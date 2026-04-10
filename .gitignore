@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Distribution
+build/
+dist/
+*.egg
+
+# Env / secretos
+.env
+.env.*
+!.env.example
+secrets.json
+credentials.json
+*.key
+*.pem
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude local
+.claude/
+
+# Logs
+logs/
+*.log
+
+# Fase 2 derivadas (regenerables desde snapshots/)
+p2p_normalized.csv
+p2p_normalized.db
