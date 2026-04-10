@@ -48,3 +48,6 @@ logs/
 # Fase 2 derivadas (regenerables desde snapshots/)
 p2p_normalized.csv
 p2p_normalized.db
+
+# Snapshots crudos (no trackear en git)
+snapshots/
