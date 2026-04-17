@@ -64,12 +64,22 @@ Idempotente. Exporta CSV opcional con `--export-csv`.
 
 ## Fase 3: Análisis
 
-**Estado:** No empezada. Diseño conceptual:
+**Estado:** 🔄 Iniciada (2026-04-10).
 
-- Métricas de mercado: spreads, VWAPs, profundidad por lado.
-- Series temporales: evolución de precios y liquidez.
-- Visualizaciones: distribución de precios, concentración de merchants.
-- Todo se recalcula desde la data normalizada (Fase 2).
+`dashboard.py` genera un HTML autocontenido (`p2p_dashboard.html`) con Plotly
+desde `p2p_normalized.db`. Se abre en cualquier navegador. Opción `--csv` para
+exportar métricas tabuladas.
+
+### Métricas incluidas
+
+- **VWAP por profundidad** (5% / 10% / 25% / 50%) — BUY y SELL con bandas
+- **Spread efectivo** a cada nivel de profundidad
+- **Profundidad por lado** — USDT totales en BUY vs SELL
+- **Curva de precio por decil** (tijera) — evidencia anuncios trampa en la cola
+- **Ratio SELL/BUY** — asimetría de oferta/demanda
+- **Concentración top-5** — % de profundidad controlado por los 5 mayores
+- **Cobertura por banco** — anuncios y profundidad por método de pago
+- **KPIs de cabecera** — VWAP 10% ambos lados, spread, profundidad, asimetría, prima vs BCB
 
 ---
 
@@ -85,4 +95,4 @@ Idempotente. Exporta CSV opcional con `--export-csv`.
 - [ ] Decidir hosting y automatizar ingesta
 - [ ] Iniciar repo Git + .gitignore
 - [ ] Limpiar carpeta .json espuria en snapshots/
-- [ ] Fase 3: diseñar e implementar análisis
+- [ ] Fase 3: iterar dashboard (filtros por tier, rango de fechas, etc.)

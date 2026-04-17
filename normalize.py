@@ -6,8 +6,9 @@ Lee snapshots crudos (.json / .json.gz) y produce una base SQLite
 con una tabla larga: 1 fila = 1 anuncio en 1 snapshot.
 
 Uso:
-    python3 normalize.py                          # busca en snapshots/
-    python3 normalize.py --input /ruta/custom      # ruta custom
+    python3 normalize.py                          # busca en snapshots/ + OneDrive backup
+    python3 normalize.py --no-input2              # solo snapshots/ local
+    python3 normalize.py --input /ruta/custom      # ruta custom (principal)
     python3 normalize.py --output mi_base.db       # nombre custom de salida
     python3 normalize.py --export-csv              # también escupe CSV
 
@@ -24,6 +25,10 @@ from pathlib import Path
 # ── Config ──────────────────────────────────────────────────────────────────
 
 DEFAULT_INPUT = Path("snapshots")
+DEFAULT_INPUT2 = Path(
+    r"%USERPROFILE%\OneDrive"
+    r"\work-files\5. Modelos\0. Alt\Snapshots_copy"
+)
 DEFAULT_OUTPUT = Path("p2p_normalized.db")
 SCHEMA_VERSION_SUPPORTED = ("v1",)
 
@@ -50,16 +55,21 @@ def load_snapshot(path: Path) -> dict:
             return json.load(f)
 
 
-def find_snapshots(root: Path) -> list[Path]:
-    seen_stems = {}
-    for pat in ["**/*.json.gz", "**/*.json"]:
-        for p in sorted(root.glob(pat)):
-            stem = str(p).replace(".json.gz", "").replace(".json", "")
-            if stem not in seen_stems:
-                seen_stems[stem] = p
-            elif str(p).endswith(".json.gz"):
-                seen_stems[stem] = p
-    return sorted(seen_stems.values())
+def find_snapshots(*roots: Path) -> list[Path]:
+    """Busca snapshots en uno o más directorios. Deduplica por nombre de archivo
+    (prefiere .json.gz sobre .json, y el primer directorio sobre el segundo)."""
+    seen = {}  # filename_stem -> Path
+    for root in roots:
+        if not root.is_dir():
+            continue
+        for pat in ["**/*.json.gz", "**/*.json"]:
+            for p in sorted(root.glob(pat)):
+                stem = p.name.replace(".json.gz", "").replace(".json", "")
+                if stem not in seen:
+                    seen[stem] = p
+                elif p.name.endswith(".json.gz") and not seen[stem].name.endswith(".json.gz"):
+                    seen[stem] = p
+    return sorted(seen.values())
 
 
 def safe_float(val):
@@ -346,7 +356,11 @@ def export_csv(conn: sqlite3.Connection, csv_path: Path):
 def main():
     parser = argparse.ArgumentParser(description="Normaliza snapshots P2P a SQLite")
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT,
-                        help=f"Directorio con snapshots (default: {DEFAULT_INPUT})")
+                        help=f"Directorio principal con snapshots (default: {DEFAULT_INPUT})")
+    parser.add_argument("--input2", type=Path, default=DEFAULT_INPUT2,
+                        help=f"Segundo directorio de snapshots (default: OneDrive backup)")
+    parser.add_argument("--no-input2", action="store_true",
+                        help="No usar segundo directorio")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
                         help=f"Archivo SQLite de salida (default: {DEFAULT_OUTPUT})")
     parser.add_argument("--export-csv", action="store_true",
@@ -356,13 +370,20 @@ def main():
     if args.input.is_file():
         snapshot_files = [args.input]
     else:
-        snapshot_files = find_snapshots(args.input)
+        dirs = [args.input]
+        if not args.no_input2:
+            dirs.append(args.input2)
+        snapshot_files = find_snapshots(*dirs)
 
     if not snapshot_files:
-        print(f"❌ No se encontraron snapshots en {args.input}", file=sys.stderr)
+        print(f"No se encontraron snapshots", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Encontrados {len(snapshot_files)} snapshot(s) en {args.input}")
+    sources = [str(args.input)]
+    if not args.no_input2 and args.input2.is_dir():
+        sources.append(str(args.input2))
+    print(f"Fuentes: {' + '.join(sources)}")
+    print(f"Encontrados {len(snapshot_files)} snapshot(s) unicos")
 
     # Borrar DB anterior para idempotencia
     if args.output.exists():
