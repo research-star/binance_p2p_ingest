@@ -12,8 +12,15 @@ de {fecha, compra, venta, fetched_at_utc}. Cada corrida acumula el dato del día
 si la fecha no está ya. Así se arma la serie histórica automáticamente.
 
 Uso:
-    python3 bcb_referencial.py              # fetch y guardar
-    python3 bcb_referencial.py --dry-run    # imprimir sin guardar
+    python3 bcb_referencial.py                        # fetch del valor actual y guardar
+    python3 bcb_referencial.py --dry-run              # imprimir sin guardar
+    python3 bcb_referencial.py --manual \
+        --fecha 2026-04-15 --compra 9.35 --venta 9.55 # agregar entrada manual
+
+Nota sobre histórico: los SVGs del BCB NO aceptan parámetro de fecha
+(probado: ?fecha, ?date, ?d, ?f, ?hist, ?historico — todos devuelven el día
+actual). El único endpoint es el valor vigente. Para completar días pasados
+hay que usar --manual con datos de noticias/prensa.
 """
 
 import argparse
@@ -58,10 +65,72 @@ def parse_svg(svg: str) -> dict:
     return out
 
 
+def save_entry(entry: dict, dry_run: bool = False):
+    """Agrega entry al histórico JSON. Dedup por fecha. Migra formato viejo."""
+    if dry_run:
+        print("[DRY RUN] no se escribió archivo")
+        return
+    history = []
+    migrated = False
+    if OUTPUT.exists():
+        try:
+            prev = json.loads(OUTPUT.read_text(encoding="utf-8"))
+            if isinstance(prev, list):
+                history = prev
+            elif isinstance(prev, dict) and prev.get("fecha_publicacion"):
+                history = [{
+                    "fecha": prev["fecha_publicacion"],
+                    "compra": prev.get("compra"),
+                    "venta": prev.get("venta"),
+                    "fetched_at_utc": prev.get("fetched_at_utc"),
+                }]
+                migrated = True
+        except Exception as e:
+            print(f"WARNING: no pude leer histórico previo: {e}", file=sys.stderr)
+
+    fechas = {h.get("fecha") for h in history}
+    added = entry["fecha"] not in fechas
+    if added:
+        history.append(entry)
+
+    if added or migrated:
+        history.sort(key=lambda h: h.get("fecha") or "")
+        OUTPUT.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
+        msg = "Migrado + " if migrated else ""
+        msg += f"{'agregada' if added else 'sin entrada nueva'} ({len(history)} entradas)"
+        print(f"{msg}: {OUTPUT}")
+    else:
+        print(f"Fecha {entry['fecha']} ya está en el histórico. Sin cambios ({len(history)} entradas).")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Scraper del valor referencial BCB")
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--manual", action="store_true",
+                        help="Agregar entrada manual (requiere --fecha --compra --venta)")
+    parser.add_argument("--fecha", help="YYYY-MM-DD (solo con --manual)")
+    parser.add_argument("--compra", type=float, help="Valor compra (solo con --manual)")
+    parser.add_argument("--venta", type=float, help="Valor venta (solo con --manual)")
+    parser.add_argument("--source", default="manual",
+                        help="Etiqueta de fuente (solo con --manual, default: 'manual')")
     args = parser.parse_args()
+
+    if args.manual:
+        if not (args.fecha and args.compra is not None and args.venta is not None):
+            print("ERROR: --manual requiere --fecha YYYY-MM-DD --compra X.XX --venta X.XX", file=sys.stderr)
+            sys.exit(2)
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", args.fecha):
+            print(f"ERROR: --fecha debe ser YYYY-MM-DD, recibí: {args.fecha}", file=sys.stderr)
+            sys.exit(2)
+        entry = {
+            "fecha": args.fecha,
+            "compra": args.compra,
+            "venta": args.venta,
+            "source": args.source,
+        }
+        print(f"Manual — {entry['fecha']}: Compra Bs {entry['compra']} · Venta Bs {entry['venta']}")
+        save_entry(entry, dry_run=args.dry_run)
+        return
 
     try:
         svg_c = fetch(URL_COMPRA)
@@ -89,43 +158,8 @@ def main():
     print(f"  Compra: Bs {entry['compra']}")
     print(f"  Venta:  Bs {entry['venta']}")
 
-    if args.dry_run:
-        print("[DRY RUN] no se escribió archivo")
-        return
-
-    # Cargar histórico (migrar formato viejo {compra/venta/fecha_publicacion} a array)
-    history = []
-    migrated = False
-    if OUTPUT.exists():
-        try:
-            prev = json.loads(OUTPUT.read_text(encoding="utf-8"))
-            if isinstance(prev, list):
-                history = prev
-            elif isinstance(prev, dict) and prev.get("fecha_publicacion"):
-                history = [{
-                    "fecha": prev["fecha_publicacion"],
-                    "compra": prev.get("compra"),
-                    "venta": prev.get("venta"),
-                    "fetched_at_utc": prev.get("fetched_at_utc"),
-                }]
-                migrated = True
-        except Exception as e:
-            print(f"WARNING: no pude leer histórico previo: {e}", file=sys.stderr)
-
-    # Agregar solo si la fecha no existe ya
-    fechas = {h.get("fecha") for h in history}
-    added = entry["fecha"] not in fechas
-    if added:
-        history.append(entry)
-
-    if added or migrated:
-        history.sort(key=lambda h: h.get("fecha") or "")
-        OUTPUT.write_text(json.dumps(history, indent=2, ensure_ascii=False), encoding="utf-8")
-        msg = "Migrado a formato array + " if migrated else ""
-        msg += f"{'agregada' if added else 'sin entrada nueva'} ({len(history)} entradas)"
-        print(f"{msg}: {OUTPUT}")
-    else:
-        print(f"Fecha {entry['fecha']} ya está en el histórico. Sin cambios ({len(history)} entradas).")
+    entry["source"] = "scraped"
+    save_entry(entry, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

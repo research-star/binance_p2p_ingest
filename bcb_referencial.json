@@ -24,6 +24,12 @@
     "source": "manual_backfill (promedio 9.45, spread estimado 0.20)"
   },
   {
+    "fecha": "2026-04-15",
+    "compra": 9.35,
+    "venta": 9.55,
+    "source": "manual"
+  },
+  {
     "fecha": "2026-04-22",
     "compra": 9.39,
     "venta": 9.59,

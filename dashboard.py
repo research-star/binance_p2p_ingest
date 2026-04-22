@@ -25,9 +25,13 @@ BCB_RATE = 6.96
 BCB_REF_FILE = Path("bcb_referencial.json")
 
 
-def load_bcb_ref() -> dict:
+def load_bcb_ref(first_date: str | None = None) -> dict:
     """Lee bcb_referencial.json (array de {fecha,compra,venta}). Soporta formato
-    viejo (dict) como fallback. Devuelve dict con latest + history."""
+    viejo (dict) como fallback. Devuelve dict con latest + history.
+
+    first_date (YYYY-MM-DD): si se pasa, filtra el histórico para que solo incluya
+    entradas con fecha >= first_date. La última entrada siempre se conserva para
+    el KPI aunque esté fuera de rango."""
     out = {'bcb_ref_compra': None, 'bcb_ref_venta': None,
            'bcb_ref_fecha': None, 'bcb_ref_history': []}
     try:
@@ -39,14 +43,18 @@ def load_bcb_ref() -> dict:
                          'compra': data.get('compra'),
                          'venta': data.get('venta')}]
             if isinstance(data, list) and data:
-                hist = sorted(
+                full_hist = sorted(
                     [h for h in data if h.get('fecha')],
                     key=lambda h: h['fecha'])
-                out['bcb_ref_history'] = hist
-                latest = hist[-1]
+                latest = full_hist[-1]
                 out['bcb_ref_compra'] = latest.get('compra')
                 out['bcb_ref_venta'] = latest.get('venta')
                 out['bcb_ref_fecha'] = latest.get('fecha')
+                # Filtrar para el gráfico (serie temporal dentro del rango de snapshots)
+                if first_date:
+                    out['bcb_ref_history'] = [h for h in full_hist if h['fecha'] >= first_date]
+                else:
+                    out['bcb_ref_history'] = full_hist
     except Exception:
         pass
     return out
@@ -277,7 +285,7 @@ def process_data(db_path: Path) -> dict:
             'total_snapshots': len(timestamps),
             'total_ads': sum(d['buy_count'] + d['sell_count'] for d in ts_data),
             'first_ts': timestamps[0], 'last_ts': timestamps[-1], 'bcb_rate': BCB_RATE,
-            **load_bcb_ref(),
+            **load_bcb_ref(first_date=timestamps[0][:10] if timestamps else None),
         }
     }
 
