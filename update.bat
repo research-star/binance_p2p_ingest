@@ -4,6 +4,8 @@ REM Si el scraper del BCB falla, sigue (no es critico).
 REM Si normalize falla, corta (es critico).
 
 cd /d %~dp0
+set PYTHONIOENCODING=utf-8
+chcp 65001 >nul
 
 echo [1/3] Bajando valor referencial BCB...
 python bcb_referencial.py
