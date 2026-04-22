@@ -48,6 +48,19 @@ logs/
 # Fase 2 derivadas (regenerables desde snapshots/)
 p2p_normalized.csv
 p2p_normalized.db
+p2p_normalized.db-shm
+p2p_normalized.db-wal
+p2p_metrics.csv
 
 # Snapshots crudos (no trackear en git)
 snapshots/
+alt/
+
+# Dashboard: el archivo servido por GitHub Pages es index.html (sí trackeado).
+# p2p_dashboard.html es un alias local por compatibilidad, no se sube.
+p2p_dashboard.html
+
+# Explícitamente NO ignorados (documentación):
+# - index.html            → dashboard servido por GitHub Pages
+# - bcb_referencial.json  → histórico del referencial, necesario para el dashboard
+# - *.py, *.bat, *.md     → código y docs

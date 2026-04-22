@@ -1,6 +1,6 @@
 # HANDOFF.md — Estado detallado del proyecto
 
-Última actualización: 2026-04-10
+Última actualización: 2026-04-15
 
 ---
 
@@ -10,89 +10,121 @@
 
 - `ingest.py` captura snapshots completos (BUY + SELL) del libro P2P USDT/BOB.
 - Guarda JSON crudo gzipeado en `snapshots/YYYY-MM-DD/`.
-- Primer snapshot real: 2026-04-09, 482 anuncios (170 BUY + 309 SELL), 68.7 KB, 0 errores.
-- 13 snapshots acumulados (9 abr + 10 abr), corriendo cada 10 min en local.
+- **~640 snapshots acumulados** (10–15 abr 2026), cadencia ~10 min.
 - Modos: una captura, `--loop` (cada 10 min), `--dry-run`.
+- **Watchdog:** `watchdog.py` chequea cada 5 min si el loop sigue vivo
+  (último snapshot <15 min) y lo relanza si murió. Configurable vía Windows
+  Task Scheduler con `watchdog.bat` (instrucciones en README).
 - Corre en local por ahora. Hosting pendiente.
+
+### Corrección histórica importante
+
+El `tradeType` del API de Binance P2P es desde la perspectiva del **taker**,
+no del maker. Esto significa:
+- **BUY** = taker compra USDT → maker vende USDT al taker
+- **SELL** = taker vende USDT → maker compra USDT del taker
+
+Esto afecta la lectura de VWAP y spreads: el "precio BUY" es el precio al que
+un taker puede comprar USDT, o sea el precio al que el merchant vende.
 
 ---
 
 ## Fase 2: Normalización
 
-**Estado:** ✅ Completa (2026-04-10).
+**Estado:** ✅ Completa.
 
 `normalize.py` lee snapshots crudos y produce `p2p_normalized.db` (SQLite).
 1 fila = 1 anuncio en 1 snapshot. PK: `(snapshot_ts_utc, side, adv_no)`.
 Idempotente. Exporta CSV opcional con `--export-csv`.
 
-### Aplanado base ✅
+### Features
 
-- 13 snapshots procesados, ~5,700 filas en DB.
-- BUY: ~160-193 ads/snapshot, precio [9.28 – 20.73], depth ~1.3-2.3M USDT
-- SELL: ~231-309 ads/snapshot, precio [6.50 – 9.33], depth ~3.6-5.8M USDT
-- Merchants: ~65% | Users: ~35%
+- **Doble entrada:** lee de `snapshots/` local + directorio de backup opcional
+  (configurable vía env `P2P_BACKUP_DIR`, p. ej. OneDrive/Dropbox/disco externo).
+  Flag `--no-input2` para ignorar el backup. Deduplica por nombre de archivo.
+- **Aplanado base:** extrae price, surplus, cantidad, min/max por transacción
+  (BOB y USDT), comisiones, banks, metadata del merchant.
+- **quality_tier (A/B/C):**
+  - **A:** merchant + ≥100 órdenes/mes + ≥95% completado + ≥500 USDT surplus (~50%)
+  - **B:** merchant que no llega a A, o user con ≥20 órdenes/mes (~27%)
+  - **C:** resto (~23%)
+- **banks como tags:** JSON array + `n_banks`.
+- **Validación estructural:** **0 restricciones estructuradas al taker** en
+  todo el libro boliviano, **0 remarks/auto_reply con keywords KYC**.
 
-### quality_tier (A/B/C) ✅
-
-- **Tier A:** merchant + ≥100 órdenes/mes + ≥95% completado + ≥500 USDT surplus → 50%
-- **Tier B:** merchant que no llega a A, o user con ≥20 órdenes/mes → 27%
-- **Tier C:** todo lo demás → 23%
-- Cortes aceptados. Calibrados con data real boliviana.
-
-### banks como tags ✅
-
-- Bancos extraídos de `tradeMethods`, guardados como JSON array + `n_banks`.
-
-### Restricciones estructuradas al taker ✅
-
-- Confirmado: **0 en 5,707 registros**. Ningún anuncio boliviano usa campos de restricción estructurada.
-
-### KYC keywords en remarks/auto_reply ✅
-
-- Confirmado: **0 en 5,707 registros**. Bolivia no usa estos campos.
-
-### Validación y sanity checks ✅
-
-- Sin nulls en price/surplus. Índices en ts, side, advertiser, price.
-
-### Pendientes no-bloqueantes (se resuelven en Fase 3 si hacen falta)
+### Pendientes no-bloqueantes
 
 - `minSingleTransAmount` como flag en VWAP → decisión: ignorar en métrica principal.
 - VWAP alternativo usando `maxSingleTransAmount` → postpuesto a final del proyecto.
 
 ---
 
-## Fase 3: Análisis
+## Fase 3: Análisis / Dashboard
 
-**Estado:** 🔄 Iniciada (2026-04-10).
+**Estado:** 🟢 Sustancialmente construida, dashboard funcional (~583 KB).
 
-`dashboard.py` genera un HTML autocontenido (`p2p_dashboard.html`) con Plotly
-desde `p2p_normalized.db`. Se abre en cualquier navegador. Opción `--csv` para
-exportar métricas tabuladas.
+`dashboard.py` genera `p2p_dashboard.html` autocontenido con Plotly.js.
+Todo se recalcula desde `p2p_normalized.db`. Opcional `--csv` para exportar
+métricas por snapshot.
 
-### Métricas incluidas
+### Métricas / Paneles implementados
 
-- **VWAP por profundidad** (5% / 10% / 25% / 50%) — BUY y SELL con bandas
-- **Spread efectivo** a cada nivel de profundidad
-- **Profundidad por lado** — USDT totales en BUY vs SELL
-- **Curva de precio por decil** (tijera) — evidencia anuncios trampa en la cola
-- **Ratio SELL/BUY** — asimetría de oferta/demanda
-- **Concentración top-5** — % de profundidad controlado por los 5 mayores
-- **Cobertura por banco** — anuncios y profundidad por método de pago
-- **KPIs de cabecera** — VWAP 10% ambos lados, spread, profundidad, asimetría, prima vs BCB
+1. **VWAP por profundidad** (5/10/25/50%) con bandas — serie temporal BUY+SELL
+2. **Spread efectivo** a múltiples profundidades (5/10/25/50%)
+3. **Profundidad por lado** (BUY vs SELL) — área apilada
+4. **Curva de deciles** (la "tijera") — VWAP acumulado 10%→100%
+5. **Ratio SELL/BUY** — asimetría de oferta/demanda
+6. **Concentración top-5 merchants** — % controlado por los 5 mayores
+7. **Cobertura por banco** — tabla con anuncios, profundidad, %
+8. **Merchants principales** — tabla top 10 BUY y SELL side-by-side
+9. **Volatilidad intradiaria** — rango (max−min) VWAP por día (solo vista "Por día")
+10. **Merchants activos** — serie temporal de merchants únicos + flujo nuevos/desaparecidos
+11. **Mapa de calor hora × métrica** — 24h (Bolivia UTC−4) × 6 métricas, normalizado
+
+### Features del dashboard
+
+- **Toggle temporal:** Por hora / Por día / Cada snapshot. Cada vista usa el
+  último snapshot de cada período.
+- **Sistema de temas:** 5 presets en la barra (Claro, Beige, Oscuro + Otros con
+  Negro/ink) + temas custom guardables (import/export JSON, máx 5).
+- **Paneles movibles y redimensionables:** drag & drop entre posiciones,
+  toggle ancho completo/medio, layout persiste en `localStorage`.
+- **Interacción Plotly:** drag-to-pan, scroll zoom, rangeslider en gráficos
+  temporales, hover mode `x unified`.
+- **BCB referencial (`bcb_referencial.py`):** scraper del SVG del BCB
+  (/valor_referencial_compra_svg.php y venta_svg.php). Acumula histórico
+  diario en `bcb_referencial.json`. Se muestra como KPI nuevo
+  "TC Referencial BCB" y como serie temporal punteada en el VWAP (interpola
+  entre días publicados).
+- **3 líneas de referencia toggleables** en leyenda del VWAP: BCB oficial
+  (6.96), BCB Ref Compra, BCB Ref Venta. Desactivadas por defecto.
 
 ---
 
-## Decisiones pendientes
+## Archivos del proyecto
 
-- **Hosting:** Oracle Free Tier vs Hetzner €4/mes. Acumular unos días de data local primero.
-- **Carpeta .json espuria:** En `snapshots/2026-04-09/` hay un snapshot descomprimido manualmente dentro de una carpeta `.json`. No afecta (normalize deduplica), pero conviene limpiarla.
+| Archivo | Rol |
+|---|---|
+| `ingest.py` | Captura snapshots del libro P2P |
+| `normalize.py` | Aplanar snapshots a SQLite |
+| `dashboard.py` | Generar HTML autocontenido |
+| `bcb_referencial.py` | Scraper del valor referencial BCB |
+| `watchdog.py` | Relanzar loop de ingesta si se cae |
+| `update.bat` | Pipeline: bcb → normalize → dashboard |
+| `sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
+| `watchdog.bat` | Wrapper para Task Scheduler |
+| `p2p_normalized.db` | SQLite generado (reconstruible) |
+| `bcb_referencial.json` | Histórico acumulado del BCB |
+| `p2p_dashboard.html` | Dashboard final (regenerado por update.bat) |
 
 ---
 
-## TODO acumulados
+## Pendientes
 
-- [ ] Decidir hosting y automatizar ingesta
-- [ ] Iniciar repo Git + .gitignore
-- [ ] Limpiar carpeta .json espuria en snapshots/
-- [ ] Fase 3: iterar dashboard (filtros por tier, rango de fechas, etc.)
+- [ ] **Hosting** (Oracle Free vs Hetzner €4/mes) — postpuesto, corre en local.
+- [ ] **GitHub Pages** para servir el dashboard públicamente o interno.
+- [ ] **VWAP alternativo con `maxSingleTransAmount`** — postpuesto a final.
+- [ ] **Análisis de reacción a eventos macro** (feriados, anuncios BCB,
+      quincenas de pago, etc.).
+- [ ] Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`.
+- [ ] Iniciar repo Git + `.gitignore` (snapshots/, logs/, *.db, *.csv, *.html).

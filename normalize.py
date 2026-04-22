@@ -6,7 +6,7 @@ Lee snapshots crudos (.json / .json.gz) y produce una base SQLite
 con una tabla larga: 1 fila = 1 anuncio en 1 snapshot.
 
 Uso:
-    python3 normalize.py                          # busca en snapshots/ + OneDrive backup
+    python3 normalize.py                          # busca en snapshots/ + backup (si hay)
     python3 normalize.py --no-input2              # solo snapshots/ local
     python3 normalize.py --input /ruta/custom      # ruta custom (principal)
     python3 normalize.py --output mi_base.db       # nombre custom de salida
@@ -18,6 +18,7 @@ Idempotente: re-correr sobre los mismos archivos da el mismo resultado.
 import argparse
 import gzip
 import json
+import os
 import sqlite3
 import sys
 from pathlib import Path
@@ -25,10 +26,9 @@ from pathlib import Path
 # ── Config ──────────────────────────────────────────────────────────────────
 
 DEFAULT_INPUT = Path("snapshots")
-DEFAULT_INPUT2 = Path(
-    r"%USERPROFILE%\OneDrive"
-    r"\work-files\5. Modelos\0. Alt\Snapshots_copy"
-)
+# Directorio de backup opcional (p. ej. OneDrive, Dropbox, disco externo).
+# Configurable vía env var P2P_BACKUP_DIR. Si no existe, se ignora silenciosamente.
+DEFAULT_INPUT2 = Path(os.environ.get("P2P_BACKUP_DIR", "")) if os.environ.get("P2P_BACKUP_DIR") else Path("snapshots_backup_not_configured")
 DEFAULT_OUTPUT = Path("p2p_normalized.db")
 SCHEMA_VERSION_SUPPORTED = ("v1",)
 
@@ -358,7 +358,7 @@ def main():
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT,
                         help=f"Directorio principal con snapshots (default: {DEFAULT_INPUT})")
     parser.add_argument("--input2", type=Path, default=DEFAULT_INPUT2,
-                        help=f"Segundo directorio de snapshots (default: OneDrive backup)")
+                        help=f"Segundo directorio de snapshots (default: $P2P_BACKUP_DIR si está definido)")
     parser.add_argument("--no-input2", action="store_true",
                         help="No usar segundo directorio")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,

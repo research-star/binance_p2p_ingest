@@ -113,3 +113,72 @@ puede cambiarlo o bloquearlo sin aviso. Si eso pasa:
 2. Abrir Binance P2P en el navegador, abrir DevTools > Network, filtrar por
    "adv/search" y copiar el request actualizado.
 3. Actualizar `BASE_PARAMS` y `HEADERS` en `ingest.py` con lo que uses.
+
+## Dashboard (GitHub Pages)
+
+El dashboard HTML autocontenido se genera con `dashboard.py` y se llama
+`index.html` para que GitHub Pages lo sirva por defecto.
+
+### Actualizar y publicar
+
+```bash
+update.bat                                   # bcb + normalize + dashboard
+git add index.html bcb_referencial.json      # o: git add .
+git commit -m "update dashboard"
+git push
+```
+
+El dashboard queda servido en:
+
+```
+https://<tu-usuario>.github.io/binance_p2p_ingest/
+```
+
+(Reemplazá `<tu-usuario>` por tu handle de GitHub.)
+
+### Activar GitHub Pages (una sola vez)
+
+1. Abrí el repo en GitHub → **Settings**.
+2. En el sidebar izquierdo, click en **Pages**.
+3. En **"Build and deployment" → Source**, seleccioná **"Deploy from a branch"**.
+4. Debajo, en **Branch**, elegí:
+   - Branch: `main` (o la branch que uses)
+   - Folder: `/ (root)`
+5. Click **Save**.
+6. Esperá 1–2 minutos. GitHub te mostrará arriba un cartel verde con la URL
+   (`Your site is live at https://...`).
+7. Cada `git push` actualiza el dashboard en ~30–60 segundos.
+
+**Notas:**
+- `snapshots/`, `p2p_normalized.db`, `logs/` NO se suben (están en `.gitignore`).
+  Solo se sube el HTML generado y `bcb_referencial.json`.
+- Si el repo es privado, Pages público requiere plan Pro. Si querés, podés
+  hacer el repo público solo para el dashboard (la data está en la DB local,
+  no se sube).
+
+## Watchdog (auto-relanzador del loop)
+
+`watchdog.py` chequea si el último snapshot tiene >15 min y relanza `ingest.py --loop`
+si el proceso se murió (ej: la máquina se suspendió). No lanza un segundo loop si
+ya hay uno corriendo.
+
+**Configurar con Windows Task Scheduler (cada 5 min):**
+
+1. Abrí Task Scheduler (`taskschd.msc`).
+2. Crear tarea básica → nombre: `P2P Watchdog`.
+3. Desencadenador: "Diariamente", hora de inicio: ahora. En propiedades
+   avanzadas, marcá "Repetir cada: 5 minutos" con duración "Indefinida".
+4. Acción: "Iniciar un programa" → `<ruta-del-repo>\watchdog.bat`.
+5. En la pestaña "Condiciones", desmarcá "Iniciar solo si el equipo usa CA"
+   (así corre también con batería).
+6. En "Configuración", marcá "Ejecutar tarea lo antes posible tras un inicio
+   programado omitido".
+
+Una sola línea de PowerShell (admin) equivalente:
+
+```powershell
+schtasks /Create /SC MINUTE /MO 5 /TN "P2P Watchdog" /TR "%CD%\watchdog.bat" /RL LIMITED /F
+```
+
+Log en `logs/watchdog.log`. Silencio = todo bien (solo escribe cuando relanza
+o detecta anomalías).

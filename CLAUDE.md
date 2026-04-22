@@ -60,13 +60,25 @@ guarda todo, aunque no se use hoy, porque cualquier análisis futuro lo necesita
 
 ## Estado muy breve
 
-- **Fase 1:** código listo y funcionando. Primer snapshot real capturado
-  exitosamente (9 abr 2026, 482 anuncios, 0 errores). Corre en local por ahora.
-- **Fase 2:** ✅ Completa. `normalize.py` produce SQLite (~5,700 filas, 13
-  snapshots). quality_tier A/B/C implementado. Ver `HANDOFF.md` para detalle.
-- **Fase 3:** no empezada. Diseño conceptual en `HANDOFF.md`.
-- **Hosting:** decisión pendiente (Oracle Free vs Hetzner €4/mes), condicionada
-  a que el usuario acumule unos días de data local primero.
+- **Fase 1 (Ingesta):** ✅ Completa. ~640 snapshots acumulados (10–15 abr
+  2026), corriendo en local con `ingest.py --loop`. `watchdog.py` detecta si
+  el loop se cae y lo relanza (cada 5 min vía Task Scheduler).
+- **Fase 2 (Normalización):** ✅ Completa. `normalize.py` lee de local +
+  directorio de backup opcional (`$P2P_BACKUP_DIR`), deduplica, produce SQLite
+  con `quality_tier` A/B/C.
+  0 restricciones estructuradas y 0 KYC keywords en todo el libro boliviano.
+- **Fase 3 (Dashboard):** 🟢 Sustancialmente construida. `dashboard.py`
+  genera HTML autocontenido (~583 KB) con 11 paneles (VWAP, spread,
+  profundidad, deciles, ratio, concentración, bancos, top merchants,
+  volatilidad, flujo, heatmap). Features: 3 vistas temporales, sistema de
+  temas con presets + custom guardables, paneles drag & drop, BCB referencial
+  scrapeado (`bcb_referencial.py`) como KPI + serie temporal. Ver `HANDOFF.md`.
+- **Hosting:** pendiente (Oracle Free vs Hetzner €4/mes). Corre en local por
+  ahora. GitHub Pages para servir el dashboard también pendiente.
+
+**Corrección importante:** El `tradeType` de Binance P2P es desde la
+perspectiva del **taker**, no del maker. BUY = taker compra USDT (maker vende),
+SELL = taker vende USDT (maker compra).
 
 Para todo lo demás, leer `HANDOFF.md`.
 
