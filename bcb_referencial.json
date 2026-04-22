@@ -1,8 +1,33 @@
 [
   {
+    "fecha": "2026-01-05",
+    "compra": 8.73,
+    "venta": 8.91,
+    "source": "manual_backfill (noticias)"
+  },
+  {
+    "fecha": "2026-04-07",
+    "compra": 9.0,
+    "venta": 9.19,
+    "source": "manual_backfill (noticias)"
+  },
+  {
+    "fecha": "2026-04-09",
+    "compra": 9.31,
+    "venta": 9.51,
+    "source": "manual_backfill (promedio 9.41, spread estimado 0.20)"
+  },
+  {
+    "fecha": "2026-04-13",
+    "compra": 9.35,
+    "venta": 9.55,
+    "source": "manual_backfill (promedio 9.45, spread estimado 0.20)"
+  },
+  {
     "fecha": "2026-04-22",
     "compra": 9.39,
     "venta": 9.59,
-    "fetched_at_utc": "2026-04-22T22:12:22.272822Z"
+    "fetched_at_utc": "2026-04-22T22:12:22.272822Z",
+    "source": "scraped"
   }
 ]
