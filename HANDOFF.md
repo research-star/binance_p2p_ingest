@@ -1,6 +1,6 @@
 # HANDOFF.md — Estado detallado del proyecto
 
-Última actualización: 2026-04-15
+Última actualización: 2026-04-22
 
 ---
 
@@ -61,9 +61,11 @@ Idempotente. Exporta CSV opcional con `--export-csv`.
 
 ## Fase 3: Análisis / Dashboard
 
-**Estado:** 🟢 Sustancialmente construida, dashboard funcional (~583 KB).
+**Estado:** 🟢 Sustancialmente construida, dashboard funcional (~587 KB).
+Publicado en GitHub Pages.
 
-`dashboard.py` genera `p2p_dashboard.html` autocontenido con Plotly.js.
+`dashboard.py` genera `index.html` autocontenido con Plotly.js (más un alias
+`p2p_dashboard.html` local por compatibilidad, no trackeado).
 Todo se recalcula desde `p2p_normalized.db`. Opcional `--csv` para exportar
 métricas por snapshot.
 
@@ -113,18 +115,21 @@ métricas por snapshot.
 | `update.bat` | Pipeline: bcb → normalize → dashboard |
 | `sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
 | `watchdog.bat` | Wrapper para Task Scheduler |
-| `p2p_normalized.db` | SQLite generado (reconstruible) |
-| `bcb_referencial.json` | Histórico acumulado del BCB |
-| `p2p_dashboard.html` | Dashboard final (regenerado por update.bat) |
+| `p2p_normalized.db` | SQLite generado (reconstruible, no trackeado) |
+| `bcb_referencial.json` | Histórico acumulado del BCB (sí trackeado) |
+| `index.html` | Dashboard final (regenerado por update.bat, servido por GitHub Pages) |
 
 ---
 
 ## Pendientes
 
-- [ ] **Hosting** (Oracle Free vs Hetzner €4/mes) — postpuesto, corre en local.
-- [ ] **GitHub Pages** para servir el dashboard públicamente o interno.
+- [ ] **Hosting de la ingesta** (Oracle Free vs Hetzner €4/mes) — postpuesto,
+      el loop corre en local con watchdog.
+- [x] **GitHub Pages** — publicado. `index.html` se sirve desde `main` /root.
+      Remote: `github.com/research-star/binance_p2p_ingest`.
+- [x] **Repo Git + `.gitignore`** — inicializado. Historial saneado con
+      `git filter-repo` (sin datos personales).
 - [ ] **VWAP alternativo con `maxSingleTransAmount`** — postpuesto a final.
 - [ ] **Análisis de reacción a eventos macro** (feriados, anuncios BCB,
       quincenas de pago, etc.).
 - [ ] Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`.
-- [ ] Iniciar repo Git + `.gitignore` (snapshots/, logs/, *.db, *.csv, *.html).
