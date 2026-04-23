@@ -482,9 +482,9 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 <div class="content">
   <div class="toolbar">
     <div class="view-toggle">
+      <button class="toggle-btn" data-view="all">Cada snapshot</button>
       <button class="toggle-btn active" data-view="hourly">Por hora</button>
       <button class="toggle-btn" data-view="daily">Por d&iacute;a</button>
-      <button class="toggle-btn" data-view="all">Cada snapshot</button>
     </div>
     <div class="theme-bar" id="themeBar">
       <button class="theme-btn active" data-theme="paper"><span class="btn-full">Claro</span><span class="btn-short">C</span></button>
@@ -636,10 +636,14 @@ function gapShapes(c){
   }));
 }
 function xaxisForView(base){
-  const cfg={...base};
-  if(currentView==='daily'){cfg.dtick=86400000;cfg.tickformat='%d/%m'}
-  else if(currentView==='hourly'){cfg.dtick=6*3600000;cfg.tickformat='%d/%m %H:00'}
-  else{cfg.dtick=2*3600000;cfg.tickformat='%d/%m %H:%M'}
+  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:0};
+  if(currentView==='daily'){
+    cfg.dtick=86400000; cfg.tickformat='%d %b';
+  } else if(currentView==='hourly'){
+    cfg.dtick=6*3600000; cfg.tickformat='%d/%m %H:00';
+  } else { // 'all' — cada snapshot
+    cfg.dtick=4*3600000; cfg.tickformat='%d/%m %H:%M';
+  }
   return cfg;
 }
 

@@ -10,7 +10,11 @@ Endpoints:
     /valor_referencial_venta_svg.php        — valor del día
     /valor_referencial_compra_svg_v2.php    — TABLA HISTÓRICA completa (desde 1-dic-2025)
                                               Fila "BANCOS (PROMEDIO PONDERADO)" = valor referencial diario.
-    (no existe equivalente v2 de venta — el BCB no publica venta histórica.)
+    (no existe equivalente v2 de venta — verificado: el BCB no publica
+     histórico agregado de venta en ningún endpoint. Los xlsx diarios en
+     /webdocs/02_comvenmonext/TC_*.xlsx tienen venta preferencial por banco
+     pero la agregación ponderada no está precalculada. El BCB define venta
+     como "compra + comisiones".)
 
 Cada corrida:
   1. Baja el histórico completo de compra (del v2) y lo mergea al JSON.
