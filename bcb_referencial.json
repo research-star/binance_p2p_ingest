@@ -1,33 +1,484 @@
 [
   {
+    "fecha": "2025-12-01",
+    "compra": 7.85,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-02",
+    "compra": 9.02,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-03",
+    "compra": 8.41,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-04",
+    "compra": 8.78,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-05",
+    "compra": 8.44,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-08",
+    "compra": 8.69,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-09",
+    "compra": 8.48,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-10",
+    "compra": 8.52,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-11",
+    "compra": 8.0,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-12",
+    "compra": 7.99,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-15",
+    "compra": 8.87,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-16",
+    "compra": 8.6,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-17",
+    "compra": 8.37,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-18",
+    "compra": 8.06,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-19",
+    "compra": 8.46,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-22",
+    "compra": 8.09,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-23",
+    "compra": 8.56,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-24",
+    "compra": 8.51,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-29",
+    "compra": 8.83,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-30",
+    "compra": 8.99,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2025-12-31",
+    "compra": 7.89,
+    "source": "bcb_v2_table"
+  },
+  {
     "fecha": "2026-01-05",
     "compra": 8.73,
-    "venta": 8.91,
-    "source": "manual_backfill (noticias)"
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-06",
+    "compra": 7.94,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-07",
+    "compra": 8.57,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-08",
+    "compra": 8.35,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-09",
+    "compra": 8.92,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-12",
+    "compra": 8.97,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-13",
+    "compra": 9.1,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-14",
+    "compra": 8.72,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-15",
+    "compra": 9.03,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-16",
+    "compra": 9.21,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-19",
+    "compra": 8.91,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-20",
+    "compra": 9.1,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-21",
+    "compra": 8.81,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-22",
+    "compra": 9.16,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-26",
+    "compra": 9.32,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-27",
+    "compra": 9.09,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-28",
+    "compra": 8.86,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-29",
+    "compra": 8.99,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-01-30",
+    "compra": 8.59,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-02",
+    "compra": 8.64,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-03",
+    "compra": 8.5,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-04",
+    "compra": 9.11,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-05",
+    "compra": 8.99,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-06",
+    "compra": 8.81,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-09",
+    "compra": 8.69,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-10",
+    "compra": 8.89,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-11",
+    "compra": 9.36,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-12",
+    "compra": 8.67,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-13",
+    "compra": 8.58,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-18",
+    "compra": 8.73,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-19",
+    "compra": 8.47,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-20",
+    "compra": 8.7,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-23",
+    "compra": 9.08,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-24",
+    "compra": 8.87,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-25",
+    "compra": 8.66,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-26",
+    "compra": 9.08,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-02-27",
+    "compra": 8.92,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-02",
+    "compra": 8.4,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-03",
+    "compra": 8.19,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-04",
+    "compra": 8.69,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-05",
+    "compra": 8.85,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-06",
+    "compra": 8.48,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-09",
+    "compra": 8.78,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-10",
+    "compra": 8.49,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-11",
+    "compra": 8.68,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-12",
+    "compra": 9.18,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-13",
+    "compra": 8.94,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-16",
+    "compra": 9.05,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-17",
+    "compra": 9.01,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-18",
+    "compra": 8.9,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-19",
+    "compra": 8.91,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-20",
+    "compra": 9.39,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-23",
+    "compra": 8.82,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-24",
+    "compra": 8.66,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-25",
+    "compra": 9.04,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-26",
+    "compra": 8.81,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-27",
+    "compra": 9.01,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-30",
+    "compra": 8.57,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-03-31",
+    "compra": 8.77,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-01",
+    "compra": 8.84,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-02",
+    "compra": 8.42,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-06",
+    "compra": 8.96,
+    "source": "bcb_v2_table"
   },
   {
     "fecha": "2026-04-07",
     "compra": 9.0,
-    "venta": 9.19,
-    "source": "manual_backfill (noticias)"
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-08",
+    "compra": 9.01,
+    "source": "bcb_v2_table"
   },
   {
     "fecha": "2026-04-09",
-    "compra": 9.31,
-    "venta": 9.51,
-    "source": "manual_backfill (promedio 9.41, spread estimado 0.20)"
+    "compra": 9.41,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-10",
+    "compra": 9.25,
+    "source": "bcb_v2_table"
   },
   {
     "fecha": "2026-04-13",
-    "compra": 9.35,
-    "venta": 9.55,
-    "source": "manual_backfill (promedio 9.45, spread estimado 0.20)"
+    "compra": 9.26,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-14",
+    "compra": 9.16,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-15",
+    "compra": 9.11,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-16",
+    "compra": 9.18,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-17",
+    "compra": 9.43,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-20",
+    "compra": 9.43,
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-21",
+    "compra": 9.39,
+    "source": "bcb_v2_table"
   },
   {
     "fecha": "2026-04-22",
     "compra": 9.39,
-    "venta": 9.59,
-    "fetched_at_utc": "2026-04-22T22:12:22.272822Z",
-    "source": "scraped"
+    "source": "bcb_v2_table"
+  },
+  {
+    "fecha": "2026-04-23",
+    "compra": 9.42,
+    "source": "bcb_daily_svg",
+    "venta": 9.62,
+    "fetched_at_utc": "2026-04-23T12:56:16.928494Z"
   }
 ]
