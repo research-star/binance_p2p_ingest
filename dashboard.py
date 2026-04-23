@@ -636,11 +636,8 @@ function gapShapes(c){
   }));
 }
 function xaxisForView(base){
-  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8};
+  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b'};
   delete cfg.dtick;
-  if(currentView==='daily')       cfg.tickformat='%d %b';
-  else if(currentView==='hourly') cfg.tickformat='%d/%m %H:00';
-  else                            cfg.tickformat='%d/%m %H:%M';
   return cfg;
 }
 
