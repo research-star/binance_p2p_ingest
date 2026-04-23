@@ -273,6 +273,23 @@ def process_data(db_path: Path) -> dict:
         ]
     }
 
+    # ── Huecos de snapshots (>20 min entre consecutivos) ──
+    gaps = []
+    gap_threshold_s = 20 * 60
+    for i in range(1, len(timestamps)):
+        try:
+            t0 = datetime.fromisoformat(timestamps[i-1].replace('Z', '+00:00'))
+            t1 = datetime.fromisoformat(timestamps[i].replace('Z', '+00:00'))
+        except Exception:
+            continue
+        diff_s = (t1 - t0).total_seconds()
+        if diff_s > gap_threshold_s:
+            gaps.append({
+                'start': timestamps[i-1],
+                'end':   timestamps[i],
+                'minutes': round(diff_s / 60),
+            })
+
     conn.close()
     return {
         'ts': ts_data, 'hourly': hourly, 'daily': daily,
@@ -281,6 +298,7 @@ def process_data(db_path: Path) -> dict:
         'volatility_daily': volatility_daily,
         'merchant_flow': merchant_flow,
         'heatmap': heatmap_data,
+        'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
             'total_ads': sum(d['buy_count'] + d['sell_count'] for d in ts_data),
@@ -508,7 +526,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
   </div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVwap"></div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVwap"></div></div></div>
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP BUY - SELL por profundidad.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartSpread"></div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDepth"></div></div></div>
     <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil</h2><p>VWAP acumulado 10%-100%.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDecile"></div></div></div>
@@ -607,6 +625,16 @@ function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)'
 const PC={displayModeBar:false,responsive:true,scrollZoom:true};
 function makeDates(ts){return ts.map(d=>{const dt=new Date(d.ts);return new Date(dt.getTime()-4*3600000)})}
 function xaWithSlider(xa){xa.rangeslider={visible:true,thickness:0.06};return xa}
+function gapShapes(c){
+  const gaps=DATA.gaps||[];
+  return gaps.map(g=>({
+    type:'rect',xref:'x',yref:'paper',
+    x0:new Date(new Date(g.start).getTime()-4*3600000),
+    x1:new Date(new Date(g.end).getTime()-4*3600000),
+    y0:0,y1:1,
+    fillcolor:c.textMuted,opacity:0.08,line:{width:0},layer:'below',
+  }));
+}
 function xaxisForView(base){
   const cfg={...base};
   if(currentView==='daily'){cfg.dtick=86400000;cfg.tickformat='%d/%m'}
@@ -615,11 +643,11 @@ function xaxisForView(base){
   return cfg;
 }
 
-function rVwap(c,ts,x){const L=BL(c);const traces=[{x:x,y:ts.map(d=>d.vb50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb25),fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb5),fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.green,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb10),name:'Compra VWAP 10%',line:{color:c.green,width:2},mode:'lines'},{x:x,y:ts.map(d=>d.vs50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs25),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs5),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.orange,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs10),name:'Venta VWAP 10%',line:{color:c.orange,width:2},mode:'lines'},{x:x,y:ts.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.textMuted,width:1,dash:'dash'},visible:'legendonly'}];if(meta.bcb_ref_history&&meta.bcb_ref_history.length){const hist=meta.bcb_ref_history;if(hist.length===1){const e=hist[0];traces.push({x:x,y:ts.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.blue,width:1,dash:'dot'}});traces.push({x:x,y:ts.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.blue,width:1.5,dash:'dot'}})}else{const hx=hist.map(e=>new Date(e.fecha+'T00:00:00'));traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.blue,width:1,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.blue},connectgaps:true});traces.push({x:hx,y:hist.map(e=>e.venta),name:'BCB Ref Venta',line:{color:c.blue,width:1.5,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.blue},connectgaps:true})}}Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:'.2f'},margin:{l:48,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},height:chartHeight('chartVwap')+40},PC)}
-function rSpread(c,ts,x){const L=BL(c);Plotly.react('chartSpread',[{x:x,y:ts.map(d=>d.sp5),name:'5%',line:{color:hexToRgba(c.blue,.3),width:1,dash:'dot'}},{x:x,y:ts.map(d=>d.sp10),name:'10%',line:{color:c.blue,width:2},mode:'lines'},{x:x,y:ts.map(d=>d.sp25),name:'25%',line:{color:hexToRgba(c.blue,.5),width:1.2}},{x:x,y:ts.map(d=>d.sp50),name:'50%',line:{color:hexToRgba(c.blue,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.3f'},height:chartHeight('chartSpread')},PC)}
-function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d=>d.buy_depth),name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.green,width:1.5}},{x:x,y:ts.map(d=>d.sell_depth),name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.orange,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:',.0f'},height:chartHeight('chartDepth')},PC)}
-function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'SELL/BUY',fill:'tozeroy',fillcolor:hexToRgba(c.blue,.08),line:{color:c.blue,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:'.1f'},height:chartHeight('chartRatio')},PC)}
-function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.green,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.orange,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.0f',rangemode:'tozero'},height:chartHeight('chartConc')},PC)}
+function rVwap(c,ts,x){const L=BL(c);const traces=[{x:x,y:ts.map(d=>d.vb50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb25),fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb5),fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.green,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vb10),name:'Compra VWAP 10%',line:{color:c.green,width:2},mode:'lines'},{x:x,y:ts.map(d=>d.vs50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs25),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs5),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.orange,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},{x:x,y:ts.map(d=>d.vs10),name:'Venta VWAP 10%',line:{color:c.orange,width:2},mode:'lines'},{x:x,y:ts.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.textMuted,width:1,dash:'dash'},visible:'legendonly'}];if(meta.bcb_ref_history&&meta.bcb_ref_history.length){const hist=meta.bcb_ref_history;if(hist.length===1){const e=hist[0];traces.push({x:x,y:ts.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.blue,width:1,dash:'dot'}});traces.push({x:x,y:ts.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.blue,width:1.5,dash:'dot'}})}else{const hx=hist.map(e=>new Date(e.fecha+'T00:00:00'));traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.blue,width:1,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.blue},connectgaps:false});traces.push({x:hx,y:hist.map(e=>e.venta),name:'BCB Ref Venta',line:{color:c.blue,width:1.5,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.blue},connectgaps:false})}}Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:'.2f'},margin:{l:48,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC)}
+function rSpread(c,ts,x){const L=BL(c);Plotly.react('chartSpread',[{x:x,y:ts.map(d=>d.sp5),name:'5%',line:{color:hexToRgba(c.blue,.3),width:1,dash:'dot'}},{x:x,y:ts.map(d=>d.sp10),name:'10%',line:{color:c.blue,width:2},mode:'lines'},{x:x,y:ts.map(d=>d.sp25),name:'25%',line:{color:hexToRgba(c.blue,.5),width:1.2}},{x:x,y:ts.map(d=>d.sp50),name:'50%',line:{color:hexToRgba(c.blue,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.3f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
+function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d=>d.buy_depth),name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.green,width:1.5}},{x:x,y:ts.map(d=>d.sell_depth),name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.orange,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
+function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'SELL/BUY',fill:'tozeroy',fillcolor:hexToRgba(c.blue,.08),line:{color:c.blue,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,tickformat:'.1f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
+function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.green,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.orange,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.0f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
 function rDecile(c){const L=BL(c),dB=DATA.deciles[meta.last_ts].BUY,dS=DATA.deciles[meta.last_ts].SELL,dl=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];Plotly.react('chartDecile',[{x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.green,.55),line:{color:c.green,width:.5}}},{x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.orange,.55),line:{color:c.orange,width:.5}}}],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},yaxis:{...L.yaxis,tickformat:'.2f',range:[Math.min(...dS)*.998,Math.max(...dB)*1.002]},height:chartHeight('chartDecile')},PC)}
 function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.blue,.2);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th>Anuncios</th><th>Profundidad (USDT)</th><th>Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td>'+b.count+'</td><td class="bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+b.depth.toLocaleString()+'</td><td>'+b.depth_pct+'%</td></tr>').join('')+'</tbody></table>'}
 
@@ -676,7 +704,7 @@ function rFlow(c){
     {x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. SELL',type:'bar',marker:{color:hexToRgba(c.orange,.2)}},
     {x:x,y:flow.map(f=>f.n_buy),name:'Total BUY',yaxis:'y2',line:{color:c.green,width:2},mode:'lines'},
     {x:x,y:flow.map(f=>f.n_sell),name:'Total SELL',yaxis:'y2',line:{color:c.orange,width:2},mode:'lines'},
-  ],{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},showlegend:true,height:chartHeight('chartFlow')},PC);
+  ],{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
 function rHeatmap(c){
