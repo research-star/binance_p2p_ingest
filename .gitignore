@@ -64,3 +64,4 @@ p2p_dashboard.html
 # - index.html            → dashboard servido por GitHub Pages
 # - bcb_referencial.json  → histórico del referencial, necesario para el dashboard
 # - *.py, *.bat, *.md     → código y docs
+.tmp_*
