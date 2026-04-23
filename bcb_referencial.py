@@ -6,19 +6,17 @@ El BCB publica desde dic-2025 un valor referencial diario basado en operaciones
 reales de bancos.
 
 Endpoints:
-    /valor_referencial_compra_svg.php       — valor del día (SVG con breakdown por banco)
-    /valor_referencial_venta_svg.php        — valor del día
-    /valor_referencial_compra_svg_v2.php    — TABLA HISTÓRICA completa (desde 1-dic-2025)
-                                              Fila "BANCOS (PROMEDIO PONDERADO)" = valor referencial diario.
-    (no existe equivalente v2 de venta — verificado: el BCB no publica
-     histórico agregado de venta en ningún endpoint. Los xlsx diarios en
-     /webdocs/02_comvenmonext/TC_*.xlsx tienen venta preferencial por banco
-     pero la agregación ponderada no está precalculada. El BCB define venta
-     como "compra + comisiones".)
+    /valor_referencial_compra_svg_v2.php  — TABLA HTML con histórico de compra
+                                            desde 1-dic-2025. Fila "BANCOS (PROMEDIO
+                                            PONDERADO)" = valor referencial diario.
+    /valor_referencial_venta_svg.php      — SVG con histórico de venta (106+ filas
+                                            cronológicas con cell-text/cell-value).
+                                            La fila --highlight es la del día.
 
 Cada corrida:
-  1. Baja el histórico completo de compra (del v2) y lo mergea al JSON.
-  2. Baja valor de hoy (compra+venta) y agrega/actualiza la entrada de hoy.
+  1. Baja histórico de compra (tabla v2) → serie completa de compra.
+  2. Baja histórico de venta (SVG) → serie completa de venta.
+  3. Merge por fecha: cada entrada {fecha, compra, venta, source} en el JSON.
 
 Uso:
     python3 bcb_referencial.py                        # fetch + backfill automático
@@ -36,7 +34,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
-URL_COMPRA = "https://www.bcb.gob.bo/valor_referencial_compra_svg.php"
 URL_VENTA = "https://www.bcb.gob.bo/valor_referencial_venta_svg.php"
 URL_COMPRA_V2 = "https://www.bcb.gob.bo/valor_referencial_compra_svg_v2.php"
 OUTPUT = Path("bcb_referencial.json")
@@ -59,17 +56,34 @@ def fetch(url: str) -> str:
         return r.read().decode("utf-8")
 
 
-def parse_today_svg(svg: str) -> dict:
-    """Extrae (valor, fecha) del SVG diario. Valor en formato 'Bs 9,39/$us'."""
-    m_val = re.search(r"Bs\s+(\d+),(\d+)/\$us", svg)
-    m_date = re.search(r"FECHA DE PUBLICACI[ÓO]N:\s*(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})", svg, re.IGNORECASE)
-    out = {}
-    if m_val:
-        out["value"] = float(f"{m_val.group(1)}.{m_val.group(2)}")
-    if m_date:
-        month = SPANISH_MONTHS.get(m_date.group(2).lower())
-        if month:
-            out["date"] = f"{int(m_date.group(3)):04d}-{month:02d}-{int(m_date.group(1)):02d}"
+def parse_venta_svg_history(svg: str) -> list[dict]:
+    """Parsea las 106+ filas históricas del SVG de venta. Formato:
+        <text class="cell-text">1 de diciembre de 2025</text>
+        <text class="cell-value">9,32</text>
+    Variantes --highlight para la fila del día actual.
+    """
+    pattern = re.compile(
+        r'class="cell-text(?:--highlight)?"[^>]*>([^<]+)</[^>]+>\s*'
+        r'(?:<[^>]+>\s*)*'  # puede haber otros tags entre medio
+        r'<[^>]*class="cell-value(?:--highlight)?"[^>]*>([^<]+)<',
+        re.IGNORECASE
+    )
+    out = []
+    for m in pattern.finditer(svg):
+        date_str = m.group(1).strip()
+        val_str = m.group(2).strip()
+        md = re.match(r"(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})", date_str, re.IGNORECASE)
+        if not md:
+            continue
+        month = SPANISH_MONTHS.get(md.group(2).lower())
+        if not month:
+            continue
+        fecha = f"{int(md.group(3)):04d}-{month:02d}-{int(md.group(1)):02d}"
+        try:
+            val = float(val_str.replace(".", "").replace(",", "."))
+        except ValueError:
+            continue
+        out.append({"fecha": fecha, "venta": val})
     return out
 
 
@@ -221,25 +235,27 @@ def main():
         except Exception as e:
             print(f"WARNING: no pude bajar histórico v2: {e}", file=sys.stderr)
 
-    # 2) Valor del día (compra + venta)
+    # 2) Histórico completo de venta (SVG con 106+ entradas cronológicas)
     try:
-        svg_c = fetch(URL_COMPRA)
         svg_v = fetch(URL_VENTA)
-        c = parse_today_svg(svg_c)
-        v = parse_today_svg(svg_v)
-        if "value" in c and "value" in v:
-            today = c.get("date") or v.get("date")
-            if today:
-                entries.append({
-                    "fecha": today,
-                    "compra": c["value"],
-                    "venta": v["value"],
-                    "fetched_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-                    "source": "bcb_daily_svg",
-                })
-                print(f"Valor de hoy ({today}): Compra {c['value']} · Venta {v['value']}")
+        venta_hist = parse_venta_svg_history(svg_v)
+        for e in venta_hist:
+            e["source"] = "bcb_venta_svg"
+        entries.extend(venta_hist)
+        if venta_hist:
+            print(f"Histórico venta: {len(venta_hist)} días parseados "
+                  f"({venta_hist[0]['fecha']} → {venta_hist[-1]['fecha']})")
     except Exception as e:
-        print(f"WARNING: no pude bajar valor del día: {e}", file=sys.stderr)
+        print(f"WARNING: no pude bajar histórico de venta: {e}", file=sys.stderr)
+
+    # 3) Timestamp de fetch para la entrada del día de hoy (metadata)
+    today_iso = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    if entries:
+        # Encuentra la fecha más reciente y etiqueta fetched_at_utc
+        latest_fecha = max(e["fecha"] for e in entries)
+        for e in entries:
+            if e["fecha"] == latest_fecha:
+                e["fetched_at_utc"] = today_iso
 
     if not entries:
         print("ERROR: sin entradas nuevas para guardar.", file=sys.stderr)
