@@ -60,21 +60,23 @@ guarda todo, aunque no se use hoy, porque cualquier análisis futuro lo necesita
 
 ## Estado muy breve
 
-- **Fase 1 (Ingesta):** ✅ Completa. ~640 snapshots acumulados (10–15 abr
-  2026), corriendo en local con `ingest.py --loop`. `watchdog.py` detecta si
-  el loop se cae y lo relanza (cada 5 min vía Task Scheduler).
+- **Fase 1 (Ingesta):** ✅ Completa, loop estable ≥3 días sin caídas.
+  ~1,500 snapshots acumulados (9 abr → 27 abr 2026), 138/día. `watchdog.py`
+  configurado en Task Scheduler ("P2P Watchdog", cada 5 min con `pythonw.exe`).
 - **Fase 2 (Normalización):** ✅ Completa. `normalize.py` lee de local +
   directorio de backup opcional (`$P2P_BACKUP_DIR`), deduplica, produce SQLite
-  con `quality_tier` A/B/C.
-  0 restricciones estructuradas y 0 KYC keywords en todo el libro boliviano.
+  con `quality_tier` A/B/C. 0 restricciones estructuradas y 0 KYC keywords
+  en todo el libro boliviano.
 - **Fase 3 (Dashboard):** 🟢 Sustancialmente construida. `dashboard.py`
-  genera HTML autocontenido (~583 KB) con 11 paneles (VWAP, spread,
-  profundidad, deciles, ratio, concentración, bancos, top merchants,
-  volatilidad, flujo, heatmap). Features: 3 vistas temporales, sistema de
-  temas con presets + custom guardables, paneles drag & drop, BCB referencial
-  scrapeado (`bcb_referencial.py`) como KPI + serie temporal. Ver `HANDOFF.md`.
-- **Hosting:** pendiente (Oracle Free vs Hetzner €4/mes). Corre en local por
-  ahora. GitHub Pages para servir el dashboard también pendiente.
+  genera HTML autocontenido (~770 KB) con 11 paneles. **Publicado en GitHub
+  Pages:** `https://research-star.github.io/binance_p2p_ingest/`. Features:
+  3 vistas temporales, temas custom guardables, paneles drag & drop, ejes X
+  con `nticks:8` + tickformat nativo, gaps visibles como franjas grises,
+  rangeslider en gráficos temporales, BCB referencial con histórico real
+  scrapeado del SVG (compra+venta, 106 días desde 1-dic-2025). Auditoría
+  visual pendiente (ver HANDOFF.md).
+- **Hosting de la ingesta:** pendiente (Oracle Free vs Hetzner €4/mes). Corre
+  en local con watchdog estable. GitHub Pages ya operativo para el dashboard.
 
 **Corrección importante:** El `tradeType` de Binance P2P es desde la
 perspectiva del **taker**, no del maker. BUY = taker compra USDT (maker vende),
