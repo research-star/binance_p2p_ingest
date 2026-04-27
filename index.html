@@ -298,8 +298,9 @@ function gapShapes(c){
     fillcolor:c.textMuted,opacity:0.08,line:{width:0},layer:'below',
   }));
 }
+function hoverFmtForView(){return currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'}
 function xaxisForView(base){
-  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b'};
+  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView()};
   delete cfg.dtick;
   return cfg;
 }
