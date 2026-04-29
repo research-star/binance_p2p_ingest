@@ -1,6 +1,6 @@
 # HANDOFF.md — Estado detallado del proyecto
 
-Última actualización: 2026-04-27
+Última actualización: 2026-04-29
 
 ---
 
@@ -10,8 +10,10 @@
 
 - `ingest.py` captura snapshots completos (BUY + SELL) del libro P2P USDT/BOB.
 - Guarda JSON crudo gzipeado en `snapshots/YYYY-MM-DD/`.
-- **~1,500 snapshots acumulados** (9 abr → 27 abr 2026), cadencia ~10 min.
+- **~1,560 snapshots acumulados** (9 abr → 29 abr 2026), cadencia ~10 min.
   Días recientes: 138/día (cobertura ~96% del esperado, gap mínimo por jitter).
+  Hueco de DNS local 28-abr 05:26→06:07 UTC (~5 snapshots fallidos como
+  WARNING en `logs/ingest.log`; loop sobrevivió sin relanzar).
 - Modos: una captura, `--loop` (cada 10 min), `--dry-run`.
 - **Watchdog activo:** `watchdog.py` corre cada 5 min vía Windows Task Scheduler
   ("P2P Watchdog", configurada con `pythonw.exe` para que no muestre consola).
@@ -96,6 +98,9 @@ métricas por snapshot.
   toggle ancho completo/medio, layout persiste en `localStorage`.
 - **Eje X profesional:** `nticks: 8`, `tickformat: '%d %b'`, `tickangle: -30`
   en todos los gráficos temporales (Plotly elige posiciones automáticamente).
+- **Hover dinámico por vista:** `hoverformat` cambia según vista activa —
+  `%d %b · %H:%M` en "Cada snapshot", `%d %b · %Hh` en "Por hora",
+  `%d %b` en "Por día" (commit `462ac21`, 2026-04-28).
 - **Huecos visibles:** Python detecta gaps >20 min entre snapshots; JS los
   renderiza como franjas grises semitransparentes en todos los gráficos
   temporales (`shapes: rect, opacity:0.08`). Aclarado en descripción del VWAP.
@@ -127,6 +132,7 @@ métricas por snapshot.
 | `bcb_referencial.py` | Scraper compra (tabla v2) + venta (SVG hist) del BCB |
 | `watchdog.py` | Relanzar loop de ingesta si se cae |
 | `update.bat` | Pipeline: bcb → normalize → dashboard (con `PYTHONIOENCODING=utf-8`) |
+| `.claude/skills/actualizar-dashboard/SKILL.md` | Skill local que ejecuta el pipeline end-to-end con verificación por paso. Soporta `--publish` (push a Pages) y sync opcional si `P2P_BACKUP_DIR` definida. Reemplaza correr `update.bat` a mano. Creada 2026-04-29. |
 | `sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
 | `watchdog.bat` | Wrapper para Task Scheduler (no usado actualmente: la tarea corre `pythonw.exe watchdog.py` directo) |
 | `p2p_normalized.db` | SQLite generado (reconstruible, no trackeado) |
@@ -139,36 +145,55 @@ métricas por snapshot.
 
 1. **`ingest.py --loop`** corre 24/7 en background.
 2. **Watchdog** (Task Scheduler "P2P Watchdog", cada 5 min) lo relanza si cae.
-3. Para refrescar el dashboard publicado: `update.bat` + `git add . && git commit -m "..." && git push`.
+3. Para refrescar el dashboard publicado, opciones:
+   - **Recomendado:** decirle a Claude "actualizá el dashboard" (sin push) o
+     "actualizá el dashboard --publish" (con push). La skill
+     `actualizar-dashboard` corre el pipeline con verificación por paso.
+   - **Manual:** `update.bat` + `git add . && git commit -m "..." && git push`.
    - El push gatilla rebuild de GitHub Pages (~30-60s).
    - Pages a veces deja deployments atascados — se desbloquean marcándolos
      `inactive` vía API y empujando un commit nuevo.
 
+### Gotchas operativos
+
+- **Encoding `cp1252` en Windows:** `normalize.py` y `bcb_referencial.py`
+  imprimen Unicode (`✓`, `→`, etc.) y crashean con `UnicodeEncodeError` si
+  no se setea `PYTHONIOENCODING=utf-8` antes. `update.bat` y la skill ya lo
+  hacen; correr scripts a mano sin esa env var falla.
+- **BCB no agendado:** `bcb_referencial.py` solo corre cuando se invoca el
+  pipeline (manual o vía skill). No hay Task Scheduler para esto. Si se
+  ejecuta el dashboard sin refrescar BCB, las líneas referenciales quedan
+  desactualizadas. Pendiente: agendar 1×/día.
+
 ---
 
-## Auditoría pendiente (2026-04-27)
+## Auditoría visual (2026-04-29) — ✅ Corregida
 
-Hallazgos detectados, sin corregir todavía. Prioridades sugeridas:
+Hallazgos detectados el 27-abr y resueltos en bloque el 29-abr:
 
-**Alta** (rompen coherencia visual):
-- Mezcla **BUY/SELL en inglés** dentro de un dashboard español: legendas de
-  Volatilidad, Merchants activos, Ratio, Spread (descripción), sub-headers de
-  Merchants principales. Debería ser Compra/Venta consistente.
-- KPIs ambiguos: "Asimetría 1.6× → más oferta que demanda" (interpretativo,
-  no informativo); "TC Referencial BCB X.XX" no aclara que es venta;
-  "prima paralela +X%" sin contexto de qué vs qué.
+**Alta** (todo en español + KPIs claros):
+- ✅ BUY/SELL → Compra/Venta en Volatilidad, Merchants activos (Flow), Ratio,
+  Spread, sub-headers de Merchants principales y heatmap labels.
+- ✅ KPI Asimetría: subtítulo "Venta / Compra (profundidad)" + decimales `.toFixed(2)`.
+- ✅ KPI TC Referencial BCB: label aclarado a "TC Referencial BCB (venta)";
+  subtítulo agrega unidad "BOB/USDT".
+- ✅ KPI TC Oficial BCB: subtítulo "Prima P2P vs oficial: +X%" + `bcb_rate.toFixed(2)`.
 
-**Media** (usabilidad directa):
-- Headers de tabla **Merchants principales** crípticos: `USDT`, `%`, `VWAP`,
-  `Trades/mes` — sin unidad ni contexto. Debería ser `Profundidad (USDT)`,
-  `% del lado`, `VWAP (BOB)`, `Órdenes/mes`.
-- Falta unidad en ejes Y de VWAP, Profundidad, Ratio.
-- Tooltips Plotly no muestran unidades (depende de `hovertemplate` explícito).
+**Media** (unidades + headers):
+- ✅ Tabla Merchants: `USDT`/`%`/`VWAP` → `Profundidad (USDT)` / `% del lado` /
+  `VWAP (BOB)`.
+- ✅ Ejes Y con título: VWAP `BOB/USDT`, Spread `BOB`, Profundidad `USDT`,
+  Ratio `×` (con `ticksuffix:'×'`).
+- ✅ Tooltips: `hovermode:'x unified'` ya muestra el yaxis title arriba — al
+  agregar títulos quedaron contextualizados sin tocar `hovertemplate`.
 
 **Baja** (pulido):
-- Capitalización inconsistente ("Por día" vs "por día").
-- Decimales mixtos (4 en gráficos, 2 en KPIs).
-- Descripción de Curva de deciles perdió la frase "tijera = anuncios trampa".
+- ✅ Decimales uniformes: precios `.4f` (VWAP, Spread, Decile, Volatilidad);
+  porcentajes `.2f` (Concentración); ratios `.2f` (KPI Asimetría, gráfico Ratio);
+  profundidad `,.0f` (no tiene sentido decimal en USDT enteros grandes).
+- ✅ Descripción de Curva de deciles: agregada frase "La «tijera» revela
+  anuncios trampa" en el subtítulo del panel.
+- Capitalización: "Por día" / "por día" no aparece minúsculo en código actual.
 
 ---
 
@@ -181,7 +206,7 @@ Hallazgos detectados, sin corregir todavía. Prioridades sugeridas:
       `git filter-repo` (sin datos personales).
 - [x] **Watchdog operativo** — Task Scheduler corriendo cada 5 min.
 - [x] **Histórico BCB compra+venta scrapeado** — 106 días reales del BCB.
-- [ ] **Auditoría visual** — corregir hallazgos (ver sección anterior).
+- [x] **Auditoría visual** — corregida en bloque el 2026-04-29 (Alta+Media+Baja).
 - [ ] **VWAP alternativo con `maxSingleTransAmount`** — postpuesto a final.
 - [ ] **Análisis de reacción a eventos macro** (feriados, anuncios BCB,
       quincenas de pago, etc.).
