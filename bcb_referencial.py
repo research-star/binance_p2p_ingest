@@ -216,7 +216,7 @@ def main():
             print(f"ERROR: --fecha debe ser YYYY-MM-DD, recibí: {args.fecha}", file=sys.stderr)
             sys.exit(2)
         entry = {"fecha": args.fecha, "compra": args.compra, "venta": args.venta, "source": args.source}
-        print(f"Manual — {entry['fecha']}: Compra Bs {entry['compra']} · Venta Bs {entry['venta']}")
+        print(f"Manual -- {entry['fecha']}: Compra Bs {entry['compra']} | Venta Bs {entry['venta']}")
         save_entries([entry], dry_run=args.dry_run)
         return
 
@@ -231,7 +231,7 @@ def main():
                 e["source"] = "bcb_v2_table"
             entries.extend(hist)
             print(f"Histórico compra (v2): {len(hist)} días parseados "
-                  f"({hist[0]['fecha']} → {hist[-1]['fecha']})" if hist else "Histórico: vacío")
+                  f"({hist[0]['fecha']} -> {hist[-1]['fecha']})" if hist else "Historico: vacio")
         except Exception as e:
             print(f"WARNING: no pude bajar histórico v2: {e}", file=sys.stderr)
 
@@ -244,7 +244,7 @@ def main():
         entries.extend(venta_hist)
         if venta_hist:
             print(f"Histórico venta: {len(venta_hist)} días parseados "
-                  f"({venta_hist[0]['fecha']} → {venta_hist[-1]['fecha']})")
+                  f"({venta_hist[0]['fecha']} -> {venta_hist[-1]['fecha']})")
     except Exception as e:
         print(f"WARNING: no pude bajar histórico de venta: {e}", file=sys.stderr)
 

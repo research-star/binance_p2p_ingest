@@ -156,6 +156,26 @@ https://<tu-usuario>.github.io/binance_p2p_ingest/
   hacer el repo público solo para el dashboard (la data está en la DB local,
   no se sube).
 
+## BCB referencial diario (Task Scheduler)
+
+`bcb_referencial.py` se agenda en Windows Task Scheduler para correr **una
+vez por día, lunes a viernes a las 12:00 hora Bolivia (UTC−4)**. El BCB
+publica el referencial cada mañana, así que al mediodía ya está disponible.
+
+**Tarea registrada:** `BCB Referencial Diario`. Comando equivalente en
+PowerShell (admin) para reproducir en otra máquina:
+
+```powershell
+$action = New-ScheduledTaskAction -Execute "pythonw.exe" -Argument "bcb_referencial.py" -WorkingDirectory "C:\Dev\binance_p2p_ingest"
+$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday -At 12:00pm
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+Register-ScheduledTask -TaskName "BCB Referencial Diario" -Action $action -Trigger $trigger -Settings $settings -Force
+```
+
+El script ya no requiere `PYTHONIOENCODING=utf-8` (los caracteres no-ASCII
+en `print()` fueron reemplazados por equivalentes ASCII, así corre limpio
+en cualquier shell de Windows).
+
 ## Watchdog (auto-relanzador del loop)
 
 `watchdog.py` chequea si el último snapshot tiene >15 min y relanza `ingest.py --loop`

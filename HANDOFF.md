@@ -156,14 +156,16 @@ métricas por snapshot.
 
 ### Gotchas operativos
 
-- **Encoding `cp1252` en Windows:** `normalize.py` y `bcb_referencial.py`
-  imprimen Unicode (`✓`, `→`, etc.) y crashean con `UnicodeEncodeError` si
-  no se setea `PYTHONIOENCODING=utf-8` antes. `update.bat` y la skill ya lo
-  hacen; correr scripts a mano sin esa env var falla.
-- **BCB no agendado:** `bcb_referencial.py` solo corre cuando se invoca el
-  pipeline (manual o vía skill). No hay Task Scheduler para esto. Si se
-  ejecuta el dashboard sin refrescar BCB, las líneas referenciales quedan
-  desactualizadas. Pendiente: agendar 1×/día.
+- **Encoding `cp1252` en Windows:** ✅ resuelto el 2026-04-29. Los `print()`
+  de `normalize.py` y `bcb_referencial.py` ya no usan caracteres fuera de
+  ASCII (`✓` → `[OK]`, `→` → `->`, `⚠` → `[WARN]`, `── ──` → `--- ---`,
+  `—` → `--`, `·` → `|`). Los scripts corren limpio en cualquier shell de
+  Windows sin `PYTHONIOENCODING=utf-8`. `update.bat` y la skill mantienen
+  la env var por defensa pero ya no es necesaria.
+- **BCB agendado diario:** ✅ resuelto el 2026-04-29. Task Scheduler
+  `BCB Referencial Diario` corre `pythonw.exe bcb_referencial.py` lunes a
+  viernes a las 12:00 hora Bolivia (UTC−4). El BCB publica el referencial
+  por la mañana, así que al mediodía ya está disponible.
 
 ---
 
@@ -212,4 +214,8 @@ Hallazgos detectados el 27-abr y resueltos en bloque el 29-abr:
       quincenas de pago, etc.).
 - [ ] **Automatizar `update.bat` + push** vía Task Scheduler (cada N horas)
       para que Pages se refresque sin intervención manual.
+- [x] **Agendar `bcb_referencial.py` diario** — Task Scheduler "BCB Referencial
+      Diario", lun-vie 12:00 BOL (2026-04-29).
+- [x] **Encoding ASCII en `print()` de normalize/bcb** — eliminado el
+      requerimiento de `PYTHONIOENCODING=utf-8` (2026-04-29).
 - [ ] Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`.

@@ -137,7 +137,7 @@ def flatten_snapshot(snapshot: dict) -> list[dict]:
     schema_v = snapshot.get("schema_version", "?")
 
     if schema_v not in SCHEMA_VERSION_SUPPORTED:
-        print(f"  ⚠ Schema {schema_v} no soportado, saltando.", file=sys.stderr)
+        print(f"  [WARN] Schema {schema_v} no soportado, saltando.", file=sys.stderr)
         return []
 
     sides = snapshot.get("sides", {})
@@ -290,7 +290,7 @@ def init_db(db_path: Path) -> sqlite3.Connection:
 # ── Sanity checks ──────────────────────────────────────────────────────────
 
 def run_sanity_checks(conn: sqlite3.Connection):
-    print("\n── Sanity checks ──")
+    print("\n--- Sanity checks ---")
 
     total = conn.execute("SELECT COUNT(*) FROM ads").fetchone()[0]
     print(f"  Total filas: {total}")
@@ -333,9 +333,9 @@ def run_sanity_checks(conn: sqlite3.Connection):
     null_price = conn.execute("SELECT COUNT(*) FROM ads WHERE price IS NULL").fetchone()[0]
     null_surplus = conn.execute("SELECT COUNT(*) FROM ads WHERE surplus_usdt IS NULL").fetchone()[0]
     if null_price or null_surplus:
-        print(f"  ⚠ Nulls inesperados: price={null_price}, surplus={null_surplus}")
+        print(f"  [WARN] Nulls inesperados: price={null_price}, surplus={null_surplus}")
     else:
-        print("  Sin nulls en price/surplus ✓")
+        print("  Sin nulls en price/surplus [OK]")
 
 
 # ── CSV export ──────────────────────────────────────────────────────────────
@@ -406,7 +406,7 @@ def main():
         except Exception as e:
             print(f"ERROR: {e}", file=sys.stderr)
 
-    print(f"\n✓ {total_rows} filas escritas en {args.output}")
+    print(f"\n[OK] {total_rows} filas escritas en {args.output}")
     run_sanity_checks(conn)
 
     if args.export_csv:
