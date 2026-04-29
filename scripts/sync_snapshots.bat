@@ -7,7 +7,7 @@ REM Ejemplo:
 REM   set P2P_BACKUP_DIR=D:\backups\p2p_snapshots
 REM   sync_snapshots.bat
 
-cd /d %~dp0
+cd /d %~dp0..
 set SRC=%cd%\snapshots
 
 if not defined P2P_BACKUP_DIR (

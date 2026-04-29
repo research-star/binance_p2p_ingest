@@ -31,6 +31,8 @@ from pathlib import Path
 
 import requests
 
+from config import SNAPSHOTS_DIR, LOGS_DIR, INGEST_INTERVAL_S
+
 # ---------- Config ----------
 ENDPOINT = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search"
 ASSET = "USDT"
@@ -44,8 +46,8 @@ PAGE_DELAY_S = 0.4      # pausa entre paginas del mismo lado
 SIDE_DELAY_S = 1.0      # pausa entre BUY y SELL
 SCHEMA_VERSION = "v1"
 
-OUTPUT_ROOT = Path("snapshots")
-LOG_FILE = Path("logs") / "ingest.log"
+OUTPUT_ROOT = SNAPSHOTS_DIR
+LOG_FILE = LOGS_DIR / "ingest.log"
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -246,8 +248,8 @@ def main():
     parser.add_argument(
         "--interval",
         type=int,
-        default=600,
-        help="Segundos entre snapshots en modo loop (default 600 = 10 min)",
+        default=INGEST_INTERVAL_S,
+        help=f"Segundos entre snapshots en modo loop (default {INGEST_INTERVAL_S} = 10 min)",
     )
     parser.add_argument("--dry-run", action="store_true", help="No escribir a disco")
     args = parser.parse_args()

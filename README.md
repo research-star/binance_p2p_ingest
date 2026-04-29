@@ -122,7 +122,7 @@ El dashboard HTML autocontenido se genera con `dashboard.py` y se llama
 ### Actualizar y publicar
 
 ```bash
-update.bat                                   # bcb + normalize + dashboard
+scripts\update.bat                                   # bcb + normalize + dashboard
 git add index.html bcb_referencial.json      # o: git add .
 git commit -m "update dashboard"
 git push
@@ -167,6 +167,7 @@ PowerShell (admin) para reproducir en otra máquina:
 
 ```powershell
 $action = New-ScheduledTaskAction -Execute "pythonw.exe" -Argument "bcb_referencial.py" -WorkingDirectory "C:\Dev\binance_p2p_ingest"
+# Nota: bcb_referencial.py vive en la raíz del proyecto (no en scripts/), por eso el Argument no lleva path.
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday -At 12:00pm
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 10) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
 Register-ScheduledTask -TaskName "BCB Referencial Diario" -Action $action -Trigger $trigger -Settings $settings -Force
@@ -188,7 +189,7 @@ ya hay uno corriendo.
 2. Crear tarea básica → nombre: `P2P Watchdog`.
 3. Desencadenador: "Diariamente", hora de inicio: ahora. En propiedades
    avanzadas, marcá "Repetir cada: 5 minutos" con duración "Indefinida".
-4. Acción: "Iniciar un programa" → `<ruta-del-repo>\watchdog.bat`.
+4. Acción: "Iniciar un programa" → `<ruta-del-repo>\scripts\watchdog.bat`.
 5. En la pestaña "Condiciones", desmarcá "Iniciar solo si el equipo usa CA"
    (así corre también con batería).
 6. En "Configuración", marcá "Ejecutar tarea lo antes posible tras un inicio
@@ -197,7 +198,7 @@ ya hay uno corriendo.
 Una sola línea de PowerShell (admin) equivalente:
 
 ```powershell
-schtasks /Create /SC MINUTE /MO 5 /TN "P2P Watchdog" /TR "%CD%\watchdog.bat" /RL LIMITED /F
+schtasks /Create /SC MINUTE /MO 5 /TN "P2P Watchdog" /TR "%CD%\scripts\watchdog.bat" /RL LIMITED /F
 ```
 
 Log en `logs/watchdog.log`. Silencio = todo bien (solo escribe cuando relanza

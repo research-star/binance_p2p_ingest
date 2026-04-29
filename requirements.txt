@@ -1,1 +1,4 @@
+# Única dependencia externa. El resto del pipeline usa solo stdlib:
+#   normalize.py, bcb_referencial.py, dashboard.py, scripts/watchdog.py,
+#   config.py → todos stdlib (sqlite3, json, gzip, urllib, re, pathlib, etc.)
 requests>=2.31.0

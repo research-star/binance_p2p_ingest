@@ -130,11 +130,13 @@ métricas por snapshot.
 | `normalize.py` | Aplanar snapshots a SQLite |
 | `dashboard.py` | Generar HTML autocontenido |
 | `bcb_referencial.py` | Scraper compra (tabla v2) + venta (SVG hist) del BCB |
-| `watchdog.py` | Relanzar loop de ingesta si se cae |
-| `update.bat` | Pipeline: bcb → normalize → dashboard (con `PYTHONIOENCODING=utf-8`) |
-| `.claude/skills/actualizar-dashboard/SKILL.md` | Skill local que ejecuta el pipeline end-to-end con verificación por paso. Soporta `--publish` (push a Pages) y sync opcional si `P2P_BACKUP_DIR` definida. Reemplaza correr `update.bat` a mano. Creada 2026-04-29. |
-| `sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
-| `watchdog.bat` | Wrapper para Task Scheduler (no usado actualmente: la tarea corre `pythonw.exe watchdog.py` directo) |
+| `config.py` | Constantes compartidas (BCB_RATE, rutas default, intervalos). Importado por todos los scripts productivos. |
+| `template.html` | Plantilla HTML del dashboard (CSS/JS). `dashboard.py` la lee y reemplaza el `__DATA_PLACEHOLDER__`. |
+| `scripts/watchdog.py` | Relanzar loop de ingesta si se cae |
+| `scripts/update.bat` | Pipeline: bcb → normalize → dashboard (con `PYTHONIOENCODING=utf-8`) |
+| `.claude/skills/actualizar-dashboard/SKILL.md` | Skill local que ejecuta el pipeline end-to-end con verificación por paso. Soporta `--publish` (push a Pages) y sync opcional si `P2P_BACKUP_DIR` definida. Reemplaza correr `scripts/update.bat` a mano. Creada 2026-04-29. |
+| `scripts/sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
+| `scripts/watchdog.bat` | Wrapper para Task Scheduler (no usado actualmente: la tarea corre `pythonw.exe scripts\watchdog.py` directo) |
 | `p2p_normalized.db` | SQLite generado (reconstruible, no trackeado) |
 | `bcb_referencial.json` | Histórico acumulado del BCB (sí trackeado, ~106 entradas) |
 | `index.html` | Dashboard final (regenerado por update.bat, servido por GitHub Pages) |
@@ -149,7 +151,7 @@ métricas por snapshot.
    - **Recomendado:** decirle a Claude "actualizá el dashboard" (sin push) o
      "actualizá el dashboard --publish" (con push). La skill
      `actualizar-dashboard` corre el pipeline con verificación por paso.
-   - **Manual:** `update.bat` + `git add . && git commit -m "..." && git push`.
+   - **Manual:** `scripts\update.bat` + `git add . && git commit -m "..." && git push`.
    - El push gatilla rebuild de GitHub Pages (~30-60s).
    - Pages a veces deja deployments atascados — se desbloquean marcándolos
      `inactive` vía API y empujando un commit nuevo.
@@ -162,6 +164,19 @@ métricas por snapshot.
   `—` → `--`, `·` → `|`). Los scripts corren limpio en cualquier shell de
   Windows sin `PYTHONIOENCODING=utf-8`. `update.bat` y la skill mantienen
   la env var por defensa pero ya no es necesaria.
+
+### Refactor de organización (2026-04-29)
+
+- `config.py` centraliza constantes (BCB_RATE, rutas default, intervalo de
+  ingesta, umbral del watchdog). Todos los scripts productivos importan de ahí.
+- `template.html` extraído de `dashboard.py` (antes inline como `HTML_TEMPLATE`).
+  `dashboard.py` lo lee con `TEMPLATE_HTML.read_text()` y hace el replace del
+  placeholder. Editar el dashboard visual = editar `template.html`.
+- `scripts/` agrupa los wrappers operativos (watchdog.py + .bat, update.bat,
+  sync_snapshots.bat). Todos los `.bat` hacen `cd /d %~dp0..` para volver a la
+  raíz del proyecto antes de ejecutar.
+- Task Scheduler "P2P Watchdog" actualizado a `pythonw.exe scripts\watchdog.py`
+  (WD sigue siendo la raíz del proyecto).
 - **BCB agendado diario:** ✅ resuelto el 2026-04-29. Task Scheduler
   `BCB Referencial Diario` corre `pythonw.exe bcb_referencial.py` lunes a
   viernes a las 12:00 hora Bolivia (UTC−4). El BCB publica el referencial

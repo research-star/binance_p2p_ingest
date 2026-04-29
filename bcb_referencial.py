@@ -34,9 +34,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from config import BCB_REF_JSON
+
 URL_VENTA = "https://www.bcb.gob.bo/valor_referencial_venta_svg.php"
 URL_COMPRA_V2 = "https://www.bcb.gob.bo/valor_referencial_compra_svg_v2.php"
-OUTPUT = Path("bcb_referencial.json")
+OUTPUT = BCB_REF_JSON
 HEADERS = {"User-Agent": "Mozilla/5.0 (binance_p2p_ingest)"}
 
 SPANISH_MONTHS = {

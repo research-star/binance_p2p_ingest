@@ -18,18 +18,17 @@ Idempotente: re-correr sobre los mismos archivos da el mismo resultado.
 import argparse
 import gzip
 import json
-import os
 import sqlite3
 import sys
 from pathlib import Path
 
+from config import SNAPSHOTS_DIR, SNAPSHOTS_BACKUP_DIR, NORMALIZED_DB
+
 # ── Config ──────────────────────────────────────────────────────────────────
 
-DEFAULT_INPUT = Path("snapshots")
-# Directorio de backup opcional (p. ej. OneDrive, Dropbox, disco externo).
-# Configurable vía env var P2P_BACKUP_DIR. Si no existe, se ignora silenciosamente.
-DEFAULT_INPUT2 = Path(os.environ.get("P2P_BACKUP_DIR", "")) if os.environ.get("P2P_BACKUP_DIR") else Path("snapshots_backup_not_configured")
-DEFAULT_OUTPUT = Path("p2p_normalized.db")
+DEFAULT_INPUT = SNAPSHOTS_DIR
+DEFAULT_INPUT2 = SNAPSHOTS_BACKUP_DIR
+DEFAULT_OUTPUT = NORMALIZED_DB
 SCHEMA_VERSION_SUPPORTED = ("v1",)
 
 KYC_KEYWORDS = ["kyc", "verificad", "dni", "carnet", "selfie", "video",

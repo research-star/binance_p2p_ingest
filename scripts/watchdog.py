@@ -18,9 +18,14 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-SNAPSHOTS_DIR = Path("snapshots")
-LOG_FILE = Path("logs") / "watchdog.log"
-STALE_MINUTES = 15
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from config import SNAPSHOTS_DIR as _SNAP, LOGS_DIR as _LOGS, WATCHDOG_STALE_MIN
+
+SNAPSHOTS_DIR = PROJECT_ROOT / _SNAP
+LOG_FILE = PROJECT_ROOT / _LOGS / "watchdog.log"
+STALE_MINUTES = WATCHDOG_STALE_MIN
 
 
 def latest_snapshot_age_minutes():
@@ -55,7 +60,7 @@ def relaunch_loop():
         flags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
     subprocess.Popen(
         [sys.executable, "ingest.py", "--loop"],
-        cwd=str(Path(__file__).parent.resolve()),
+        cwd=str(PROJECT_ROOT),
         creationflags=flags,
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL,
         close_fds=True,

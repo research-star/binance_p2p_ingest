@@ -3,7 +3,7 @@ REM Actualiza el valor referencial del BCB, la DB normalizada, y el dashboard.
 REM Si el scraper del BCB falla, sigue (no es critico).
 REM Si normalize falla, corta (es critico).
 
-cd /d %~dp0
+cd /d %~dp0..
 set PYTHONIOENCODING=utf-8
 chcp 65001 >nul
 

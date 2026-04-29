@@ -86,6 +86,46 @@ Para todo lo demás, leer `HANDOFF.md`.
 
 ---
 
+## Mapa de archivos
+
+**Raíz** (módulos productivos):
+- `config.py` — Constantes compartidas: `BCB_RATE`, rutas default
+  (`SNAPSHOTS_DIR`, `LOGS_DIR`, `NORMALIZED_DB`, `DASHBOARD_HTML`,
+  `BCB_REF_JSON`, `TEMPLATE_HTML`, `SNAPSHOTS_BACKUP_DIR`),
+  `INGEST_INTERVAL_S`, `WATCHDOG_STALE_MIN`. Importado por todos los demás.
+- `ingest.py` — Captura snapshots crudos del libro P2P (Fase 1).
+- `normalize.py` — Aplana snapshots a SQLite con `quality_tier` (Fase 2).
+- `bcb_referencial.py` — Scraper compra (tabla v2) + venta (SVG histórico) del BCB.
+- `dashboard.py` — Genera HTML autocontenido desde la SQLite + `template.html` (Fase 3).
+- `template.html` — Plantilla HTML/CSS/JS del dashboard. `dashboard.py` la lee
+  y reemplaza `__DATA_PLACEHOLDER__` con el JSON de datos. Editar acá lo visual.
+- `requirements.txt` — Solo `requests`. El resto es stdlib.
+
+**Datos / artefactos** (regenerables o acumulables):
+- `snapshots/YYYY-MM-DD/*.json.gz` — Acumulado crudo, irrecuperable.
+- `bcb_referencial.json` — Histórico BCB (compra+venta), trackeado en git.
+- `p2p_normalized.db` — SQLite reconstruible (no trackeado).
+- `index.html`, `p2p_dashboard.html` — Output del dashboard.
+- `logs/ingest.log`, `logs/watchdog.log` — Logs operativos.
+
+**`scripts/`** (wrappers operativos, no productivos):
+- `watchdog.py` — Relanza `ingest.py --loop` si lleva >15 min sin snapshots.
+- `watchdog.bat` — Wrapper para Task Scheduler (no usado: la tarea llama a
+  `pythonw.exe scripts\watchdog.py` directo).
+- `update.bat` — Pipeline manual: BCB → normalize → dashboard.
+- `sync_snapshots.bat` — `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR`.
+
+**`.claude/skills/actualizar-dashboard/`** (config local, no trackeado):
+- `SKILL.md` — Skill que ejecuta el pipeline end-to-end con verificación por
+  paso y `--publish` opcional.
+
+**Docs**:
+- `CLAUDE.md` — este archivo (contexto persistente).
+- `HANDOFF.md` — estado detallado y pendientes.
+- `README.md` — setup, uso, deploy a Pages, agendamiento de tareas.
+
+---
+
 ## Reglas de coordinación (agregado automáticamente)
 
 Sección agregada por un setup automatizado para habilitar colaboración vía GitHub. El contenido anterior de este archivo no fue modificado.
