@@ -96,6 +96,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 /* ── Bank table ── */
 .bank-table{width:100%;border-collapse:collapse}
 .bank-table th{text-align:left;font-family:'Outfit',sans-serif;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border-color)}
+.bank-table th.num{text-align:right}
+.merchants-table th.num{text-align:right}
 .bank-table td{padding:8px 14px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
 .bank-table td.num{text-align:right}
 .bank-table td:first-child{font-family:'Outfit',sans-serif;font-weight:500;font-size:12px;color:var(--text-primary)}
@@ -117,8 +119,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:9.5px;font-weight:600;letter-spacing:.04em;text-transform:lowercase;font-family:'Outfit',sans-serif;font-variant-numeric:normal}
 .pill-yellow{background:rgba(218,165,32,.18);color:#a37113}
 .pill-red{background:rgba(192,52,52,.20);color:#a83232}
-[data-theme-dark="1"] .pill-yellow,body.theme-dark .pill-yellow{background:rgba(232,190,90,.18);color:#e8be5a}
-[data-theme-dark="1"] .pill-red,body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
+body.theme-dark .pill-yellow{background:rgba(232,190,90,.18);color:#e8be5a}
+body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .snap-stamp{font-size:11px;color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
 .panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
 .panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
