@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="Dashboard del mercado P2P USDT/BOB en Binance Bolivia. VWAP, profundidad, spread, concentración de merchants y referencia BCB. Datos actualizados cada 10 minutos.">
+<meta name="author" content="DDR Capital Partners">
+<meta property="og:title" content="Mercado P2P USDT/BOB — Bolivia">
+<meta property="og:description" content="Análisis estructural del libro de anuncios P2P de Binance en Bolivia. VWAP, depth, spread, BCB Ref y más.">
+<meta property="og:type" content="website">
 <title>P2P USDT/BOB — Dashboard</title>
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -203,7 +208,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
     <div class="section full-width" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartHeatmap"></div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
-<div class="footer"><strong>Binance P2P USDT/BOB</strong> &mdash; Dashboard &middot; <span id="footerText"></span></div>
+<div class="footer" id="footer"></div>
 
 <script>
 const DATA = __DATA_PLACEHOLDER__;
@@ -407,7 +412,9 @@ function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(t
 document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'});
 const premium=(last.vb10/meta.bcb_rate-1)*100;
 document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+'</div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
-document.getElementById('footerText').textContent='Dashboard generado: '+new Date().toLocaleString('es-BO')+' \u00b7 '+fmtInt(meta.total_snapshots)+' snapshots procesados';
+const DASHBOARD_VERSION='v0.3.0';
+const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2P \u00b7 <strong>\u00daltima actualizaci\u00f3n del dataset:</strong> '+lastTsFmt+' \u00b7 DDR Capital Partners \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
 // View toggle
