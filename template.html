@@ -125,13 +125,13 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
 .panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
 
-/* ── Help tooltip (ⓘ) ── */
+/* ── Help tooltip (ⓘ) ── posicionado fixed via JS para escapar overflow del panel ── */
 .help-tip{position:relative;display:inline-block;cursor:help;vertical-align:middle;margin-left:4px}
 .help-tip .help-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;border:1px solid var(--text-muted);color:var(--text-muted);font-size:10px;font-weight:600;line-height:1;opacity:.6;transition:opacity .15s,color .15s,border-color .15s;font-family:'Outfit',sans-serif;font-style:italic}
-.help-tip:hover .help-icon,.help-tip:focus-within .help-icon{opacity:1;color:var(--text-primary);border-color:var(--text-primary)}
-.help-tip .help-pop{position:absolute;bottom:calc(100% + 8px);left:0;width:max-content;max-width:340px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;padding:10px 12px;font-size:11px;font-weight:400;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:1500;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s;white-space:normal;text-align:left}
-.help-tip:hover .help-pop,.help-tip:focus-within .help-pop{opacity:1;visibility:visible;pointer-events:auto}
-.help-tip .help-pop code{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--bg-secondary);padding:1px 4px;border-radius:3px}
+.help-tip:hover .help-icon,.help-tip.is-open .help-icon,.help-tip:focus-within .help-icon{opacity:1;color:var(--text-primary);border-color:var(--text-primary)}
+.help-pop{position:fixed;width:max-content;max-width:340px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:6px;padding:10px 12px;font-size:11px;font-weight:400;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.18);z-index:2500;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s;white-space:normal;text-align:left}
+.help-pop.show{opacity:1;visibility:visible;pointer-events:auto}
+.help-pop code{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--bg-secondary);padding:1px 4px;border-radius:3px}
 
 /* ── Panel grid ── */
 .panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -613,30 +613,56 @@ function aggregateVolatility(rangeFromIdx, rangeToIdx, view){
           mode:'bars', xType:'category', yTitle:'Rango VWAP 10% intradiario (BOB/USDT)'};
 }
 
+// Helper: limpia un div que puede tener Plotly o un view-hint inyectado.
+// Sin este purge previo, Plotly.react sobre un div cuyo innerHTML fue
+// reemplazado por un view-hint (caso empty-state) entra en estado
+// inconsistente y falla silenciosamente al re-renderizar con datos.
+function _purgeAndClear(el){
+  if(window.Plotly && el && el._fullLayout) Plotly.purge(el);
+  if(el) el.innerHTML='';
+}
+
 function rVolatility(c){
   const el=document.getElementById('chartVolatility');
+  if(!el) return;
   // Mientras no haya selector de fechas, rango = todo el dataset.
   const total=(DATA.ts_metrics&&DATA.ts_metrics.ts)?DATA.ts_metrics.ts.length:0;
-  if(total===0){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(total===0){
+    _purgeAndClear(el);
+    el.innerHTML='<div class="view-hint">Sin datos</div>';
+    return;
+  }
   const v=aggregateVolatility(0, total-1, currentView);
-  if(v.empty){el.innerHTML='<div class="view-hint">'+v.msg+'</div>';return}
-  el.innerHTML='';
+  if(v.empty){
+    _purgeAndClear(el);
+    el.innerHTML='<div class="view-hint">'+v.msg+'</div>';
+    return;
+  }
+  // Purgar antes de re-renderizar para evitar que Plotly conserve type/
+  // barmode del render previo al alternar entre vistas date/category o
+  // bars/lines.
+  _purgeAndClear(el);
+
   const L=BL(c);
-  // type explícito en cada caso para evitar que Plotly.react conserve el
-  // type del render anterior (al alternar entre vistas date/category).
   const xaxisCfg = v.xType==='category'
     ? {...L.xaxis, type:'category', tickangle:v.x.length>14?-30:0}
     : {...xaxisForView(L.xaxis), type:'date'};
-  if(v.mode==='lines'){
-    Plotly.react('chartVolatility',[
-      {x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',line:{color:c.buy,width:1.5}},
-      {x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',line:{color:c.sell,width:1.5}},
-    ],{...L,barmode:undefined,xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartVolatility')},PC);
-  }else{
-    Plotly.react('chartVolatility',[
-      {x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}},
-      {x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}},
-    ],{...L,barmode:'group',xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},showlegend:true,height:chartHeight('chartVolatility')},PC);
+
+  try{
+    if(v.mode==='lines'){
+      Plotly.react('chartVolatility',[
+        {x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',connectgaps:false,line:{color:c.buy,width:1.5}},
+        {x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',connectgaps:false,line:{color:c.sell,width:1.5}},
+      ],{...L,barmode:undefined,xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartVolatility')},PC);
+    }else{
+      Plotly.react('chartVolatility',[
+        {x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}},
+        {x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}},
+      ],{...L,barmode:'group',xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},showlegend:true,height:chartHeight('chartVolatility')},PC);
+    }
+  }catch(err){
+    console.error('[volatility] Plotly.react falló:',err,{view:currentView,mode:v.mode,xType:v.xType,xLen:v.x.length,buyN:v.buy.filter(x=>x!=null).length,sellN:v.sell.filter(x=>x!=null).length});
+    el.innerHTML='<div class="view-hint">Error al renderizar el panel. Ver consola.</div>';
   }
 }
 
@@ -927,6 +953,40 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   if(saved&&(THEMES[saved]||customIds.includes(saved)))applyTheme(saved);
   else applyTheme('paper');
   renderTimeSeries('hourly');
+  initHelpTooltips();
 })();
+
+// ═══ HELP TOOLTIPS (re-parented to body) ═══
+// Sin re-parentar, el .help-pop quedaba clipped por el .section overflow:hidden
+// del panel. Posicionamos fixed y movemos el nodo a body al primer hover.
+function initHelpTooltips(){
+  document.querySelectorAll('.help-tip').forEach(tip=>{
+    const pop=tip.querySelector('.help-pop');
+    if(!pop) return;
+    let parented=false;
+    const place=()=>{
+      if(!parented){document.body.appendChild(pop);parented=true}
+      const r=tip.getBoundingClientRect();
+      const ph=pop.offsetHeight||80, pw=pop.offsetWidth||320;
+      const vw=window.innerWidth, vh=window.innerHeight;
+      // Por defecto debajo del icono. Si no entra abajo, arriba.
+      let top=r.bottom+8;
+      if(top+ph>vh-8) top=Math.max(8, r.top-ph-8);
+      // Alinear left con el icono, clamp al viewport.
+      let left=r.left;
+      if(left+pw>vw-8) left=Math.max(8, vw-pw-8);
+      pop.style.top=top+'px';
+      pop.style.left=left+'px';
+    };
+    const show=()=>{place();pop.classList.add('show');tip.classList.add('is-open')};
+    const hide=()=>{pop.classList.remove('show');tip.classList.remove('is-open')};
+    tip.addEventListener('mouseenter',show);
+    tip.addEventListener('mouseleave',hide);
+    tip.addEventListener('focusin',show);
+    tip.addEventListener('focusout',hide);
+    window.addEventListener('scroll',()=>{if(pop.classList.contains('show'))place()},{passive:true});
+    window.addEventListener('resize',()=>{if(pop.classList.contains('show'))place()});
+  });
+}
 </script>
 </body></html>
