@@ -166,6 +166,22 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 @media(max-width:768px){.theme-btn .btn-full{display:none}.theme-btn .btn-short{display:inline}}
 @media(min-width:769px){.theme-btn .btn-short{display:none}}
 
+/* ── Date selector ── */
+.date-selector{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bg-secondary);padding:12px 48px;border-bottom:1px solid var(--border-color);font-family:'Outfit',sans-serif;font-size:11px}
+.ds-label{color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:500;font-size:10px}
+.ds-presets{display:flex;gap:0}
+.ds-chip{padding:5px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s}
+.ds-chip:first-of-type{border-radius:4px 0 0 4px}
+.ds-chip:last-of-type{border-radius:0 4px 4px 0;margin-right:0}
+.ds-chip:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.ds-chip.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
+.ds-custom{display:flex;align-items:center;gap:10px}
+.ds-custom label{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:11px}
+.ds-custom input[type="date"]{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 6px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);color:var(--text-primary);color-scheme:light}
+body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
+.ds-info{margin-left:auto;font-family:'IBM Plex Mono',monospace;color:var(--text-muted);font-size:11px}
+@media(max-width:900px){.date-selector{padding:12px 24px;gap:10px}.ds-info{margin-left:0;width:100%}}
+
 /* ── Error banner ── */
 .error-banner{position:sticky;top:0;z-index:2000;background:#b35c1e;color:#fff;padding:10px 16px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;text-align:center;display:none}
 .error-banner.show{display:block}
@@ -187,6 +203,21 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 </div></div>
 
 <div class="kpi-row" id="kpis"></div>
+
+<div class="date-selector" id="dateSelector">
+  <span class="ds-label">Rango</span>
+  <div class="ds-presets">
+    <button class="ds-chip" data-preset="24h" type="button">24h</button>
+    <button class="ds-chip" data-preset="7d" type="button">7d</button>
+    <button class="ds-chip" data-preset="30d" type="button">30d</button>
+    <button class="ds-chip active" data-preset="all" type="button">Todo</button>
+  </div>
+  <div class="ds-custom">
+    <label>Desde <input type="date" id="dsFrom"></label>
+    <label>Hasta <input type="date" id="dsTo"></label>
+  </div>
+  <span class="ds-info" id="dsInfo">&mdash;</span>
+</div>
 
 <div class="content">
   <div class="toolbar">
@@ -238,7 +269,7 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
     <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil <span class="help-tip" tabindex="0" aria-label="Explicaci&oacute;n del panel decil"><span class="help-icon">i</span><span class="help-pop">VWAP acumulado por decil de profundidad. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.<br><br>Toggle <em>Excluir percentil 100</em>: en ambos lados el percentil 100 representa el precio MENOS competitivo para el taker (m&aacute;s caro en Compra, m&aacute;s barato en Venta) y suele estar contaminado por anuncios cebo y manipulaci&oacute;n. Activado por defecto. El percentil 10 (mejor 10% del libro) se mantiene visible.</span></span></h2><p>VWAP acumulado por decil de profundidad &middot; &uacute;ltimo snapshot.</p><label class="panel-toggle"><input type="checkbox" id="decileExcludeExtremes" checked><span>Excluir percentil 100 (cola con trampas)</span></label></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDecile"></div></div></div>
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartRatio"></div></div></div>
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
-    <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco</h2><p>Anuncios y profundidad por m&eacute;todo de pago en el &uacute;ltimo snapshot del rango activo.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
+    <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco <span class="help-tip" tabindex="0" aria-label="Granularidad del panel"><span class="help-icon">i</span><span class="help-pop">Granularidad diaria: muestra el &uacute;ltimo snapshot del &uacute;ltimo d&iacute;a disponible dentro del rango activo. Al mover el selector de fechas, salta al cierre de d&iacute;a m&aacute;s cercano (no al &uacute;ltimo ts exacto del rango).</span></span></h2><p>Anuncios y profundidad por m&eacute;todo de pago.</p><p class="snap-stamp">Snapshot del <span id="banksSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
     <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="topMerchants"></div></div></div>
     <div class="section full-width" data-panel="outliers" draggable="true"><div class="section-header"><div class="sh-left"><h2>Outliers detectados <span class="help-tip" tabindex="0" aria-label="Detalle outliers"><span class="help-icon">i</span><span class="help-pop">Detectados sobre TODOS los merchants del &uacute;ltimo snapshot, no solo el top por profundidad. La densidad alta del lado Venta es estructural &mdash; ajustar <code>OUTLIER_THRESHOLDS</code> en c&oacute;digo si quer&eacute;s foco solo en casos extremos.</span></span></h2><p>Anuncios fuera del rango central del mercado.</p><p class="snap-stamp">Snapshot del <span id="outliersSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="outliersTable"></div></div></div>
     <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria <span class="help-tip" tabindex="0" aria-label="F&oacute;rmulas seg&uacute;n vista"><span class="help-icon">i</span><span class="help-pop">Cada vista usa una f&oacute;rmula distinta:<br>&bull; <em>Cada snapshot</em>: stddev rolling ventana 6 (~1h) sobre VWAP 10%.<br>&bull; <em>Por hora</em>: stddev por hora del d&iacute;a sobre el rango activo.<br>&bull; <em>Por d&iacute;a</em>: rango max&minus;min del VWAP 10% dentro de cada d&iacute;a.<br><br>En vistas <em>Por hora</em> y <em>Por d&iacute;a</em> requiere &ge;3 d&iacute;as distintos en el rango.</span></span></h2><p>Dispersi&oacute;n del VWAP 10% seg&uacute;n vista activa.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVolatility"></div></div></div>
@@ -250,13 +281,16 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 
 <script>
 const DATA = __DATA_PLACEHOLDER__;
-if(!DATA||typeof DATA!=='object'||!Array.isArray(DATA.ts)||!DATA.ts.length){
+if(!DATA||typeof DATA!=='object'||!DATA.ts_metrics||!Array.isArray(DATA.ts_metrics.ts)||!DATA.ts_metrics.ts.length){
   document.getElementById('errorBanner').classList.add('show');
   setTimeout(()=>location.reload(),30000);
   throw new Error('Dataset inválido o vacío');
 }
-const datasets = {all:DATA.ts, hourly:DATA.hourly, daily:DATA.daily};
-const meta = DATA.meta, last = DATA.ts[DATA.ts.length-1];
+const meta = DATA.meta;
+const TS_ARR = DATA.ts_metrics.ts;
+// `last` ahora se recalcula al cambiar el rango (apunta al último snapshot
+// del rango activo, no del dataset).
+let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
@@ -425,6 +459,167 @@ function closeAllPanels(){
 }
 
 // ═══ PLOTLY ═══
+// ═══ DATE RANGE STATE ═══
+let activeRange = {fromIdx: 0, toIdx: TS_ARR.length-1};
+let dateRangeState = {preset: 'all'};
+
+function _binarySearchIdx(targetMs, mode){
+  // mode='gte': primer idx con time >= target. mode='lte': último idx con time <= target.
+  let lo=0, hi=TS_ARR.length-1;
+  if(mode==='gte'){
+    let res=TS_ARR.length;
+    while(lo<=hi){
+      const mid=(lo+hi)>>1;
+      if(new Date(TS_ARR[mid]).getTime() >= targetMs){res=mid;hi=mid-1}
+      else lo=mid+1;
+    }
+    return res;
+  }else{
+    let res=-1;
+    while(lo<=hi){
+      const mid=(lo+hi)>>1;
+      if(new Date(TS_ARR[mid]).getTime() <= targetMs){res=mid;lo=mid+1}
+      else hi=mid-1;
+    }
+    return res;
+  }
+}
+
+function rangeFromState(state){
+  const lastMs = new Date(TS_ARR[TS_ARR.length-1]).getTime();
+  if(state.preset){
+    if(state.preset==='all') return {fromIdx:0, toIdx:TS_ARR.length-1};
+    const hours = {'24h':24,'7d':7*24,'30d':30*24}[state.preset] || 24;
+    const fromMs = lastMs - hours*3600*1000;
+    const fromIdx = _binarySearchIdx(fromMs, 'gte');
+    return {fromIdx: Math.max(0,Math.min(fromIdx, TS_ARR.length-1)), toIdx: TS_ARR.length-1};
+  }
+  // custom from/to (YYYY-MM-DD)
+  const fromMs = new Date(state.from + 'T00:00:00Z').getTime();
+  const toMs   = new Date(state.to   + 'T23:59:59Z').getTime();
+  const fromIdx = _binarySearchIdx(fromMs, 'gte');
+  const toIdx   = _binarySearchIdx(toMs,   'lte');
+  return {
+    fromIdx: Math.max(0, Math.min(fromIdx, TS_ARR.length-1)),
+    toIdx:   Math.max(0, Math.min(toIdx,   TS_ARR.length-1))
+  };
+}
+
+// ═══ AGGREGATORS (rango activo + view) ═══
+const TS_FIELDS = ['vb5','vb10','vb25','vb50','vs5','vs10','vs25','vs50','sp5','sp10','sp25','sp50','buy_depth','sell_depth','buy_count','sell_count','depth_ratio','t5buy','t5sell'];
+
+function aggregateTimeView(rangeFromIdx, rangeToIdx, view){
+  const tm=DATA.ts_metrics;
+  const out={ts:[]};
+  for(const f of TS_FIELDS) out[f]=[];
+  if(view==='all'||view==='snapshot'){
+    for(let i=rangeFromIdx;i<=rangeToIdx;i++){
+      out.ts.push(tm.ts[i]);
+      for(const f of TS_FIELDS) out[f].push(tm[f][i]);
+    }
+  }else{
+    const keyFn = view==='hourly' ? (t=>t.slice(0,13)) : (t=>t.slice(0,10));
+    const buckets = new Map();
+    for(let i=rangeFromIdx;i<=rangeToIdx;i++) buckets.set(keyFn(tm.ts[i]), i);
+    const keys=[...buckets.keys()].sort();
+    for(const k of keys){
+      const i=buckets.get(k);
+      out.ts.push(tm.ts[i]);
+      for(const f of TS_FIELDS) out[f].push(tm[f][i]);
+    }
+  }
+  out.x = out.ts.map(t=>new Date(new Date(t).getTime()-4*3600000));
+  return out;
+}
+
+function aggregateBankCoverage(rangeFromIdx, rangeToIdx){
+  const bd=DATA.banks_daily||[];
+  if(!bd.length) return null;
+  const fromDay = TS_ARR[rangeFromIdx].slice(0,10);
+  const toDay   = TS_ARR[rangeToIdx].slice(0,10);
+  // Último entry diario con date <= toDay (preferentemente >= fromDay).
+  let pick=null;
+  for(let i=bd.length-1;i>=0;i--){
+    if(bd[i].date<=toDay){pick=bd[i];break}
+  }
+  if(!pick) return null;
+  const total=pick.total_depth||1;
+  return {
+    snapshot_ts: pick.snapshot_ts,
+    items: pick.items.map(b=>({...b, depth_pct: b.depth/total*100}))
+  };
+}
+
+function aggregateHeatmap(rangeFromIdx, rangeToIdx){
+  const tm=DATA.ts_metrics;
+  const metrics=[
+    {key:'buy_depth',  label:'Profundidad Compra'},
+    {key:'sell_depth', label:'Profundidad Venta'},
+    {key:'sp10',       label:'Spread 10%'},
+    {key:'n_ads',      label:'Anuncios'},
+    {key:'vb10',       label:'VWAP 10% Compra'},
+    {key:'vs10',       label:'VWAP 10% Venta'},
+  ];
+  const sums={};
+  for(const m of metrics) sums[m.key]=Array.from({length:24},()=>[0,0]);
+  for(let i=rangeFromIdx;i<=rangeToIdx;i++){
+    const h=(new Date(new Date(tm.ts[i]).getTime()-4*3600000)).getUTCHours();
+    for(const m of metrics){
+      const v = m.key==='n_ads' ? (tm.buy_count[i]+tm.sell_count[i]) : tm[m.key][i];
+      if(v==null) continue;
+      sums[m.key][h][0]+=v; sums[m.key][h][1]+=1;
+    }
+  }
+  return {
+    hours: Array.from({length:24},(_,h)=>h),
+    metrics: metrics.map(m=>({key:m.key, label:m.label,
+      values: sums[m.key].map(([s,c])=>c>0 ? s/c : null)
+    }))
+  };
+}
+
+function aggregateMerchantFlow(rangeFromIdx, rangeToIdx, view){
+  const fps=DATA.flow_per_snapshot;
+  if(!fps||!fps.ts) return [];
+  const tsArr=fps.ts;
+  // Sub-rango via binary search (fps.ts === DATA.ts_metrics.ts en construcción).
+  let fps_from=0, fps_to=tsArr.length-1;
+  // Como flow_per_snapshot tiene la misma serie de ts que ts_metrics, los
+  // índices coinciden. Pero por defensa hacemos bsearch sobre fps.ts.
+  if(tsArr.length===TS_ARR.length){
+    fps_from=rangeFromIdx; fps_to=rangeToIdx;
+  }else{
+    const fromMs=new Date(TS_ARR[rangeFromIdx]).getTime();
+    const toMs=new Date(TS_ARR[rangeToIdx]).getTime();
+    fps_from=tsArr.findIndex(t=>new Date(t).getTime()>=fromMs);
+    if(fps_from<0) fps_from=0;
+    for(let i=tsArr.length-1;i>=0;i--){if(new Date(tsArr[i]).getTime()<=toMs){fps_to=i;break}}
+  }
+  // Vista snapshot: devolver tal cual filtrado.
+  if(view==='all'||view==='snapshot'){
+    const out=[];
+    for(let i=fps_from;i<=fps_to;i++){
+      out.push({ts:tsArr[i], n_buy:fps.n_buy[i], n_sell:fps.n_sell[i],
+                new_buy:fps.new_buy[i], gone_buy:fps.gone_buy[i],
+                new_sell:fps.new_sell[i], gone_sell:fps.gone_sell[i]});
+    }
+    return out;
+  }
+  // hourly/daily: agrupar. Estado n_buy/n_sell = último del bucket; flujos = suma.
+  const keyFn=view==='hourly'?(t=>t.slice(0,13)):(t=>t.slice(0,10));
+  const buckets=new Map();
+  for(let i=fps_from;i<=fps_to;i++){
+    const k=keyFn(tsArr[i]);
+    if(!buckets.has(k)) buckets.set(k,{ts:tsArr[i], n_buy:0, n_sell:0, new_buy:0, gone_buy:0, new_sell:0, gone_sell:0});
+    const b=buckets.get(k);
+    b.ts=tsArr[i];
+    b.n_buy=fps.n_buy[i]; b.n_sell=fps.n_sell[i];
+    b.new_buy+=fps.new_buy[i]; b.gone_buy+=fps.gone_buy[i];
+    b.new_sell+=fps.new_sell[i]; b.gone_sell+=fps.gone_sell[i];
+  }
+  return [...buckets.keys()].sort().map(k=>buckets.get(k));
+}
+
 function getC(){
   const t=activeThemeValues;
   return{
@@ -445,7 +640,6 @@ function getC(){
 }
 function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:'pan',font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
 const PC={displayModeBar:false,responsive:true,scrollZoom:true};
-function makeDates(ts){return ts.map(d=>{const dt=new Date(d.ts);return new Date(dt.getTime()-4*3600000)})}
 function xaWithSlider(xa){xa.rangeslider={visible:true,thickness:0.06};return xa}
 function gapShapes(c){
   const gaps=DATA.gaps||[];
@@ -468,26 +662,26 @@ function xaxisForView(base){
   return cfg;
 }
 
-function rVwap(c,ts,x){
-  const L=BL(c);
+function rVwap(c,v){
+  const L=BL(c), x=v.x;
   const traces=[
-    {x:x,y:ts.map(d=>d.vb50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vb25),fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vb5),fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vb10),name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines'},
-    {x:x,y:ts.map(d=>d.vs50),line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vs25),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vs5),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {x:x,y:ts.map(d=>d.vs10),name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'},
+    {x:x,y:v.vb50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vb25,fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vb5, fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines'},
+    {x:x,y:v.vs50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vs25,fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vs5, fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
+    {x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'},
     // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
-    {x:x,y:ts.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
+    {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
   ];
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
     const hist=meta.bcb_ref_history;
     if(hist.length===1){
       const e=hist[0];
-      traces.push({x:x,y:ts.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
-      traces.push({x:x,y:ts.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
+      traces.push({x:x,y:x.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
+      traces.push({x:x,y:x.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
     }else{
       const hx=hist.map(e=>new Date(e.fecha+'T00:00:00'));
       traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
@@ -496,16 +690,14 @@ function rVwap(c,ts,x){
   }
   Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f'},margin:{l:60,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
 }
-function rSpread(c,ts,x){const L=BL(c);Plotly.react('chartSpread',[{x:x,y:ts.map(d=>d.sp5),name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:ts.map(d=>d.sp10),name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:ts.map(d=>d.sp25),name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:ts.map(d=>d.sp50),name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.4f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
-function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d=>d.buy_depth),name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}},{x:x,y:ts.map(d=>d.sell_depth),name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
-function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
-function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.sell,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
+function rSpread(c,v){const L=BL(c),x=v.x;Plotly.react('chartSpread',[{x:x,y:v.sp5,name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:v.sp10,name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:v.sp25,name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:v.sp50,name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.4f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
+function rDepth(c,v){const L=BL(c),x=v.x;Plotly.react('chartDepth',[{x:x,y:v.buy_depth,name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}},{x:x,y:v.sell_depth,name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
+function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
+function rConc(c,v){const L=BL(c),x=v.x;Plotly.react('chartConc',[{x:x,y:v.t5buy,name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},{x:x,y:v.t5sell,name:'Top 5 venta',line:{color:c.sell,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
 function rDecile(c){
   const L=BL(c);
   const dlAll=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];
-  // Schema viejo (DATA.deciles[ts]) y nuevo (DATA.deciles_last) coexisten;
-  // preferimos el nuevo, fallback al viejo.
-  const src=DATA.deciles_last||(DATA.deciles&&DATA.deciles[meta.last_ts])||{BUY:[],SELL:[]};
+  const src=DATA.deciles_last||{BUY:[],SELL:[]};
   const exclude=localStorage.getItem('dashboard-decile-exclude-extremes')!=='false'; // default true
   // Excluir SOLO percentil 100 (índice 9): en ambos lados es el precio menos
   // competitivo para el taker (cola con trampas/manipulación). El percentil
@@ -525,25 +717,32 @@ function rDecile(c){
      yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f',range:[yMin,yMax]},
      height:chartHeight('chartDecile')},PC);
 }
-function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.neutral,.18);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num" title="Anuncios activos en el último snapshot del rango">Anuncios (último snapshot)</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>'}
-
-// ── New panel renderers ──
-function currentViewLastTs(){const ts=datasets[currentView];return(ts&&ts.length)?ts[ts.length-1].ts:meta.last_ts}
+function rBank(c){
+  const data=aggregateBankCoverage(activeRange.fromIdx, activeRange.toIdx);
+  const el=document.getElementById('bankTable');
+  if(!data||!data.items.length){el.innerHTML='<div class="view-hint">Sin datos de bancos en el rango</div>';return}
+  const bk=data.items;
+  const mx=Math.max(...bk.map(b=>b.depth));
+  const bc=hexToRgba(c.neutral,.18);
+  // Stamp de granularidad ζ: la tabla refleja el último snapshot diario
+  // disponible <= rangeTo, no el último ts exacto del rango.
+  const stampEl=document.getElementById('banksSnapStamp');
+  if(stampEl){
+    stampEl.textContent = new Date(data.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  el.innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num" title="Anuncios activos en el último snapshot del rango">Anuncios (último snapshot)</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>';
+}
 
 function rMerchants(){
   // Por decisión ζ del plan, esta tabla se congela al último snapshot del
   // dataset (DATA.merchants_last) y NO responde al selector de fechas.
   // Las refs VWAP 10% para outliers vienen del mismo snapshot.
-  const ml=DATA.merchants_last||null;
-  // merchants_last contiene TODOS los merchants del último snapshot
-  // (commit panel Outliers). Acá cortamos a top 10 por depth para mantener
-  // el comportamiento de "Merchants principales".
-  const data = ml && ml.BUY ? {BUY:ml.BUY.slice(0,10), SELL:ml.SELL.slice(0,10)}
-                            : ((DATA.top_merchants||{})[currentViewLastTs()] || (DATA.top_merchants||{})[meta.last_ts]);
-  const refs = {
-    BUY:  ml ? ml.vwap10_buy  : (last && last.vb10),
-    SELL: ml ? ml.vwap10_sell : (last && last.vs10)
-  };
+  const ml=DATA.merchants_last;
+  if(!ml||!ml.BUY){document.getElementById('topMerchants').innerHTML='<div class="view-hint">Sin datos de merchants</div>';return}
+  // merchants_last contiene TODOS los merchants del último snapshot.
+  // Acá cortamos a top 10 por depth para "Merchants principales".
+  const data = {BUY:ml.BUY.slice(0,10), SELL:ml.SELL.slice(0,10)};
+  const refs = {BUY: ml.vwap10_buy, SELL: ml.vwap10_sell};
   // Caveat ζ: stamp del snapshot mostrado.
   const stampEl=document.getElementById('merchantsSnapStamp');
   if(stampEl){
@@ -737,9 +936,10 @@ function rVolatility(c){
 
 function rFlow(c){
   const L=BL(c);
-  const flow=(DATA.merchant_flow||{})[currentView]||[];
-  if(!flow.length){document.getElementById('chartFlow').innerHTML='<div class="view-hint">Sin datos</div>';return}
-  const x=flow.map(f=>{const dt=new Date(f.ts);return new Date(dt.getTime()-4*3600000)});
+  const el=document.getElementById('chartFlow');
+  const flow=aggregateMerchantFlow(activeRange.fromIdx, activeRange.toIdx, currentView);
+  if(!flow.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  const x=flow.map(f=>new Date(new Date(f.ts).getTime()-4*3600000));
   Plotly.react('chartFlow',[
     {x:x,y:flow.map(f=>f.new_buy),name:'Nuevos Compra',type:'bar',marker:{color:hexToRgba(c.buy,.5)}},
     {x:x,y:flow.map(f=>-f.gone_buy),name:'Desap. Compra',type:'bar',marker:{color:hexToRgba(c.buy,.2)}},
@@ -751,8 +951,9 @@ function rFlow(c){
 }
 
 function rHeatmap(c){
-  const hm=DATA.heatmap;
-  if(!hm||!hm.metrics||!hm.metrics.length){document.getElementById('chartHeatmap').innerHTML='<div class="view-hint">Sin datos</div>';return}
+  const hm=aggregateHeatmap(activeRange.fromIdx, activeRange.toIdx);
+  const el=document.getElementById('chartHeatmap');
+  if(!hm||!hm.metrics||!hm.metrics.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   // Normalize each row 0..1 for color; keep real values in customdata for hover
   const z=[], text=[], labels=[];
   for(const m of hm.metrics){
@@ -780,16 +981,32 @@ function rHeatmap(c){
   }],{...L,margin:{l:130,r:16,t:8,b:40},xaxis:{...L.xaxis,tickangle:0,side:'bottom',type:'category',showgrid:false},yaxis:{...L.yaxis,automargin:true,showgrid:false},height:chartHeight('chartHeatmap')},PC);
 }
 
-function renderTimeSeries(v){currentView=v;const c=getC(),ts=datasets[v],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rMerchants();rOutliers();rVolatility(c);rFlow(c)}
-function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rDecile(c);rBank(c);rMerchants();rOutliers();rVolatility(c);rFlow(c);rHeatmap(c)}
+function renderTimeSeries(view){
+  currentView=view;
+  const c=getC();
+  const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, view);
+  rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
+  rMerchants(); rOutliers(); rVolatility(c); rFlow(c);
+}
+function replotAllCharts(){
+  const c=getC();
+  const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
+  rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
+  rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rHeatmap(c);
+  updateKpis();
+}
 
 // ═══ STATIC CONTENT ═══
 {
   const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
   document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+'<br>Última snapshot: <strong>'+lastSnapFmt+'</strong>';
 }
-const premium=(last.vb10/meta.bcb_rate-1)*100;
+function updateKpis(){
+  const tm=DATA.ts_metrics, i=activeRange.toIdx;
+  last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
+  const premium=(last.vb10/meta.bcb_rate-1)*100;
 document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+' <span class="unit">BOB</span></div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
+}
 const DASHBOARD_VERSION='v0.3.0';
 const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
 document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2P \u00b7 <strong>\u00daltima actualizaci\u00f3n del dataset:</strong> '+lastTsFmt+' \u00b7 DDR Capital Partners \u00b7 '+DASHBOARD_VERSION;
@@ -797,6 +1014,52 @@ document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2
 // ═══ EVENTS ═══
 // View toggle
 document.querySelectorAll('.toggle-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderTimeSeries(b.dataset.view)})});
+
+// ═══ DATE RANGE: state, persistence, UI sync ═══
+function applyDateRange(state, persist){
+  dateRangeState = state;
+  if(persist!==false) localStorage.setItem('dashboard-date-range', JSON.stringify(state));
+  activeRange = rangeFromState(state);
+  // Sync chips
+  document.querySelectorAll('.ds-chip').forEach(b=>{
+    b.classList.toggle('active', state.preset && b.dataset.preset===state.preset);
+  });
+  // Sync date inputs (mostrar fechas del rango efectivo)
+  const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
+  if(fromInput) fromInput.value = TS_ARR[activeRange.fromIdx].slice(0,10);
+  if(toInput)   toInput.value   = TS_ARR[activeRange.toIdx].slice(0,10);
+  // Info textual
+  const dsInfo=document.getElementById('dsInfo');
+  if(dsInfo){
+    const n = activeRange.toIdx - activeRange.fromIdx + 1;
+    const fmtD = ts => new Date(ts).toLocaleDateString('es-BO',{day:'numeric',month:'short'});
+    dsInfo.textContent = fmtInt(n)+' snapshots · '+fmtD(TS_ARR[activeRange.fromIdx])+' — '+fmtD(TS_ARR[activeRange.toIdx]);
+  }
+  // Re-render all reactive panels.
+  replotAllCharts();
+}
+
+document.querySelectorAll('.ds-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>applyDateRange({preset:chip.dataset.preset}));
+});
+{
+  const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
+  // Min/max basados en el dataset.
+  const minDay = TS_ARR[0].slice(0,10);
+  const maxDay = TS_ARR[TS_ARR.length-1].slice(0,10);
+  if(fromInput){fromInput.min=minDay;fromInput.max=maxDay}
+  if(toInput){toInput.min=minDay;toInput.max=maxDay}
+  const onCustom=()=>{
+    let f = fromInput.value || minDay;
+    let t = toInput.value   || maxDay;
+    if(f<minDay) f=minDay;
+    if(t>maxDay) t=maxDay;
+    if(f>t){const tmp=f;f=t;t=tmp}
+    applyDateRange({from:f, to:t});
+  };
+  if(fromInput) fromInput.addEventListener('change',onCustom);
+  if(toInput)   toInput.addEventListener('change',onCustom);
+}
 
 // Decile: toggle excluir extremos
 {
@@ -1021,6 +1284,18 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
     const btn=p.querySelector('.size-toggle');
     if(btn)updateToggleIcon(btn,p.classList.contains('full-width'));
   });
+  // Restaurar rango de fechas antes de cualquier render que lo consuma.
+  try{
+    const drs=localStorage.getItem('dashboard-date-range');
+    if(drs){
+      const parsed=JSON.parse(drs);
+      if(parsed && (parsed.preset || (parsed.from && parsed.to))){
+        dateRangeState=parsed;
+      }
+    }
+  }catch(e){}
+  activeRange = rangeFromState(dateRangeState);
+
   renderCustomList();
   let saved=localStorage.getItem('dashboard-active-theme');
   // Migración: tema 'ink' (Negro) eliminado, mapear a 'slate' (Oscuro).
@@ -1028,6 +1303,11 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   const customIds=loadSaved().map(t=>'custom:'+t.name);
   if(saved&&(THEMES[saved]||customIds.includes(saved)))applyTheme(saved);
   else applyTheme('paper');
+  // Sincronizar UI del selector con el rango restaurado y disparar render
+  // inicial completo. applyDateRange llama a replotAllCharts internamente.
+  applyDateRange(dateRangeState, false);
+  // applyDateRange ya hace replotAllCharts; renderTimeSeries fija currentView
+  // y vuelve a renderizar las series temporales con la vista activa.
   renderTimeSeries('hourly');
   initHelpTooltips();
 })();

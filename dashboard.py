@@ -461,21 +461,14 @@ def process_data(db_path: Path) -> dict:
     conn.close()
 
     return {
-        # Schema viejo (consumido por los renderers actuales).
-        'ts': ts_data, 'hourly': hourly, 'daily': daily,
-        'deciles': decile_data, 'banks': bank_list,
-        'top_merchants': top_merchants,
-        'volatility_daily': volatility_daily,
-        'merchant_flow': merchant_flow,
-        'heatmap': heatmap_data,
-        'gaps': gaps,
-        # Schema nuevo (columnar, para reagregación cliente — commits 13–16).
+        # Schema columnar (commit 12 → único schema desde commit 17).
         'ts_metrics': ts_metrics,
         'merchants_last': merchants_last,
         'banks_daily': banks_daily,
         'offer_daily': offer_daily,
         'flow_per_snapshot': flow_per_snapshot,
         'deciles_last': deciles_last,
+        'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
             'total_ads': sum(d['buy_count'] + d['sell_count'] for d in ts_data),
