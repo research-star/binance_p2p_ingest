@@ -66,9 +66,10 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .header .meta strong{color:var(--text-secondary);font-weight:500}
 
 /* ── KPIs ── */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
-.kpi{padding:18px 24px;border-right:1px solid var(--border-color)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
+.kpi{padding:18px 24px;border-right:1px solid var(--border-color);border-bottom:1px solid transparent}
 .kpi:last-child{border-right:none}
+@media(max-width:1100px){.kpi{border-bottom:1px solid var(--border-color)}}
 .kpi .label{font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px}
 .kpi .value{font-family:'IBM Plex Mono',monospace;font-size:var(--kpi-value-size);font-weight:600;color:var(--text-primary);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .sub{font-size:11px;color:var(--text-muted);margin-top:3px}
