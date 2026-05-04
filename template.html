@@ -114,6 +114,12 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .merchants-table td.num{text-align:right}
 .merchants-table tr:hover td{background:var(--bg-tertiary)}
 .view-hint{padding:36px 16px;text-align:center;color:var(--text-muted);font-size:12px;font-style:italic}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:9.5px;font-weight:600;letter-spacing:.04em;text-transform:lowercase;font-family:'Outfit',sans-serif;font-variant-numeric:normal}
+.pill-yellow{background:rgba(218,165,32,.18);color:#a37113}
+.pill-red{background:rgba(192,52,52,.20);color:#a83232}
+[data-theme-dark="1"] .pill-yellow,body.theme-dark .pill-yellow{background:rgba(232,190,90,.18);color:#e8be5a}
+[data-theme-dark="1"] .pill-red,body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
+.snap-stamp{font-size:11px;color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
 
 /* ── Panel grid ── */
 .panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -210,7 +216,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartRatio"></div></div></div>
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco</h2><p>Anuncios y profundidad por m&eacute;todo de pago en el &uacute;ltimo snapshot del rango activo.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
-    <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants principales</h2><p>Top 10 merchants por profundidad en el &uacute;ltimo snapshot de la vista activa.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="topMerchants"></div></div></div>
+    <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants principales</h2><p>Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver una densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para foco en outliers extremos del lado Venta, ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="topMerchants"></div></div></div>
     <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria</h2><p>Rango (max-min) del VWAP 10% por d&iacute;a. Solo en vista &quot;Por d&iacute;a&quot;.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVolatility"></div></div></div>
     <div class="section" data-panel="flow" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants activos</h2><p>Merchants &uacute;nicos por side. Barras: nuevos (+) y desaparecidos (-) vs punto anterior.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartFlow"></div></div></div>
     <div class="section full-width" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartHeatmap"></div></div></div>
@@ -252,6 +258,28 @@ function fmtInt(n){return n==null?'-':NF_INT.format(n)}
 function fmt2(n){return n==null?'-':NF2.format(n)}
 function fmt4(n){return n==null?'-':NF4.format(n)}
 function fmtPctCoverage(p){if(p==null)return'-';if(p===0)return'0%';if(p<0.01)return'<0.01%';return NF2.format(p)+'%'}
+
+// ═══ OUTLIER DETECTION ═══
+// Thresholds simétricos mismo-lado, referencia VWAP 10% del último snapshot.
+// Ajustar acá para cambiar la sensibilidad sin tocar la lógica.
+const OUTLIER_THRESHOLDS = {
+  BUY:  { yellow: 5,   red: 10  },  // ≥ +X% (precio inflado vs VWAP10 Compra)
+  SELL: { yellow: -5,  red: -10 }   // ≤ -X% (precio cebo vs VWAP10 Venta)
+};
+function aggregateOutliers(merchantVwap, side, refVwap10){
+  if(merchantVwap==null || refVwap10==null) return {dev:null, level:null};
+  const dev = (merchantVwap - refVwap10) / refVwap10 * 100;
+  const t = OUTLIER_THRESHOLDS[side];
+  let level = null;
+  if(side==='BUY'){
+    if(dev >= t.red) level='red';
+    else if(dev >= t.yellow) level='yellow';
+  }else{
+    if(dev <= t.red) level='red';
+    else if(dev <= t.yellow) level='yellow';
+  }
+  return {dev, level};
+}
 function hexToRgba(h,a){h=(h||'').trim();if(h.startsWith('rgba')||h.startsWith('rgb'))return h;if(!h.startsWith('#')||h.length<7)return h;return'rgba('+parseInt(h.slice(1,3),16)+','+parseInt(h.slice(3,5),16)+','+parseInt(h.slice(5,7),16)+','+a+')'}
 function hexLuminance(h){h=(h||'').trim();if(!h.startsWith('#')||h.length<7)return 0;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return(0.299*r+0.587*g+0.114*b)/255}
 function isLightTheme(id){if(LIGHT_THEMES.includes(id))return true;if(id&&id.startsWith('custom:')){return hexLuminance(activeThemeValues['bg-primary'])>.5}return false}
@@ -288,6 +316,7 @@ function applyTheme(id){
   localStorage.setItem('dashboard-active-theme',id);
   // Update bar buttons
   document.querySelectorAll('.theme-bar .theme-btn[data-theme]').forEach(b=>{b.classList.toggle('active',b.dataset.theme===id)});
+  document.body.classList.toggle('theme-dark',!isLightTheme(id));
   // Mark active in custom list
   renderCustomList();
   replotAllCharts();
@@ -416,18 +445,18 @@ function rVwap(c,ts,x){
     {x:x,y:ts.map(d=>d.vs25),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
     {x:x,y:ts.map(d=>d.vs5),fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
     {x:x,y:ts.map(d=>d.vs10),name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'},
-    // BCB oficial: dash. Ref Compra: solid. Ref Venta: dot. (Plan ítem 16)
+    // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
     {x:x,y:ts.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
   ];
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
     const hist=meta.bcb_ref_history;
     if(hist.length===1){
       const e=hist[0];
-      traces.push({x:x,y:ts.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'solid'}});
+      traces.push({x:x,y:ts.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
       traces.push({x:x,y:ts.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
     }else{
       const hx=hist.map(e=>new Date(e.fecha+'T00:00:00'));
-      traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'solid'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
+      traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
       traces.push({x:hx,y:hist.map(e=>e.venta),name:'BCB Ref Venta',line:{color:c.bcbRefVenta,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefVenta},connectgaps:false});
     }
   }
@@ -444,25 +473,49 @@ function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...
 function currentViewLastTs(){const ts=datasets[currentView];return(ts&&ts.length)?ts[ts.length-1].ts:meta.last_ts}
 
 function rMerchants(){
-  const key=currentViewLastTs();
-  const data=(DATA.top_merchants||{})[key]||(DATA.top_merchants||{})[meta.last_ts];
+  // Por decisión ζ del plan, esta tabla se congela al último snapshot del
+  // dataset (DATA.merchants_last) y NO responde al selector de fechas.
+  // Las refs VWAP 10% para outliers vienen del mismo snapshot.
+  const ml=DATA.merchants_last||null;
+  const data = ml && ml.BUY ? {BUY:ml.BUY, SELL:ml.SELL}
+                            : ((DATA.top_merchants||{})[currentViewLastTs()] || (DATA.top_merchants||{})[meta.last_ts]);
+  const refs = {
+    BUY:  ml ? ml.vwap10_buy  : (last && last.vb10),
+    SELL: ml ? ml.vwap10_sell : (last && last.vs10)
+  };
+  // Caveat ζ: stamp del snapshot mostrado.
+  const stampEl=document.getElementById('merchantsSnapStamp');
+  if(stampEl){
+    const snapTs = ml ? ml.snapshot_ts : meta.last_ts;
+    stampEl.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
   if(!data){document.getElementById('topMerchants').innerHTML='<div class="view-hint">Sin datos de merchants</div>';return}
-  const renderSide=(label,arr)=>{
+  const renderSide=(label,arr,side)=>{
     if(!arr||!arr.length)return '<div class="merchants-side"><h3>'+label+'</h3><div class="view-hint">Sin datos</div></div>';
-    const rows=arr.map((m,i)=>'<tr>'+
-      '<td>'+(i+1)+'</td>'+
-      '<td class="nick" title="'+(m.nick||'').replace(/"/g,'&quot;')+'">'+(m.nick||'')+'</td>'+
-      '<td class="num">'+fmtInt(m.depth)+'</td>'+
-      '<td class="num">'+(m.pct!=null?fmt2(m.pct)+'%':'-')+'</td>'+
-      '<td class="num">'+fmt4(m.vwap)+'</td>'+
-      '<td class="num">'+(m.n_banks!=null?m.n_banks:'-')+'</td>'+
-      '<td class="num">'+fmtInt(m.month_order_count)+'</td>'+
-    '</tr>').join('');
+    const ref=refs[side];
+    const rows=arr.map((m,i)=>{
+      const {dev,level}=aggregateOutliers(m.vwap, side, ref);
+      let pillHtml='';
+      if(level){
+        const tip = 'Desv. '+(dev>=0?'+':'')+fmt2(dev)+'% vs VWAP 10% '+(side==='BUY'?'Compra ':'Venta ')+(ref!=null?fmt4(ref)+' BOB':'');
+        pillHtml='<span class="pill pill-'+level+'" title="'+tip.replace(/"/g,'&quot;')+'">outlier</span>';
+      }
+      return '<tr>'+
+        '<td>'+(i+1)+'</td>'+
+        '<td class="nick" title="'+(m.nick||'').replace(/"/g,'&quot;')+'">'+(m.nick||'')+'</td>'+
+        '<td class="num">'+fmtInt(m.depth)+'</td>'+
+        '<td class="num">'+(m.pct!=null?fmt2(m.pct)+'%':'-')+'</td>'+
+        '<td class="num">'+fmt4(m.vwap)+'</td>'+
+        '<td>'+pillHtml+'</td>'+
+        '<td class="num">'+(m.n_banks!=null?m.n_banks:'-')+'</td>'+
+        '<td class="num">'+fmtInt(m.month_order_count)+'</td>'+
+      '</tr>';
+    }).join('');
     return '<div class="merchants-side"><h3>'+label+'</h3><table class="merchants-table">'+
-      '<thead><tr><th>#</th><th>Nick</th><th>Profundidad (USDT)</th><th>% del lado</th><th>VWAP (BOB)</th><th>Bancos</th><th>Trades/mes</th></tr></thead>'+
+      '<thead><tr><th>#</th><th>Nick</th><th class="num">Profundidad (USDT)</th><th class="num">% del lado</th><th class="num">VWAP (BOB)</th><th>Estado</th><th class="num">Bancos</th><th class="num">Trades/mes</th></tr></thead>'+
       '<tbody>'+rows+'</tbody></table></div>';
   };
-  document.getElementById('topMerchants').innerHTML='<div class="merchants-grid">'+renderSide('Compra',data.BUY)+renderSide('Venta',data.SELL)+'</div>';
+  document.getElementById('topMerchants').innerHTML='<div class="merchants-grid">'+renderSide('Compra',data.BUY,'BUY')+renderSide('Venta',data.SELL,'SELL')+'</div>';
 }
 
 function rVolatility(c){
