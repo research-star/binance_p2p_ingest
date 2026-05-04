@@ -174,9 +174,6 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
       <div class="tb-dropdown-wrap" id="othersWrap">
         <button class="theme-btn" id="othersBtn"><span class="btn-full">Otros &#9662;</span><span class="btn-short">&#8230;</span></button>
         <div class="tb-dropdown" id="othersDd">
-          <div class="tb-dd-title">M&aacute;s temas</div>
-          <div class="tb-dd-item" data-id="ink"><div class="dd-dot" style="background:#000"></div><span>Negro</span></div>
-          <div class="tb-dd-divider"></div>
           <div class="tb-dd-title">Mis temas</div>
           <div id="customList"></div>
           <div class="tb-dd-divider"></div>
@@ -196,10 +193,10 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
           <div class="cp-row"><label>Venta</label><input type="color" id="cp-orange" value="#b35c1e"></div>
           <div class="cp-row"><label>Acento</label><input type="color" id="cp-blue-accent" value="#3b6fb5"></div>
           <div class="ep-buttons">
-            <button id="cpSaveAs">Guardar como&hellip;</button>
             <button id="cpExport">Export JSON</button>
             <button id="cpReset">Reset</button>
           </div>
+          <div class="tb-dd-note">Los cambios se guardan al cerrar.</div>
         </div>
       </div>
     </div>
@@ -235,12 +232,12 @@ const meta = DATA.meta, last = DATA.ts[DATA.ts.length-1];
 const THEMES = {
   paper:{'bg-primary':'#f7f5f0','bg-secondary':'#ffffff','bg-tertiary':'#eeece6','border-color':'#ddd9d0','text-primary':'#1a1a1a','text-secondary':'#5c5c5c','text-muted':'#9a9a9a','green':'#2d7a4f','green-muted':'rgba(45,122,79,0.10)','orange':'#b35c1e','orange-muted':'rgba(179,92,30,0.10)','blue-accent':'#3b6fb5','kpi-value-size':'28px'},
   claude:{'bg-primary':'#ece5d8','bg-secondary':'#f5f0e8','bg-tertiary':'#e2dace','border-color':'#d1c9ba','text-primary':'#2b2520','text-secondary':'#6b6056','text-muted':'#998e80','green':'#407a56','green-muted':'rgba(64,122,86,0.10)','orange':'#b8652a','orange-muted':'rgba(184,101,42,0.10)','blue-accent':'#8b6d4a','kpi-value-size':'28px'},
-  slate:{'bg-primary':'#0f1115','bg-secondary':'#161a20','bg-tertiary':'#1e2228','border-color':'#2a2f38','text-primary':'#dce0e8','text-secondary':'#7c828e','text-muted':'#484e58','green':'#4faa72','green-muted':'rgba(79,170,114,0.12)','orange':'#d08050','orange-muted':'rgba(208,128,80,0.12)','blue-accent':'#5a8ac0','kpi-value-size':'28px'},
-  ink:{'bg-primary':'#000000','bg-secondary':'#0a0a0c','bg-tertiary':'#141416','border-color':'#222228','text-primary':'#c8cad0','text-secondary':'#68686e','text-muted':'#3e3e44','green':'#4a9e68','green-muted':'rgba(74,158,104,0.12)','orange':'#c87848','orange-muted':'rgba(200,120,72,0.12)','blue-accent':'#5580aa','kpi-value-size':'28px'}
+  slate:{'bg-primary':'#0f1115','bg-secondary':'#161a20','bg-tertiary':'#1e2228','border-color':'#2a2f38','text-primary':'#dce0e8','text-secondary':'#7c828e','text-muted':'#484e58','green':'#4faa72','green-muted':'rgba(79,170,114,0.12)','orange':'#d08050','orange-muted':'rgba(208,128,80,0.12)','blue-accent':'#5a8ac0','kpi-value-size':'28px'}
 };
 const LIGHT_THEMES = ['paper','claude'];
 
 let currentTheme='paper', currentView='hourly', activeThemeValues={...THEMES.paper};
+let editorBaseline=null, editorBaselineTheme=null;   // snapshot al abrir el editor
 
 // ═══ UTILS ═══
 const NF_INT = new Intl.NumberFormat('es-BO',{maximumFractionDigits:0});
@@ -267,9 +264,6 @@ function applyTheme(id){
   localStorage.setItem('dashboard-active-theme',id);
   // Update bar buttons
   document.querySelectorAll('.theme-bar .theme-btn[data-theme]').forEach(b=>{b.classList.toggle('active',b.dataset.theme===id)});
-  // Mark ink item in Otros dropdown
-  const inkItem=document.querySelector('#othersDd .tb-dd-item[data-id="ink"]');
-  if(inkItem)inkItem.classList.toggle('is-active',id==='ink');
   // Mark active in custom list
   renderCustomList();
   replotAllCharts();
@@ -309,7 +303,39 @@ function renderCustomList(){
 }
 
 // ═══ PANEL MANAGEMENT ═══
-function closeAllPanels(){document.getElementById('othersDd').classList.remove('open');document.getElementById('editDd').classList.remove('open')}
+function persistEditorChangesIfAny(){
+  // Auto-guardado al cerrar el editor: si activeThemeValues cambió desde
+  // el baseline, persistir como custom. Sobre presets crea/sobrescribe
+  // 'Edición de {nombre}'; sobre custom existente sobrescribe.
+  if(!editorBaseline) return;
+  const changed=Object.keys(editorBaseline).some(k=>editorBaseline[k]!==activeThemeValues[k]);
+  if(!changed){editorBaseline=null;editorBaselineTheme=null;return}
+  let targetName, targetId;
+  if(editorBaselineTheme&&editorBaselineTheme.startsWith('custom:')){
+    targetName=editorBaselineTheme.slice(7);
+  }else{
+    const presetLabels={paper:'Claro',claude:'Beige',slate:'Oscuro'};
+    targetName=('Edición de '+(presetLabels[editorBaselineTheme]||editorBaselineTheme)).slice(0,20);
+  }
+  targetId='custom:'+targetName;
+  const colors={};for(const k of Object.keys(THEMES.paper))colors[k]=activeThemeValues[k];
+  const saved=loadSaved().filter(t=>t.name!==targetName);
+  if(saved.length>=5){
+    // Sin espacio: si el target ya existía solo sobrescribimos; si no, descartar cambios silenciosamente
+    // (filter ya lo quitó si existía, así que aquí no había hueco). Dejar baseline para no reintentar.
+    editorBaseline=null;editorBaselineTheme=null;return;
+  }
+  saved.push({name:targetName,colors});persistSaved(saved);
+  editorBaseline=null;editorBaselineTheme=null;
+  if(currentTheme!==targetId)applyTheme(targetId); else renderCustomList();
+}
+function closeAllPanels(){
+  const ed=document.getElementById('editDd');
+  const wasEditOpen=ed.classList.contains('open');
+  document.getElementById('othersDd').classList.remove('open');
+  ed.classList.remove('open');
+  if(wasEditOpen) persistEditorChangesIfAny();
+}
 
 // ═══ PLOTLY ═══
 function getC(){const t=activeThemeValues;return{gridcolor:t['border-color'],fontcolor:t['text-secondary'],green:t.green,greenMuted:t['green-muted'],orange:t.orange,orangeMuted:t['orange-muted'],blue:t['blue-accent'],textPrimary:t['text-primary'],textMuted:t['text-muted'],bgTertiary:t['bg-tertiary'],borderColor:t['border-color']}}
@@ -462,22 +488,30 @@ document.getElementById('othersBtn').addEventListener('click',e=>{
   ed.classList.remove('open');
   dd.classList.toggle('open');
 });
-// "Negro" preset item in Otros
-document.querySelector('#othersDd .tb-dd-item[data-id="ink"]').addEventListener('click',()=>{closeAllPanels();applyTheme('ink')});
-
 // Edit dropdown
 document.getElementById('editBtn').addEventListener('click',e=>{
   e.stopPropagation();
   const dd=document.getElementById('editDd'), od=document.getElementById('othersDd');
   od.classList.remove('open');
-  dd.classList.toggle('open');
-  if(dd.classList.contains('open'))updateCpInputs();
+  const willOpen=!dd.classList.contains('open');
+  if(willOpen){
+    editorBaseline={...activeThemeValues};
+    editorBaselineTheme=currentTheme;
+    dd.classList.add('open');
+    updateCpInputs();
+  }else{
+    dd.classList.remove('open');
+    persistEditorChangesIfAny();
+  }
 });
 
 // Click outside closes panels
 document.addEventListener('click',e=>{
   if(!document.getElementById('othersWrap').contains(e.target))document.getElementById('othersDd').classList.remove('open');
-  if(!document.getElementById('editWrap').contains(e.target))document.getElementById('editDd').classList.remove('open');
+  if(!document.getElementById('editWrap').contains(e.target)){
+    const ed=document.getElementById('editDd');
+    if(ed.classList.contains('open')){ed.classList.remove('open');persistEditorChangesIfAny()}
+  }
 });
 // Escape closes panels
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAllPanels()});
@@ -496,17 +530,6 @@ cpMap.forEach(([id,vn])=>{
   const el=document.getElementById(id);
   el.addEventListener('input',function(){applyCssVar(vn,this.value);clearTimeout(rpT);rpT=setTimeout(()=>replotAllCharts(),300)});
   el.addEventListener('change',function(){applyCssVar(vn,this.value);clearTimeout(rpT);replotAllCharts()});
-});
-
-// Save as
-document.getElementById('cpSaveAs').addEventListener('click',()=>{
-  const name=prompt('Nombre del tema (max 20 chars):');
-  if(!name||!name.trim())return;
-  const n=name.trim().slice(0,20), saved=loadSaved().filter(t=>t.name!==n);
-  if(saved.length>=5){alert('M\u00e1ximo 5 temas. Elimin\u00e1 uno primero.');return}
-  const colors={};for(const k of Object.keys(THEMES.paper))colors[k]=activeThemeValues[k];
-  saved.push({name:n,colors});persistSaved(saved);
-  applyTheme('custom:'+n);closeAllPanels();
 });
 
 // Export JSON
@@ -643,7 +666,9 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
     if(btn)updateToggleIcon(btn,p.classList.contains('full-width'));
   });
   renderCustomList();
-  const saved=localStorage.getItem('dashboard-active-theme');
+  let saved=localStorage.getItem('dashboard-active-theme');
+  // Migración: tema 'ink' (Negro) eliminado, mapear a 'slate' (Oscuro).
+  if(saved==='ink'){saved='slate';localStorage.setItem('dashboard-active-theme','slate')}
   const customIds=loadSaved().map(t=>'custom:'+t.name);
   if(saved&&(THEMES[saved]||customIds.includes(saved)))applyTheme(saved);
   else applyTheme('paper');
