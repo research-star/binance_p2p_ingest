@@ -65,7 +65,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .kpi{padding:18px 24px;border-right:1px solid var(--border-color)}
 .kpi:last-child{border-right:none}
 .kpi .label{font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px}
-.kpi .value{font-family:'IBM Plex Mono',monospace;font-size:var(--kpi-value-size);font-weight:600;color:var(--text-primary);letter-spacing:-.02em}
+.kpi .value{font-family:'IBM Plex Mono',monospace;font-size:var(--kpi-value-size);font-weight:600;color:var(--text-primary);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .sub{font-size:11px;color:var(--text-muted);margin-top:3px}
 .kpi .value.buy{color:var(--green)}.kpi .value.sell{color:var(--orange)}.kpi .value.spread{color:var(--blue-accent)}
 
@@ -89,7 +89,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 /* ── Bank table ── */
 .bank-table{width:100%;border-collapse:collapse}
 .bank-table th{text-align:left;font-family:'Outfit',sans-serif;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border-color)}
-.bank-table td{padding:8px 14px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-secondary)}
+.bank-table td{padding:8px 14px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+.bank-table td.num{text-align:right}
 .bank-table td:first-child{font-family:'Outfit',sans-serif;font-weight:500;font-size:12px;color:var(--text-primary)}
 .bank-table tr:hover td{background:var(--bg-tertiary)}
 .bar-cell{position:relative;z-index:1}
@@ -101,7 +102,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .merchants-side h3{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:6px}
 .merchants-table{width:100%;border-collapse:collapse;font-size:11px}
 .merchants-table th{text-align:left;font-family:'Outfit',sans-serif;font-size:9.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px;border-bottom:1px solid var(--border-color);white-space:nowrap}
-.merchants-table td{padding:5px 8px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;color:var(--text-secondary);white-space:nowrap}
+.merchants-table td{padding:5px 8px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
 .merchants-table td.nick{font-family:'Outfit',sans-serif;color:var(--text-primary);font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis}
 .merchants-table td.num{text-align:right}
 .merchants-table tr:hover td{background:var(--bg-tertiary)}
@@ -221,6 +222,13 @@ const LIGHT_THEMES = ['paper','claude'];
 let currentTheme='paper', currentView='hourly', activeThemeValues={...THEMES.paper};
 
 // ═══ UTILS ═══
+const NF_INT = new Intl.NumberFormat('es-BO',{maximumFractionDigits:0});
+const NF2 = new Intl.NumberFormat('es-BO',{minimumFractionDigits:2,maximumFractionDigits:2});
+const NF4 = new Intl.NumberFormat('es-BO',{minimumFractionDigits:4,maximumFractionDigits:4});
+function fmtInt(n){return n==null?'-':NF_INT.format(n)}
+function fmt2(n){return n==null?'-':NF2.format(n)}
+function fmt4(n){return n==null?'-':NF4.format(n)}
+function fmtPctCoverage(p){if(p==null)return'-';if(p>0&&p<0.1)return'<0,1%';return NF2.format(p)+'%'}
 function hexToRgba(h,a){h=(h||'').trim();if(h.startsWith('rgba')||h.startsWith('rgb'))return h;if(!h.startsWith('#')||h.length<7)return h;return'rgba('+parseInt(h.slice(1,3),16)+','+parseInt(h.slice(3,5),16)+','+parseInt(h.slice(5,7),16)+','+a+')'}
 function hexLuminance(h){h=(h||'').trim();if(!h.startsWith('#')||h.length<7)return 0;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return(0.299*r+0.587*g+0.114*b)/255}
 function isLightTheme(id){if(LIGHT_THEMES.includes(id))return true;if(id&&id.startsWith('custom:')){return hexLuminance(activeThemeValues['bg-primary'])>.5}return false}
@@ -311,7 +319,7 @@ function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d
 function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.blue,.08),line:{color:c.blue,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
 function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.green,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.orange,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
 function rDecile(c){const L=BL(c),dB=DATA.deciles[meta.last_ts].BUY,dS=DATA.deciles[meta.last_ts].SELL,dl=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];Plotly.react('chartDecile',[{x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.green,.55),line:{color:c.green,width:.5}}},{x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.orange,.55),line:{color:c.orange,width:.5}}}],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f',range:[Math.min(...dS)*.998,Math.max(...dB)*1.002]},height:chartHeight('chartDecile')},PC)}
-function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.blue,.2);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th>Anuncios</th><th>Profundidad (USDT)</th><th>Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td>'+b.count+'</td><td class="bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+b.depth.toLocaleString()+'</td><td>'+b.depth_pct+'%</td></tr>').join('')+'</tbody></table>'}
+function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.blue,.2);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num">Anuncios</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>'}
 
 // ── New panel renderers ──
 function currentViewLastTs(){const ts=datasets[currentView];return(ts&&ts.length)?ts[ts.length-1].ts:meta.last_ts}
@@ -325,11 +333,11 @@ function rMerchants(){
     const rows=arr.map((m,i)=>'<tr>'+
       '<td>'+(i+1)+'</td>'+
       '<td class="nick" title="'+(m.nick||'').replace(/"/g,'&quot;')+'">'+(m.nick||'')+'</td>'+
-      '<td class="num">'+(m.depth!=null?m.depth.toLocaleString():'-')+'</td>'+
-      '<td class="num">'+(m.pct!=null?m.pct+'%':'-')+'</td>'+
-      '<td class="num">'+(m.vwap!=null?m.vwap.toFixed(4):'-')+'</td>'+
+      '<td class="num">'+fmtInt(m.depth)+'</td>'+
+      '<td class="num">'+(m.pct!=null?fmt2(m.pct)+'%':'-')+'</td>'+
+      '<td class="num">'+fmt4(m.vwap)+'</td>'+
       '<td class="num">'+(m.n_banks!=null?m.n_banks:'-')+'</td>'+
-      '<td class="num">'+(m.month_order_count!=null?m.month_order_count.toLocaleString():'-')+'</td>'+
+      '<td class="num">'+fmtInt(m.month_order_count)+'</td>'+
     '</tr>').join('');
     return '<div class="merchants-side"><h3>'+label+'</h3><table class="merchants-table">'+
       '<thead><tr><th>#</th><th>Nick</th><th>Profundidad (USDT)</th><th>% del lado</th><th>VWAP (BOB)</th><th>Bancos</th><th>Trades/mes</th></tr></thead>'+
@@ -380,7 +388,7 @@ function rHeatmap(c){
     const nums=vals.filter(v=>v!=null);
     const mn=Math.min(...nums), mx=Math.max(...nums), rng=(mx-mn)||1;
     z.push(vals.map(v=>v==null?null:(v-mn)/rng));
-    text.push(vals.map(v=>v==null?'—':v.toLocaleString(undefined,{maximumFractionDigits:4})));
+    text.push(vals.map(v=>v==null?'—':v.toLocaleString('es-BO',{maximumFractionDigits:4})));
   }
   const L=BL(c);
   const cs=[[0,hexToRgba(c.blue,.05)],[0.5,hexToRgba(c.blue,.35)],[1,c.blue]];
@@ -396,10 +404,10 @@ function renderTimeSeries(v){currentView=v;const c=getC(),ts=datasets[v],x=makeD
 function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rDecile(c);rBank(c);rMerchants();rVolatility(c);rFlow(c);rHeatmap(c)}
 
 // ═══ STATIC CONTENT ═══
-document.getElementById('headerMeta').innerHTML='<strong>'+meta.total_snapshots+'</strong> snapshots &middot; <strong>'+meta.total_ads.toLocaleString()+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'});
-const premium=((last.vb10/meta.bcb_rate-1)*100).toFixed(1);
-document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+last.vb10.toFixed(4)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+last.vs10.toFixed(4)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+last.sp10.toFixed(4)+'</div><div class="sub">'+(last.sp10/last.vb10*100).toFixed(2)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+(last.buy_depth/1e6).toFixed(2)+'M</div><div class="sub">'+last.buy_count+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+(last.sell_depth/1e6).toFixed(2)+'M</div><div class="sub">'+last.sell_count+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+last.depth_ratio.toFixed(2)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+meta.bcb_rate.toFixed(2)+'</div><div class="sub">Prima P2P vs oficial: +'+premium+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+meta.bcb_ref_venta.toFixed(2)+'</div><div class="sub">Compra: '+meta.bcb_ref_compra.toFixed(2)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
-document.getElementById('footerText').textContent='Dashboard generado: '+new Date().toLocaleString('es-BO')+' \u00b7 '+meta.total_snapshots+' snapshots procesados';
+document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'});
+const premium=(last.vb10/meta.bcb_rate-1)*100;
+document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+'</div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
+document.getElementById('footerText').textContent='Dashboard generado: '+new Date().toLocaleString('es-BO')+' \u00b7 '+fmtInt(meta.total_snapshots)+' snapshots procesados';
 
 // ═══ EVENTS ═══
 // View toggle
