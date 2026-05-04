@@ -160,7 +160,8 @@ def process_data(db_path: Path) -> dict:
             bank_stats[b]['depth'] += r['surplus_usdt']
     bank_list = [
         {'name': BANK_CANONICAL.get(b, b), 'count': s['count'],
-         'depth': round(s['depth']), 'depth_pct': round(s['depth'] / total_depth_last * 100, 1)}
+         'depth': round(s['depth']),
+         'depth_pct': round(s['depth'] / total_depth_last * 100, 4)}
         for b, s in sorted(bank_stats.items(), key=lambda x: -x[1]['depth'])
     ]
 
