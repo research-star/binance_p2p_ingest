@@ -65,6 +65,22 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .header .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);text-align:right;line-height:1.7;flex-shrink:0}
 .header .meta strong{color:var(--text-secondary);font-weight:500}
 
+/* ── VWAP hero (fijos arriba del KPI grid) ── */
+.vwap-hero{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
+.vh-card{padding:24px 48px;border-right:1px solid var(--border-color);position:relative}
+.vh-card:last-child{border-right:none}
+.vh-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--text-muted)}
+.vh-card.vh-buy::before{background:var(--color-buy)}
+.vh-card.vh-sell::before{background:var(--color-sell)}
+.vh-label{font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px}
+.vh-value{font-family:'IBM Plex Mono',monospace;font-size:48px;font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+.vh-buy .vh-value{color:var(--color-buy)}
+.vh-sell .vh-value{color:var(--color-sell)}
+.vh-unit{font-size:.32em;font-weight:500;color:var(--text-muted);letter-spacing:.06em;margin-left:8px;text-transform:uppercase}
+.vh-sub{font-family:'Outfit',sans-serif;font-size:12px;color:var(--text-secondary);margin-top:10px}
+.vh-sub .vh-premium{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text-primary);font-variant-numeric:tabular-nums}
+@media(max-width:900px){.vwap-hero{grid-template-columns:1fr}.vh-card{padding:18px 24px;border-right:none;border-bottom:1px solid var(--border-color)}.vh-card:last-child{border-bottom:none}.vh-value{font-size:36px}}
+
 /* ── KPIs ── */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
 .kpi{padding:18px 24px;border-right:1px solid var(--border-color);border-bottom:1px solid transparent}
@@ -201,6 +217,19 @@ body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
   </div>
   <div class="meta" id="headerMeta"></div>
 </div></div>
+
+<div class="vwap-hero" id="vwapHero">
+  <div class="vh-card vh-buy">
+    <div class="vh-label">VWAP 10% Compra</div>
+    <div class="vh-value"><span id="vhBuyValue">&mdash;</span><span class="vh-unit">BOB/USDT</span></div>
+    <div class="vh-sub">Prima vs BCB Ref Compra: <span class="vh-premium" id="vhBuyPremium">&mdash;</span></div>
+  </div>
+  <div class="vh-card vh-sell">
+    <div class="vh-label">VWAP 10% Venta</div>
+    <div class="vh-value"><span id="vhSellValue">&mdash;</span><span class="vh-unit">BOB/USDT</span></div>
+    <div class="vh-sub">Prima vs BCB Ref Venta: <span class="vh-premium" id="vhSellPremium">&mdash;</span></div>
+  </div>
+</div>
 
 <div class="kpi-row" id="kpis"></div>
 
@@ -1023,6 +1052,7 @@ function replotAllCharts(){
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
   rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rHeatmap(c);
   updateKpis();
+  updateVwapHero();
 }
 
 // ═══ STATIC CONTENT ═══
@@ -1030,6 +1060,33 @@ function replotAllCharts(){
   const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
   document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+'<br>Última snapshot: <strong>'+lastSnapFmt+'</strong>';
 }
+// Devuelve {compra, venta} del BCB ref más cercano hacia atrás (<=) a un
+// timestamp dado. Fallback al último ref disponible.
+function bcbRefAt(tsMs){
+  const hist=meta.bcb_ref_history||[];
+  for(let i=hist.length-1;i>=0;i--){
+    const t=new Date(hist[i].fecha+'T00:00:00').getTime();
+    if(t<=tsMs) return {compra:hist[i].compra, venta:hist[i].venta, fecha:hist[i].fecha};
+  }
+  return {compra:meta.bcb_ref_compra, venta:meta.bcb_ref_venta, fecha:meta.bcb_ref_fecha};
+}
+
+function updateVwapHero(){
+  const tm=DATA.ts_metrics, i=activeRange.toIdx;
+  const vb10=tm.vb10[i], vs10=tm.vs10[i];
+  const lastTsMs=new Date(TS_ARR[i]).getTime();
+  const ref=bcbRefAt(lastTsMs);
+  const fmtPrem=(vwap, refVal)=>{
+    if(vwap==null||refVal==null) return '—';
+    const p=(vwap/refVal-1)*100;
+    return (p>=0?'+':'')+fmt2(p)+'%';
+  };
+  document.getElementById('vhBuyValue').textContent  = vb10!=null?fmt4(vb10):'—';
+  document.getElementById('vhSellValue').textContent = vs10!=null?fmt4(vs10):'—';
+  document.getElementById('vhBuyPremium').textContent  = fmtPrem(vb10, ref.compra);
+  document.getElementById('vhSellPremium').textContent = fmtPrem(vs10, ref.venta);
+}
+
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
