@@ -340,7 +340,7 @@ function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d
 function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.blue,.08),line:{color:c.blue,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
 function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.green,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.orange,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
 function rDecile(c){const L=BL(c),dB=DATA.deciles[meta.last_ts].BUY,dS=DATA.deciles[meta.last_ts].SELL,dl=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];Plotly.react('chartDecile',[{x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.green,.55),line:{color:c.green,width:.5}}},{x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.orange,.55),line:{color:c.orange,width:.5}}}],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f',range:[Math.min(...dS)*.998,Math.max(...dB)*1.002]},height:chartHeight('chartDecile')},PC)}
-function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.blue,.2);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num">Anuncios</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>'}
+function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.blue,.18);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num">Anuncios</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>'}
 
 // ── New panel renderers ──
 function currentViewLastTs(){const ts=datasets[currentView];return(ts&&ts.length)?ts[ts.length-1].ts:meta.last_ts}
@@ -413,10 +413,17 @@ function rHeatmap(c){
   }
   const L=BL(c);
   const cs=[[0,hexToRgba(c.blue,.05)],[0.5,hexToRgba(c.blue,.35)],[1,c.blue]];
+  // Texto: color adaptativo según luminosidad del fondo del tema. En celdas
+  // muy oscuras del extremo alto del colorscale, el texto en font.color sigue
+  // siendo legible porque c.blue (acento) sobre celdas pintadas con tinte
+  // azul mantiene contraste razonable; el fallback es el tooltip.
+  const isLight=hexLuminance(activeThemeValues['bg-primary'])>.5;
+  const txtColor=isLight?'#1a1a1a':'#e8e8ee';
   Plotly.react('chartHeatmap',[{
     z:z,x:hm.hours.map(h=>String(h).padStart(2,'0')+'h'),y:labels,
     type:'heatmap',colorscale:cs,showscale:false,
-    text:text,texttemplate:'%{text}',hovertemplate:'%{y}<br>%{x}: %{text}<extra></extra>',
+    text:text,texttemplate:'%{text}',textfont:{family:'IBM Plex Mono,monospace',size:9.5,color:txtColor},
+    hovertemplate:'%{y}<br>%{x}: %{text}<extra></extra>',
     xgap:1,ygap:1,
   }],{...L,margin:{l:130,r:16,t:8,b:40},xaxis:{...L.xaxis,tickangle:0,side:'bottom',type:'category',showgrid:false},yaxis:{...L.yaxis,automargin:true,showgrid:false},height:chartHeight('chartHeatmap')},PC);
 }
