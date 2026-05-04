@@ -322,12 +322,47 @@ def process_data(db_path: Path) -> dict:
         ts_metrics[k] = [d.get(k) for d in ts_data]
 
     last_ts_str = timestamps[-1]
+    # merchants_last incluye TODOS los merchants del último snapshot (no top
+    # 10) para alimentar tanto rMerchants (top por depth, slice cliente) como
+    # rOutliers (todos, filtrado por threshold). Re-agrega aquí en lugar de
+    # heredar el slice de top_merchants[last_ts_str].
+    ml_rows = conn.execute("""
+        SELECT side, advertiser_nick, advertiser_id, price, surplus_usdt,
+               n_banks, month_order_count
+        FROM ads WHERE snapshot_ts_utc=?
+    """, (last_ts_str,)).fetchall()
+    ml_agg = {}
+    for r in ml_rows:
+        key = (r['side'], r['advertiser_id'])
+        if key not in ml_agg:
+            ml_agg[key] = {'nick': r['advertiser_nick'] or '(sin nick)',
+                           'depth': 0.0, 'price_w': 0.0,
+                           'n_banks': r['n_banks'] or 0,
+                           'month_order_count': r['month_order_count'] or 0}
+        ml_agg[key]['depth']   += r['surplus_usdt'] or 0
+        ml_agg[key]['price_w'] += (r['price'] or 0) * (r['surplus_usdt'] or 0)
+    ml_totals = {'BUY': 0.0, 'SELL': 0.0}
+    for (side, _), v in ml_agg.items():
+        ml_totals[side] += v['depth']
+    ml_full = {'BUY': [], 'SELL': []}
+    for side in ('BUY', 'SELL'):
+        entries = sorted([v for (s, _), v in ml_agg.items() if s == side],
+                         key=lambda e: -e['depth'])
+        total = ml_totals[side] or 1
+        ml_full[side] = [{
+            'nick': e['nick'],
+            'depth': round(e['depth']),
+            'pct': round(e['depth'] / total * 100, 2),
+            'vwap': round(e['price_w'] / e['depth'], 4) if e['depth'] > 0 else None,
+            'n_banks': e['n_banks'],
+            'month_order_count': e['month_order_count'],
+        } for e in entries]
     merchants_last = {
         'snapshot_ts': last_ts_str,
         'vwap10_buy':  ts_data[-1].get('vb10'),
         'vwap10_sell': ts_data[-1].get('vs10'),
-        'BUY':  top_merchants.get(last_ts_str, {}).get('BUY', []),
-        'SELL': top_merchants.get(last_ts_str, {}).get('SELL', []),
+        'BUY':  ml_full['BUY'],
+        'SELL': ml_full['SELL'],
     }
 
     # banks_daily: nueva pasada por día (último snapshot de cada día).

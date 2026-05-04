@@ -122,6 +122,17 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 body.theme-dark .pill-yellow{background:rgba(232,190,90,.18);color:#e8be5a}
 body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .snap-stamp{font-size:11px;color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
+.outliers-scroll{max-height:420px;overflow-y:auto;border:1px solid var(--border-color);border-radius:4px}
+.outliers-scroll thead th{position:sticky;top:0;background:var(--bg-secondary);z-index:2}
+.outliers-table{width:100%;border-collapse:collapse;font-size:11px}
+.outliers-table th{text-align:left;font-family:'Outfit',sans-serif;font-size:9.5px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:8px 10px;border-bottom:1px solid var(--border-color);white-space:nowrap}
+.outliers-table th.num{text-align:right}
+.outliers-table td{padding:5px 10px;border-bottom:1px solid var(--border-color);font-family:'IBM Plex Mono',monospace;color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
+.outliers-table td.num{text-align:right}
+.outliers-table td.nick{font-family:'Outfit',sans-serif;color:var(--text-primary);font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.outliers-table td.side-buy{color:var(--color-buy);font-family:'Outfit',sans-serif;font-weight:500}
+.outliers-table td.side-sell{color:var(--color-sell);font-family:'Outfit',sans-serif;font-weight:500}
+.outliers-table tr:hover td{background:var(--bg-tertiary)}
 .panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
 .panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
 
@@ -229,6 +240,7 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco</h2><p>Anuncios y profundidad por m&eacute;todo de pago en el &uacute;ltimo snapshot del rango activo.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
     <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="topMerchants"></div></div></div>
+    <div class="section full-width" data-panel="outliers" draggable="true"><div class="section-header"><div class="sh-left"><h2>Outliers detectados <span class="help-tip" tabindex="0" aria-label="Detalle outliers"><span class="help-icon">i</span><span class="help-pop">Detectados sobre TODOS los merchants del &uacute;ltimo snapshot, no solo el top por profundidad. La densidad alta del lado Venta es estructural &mdash; ajustar <code>OUTLIER_THRESHOLDS</code> en c&oacute;digo si quer&eacute;s foco solo en casos extremos.</span></span></h2><p>Anuncios fuera del rango central del mercado.</p><p class="snap-stamp">Snapshot del <span id="outliersSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="outliersTable"></div></div></div>
     <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria <span class="help-tip" tabindex="0" aria-label="F&oacute;rmulas seg&uacute;n vista"><span class="help-icon">i</span><span class="help-pop">Cada vista usa una f&oacute;rmula distinta:<br>&bull; <em>Cada snapshot</em>: stddev rolling ventana 6 (~1h) sobre VWAP 10%.<br>&bull; <em>Por hora</em>: stddev por hora del d&iacute;a sobre el rango activo.<br>&bull; <em>Por d&iacute;a</em>: rango max&minus;min del VWAP 10% dentro de cada d&iacute;a.<br><br>En vistas <em>Por hora</em> y <em>Por d&iacute;a</em> requiere &ge;3 d&iacute;as distintos en el rango.</span></span></h2><p>Dispersi&oacute;n del VWAP 10% seg&uacute;n vista activa.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVolatility"></div></div></div>
     <div class="section" data-panel="flow" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants activos</h2><p>Merchants &uacute;nicos por side. Barras: nuevos (+) y desaparecidos (-) vs punto anterior.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartFlow"></div></div></div>
     <div class="section full-width" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartHeatmap"></div></div></div>
@@ -270,6 +282,16 @@ function fmtInt(n){return n==null?'-':NF_INT.format(n)}
 function fmt2(n){return n==null?'-':NF2.format(n)}
 function fmt4(n){return n==null?'-':NF4.format(n)}
 function fmtPctCoverage(p){if(p==null)return'-';if(p===0)return'0%';if(p<0.01)return'<0.01%';return NF2.format(p)+'%'}
+// Formato compacto SI-style (1.23M / 4.56K / 7.89). Útil para celdas
+// chicas con valores grandes (heatmap, etc.). Disponible global para
+// reutilizar en otros paneles si se necesita.
+function formatCompact(v){
+  if(v==null) return '';
+  const abs=Math.abs(v);
+  if(abs>=1e6) return (v/1e6).toFixed(2)+'M';
+  if(abs>=1e3) return (v/1e3).toFixed(2)+'K';
+  return v.toFixed(2);
+}
 
 // ═══ OUTLIER DETECTION ═══
 // Thresholds simétricos mismo-lado, referencia VWAP 10% del último snapshot.
@@ -513,7 +535,10 @@ function rMerchants(){
   // dataset (DATA.merchants_last) y NO responde al selector de fechas.
   // Las refs VWAP 10% para outliers vienen del mismo snapshot.
   const ml=DATA.merchants_last||null;
-  const data = ml && ml.BUY ? {BUY:ml.BUY, SELL:ml.SELL}
+  // merchants_last contiene TODOS los merchants del último snapshot
+  // (commit panel Outliers). Acá cortamos a top 10 por depth para mantener
+  // el comportamiento de "Merchants principales".
+  const data = ml && ml.BUY ? {BUY:ml.BUY.slice(0,10), SELL:ml.SELL.slice(0,10)}
                             : ((DATA.top_merchants||{})[currentViewLastTs()] || (DATA.top_merchants||{})[meta.last_ts]);
   const refs = {
     BUY:  ml ? ml.vwap10_buy  : (last && last.vb10),
@@ -552,6 +577,50 @@ function rMerchants(){
       '<tbody>'+rows+'</tbody></table></div>';
   };
   document.getElementById('topMerchants').innerHTML='<div class="merchants-grid">'+renderSide('Compra',data.BUY,'BUY')+renderSide('Venta',data.SELL,'SELL')+'</div>';
+}
+
+function rOutliers(){
+  const ml=DATA.merchants_last||null;
+  const el=document.getElementById('outliersTable');
+  if(!el) return;
+  const stamp=document.getElementById('outliersSnapStamp');
+  if(stamp){
+    const snapTs = ml ? ml.snapshot_ts : meta.last_ts;
+    stamp.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  const refs={BUY:ml.vwap10_buy, SELL:ml.vwap10_sell};
+  const rows=[];
+  for(const side of ['BUY','SELL']){
+    for(const m of (ml[side]||[])){
+      const {dev,level}=aggregateOutliers(m.vwap, side, refs[side]);
+      if(level) rows.push({nick:m.nick, depth:m.depth, vwap:m.vwap, side, dev, level});
+    }
+  }
+  rows.sort((a,b)=>Math.abs(b.dev)-Math.abs(a.dev));
+  if(!rows.length){
+    el.innerHTML='<div class="view-hint">No se detectaron outliers en el &uacute;ltimo snapshot.</div>';
+    return;
+  }
+  const html='<table class="outliers-table"><thead><tr>'+
+    '<th>Lado</th><th>Merchant</th>'+
+    '<th class="num">Depth (USDT)</th><th class="num">VWAP (BOB)</th>'+
+    '<th class="num">Desv. %</th><th>Pill</th></tr></thead><tbody>'+
+    rows.map(r=>{
+      const tip='vs VWAP 10% '+(r.side==='BUY'?'Compra ':'Venta ')+(refs[r.side]!=null?fmt4(refs[r.side])+' BOB':'');
+      const sideLabel=r.side==='BUY'?'Compra':'Venta';
+      const sideCls=r.side==='BUY'?'side-buy':'side-sell';
+      return '<tr>'+
+        '<td class="'+sideCls+'">'+sideLabel+'</td>'+
+        '<td class="nick" title="'+(r.nick||'').replace(/"/g,'&quot;')+'">'+(r.nick||'')+'</td>'+
+        '<td class="num">'+fmtInt(r.depth)+'</td>'+
+        '<td class="num">'+fmt4(r.vwap)+'</td>'+
+        '<td class="num">'+(r.dev>=0?'+':'')+fmt2(r.dev)+'%</td>'+
+        '<td><span class="pill pill-'+r.level+'" title="'+tip.replace(/"/g,'&quot;')+'">outlier</span></td>'+
+      '</tr>';
+    }).join('')+
+    '</tbody></table>';
+  el.innerHTML='<div class="outliers-scroll">'+html+'</div>';
 }
 
 // Stddev poblacional con tolerancia a nulls.
@@ -692,7 +761,7 @@ function rHeatmap(c){
     const nums=vals.filter(v=>v!=null);
     const mn=Math.min(...nums), mx=Math.max(...nums), rng=(mx-mn)||1;
     z.push(vals.map(v=>v==null?null:(v-mn)/rng));
-    text.push(vals.map(v=>v==null?'—':v.toLocaleString('en-US',{maximumFractionDigits:4})));
+    text.push(vals.map(v=>v==null?'—':formatCompact(v)));
   }
   const L=BL(c);
   const cs=[[0,hexToRgba(c.neutral,.05)],[0.5,hexToRgba(c.neutral,.35)],[1,c.neutral]];
@@ -711,8 +780,8 @@ function rHeatmap(c){
   }],{...L,margin:{l:130,r:16,t:8,b:40},xaxis:{...L.xaxis,tickangle:0,side:'bottom',type:'category',showgrid:false},yaxis:{...L.yaxis,automargin:true,showgrid:false},height:chartHeight('chartHeatmap')},PC);
 }
 
-function renderTimeSeries(v){currentView=v;const c=getC(),ts=datasets[v],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rMerchants();rVolatility(c);rFlow(c)}
-function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rDecile(c);rBank(c);rMerchants();rVolatility(c);rFlow(c);rHeatmap(c)}
+function renderTimeSeries(v){currentView=v;const c=getC(),ts=datasets[v],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rMerchants();rOutliers();rVolatility(c);rFlow(c)}
+function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rDecile(c);rBank(c);rMerchants();rOutliers();rVolatility(c);rFlow(c);rHeatmap(c)}
 
 // ═══ STATIC CONTENT ═══
 {
@@ -848,7 +917,8 @@ document.getElementById('importBtn').addEventListener('click',()=>{
 const DEFAULT_LAYOUT = [
   {id:'vwap',full:true},{id:'spread',full:false},{id:'depth',full:false},
   {id:'decile',full:false},{id:'ratio',full:false},{id:'conc',full:false},{id:'bank',full:false},
-  {id:'merchants',full:true},{id:'volatility',full:false},{id:'flow',full:false},{id:'heatmap',full:true}
+  {id:'merchants',full:true},{id:'outliers',full:true},
+  {id:'volatility',full:false},{id:'flow',full:false},{id:'heatmap',full:true}
 ];
 
 function loadLayout(){
@@ -864,11 +934,17 @@ function applyLayout(layout){
   const grid=document.getElementById('panelGrid');
   const panels={};
   [...grid.children].forEach(el=>{panels[el.dataset.panel]=el});
+  const layoutIds=new Set(layout.map(i=>i.id));
   layout.forEach(item=>{
     const el=panels[item.id];
     if(!el)return;
     el.classList.toggle('full-width',!!item.full);
     grid.appendChild(el);
+  });
+  // Paneles nuevos (no presentes en layout legacy guardado) van al final
+  // preservando su orden HTML; evita que queden colgados al principio.
+  Object.keys(panels).forEach(id=>{
+    if(!layoutIds.has(id)) grid.appendChild(panels[id]);
   });
 }
 function chartHeight(divId){const el=document.getElementById(divId);if(!el)return 300;const panel=el.closest('.section');return(panel&&panel.classList.contains('full-width'))?400:300}
