@@ -219,7 +219,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco</h2><p>Anuncios y profundidad por m&eacute;todo de pago en el &uacute;ltimo snapshot del rango activo.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
     <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants principales</h2><p>Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver una densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para foco en outliers extremos del lado Venta, ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="topMerchants"></div></div></div>
-    <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria</h2><p>Rango (max-min) del VWAP 10% por d&iacute;a. Solo en vista &quot;Por d&iacute;a&quot;.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVolatility"></div></div></div>
+    <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria</h2><p>Cada vista usa una f&oacute;rmula distinta: <em>Cada snapshot</em> &rarr; stddev rolling de 6 puntos (~1h); <em>Por hora</em> &rarr; stddev por hora del d&iacute;a; <em>Por d&iacute;a</em> &rarr; rango max&minus;min del VWAP 10% diario.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVolatility"></div></div></div>
     <div class="section" data-panel="flow" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants activos</h2><p>Merchants &uacute;nicos por side. Barras: nuevos (+) y desaparecidos (-) vs punto anterior.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartFlow"></div></div></div>
     <div class="section full-width" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartHeatmap"></div></div></div>
   </div><!-- /panel-grid -->
@@ -542,20 +542,87 @@ function rMerchants(){
   document.getElementById('topMerchants').innerHTML='<div class="merchants-grid">'+renderSide('Compra',data.BUY,'BUY')+renderSide('Venta',data.SELL,'SELL')+'</div>';
 }
 
+// Stddev poblacional con tolerancia a nulls.
+function _stddev(arr){
+  const xs=arr.filter(v=>v!=null);
+  if(xs.length<2) return null;
+  const m=xs.reduce((a,b)=>a+b,0)/xs.length;
+  return Math.sqrt(xs.reduce((s,v)=>s+(v-m)*(v-m),0)/xs.length);
+}
+
+// aggregateVolatility(rangeFromIdx, rangeToIdx, view): three formulas.
+// Mientras no exista selector de fechas (Fase 6.1), rangeFromIdx=0 y
+// rangeToIdx = ts_metrics.ts.length - 1 (rango = todo el dataset).
+function aggregateVolatility(rangeFromIdx, rangeToIdx, view){
+  const tm=DATA.ts_metrics; if(!tm||!tm.ts) return {empty:true,msg:'Sin datos'};
+  const ts=tm.ts.slice(rangeFromIdx, rangeToIdx+1);
+  const vb=tm.vb10.slice(rangeFromIdx, rangeToIdx+1);
+  const vs=tm.vs10.slice(rangeFromIdx, rangeToIdx+1);
+  if(!ts.length) return {empty:true,msg:'Sin datos en el rango'};
+  const distinctDays=new Set(ts.map(t=>t.slice(0,10))).size;
+
+  if(view==='all'||view==='snapshot'){
+    // Rolling stddev ventana 6 (~1h) sobre vb10/vs10.
+    const W=6;
+    const buy=[], sell=[];
+    for(let i=0;i<ts.length;i++){
+      const a=Math.max(0,i-W+1);
+      buy.push(_stddev(vb.slice(a,i+1)));
+      sell.push(_stddev(vs.slice(a,i+1)));
+    }
+    return {x:ts.map(t=>new Date(new Date(t).getTime()-4*3600000)), buy, sell, mode:'lines', xType:'date',
+            yTitle:'Stddev rolling VWAP 10% (BOB/USDT)'};
+  }
+  if(distinctDays<3) return {empty:true,msg:'Necesita al menos 3 días de data en el rango seleccionado'};
+  if(view==='hourly'){
+    // Stddev de cada hora del día (Bolivia UTC-4) sobre todas las ocurrencias.
+    const buckBuy=Array.from({length:24},()=>[]), buckSell=Array.from({length:24},()=>[]);
+    for(let i=0;i<ts.length;i++){
+      const h=(new Date(new Date(ts[i]).getTime()-4*3600000)).getUTCHours();
+      if(vb[i]!=null) buckBuy[h].push(vb[i]);
+      if(vs[i]!=null) buckSell[h].push(vs[i]);
+    }
+    const labels=Array.from({length:24},(_,h)=>String(h).padStart(2,'0')+'h');
+    return {x:labels, buy:buckBuy.map(_stddev), sell:buckSell.map(_stddev), mode:'bars', xType:'category',
+            yTitle:'Stddev VWAP 10% por hora (BOB/USDT)'};
+  }
+  // daily: rango max-min por día.
+  const byDay={};
+  for(let i=0;i<ts.length;i++){
+    const d=ts[i].slice(0,10);
+    if(!byDay[d]) byDay[d]={vb:[],vs:[]};
+    if(vb[i]!=null) byDay[d].vb.push(vb[i]);
+    if(vs[i]!=null) byDay[d].vs.push(vs[i]);
+  }
+  const days=Object.keys(byDay).sort();
+  return {x:days,
+          buy: days.map(d=>byDay[d].vb.length?Math.max(...byDay[d].vb)-Math.min(...byDay[d].vb):null),
+          sell:days.map(d=>byDay[d].vs.length?Math.max(...byDay[d].vs)-Math.min(...byDay[d].vs):null),
+          mode:'bars', xType:'category', yTitle:'Rango VWAP 10% intradiario (BOB/USDT)'};
+}
+
 function rVolatility(c){
   const el=document.getElementById('chartVolatility');
-  if(currentView!=='daily'){
-    el.innerHTML='<div class="view-hint">Cambi&aacute; a vista &quot;Por d&iacute;a&quot; para ver este gr&aacute;fico.</div>';
-    return;
-  }
+  // Mientras no haya selector de fechas, rango = todo el dataset.
+  const total=(DATA.ts_metrics&&DATA.ts_metrics.ts)?DATA.ts_metrics.ts.length:0;
+  if(total===0){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  const v=aggregateVolatility(0, total-1, currentView);
+  if(v.empty){el.innerHTML='<div class="view-hint">'+v.msg+'</div>';return}
   el.innerHTML='';
-  const v=DATA.volatility_daily||[];
-  if(!v.length){el.innerHTML='<div class="view-hint">Sin datos de volatilidad</div>';return}
-  const L=BL(c), xa=xaxisForView(L.xaxis);
-  Plotly.react('chartVolatility',[
-    {x:v.map(d=>d.date),y:v.map(d=>d.buy_range),name:'Compra (rango)',type:'bar',marker:{color:c.buy}},
-    {x:v.map(d=>d.date),y:v.map(d=>d.sell_range),name:'Venta (rango)',type:'bar',marker:{color:c.sell}},
-  ],{...L,barmode:'group',xaxis:{...L.xaxis,type:'category'},yaxis:{...L.yaxis,title:{text:'Rango VWAP 10% (BOB/USDT)',font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},showlegend:true,height:chartHeight('chartVolatility')},PC);
+  const L=BL(c);
+  const xaxisCfg = v.xType==='category' ? {...L.xaxis,type:'category',tickangle:v.x.length>14?-30:0}
+                                        : xaxisForView(L.xaxis);
+  if(v.mode==='lines'){
+    Plotly.react('chartVolatility',[
+      {x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',line:{color:c.buy,width:1.5}},
+      {x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',line:{color:c.sell,width:1.5}},
+    ],{...L,xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartVolatility')},PC);
+  }else{
+    Plotly.react('chartVolatility',[
+      {x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}},
+      {x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}},
+    ],{...L,barmode:'group',xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},showlegend:true,height:chartHeight('chartVolatility')},PC);
+  }
 }
 
 function rFlow(c){
