@@ -65,22 +65,6 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .header .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);text-align:right;line-height:1.7;flex-shrink:0}
 .header .meta strong{color:var(--text-secondary);font-weight:500}
 
-/* ── VWAP hero (fijos arriba del KPI grid) ── */
-.vwap-hero{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
-.vh-card{padding:24px 48px;border-right:1px solid var(--border-color);position:relative}
-.vh-card:last-child{border-right:none}
-.vh-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--text-muted)}
-.vh-card.vh-buy::before{background:var(--color-buy)}
-.vh-card.vh-sell::before{background:var(--color-sell)}
-.vh-label{font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:10px}
-.vh-value{font-family:'IBM Plex Mono',monospace;font-size:48px;font-weight:600;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums;color:var(--text-primary)}
-.vh-buy .vh-value{color:var(--color-buy)}
-.vh-sell .vh-value{color:var(--color-sell)}
-.vh-unit{font-size:.32em;font-weight:500;color:var(--text-muted);letter-spacing:.06em;margin-left:8px;text-transform:uppercase}
-.vh-sub{font-family:'Outfit',sans-serif;font-size:12px;color:var(--text-secondary);margin-top:10px}
-.vh-sub .vh-premium{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text-primary);font-variant-numeric:tabular-nums}
-@media(max-width:900px){.vwap-hero{grid-template-columns:1fr}.vh-card{padding:18px 24px;border-right:none;border-bottom:1px solid var(--border-color)}.vh-card:last-child{border-bottom:none}.vh-value{font-size:36px}}
-
 /* ── KPIs ── */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
 .kpi{padding:18px 24px;border-right:1px solid var(--border-color);border-bottom:1px solid transparent}
@@ -217,19 +201,6 @@ body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
   </div>
   <div class="meta" id="headerMeta"></div>
 </div></div>
-
-<div class="vwap-hero" id="vwapHero">
-  <div class="vh-card vh-buy">
-    <div class="vh-label">VWAP 10% Compra</div>
-    <div class="vh-value"><span id="vhBuyValue">&mdash;</span><span class="vh-unit">BOB/USDT</span></div>
-    <div class="vh-sub">Prima vs BCB Ref Compra: <span class="vh-premium" id="vhBuyPremium">&mdash;</span></div>
-  </div>
-  <div class="vh-card vh-sell">
-    <div class="vh-label">VWAP 10% Venta</div>
-    <div class="vh-value"><span id="vhSellValue">&mdash;</span><span class="vh-unit">BOB/USDT</span></div>
-    <div class="vh-sub">Prima vs BCB Ref Venta: <span class="vh-premium" id="vhSellPremium">&mdash;</span></div>
-  </div>
-</div>
 
 <div class="kpi-row" id="kpis"></div>
 
@@ -1052,7 +1023,6 @@ function replotAllCharts(){
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
   rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rHeatmap(c);
   updateKpis();
-  updateVwapHero();
 }
 
 // ═══ STATIC CONTENT ═══
@@ -1071,27 +1041,21 @@ function bcbRefAt(tsMs){
   return {compra:meta.bcb_ref_compra, venta:meta.bcb_ref_venta, fecha:meta.bcb_ref_fecha};
 }
 
-function updateVwapHero(){
-  const tm=DATA.ts_metrics, i=activeRange.toIdx;
-  const vb10=tm.vb10[i], vs10=tm.vs10[i];
-  const lastTsMs=new Date(TS_ARR[i]).getTime();
-  const ref=bcbRefAt(lastTsMs);
-  const fmtPrem=(vwap, refVal)=>{
-    if(vwap==null||refVal==null) return '—';
-    const p=(vwap/refVal-1)*100;
-    return (p>=0?'+':'')+fmt2(p)+'%';
-  };
-  document.getElementById('vhBuyValue').textContent  = vb10!=null?fmt4(vb10):'—';
-  document.getElementById('vhSellValue').textContent = vs10!=null?fmt4(vs10):'—';
-  document.getElementById('vhBuyPremium').textContent  = fmtPrem(vb10, ref.compra);
-  document.getElementById('vhSellPremium').textContent = fmtPrem(vs10, ref.venta);
-}
-
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
   const premium=(last.vb10/meta.bcb_rate-1)*100;
-document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+' <span class="unit">BOB</span></div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
+  // Prima vs BCB Ref del lado correspondiente, matched al ts del último
+  // snapshot del rango activo (bcbRefAt busca <=).
+  const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
+  const fmtPrem=(vwap,refVal)=>{
+    if(vwap==null||refVal==null) return '—';
+    const p=(vwap/refVal-1)*100;
+    return (p>=0?'+':'')+fmt2(p)+'%';
+  };
+  const subBuy  = 'BOB/USDT &middot; Prima vs BCB Ref Compra: '+fmtPrem(last.vb10, ref.compra);
+  const subSell = 'BOB/USDT &middot; Prima vs BCB Ref Venta: '+fmtPrem(last.vs10, ref.venta);
+document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">'+subBuy+'</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">'+subSell+'</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+' <span class="unit">BOB</span></div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
 }
 const DASHBOARD_VERSION='v0.3.0';
 const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
