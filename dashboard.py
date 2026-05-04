@@ -25,6 +25,21 @@ DEFAULT_DB = NORMALIZED_DB
 DEFAULT_OUTPUT = DASHBOARD_HTML
 BCB_REF_FILE = BCB_REF_JSON
 
+# Mapeo canónico de nombres de bancos (raw → display).
+BANK_CANONICAL = {
+    'BancoDeBolivia':  'Banco de Bolivia',
+    'BancoDeCredito':  'Banco de Crédito BCP',
+    'BancoEconomico':  'Banco Económico',
+    'BancoFIE':        'Banco FIE',
+    'BancoFassil':     'Banco Fassil',
+    'BancoGanadero':   'Banco Ganadero',
+    'BancoSantaCruz':  'Banco SantaCruz',
+    'BancoSolidario':  'Banco Solidario',
+    'BancoUnion':      'Banco Unión',
+    'SoliPagos':       'SoliPagos',
+    'TigoMoney':       'Tigo Money',
+}
+
 
 def load_bcb_ref(first_date: str | None = None) -> dict:
     """Lee bcb_referencial.json (array de {fecha,compra,venta}). Soporta formato
@@ -144,7 +159,7 @@ def process_data(db_path: Path) -> dict:
             bank_stats[b]['count'] += 1
             bank_stats[b]['depth'] += r['surplus_usdt']
     bank_list = [
-        {'name': b.replace('Banco', '').replace('De', 'de '), 'count': s['count'],
+        {'name': BANK_CANONICAL.get(b, b), 'count': s['count'],
          'depth': round(s['depth']), 'depth_pct': round(s['depth'] / total_depth_last * 100, 1)}
         for b, s in sorted(bank_stats.items(), key=lambda x: -x[1]['depth'])
     ]
