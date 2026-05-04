@@ -60,8 +60,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 .header{background:var(--bg-secondary);padding:28px 48px 24px;border-bottom:1px solid var(--border-color)}
 .header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
 .header-left{display:flex;align-items:center;gap:24px}
-.header h1{font-family:'Outfit',sans-serif;font-size:22px;font-weight:600;color:var(--text-primary);letter-spacing:-.02em}
-.header .subtitle{font-size:13px;color:var(--text-muted);margin-top:3px;font-weight:400}
+.header h1{font-family:'Outfit',sans-serif;font-size:22px;font-weight:500;color:var(--text-primary);letter-spacing:-.02em}
+.header .subtitle{font-size:13px;color:var(--text-secondary);margin-top:3px;font-weight:400}
 .header .meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-muted);text-align:right;line-height:1.7;flex-shrink:0}
 .header .meta strong{color:var(--text-secondary);font-weight:500}
 
@@ -87,7 +87,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 /* ── Sections ── */
 .section{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;margin-bottom:16px;overflow:hidden}
 .section-header{padding:16px 20px 12px;border-bottom:1px solid var(--border-color)}
-.section-header h2{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-secondary)}
+.section-header h2{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;letter-spacing:-.005em;color:var(--text-primary)}
 .section-header p{font-size:12px;font-weight:400;color:var(--text-muted);margin-top:3px;line-height:1.4}
 .section-body{padding:16px 20px 20px}
 
@@ -423,7 +423,10 @@ function renderTimeSeries(v){currentView=v;const c=getC(),ts=datasets[v],x=makeD
 function replotAllCharts(){const c=getC(),ts=datasets[currentView],x=makeDates(ts);rVwap(c,ts,x);rSpread(c,ts,x);rDepth(c,ts,x);rRatio(c,ts,x);rConc(c,ts,x);rDecile(c);rBank(c);rMerchants();rVolatility(c);rFlow(c);rHeatmap(c)}
 
 // ═══ STATIC CONTENT ═══
-document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'});
+{
+  const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('headerMeta').innerHTML='<strong>'+fmtInt(meta.total_snapshots)+'</strong> snapshots &middot; <strong>'+fmtInt(meta.total_ads)+'</strong> registros<br>'+new Date(meta.first_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+' &mdash; '+new Date(meta.last_ts).toLocaleDateString('es-BO',{day:'numeric',month:'long',year:'numeric'})+'<br>Última snapshot: <strong>'+lastSnapFmt+'</strong>';
+}
 const premium=(last.vb10/meta.bcb_rate-1)*100;
 document.getElementById('kpis').innerHTML='<div class="kpi"><div class="label">VWAP 10% Compra</div><div class="value buy">'+fmt4(last.vb10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">VWAP 10% Venta</div><div class="value sell">'+fmt4(last.vs10)+'</div><div class="sub">BOB por USDT</div></div><div class="kpi"><div class="label">Spread efectivo</div><div class="value spread">'+fmt4(last.sp10)+'</div><div class="sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div><div class="kpi"><div class="label">Profundidad Compra</div><div class="value">'+fmt2(last.buy_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.buy_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Profundidad Venta</div><div class="value">'+fmt2(last.sell_depth/1e6)+'M</div><div class="sub">'+fmtInt(last.sell_count)+' anuncios &middot; USDT</div></div><div class="kpi"><div class="label">Asimetr\u00eda</div><div class="value">'+fmt2(last.depth_ratio)+'\u00d7</div><div class="sub">Venta / Compra (profundidad)</div></div><div class="kpi"><div class="label">TC Oficial BCB</div><div class="value">'+fmt2(meta.bcb_rate)+'</div><div class="sub">Prima P2P vs oficial: +'+fmt2(premium)+'%</div></div>'+(meta.bcb_ref_venta!=null?'<div class="kpi"><div class="label">TC Referencial BCB (venta)</div><div class="value spread">'+fmt2(meta.bcb_ref_venta)+'</div><div class="sub">Compra: '+fmt2(meta.bcb_ref_compra)+' BOB/USDT &middot; Fuente: BCB</div></div>':'');
 const DASHBOARD_VERSION='v0.3.0';
