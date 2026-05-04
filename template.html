@@ -120,6 +120,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
 [data-theme-dark="1"] .pill-yellow,body.theme-dark .pill-yellow{background:rgba(232,190,90,.18);color:#e8be5a}
 [data-theme-dark="1"] .pill-red,body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .snap-stamp{font-size:11px;color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
+.panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
+.panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
 
 /* ── Panel grid ── */
 .panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -212,7 +214,7 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit'
     <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartVwap"></div></div></div>
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP Compra &minus; Venta por profundidad (BOB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartSpread"></div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDepth"></div></div></div>
-    <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil</h2><p>VWAP acumulado 10%&ndash;100%. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDecile"></div></div></div>
+    <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil</h2><p>VWAP acumulado 10%&ndash;100%. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.</p><label class="panel-toggle"><input type="checkbox" id="decileExcludeExtremes" checked><span>Excluir percentiles extremos (10%, 100%)</span></label></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartDecile"></div></div></div>
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartRatio"></div></div></div>
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco</h2><p>Anuncios y profundidad por m&eacute;todo de pago en el &uacute;ltimo snapshot del rango activo.</p></div><div class="sh-controls"><button class="sh-ctrl-btn size-toggle" aria-label="Alternar ancho del panel" title="Alternar ancho">&#11036;</button><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
@@ -466,7 +468,29 @@ function rSpread(c,ts,x){const L=BL(c);Plotly.react('chartSpread',[{x:x,y:ts.map
 function rDepth(c,ts,x){const L=BL(c);Plotly.react('chartDepth',[{x:x,y:ts.map(d=>d.buy_depth),name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}},{x:x,y:ts.map(d=>d.sell_depth),name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
 function rRatio(c,ts,x){const L=BL(c);Plotly.react('chartRatio',[{x:x,y:ts.map(d=>d.depth_ratio),name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:ts.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
 function rConc(c,ts,x){const L=BL(c);Plotly.react('chartConc',[{x:x,y:ts.map(d=>d.t5buy),name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},{x:x,y:ts.map(d=>d.t5sell),name:'Top 5 venta',line:{color:c.sell,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
-function rDecile(c){const L=BL(c),dB=DATA.deciles[meta.last_ts].BUY,dS=DATA.deciles[meta.last_ts].SELL,dl=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];Plotly.react('chartDecile',[{x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.buy,.55),line:{color:c.buy,width:.5}}},{x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.sell,.55),line:{color:c.sell,width:.5}}}],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f',range:[Math.min(...dS)*.998,Math.max(...dB)*1.002]},height:chartHeight('chartDecile')},PC)}
+function rDecile(c){
+  const L=BL(c);
+  const dlAll=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];
+  // Schema viejo (DATA.deciles[ts]) y nuevo (DATA.deciles_last) coexisten;
+  // preferimos el nuevo, fallback al viejo.
+  const src=DATA.deciles_last||(DATA.deciles&&DATA.deciles[meta.last_ts])||{BUY:[],SELL:[]};
+  const exclude=localStorage.getItem('dashboard-decile-exclude-extremes')!=='false'; // default true
+  // Excluir extremos = índices 0 (10%) y 9 (100%). Quedan 20%..90%.
+  const idxs = exclude ? [1,2,3,4,5,6,7,8] : [0,1,2,3,4,5,6,7,8,9];
+  const dl = idxs.map(i=>dlAll[i]);
+  const dB = idxs.map(i=>src.BUY[i]);
+  const dS = idxs.map(i=>src.SELL[i]);
+  const validS = dS.filter(v=>v!=null), validB = dB.filter(v=>v!=null);
+  const yMin = validS.length ? Math.min(...validS)*.998 : 0;
+  const yMax = validB.length ? Math.max(...validB)*1.002 : 1;
+  Plotly.react('chartDecile',[
+    {x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.buy,.55),line:{color:c.buy,width:.5}}},
+    {x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.sell,.55),line:{color:c.sell,width:.5}}}
+  ],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,
+     xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},
+     yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f',range:[yMin,yMax]},
+     height:chartHeight('chartDecile')},PC);
+}
 function rBank(c){const bk=DATA.banks;if(!bk.length)return;const mx=Math.max(...bk.map(b=>b.depth)),bc=hexToRgba(c.neutral,.18);document.getElementById('bankTable').innerHTML='<table class="bank-table"><thead><tr><th>Banco</th><th class="num" title="Anuncios activos en el último snapshot del rango">Anuncios (último snapshot)</th><th class="num">Profundidad (USDT)</th><th class="num">Cobertura</th></tr></thead><tbody>'+bk.map(b=>'<tr><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>'}
 
 // ── New panel renderers ──
@@ -596,6 +620,19 @@ document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2
 // ═══ EVENTS ═══
 // View toggle
 document.querySelectorAll('.toggle-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderTimeSeries(b.dataset.view)})});
+
+// Decile: toggle excluir extremos
+{
+  const cb=document.getElementById('decileExcludeExtremes');
+  if(cb){
+    const saved=localStorage.getItem('dashboard-decile-exclude-extremes');
+    cb.checked = saved==null ? true : (saved!=='false');
+    cb.addEventListener('change',()=>{
+      localStorage.setItem('dashboard-decile-exclude-extremes', cb.checked?'true':'false');
+      rDecile(getC());
+    });
+  }
+}
 
 // Preset theme buttons
 document.querySelectorAll('.theme-bar > .theme-btn[data-theme]').forEach(b=>{
