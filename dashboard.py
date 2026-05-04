@@ -307,8 +307,126 @@ def process_data(db_path: Path) -> dict:
                 'minutes': round(diff_s / 60),
             })
 
+    # ── SCHEMA NUEVO (columnar, capa de compatibilidad — eliminar en commit 17) ──
+    # Construido en paralelo al schema viejo para que los renderers JS migren
+    # uno por uno en commits 13–16. Ningún cambio visible al usuario hasta
+    # que JS comience a leer de los nuevos campos.
+
+    # ts_metrics: arrays paralelos por métrica (~30 KB).
+    ts_metrics = {'ts': [d['ts'] for d in ts_data]}
+    for k in ('vb5', 'vb10', 'vb25', 'vb50',
+              'vs5', 'vs10', 'vs25', 'vs50',
+              'sp5', 'sp10', 'sp25', 'sp50',
+              'buy_depth', 'sell_depth', 'buy_count', 'sell_count',
+              'depth_ratio', 't5buy', 't5sell'):
+        ts_metrics[k] = [d.get(k) for d in ts_data]
+
+    last_ts_str = timestamps[-1]
+    merchants_last = {
+        'snapshot_ts': last_ts_str,
+        'vwap10_buy':  ts_data[-1].get('vb10'),
+        'vwap10_sell': ts_data[-1].get('vs10'),
+        'BUY':  top_merchants.get(last_ts_str, {}).get('BUY', []),
+        'SELL': top_merchants.get(last_ts_str, {}).get('SELL', []),
+    }
+
+    # banks_daily: nueva pasada por día (último snapshot de cada día).
+    banks_daily = []
+    for d in daily:
+        ts = d['ts']
+        rows_b = conn.execute(
+            "SELECT banks, surplus_usdt FROM ads WHERE snapshot_ts_utc=?",
+            (ts,)).fetchall()
+        bs = {}
+        total = 0.0
+        for r in rows_b:
+            bks = json.loads(r['banks']) if r['banks'] else []
+            total += r['surplus_usdt'] or 0
+            for b in bks:
+                if b == 'BANK':
+                    continue
+                if b not in bs:
+                    bs[b] = {'count': 0, 'depth': 0.0}
+                bs[b]['count'] += 1
+                bs[b]['depth'] += r['surplus_usdt'] or 0
+        items = [{'name': BANK_CANONICAL.get(b, b),
+                  'count': v['count'],
+                  'depth': round(v['depth'])}
+                 for b, v in sorted(bs.items(), key=lambda x: -x[1]['depth'])]
+        banks_daily.append({
+            'date': ts[:10],
+            'snapshot_ts': ts,
+            'total_depth': round(total),
+            'items': items,
+        })
+
+    # offer_daily: ads crudos del último snapshot de cada día, columnar.
+    aids_table = {}      # advertiser_id -> índice incremental
+    od_dates, od_snaps = [], []
+    od_offsets = [0]
+    od_side, od_price, od_surplus, od_aid_idx = [], [], [], []
+    od_vwap10_buy, od_vwap10_sell = [], []
+
+    def _aid_idx(aid):
+        if aid not in aids_table:
+            aids_table[aid] = len(aids_table)
+        return aids_table[aid]
+
+    for d in daily:
+        ts = d['ts']
+        rows_o = conn.execute(
+            "SELECT side, price, surplus_usdt, advertiser_id FROM ads WHERE snapshot_ts_utc=?",
+            (ts,)).fetchall()
+        buy_ps  = sorted([(r['price'], r['surplus_usdt']) for r in rows_o
+                          if r['side'] == 'BUY' and r['price'] and r['surplus_usdt']],
+                         key=lambda x: x[0])
+        sell_ps = sorted([(r['price'], r['surplus_usdt']) for r in rows_o
+                          if r['side'] == 'SELL' and r['price'] and r['surplus_usdt']],
+                         key=lambda x: -x[0])
+        od_vwap10_buy.append(vwap_by_depth(buy_ps, 0.10))
+        od_vwap10_sell.append(vwap_by_depth(sell_ps, 0.10))
+        for r in rows_o:
+            if r['price'] is None or r['surplus_usdt'] is None:
+                continue
+            od_side.append(0 if r['side'] == 'BUY' else 1)
+            od_price.append(round(r['price'], 4))
+            od_surplus.append(round(r['surplus_usdt'], 2))
+            od_aid_idx.append(_aid_idx(r['advertiser_id']))
+        od_offsets.append(len(od_side))
+        od_dates.append(ts[:10])
+        od_snaps.append(ts)
+
+    offer_daily = {
+        'dates': od_dates,
+        'snapshot_ts': od_snaps,
+        'row_offsets': od_offsets,
+        'side': od_side,
+        'price': od_price,
+        'surplus': od_surplus,
+        'aid_idx': od_aid_idx,
+        'vwap10_buy': od_vwap10_buy,
+        'vwap10_sell': od_vwap10_sell,
+    }
+    aids_list = sorted(aids_table.keys(), key=lambda a: aids_table[a])
+
+    # flow_per_snapshot: aplanar merchant_flow['all'] columnar.
+    fps_src = merchant_flow.get('all', [])
+    flow_per_snapshot = {
+        'ts':        [f['ts']        for f in fps_src],
+        'n_buy':     [f['n_buy']     for f in fps_src],
+        'n_sell':    [f['n_sell']    for f in fps_src],
+        'new_buy':   [f.get('new_buy', 0)   for f in fps_src],
+        'gone_buy':  [f.get('gone_buy', 0)  for f in fps_src],
+        'new_sell':  [f.get('new_sell', 0)  for f in fps_src],
+        'gone_sell': [f.get('gone_sell', 0) for f in fps_src],
+    }
+
+    deciles_last = decile_data.get(last_ts_str, {'BUY': [], 'SELL': []})
+
     conn.close()
+
     return {
+        # Schema viejo (consumido por los renderers actuales).
         'ts': ts_data, 'hourly': hourly, 'daily': daily,
         'deciles': decile_data, 'banks': bank_list,
         'top_merchants': top_merchants,
@@ -316,10 +434,20 @@ def process_data(db_path: Path) -> dict:
         'merchant_flow': merchant_flow,
         'heatmap': heatmap_data,
         'gaps': gaps,
+        # Schema nuevo (columnar, para reagregación cliente — commits 13–16).
+        'ts_metrics': ts_metrics,
+        'merchants_last': merchants_last,
+        'banks_daily': banks_daily,
+        'offer_daily': offer_daily,
+        'flow_per_snapshot': flow_per_snapshot,
+        'deciles_last': deciles_last,
         'meta': {
             'total_snapshots': len(timestamps),
             'total_ads': sum(d['buy_count'] + d['sell_count'] for d in ts_data),
             'first_ts': timestamps[0], 'last_ts': timestamps[-1], 'bcb_rate': BCB_RATE,
+            'aids': aids_list,
+            'version': '0.3.0',
+            'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             **load_bcb_ref(first_date=timestamps[0][:10] if timestamps else None),
         }
     }
