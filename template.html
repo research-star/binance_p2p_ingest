@@ -209,8 +209,8 @@ body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
   <div class="ds-presets">
     <button class="ds-chip" data-preset="24h" type="button">24h</button>
     <button class="ds-chip" data-preset="7d" type="button">7d</button>
-    <button class="ds-chip" data-preset="30d" type="button">30d</button>
-    <button class="ds-chip active" data-preset="all" type="button">Todo</button>
+    <button class="ds-chip active" data-preset="30d" type="button">30d</button>
+    <button class="ds-chip" data-preset="all" type="button">Todo</button>
   </div>
   <div class="ds-custom">
     <label>Desde <input type="date" id="dsFrom"></label>
@@ -223,8 +223,8 @@ body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
   <div class="toolbar">
     <div class="view-toggle">
       <button class="toggle-btn" data-view="all">Cada snapshot</button>
-      <button class="toggle-btn active" data-view="hourly">Por hora</button>
-      <button class="toggle-btn" data-view="daily">Por d&iacute;a</button>
+      <button class="toggle-btn" data-view="hourly">Por hora</button>
+      <button class="toggle-btn active" data-view="daily">Por d&iacute;a</button>
     </div>
     <div class="theme-bar" id="themeBar">
       <button class="theme-btn active" data-theme="paper"><span class="btn-full">Claro</span><span class="btn-short">C</span></button>
@@ -305,7 +305,7 @@ const SEMANTIC_VAR_FALLBACKS = {
 };
 const LIGHT_THEMES = ['paper','claude'];
 
-let currentTheme='paper', currentView='hourly', activeThemeValues={...THEMES.paper};
+let currentTheme='paper', currentView='daily', activeThemeValues={...THEMES.paper};
 let editorBaseline=null, editorBaselineTheme=null;   // snapshot al abrir el editor
 
 // ═══ UTILS ═══
@@ -461,7 +461,7 @@ function closeAllPanels(){
 // ═══ PLOTLY ═══
 // ═══ DATE RANGE STATE ═══
 let activeRange = {fromIdx: 0, toIdx: TS_ARR.length-1};
-let dateRangeState = {preset: 'all'};
+let dateRangeState = {preset: '30d'};
 
 function _binarySearchIdx(targetMs, mode){
   // mode='gte': primer idx con time >= target. mode='lte': último idx con time <= target.
@@ -640,7 +640,14 @@ function getC(){
 }
 function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:'pan',font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
 const PC={displayModeBar:false,responsive:true,scrollZoom:true};
-function xaWithSlider(xa){xa.rangeslider={visible:true,thickness:0.06};return xa}
+function xaWithSlider(xa){
+  xa.rangeslider={visible:true,thickness:0.06};
+  // Sincronizar el slider con el range explícito del eje, si lo hay. Sin
+  // esto el slider conserva el rango del render previo y el eje X parece
+  // estancado al cambiar el selector de fechas.
+  if(xa.range) xa.rangeslider.range=[xa.range[0],xa.range[1]];
+  return xa;
+}
 function gapShapes(c){
   const gaps=DATA.gaps||[];
   // Opacidad mayor en temas oscuros para que las franjas sigan siendo
@@ -656,8 +663,15 @@ function gapShapes(c){
   }));
 }
 function hoverFmtForView(){return currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'}
-function xaxisForView(base){
+function xaxisForView(base, v){
   const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView()};
+  // range explícito del rango activo: fuerza al eje a redibujarse con cada
+  // cambio de selector y evita que Plotly conserve autorange/rangeslider
+  // del render anterior.
+  if(v && v.x && v.x.length){
+    cfg.range = [v.x[0], v.x[v.x.length-1]];
+    cfg.autorange = false;
+  }
   delete cfg.dtick;
   return cfg;
 }
@@ -677,23 +691,38 @@ function rVwap(c,v){
     {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
   ];
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
+    // Filtrar el histórico BCB al rango visible. Si no hay puntos dentro,
+    // usamos el último BCB <= xMax como referencia constante a través del
+    // rango (línea horizontal informativa). Sin esto, al contraer el
+    // selector las líneas BCB quedaban con su rango histórico fijo y no
+    // se reactualizaban con el chart.
     const hist=meta.bcb_ref_history;
-    if(hist.length===1){
-      const e=hist[0];
+    const xMin=x.length?x[0].getTime():null, xMax=x.length?x[x.length-1].getTime():null;
+    const histWithT=hist.map(e=>({...e, t:new Date(e.fecha+'T00:00:00').getTime()}));
+    let inRange = (xMin!=null && xMax!=null) ? histWithT.filter(e=>e.t>=xMin && e.t<=xMax) : [];
+    if(!inRange.length && xMax!=null){
+      // Tomar el último BCB anterior al rango como referencia constante.
+      const prev = histWithT.filter(e=>e.t<=xMax).pop();
+      if(prev){
+        traces.push({x:x,y:x.map(()=>prev.compra),name:'BCB Ref Compra '+prev.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
+        traces.push({x:x,y:x.map(()=>prev.venta), name:'BCB Ref Venta '+prev.venta, line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
+      }
+    }else if(inRange.length===1){
+      const e=inRange[0];
       traces.push({x:x,y:x.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
-      traces.push({x:x,y:x.map(()=>e.venta),name:'BCB Ref Venta '+e.venta,line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
-    }else{
-      const hx=hist.map(e=>new Date(e.fecha+'T00:00:00'));
-      traces.push({x:hx,y:hist.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
-      traces.push({x:hx,y:hist.map(e=>e.venta),name:'BCB Ref Venta',line:{color:c.bcbRefVenta,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefVenta},connectgaps:false});
+      traces.push({x:x,y:x.map(()=>e.venta), name:'BCB Ref Venta '+e.venta, line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
+    }else if(inRange.length>1){
+      const hx=inRange.map(e=>new Date(e.t));
+      traces.push({x:hx,y:inRange.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
+      traces.push({x:hx,y:inRange.map(e=>e.venta), name:'BCB Ref Venta', line:{color:c.bcbRefVenta,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefVenta},connectgaps:false});
     }
   }
-  Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f'},margin:{l:60,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.4f'},margin:{l:60,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
 }
-function rSpread(c,v){const L=BL(c),x=v.x;Plotly.react('chartSpread',[{x:x,y:v.sp5,name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:v.sp10,name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:v.sp25,name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:v.sp50,name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.4f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
-function rDepth(c,v){const L=BL(c),x=v.x;Plotly.react('chartDepth',[{x:x,y:v.buy_depth,name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}},{x:x,y:v.sell_depth,name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
-function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
-function rConc(c,v){const L=BL(c),x=v.x;Plotly.react('chartConc',[{x:x,y:v.t5buy,name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},{x:x,y:v.t5sell,name:'Top 5 venta',line:{color:c.sell,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
+function rSpread(c,v){const L=BL(c),x=v.x;Plotly.react('chartSpread',[{x:x,y:v.sp5,name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:v.sp10,name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:v.sp25,name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:v.sp50,name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.4f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
+function rDepth(c,v){const L=BL(c),x=v.x;Plotly.react('chartDepth',[{x:x,y:v.buy_depth,name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}},{x:x,y:v.sell_depth,name:'Venta',fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC)}
+function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
+function rConc(c,v){const L=BL(c),x=v.x;Plotly.react('chartConc',[{x:x,y:v.t5buy,name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},{x:x,y:v.t5sell,name:'Top 5 venta',line:{color:c.sell,width:1.5},mode:'lines'}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC)}
 function rDecile(c){
   const L=BL(c);
   const dlAll=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];
@@ -914,7 +943,7 @@ function rVolatility(c){
   const L=BL(c);
   const xaxisCfg = v.xType==='category'
     ? {...L.xaxis, type:'category', tickangle:v.x.length>14?-30:0}
-    : {...xaxisForView(L.xaxis), type:'date'};
+    : {...xaxisForView(L.xaxis,v), type:'date'};
 
   try{
     if(v.mode==='lines'){
@@ -947,7 +976,7 @@ function rFlow(c){
     {x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
     {x:x,y:flow.map(f=>f.n_buy),name:'Total Compra',yaxis:'y2',line:{color:c.buy,width:2},mode:'lines'},
     {x:x,y:flow.map(f=>f.n_sell),name:'Total Venta',yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'},
-  ],{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis)),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
+  ],{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
 function rHeatmap(c){
@@ -1012,8 +1041,15 @@ const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',mon
 document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2P \u00b7 <strong>\u00daltima actualizaci\u00f3n del dataset:</strong> '+lastTsFmt+' \u00b7 DDR Capital Partners \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
-// View toggle
-document.querySelectorAll('.toggle-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderTimeSeries(b.dataset.view)})});
+// View toggle (persiste la vista en localStorage)
+document.querySelectorAll('.toggle-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.toggle-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    localStorage.setItem('dashboard-view', b.dataset.view);
+    renderTimeSeries(b.dataset.view);
+  });
+});
 
 // ═══ DATE RANGE: state, persistence, UI sync ═══
 function applyDateRange(state, persist){
@@ -1306,9 +1342,15 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // Sincronizar UI del selector con el rango restaurado y disparar render
   // inicial completo. applyDateRange llama a replotAllCharts internamente.
   applyDateRange(dateRangeState, false);
+  // Restaurar vista persistida (default 'daily').
+  const savedView=localStorage.getItem('dashboard-view');
+  const initialView=(savedView==='all'||savedView==='hourly'||savedView==='daily')?savedView:'daily';
+  document.querySelectorAll('.toggle-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===initialView);
+  });
   // applyDateRange ya hace replotAllCharts; renderTimeSeries fija currentView
   // y vuelve a renderizar las series temporales con la vista activa.
-  renderTimeSeries('hourly');
+  renderTimeSeries(initialView);
   initHelpTooltips();
 })();
 
