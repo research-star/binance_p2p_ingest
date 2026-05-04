@@ -319,12 +319,16 @@ function makeDates(ts){return ts.map(d=>{const dt=new Date(d.ts);return new Date
 function xaWithSlider(xa){xa.rangeslider={visible:true,thickness:0.06};return xa}
 function gapShapes(c){
   const gaps=DATA.gaps||[];
+  // Opacidad mayor en temas oscuros para que las franjas sigan siendo
+  // visibles sobre fondos cercanos al negro.
+  const isLight=hexLuminance(activeThemeValues['bg-primary'])>.5;
+  const op=isLight?0.10:0.22;
   return gaps.map(g=>({
     type:'rect',xref:'x',yref:'paper',
     x0:new Date(new Date(g.start).getTime()-4*3600000),
     x1:new Date(new Date(g.end).getTime()-4*3600000),
     y0:0,y1:1,
-    fillcolor:c.textMuted,opacity:0.08,line:{width:0},layer:'below',
+    fillcolor:c.textMuted,opacity:op,line:{width:0},layer:'below',
   }));
 }
 function hoverFmtForView(){return currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'}
