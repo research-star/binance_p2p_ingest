@@ -167,16 +167,21 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 @media(max-width:768px){.theme-btn .btn-full{display:none}.theme-btn .btn-short{display:inline}}
 @media(min-width:769px){.theme-btn .btn-short{display:none}}
 
-/* ── Side toggle (sticky) ── */
-.side-toggle{position:fixed;top:96px;right:24px;z-index:1200;display:flex;gap:0;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;padding:3px;box-shadow:0 4px 14px rgba(0,0,0,.10);transition:background .2s,border-color .2s}
-body.theme-dark .side-toggle{background:rgba(22,26,32,.88);backdrop-filter:saturate(1.2) blur(6px);-webkit-backdrop-filter:saturate(1.2) blur(6px)}
-.st-btn{padding:6px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;border:none;border-radius:4px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.02em}
-.st-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.st-btn.active{font-weight:600}
-.st-btn.active[data-side="both"]{background:var(--text-primary);color:var(--bg-secondary)}
-.st-btn.active[data-side="buy"]{background:var(--color-buy);color:#fff}
-.st-btn.active[data-side="sell"]{background:var(--color-sell);color:#fff}
-@media(max-width:768px){.side-toggle{top:auto;bottom:14px;right:14px;padding:2px}.st-btn{padding:5px 10px;font-size:10px}}
+/* ── Side checkbox group (en toolbar, a la derecha del view-toggle) ── */
+.side-chk-group{display:inline-flex;gap:0}
+.side-chk{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s;user-select:none;line-height:1}
+.side-chk:first-of-type{border-radius:4px 0 0 4px}
+.side-chk:last-of-type{border-radius:0 4px 4px 0;margin-right:0}
+.side-chk:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.side-chk input[type="checkbox"]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.side-chk .chk-box{position:relative;width:14px;height:14px;border:1.5px solid var(--text-muted);border-radius:3px;flex-shrink:0;background:var(--bg-secondary);transition:all .15s}
+.side-chk .chk-box::after{content:'';position:absolute;left:2px;top:2px;width:8px;height:8px;border-radius:1px;background:transparent;transition:background .15s}
+.side-chk.is-checked{color:var(--text-primary)}
+.side-chk[data-side="buy"].is-checked .chk-box{border-color:var(--color-buy)}
+.side-chk[data-side="buy"].is-checked .chk-box::after{background:var(--color-buy)}
+.side-chk[data-side="sell"].is-checked .chk-box{border-color:var(--color-sell)}
+.side-chk[data-side="sell"].is-checked .chk-box::after{background:var(--color-sell)}
+.side-chk input:focus-visible + .chk-box{outline:2px solid var(--blue-accent);outline-offset:1px}
 
 /* ── Date selector ── */
 .date-selector{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bg-secondary);padding:12px 48px;border-bottom:1px solid var(--border-color);font-family:'Outfit',sans-serif;font-size:11px}
@@ -211,12 +216,6 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
   No se pudo cargar el dataset. <span class="eb-retry">Reintentando...</span>
 </div>
 
-<div class="side-toggle" id="sideToggle" role="group" aria-label="Filtro de lado direccional"
-     title="Filtra paneles direccionales. Spread, Ratio, Heatmap, Decil y Bancos son agregados de ambos lados, no se ven afectados.">
-  <button class="st-btn active" data-side="both" type="button">Ambas</button>
-  <button class="st-btn" data-side="buy"  type="button">Compra</button>
-  <button class="st-btn" data-side="sell" type="button">Venta</button>
-</div>
 
 <!-- Header -->
 <div class="header"><div class="header-top">
@@ -250,6 +249,11 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
       <button class="toggle-btn" data-view="all">Cada snapshot</button>
       <button class="toggle-btn" data-view="hourly">Por hora</button>
       <button class="toggle-btn active" data-view="daily">Por d&iacute;a</button>
+    </div>
+    <div class="side-chk-group" id="sideChkGroup" role="group" aria-label="Filtro de lado direccional"
+         title="Filtra paneles direccionales. Spread, Ratio, Heatmap, Decil y Bancos son agregados de ambos lados, no se ven afectados.">
+      <label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label>
+      <label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label>
     </div>
     <div class="theme-bar" id="themeBar">
       <button class="theme-btn active" data-theme="paper"><span class="btn-full">Claro</span><span class="btn-short">C</span></button>
@@ -488,6 +492,18 @@ function closeAllPanels(){
 let sideFilter = 'both';   // 'both' | 'buy' | 'sell'
 function showBuy(){return sideFilter==='both'||sideFilter==='buy'}
 function showSell(){return sideFilter==='both'||sideFilter==='sell'}
+// Helper compartido para todos los renderers reactivos: filtra un array
+// de traces en función del sideFilter activo. Cada trace direccional
+// declara _side:'buy'|'sell'; las neutras (sin _side) pasan siempre.
+// Plotly ignora propiedades desconocidas como _side, así que el filtro
+// es transparente al render.
+function filterDirectionalTraces(traces){
+  return traces.filter(t=>{
+    if(t&&t._side==='buy')  return showBuy();
+    if(t&&t._side==='sell') return showSell();
+    return true;
+  });
+}
 
 // ═══ DATE RANGE STATE ═══
 let activeRange = {fromIdx: 0, toIdx: TS_ARR.length-1};
@@ -708,22 +724,21 @@ function xaxisForView(base, v){
 
 function rVwap(c,v){
   const L=BL(c), x=v.x;
-  // Trazas direccionales construidas según sideFilter; las BCB siempre.
-  const traces=[];
-  if(showBuy()){
-    traces.push({x:x,y:v.vb50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vb25,fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vb5, fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines'});
-  }
-  if(showSell()){
-    traces.push({x:x,y:v.vs50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vs25,fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vs5, fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'});
-    traces.push({x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'});
-  }
-  // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
-  traces.push({x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'});
+  // Construye TODAS las trazas con metadato _side; el helper compartido
+  // filterDirectionalTraces aplica el sideFilter actual.
+  const allTraces=[
+    {_side:'buy', x:x,y:v.vb50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {_side:'buy', x:x,y:v.vb25,fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {_side:'buy', x:x,y:v.vb5, fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
+    {_side:'buy', x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines'},
+    {_side:'sell',x:x,y:v.vs50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {_side:'sell',x:x,y:v.vs25,fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
+    {_side:'sell',x:x,y:v.vs5, fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
+    {_side:'sell',x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'},
+    // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
+    {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
+  ];
+  const traces=filterDirectionalTraces(allTraces);
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
     // Filtrar el histórico BCB al rango visible. Si no hay puntos dentro,
     // usamos el último BCB <= xMax como referencia constante a través del
@@ -755,16 +770,20 @@ function rVwap(c,v){
 }
 function rSpread(c,v){const L=BL(c),x=v.x;Plotly.react('chartSpread',[{x:x,y:v.sp5,name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:v.sp10,name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:v.sp25,name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:v.sp50,name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.4f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
 function rDepth(c,v){
-  const L=BL(c),x=v.x,traces=[];
-  if(showBuy())  traces.push({x:x,y:v.buy_depth, name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted,line:{color:c.buy,width:1.5}});
-  if(showSell()) traces.push({x:x,y:v.sell_depth,name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}});
+  const L=BL(c),x=v.x;
+  const traces=filterDirectionalTraces([
+    {_side:'buy', x:x,y:v.buy_depth, name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
+    {_side:'sell',x:x,y:v.sell_depth,name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
+  ]);
   Plotly.react('chartDepth',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC);
 }
 function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
 function rConc(c,v){
-  const L=BL(c),x=v.x,traces=[];
-  if(showBuy())  traces.push({x:x,y:v.t5buy, name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'});
-  if(showSell()) traces.push({x:x,y:v.t5sell,name:'Top 5 venta', line:{color:c.sell,width:1.5},mode:'lines'});
+  const L=BL(c),x=v.x;
+  const traces=filterDirectionalTraces([
+    {_side:'buy', x:x,y:v.t5buy, name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},
+    {_side:'sell',x:x,y:v.t5sell,name:'Top 5 venta', line:{color:c.sell,width:1.5},mode:'lines'}
+  ]);
   Plotly.react('chartConc',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC);
 }
 function rDecile(c){
@@ -998,15 +1017,14 @@ function rVolatility(c){
     : {...xaxisForView(L.xaxis,v), type:'date'};
 
   try{
-    const tracesL=[], tracesB=[];
-    if(showBuy()){
-      tracesL.push({x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',connectgaps:false,line:{color:c.buy,width:1.5}});
-      tracesB.push({x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}});
-    }
-    if(showSell()){
-      tracesL.push({x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',connectgaps:false,line:{color:c.sell,width:1.5}});
-      tracesB.push({x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}});
-    }
+    const tracesL=filterDirectionalTraces([
+      {_side:'buy', x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',connectgaps:false,line:{color:c.buy,width:1.5}},
+      {_side:'sell',x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',connectgaps:false,line:{color:c.sell,width:1.5}}
+    ]);
+    const tracesB=filterDirectionalTraces([
+      {_side:'buy', x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}},
+      {_side:'sell',x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}}
+    ]);
     if(v.mode==='lines'){
       Plotly.react('chartVolatility',tracesL,{...L,barmode:undefined,xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.4f',rangemode:'tozero'},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartVolatility')},PC);
     }else{
@@ -1024,17 +1042,14 @@ function rFlow(c){
   const flow=aggregateMerchantFlow(activeRange.fromIdx, activeRange.toIdx, currentView);
   if(!flow.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   const x=flow.map(f=>new Date(new Date(f.ts).getTime()-4*3600000));
-  const traces=[];
-  if(showBuy()){
-    traces.push({x:x,y:flow.map(f=>f.new_buy), name:'Nuevos Compra', type:'bar',marker:{color:hexToRgba(c.buy,.5)}});
-    traces.push({x:x,y:flow.map(f=>-f.gone_buy),name:'Desap. Compra', type:'bar',marker:{color:hexToRgba(c.buy,.2)}});
-    traces.push({x:x,y:flow.map(f=>f.n_buy), name:'Total Compra', yaxis:'y2',line:{color:c.buy,width:2},mode:'lines'});
-  }
-  if(showSell()){
-    traces.push({x:x,y:flow.map(f=>f.new_sell), name:'Nuevos Venta', type:'bar',marker:{color:hexToRgba(c.sell,.5)}});
-    traces.push({x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta', type:'bar',marker:{color:hexToRgba(c.sell,.2)}});
-    traces.push({x:x,y:flow.map(f=>f.n_sell),name:'Total Venta',yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'});
-  }
+  const traces=filterDirectionalTraces([
+    {_side:'buy', x:x,y:flow.map(f=>f.new_buy),  name:'Nuevos Compra',type:'bar',marker:{color:hexToRgba(c.buy,.5)}},
+    {_side:'buy', x:x,y:flow.map(f=>-f.gone_buy),name:'Desap. Compra',type:'bar',marker:{color:hexToRgba(c.buy,.2)}},
+    {_side:'buy', x:x,y:flow.map(f=>f.n_buy),    name:'Total Compra', yaxis:'y2',line:{color:c.buy,width:2},mode:'lines'},
+    {_side:'sell',x:x,y:flow.map(f=>f.new_sell), name:'Nuevos Venta', type:'bar',marker:{color:hexToRgba(c.sell,.5)}},
+    {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
+    {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'Total Venta', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
+  ]);
   Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
@@ -1164,18 +1179,38 @@ document.querySelectorAll('.ds-chip').forEach(chip=>{
   chip.addEventListener('click',()=>applyDateRange({preset:chip.dataset.preset}));
 });
 
-// Side filter
+// Side filter (2 checkboxes; ambas desmarcadas = prohibido)
+function syncSideChkUI(){
+  const buyOn  = sideFilter==='both'||sideFilter==='buy';
+  const sellOn = sideFilter==='both'||sideFilter==='sell';
+  const buyEl  = document.querySelector('.side-chk[data-side="buy"]');
+  const sellEl = document.querySelector('.side-chk[data-side="sell"]');
+  const buyInp = buyEl  && buyEl.querySelector('input');
+  const sellInp= sellEl && sellEl.querySelector('input');
+  if(buyEl)  buyEl.classList.toggle('is-checked', buyOn);
+  if(sellEl) sellEl.classList.toggle('is-checked', sellOn);
+  if(buyInp)  buyInp.checked  = buyOn;
+  if(sellInp) sellInp.checked = sellOn;
+}
 function applySideFilter(side, persist){
   if(side!=='both'&&side!=='buy'&&side!=='sell') side='both';
   sideFilter=side;
   if(persist!==false) localStorage.setItem('dashboard-side-filter', side);
-  document.querySelectorAll('.st-btn').forEach(b=>{
-    b.classList.toggle('active', b.dataset.side===side);
-  });
+  syncSideChkUI();
   replotAllCharts();
 }
-document.querySelectorAll('.st-btn').forEach(b=>{
-  b.addEventListener('click',()=>applySideFilter(b.dataset.side));
+document.querySelectorAll('.side-chk input[type="checkbox"]').forEach(inp=>{
+  inp.addEventListener('change',()=>{
+    const buyInp  = document.querySelector('.side-chk[data-side="buy"] input');
+    const sellInp = document.querySelector('.side-chk[data-side="sell"] input');
+    if(!buyInp.checked && !sellInp.checked){
+      // Prohibido: revertir el cambio que dejaría ambas desmarcadas.
+      inp.checked = true;
+      return;
+    }
+    const newSide = (buyInp.checked && sellInp.checked) ? 'both' : (buyInp.checked ? 'buy' : 'sell');
+    applySideFilter(newSide);
+  });
 });
 // dd/mm/aaaa <-> yyyy-mm-dd helpers para inputs de fecha tipeables.
 function isoToDmy(iso){
@@ -1492,9 +1527,7 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // Restaurar side filter antes de cualquier render.
   const savedSide=localStorage.getItem('dashboard-side-filter');
   if(savedSide==='buy'||savedSide==='sell'||savedSide==='both') sideFilter=savedSide;
-  document.querySelectorAll('.st-btn').forEach(b=>{
-    b.classList.toggle('active', b.dataset.side===sideFilter);
-  });
+  syncSideChkUI();
 
   // Restaurar rango de fechas antes de cualquier render que lo consuma.
   try{
