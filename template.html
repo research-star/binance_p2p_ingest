@@ -189,8 +189,14 @@ body.theme-dark .side-toggle{background:rgba(22,26,32,.88);backdrop-filter:satur
 .ds-chip.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 .ds-custom{display:flex;align-items:center;gap:10px}
 .ds-custom label{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:11px}
-.ds-custom input[type="date"]{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 6px;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);color:var(--text-primary);color-scheme:light}
-body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
+.date-field{position:relative;display:inline-flex;align-items:stretch;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);overflow:hidden}
+.date-field:focus-within{border-color:var(--blue-accent)}
+.date-field input[type="text"]{font-family:'IBM Plex Mono',monospace;font-size:11px;font-variant-numeric:tabular-nums;padding:4px 6px;border:none;background:transparent;color:var(--text-primary);width:88px;outline:none;letter-spacing:.02em}
+.date-field input[type="text"].invalid{color:var(--orange);background:rgba(179,92,30,.06)}
+.date-field .date-picker-hidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:0;bottom:0;border:0;padding:0;margin:0}
+.date-field .date-cal-btn{border:none;border-left:1px solid var(--border-color);background:transparent;color:var(--text-muted);cursor:pointer;padding:0 8px;font-size:13px;line-height:1;display:flex;align-items:center}
+.date-field .date-cal-btn:hover{color:var(--text-primary);background:var(--bg-tertiary)}
+body.theme-dark .date-field input[type="date"]{color-scheme:dark}
 .ds-info{margin-left:auto;font-family:'IBM Plex Mono',monospace;color:var(--text-muted);font-size:11px}
 @media(max-width:900px){.date-selector{padding:12px 24px;gap:10px}.ds-info{margin-left:0;width:100%}}
 
@@ -232,8 +238,8 @@ body.theme-dark .ds-custom input[type="date"]{color-scheme:dark}
     <button class="ds-chip" data-preset="all" type="button">Todo</button>
   </div>
   <div class="ds-custom">
-    <label>Desde <input type="date" id="dsFrom"></label>
-    <label>Hasta <input type="date" id="dsTo"></label>
+    <label>Desde <span class="date-field"><input type="text" id="dsFrom" inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off" maxlength="10" spellcheck="false"><input type="date" id="dsFromPicker" class="date-picker-hidden" tabindex="-1" aria-hidden="true"><button type="button" class="date-cal-btn" id="dsFromBtn" aria-label="Abrir calendario">&#128197;</button></span></label>
+    <label>Hasta <span class="date-field"><input type="text" id="dsTo" inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off" maxlength="10" spellcheck="false"><input type="date" id="dsToPicker" class="date-picker-hidden" tabindex="-1" aria-hidden="true"><button type="button" class="date-cal-btn" id="dsToBtn" aria-label="Abrir calendario">&#128197;</button></span></label>
   </div>
   <span class="ds-info" id="dsInfo">&mdash;</span>
 </div>
@@ -1134,10 +1140,15 @@ function applyDateRange(state, persist){
   document.querySelectorAll('.ds-chip').forEach(b=>{
     b.classList.toggle('active', state.preset && b.dataset.preset===state.preset);
   });
-  // Sync date inputs (mostrar fechas del rango efectivo)
+  // Sync date inputs (mostrar fechas del rango efectivo en formato dd/mm/aaaa)
   const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
-  if(fromInput) fromInput.value = TS_ARR[activeRange.fromIdx].slice(0,10);
-  if(toInput)   toInput.value   = TS_ARR[activeRange.toIdx].slice(0,10);
+  const fromPicker=document.getElementById('dsFromPicker'), toPicker=document.getElementById('dsToPicker');
+  const fromIso=TS_ARR[activeRange.fromIdx].slice(0,10);
+  const toIso=TS_ARR[activeRange.toIdx].slice(0,10);
+  if(fromInput){fromInput.value=isoToDmy(fromIso);fromInput.classList.remove('invalid')}
+  if(toInput){toInput.value=isoToDmy(toIso);toInput.classList.remove('invalid')}
+  if(fromPicker) fromPicker.value=fromIso;
+  if(toPicker) toPicker.value=toIso;
   // Info textual
   const dsInfo=document.getElementById('dsInfo');
   if(dsInfo){
@@ -1166,23 +1177,93 @@ function applySideFilter(side, persist){
 document.querySelectorAll('.st-btn').forEach(b=>{
   b.addEventListener('click',()=>applySideFilter(b.dataset.side));
 });
+// dd/mm/aaaa <-> yyyy-mm-dd helpers para inputs de fecha tipeables.
+function isoToDmy(iso){
+  if(!iso) return '';
+  const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? m[3]+'/'+m[2]+'/'+m[1] : '';
+}
+function dmyToIso(s){
+  if(!s) return null;
+  const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s.trim());
+  if(!m) return null;
+  const d=parseInt(m[1],10), mo=parseInt(m[2],10), y=parseInt(m[3],10);
+  if(d<1||d>31||mo<1||mo>12||y<1900||y>2999) return null;
+  // Validar día real para el mes (Date construye y vuelve a verificar).
+  const dt=new Date(Date.UTC(y, mo-1, d));
+  if(dt.getUTCFullYear()!==y || dt.getUTCMonth()!==mo-1 || dt.getUTCDate()!==d) return null;
+  return String(y).padStart(4,'0')+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+}
+
 {
   const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
+  const fromPicker=document.getElementById('dsFromPicker'), toPicker=document.getElementById('dsToPicker');
+  const fromBtn=document.getElementById('dsFromBtn'), toBtn=document.getElementById('dsToBtn');
   // Min/max basados en el dataset.
-  const minDay = TS_ARR[0].slice(0,10);
-  const maxDay = TS_ARR[TS_ARR.length-1].slice(0,10);
-  if(fromInput){fromInput.min=minDay;fromInput.max=maxDay}
-  if(toInput){toInput.min=minDay;toInput.max=maxDay}
-  const onCustom=()=>{
-    let f = fromInput.value || minDay;
-    let t = toInput.value   || maxDay;
+  const minDay=TS_ARR[0].slice(0,10), maxDay=TS_ARR[TS_ARR.length-1].slice(0,10);
+  [fromPicker,toPicker].forEach(p=>{if(p){p.min=minDay;p.max=maxDay}});
+
+  const commitCustom = ()=>{
+    let fIso = dmyToIso(fromInput.value);
+    let tIso = dmyToIso(toInput.value);
+    // Validación: marcar invalid si formato roto, no aplicar.
+    if(fromInput.value && !fIso){fromInput.classList.add('invalid');return}
+    if(toInput.value && !tIso){toInput.classList.add('invalid');return}
+    fromInput.classList.remove('invalid');
+    toInput.classList.remove('invalid');
+    let f = fIso || minDay;
+    let t = tIso || maxDay;
     if(f<minDay) f=minDay;
     if(t>maxDay) t=maxDay;
     if(f>t){const tmp=f;f=t;t=tmp}
     applyDateRange({from:f, to:t});
   };
-  if(fromInput) fromInput.addEventListener('change',onCustom);
-  if(toInput)   toInput.addEventListener('change',onCustom);
+
+  // Auto-formato suave: limita a dígitos + slashes y agrega slashes después
+  // del 2do y 4to dígito numérico mientras se tipea (estilo investing.com).
+  const autoFormat = (input)=>{
+    const raw=input.value.replace(/[^\d\/]/g,'');
+    let digits=raw.replace(/\//g,'');
+    if(digits.length>8) digits=digits.slice(0,8);
+    let out=digits;
+    if(digits.length>=3 && digits.length<=4) out=digits.slice(0,2)+'/'+digits.slice(2);
+    else if(digits.length>=5) out=digits.slice(0,2)+'/'+digits.slice(2,4)+'/'+digits.slice(4);
+    if(out!==input.value){
+      const pos=input.selectionStart;
+      input.value=out;
+      // mantener cursor al final si estaba al final.
+      try{input.setSelectionRange(out.length,out.length)}catch(e){}
+    }
+    // Limpiar invalid mientras escribe; se re-evalúa al blur/Enter.
+    input.classList.remove('invalid');
+  };
+
+  [fromInput,toInput].forEach(inp=>{
+    if(!inp) return;
+    inp.addEventListener('input',()=>autoFormat(inp));
+    inp.addEventListener('change',commitCustom);
+    inp.addEventListener('blur',commitCustom);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitCustom()}});
+  });
+
+  // Botón calendario: abrir el picker nativo si está disponible (Chromium,
+  // Edge, Safari modernos). Fallback: focus que en muchos browsers también
+  // abre el picker del input date.
+  const openPicker = (picker)=>{
+    if(!picker) return;
+    if(typeof picker.showPicker==='function'){
+      try{picker.showPicker()}catch(e){picker.focus()}
+    }else{
+      picker.focus();
+      picker.click();
+    }
+  };
+  if(fromBtn) fromBtn.addEventListener('click',()=>openPicker(fromPicker));
+  if(toBtn)   toBtn  .addEventListener('click',()=>openPicker(toPicker));
+
+  // Picker change → setear text input formateado y aplicar.
+  if(fromPicker) fromPicker.addEventListener('change',()=>{if(fromPicker.value){fromInput.value=isoToDmy(fromPicker.value);commitCustom()}});
+  if(toPicker)   toPicker  .addEventListener('change',()=>{if(toPicker.value){toInput.value=isoToDmy(toPicker.value);commitCustom()}});
 }
 
 // Decile: toggle excluir extremos
