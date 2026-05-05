@@ -137,6 +137,30 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
 .panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
 
+/* ── Panel visibility (fade + hidden) ── */
+.section{transition:opacity .2s ease}
+.section.is-hidden{display:none}
+.section.fading-out{opacity:0;pointer-events:none}
+.section.fading-in{animation:sectionFadeIn .2s ease forwards}
+@keyframes sectionFadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── FAB Más gráficas ── */
+.fab-more{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;border:none;background:var(--blue-accent);color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,.20);z-index:1500;font-size:22px;line-height:1;transition:transform .15s,box-shadow .15s}
+.fab-more.show{display:inline-flex}
+.fab-more:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.28)}
+.fab-more:focus-visible{outline:2px solid var(--blue-accent);outline-offset:3px}
+.fab-more .fab-badge{position:absolute;top:-4px;right:-4px;min-width:22px;height:22px;border-radius:11px;background:var(--orange);color:#fff;font-size:11px;font-weight:600;font-family:'Outfit',sans-serif;display:inline-flex;align-items:center;justify-content:center;padding:0 6px;border:2px solid var(--bg-primary);line-height:1}
+.fab-popup{position:fixed;bottom:96px;right:24px;display:none;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;box-shadow:0 10px 32px rgba(0,0,0,.22);min-width:280px;max-width:360px;max-height:60vh;overflow-y:auto;z-index:1600;padding:6px;font-family:'Outfit',sans-serif;font-size:12px}
+.fab-popup.open{display:block}
+.fab-popup-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:8px 10px 6px}
+.fab-popup-list{list-style:none;margin:0;padding:0}
+.fab-popup-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 10px;border-radius:4px;color:var(--text-primary)}
+.fab-popup-item:hover{background:var(--bg-tertiary)}
+.fpi-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fpi-show{padding:4px 10px;font-family:inherit;font-size:11px;font-weight:500;border:1px solid var(--border-color);border-radius:4px;background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .12s;white-space:nowrap}
+.fpi-show:hover{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
+@media(max-width:768px){.fab-more{bottom:16px;right:16px;width:48px;height:48px;font-size:18px}.fab-popup{bottom:80px;right:16px;left:16px;min-width:auto}}
+
 /* ── Panel menu (dropdown ⋮) ── */
 .panel-menu{position:fixed;display:none;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:200px;padding:4px;z-index:2400;font-family:'Outfit',sans-serif;font-size:12px}
 .panel-menu.open{display:block}
@@ -327,9 +351,19 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
 <div class="footer" id="footer"></div>
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
+  <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
   <button class="panel-menu-item" data-action="toggle-width" role="menuitem" type="button">Ancho: <span class="pmi-state" id="pmiWidthState">&mdash;</span></button>
   <button class="panel-menu-item" data-action="move-up" role="menuitem" type="button">Mover arriba &uarr;</button>
   <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">Mover abajo &darr;</button>
+</div>
+
+<button class="fab-more" id="fabMore" type="button" aria-label="Más gráficas. 0 paneles ocultos" title="Más gráficas">
+  <span class="fab-icon">&#9636;</span>
+  <span class="fab-badge" id="fabBadge">0</span>
+</button>
+<div class="fab-popup" id="fabPopup" role="menu" aria-hidden="true" aria-labelledby="fabMore">
+  <div class="fab-popup-title">Mostrar paneles</div>
+  <ul class="fab-popup-list" id="fabPopupList"></ul>
 </div>
 
 <script>
@@ -1521,6 +1555,152 @@ function resizePanelCharts(panel){
     plots.forEach(p=>{Plotly.relayout(p,{height:h,autosize:true}).then(()=>Plotly.Plots.resize(p))});
   },50)});
 }
+// \u2550\u2550\u2550 PANEL VISIBILITY (Ocultar / FAB M\u00e1s gr\u00e1ficas) \u2550\u2550\u2550
+const HIDDEN_BY_DEFAULT = ['flow','bank','ratio','spread','depth','outliers'];
+let panelVisibility = {};
+
+function loadVisibility(){
+  // Migraci\u00f3n: si la clave existe, respetarla; si no, aplicar defaults.
+  const raw = localStorage.getItem('dashboard-panel-visibility');
+  if(raw){
+    try{
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed==='object'){
+        panelVisibility = parsed;
+        // Asegurar que los paneles nuevos no listados arranquen visibles.
+        for(const item of DEFAULT_LAYOUT){
+          if(!(item.id in panelVisibility)) panelVisibility[item.id]=true;
+        }
+        return;
+      }
+    }catch(e){}
+  }
+  panelVisibility = {};
+  for(const item of DEFAULT_LAYOUT){
+    panelVisibility[item.id] = !HIDDEN_BY_DEFAULT.includes(item.id);
+  }
+}
+function saveVisibility(){
+  try{localStorage.setItem('dashboard-panel-visibility', JSON.stringify(panelVisibility))}catch(e){}
+}
+function applyVisibilityImmediate(){
+  document.querySelectorAll('.panel-grid .section').forEach(p=>{
+    const id=p.dataset.panel;
+    const visible = panelVisibility[id]!==false;
+    p.classList.toggle('is-hidden', !visible);
+  });
+}
+function panelTitle(id){
+  const p=document.querySelector('.panel-grid .section[data-panel="'+id+'"]');
+  if(!p) return id;
+  const h=p.querySelector('.section-header h2');
+  if(!h) return id;
+  const clone=h.cloneNode(true);
+  clone.querySelectorAll('.help-tip').forEach(x=>x.remove());
+  return clone.textContent.trim();
+}
+function hidePanelWithFade(panel){
+  if(!panel) return;
+  const id=panel.dataset.panel;
+  panel.classList.add('fading-out');
+  setTimeout(()=>{
+    panel.classList.add('is-hidden');
+    panel.classList.remove('fading-out');
+  }, 200);
+  panelVisibility[id]=false;
+  saveVisibility();
+  updateFab();
+  updatePopupList();
+}
+function showPanelWithFade(id){
+  const panel=document.querySelector('.panel-grid .section[data-panel="'+id+'"]');
+  if(!panel) return;
+  panelVisibility[id]=true;
+  saveVisibility();
+  panel.classList.remove('is-hidden');
+  panel.classList.add('fading-in');
+  setTimeout(()=>{
+    panel.classList.remove('fading-in');
+    panel.querySelectorAll('.js-plotly-plot').forEach(plot=>{try{Plotly.Plots.resize(plot)}catch(e){}});
+  }, 220);
+  updateFab();
+  updatePopupList();
+}
+function listHiddenPanels(){
+  // Orden natural seg\u00fan DEFAULT_LAYOUT.
+  return DEFAULT_LAYOUT.map(it=>it.id).filter(id=>panelVisibility[id]===false);
+}
+function updateFab(){
+  const fab=document.getElementById('fabMore');
+  const badge=document.getElementById('fabBadge');
+  if(!fab||!badge) return;
+  const hidden=listHiddenPanels();
+  if(hidden.length===0){
+    fab.classList.remove('show');
+    closeFabPopup(false);
+  }else{
+    fab.classList.add('show');
+    badge.textContent=hidden.length;
+  }
+  fab.setAttribute('aria-label','M\u00e1s gr\u00e1ficas. '+hidden.length+' paneles ocultos');
+}
+function updatePopupList(){
+  const list=document.getElementById('fabPopupList');
+  if(!list) return;
+  const hidden=listHiddenPanels();
+  if(hidden.length===0){
+    list.innerHTML='';
+    closeFabPopup(false);
+    return;
+  }
+  list.innerHTML=hidden.map(id=>{
+    const t=panelTitle(id);
+    return '<li class="fab-popup-item"><span class="fpi-title">'+t.replace(/</g,'&lt;')+'</span><button class="fpi-show" data-show-id="'+id+'" type="button">Mostrar</button></li>';
+  }).join('');
+}
+function openFabPopup(){
+  updatePopupList();
+  const popup=document.getElementById('fabPopup');
+  if(!popup) return;
+  if(listHiddenPanels().length===0) return;
+  popup.classList.add('open');
+  popup.setAttribute('aria-hidden','false');
+}
+function closeFabPopup(returnFocus){
+  const popup=document.getElementById('fabPopup');
+  if(!popup||!popup.classList.contains('open')) return;
+  popup.classList.remove('open');
+  popup.setAttribute('aria-hidden','true');
+  if(returnFocus){
+    const fab=document.getElementById('fabMore');
+    if(fab) fab.focus();
+  }
+}
+{
+  const fab=document.getElementById('fabMore');
+  const popup=document.getElementById('fabPopup');
+  const list=document.getElementById('fabPopupList');
+  if(fab) fab.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(popup.classList.contains('open')) closeFabPopup(true);
+    else openFabPopup();
+  });
+  if(list) list.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-show-id]');
+    if(!btn) return;
+    e.stopPropagation();
+    showPanelWithFade(btn.dataset.showId);
+  });
+  document.addEventListener('click',e=>{
+    if(!popup||!popup.classList.contains('open')) return;
+    if(popup.contains(e.target) || (fab && fab.contains(e.target))) return;
+    closeFabPopup(false);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape' && popup && popup.classList.contains('open')) closeFabPopup(true);
+  });
+}
+
 // \u2550\u2550\u2550 PANEL MENU (\u22ee) \u2550\u2550\u2550
 let activePanelForMenu=null;
 function openPanelMenu(panel, btn){
@@ -1583,7 +1763,9 @@ document.querySelectorAll('#panelMenu .panel-menu-item').forEach(item=>{
     if(item.disabled||!activePanelForMenu) return;
     const panel=activePanelForMenu;
     const action=item.dataset.action;
-    if(action==='toggle-width'){
+    if(action==='hide'){
+      hidePanelWithFade(panel);
+    }else if(action==='toggle-width'){
       panel.classList.toggle('full-width');
       saveLayout();
       resizePanelCharts(panel);
@@ -1686,6 +1868,10 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // Restore layout
   const layout=loadLayout();
   if(layout)applyLayout(layout);
+  // Cargar visibility (respeta clave existente, default si no existe)
+  loadVisibility();
+  applyVisibilityImmediate();
+  updateFab();
   // Restaurar side filter antes de cualquier render.
   const savedSide=localStorage.getItem('dashboard-side-filter');
   if(savedSide==='buy'||savedSide==='sell'||savedSide==='both') sideFilter=savedSide;
