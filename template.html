@@ -10,7 +10,7 @@
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#f7f5f0;--bg-secondary:#fff;--bg-tertiary:#eeece6;--border-color:#ddd9d0;--text-primary:#1a1a1a;--text-secondary:#5c5c5c;--text-muted:#9a9a9a;--green:#2d7a4f;--green-muted:rgba(45,122,79,.10);--orange:#b35c1e;--orange-muted:rgba(179,92,30,.10);--blue-accent:#3b6fb5;--kpi-value-size:28px;--color-buy:#2d7a4f;--color-sell:#b35c1e;--color-bcb-oficial:#8a8a8a;--color-bcb-ref-compra:#1f4d8a;--color-bcb-ref-venta:#6a9bd1;--color-neutral:#4a5868}
+:root{--bg-primary:#f7f5f0;--bg-secondary:#fff;--bg-tertiary:#eeece6;--border-color:#ddd9d0;--text-primary:#1a1a1a;--text-secondary:#5c5c5c;--text-muted:#9a9a9a;--green:#2d7a4f;--green-muted:rgba(45,122,79,.10);--orange:#b35c1e;--orange-muted:rgba(179,92,30,.10);--blue-accent:#3b6fb5;--kpi-value-size:28px;--color-buy:#2d7a4f;--color-sell:#b35c1e;--color-bcb-oficial:#8a8a8a;--color-bcb-ref-compra:#1f4d8a;--color-bcb-ref-venta:#6a9bd1;--color-neutral:#4a5868;--color-accent-warm:#d4a64a}
 *,*::before,*::after{transition:background-color .3s,color .3s,border-color .3s}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit',sans-serif;min-height:100vh}
@@ -339,6 +339,7 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP Compra &minus; Venta por profundidad (BOB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpread"></div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div></div></div>
     <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil <span class="help-tip" tabindex="0" aria-label="Explicaci&oacute;n del panel decil"><span class="help-icon">i</span><span class="help-pop">VWAP acumulado por decil de profundidad. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.<br><br>Toggle <em>Excluir percentil 100</em>: en ambos lados el percentil 100 representa el precio MENOS competitivo para el taker (m&aacute;s caro en Compra, m&aacute;s barato en Venta) y suele estar contaminado por anuncios cebo y manipulaci&oacute;n. Activado por defecto. El percentil 10 (mejor 10% del libro) se mantiene visible.</span></span></h2><p>VWAP acumulado por decil de profundidad &middot; &uacute;ltimo snapshot.</p><label class="panel-toggle"><input type="checkbox" id="decileExcludeExtremes" checked><span>Excluir percentil 100 (cola con trampas)</span></label></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDecile"></div></div></div>
+    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div></div></div>
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartRatio"></div></div></div>
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartConc"></div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco <span class="help-tip" tabindex="0" aria-label="Granularidad del panel"><span class="help-icon">i</span><span class="help-pop">Granularidad diaria: muestra el &uacute;ltimo snapshot del &uacute;ltimo d&iacute;a disponible dentro del rango activo. Al mover el selector de fechas, salta al cierre de d&iacute;a m&aacute;s cercano (no al &uacute;ltimo ts exacto del rango).</span></span></h2><p>Anuncios y profundidad por m&eacute;todo de pago.</p><p class="snap-stamp">Snapshot del <span id="banksSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="bankTable"></div></div></div>
@@ -385,14 +386,14 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f7f5f0','bg-secondary':'#ffffff','bg-tertiary':'#eeece6','border-color':'#ddd9d0','text-primary':'#1a1a1a','text-secondary':'#5c5c5c','text-muted':'#9a9a9a','green':'#2d7a4f','green-muted':'rgba(45,122,79,0.10)','orange':'#b35c1e','orange-muted':'rgba(179,92,30,0.10)','blue-accent':'#3b6fb5','kpi-value-size':'28px','color-buy':'#2d7a4f','color-sell':'#b35c1e','color-bcb-oficial':'#8a8a8a','color-bcb-ref-compra':'#1f4d8a','color-bcb-ref-venta':'#6a9bd1','color-neutral':'#4a5868'},
-  claude:{'bg-primary':'#ece5d8','bg-secondary':'#f5f0e8','bg-tertiary':'#e2dace','border-color':'#d1c9ba','text-primary':'#2b2520','text-secondary':'#6b6056','text-muted':'#998e80','green':'#407a56','green-muted':'rgba(64,122,86,0.10)','orange':'#b8652a','orange-muted':'rgba(184,101,42,0.10)','blue-accent':'#8b6d4a','kpi-value-size':'28px','color-buy':'#407a56','color-sell':'#b8652a','color-bcb-oficial':'#88806f','color-bcb-ref-compra':'#4a5d7d','color-bcb-ref-venta':'#8da4be','color-neutral':'#555548'},
-  slate:{'bg-primary':'#0f1115','bg-secondary':'#161a20','bg-tertiary':'#1e2228','border-color':'#2a2f38','text-primary':'#dce0e8','text-secondary':'#7c828e','text-muted':'#484e58','green':'#4faa72','green-muted':'rgba(79,170,114,0.12)','orange':'#d08050','orange-muted':'rgba(208,128,80,0.12)','blue-accent':'#5a8ac0','kpi-value-size':'28px','color-buy':'#4faa72','color-sell':'#d08050','color-bcb-oficial':'#7c828e','color-bcb-ref-compra':'#6a8ec0','color-bcb-ref-venta':'#a8c0e0','color-neutral':'#8090a8'}
+  paper:{'bg-primary':'#f7f5f0','bg-secondary':'#ffffff','bg-tertiary':'#eeece6','border-color':'#ddd9d0','text-primary':'#1a1a1a','text-secondary':'#5c5c5c','text-muted':'#9a9a9a','green':'#2d7a4f','green-muted':'rgba(45,122,79,0.10)','orange':'#b35c1e','orange-muted':'rgba(179,92,30,0.10)','blue-accent':'#3b6fb5','kpi-value-size':'28px','color-buy':'#2d7a4f','color-sell':'#b35c1e','color-bcb-oficial':'#8a8a8a','color-bcb-ref-compra':'#1f4d8a','color-bcb-ref-venta':'#6a9bd1','color-neutral':'#4a5868','color-accent-warm':'#d4a64a'},
+  claude:{'bg-primary':'#ece5d8','bg-secondary':'#f5f0e8','bg-tertiary':'#e2dace','border-color':'#d1c9ba','text-primary':'#2b2520','text-secondary':'#6b6056','text-muted':'#998e80','green':'#407a56','green-muted':'rgba(64,122,86,0.10)','orange':'#b8652a','orange-muted':'rgba(184,101,42,0.10)','blue-accent':'#8b6d4a','kpi-value-size':'28px','color-buy':'#407a56','color-sell':'#b8652a','color-bcb-oficial':'#88806f','color-bcb-ref-compra':'#4a5d7d','color-bcb-ref-venta':'#8da4be','color-neutral':'#555548','color-accent-warm':'#c69240'},
+  slate:{'bg-primary':'#0f1115','bg-secondary':'#161a20','bg-tertiary':'#1e2228','border-color':'#2a2f38','text-primary':'#dce0e8','text-secondary':'#7c828e','text-muted':'#484e58','green':'#4faa72','green-muted':'rgba(79,170,114,0.12)','orange':'#d08050','orange-muted':'rgba(208,128,80,0.12)','blue-accent':'#5a8ac0','kpi-value-size':'28px','color-buy':'#4faa72','color-sell':'#d08050','color-bcb-oficial':'#7c828e','color-bcb-ref-compra':'#6a8ec0','color-bcb-ref-venta':'#a8c0e0','color-neutral':'#8090a8','color-accent-warm':'#e0b96a'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
   'color-bcb-oficial':'text-muted','color-bcb-ref-compra':'blue-accent','color-bcb-ref-venta':'blue-accent',
-  'color-neutral':'blue-accent'
+  'color-neutral':'blue-accent','color-accent-warm':'orange'
 };
 const LIGHT_THEMES = ['paper','claude'];
 
@@ -728,6 +729,88 @@ function aggregateMerchantFlow(rangeFromIdx, rangeToIdx, view){
   return [...buckets.keys()].sort().map(k=>buckets.get(k));
 }
 
+// Distribución de oferta USDT por bin de precio (Sección 6.5).
+// Toma el último día <= rangeTo de offer_daily, calcula bins de 0.10 BOB
+// con rango dinámico (cuantiles 10%/90% del USDT total + ancla mid-price
+// + padding 5%), y agrega surplus por lado y oferentes únicos por bin.
+function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
+  const od=DATA.offer_daily;
+  if(!od||!od.dates||!od.dates.length) return null;
+  const fromDay=TS_ARR[rangeFromIdx].slice(0,10);
+  const toDay  =TS_ARR[rangeToIdx].slice(0,10);
+  // Último día <= toDay (preferentemente >= fromDay; si no hay dentro
+  // del rango, el más cercano hacia atrás).
+  let dayIdx=-1;
+  for(let i=od.dates.length-1;i>=0;i--){
+    if(od.dates[i]<=toDay){dayIdx=i;break}
+  }
+  if(dayIdx<0) return null;
+  const start=od.row_offsets[dayIdx], end=od.row_offsets[dayIdx+1];
+  if(end<=start) return {empty:true, snapshot_ts:od.snapshot_ts[dayIdx]};
+  const vb10=od.vwap10_buy[dayIdx], vs10=od.vwap10_sell[dayIdx];
+  const mid=(vb10!=null&&vs10!=null) ? (vb10+vs10)/2 : null;
+
+  // Pasada 1: total USDT y vector ordenado por precio.
+  const ads=[];
+  let total=0;
+  for(let i=start;i<end;i++){
+    const p=od.price[i], s=od.surplus[i];
+    if(p==null||s==null||s<=0) continue;
+    ads.push({p, s, side:od.side[i], aid:od.aid_idx[i]});
+    total+=s;
+  }
+  if(total<=0||!ads.length) return {empty:true, snapshot_ts:od.snapshot_ts[dayIdx]};
+  ads.sort((a,b)=>a.p-b.p);
+
+  // Cuantiles ponderados.
+  const target=total*0.10;
+  let acc=0, priceLow=ads[0].p;
+  for(const a of ads){acc+=a.s; if(acc>=target){priceLow=a.p;break}}
+  acc=0; let priceHigh=ads[ads.length-1].p;
+  for(let i=ads.length-1;i>=0;i--){acc+=ads[i].s; if(acc>=target){priceHigh=ads[i].p;break}}
+
+  // Anclas con mid + padding 5%.
+  let lowAnchor=priceLow, highAnchor=priceHigh;
+  if(mid!=null){
+    lowAnchor =Math.min(lowAnchor,  mid-0.05);
+    highAnchor=Math.max(highAnchor, mid+0.05);
+  }
+  if(lowAnchor>=highAnchor){lowAnchor=highAnchor-0.10}
+  const span=highAnchor-lowAnchor;
+  const finalLow =lowAnchor  - 0.05*span;
+  const finalHigh=highAnchor + 0.05*span;
+  const binStart=Math.floor(finalLow*10)/10;
+  const binEnd  =Math.ceil(finalHigh*10)/10;
+  const nBins=Math.max(1, Math.round((binEnd-binStart)*10));
+
+  // Acumular por bin.
+  const buyAmt =new Array(nBins).fill(0);
+  const sellAmt=new Array(nBins).fill(0);
+  const aidSets=[]; for(let i=0;i<nBins;i++) aidSets.push(new Set());
+  for(const a of ads){
+    if(a.p<binStart||a.p>=binEnd+0.0000001) continue;
+    const idx=Math.min(nBins-1, Math.max(0, Math.floor((a.p-binStart)*10+1e-9)));
+    if(a.side===0) buyAmt[idx]+=a.s; else sellAmt[idx]+=a.s;
+    aidSets[idx].add(a.aid);
+  }
+  // Filtrar bins con < 1 USDT total y construir labels.
+  const labels=[], buy=[], sell=[], offerers=[];
+  for(let i=0;i<nBins;i++){
+    if((buyAmt[i]+sellAmt[i])<1) continue;
+    const lo=binStart+i*0.1;
+    labels.push(lo.toFixed(2));
+    buy.push(Math.round(buyAmt[i]));
+    sell.push(Math.round(sellAmt[i]));
+    offerers.push(aidSets[i].size);
+  }
+  return {
+    snapshot_ts: od.snapshot_ts[dayIdx],
+    binStart, binEnd, nBins,
+    labels, buy, sell, offerers,
+    mid_price: mid
+  };
+}
+
 function getC(){
   const t=activeThemeValues;
   return{
@@ -743,7 +826,8 @@ function getC(){
     bcbOficial:    t['color-bcb-oficial']   || t['text-muted'],
     bcbRefCompra:  t['color-bcb-ref-compra']|| t['blue-accent'],
     bcbRefVenta:   t['color-bcb-ref-venta'] || t['blue-accent'],
-    neutral:       t['color-neutral']       || t['blue-accent']
+    neutral:       t['color-neutral']       || t['blue-accent'],
+    accentWarm:    t['color-accent-warm']   || t.orange
   };
 }
 function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:'pan',font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
@@ -1148,6 +1232,54 @@ function rFlow(c){
   Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
+function rOffer(c){
+  const el=document.getElementById('chartOffer');
+  if(!el) return;
+  const stamp=document.getElementById('offerSnapStamp');
+  const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx);
+  if(!od){
+    _purgeAndClear(el);
+    el.innerHTML='<div class="view-hint">Sin data en el rango activo</div>';
+    if(stamp) stamp.textContent='—';
+    return;
+  }
+  if(stamp&&od.snapshot_ts){
+    stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+  if(od.empty){
+    _purgeAndClear(el);
+    el.innerHTML='<div class="view-hint">Sin oferta en el último snapshot del rango activo</div>';
+    return;
+  }
+  const L=BL(c);
+  const allTraces=[
+    {_side:'buy', type:'bar', name:'Compra', x:od.labels, y:od.buy,
+      marker:{color:c.buy}, opacity:0.55, yaxis:'y'},
+    {_side:'sell',type:'bar', name:'Venta', x:od.labels, y:od.sell,
+      marker:{color:c.sell}, opacity:0.55, yaxis:'y'},
+    // Línea de oferentes únicos: NEUTRA (sin _side), siempre visible.
+    {type:'scatter', mode:'lines+markers', name:'Nro. de oferentes',
+      x:od.labels, y:od.offerers,
+      line:{color:c.accentWarm, width:2},
+      marker:{color:c.accentWarm, size:5},
+      yaxis:'y2'}
+  ];
+  const traces=filterDirectionalTraces(allTraces);
+  Plotly.react('chartOffer', traces, {
+    ...L,
+    barmode:'overlay',
+    showlegend:true,
+    legend:{orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:{size:11,family:'Outfit',color:c.fontcolor}},
+    xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30},
+    yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted}}, tickformat:',.0f', rangemode:'tozero'},
+    yaxis2:{overlaying:'y', side:'right', showgrid:false,
+      tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
+      title:{text:'Nro. oferentes',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
+    margin:{l:60,r:60,t:36,b:60},
+    height:chartHeight('chartOffer')
+  }, PC);
+}
+
 function rHeatmap(c){
   const hm=aggregateHeatmap(activeRange.fromIdx, activeRange.toIdx);
   const el=document.getElementById('chartHeatmap');
@@ -1190,7 +1322,7 @@ function replotAllCharts(){
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
-  rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rHeatmap(c);
+  rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rOffer(c); rHeatmap(c);
   updateKpis();
 }
 
@@ -1519,7 +1651,8 @@ document.getElementById('importBtn').addEventListener('click',()=>{
 // ═══ PANEL LAYOUT (drag + resize + persist) ═══
 const DEFAULT_LAYOUT = [
   {id:'vwap',full:true},{id:'spread',full:false},{id:'depth',full:false},
-  {id:'decile',full:false},{id:'ratio',full:false},{id:'conc',full:false},{id:'bank',full:false},
+  {id:'decile',full:false},{id:'offer_range',full:true},
+  {id:'ratio',full:false},{id:'conc',full:false},{id:'bank',full:false},
   {id:'merchants',full:true},{id:'outliers',full:true},
   {id:'volatility',full:false},{id:'flow',full:false},{id:'heatmap',full:true}
 ];
@@ -1710,7 +1843,8 @@ function closeFabPopup(returnFocus){
 const PANEL_CHART_DIV = {
   vwap:'chartVwap', spread:'chartSpread', depth:'chartDepth',
   decile:'chartDecile', ratio:'chartRatio', conc:'chartConc',
-  volatility:'chartVolatility', flow:'chartFlow', heatmap:'chartHeatmap'
+  volatility:'chartVolatility', flow:'chartFlow',
+  offer_range:'chartOffer', heatmap:'chartHeatmap'
 };
 const PANEL_TABLE_ROOT = {bank:'bankTable', merchants:'topMerchants', outliers:'outliersTable'};
 
@@ -1795,6 +1929,25 @@ function csvFromChartPanel(panelId){
   const div=document.getElementById(divId);
   const data=(div&&div.data)||[];
   if(!data.length) return '';
+  // Offer range: wide (precio_bin, surplus_buy, surplus_sell, oferentes_unicos).
+  // M\u00e1s legible que long para histograma; filas filtradas por toggle siguen
+  // representadas como columnas vac\u00edas cuando el lado no est\u00e1 visible.
+  if(panelId==='offer_range'){
+    const buyT  = data.find(t=>t._side==='buy');
+    const sellT = data.find(t=>t._side==='sell');
+    const offT  = data.find(t=>t.yaxis==='y2');
+    const xs = (buyT&&buyT.x) || (sellT&&sellT.x) || (offT&&offT.x) || [];
+    const rows=[['precio_bin','surplus_buy','surplus_sell','oferentes_unicos']];
+    for(let i=0;i<xs.length;i++){
+      rows.push([
+        xs[i],
+        buyT  ? (buyT.y[i]!=null?buyT.y[i]:'')  : '',
+        sellT ? (sellT.y[i]!=null?sellT.y[i]:''): '',
+        offT  ? (offT.y[i]!=null?offT.y[i]:'')  : ''
+      ]);
+    }
+    return _csvRows(rows);
+  }
   // Heatmap: 1 trace tipo heatmap \u2192 expandir matriz (long).
   if(data.length===1 && data[0].type==='heatmap'){
     const t=data[0], rows=[['metric','hour','value']];
