@@ -168,6 +168,7 @@ body.theme-dark .pill-red{background:rgba(232,110,110,.18);color:#e88a8a}
 .panel-menu-item:hover:not(:disabled){background:var(--bg-tertiary)}
 .panel-menu-item:disabled{opacity:.4;cursor:not-allowed}
 .panel-menu-item .pmi-state{color:var(--text-muted);font-weight:400;font-family:'IBM Plex Mono',monospace;font-size:11px}
+.panel-menu-divider{height:1px;background:var(--border-color);margin:4px 4px}
 
 /* ── Sort headers en tablas ── */
 .bank-table th[data-sort-key],.merchants-table th[data-sort-key],.outliers-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
@@ -355,6 +356,9 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
   <button class="panel-menu-item" data-action="toggle-width" role="menuitem" type="button">Ancho: <span class="pmi-state" id="pmiWidthState">&mdash;</span></button>
   <button class="panel-menu-item" data-action="move-up" role="menuitem" type="button">Mover arriba &uarr;</button>
   <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">Mover abajo &darr;</button>
+  <div class="panel-menu-divider" id="pmiDivider"></div>
+  <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">Descargar PNG</button>
+  <button class="panel-menu-item" data-action="download-csv" role="menuitem" type="button">Descargar CSV</button>
 </div>
 
 <button class="fab-more" id="fabMore" type="button" aria-label="Más gráficas. 0 paneles ocultos" title="Más gráficas">
@@ -1701,6 +1705,123 @@ function closeFabPopup(returnFocus){
   });
 }
 
+// \u2550\u2550\u2550 PANEL DOWNLOADS (PNG / CSV) \u2550\u2550\u2550
+// Mapas de tipo de panel.
+const PANEL_CHART_DIV = {
+  vwap:'chartVwap', spread:'chartSpread', depth:'chartDepth',
+  decile:'chartDecile', ratio:'chartRatio', conc:'chartConc',
+  volatility:'chartVolatility', flow:'chartFlow', heatmap:'chartHeatmap'
+};
+const PANEL_TABLE_ROOT = {bank:'bankTable', merchants:'topMerchants', outliers:'outliersTable'};
+
+function _stamp(){
+  const d=new Date(), pad=n=>String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes());
+}
+function _csvEscape(v){
+  if(v==null) return '';
+  const s=String(v);
+  return /[",\n\r]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+}
+function _csvRows(rows){return rows.map(r=>r.map(_csvEscape).join(',')).join('\n')}
+function _triggerDownload(content, filename, mime){
+  // BOM UTF-8 para que Excel detecte encoding correctamente.
+  const blob=new Blob(['\ufeff'+content], {type:(mime||'text/csv;charset=utf-8')});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url)}, 200);
+}
+
+function downloadPanelPng(panelId){
+  const divId=PANEL_CHART_DIV[panelId];
+  if(!divId) return;
+  const div=document.getElementById(divId);
+  if(!div||!window.Plotly||!Plotly.downloadImage) return;
+  const r=div.getBoundingClientRect();
+  Plotly.downloadImage(div, {
+    format:'png',
+    filename: panelId+'_'+_stamp(),
+    width: Math.max(800, Math.round(r.width)||1200),
+    height:Math.max(400, Math.round(r.height)||500)
+  });
+}
+
+// CSV de tabla gen\u00e9rica (un \u00fanico <table>): respeta orden visible (sort) y
+// filas filtradas (toggle Compra/Venta) porque lee el DOM directamente.
+function _tableToRows(tableEl){
+  const rows=[];
+  const headers=[...tableEl.querySelectorAll('thead th')].map(th=>{
+    const c=th.cloneNode(true);
+    c.querySelectorAll('.sort-arrow').forEach(x=>x.remove());
+    return c.textContent.trim();
+  });
+  rows.push(headers);
+  tableEl.querySelectorAll('tbody tr').forEach(tr=>{
+    rows.push([...tr.children].map(td=>td.textContent.trim()));
+  });
+  return rows;
+}
+function csvFromTablePanel(panelId){
+  if(panelId==='merchants'){
+    // Merchants tiene 2 sub-tablas Compra/Venta. Combinarlas con columna 'Lado'.
+    const sides=document.querySelectorAll('#topMerchants .merchants-side');
+    const out=[]; let headers=null;
+    sides.forEach(side=>{
+      const lab=(side.querySelector('h3')||{}).textContent||'';
+      const tbl=side.querySelector('table.merchants-table');
+      if(!tbl) return;
+      const tr=_tableToRows(tbl);
+      if(!headers){headers=['Lado',...tr[0]]; out.push(headers)}
+      for(let i=1;i<tr.length;i++) out.push([lab.trim(),...tr[i]]);
+    });
+    return _csvRows(out);
+  }
+  const rootId=PANEL_TABLE_ROOT[panelId];
+  const root=document.getElementById(rootId);
+  if(!root) return '';
+  const tbl=root.querySelector('table');
+  if(!tbl) return '';
+  return _csvRows(_tableToRows(tbl));
+}
+
+// CSV de chart Plotly. Lee div.data (estado actual = post-filtro Compra/Venta
+// y post-selector de fechas, porque construimos traces con los datos del rango
+// activo). Long format: x, trace, y. Heatmap: metric, hour, value.
+function csvFromChartPanel(panelId){
+  const divId=PANEL_CHART_DIV[panelId];
+  if(!divId) return '';
+  const div=document.getElementById(divId);
+  const data=(div&&div.data)||[];
+  if(!data.length) return '';
+  // Heatmap: 1 trace tipo heatmap \u2192 expandir matriz (long).
+  if(data.length===1 && data[0].type==='heatmap'){
+    const t=data[0], rows=[['metric','hour','value']];
+    const ys=t.y||[], xs=t.x||[], z=t.z||[];
+    for(let i=0;i<ys.length;i++){
+      for(let j=0;j<xs.length;j++){
+        const v=z[i] ? z[i][j] : null;
+        rows.push([ys[i], xs[j], v==null?'':v]);
+      }
+    }
+    return _csvRows(rows);
+  }
+  // Long: x, trace, y.
+  const rows=[['x','trace','y']];
+  for(const t of data){
+    const name=t.name||'';
+    const xs=t.x||[], ys=t.y||[];
+    for(let i=0;i<xs.length;i++){
+      const xv=xs[i];
+      const xs2=(xv instanceof Date)?xv.toISOString():(xv==null?'':xv);
+      const yv=ys[i];
+      rows.push([xs2, name, yv==null?'':yv]);
+    }
+  }
+  return _csvRows(rows);
+}
+
 // \u2550\u2550\u2550 PANEL MENU (\u22ee) \u2550\u2550\u2550
 let activePanelForMenu=null;
 function openPanelMenu(panel, btn){
@@ -1714,6 +1835,10 @@ function openPanelMenu(panel, btn){
   const idx=sibs.indexOf(panel);
   menu.querySelector('[data-action="move-up"]').disabled = idx<=0;
   menu.querySelector('[data-action="move-down"]').disabled = idx>=sibs.length-1;
+  // PNG solo en paneles tipo chart Plotly. En tablas (bank, merchants,
+  // outliers) ocultar el item completo, no mostrarlo deshabilitado.
+  const pngItem=menu.querySelector('[data-action="download-png"]');
+  if(pngItem) pngItem.style.display = (panel.dataset.panel in PANEL_CHART_DIV) ? '' : 'none';
   // Posicionar fixed alineado a la derecha del bot\u00f3n
   const r=btn.getBoundingClientRect();
   const vw=window.innerWidth, vh=window.innerHeight;
@@ -1779,6 +1904,12 @@ document.querySelectorAll('#panelMenu .panel-menu-item').forEach(item=>{
       if(next) panel.parentElement.insertBefore(next, panel);
       saveLayout();
       document.querySelectorAll('.panel-grid .js-plotly-plot').forEach(p=>{try{Plotly.Plots.resize(p)}catch(e){}});
+    }else if(action==='download-png'){
+      downloadPanelPng(panel.dataset.panel);
+    }else if(action==='download-csv'){
+      const id=panel.dataset.panel;
+      const csv = (id in PANEL_TABLE_ROOT) ? csvFromTablePanel(id) : csvFromChartPanel(id);
+      _triggerDownload(csv, id+'_'+_stamp()+'.csv', 'text/csv;charset=utf-8');
     }
     closePanelMenu(true);
   });
