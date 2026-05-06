@@ -731,15 +731,22 @@ function aggregateMerchantFlow(rangeFromIdx, rangeToIdx, view){
 
 // Distribución de oferta USDT por bin de precio (Sección 6.5).
 // Toma el último día <= rangeTo de offer_daily, calcula bins de 0.10 BOB
-// con rango dinámico (cuantiles 10%/90% del USDT total + ancla mid-price
-// + padding 5%), y agrega surplus por lado y oferentes únicos por bin.
-function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
+// con rango dinámico (cuantiles 10%/90% del USDT del subset visible +
+// ancla mid-price + padding 5%), y agrega surplus por lado y oferentes
+// únicos del lado activo por bin.
+//
+// sideF: 'both' (default) | 'buy' | 'sell'. Cuando filtra:
+//   - cuantiles, mid, padding y bins se calculan SOLO sobre el subset
+//     del lado visible — el rango colapsa al núcleo de los ads visibles.
+//   - oferentes únicos se cuentan SOLO sobre ads del lado visible.
+//   - bins con < 1 USDT en el lado activo se omiten del eje X (cuando
+//     'both', se omiten si la suma de ambos lados es < 1).
+function aggregateOfferDistribution(rangeFromIdx, rangeToIdx, sideF){
   const od=DATA.offer_daily;
   if(!od||!od.dates||!od.dates.length) return null;
+  const filterSide = sideF==='buy' ? 0 : sideF==='sell' ? 1 : null;   // null=both
   const fromDay=TS_ARR[rangeFromIdx].slice(0,10);
   const toDay  =TS_ARR[rangeToIdx].slice(0,10);
-  // Último día <= toDay (preferentemente >= fromDay; si no hay dentro
-  // del rango, el más cercano hacia atrás).
   let dayIdx=-1;
   for(let i=od.dates.length-1;i>=0;i--){
     if(od.dates[i]<=toDay){dayIdx=i;break}
@@ -748,21 +755,26 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
   const start=od.row_offsets[dayIdx], end=od.row_offsets[dayIdx+1];
   if(end<=start) return {empty:true, snapshot_ts:od.snapshot_ts[dayIdx]};
   const vb10=od.vwap10_buy[dayIdx], vs10=od.vwap10_sell[dayIdx];
-  const mid=(vb10!=null&&vs10!=null) ? (vb10+vs10)/2 : null;
+  // Mid-price: el del lado activo si filtramos; si 'both', promedio.
+  let mid;
+  if(filterSide===0)      mid=vb10;
+  else if(filterSide===1) mid=vs10;
+  else                    mid=(vb10!=null&&vs10!=null) ? (vb10+vs10)/2 : null;
 
-  // Pasada 1: total USDT y vector ordenado por precio.
+  // Pasada 1: ads del subset visible.
   const ads=[];
   let total=0;
   for(let i=start;i<end;i++){
     const p=od.price[i], s=od.surplus[i];
     if(p==null||s==null||s<=0) continue;
+    if(filterSide!==null && od.side[i]!==filterSide) continue;
     ads.push({p, s, side:od.side[i], aid:od.aid_idx[i]});
     total+=s;
   }
   if(total<=0||!ads.length) return {empty:true, snapshot_ts:od.snapshot_ts[dayIdx]};
   ads.sort((a,b)=>a.p-b.p);
 
-  // Cuantiles ponderados.
+  // Cuantiles ponderados sobre el subset.
   const target=total*0.10;
   let acc=0, priceLow=ads[0].p;
   for(const a of ads){acc+=a.s; if(acc>=target){priceLow=a.p;break}}
@@ -783,7 +795,7 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
   const binEnd  =Math.ceil(finalHigh*10)/10;
   const nBins=Math.max(1, Math.round((binEnd-binStart)*10));
 
-  // Acumular por bin.
+  // Acumular por bin (ya filtrado por lado en `ads`).
   const buyAmt =new Array(nBins).fill(0);
   const sellAmt=new Array(nBins).fill(0);
   const aidSets=[]; for(let i=0;i<nBins;i++) aidSets.push(new Set());
@@ -793,10 +805,14 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
     if(a.side===0) buyAmt[idx]+=a.s; else sellAmt[idx]+=a.s;
     aidSets[idx].add(a.aid);
   }
-  // Filtrar bins con < 1 USDT total y construir labels.
+  // Filtrar bins sin data útil del lado activo.
   const labels=[], buy=[], sell=[], offerers=[];
   for(let i=0;i<nBins;i++){
-    if((buyAmt[i]+sellAmt[i])<1) continue;
+    let active;
+    if(filterSide===0)      active = buyAmt[i];
+    else if(filterSide===1) active = sellAmt[i];
+    else                    active = buyAmt[i]+sellAmt[i];
+    if(active < 1) continue;
     const lo=binStart+i*0.1;
     labels.push(lo.toFixed(2));
     buy.push(Math.round(buyAmt[i]));
@@ -807,7 +823,8 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx){
     snapshot_ts: od.snapshot_ts[dayIdx],
     binStart, binEnd, nBins,
     labels, buy, sell, offerers,
-    mid_price: mid
+    mid_price: mid,
+    side_filter: sideF || 'both'
   };
 }
 
@@ -1236,7 +1253,9 @@ function rOffer(c){
   const el=document.getElementById('chartOffer');
   if(!el) return;
   const stamp=document.getElementById('offerSnapStamp');
-  const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx);
+  // El agregador ya filtra ads, cuantiles, bins y oferentes por sideFilter.
+  // La línea de oferentes refleja únicos del lado visible (o ambos en 'both').
+  const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx, sideFilter);
   if(!od){
     _purgeAndClear(el);
     el.innerHTML='<div class="view-hint">Sin data en el rango activo</div>';
@@ -1252,19 +1271,20 @@ function rOffer(c){
     return;
   }
   const L=BL(c);
-  const allTraces=[
-    {_side:'buy', type:'bar', name:'Compra', x:od.labels, y:od.buy,
-      marker:{color:c.buy}, opacity:0.55, yaxis:'y'},
-    {_side:'sell',type:'bar', name:'Venta', x:od.labels, y:od.sell,
-      marker:{color:c.sell}, opacity:0.55, yaxis:'y'},
-    // Línea de oferentes únicos: NEUTRA (sin _side), siempre visible.
-    {type:'scatter', mode:'lines+markers', name:'Nro. de oferentes',
-      x:od.labels, y:od.offerers,
-      line:{color:c.accentWarm, width:2},
-      marker:{color:c.accentWarm, size:5},
-      yaxis:'y2'}
-  ];
-  const traces=filterDirectionalTraces(allTraces);
+  // Con sideFilter activo, los bins ya solo contienen ads del lado visible:
+  // construimos solo la(s) traza(s) del lado, sin pasar por
+  // filterDirectionalTraces (no aplica acá porque el dataset ya viene filtrado).
+  const traces=[];
+  if(showBuy())  traces.push({type:'bar', name:'Compra', x:od.labels, y:od.buy,
+    marker:{color:c.buy}, opacity:0.55, yaxis:'y'});
+  if(showSell()) traces.push({type:'bar', name:'Venta',  x:od.labels, y:od.sell,
+    marker:{color:c.sell}, opacity:0.55, yaxis:'y'});
+  // Oferentes únicos: refleja el subset filtrado.
+  traces.push({type:'scatter', mode:'lines+markers', name:'Nro. de oferentes',
+    x:od.labels, y:od.offerers,
+    line:{color:c.accentWarm, width:2},
+    marker:{color:c.accentWarm, size:5},
+    yaxis:'y2'});
   Plotly.react('chartOffer', traces, {
     ...L,
     barmode:'overlay',
