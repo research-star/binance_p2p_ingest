@@ -112,6 +112,13 @@ Para todo lo demás, leer `HANDOFF.md`.
 - `watchdog.py` — Relanza `ingest.py --loop` si lleva >15 min sin snapshots.
 - `watchdog.bat` — Wrapper para Task Scheduler (no usado: la tarea llama a
   `pythonw.exe scripts\watchdog.py` directo).
+- `start_loop.ps1` — Lanza `ingest.py --loop` desacoplado con `pythonw.exe`.
+  Aborta si ya hay un loop corriendo (mismo criterio que watchdog: proceso
+  python/pythonw con `ingest.py` en CommandLine). Útil tras matar el loop a
+  mano o cerrar VS Code, para no esperar 15 min al watchdog.
+- `status.py` — Reporte rápido del loop: PID/RAM/uptime, snapshots por día,
+  edad del último, BCB, WARNING/ERROR de logs. Si el loop está caído y la
+  sesión es interactiva, ofrece lanzar `start_loop.ps1` con prompt `[y/N]`.
 - `update.bat` — Pipeline manual: BCB → normalize → dashboard.
 - `sync_snapshots.bat` — `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR`.
 
