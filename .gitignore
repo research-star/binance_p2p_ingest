@@ -50,7 +50,17 @@ p2p_normalized.csv
 p2p_normalized.db
 p2p_normalized.db-shm
 p2p_normalized.db-wal
+p2p_normalized.db.lock
+p2p_normalized.db.bak.*
 p2p_metrics.csv
+
+# Artefactos de testing/benchmark de normalize.py (no versionar)
+p2p_baseline_old.db*
+p2p_old_frozen.db*
+p2p_new_frozen.db*
+p2p_new_full.db*
+snapshots_frozen/
+normalize.py.OLD_BASELINE
 
 # Snapshots crudos (no trackear en git)
 snapshots/
