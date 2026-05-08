@@ -1,6 +1,6 @@
 # HANDOFF.md — Estado detallado del proyecto
 
-Última actualización: 2026-04-29
+Última actualización: 2026-05-07
 
 ---
 
@@ -36,11 +36,32 @@ un taker puede comprar USDT, o sea el precio al que el merchant vende.
 
 ## Fase 2: Normalización
 
-**Estado:** ✅ Completa.
+**Estado:** ✅ Completa. **Incremental por default desde 2026-05-07.**
 
 `normalize.py` lee snapshots crudos y produce `p2p_normalized.db` (SQLite).
 1 fila = 1 anuncio en 1 snapshot. PK: `(snapshot_ts_utc, side, adv_no)`.
-Idempotente. Exporta CSV opcional con `--export-csv`.
+Idempotente.
+
+### Modos
+
+- `python normalize.py` → **incremental** (default). Procesa solo archivos con
+  stem > watermark. Sin trabajo → exit 0 silencioso. Pensado para correr cada
+  5 min vía cron sin penalidad.
+- `python normalize.py --full-rebuild` → vacía `ads`, resetea watermark,
+  reprocesa todo. Necesario tras cambios de schema o **al actualizar el código
+  por primera vez** (la DB previa no tiene tabla `normalize_state` poblada).
+- `python normalize.py --since YYYY-MM-DD` → reprocesa rango específico para
+  debugging. **No toca el watermark.**
+- `python normalize.py --status` → muestra watermark actual, snapshots
+  pendientes, totales en DB. No procesa.
+
+### Watermark
+
+- Tabla `normalize_state(key, value, updated_at)`, key=`last_snapshot_stem`.
+- Valor: stem del archivo (`20260507T162114Z_snapshot`). Lex-comparable y
+  cronológico por construcción (formato ISO).
+- Toda corrida lee/escribe el watermark en la **misma transacción** que los
+  inserts → crash a mitad rollbackea el batch entero.
 
 ### Features
 
@@ -49,13 +70,37 @@ Idempotente. Exporta CSV opcional con `--export-csv`.
   Flag `--no-input2` para ignorar el backup. Deduplica por nombre de archivo.
 - **Aplanado base:** extrae price, surplus, cantidad, min/max por transacción
   (BOB y USDT), comisiones, banks, metadata del merchant.
-- **quality_tier (A/B/C):**
+- **quality_tier (A/B/C):** vive en `normalize.py` y se materializa como
+  columna. Threshold drift requiere `--full-rebuild` para repropagar (issue
+  follow-up: mover a VIEW para evaluación lazy).
   - **A:** merchant + ≥100 órdenes/mes + ≥95% completado + ≥500 USDT surplus (~50%)
   - **B:** merchant que no llega a A, o user con ≥20 órdenes/mes (~27%)
   - **C:** resto (~23%)
 - **banks como tags:** JSON array + `n_banks`.
 - **Validación estructural:** **0 restricciones estructuradas al taker** en
   todo el libro boliviano, **0 remarks/auto_reply con keywords KYC**.
+- **Lockfile cooperativo** (`p2p_normalized.db.lock`) con detección de PID
+  stale. Segunda instancia simultánea sale limpia (exit 0) sin reprocesar.
+
+### Optimizaciones SQLite aplicadas
+
+- WAL ya estaba activo desde antes.
+- `synchronous=NORMAL`, `cache_size=-65536` (64 MB), `temp_store=MEMORY`.
+- Nuevo índice covering `idx_ads_flow (snapshot_ts_utc, side, advertiser_id)`
+  → la query del panel "merchant flow" del dashboard pasa de `SCAN ads` a
+  `SCAN COVERING INDEX`.
+- Una transacción por batch (no commit-per-snapshot) → full-rebuild ~1.7×
+  más rápido (~135s → ~77s sobre 2676 snapshots).
+
+### Migración tras pull
+
+La primera corrida del nuevo código sobre una DB vieja **abortará con exit 2**
+(watermark vacío). Bootstrap explícito por diseño (evita ambigüedades):
+
+```bash
+python normalize.py --full-rebuild   # una vez, ~80s
+python normalize.py                   # de ahí en adelante, segundos
+```
 
 ### Pendientes no-bloqueantes
 
