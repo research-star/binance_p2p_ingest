@@ -13,8 +13,10 @@ Uso (Task Scheduler cada 5 min): ver README.
 """
 
 import logging
+import os
 import subprocess
 import sys
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -26,6 +28,25 @@ from config import SNAPSHOTS_DIR as _SNAP, LOGS_DIR as _LOGS, WATCHDOG_STALE_MIN
 SNAPSHOTS_DIR = PROJECT_ROOT / _SNAP
 LOG_FILE = PROJECT_ROOT / _LOGS / "watchdog.log"
 STALE_MINUTES = WATCHDOG_STALE_MIN
+
+# UUID se pasa via env var desde el crontab (NO hardcodear: el repo es público).
+# Sin env var → no ping, comportamiento silencioso (e.g. corrida manual).
+HC_INGEST = os.environ.get("HC_INGEST", "")
+
+
+def ping_healthcheck():
+    """Ping a healthchecks.io señalando ingest sano. No-op si HC_INGEST no seteado.
+
+    Falla silenciosa por diseño: si la red está rara o el servicio caído,
+    no debe crashear el watchdog. La ausencia del ping ya dispara la alerta
+    tras el grace time configurado en healthchecks.io.
+    """
+    if not HC_INGEST:
+        return
+    try:
+        urllib.request.urlopen(f"https://hc-ping.com/{HC_INGEST}", timeout=5)
+    except Exception as e:
+        logging.warning(f"healthcheck ping failed: {e}")
 
 
 def latest_snapshot_age_minutes():
@@ -78,6 +99,7 @@ def main():
 
     age = latest_snapshot_age_minutes()
     if age is not None and age < STALE_MINUTES:
+        ping_healthcheck()
         return  # Todo OK, silencio.
 
     age_str = f"{age:.1f}min" if age is not None else "nunca"
