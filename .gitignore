@@ -22,10 +22,22 @@ dist/
 .env
 .env.*
 !.env.example
+backup.env
+!backup.env.example
 secrets.json
 credentials.json
 *.key
 *.pem
+
+# Lockfiles (backup.py, normalize.py)
+.backup.*.lock
+*.db.lock
+
+# SSH keys defensivo (jamás deberían estar en el repo)
+id_ed25519*
+id_rsa*
+id_ecdsa*
+*USERPROFILE*
 
 # IDE
 .vscode/
