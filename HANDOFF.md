@@ -1,6 +1,6 @@
 # HANDOFF.md — Estado detallado del proyecto
 
-Última actualización: 2026-05-07
+Última actualización: 2026-05-08
 
 ---
 
@@ -20,7 +20,9 @@
   Chequea último snapshot <15 min y verifica con `Get-CimInstance` si hay
   proceso `ingest.py` activo. Si está caído, relanza con `DETACHED_PROCESS`.
   Loop ininterrumpido desde el 2026-04-24 18:44 (≥3 días, 0 caídas).
-- Corre en local. Hosting pendiente.
+- **Corre en VPS Hetzner desde 2026-05-07 23:41 UTC.** Ver sección
+  **Migración Hetzner 2026-05-07**. El watchdog de Task Scheduler en laptop
+  quedó `Disabled` durante el período de gracia de rollback.
 
 ### Corrección histórica importante
 
@@ -167,6 +169,151 @@ métricas por snapshot.
 
 ---
 
+## Migración Hetzner 2026-05-07
+
+**Estado:** ✅ Producción en VPS Hetzner. La laptop ya no corre el ingest.
+
+### Cutover
+
+- **Stop laptop ingest:** 2026-05-07 22:00 UTC (PID 20192 muerto, P2P Watchdog
+  Task Scheduler `Disabled`).
+- **VPS go-live:** 2026-05-07 23:41:37 UTC (`systemctl enable --now
+  binance-ingest.service`).
+- **Gap de captura:** ~1 h 34 min entre último snapshot laptop
+  (`20260507T220741Z`) y primer snapshot VPS (`20260507T234137Z`). Costo
+  único conocido del cutover (kill → migración + bootstrap → go-live).
+
+### Conteos / verificación
+
+| Métrica | Pre-migración (laptop) | Post-bootstrap (VPS) |
+|---|---|---|
+| `ads` rows | 935,699 | 1,030,075 |
+| max `snapshot_ts_utc` | 2026-05-06T03:19:07Z | 2026-05-07T22:07:41Z |
+| snapshots files | 2,709 | 2,709 (creciendo +138/día) |
+
+**Bit-identity de la migración (Step 3.5):** `checksum_db.py` global hash
+local vs VPS (post-scp, pre-`--full-rebuild`):
+
+```
+c5ad8a68fc77394854fb169197c68541a5c5b95b1a025bff23865ff67ae201b5  IDENTICAL
+```
+
+El `--full-rebuild` posterior agregó +94k filas (snapshots ya copiados pero
+no procesados por la versión vieja del laptop) e introdujo el covering index
+`idx_ads_flow`, lo que justifica el crecimiento físico de la DB de ~422 MB
+a ~548 MB (esperado, no es regresión).
+
+> Nota: la diff `records_inserted=1,035,926` (bruto) vs `ads count=1,030,075`
+> (post-dedup) es comportamiento esperado de `INSERT OR REPLACE` colapsando
+> duplicados intra-snapshot que el API ocasionalmente devuelve en bordes de
+> paginación BUY/SELL.
+
+### Topología productiva
+
+- **VPS:** Hetzner — Ubuntu 24.04 LTS, IP `46.62.158.88`, hostname
+  `p2p-ingest-prod`. 38 GB disco / 3.7 GB RAM / 2 GB swap (`/swapfile`,
+  `vm.swappiness=10`).
+- **User dedicado:** `binance` (uid 1000). Sudo restringido por
+  `/etc/sudoers.d/binance` a 5 operaciones sobre `binance-ingest.service`:
+  `restart`, `start`, `stop`, `enable`, `disable`. Sin sudo full.
+- **Paths:**
+  - Código: `/opt/binance_p2p/` (clone de `main` desde GitHub vía deploy key
+    con write access, `id_ed25519_github` privada local del VPS).
+  - Logs: `/var/log/binance_p2p/{ingest.log, ingest.err, normalize.log,
+    watchdog.log}`.
+  - DB: `/opt/binance_p2p/p2p_normalized.db`.
+  - Snapshots crudos: `/opt/binance_p2p/snapshots/YYYY-MM-DD/`.
+- **systemd unit:** `binance-ingest.service` (`Type=simple`,
+  `Restart=on-failure`, `RestartSec=30`, append a `ingest.log`/`ingest.err`).
+- **Cron del user `binance`** (instalado desde `/tmp/binance-crontab`):
+  ```
+  */5 * * * * cd /opt/binance_p2p && .venv/bin/python normalize.py
+  */5 * * * * cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
+  # */12 * * * * scripts/publish_dashboard.py  ← DESACTIVADO hasta A1
+  ```
+  La línea de dashboard publish queda comentada porque
+  `scripts/publish_dashboard.py` aún no existe (workstream A1 separado).
+- **Hardening SSH:** `PasswordAuthentication no`, `PermitRootLogin no`,
+  `KbdInteractiveAuthentication no` (drop-in
+  `/etc/ssh/sshd_config.d/99-hardening.conf`). `ufw` activo permitiendo solo
+  22/tcp (v4+v6). `fail2ban` con jail `sshd` activa.
+
+### SSH desde laptop
+
+```bash
+ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88
+```
+
+`root` está bloqueado a propósito tras el hardening. No intentes entrar como
+root vía SSH — usá Hetzner Rescue Console si necesitás root real.
+
+### Backup laptop-pull (operación diaria)
+
+`backup.env` configurado en la raíz del repo con valores reales del VPS
+(gitignored). Subcomandos:
+
+```bash
+python scripts/backup.py db          # snapshot consistente VPS → ~/backups/db/p2p_normalized_<TS>.db
+python scripts/backup.py snapshots   # incremental: pulls solo files nuevos
+python scripts/backup.py status      # versiones locales + GFS
+python scripts/backup.py prune       # aplica GFS sobre db/
+python scripts/backup.py restore --target X --version YYYY-MM-DDTHHMMSSZ
+```
+
+**Smoke test post-cutover (2026-05-08):** dos `db` consecutivos confirmaron
+IDENTICAL (n_rows=1,035,079, global=`e3db585bd213ff5f...`). `restore`
+produce copia byte-idéntica (md5=`f8c6df21...`).
+
+### Limitación conocida: bulk-seed inicial de snapshots
+
+`backup.py snapshots` usa `sftp -b` batch con `get` por archivo. Eficiente para
+runs incrementales (decenas/centenas de archivos nuevos), **inviable para
+bulk-pull desde cero** (~36 min para 2,710 archivos chicos en pruebas reales).
+
+**Mitigación manual** para first-time setup en una máquina nueva:
+
+```bash
+ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 \
+    'cd /opt/binance_p2p && tar -cf - snapshots' \
+    | tar -xf - -C ~/backups/
+```
+
+(~50 s para 150 MB / 2,710 archivos.) Después de eso, `backup.py snapshots`
+opera incremental sin problemas.
+
+**Mejora futura (no-bloqueante):** flag `--bulk-seed` en `backup.py snapshots`
+que use tar internamente en el primer pull.
+
+### Procedimiento de rollback (válido por 7 días, hasta 2026-05-14)
+
+Si algo crítico falla en el VPS y querés volver al laptop:
+
+```bash
+# 1. Parar el VPS
+ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 \
+    'sudo systemctl stop binance-ingest.service && \
+     sudo systemctl disable binance-ingest.service && \
+     crontab -u binance -r'
+
+# 2. En la laptop: restaurar la DB pre-migración
+cd /c/Dev/binance_p2p_ingest
+mv p2p_normalized.db p2p_normalized.db.failed-vps
+mv p2p_normalized.db.pre-migration-20260507T180022Z p2p_normalized.db
+
+# 3. Re-habilitar la P2P Watchdog del Task Scheduler
+schtasks /Change /TN "P2P Watchdog" /ENABLE
+
+# 4. Lanzar el loop (el watchdog lo recogerá automáticamente si muere)
+pythonw.exe ingest.py --loop
+```
+
+**MANTENER `p2p_normalized.db.pre-migration-20260507T180022Z` intacto en la
+laptop hasta el 2026-05-14**. Es el único rollback duro disponible. Después
+de esa fecha, el rollback requiere bajar la DB del VPS via `backup.py db`
+(que sí es válido pero menos directo).
+
+---
+
 ## Archivos del proyecto
 
 | Archivo | Rol |
@@ -234,8 +381,8 @@ métricas por snapshot.
 
 ## Backups laptop-pull: cómo operar y restaurar
 
-**Estado:** 🟢 implementado. End-to-end real pendiente hasta cerrar 5.2 (deploy
-del código al VPS Hetzner).
+**Estado:** ✅ implementado y validado end-to-end el **2026-05-08** contra el
+VPS productivo (ver sección **Migración Hetzner 2026-05-07**).
 
 **Arquitectura:** la laptop hace **pull desde el VPS** vía ssh/scp/sftp (todo
 built-in en OpenSSH client de Win11; rsync NO se usa para evitar instalar
@@ -416,8 +563,9 @@ Hallazgos detectados el 27-abr y resueltos en bloque el 29-abr:
 
 ## Pendientes
 
-- [ ] **Hosting de la ingesta** (Oracle Free vs Hetzner €4/mes) — postpuesto,
-      el loop corre en local con watchdog estable.
+- [x] **Hosting de la ingesta** — VPS Hetzner desde 2026-05-07 (ver sección
+      Migración Hetzner). Loop corre 24/7 como systemd service, normalize y
+      watchdog vía cron del user `binance`.
 - [x] **GitHub Pages** — publicado en `research-star.github.io/binance_p2p_ingest/`.
 - [x] **Repo Git + `.gitignore`** — inicializado. Historial saneado con
       `git filter-repo` (sin datos personales).
