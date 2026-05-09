@@ -2,7 +2,7 @@
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="Dashboard del mercado P2P USDT/BOB en Binance Bolivia. VWAP, profundidad, spread, concentración de merchants y referencia BCB. Datos actualizados cada 10 minutos.">
-<meta name="author" content="DDR Capital Partners">
+<meta name="author" content="FinanzasBo">
 <meta property="og:title" content="Mercado P2P USDT/BOB — Bolivia">
 <meta property="og:description" content="Análisis estructural del libro de anuncios P2P de Binance en Bolivia. VWAP, depth, spread, BCB Ref y más.">
 <meta property="og:type" content="website">
@@ -263,7 +263,7 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
 <!-- Header -->
 <div class="header"><div class="header-top">
   <div class="header-left">
-    <div class="logo"><span class="logo-ddr">DDR</span><span class="logo-separator"></span><span class="logo-text">CAPITAL<br>PARTNERS</span></div>
+    <div class="logo"><span class="logo-ddr">FinanzasBo</span></div>
     <div><h1>Mercado P2P USDT/BOB</h1><div class="subtitle">Libro de anuncios — Binance P2P Bolivia</div></div>
   </div>
   <div class="meta" id="headerMeta"></div>
@@ -1386,7 +1386,7 @@ document.getElementById('kpis').innerHTML=kpiBuy+kpiSell+'<div class="kpi"><div 
 }
 const DASHBOARD_VERSION='v0.3.0';
 const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2P \u00b7 <strong>\u00daltima actualizaci\u00f3n del dataset:</strong> '+lastTsFmt+' \u00b7 DDR Capital Partners \u00b7 '+DASHBOARD_VERSION;
+document.getElementById('footer').innerHTML='<strong>Fuente:</strong> Binance P2P \u00b7 <strong>\u00daltima actualizaci\u00f3n del dataset:</strong> '+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
 // View toggle (persiste la vista en localStorage)

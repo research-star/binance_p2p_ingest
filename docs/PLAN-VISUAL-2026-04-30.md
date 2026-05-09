@@ -1,4 +1,4 @@
-# Plan de mejoras — Dashboard P2P USDT/BOB (DDR Capital Partners)
+# Plan de mejoras — Dashboard P2P USDT/BOB (FinanzasBo)
 
 ## Contexto del proyecto
 
@@ -70,7 +70,7 @@ Si encontrás otros nombres mal formateados durante Discovery, sumalos al mapeo 
 
 - `<meta name="description">` con descripción del dashboard.
 - Open Graph tags (`og:title`, `og:description`, `og:type`).
-- Footer con: "Fuente: Binance P2P · Última actualización del dataset: {timestamp} · DDR Capital Partners · v{version}". Versión hardcodeada por ahora (ej `v0.3.0`).
+- Footer con: "Fuente: Binance P2P · Última actualización del dataset: {timestamp} · FinanzasBo · v{version}". Versión hardcodeada por ahora (ej `v0.3.0`).
 
 ### 3.4 Tooltips en íconos + estados de carga (Ítems 20, 27)
 
