@@ -9,11 +9,12 @@
 <title>P2P USDT/BOB — Dashboard</title>
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#f7f5f0;--bg-secondary:#fff;--bg-tertiary:#eeece6;--border-color:#ddd9d0;--text-primary:#1a1a1a;--text-secondary:#5c5c5c;--text-muted:#9a9a9a;--green:#2d7a4f;--green-muted:rgba(45,122,79,.10);--orange:#b35c1e;--orange-muted:rgba(179,92,30,.10);--blue-accent:#3b6fb5;--kpi-value-size:28px;--color-buy:#2d7a4f;--color-sell:#b35c1e;--color-bcb-oficial:#8a8a8a;--color-bcb-ref-compra:#1f4d8a;--color-bcb-ref-venta:#6a9bd1;--color-neutral:#4a5868;--color-accent-warm:#d4a64a}
+:root{--bg-primary:#f7f6f1;--bg-secondary:#ffffff;--bg-tertiary:#eef0f5;--border-color:rgba(12,45,90,0.10);--text-primary:#14213d;--text-secondary:#374151;--text-muted:#6b7280;--green:#0f6e56;--green-muted:rgba(15,110,86,.10);--orange:#993c1d;--orange-muted:rgba(153,60,29,.10);--blue-accent:#0c2d5a;--kpi-value-size:28px;--color-buy:#0f6e56;--color-sell:#993c1d;--color-bcb-oficial:#9ca3af;--color-bcb-ref-compra:#2563a8;--color-bcb-ref-venta:#5b9bd5;--color-neutral:#4b5568;--color-accent-warm:#d4a64a}
 *,*::before,*::after{transition:background-color .3s,color .3s,border-color .3s}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg-primary);color:var(--text-primary);font-family:'Outfit',sans-serif;min-height:100vh}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh}
 
 /* ── Theme bar ── */
 .theme-bar{display:flex;align-items:center;gap:4px;padding:4px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);margin-left:auto}
@@ -252,6 +253,7 @@ body.theme-dark .date-field input[type="date"]{color-scheme:dark}
 .error-banner{position:sticky;top:0;z-index:2000;background:#b35c1e;color:#fff;padding:10px 16px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;text-align:center;display:none}
 .error-banner.show{display:block}
 .error-banner .eb-retry{margin-left:8px;font-size:11px;opacity:.85}
+.fb-mono{font-family:'IBM Plex Mono',monospace}
 </style></head>
 <body>
 
@@ -386,9 +388,9 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f7f5f0','bg-secondary':'#ffffff','bg-tertiary':'#eeece6','border-color':'#ddd9d0','text-primary':'#1a1a1a','text-secondary':'#5c5c5c','text-muted':'#9a9a9a','green':'#2d7a4f','green-muted':'rgba(45,122,79,0.10)','orange':'#b35c1e','orange-muted':'rgba(179,92,30,0.10)','blue-accent':'#3b6fb5','kpi-value-size':'28px','color-buy':'#2d7a4f','color-sell':'#b35c1e','color-bcb-oficial':'#8a8a8a','color-bcb-ref-compra':'#1f4d8a','color-bcb-ref-venta':'#6a9bd1','color-neutral':'#4a5868','color-accent-warm':'#d4a64a'},
+  paper:{'bg-primary':'#f7f6f1','bg-secondary':'#ffffff','bg-tertiary':'#eef0f5','border-color':'rgba(12,45,90,0.10)','text-primary':'#14213d','text-secondary':'#374151','text-muted':'#6b7280','green':'#0f6e56','green-muted':'rgba(15,110,86,0.10)','orange':'#993c1d','orange-muted':'rgba(153,60,29,0.10)','blue-accent':'#0c2d5a','kpi-value-size':'28px','color-buy':'#0f6e56','color-sell':'#993c1d','color-bcb-oficial':'#9ca3af','color-bcb-ref-compra':'#2563a8','color-bcb-ref-venta':'#5b9bd5','color-neutral':'#4b5568','color-accent-warm':'#d4a64a'},
   claude:{'bg-primary':'#ece5d8','bg-secondary':'#f5f0e8','bg-tertiary':'#e2dace','border-color':'#d1c9ba','text-primary':'#2b2520','text-secondary':'#6b6056','text-muted':'#998e80','green':'#407a56','green-muted':'rgba(64,122,86,0.10)','orange':'#b8652a','orange-muted':'rgba(184,101,42,0.10)','blue-accent':'#8b6d4a','kpi-value-size':'28px','color-buy':'#407a56','color-sell':'#b8652a','color-bcb-oficial':'#88806f','color-bcb-ref-compra':'#4a5d7d','color-bcb-ref-venta':'#8da4be','color-neutral':'#555548','color-accent-warm':'#c69240'},
-  slate:{'bg-primary':'#0f1115','bg-secondary':'#161a20','bg-tertiary':'#1e2228','border-color':'#2a2f38','text-primary':'#dce0e8','text-secondary':'#7c828e','text-muted':'#484e58','green':'#4faa72','green-muted':'rgba(79,170,114,0.12)','orange':'#d08050','orange-muted':'rgba(208,128,80,0.12)','blue-accent':'#5a8ac0','kpi-value-size':'28px','color-buy':'#4faa72','color-sell':'#d08050','color-bcb-oficial':'#7c828e','color-bcb-ref-compra':'#6a8ec0','color-bcb-ref-venta':'#a8c0e0','color-neutral':'#8090a8','color-accent-warm':'#e0b96a'}
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'#0d1a2e','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#b0baca','text-muted':'#8a96aa','green':'#4ec9a8','green-muted':'rgba(78,201,168,0.12)','orange':'#e08866','orange-muted':'rgba(224,136,102,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#4ec9a8','color-sell':'#e08866','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#a8c4e8','color-neutral':'#8090a8','color-accent-warm':'#e0b96a'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
