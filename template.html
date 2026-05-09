@@ -781,8 +781,8 @@ function getC(){
     accentWarm:    t['color-accent-warm']   || t.orange
   };
 }
-function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:'pan',font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
-const PC={displayModeBar:false,responsive:true,scrollZoom:true};
+function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
+const PC={displayModeBar:false,responsive:true,scrollZoom:false};
 function xaWithSlider(xa){
   xa.rangeslider={visible:true,thickness:0.06};
   // Sincronizar el slider con el range explícito del eje, si lo hay. Sin
@@ -1180,7 +1180,7 @@ function rFlow(c){
     {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
     {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'Total Venta', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
   ]);
-  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
+  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
 function rOffer(c){
@@ -1227,7 +1227,7 @@ function rOffer(c){
     legend:{orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:{size:11,family:'Outfit',color:c.fontcolor}},
     xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30},
     yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted}}, tickformat:',.0f', rangemode:'tozero'},
-    yaxis2:{overlaying:'y', side:'right', showgrid:false,
+    yaxis2:{overlaying:'y', side:'right', showgrid:false, fixedrange:true,
       tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
       title:{text:'Nro. oferentes',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
     margin:{l:60,r:60,t:36,b:60},
