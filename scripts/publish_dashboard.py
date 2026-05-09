@@ -165,6 +165,15 @@ def main() -> int:
 
 
 def _run(t0: float) -> int:
+    # Auto-pull: traer cambios de main antes de regenerar.
+    # Si falla (conflicto, otra branch, red), log warning y seguir.
+    try:
+        run(["git", "pull", "--ff-only", "origin", "main"], cwd=str(REPO_ROOT))
+    except subprocess.CalledProcessError as e:
+        emit(f"[publish] mode=warn stage=auto_pull rc={e.returncode} "
+             f"stderr={(e.stderr or '')[:200]}")
+        # No fallamos: seguimos con el código local.
+
     # Skip rápido si el dataset no avanzó (ahorra el gasto de dashboard.py)
     n_snap, n_rows = db_metrics()
     last = read_last_state()
