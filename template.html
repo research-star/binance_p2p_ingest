@@ -295,6 +295,19 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-mono{font-family:'IBM Plex Mono',monospace}
 .fb-chart-source{font-size:10px;color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
+.fb-series-toggles{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.fb-stog{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:11px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
+.fb-stog .dot{display:inline-block;width:10px;height:2px}
+.fb-stog.active{border-color:rgba(44,74,107,.25);color:var(--text-primary);box-shadow:0 0 0 1px rgba(44,74,107,.08) inset}
+.fb-stog.inactive{background:rgba(44,74,107,.04);border-color:rgba(44,74,107,.08);color:#9aa6b5}
+.fb-stog.inactive .dot{background:#c4ccd6 !important;opacity:.5}
+body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.04);color:#6b7d92}
+body.theme-dark .fb-stog.inactive .dot{background:#4a5868 !important;opacity:.6}
+.fb-stog[data-trace="compra"].active .dot{background:var(--color-buy)}
+.fb-stog[data-trace="venta"].active .dot{background:var(--color-sell)}
+.fb-stog[data-trace="bcb-compra"].active .dot{background:var(--color-bcb-ref-compra)}
+.fb-stog[data-trace="bcb-venta"].active .dot{background:var(--color-bcb-ref-venta)}
+.fb-stog[data-trace="bcb-oficial"].active .dot{background:var(--color-bcb-oficial)}
 </style></head>
 <body>
 
@@ -362,7 +375,7 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
   </div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip active" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip active" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra"><span class="dot"></span>Compra VWAP 10%</button><button type="button" class="fb-stog inactive" data-trace="venta"><span class="dot"></span>Venta VWAP 10%</button><button type="button" class="fb-stog inactive" data-trace="bcb-compra"><span class="dot"></span>BCB Ref Compra</button><button type="button" class="fb-stog inactive" data-trace="bcb-venta"><span class="dot"></span>BCB Ref Venta</button><button type="button" class="fb-stog inactive" data-trace="bcb-oficial"><span class="dot"></span>BCB Oficial</button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP Compra &minus; Venta por profundidad (BOB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpread"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil <span class="help-tip" tabindex="0" aria-label="Explicaci&oacute;n del panel decil"><span class="help-icon">i</span><span class="help-pop">VWAP acumulado por decil de profundidad. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.<br><br>Toggle <em>Excluir percentil 100</em>: en ambos lados el percentil 100 representa el precio MENOS competitivo para el taker (m&aacute;s caro en Compra, m&aacute;s barato en Venta) y suele estar contaminado por anuncios cebo y manipulaci&oacute;n. Activado por defecto. El percentil 10 (mejor 10% del libro) se mantiene visible.</span></span></h2><p>VWAP acumulado por decil de profundidad &middot; &uacute;ltimo snapshot.</p><label class="panel-toggle"><input type="checkbox" id="decileExcludeExtremes" checked><span>Excluir percentil 100 (cola con trampas)</span></label></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDecile"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
@@ -817,6 +830,39 @@ function xaxisForView(base, v){
   return cfg;
 }
 
+// VWAP series toggle state (default: only Compra visible)
+const vwapToggle={compra:true,venta:false,'bcb-compra':false,'bcb-venta':false,'bcb-oficial':false};
+function applyVwapToggle(){
+  const el=document.getElementById('chartVwap');
+  if(!el||!el.data) return;
+  // Map each trace to a toggle key based on name and position.
+  // Band traces (no name, hoverinfo:'skip') belong to buy (first group) or sell (second group).
+  let buyMainIdx=-1, sellMainIdx=-1;
+  const keys=el.data.map(function(tr,i){
+    if(tr.name==='Compra VWAP 10%'){buyMainIdx=i;return 'compra';}
+    if(tr.name==='Venta VWAP 10%'){sellMainIdx=i;return 'venta';}
+    if(tr.name&&tr.name.indexOf('BCB Ref Compra')===0) return 'bcb-compra';
+    if(tr.name&&tr.name.indexOf('BCB Ref Venta')===0) return 'bcb-venta';
+    if(tr.name&&tr.name.indexOf('BCB ')===0) return 'bcb-oficial';
+    return null;
+  });
+  // Assign band traces: traces before buyMainIdx with no key → compra; before sellMainIdx → venta
+  keys.forEach(function(_,i){
+    if(keys[i]!==null) return;
+    if(buyMainIdx>0&&i<buyMainIdx) keys[i]='compra';
+    else if(sellMainIdx>0&&i>buyMainIdx&&i<sellMainIdx) keys[i]='venta';
+  });
+  const updates={};
+  keys.forEach(function(k,i){
+    if(!k) return;
+    if(!updates[k]) updates[k]={vis:vwapToggle[k]?true:'legendonly',idx:[]};
+    updates[k].idx.push(i);
+  });
+  Object.values(updates).forEach(function(u){
+    Plotly.restyle(el,{visible:u.vis},u.idx);
+  });
+}
+
 function rVwap(c,v){
   const L=BL(c), x=v.x;
   // Construye TODAS las trazas con metadato _side; el helper compartido
@@ -861,7 +907,8 @@ function rVwap(c,v){
       traces.push({x:hx,y:inRange.map(e=>e.venta), name:'BCB Ref Venta', line:{color:c.bcbRefVenta,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefVenta},connectgaps:false});
     }
   }
-  Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  applyVwapToggle();
 }
 function rSpread(c,v){const L=BL(c),x=v.x;Plotly.react('chartSpread',[{x:x,y:v.sp5,name:'5%',line:{color:hexToRgba(c.neutral,.3),width:1,dash:'dot'}},{x:x,y:v.sp10,name:'10%',line:{color:c.neutral,width:2},mode:'lines'},{x:x,y:v.sp25,name:'25%',line:{color:hexToRgba(c.neutral,.5),width:1.2}},{x:x,y:v.sp50,name:'50%',line:{color:hexToRgba(c.neutral,.25),width:1}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartSpread')},PC)}
 function rDepth(c,v){
@@ -1372,6 +1419,19 @@ document.getElementById('footer').innerHTML='\u00daltima actualizaci\u00f3n: '+l
     wrap.querySelectorAll('.ds-chip').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     renderTimeSeries(btn.dataset.view);
+  });
+}
+// VWAP series toggles
+{
+  const wrap=document.getElementById('vwapSeriesToggles');
+  if(wrap) wrap.addEventListener('click',e=>{
+    const btn=e.target.closest('.fb-stog');
+    if(!btn) return;
+    const key=btn.dataset.trace;
+    const isActive=btn.classList.contains('active');
+    if(isActive){btn.classList.remove('active');btn.classList.add('inactive');vwapToggle[key]=false;}
+    else{btn.classList.remove('inactive');btn.classList.add('active');vwapToggle[key]=true;}
+    applyVwapToggle();
   });
 }
 
