@@ -104,7 +104,6 @@ def process_data(db_path: Path) -> dict:
         "SELECT DISTINCT snapshot_ts_utc FROM ads WHERE snapshot_ts_utc >= '2026-05-08 00:00:00' ORDER BY snapshot_ts_utc"
     ).fetchall()]
     ts_data = []
-    decile_data = {}
     for ts in timestamps:
         rows = conn.execute(
             "SELECT side, price, surplus_usdt, advertiser_id FROM ads WHERE snapshot_ts_utc=?",
@@ -135,10 +134,6 @@ def process_data(db_path: Path) -> dict:
             top5 = sum(sorted(merchants.values(), reverse=True)[:5])
             d[f't5{side_name}'] = round(top5 / depth * 100, 1) if depth > 0 else 0
         ts_data.append(d)
-        decile_data[ts] = {
-            'BUY': [vwap_by_depth(buy_ps, i * 0.1) for i in range(1, 11)],
-            'SELL': [vwap_by_depth(sell_ps, i * 0.1) for i in range(1, 11)],
-        }
     def _group_last(data, key_fn):
         groups = {}
         for d in data:
@@ -207,20 +202,7 @@ def process_data(db_path: Path) -> dict:
             } for e in entries]
         top_merchants[view_ts] = result
 
-    # ── Panel 2: Volatilidad intradiaria (daily) ──
-    vol_by_day = defaultdict(lambda: {'vb10': [], 'vs10': []})
-    for d in ts_data:
-        day = d['ts'][:10]
-        if d.get('vb10') is not None: vol_by_day[day]['vb10'].append(d['vb10'])
-        if d.get('vs10') is not None: vol_by_day[day]['vs10'].append(d['vs10'])
-    volatility_daily = [
-        {'date': day,
-         'buy_range': round(max(v['vb10']) - min(v['vb10']), 4) if v['vb10'] else None,
-         'sell_range': round(max(v['vs10']) - min(v['vs10']), 4) if v['vs10'] else None}
-        for day, v in sorted(vol_by_day.items())
-    ]
-
-    # ── Panel 3: Merchants activos / flow ──
+    # ── Panel 2: Merchants activos / flow ──
     all_ts_list = [d['ts'] for d in ts_data]
     ids_by_ts = defaultdict(lambda: {'BUY': set(), 'SELL': set()})
     if all_ts_list:
@@ -456,7 +438,32 @@ def process_data(db_path: Path) -> dict:
         'gone_sell': [f.get('gone_sell', 0) for f in fps_src],
     }
 
-    deciles_last = decile_data.get(last_ts_str, {'BUY': [], 'SELL': []})
+    # ── Order book: individual ads from last snapshot for depth chart ──
+    ob_rows = conn.execute(
+        "SELECT side, price, surplus_usdt FROM ads WHERE snapshot_ts_utc=? AND price IS NOT NULL AND surplus_usdt IS NOT NULL",
+        (last_ts_str,)).fetchall()
+    order_book = {
+        'buy': [{'p': round(r['price'], 2), 'a': round(r['surplus_usdt'], 2)} for r in ob_rows if r['side'] == 'BUY'],
+        'sell': [{'p': round(r['price'], 2), 'a': round(r['surplus_usdt'], 2)} for r in ob_rows if r['side'] == 'SELL'],
+    }
+
+    # ── Activity heatmap: volume by (day_of_week, hour) in Bolivia time (UTC-4) ──
+    activity_hm_rows = conn.execute("""
+        SELECT
+            CAST(strftime('%w', snapshot_ts_utc, '-4 hours') AS INTEGER) AS dow,
+            CAST(strftime('%H', snapshot_ts_utc, '-4 hours') AS INTEGER) AS hour,
+            SUM(surplus_usdt) AS total_amount
+        FROM ads
+        WHERE snapshot_ts_utc >= '2026-05-08 00:00:00'
+        GROUP BY dow, hour
+    """).fetchall()
+    # Build 7x24 matrix. SQLite %w: 0=Sun,1=Mon...6=Sat → reorder to Mon-Sun
+    activity_matrix = [[0]*24 for _ in range(7)]
+    for row in activity_hm_rows:
+        dow_sqlite = row['dow']  # 0=Sun
+        hour = row['hour']
+        dow_mon = (dow_sqlite - 1) % 7  # Sun(0)→6, Mon(1)→0, Tue(2)→1, etc.
+        activity_matrix[dow_mon][hour] = round(row['total_amount'])
 
     conn.close()
 
@@ -467,7 +474,8 @@ def process_data(db_path: Path) -> dict:
         'banks_daily': banks_daily,
         'offer_daily': offer_daily,
         'flow_per_snapshot': flow_per_snapshot,
-        'deciles_last': deciles_last,
+        'order_book': order_book,
+        'activity_heatmap': activity_matrix,
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
