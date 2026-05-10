@@ -227,27 +227,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .side-chk[data-side="sell"].is-checked .chk-box::after{background:var(--color-sell)}
 .side-chk input:focus-visible + .chk-box{outline:2px solid var(--blue-accent);outline-offset:1px}
 
-/* ── Date selector ── */
-.date-selector{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--bg-secondary);padding:12px 48px;border-bottom:1px solid var(--border-color);font-family:'Outfit',sans-serif;font-size:11px}
-.ds-label{color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:500;font-size:10px}
-.ds-presets{display:flex;gap:0}
-.ds-chip{padding:5px 14px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s}
-.ds-chip:first-of-type{border-radius:4px 0 0 4px}
-.ds-chip:last-of-type{border-radius:0 4px 4px 0;margin-right:0}
-.ds-chip:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.ds-chip.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
-.ds-custom{display:flex;align-items:center;gap:10px}
-.ds-custom label{display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);font-size:11px}
-.date-field{position:relative;display:inline-flex;align-items:stretch;border:1px solid var(--border-color);border-radius:3px;background:var(--bg-secondary);overflow:hidden}
-.date-field:focus-within{border-color:var(--blue-accent)}
-.date-field input[type="text"]{font-family:'IBM Plex Mono',monospace;font-size:11px;font-variant-numeric:tabular-nums;padding:4px 6px;border:none;background:transparent;color:var(--text-primary);width:88px;outline:none;letter-spacing:.02em}
-.date-field input[type="text"].invalid{color:var(--orange);background:rgba(179,92,30,.06)}
-.date-field .date-picker-hidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:0;bottom:0;border:0;padding:0;margin:0}
-.date-field .date-cal-btn{border:none;border-left:1px solid var(--border-color);background:transparent;color:var(--text-muted);cursor:pointer;padding:0 8px;font-size:13px;line-height:1;display:flex;align-items:center}
-.date-field .date-cal-btn:hover{color:var(--text-primary);background:var(--bg-tertiary)}
-body.theme-dark .date-field input[type="date"]{color-scheme:dark}
-.ds-info{margin-left:auto;font-family:'IBM Plex Mono',monospace;color:var(--text-muted);font-size:11px}
-@media(max-width:900px){.date-selector{padding:12px 24px;gap:10px}.ds-info{margin-left:0;width:100%}}
 
 /* ── Error banner ── */
 .error-banner{position:sticky;top:0;z-index:2000;background:#2c4a6b;color:#fff;padding:10px 16px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;text-align:center;display:none}
@@ -275,22 +254,20 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-stat{text-align:right}
 .fb-stat-label{display:block;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
 .fb-stat-value{display:block;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500;color:var(--text-primary)}
-/* ── KPI Hero + Mini ── */
+/* ── KPI Uniform Grid ── */
 .fb-kpi-wrap{padding:12px 18px 0;background:var(--bg-primary)}
-.fb-hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px}
-.fb-hero-card{padding:14px 16px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary)}
-.fb-hero-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:6px}
-.fb-hero-value{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1}
-.fb-hero-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
-.fb-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding-bottom:12px}
-.fb-mini-card{padding:9px 11px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary)}
-.fb-mini-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px}
-.fb-mini-value{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;color:var(--text-primary);font-variant-numeric:tabular-nums}
-.fb-mini-sub{font-size:10px;color:var(--text-muted);margin-top:2px}
-/* ── Time pills override ── */
-.ds-chip{padding:4px 10px;font-family:'IBM Plex Mono',monospace}
+.fb-kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding-bottom:12px}
+.fb-kpi-card{padding:14px 16px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary)}
+.fb-kpi-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.10em;color:var(--text-muted);margin-bottom:6px}
+.fb-kpi-value{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;color:var(--text-primary)}
+.fb-kpi-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+/* ── View toggle pills ── */
+.ds-chip{padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s;border-radius:4px}
+.ds-chip:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.ds-chip.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 .ds-chip:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
-@media(max-width:900px){.fb-hero-grid{grid-template-columns:1fr}.fb-mini-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.fb-kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.fb-kpi-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
 .fb-mono{font-family:'IBM Plex Mono',monospace}
 .fb-chart-source{font-size:10px;color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
@@ -349,23 +326,6 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
 
 <div id="kpis"></div>
 
-<div class="date-selector" id="dateSelector">
-  <span class="ds-label">Rango</span>
-  <div class="ds-presets">
-    <button class="ds-chip" data-preset="24h" type="button">1D</button>
-    <button class="ds-chip" data-preset="7d" type="button">1W</button>
-    <button class="ds-chip active" data-preset="30d" type="button">1M</button>
-    <button class="ds-chip" data-preset="6m" type="button" disabled>6M</button>
-    <button class="ds-chip" data-preset="ytd" type="button" disabled>YTD</button>
-    <button class="ds-chip" data-preset="1y" type="button" disabled>1Y</button>
-    <button class="ds-chip" data-preset="all" type="button">MAX</button>
-  </div>
-  <div class="ds-custom">
-    <label>Desde <span class="date-field"><input type="text" id="dsFrom" inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off" maxlength="10" spellcheck="false"><input type="date" id="dsFromPicker" class="date-picker-hidden" tabindex="-1" aria-hidden="true"><button type="button" class="date-cal-btn" id="dsFromBtn" aria-label="Abrir calendario">&#128197;</button></span></label>
-    <label>Hasta <span class="date-field"><input type="text" id="dsTo" inputmode="numeric" placeholder="dd/mm/aaaa" autocomplete="off" maxlength="10" spellcheck="false"><input type="date" id="dsToPicker" class="date-picker-hidden" tabindex="-1" aria-hidden="true"><button type="button" class="date-cal-btn" id="dsToBtn" aria-label="Abrir calendario">&#128197;</button></span></label>
-  </div>
-  <span class="ds-info" id="dsInfo">&mdash;</span>
-</div>
 
 <div class="content">
   <div class="toolbar">
@@ -379,17 +339,18 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
   <div class="panel-grid" id="panelGrid">
     <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip active" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra VWAP 10%</span></button><button type="button" class="fb-stog inactive" data-trace="venta" style="--fb-trace-color:#6b7d92"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#6b7d92"></span><span class="fb-stog-label">Venta VWAP 10%</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-compra" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Compra</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-venta" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Venta</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-oficial" style="--fb-trace-color:#8c8c8c"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#8c8c8c"></span><span class="fb-stog-label">BCB Oficial</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP Compra &minus; Venta por profundidad (BOB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpread"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="spread_evo" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread compra-venta</h2><p>Diferencia entre precio venta VWAP y precio compra VWAP</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpreadEvo"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="decile" draggable="true"><div class="section-header"><div class="sh-left"><h2>Curva de precio por decil <span class="help-tip" tabindex="0" aria-label="Explicaci&oacute;n del panel decil"><span class="help-icon">i</span><span class="help-pop">VWAP acumulado por decil de profundidad. La &laquo;tijera&raquo; (precio Compra &gt; Venta a alta profundidad) suele revelar anuncios trampa.<br><br>Toggle <em>Excluir percentil 100</em>: en ambos lados el percentil 100 representa el precio MENOS competitivo para el taker (m&aacute;s caro en Compra, m&aacute;s barato en Venta) y suele estar contaminado por anuncios cebo y manipulaci&oacute;n. Activado por defecto. El percentil 10 (mejor 10% del libro) se mantiene visible.</span></span></h2><p>VWAP acumulado por decil de profundidad &middot; &uacute;ltimo snapshot.</p><label class="panel-toggle"><input type="checkbox" id="decileExcludeExtremes" checked><span>Excluir percentil 100 (cola con trampas)</span></label></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDecile"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartRatio"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartConc"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco <span class="help-tip" tabindex="0" aria-label="Granularidad del panel"><span class="help-icon">i</span><span class="help-pop">Granularidad diaria: muestra el &uacute;ltimo snapshot del &uacute;ltimo d&iacute;a disponible dentro del rango activo. Al mover el selector de fechas, salta al cierre de d&iacute;a m&aacute;s cercano (no al &uacute;ltimo ts exacto del rango).</span></span></h2><p>Anuncios y profundidad por m&eacute;todo de pago.</p><p class="snap-stamp">Snapshot del <span id="banksSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="bankTable"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><p style="font-size:12px;color:var(--text-muted);margin-bottom:6px" id="merchantsConcText"></p><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="topMerchants"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="outliers" draggable="true"><div class="section-header"><div class="sh-left"><h2>Outliers detectados <span class="help-tip" tabindex="0" aria-label="Detalle outliers"><span class="help-icon">i</span><span class="help-pop">Detectados sobre TODOS los merchants del &uacute;ltimo snapshot, no solo el top por profundidad. La densidad alta del lado Venta es estructural &mdash; ajustar <code>OUTLIER_THRESHOLDS</code> en c&oacute;digo si quer&eacute;s foco solo en casos extremos.</span></span></h2><p>Anuncios fuera del rango central del mercado.</p><p class="snap-stamp">Snapshot del <span id="outliersSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="outliersTable"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="volatility" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volatilidad intradiaria <span class="help-tip" tabindex="0" aria-label="F&oacute;rmulas seg&uacute;n vista"><span class="help-icon">i</span><span class="help-pop">Cada vista usa una f&oacute;rmula distinta:<br>&bull; <em>Cada snapshot</em>: stddev rolling ventana 6 (~1h) sobre VWAP 10%.<br>&bull; <em>Por hora</em>: stddev por hora del d&iacute;a sobre el rango activo.<br>&bull; <em>Por d&iacute;a</em>: rango max&minus;min del VWAP 10% dentro de cada d&iacute;a.<br><br>En vistas <em>Por hora</em> y <em>Por d&iacute;a</em> requiere &ge;3 d&iacute;as distintos en el rango.</span></span></h2><p>Dispersi&oacute;n del VWAP 10% seg&uacute;n vista activa.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolatility"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="flow" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants activos</h2><p>Merchants &uacute;nicos por side. Barras: nuevos (+) y desaparecidos (-) vs punto anterior.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartFlow"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartHeatmap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartHeatmap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="orderbook" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad del libro de &oacute;rdenes</h2><p>Cantidad acumulada (USDT) por nivel de precio. &Uacute;ltima snapshot.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOrderBook"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="activity_hm" draggable="true"><div class="section-header"><div class="sh-left"><h2>Actividad por hora y d&iacute;a de la semana</h2><p>Volumen total (USDT) agregado. Horarios pico en zona Bolivia (UTC-4).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartActivityHm"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -521,7 +482,7 @@ function filterDirectionalTraces(traces){
 
 // ═══ DATE RANGE STATE ═══
 let activeRange = {fromIdx: 0, toIdx: TS_ARR.length-1};
-let dateRangeState = {preset: '30d'};
+let dateRangeState = {preset: 'all'};
 
 function _binarySearchIdx(targetMs, mode){
   // mode='gte': primer idx con time >= target. mode='lte': último idx con time <= target.
@@ -930,29 +891,6 @@ function rConc(c,v){
   ]);
   Plotly.react('chartConc',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC);
 }
-function rDecile(c){
-  const L=BL(c);
-  const dlAll=['10%','20%','30%','40%','50%','60%','70%','80%','90%','100%'];
-  const src=DATA.deciles_last||{BUY:[],SELL:[]};
-  const exclude=localStorage.getItem('dashboard-decile-exclude-extremes')!=='false'; // default true
-  // Excluir SOLO percentil 100 (índice 9): en ambos lados es el precio menos
-  // competitivo para el taker (cola con trampas/manipulación). El percentil
-  // 10 (mejor 10% del libro) se mantiene visible: es información valiosa.
-  const idxs = exclude ? [0,1,2,3,4,5,6,7,8] : [0,1,2,3,4,5,6,7,8,9];
-  const dl = idxs.map(i=>dlAll[i]);
-  const dB = idxs.map(i=>src.BUY[i]);
-  const dS = idxs.map(i=>src.SELL[i]);
-  const validS = dS.filter(v=>v!=null), validB = dB.filter(v=>v!=null);
-  const yMin = validS.length ? Math.min(...validS)*.998 : 0;
-  const yMax = validB.length ? Math.max(...validB)*1.002 : 1;
-  Plotly.react('chartDecile',[
-    {x:dl,y:dB,name:'Compra',type:'bar',marker:{color:hexToRgba(c.buy,.55),line:{color:c.buy,width:.5}}},
-    {x:dl,y:dS,name:'Venta',type:'bar',marker:{color:hexToRgba(c.sell,.55),line:{color:c.sell,width:.5}}}
-  ],{...L,barmode:'group',bargap:.3,bargroupgap:.06,showlegend:true,
-     xaxis:{...L.xaxis,title:{text:'Profundidad acumulada',font:{size:10,color:c.textMuted}},tickangle:0},
-     yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',range:[yMin,yMax]},
-     height:chartHeight('chartDecile')},PC);
-}
 function rBank(c){
   const data=aggregateBankCoverage(activeRange.fromIdx, activeRange.toIdx);
   const el=document.getElementById('bankTable');
@@ -1116,117 +1054,10 @@ function rOutliers(){
 }
 
 // Stddev poblacional con tolerancia a nulls.
-function _stddev(arr){
-  const xs=arr.filter(v=>v!=null);
-  if(xs.length<2) return null;
-  const m=xs.reduce((a,b)=>a+b,0)/xs.length;
-  return Math.sqrt(xs.reduce((s,v)=>s+(v-m)*(v-m),0)/xs.length);
-}
-
-// aggregateVolatility(rangeFromIdx, rangeToIdx, view): three formulas.
-// Mientras no exista selector de fechas (Fase 6.1), rangeFromIdx=0 y
-// rangeToIdx = ts_metrics.ts.length - 1 (rango = todo el dataset).
-function aggregateVolatility(rangeFromIdx, rangeToIdx, view){
-  const tm=DATA.ts_metrics; if(!tm||!tm.ts) return {empty:true,msg:'Sin datos'};
-  const ts=tm.ts.slice(rangeFromIdx, rangeToIdx+1);
-  const vb=tm.vb10.slice(rangeFromIdx, rangeToIdx+1);
-  const vs=tm.vs10.slice(rangeFromIdx, rangeToIdx+1);
-  if(!ts.length) return {empty:true,msg:'Sin datos en el rango'};
-  const distinctDays=new Set(ts.map(t=>t.slice(0,10))).size;
-
-  if(view==='all'||view==='snapshot'){
-    // Rolling stddev ventana 6 (~1h) sobre vb10/vs10.
-    const W=6;
-    const buy=[], sell=[];
-    for(let i=0;i<ts.length;i++){
-      const a=Math.max(0,i-W+1);
-      buy.push(_stddev(vb.slice(a,i+1)));
-      sell.push(_stddev(vs.slice(a,i+1)));
-    }
-    return {x:ts.map(t=>new Date(new Date(t).getTime()-4*3600000)), buy, sell, mode:'lines', xType:'date',
-            yTitle:'Stddev rolling VWAP 10% (BOB/USDT)'};
-  }
-  if(distinctDays<3) return {empty:true,msg:'Necesita al menos 3 días de data en el rango seleccionado'};
-  if(view==='hourly'){
-    // Stddev de cada hora del día (Bolivia UTC-4) sobre todas las ocurrencias.
-    const buckBuy=Array.from({length:24},()=>[]), buckSell=Array.from({length:24},()=>[]);
-    for(let i=0;i<ts.length;i++){
-      const h=(new Date(new Date(ts[i]).getTime()-4*3600000)).getUTCHours();
-      if(vb[i]!=null) buckBuy[h].push(vb[i]);
-      if(vs[i]!=null) buckSell[h].push(vs[i]);
-    }
-    const labels=Array.from({length:24},(_,h)=>String(h).padStart(2,'0')+'h');
-    return {x:labels, buy:buckBuy.map(_stddev), sell:buckSell.map(_stddev), mode:'bars', xType:'category',
-            yTitle:'Stddev VWAP 10% por hora (BOB/USDT)'};
-  }
-  // daily: rango max-min por día.
-  const byDay={};
-  for(let i=0;i<ts.length;i++){
-    const d=ts[i].slice(0,10);
-    if(!byDay[d]) byDay[d]={vb:[],vs:[]};
-    if(vb[i]!=null) byDay[d].vb.push(vb[i]);
-    if(vs[i]!=null) byDay[d].vs.push(vs[i]);
-  }
-  const days=Object.keys(byDay).sort();
-  return {x:days,
-          buy: days.map(d=>byDay[d].vb.length?Math.max(...byDay[d].vb)-Math.min(...byDay[d].vb):null),
-          sell:days.map(d=>byDay[d].vs.length?Math.max(...byDay[d].vs)-Math.min(...byDay[d].vs):null),
-          mode:'bars', xType:'category', yTitle:'Rango VWAP 10% intradiario (BOB/USDT)'};
-}
-
 // Helper: limpia un div que puede tener Plotly o un view-hint inyectado.
-// Sin este purge previo, Plotly.react sobre un div cuyo innerHTML fue
-// reemplazado por un view-hint (caso empty-state) entra en estado
-// inconsistente y falla silenciosamente al re-renderizar con datos.
 function _purgeAndClear(el){
   if(window.Plotly && el && el._fullLayout) Plotly.purge(el);
   if(el) el.innerHTML='';
-}
-
-function rVolatility(c){
-  const el=document.getElementById('chartVolatility');
-  if(!el) return;
-  // Mientras no haya selector de fechas, rango = todo el dataset.
-  const total=(DATA.ts_metrics&&DATA.ts_metrics.ts)?DATA.ts_metrics.ts.length:0;
-  if(total===0){
-    _purgeAndClear(el);
-    el.innerHTML='<div class="view-hint">Sin datos</div>';
-    return;
-  }
-  const v=aggregateVolatility(0, total-1, currentView);
-  if(v.empty){
-    _purgeAndClear(el);
-    el.innerHTML='<div class="view-hint">'+v.msg+'</div>';
-    return;
-  }
-  // Purgar antes de re-renderizar para evitar que Plotly conserve type/
-  // barmode del render previo al alternar entre vistas date/category o
-  // bars/lines.
-  _purgeAndClear(el);
-
-  const L=BL(c);
-  const xaxisCfg = v.xType==='category'
-    ? {...L.xaxis, type:'category', tickangle:-45, automargin:true}
-    : {...xaxisForView(L.xaxis,v), type:'date', automargin:true};
-
-  try{
-    const tracesL=filterDirectionalTraces([
-      {_side:'buy', x:v.x,y:v.buy, name:'Compra',type:'scatter',mode:'lines',connectgaps:false,line:{color:c.buy,width:1.5}},
-      {_side:'sell',x:v.x,y:v.sell,name:'Venta', type:'scatter',mode:'lines',connectgaps:false,line:{color:c.sell,width:1.5}}
-    ]);
-    const tracesB=filterDirectionalTraces([
-      {_side:'buy', x:v.x,y:v.buy, name:'Compra',type:'bar',marker:{color:c.buy}},
-      {_side:'sell',x:v.x,y:v.sell,name:'Venta', type:'bar',marker:{color:c.sell}}
-    ]);
-    if(v.mode==='lines'){
-      Plotly.react('chartVolatility',tracesL,{...L,barmode:undefined,xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.2f',rangemode:'tozero'},margin:{...L.margin,b:80},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartVolatility')},PC);
-    }else{
-      Plotly.react('chartVolatility',tracesB,{...L,barmode:'group',xaxis:xaxisCfg,yaxis:{...L.yaxis,title:{text:v.yTitle,font:{size:10,color:c.textMuted}},tickformat:'.2f',rangemode:'tozero'},margin:{...L.margin,b:80},showlegend:true,height:chartHeight('chartVolatility')},PC);
-    }
-  }catch(err){
-    console.error('[volatility] Plotly.react falló:',err,{view:currentView,mode:v.mode,xType:v.xType,xLen:v.x.length,buyN:v.buy.filter(x=>x!=null).length,sellN:v.sell.filter(x=>x!=null).length});
-    el.innerHTML='<div class="view-hint">Error al renderizar el panel. Ver consola.</div>';
-  }
 }
 
 function rFlow(c){
@@ -1314,19 +1145,80 @@ function rHeatmap(c){
   }
   const L=BL(c);
   const cs=[[0,'#dde8ef'],[0.25,'#a8c8e0'],[0.5,'#5589c0'],[0.75,'#2c4a6b'],[1,'#162844']];
-  // Texto: color adaptativo según luminosidad del fondo del tema. En celdas
-  // muy saturadas del extremo alto del colorscale (c.neutral), el texto en
-  // font.color sigue siendo legible porque el color neutral del tema no
-  // satura tanto como un acento puro; el fallback es el tooltip.
-  const isLight=hexLuminance(activeThemeValues['bg-primary'])>.5;
-  const txtColor=isLight?'#1a1a1a':'#e8e8ee';
+  // Per-cell text color: white on dark cells, navy on light cells
+  const textColors=z.map(function(row){return row.map(function(v){return(v!=null&&v>=0.6)?'#ffffff':'#162844'})});
   Plotly.react('chartHeatmap',[{
     z:z,x:hm.hours.map(h=>String(h).padStart(2,'0')+'h'),y:labels,
     type:'heatmap',colorscale:cs,showscale:false,
-    text:text,texttemplate:'%{text}',textfont:{family:'IBM Plex Mono,monospace',size:9.5,color:txtColor},
+    text:text,texttemplate:'%{text}',textfont:{family:'IBM Plex Mono,monospace',size:9.5,color:textColors},
     hovertemplate:'%{y}<br>%{x}: %{text}<extra></extra>',
     xgap:1,ygap:1,
   }],{...L,margin:{l:130,r:16,t:8,b:40},xaxis:{...L.xaxis,tickangle:0,side:'bottom',type:'category',showgrid:false},yaxis:{...L.yaxis,automargin:true,showgrid:false},height:chartHeight('chartHeatmap')},PC);
+}
+
+// ═══ NEW CHART: Spread evolutivo (G) ═══
+function rSpreadEvo(c,v){
+  var L=BL(c), x=v.x;
+  var spreadY=v.vs10.map(function(sell,i){return(sell!=null&&v.vb10[i]!=null)?sell-v.vb10[i]:null});
+  Plotly.react('chartSpreadEvo',[{
+    x:x,y:spreadY,name:'Spread',type:'scatter',mode:'lines',
+    line:{color:'#2c4a6b',width:2},
+    hovertemplate:'%{y:.2f} BOB<extra></extra>'
+  }],{...L,
+    xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),
+    yaxis:{...L.yaxis,title:{text:'BOB',font:{size:10,color:c.textMuted}},tickformat:'.2f'},
+    showlegend:false,shapes:gapShapes(c),height:chartHeight('chartSpreadEvo')
+  },PC);
+}
+
+// ═══ NEW CHART: Order Book Depth (H) ═══
+function rOrderBook(c){
+  var ob=DATA.order_book;
+  var el=document.getElementById('chartOrderBook');
+  if(!ob||(!ob.buy.length&&!ob.sell.length)){if(el)el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  var buyLevels=ob.buy.slice().sort(function(a,b){return b.p-a.p});
+  var buyX=[],buyY=[],buyAcc=0;
+  buyLevels.forEach(function(l){buyAcc+=l.a;buyX.push(l.p);buyY.push(buyAcc)});
+  var sellLevels=ob.sell.slice().sort(function(a,b){return a.p-b.p});
+  var sellX=[],sellY=[],sellAcc=0;
+  sellLevels.forEach(function(l){sellAcc+=l.a;sellX.push(l.p);sellY.push(sellAcc)});
+  var L=BL(c);
+  Plotly.react('chartOrderBook',[
+    {x:buyX,y:buyY,type:'scatter',mode:'lines',line:{shape:'hv',color:c.buy,width:2},fill:'tozeroy',fillcolor:hexToRgba(c.buy,.15),name:'Compra',hovertemplate:'Precio: %{x:.2f} BOB<br>Acumulado: %{y:,.0f} USDT<extra></extra>'},
+    {x:sellX,y:sellY,type:'scatter',mode:'lines',line:{shape:'hv',color:c.sell,width:2},fill:'tozeroy',fillcolor:hexToRgba(c.sell,.15),name:'Venta',hovertemplate:'Precio: %{x:.2f} BOB<br>Acumulado: %{y:,.0f} USDT<extra></extra>'}
+  ],{...L,
+    xaxis:{...L.xaxis,title:{text:'Precio (BOB/USDT)',font:{size:10,color:c.textMuted}},tickformat:'.2f',tickangle:0},
+    yaxis:{...L.yaxis,title:{text:'USDT acumulado',font:{size:10,color:c.textMuted}},tickformat:',.0f'},
+    showlegend:true,height:chartHeight('chartOrderBook')
+  },PC);
+}
+
+// ═══ NEW CHART: Activity Heatmap by hour-day (I) ═══
+function rActivityHm(c){
+  var matrix=DATA.activity_heatmap;
+  var el=document.getElementById('chartActivityHm');
+  if(!matrix||!matrix.length){if(el)el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  var dayLabels=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
+  var hourLabels=Array.from({length:24},function(_,i){return i+'h'});
+  var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
+  var threshold=maxZ*0.6;
+  var textColors=matrix.map(function(row){return row.map(function(v){return v>=threshold?'#ffffff':'#162844'})});
+  var textMatrix=matrix.map(function(row){return row.map(function(v){return formatCompact(v)})});
+  var cs=[[0,'#dde8ef'],[0.25,'#a8c8e0'],[0.5,'#5589c0'],[0.75,'#2c4a6b'],[1,'#162844']];
+  var L=BL(c);
+  Plotly.react('chartActivityHm',[{
+    z:matrix,x:hourLabels,y:dayLabels,
+    type:'heatmap',colorscale:cs,showscale:false,
+    text:textMatrix,texttemplate:'%{text}',
+    textfont:{family:'IBM Plex Mono,monospace',size:9.5,color:textColors},
+    hovertemplate:'%{y} %{x}<br>Volumen: %{text} USDT<extra></extra>',
+    xgap:1,ygap:1
+  }],{...L,
+    margin:{l:50,r:16,t:8,b:40},
+    xaxis:{...L.xaxis,tickangle:0,side:'bottom',type:'category',showgrid:false},
+    yaxis:{...L.yaxis,automargin:true,showgrid:false,type:'category'},
+    showlegend:false,height:280
+  },PC);
 }
 
 function renderTimeSeries(view){
@@ -1334,13 +1226,14 @@ function renderTimeSeries(view){
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, view);
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
-  rMerchants(); rOutliers(); rVolatility(c); rFlow(c);
+  rSpreadEvo(c,v); rMerchants(); rOutliers(); rFlow(c);
 }
 function replotAllCharts(){
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
-  rDecile(c); rBank(c); rMerchants(); rOutliers(); rVolatility(c); rFlow(c); rOffer(c); rHeatmap(c);
+  rBank(c); rMerchants(); rOutliers(); rFlow(c); rOffer(c); rHeatmap(c);
+  rSpreadEvo(c,v); rOrderBook(c); rActivityHm(c);
   updateKpis();
 }
 
@@ -1371,30 +1264,28 @@ function updateKpis(){
     const p=(vwap/refVal-1)*100;
     return (p>=0?'+':'')+fmt2(p)+'%';
   };
-  const depth=fmt2((last.buy_depth+last.sell_depth)/1e6)+'M';
+  const buyDepth=fmt2(last.buy_depth/1e6)+'M';
+  const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
-    '<div class="fb-kpi-wrap">'+
-    '<div class="fb-hero-grid">'+
-    '<div class="fb-hero-card"><div class="fb-hero-label">USDT Compra</div>'+
-    '<div class="fb-hero-value" style="color:var(--color-buy)">'+fmt2(last.vb10)+'</div>'+
-    '<div class="fb-hero-sub">BOB/USDT &middot; Prima vs BCB Ref: '+fmtPrem(last.vb10,ref.compra)+'</div></div>'+
-    '<div class="fb-hero-card"><div class="fb-hero-label">USDT Venta</div>'+
-    '<div class="fb-hero-value" style="color:var(--color-sell)">'+fmt2(last.vs10)+'</div>'+
-    '<div class="fb-hero-sub">BOB/USDT &middot; Prima vs BCB Ref: '+fmtPrem(last.vs10,ref.venta)+'</div></div>'+
-    '</div>'+
-    '<div class="fb-mini-grid">'+
-    '<div class="fb-mini-card"><div class="fb-mini-label">Spread efectivo</div>'+
-    '<div class="fb-mini-value">'+fmt4(last.sp10)+' <span style="font-size:.8em;font-weight:400">BOB</span></div>'+
-    '<div class="fb-mini-sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div>'+
-    '<div class="fb-mini-card"><div class="fb-mini-label">TC Oficial BCB</div>'+
-    '<div class="fb-mini-value">'+fmt2(meta.bcb_rate)+'</div>'+
-    '<div class="fb-mini-sub">Prima P2P: +'+fmt2(premium)+'%</div></div>'+
-    '<div class="fb-mini-card"><div class="fb-mini-label">Profundidad</div>'+
-    '<div class="fb-mini-value">'+depth+'</div>'+
-    '<div class="fb-mini-sub">Compra + Venta USDT</div></div>'+
-    '<div class="fb-mini-card"><div class="fb-mini-label">Asimetr\u00eda</div>'+
-    '<div class="fb-mini-value">'+fmt2(last.depth_ratio)+'\u00d7</div>'+
-    '<div class="fb-mini-sub">Venta / Compra</div></div>'+
+    '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">USDT Compra</div>'+
+    '<div class="fb-kpi-value" style="color:var(--color-buy)">'+fmt2(last.vb10)+'</div>'+
+    '<div class="fb-kpi-sub">BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vb10,ref.compra)+'</div></div>'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">USDT Venta</div>'+
+    '<div class="fb-kpi-value" style="color:var(--color-sell)">'+fmt2(last.vs10)+'</div>'+
+    '<div class="fb-kpi-sub">BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vs10,ref.venta)+'</div></div>'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">Spread</div>'+
+    '<div class="fb-kpi-value">'+fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span></div>'+
+    '<div class="fb-kpi-sub">'+fmt2(last.sp10/last.vb10*100)+'% del precio</div></div>'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">TC Oficial BCB</div>'+
+    '<div class="fb-kpi-value">'+fmt2(meta.bcb_rate)+'</div>'+
+    '<div class="fb-kpi-sub">Prima P2P: +'+fmt2(premium)+'%</div></div>'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">Profundidad</div>'+
+    '<div class="fb-kpi-value">'+buyDepth+' / '+sellDepth+'</div>'+
+    '<div class="fb-kpi-sub">Compra \u00b7 Venta (USDT)</div></div>'+
+    '<div class="fb-kpi-card"><div class="fb-kpi-label">Asimetr\u00eda</div>'+
+    '<div class="fb-kpi-value">'+fmt2(last.depth_ratio)+'\u00d7</div>'+
+    '<div class="fb-kpi-sub">Venta / Compra</div></div>'+
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
@@ -1437,38 +1328,13 @@ document.getElementById('footer').innerHTML='\u00daltima actualizaci\u00f3n: '+l
   });
 }
 
-// ═══ DATE RANGE: state, persistence, UI sync ═══
+// ═══ DATE RANGE: state, persistence ═══
 function applyDateRange(state, persist){
   dateRangeState = state;
   if(persist!==false) localStorage.setItem('dashboard-date-range', JSON.stringify(state));
   activeRange = rangeFromState(state);
-  // Sync chips
-  document.querySelectorAll('.ds-chip').forEach(b=>{
-    b.classList.toggle('active', state.preset && b.dataset.preset===state.preset);
-  });
-  // Sync date inputs (mostrar fechas del rango efectivo en formato dd/mm/aaaa)
-  const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
-  const fromPicker=document.getElementById('dsFromPicker'), toPicker=document.getElementById('dsToPicker');
-  const fromIso=TS_ARR[activeRange.fromIdx].slice(0,10);
-  const toIso=TS_ARR[activeRange.toIdx].slice(0,10);
-  if(fromInput){fromInput.value=isoToDmy(fromIso);fromInput.classList.remove('invalid')}
-  if(toInput){toInput.value=isoToDmy(toIso);toInput.classList.remove('invalid')}
-  if(fromPicker) fromPicker.value=fromIso;
-  if(toPicker) toPicker.value=toIso;
-  // Info textual
-  const dsInfo=document.getElementById('dsInfo');
-  if(dsInfo){
-    const n = activeRange.toIdx - activeRange.fromIdx + 1;
-    const fmtD = ts => new Date(ts).toLocaleDateString('es-BO',{day:'numeric',month:'short'});
-    dsInfo.textContent = fmtInt(n)+' snapshots · '+fmtD(TS_ARR[activeRange.fromIdx])+' — '+fmtD(TS_ARR[activeRange.toIdx]);
-  }
-  // Re-render all reactive panels.
   replotAllCharts();
 }
-
-document.querySelectorAll('.ds-chip').forEach(chip=>{
-  chip.addEventListener('click',()=>applyDateRange({preset:chip.dataset.preset}));
-});
 
 // Side filter (2 checkboxes; ambas desmarcadas = prohibido)
 function syncSideChkUI(){
@@ -1503,116 +1369,18 @@ document.querySelectorAll('.side-chk input[type="checkbox"]').forEach(inp=>{
     applySideFilter(newSide);
   });
 });
-// dd/mm/aaaa <-> yyyy-mm-dd helpers para inputs de fecha tipeables.
-function isoToDmy(iso){
-  if(!iso) return '';
-  const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
-  return m ? m[3]+'/'+m[2]+'/'+m[1] : '';
-}
-function dmyToIso(s){
-  if(!s) return null;
-  const m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(s.trim());
-  if(!m) return null;
-  const d=parseInt(m[1],10), mo=parseInt(m[2],10), y=parseInt(m[3],10);
-  if(d<1||d>31||mo<1||mo>12||y<1900||y>2999) return null;
-  // Validar día real para el mes (Date construye y vuelve a verificar).
-  const dt=new Date(Date.UTC(y, mo-1, d));
-  if(dt.getUTCFullYear()!==y || dt.getUTCMonth()!==mo-1 || dt.getUTCDate()!==d) return null;
-  return String(y).padStart(4,'0')+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-}
-
-{
-  const fromInput=document.getElementById('dsFrom'), toInput=document.getElementById('dsTo');
-  const fromPicker=document.getElementById('dsFromPicker'), toPicker=document.getElementById('dsToPicker');
-  const fromBtn=document.getElementById('dsFromBtn'), toBtn=document.getElementById('dsToBtn');
-  // Min/max basados en el dataset.
-  const minDay=TS_ARR[0].slice(0,10), maxDay=TS_ARR[TS_ARR.length-1].slice(0,10);
-  [fromPicker,toPicker].forEach(p=>{if(p){p.min=minDay;p.max=maxDay}});
-
-  const commitCustom = ()=>{
-    let fIso = dmyToIso(fromInput.value);
-    let tIso = dmyToIso(toInput.value);
-    // Validación: marcar invalid si formato roto, no aplicar.
-    if(fromInput.value && !fIso){fromInput.classList.add('invalid');return}
-    if(toInput.value && !tIso){toInput.classList.add('invalid');return}
-    fromInput.classList.remove('invalid');
-    toInput.classList.remove('invalid');
-    let f = fIso || minDay;
-    let t = tIso || maxDay;
-    if(f<minDay) f=minDay;
-    if(t>maxDay) t=maxDay;
-    if(f>t){const tmp=f;f=t;t=tmp}
-    applyDateRange({from:f, to:t});
-  };
-
-  // Auto-formato suave: limita a dígitos + slashes y agrega slashes después
-  // del 2do y 4to dígito numérico mientras se tipea (estilo investing.com).
-  const autoFormat = (input)=>{
-    const raw=input.value.replace(/[^\d\/]/g,'');
-    let digits=raw.replace(/\//g,'');
-    if(digits.length>8) digits=digits.slice(0,8);
-    let out=digits;
-    if(digits.length>=3 && digits.length<=4) out=digits.slice(0,2)+'/'+digits.slice(2);
-    else if(digits.length>=5) out=digits.slice(0,2)+'/'+digits.slice(2,4)+'/'+digits.slice(4);
-    if(out!==input.value){
-      const pos=input.selectionStart;
-      input.value=out;
-      // mantener cursor al final si estaba al final.
-      try{input.setSelectionRange(out.length,out.length)}catch(e){}
-    }
-    // Limpiar invalid mientras escribe; se re-evalúa al blur/Enter.
-    input.classList.remove('invalid');
-  };
-
-  [fromInput,toInput].forEach(inp=>{
-    if(!inp) return;
-    inp.addEventListener('input',()=>autoFormat(inp));
-    inp.addEventListener('change',commitCustom);
-    inp.addEventListener('blur',commitCustom);
-    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commitCustom()}});
-  });
-
-  // Botón calendario: abrir el picker nativo si está disponible (Chromium,
-  // Edge, Safari modernos). Fallback: focus que en muchos browsers también
-  // abre el picker del input date.
-  const openPicker = (picker)=>{
-    if(!picker) return;
-    if(typeof picker.showPicker==='function'){
-      try{picker.showPicker()}catch(e){picker.focus()}
-    }else{
-      picker.focus();
-      picker.click();
-    }
-  };
-  if(fromBtn) fromBtn.addEventListener('click',()=>openPicker(fromPicker));
-  if(toBtn)   toBtn  .addEventListener('click',()=>openPicker(toPicker));
-
-  // Picker change → setear text input formateado y aplicar.
-  if(fromPicker) fromPicker.addEventListener('change',()=>{if(fromPicker.value){fromInput.value=isoToDmy(fromPicker.value);commitCustom()}});
-  if(toPicker)   toPicker  .addEventListener('change',()=>{if(toPicker.value){toInput.value=isoToDmy(toPicker.value);commitCustom()}});
-}
-
-// Decile: toggle excluir extremos
-{
-  const cb=document.getElementById('decileExcludeExtremes');
-  if(cb){
-    const saved=localStorage.getItem('dashboard-decile-exclude-extremes');
-    cb.checked = saved==null ? true : (saved!=='false');
-    cb.addEventListener('change',()=>{
-      localStorage.setItem('dashboard-decile-exclude-extremes', cb.checked?'true':'false');
-      rDecile(getC());
-    });
-  }
-}
 
 
 // ═══ PANEL LAYOUT (drag + resize + persist) ═══
 const DEFAULT_LAYOUT = [
-  {id:'vwap',full:true},{id:'spread',full:false},{id:'depth',full:false},
-  {id:'decile',full:false},{id:'offer_range',full:true},
-  {id:'ratio',full:false},{id:'conc',full:false},{id:'bank',full:false},
-  {id:'merchants',full:true},{id:'outliers',full:true},
-  {id:'volatility',full:false},{id:'flow',full:false},{id:'heatmap',full:true}
+  {id:'vwap',full:true},
+  {id:'spread',full:false},{id:'spread_evo',full:false},
+  {id:'depth',full:false},{id:'heatmap',full:false},
+  {id:'orderbook',full:false},{id:'activity_hm',full:false},
+  {id:'offer_range',full:true},
+  {id:'ratio',full:false},{id:'conc',full:false},
+  {id:'bank',full:false},{id:'flow',full:false},
+  {id:'merchants',full:true},{id:'outliers',full:true}
 ];
 
 function loadLayout(){
@@ -1800,9 +1568,9 @@ function closeFabPopup(returnFocus){
 // Mapas de tipo de panel.
 const PANEL_CHART_DIV = {
   vwap:'chartVwap', spread:'chartSpread', depth:'chartDepth',
-  decile:'chartDecile', ratio:'chartRatio', conc:'chartConc',
-  volatility:'chartVolatility', flow:'chartFlow',
-  offer_range:'chartOffer', heatmap:'chartHeatmap'
+  spread_evo:'chartSpreadEvo', orderbook:'chartOrderBook', activity_hm:'chartActivityHm',
+  ratio:'chartRatio', conc:'chartConc',
+  flow:'chartFlow', offer_range:'chartOffer', heatmap:'chartHeatmap'
 };
 const PANEL_TABLE_ROOT = {bank:'bankTable', merchants:'topMerchants', outliers:'outliersTable'};
 
@@ -2119,16 +1887,6 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   if(savedSide==='buy'||savedSide==='sell'||savedSide==='both') sideFilter=savedSide;
   syncSideChkUI();
 
-  // Restaurar rango de fechas antes de cualquier render que lo consuma.
-  try{
-    const drs=localStorage.getItem('dashboard-date-range');
-    if(drs){
-      const parsed=JSON.parse(drs);
-      if(parsed && (parsed.preset || (parsed.from && parsed.to))){
-        dateRangeState=parsed;
-      }
-    }
-  }catch(e){}
   activeRange = rangeFromState(dateRangeState);
 
   let saved=localStorage.getItem('dashboard-active-theme');
