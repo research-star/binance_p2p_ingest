@@ -42,7 +42,7 @@ TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
 LOCK_PATH = Path("/tmp/publish_dashboard.lock")
 LAST_SIZE_STATE_PATH = Path("/var/log/binance_p2p/publish_dashboard.last_size")
 
-MIN_INDEX_SIZE_BYTES = 500_000
+MIN_INDEX_SIZE_BYTES = 200_000
 SHRINK_RATIO_FLOOR = 0.50
 
 GIT_USER_NAME = "binance VPS"
