@@ -101,7 +101,7 @@ def process_data(db_path: Path) -> dict:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     timestamps = [r[0] for r in conn.execute(
-        "SELECT DISTINCT snapshot_ts_utc FROM ads ORDER BY snapshot_ts_utc"
+        "SELECT DISTINCT snapshot_ts_utc FROM ads WHERE snapshot_ts_utc >= '2026-05-08 00:00:00' ORDER BY snapshot_ts_utc"
     ).fetchall()]
     ts_data = []
     decile_data = {}
@@ -225,7 +225,7 @@ def process_data(db_path: Path) -> dict:
     ids_by_ts = defaultdict(lambda: {'BUY': set(), 'SELL': set()})
     if all_ts_list:
         rows = conn.execute(
-            "SELECT snapshot_ts_utc, side, advertiser_id FROM ads"
+            "SELECT snapshot_ts_utc, side, advertiser_id FROM ads WHERE snapshot_ts_utc >= '2026-05-08 00:00:00'"
         ).fetchall()
         for r in rows:
             ids_by_ts[r['snapshot_ts_utc']][r['side']].add(r['advertiser_id'])
