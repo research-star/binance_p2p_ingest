@@ -503,7 +503,7 @@ const SEMANTIC_VAR_FALLBACKS = {
 };
 const LIGHT_THEMES = ['paper'];
 
-let currentTheme='paper', currentView='daily', activeThemeValues={...THEMES.paper};
+let currentTheme='paper', currentView='snapshot', activeThemeValues={...THEMES.paper};
 
 // ═══ UTILS ═══
 const NF_INT = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
@@ -2001,8 +2001,8 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // Sincronizar UI del selector con el rango restaurado y disparar render
   // inicial completo. applyDateRange llama a replotAllCharts internamente.
   applyDateRange(dateRangeState, false);
-  // Vista fija en 'daily' (selector de vista eliminado en PR consolidado).
-  renderTimeSeries('daily');
+  // Vista fija en 'snapshot' (selector de vista eliminado en PR consolidado).
+  renderTimeSeries('snapshot');
   initHelpTooltips();
 })();
 
