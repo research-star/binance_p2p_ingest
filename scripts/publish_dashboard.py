@@ -36,6 +36,7 @@ REPO_ROOT = Path("/opt/binance_p2p")
 VENV_PYTHON = REPO_ROOT / ".venv/bin/python"
 DASHBOARD_SCRIPT = "dashboard.py"
 DB_PATH = REPO_ROOT / "p2p_normalized.db"
+STATIC_DIR = REPO_ROOT / "static"
 
 WORKTREE_PATH = Path("/tmp/gh-pages-publish-wt")
 TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
@@ -245,11 +246,16 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
     existing_index = WORKTREE_PATH / "index.html"
     shutil.copyfile(TMP_INDEX_PATH, existing_index)
 
+    if STATIC_DIR.exists():
+        for asset in STATIC_DIR.iterdir():
+            if asset.is_file():
+                shutil.copyfile(asset, WORKTREE_PATH / asset.name)
+
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     msg = f"dashboard: {ts} snapshots={n_snap} rows={n_rows}"
 
     try:
-        run(["git", "add", "index.html"], cwd=str(WORKTREE_PATH))
+        run(["git", "add", "-A"], cwd=str(WORKTREE_PATH))
         run(["git",
              "-c", f"user.name={GIT_USER_NAME}",
              "-c", f"user.email={GIT_USER_EMAIL}",
