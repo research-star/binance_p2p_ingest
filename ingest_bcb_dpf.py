@@ -183,7 +183,7 @@ def _should_stop(cell_a_text: str) -> bool:
 
 def _should_skip(cell_a_text: str) -> bool:
     """Check if this row is a header/label that should be skipped."""
-    return bool(SKIP_PATTERNS.match(cell_a_text.strip()))
+    return bool(SKIP_PATTERNS.fullmatch(cell_a_text.strip()))
 
 
 def _row_has_rate_data(row: tuple, min_col: int = 1, max_col: int = 21) -> bool:
