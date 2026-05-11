@@ -561,6 +561,23 @@ Hallazgos detectados el 27-abr y resueltos en bloque el 29-abr:
 
 ---
 
+## TODO follow-up — cache key del publish
+
+`scripts/publish_dashboard.py` saltea publish cuando `(n_snap, n_rows)` no
+cambió desde el último run. Esto previene publish redundante cuando solo
+cambia un timestamp, pero NO se invalida cuando cambia código
+(`template.html`, `static/`).
+
+Consecuencia: deploys de cambios visuales sin cambio de dataset esperan hasta
+el próximo snapshot + próximo tick del cron (~22 min worst case) para
+reflejarse en gh-pages.
+
+Fix propuesto: agregar al cache key un hash de `template.html` +
+`listdir(static/)`, o usar el commit hash de main. Tarea no urgente,
+anotada tras PR #19.
+
+---
+
 ## Pendientes
 
 - [x] **Hosting de la ingesta** — VPS Hetzner desde 2026-05-07 (ver sección
