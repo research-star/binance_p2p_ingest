@@ -372,10 +372,14 @@ de esa fecha, el rollback requiere bajar la DB del VPS via `backup.py db`
   raíz del proyecto antes de ejecutar.
 - Task Scheduler "P2P Watchdog" actualizado a `pythonw.exe scripts\watchdog.py`
   (WD sigue siendo la raíz del proyecto).
-- **BCB agendado diario:** ✅ resuelto el 2026-04-29. Task Scheduler
-  `BCB Referencial Diario` corre `pythonw.exe bcb_referencial.py` lunes a
-  viernes a las 12:00 hora Bolivia (UTC−4). El BCB publica el referencial
-  por la mañana, así que al mediodía ya está disponible.
+- **BCB agendado diario:** ✅ migrado de Windows a VPS el 2026-05-11 (PR #20).
+  Cron del user `binance@p2p-ingest-prod`:
+  `5,35 12-15 * * 1-5 cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh >> /var/log/binance_p2p/bcb_ref.log 2>&1`
+  — 8 corridas/día, 8:05–11:35 BO, lun-vie. Wrapper `scripts/bcb_scrape_and_commit.sh`
+  invoca `bcb_referencial.py` (backfill total, idempotente), commitea + pushea
+  a `CURRENT_BRANCH` solo si `bcb_referencial.json` cambió. Reemplaza la
+  Task Scheduler local "BCB Referencial Diario" (deshabilitada en el mismo PR).
+  Healthcheck pendiente, ver **TODO follow-up** más abajo.
 
 ---
 
@@ -575,6 +579,12 @@ reflejarse en gh-pages.
 Fix propuesto: agregar al cache key un hash de `template.html` +
 `listdir(static/)`, o usar el commit hash de main. Tarea no urgente,
 anotada tras PR #19.
+
+- **BCB scraper HC ping**: crear UUID en healthchecks.io, agregarlo a
+  `/opt/binance_p2p/.env` como `HC_BCB`, y appendear `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
+  al cron line de BCB. Sin esto, una falla del scraper es silenciosa hasta
+  que se note un hueco en la gráfica del dashboard. Tarea no urgente, anotada
+  en PR #20.
 
 ---
 
