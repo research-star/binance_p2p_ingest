@@ -445,6 +445,14 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
       </table>
       <div class="fb-chart-source">Datos: Banco Central de Bolivia &middot; &Uacute;ltima actualizaci&oacute;n: <span id="dpfSourceDate">&mdash;</span></div>
     </div>
+    <div class="fb-chart-card" id="dpf-scatter-card" style="margin-top:16px;">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Tasas DPF por plazo y entidad</div>
+        <div class="fb-chart-sub">Cada punto representa una entidad. Pasar el mouse para ver detalle.</div>
+      </div>
+      <div id="dpf-scatter-chart" style="width:100%; height:380px;"></div>
+      <div class="fb-chart-source">Datos: Banco Central de Bolivia</div>
+    </div>
     <div id="dpf-empty-state" style="display:none;padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13px;">
       A&uacute;n no hay datos del BCB disponibles. El sistema descargar&aacute; el primer reporte ma&ntilde;ana a las 09:30.
     </div>
@@ -2040,7 +2048,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     var target=tab.dataset.tab;
     document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
     document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
-    if(target==='dpf') renderDpfTable();
+    if(target==='dpf'){renderDpfTable();renderDpfScatter();}
   });
 });
 
@@ -2061,10 +2069,12 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
   var emptyEl=document.getElementById('dpf-empty-state');
   var tableEl=document.getElementById('dpf-rates-table');
   var filtersEl=document.querySelector('.fb-dpf-filters');
+  var scatterCardInit=document.getElementById('dpf-scatter-card');
   if(!dpfData.rates||!dpfData.rates.length){
     if(emptyEl) emptyEl.style.display='';
     if(tableEl) tableEl.style.display='none';
     if(filtersEl) filtersEl.style.display='none';
+    if(scatterCardInit) scatterCardInit.style.display='none';
   }
 
   window.renderDpfTable=function(){
@@ -2121,6 +2131,55 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     if(plazoGroup) plazoGroup.style.display=dpfState.tipo==='DPF'?'':'none';
   };
 
+  window.renderDpfScatter=function(){
+    var scatterCard=document.getElementById('dpf-scatter-card');
+    if(!scatterCard) return;
+    if(!dpfData.rates||!dpfData.rates.length){scatterCard.style.display='none';return;}
+
+    // Hide scatter when Caja de Ahorro is selected (no plazo axis)
+    if(dpfState.tipo==='CAJA_AHORRO'){scatterCard.style.display='none';return;}
+    scatterCard.style.display='';
+
+    var moneda=dpfState.moneda;
+    var categorias=['BANCOS MULTIPLES','MICROFINANZAS','BANCOS PYME','ENT. VIVIENDA','COOPERATIVAS','IFD'];
+    var colors={
+      'BANCOS MULTIPLES':'#1e4d7a',
+      'MICROFINANZAS':'#5589c0',
+      'BANCOS PYME':'#7ba3c4',
+      'ENT. VIVIENDA':'#9ec0d8',
+      'COOPERATIVAS':'#a8c8e0',
+      'IFD':'#8c8c8c'
+    };
+    function plazoLabel(p){return p===-1?'Mayor':String(p);}
+    var plazoOrder=['30','60','90','180','360','720','1080','Mayor'];
+
+    var traces=categorias.map(function(cat){
+      var rates=dpfData.rates.filter(function(r){
+        return r.producto==='DPF'&&r.moneda===moneda&&r.categoria===cat&&r.tasa!=null&&r.tasa>0;
+      });
+      return {
+        x:rates.map(function(r){return plazoLabel(r.plazo);}),
+        y:rates.map(function(r){return r.tasa;}),
+        type:'scatter',mode:'markers',
+        name:cat.charAt(0)+cat.slice(1).toLowerCase().replace('_',' '),
+        marker:{color:colors[cat],size:8,line:{color:'rgba(255,255,255,0.6)',width:1}},
+        text:rates.map(function(r){return r.entidad;}),
+        hovertemplate:'<b>%{text}</b><br>Plazo: %{x} d\u00edas<br>Tasa: %{y:.2f}%<extra></extra>'
+      };
+    });
+
+    var layout={
+      xaxis:{title:{text:'Plazo (d\u00edas)',font:{size:11,color:'#6b7d92'}},type:'category',categoryorder:'array',categoryarray:plazoOrder,tickfont:{size:10,color:'#6b7d92',family:'IBM Plex Mono'},fixedrange:true,automargin:true},
+      yaxis:{title:{text:'Tasa (%)',font:{size:11,color:'#6b7d92'}},tickformat:'.2f',tickfont:{size:10,color:'#6b7d92',family:'IBM Plex Mono'},gridcolor:'rgba(44,74,107,0.04)',fixedrange:true,automargin:true,rangemode:'tozero'},
+      showlegend:true,
+      legend:{orientation:'h',x:0,y:-0.20,font:{size:10,color:'#6b7d92'}},
+      margin:{l:60,r:20,t:10,b:80},
+      paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
+      hoverlabel:{bgcolor:'#fff',bordercolor:'rgba(44,74,107,0.20)',font:{color:'#2c4a6b',family:'Inter',size:11}}
+    };
+    Plotly.newPlot('dpf-scatter-chart',traces,layout,{responsive:true,displayModeBar:false,scrollZoom:false});
+  };
+
   // Filter pill clicks
   document.querySelectorAll('.fb-dpf-filters .fb-pill').forEach(function(btn){
     btn.addEventListener('click',function(){
@@ -2131,6 +2190,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       btn.parentElement.querySelectorAll('.fb-pill').forEach(function(b){b.classList.remove('active')});
       btn.classList.add('active');
       renderDpfTable();
+      renderDpfScatter();
     });
   });
 })();
