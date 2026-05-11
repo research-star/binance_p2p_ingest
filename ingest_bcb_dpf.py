@@ -212,6 +212,7 @@ def parse_excel(filepath: str) -> list[tuple]:
     rows_data = []
     current_category = None
     parsing_started = False  # Wait until we hit first category
+    seen_first_bancos_multiples = False
 
     for row_idx, row in enumerate(ws.iter_rows(min_row=1, values_only=True), start=1):
         # Skip header rows (rows 1-11 are title/headers/column labels)
@@ -232,8 +233,18 @@ def parse_excel(filepath: str) -> list[tuple]:
         # Check if this is a category header
         cat = _is_category_row(cell_a_text)
         if cat is not None:
-            current_category = cat
-            parsing_started = True
+            # "BANCOS MULTIPLES" appears twice: once as the real category (row 12),
+            # and again as a sub-label inside other sections (e.g. row 26 inside
+            # MICROFINANZAS). Only use it to set category the FIRST time.
+            if cat == "BANCOS MULTIPLES":
+                if not seen_first_bancos_multiples:
+                    current_category = cat
+                    seen_first_bancos_multiples = True
+                    parsing_started = True
+                # else: skip — it's a sub-label, don't reset category
+            else:
+                current_category = cat
+                parsing_started = True
             continue
 
         # Don't parse until we've seen the first category
