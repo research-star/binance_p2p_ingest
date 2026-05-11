@@ -472,15 +472,16 @@ def process_data(db_path: Path) -> dict:
         latest_dpf_date = latest_dpf_row[0] if latest_dpf_row else None
         if latest_dpf_date:
             dpf_rows = conn.execute("""
-                SELECT entidad, moneda, producto, plazo, tasa
+                SELECT entidad, moneda, producto, plazo, tasa, categoria
                 FROM bcb_dpf_rates WHERE report_date = ?
-                ORDER BY entidad, moneda, producto, plazo
+                ORDER BY categoria, entidad, moneda, producto, plazo
             """, (latest_dpf_date,)).fetchall()
             dpf_data = {
                 'report_date': latest_dpf_date,
                 'rates': [{'entidad': r['entidad'], 'moneda': r['moneda'],
                            'producto': r['producto'], 'plazo': r['plazo'],
-                           'tasa': r['tasa']} for r in dpf_rows]
+                           'tasa': r['tasa'], 'categoria': r['categoria']}
+                          for r in dpf_rows]
             }
     except Exception:
         pass  # Table doesn't exist yet — graceful degradation

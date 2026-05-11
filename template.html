@@ -416,6 +416,17 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
           <button class="fb-pill" data-filter="moneda" data-value="UFV">UFV</button>
         </div>
       </div>
+      <div class="fb-dpf-fcol">
+        <span class="fb-flab">Categor&iacute;a</span>
+        <div class="fb-pills">
+          <button class="fb-pill active" data-filter="categoria" data-value="BANCOS MULTIPLES">Bancos M&uacute;ltiples</button>
+          <button class="fb-pill" data-filter="categoria" data-value="MICROFINANZAS">Microfinanzas</button>
+          <button class="fb-pill" data-filter="categoria" data-value="BANCOS PYME">Bancos PYME</button>
+          <button class="fb-pill" data-filter="categoria" data-value="ENT. VIVIENDA">Vivienda</button>
+          <button class="fb-pill" data-filter="categoria" data-value="COOPERATIVAS">Cooperativas</button>
+          <button class="fb-pill" data-filter="categoria" data-value="IFD">IFD</button>
+        </div>
+      </div>
     </div>
     <div class="fb-chart-card">
       <div class="fb-chart-head">
@@ -2035,7 +2046,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
 
 // ═══ DPF TAB LOGIC ═══
 (function(){
-  var dpfState={tipo:'DPF',plazo:360,moneda:'BOB'};
+  var dpfState={tipo:'DPF',plazo:360,moneda:'BOB',categoria:'BANCOS MULTIPLES'};
   var dpfData=DATA.dpf_data||{report_date:null,rates:[]};
 
   // Set report date in UI
@@ -2063,6 +2074,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       if(r.producto!==dpfState.tipo) return false;
       if(dpfState.tipo==='DPF'&&r.plazo!==dpfState.plazo) return false;
       if(r.moneda!==dpfState.moneda) return false;
+      if(r.categoria!==dpfState.categoria) return false;
       return true;
     });
     filtered.sort(function(a,b){
@@ -2099,8 +2111,8 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     var titleEl=document.getElementById('dpf-table-title');
     if(titleEl){
       var title=dpfState.tipo==='CAJA_AHORRO'
-        ?'Caja de Ahorro \u00b7 '+dpfState.moneda+' \u00b7 Entidades Financieras'
-        :'DPF \u00b7 '+(dpfState.plazo===-1?'Mayor':dpfState.plazo+' d\u00edas')+' \u00b7 '+dpfState.moneda+' \u00b7 Entidades Financieras';
+        ?'Caja de Ahorro \u00b7 '+dpfState.moneda+' \u00b7 '+dpfState.categoria
+        :'DPF \u00b7 '+(dpfState.plazo===-1?'Mayor':dpfState.plazo+' d\u00edas')+' \u00b7 '+dpfState.moneda+' \u00b7 '+dpfState.categoria;
       titleEl.textContent=title;
     }
 

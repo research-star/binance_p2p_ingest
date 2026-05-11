@@ -32,16 +32,41 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/201001
 MAX_RETRIES = 3
 RETRY_DELAY_S = 5
 
-# Category headers to skip when parsing (not individual banks)
-CATEGORY_HEADERS = {
-    "BANCOS MULTIPLES",
-    "ENTIDADES ESPECIALIZADAS EN MICROFINANZAS",
-    "BANCOS PYME",
-    "ENTIDADES FINANCIERAS DE VIVIENDA",
-    "COOPERATIVAS DE AHORRO Y CRÉDITO",
-    "COOPERATIVAS",
-    "INSTITUCIONES FINANCIERAS DE DESARROLLO",
+# ── Category detection ────────────────────────────────────────────────────────
+
+# Known category headers in the BCB Excel (sheet2). These mark the start of a
+# group of entities. The value in col A is ALL CAPS with no numeric data in the row.
+CATEGORY_MAP = {
+    "BANCOS MULTIPLES": "BANCOS MULTIPLES",
+    "ENTIDADES ESPECIALIZADAS EN MICROFINANZAS": "MICROFINANZAS",
+    "BANCOS PYME": "BANCOS PYME",
+    "ENTIDADES FINANCIERAS DE VIVIENDA": "ENT. VIVIENDA",
+    "COOPERATIVAS DE AHORRO Y CRÉDITO": "COOPERATIVAS",
+    "COOPERATIVAS DE AHORRO Y CREDITO": "COOPERATIVAS",
+    "COOPERATIVAS": "COOPERATIVAS",
+    "INSTITUCIONES FINANCIERAS DE DESARROLLO": "IFD",
 }
+
+# Strings that appear in rows we should STOP parsing at (footer section)
+STOP_MARKERS = {
+    "TASAS DE INTERÉS DE LOS VALORES",
+    "TASAS  DE  INTERÉS  DE  LOS  VALORES",
+    "TASAS DE INTERES DE LOS VALORES",
+    "DETALLE",
+    "BCB REMESAS",
+    "BCB DIRECTO",
+    "PROMEDIOS PONDERADOS POR MONTO",
+}
+
+# Header/label strings to skip (not entities, not categories)
+SKIP_PATTERNS = re.compile(
+    r'^(entidades?|tasa|plazo|caja de ahorro|moneda|depositos?|'
+    r'informaci[oó]n|tasas? (pasivas?|activas?|de inter[eé]s|interbancarias?)|'
+    r'promedio|vigencia|fuente|mayor|mn|me|ufv|mvdol?|'
+    r'empresarial|pyme|micro-cr[eé]dito|consumo|vivienda|'
+    r'banco central de bolivia|semana|\*)',
+    re.IGNORECASE
+)
 
 # Column mapping for sheet2 (0-indexed from col A)
 # Col A=0: Entidad, B=1: CA BOB, C-J=2-9: DPF BOB, K=10: CA USD, L-S=11-18: DPF USD, T=19: UFV, U=20: MVDOL
@@ -66,6 +91,7 @@ CREATE TABLE IF NOT EXISTS bcb_dpf_rates (
   producto TEXT NOT NULL,
   plazo INTEGER,
   tasa REAL,
+  categoria TEXT,
   UNIQUE(report_date, entidad, moneda, producto, plazo)
 );
 """
@@ -73,6 +99,7 @@ CREATE TABLE IF NOT EXISTS bcb_dpf_rates (
 CREATE_INDEXES_SQL = [
     "CREATE INDEX IF NOT EXISTS idx_dpf_report_date ON bcb_dpf_rates(report_date);",
     "CREATE INDEX IF NOT EXISTS idx_dpf_entidad ON bcb_dpf_rates(entidad);",
+    "CREATE INDEX IF NOT EXISTS idx_dpf_categoria ON bcb_dpf_rates(categoria);",
 ]
 
 
@@ -80,6 +107,11 @@ CREATE_INDEXES_SQL = [
 
 def init_table(conn: sqlite3.Connection):
     conn.execute(CREATE_TABLE_SQL)
+    # Add categoria column if upgrading from old schema
+    try:
+        conn.execute("ALTER TABLE bcb_dpf_rates ADD COLUMN categoria TEXT")
+    except sqlite3.OperationalError:
+        pass  # Column already exists
     for idx in CREATE_INDEXES_SQL:
         conn.execute(idx)
     conn.commit()
@@ -100,7 +132,6 @@ def fetch_with_retry(url: str, timeout: int = 60) -> requests.Response:
 
 def find_latest_td_link(html: str) -> tuple[str, str]:
     """Find the most recent TD_DD%20MM%20YYYY.xlsx link. Returns (url, date YYYY-MM-DD)."""
-    # Pattern: TD_DD%20MM%20YYYY.xlsx (possibly with (1) suffix for revisions)
     pattern = re.compile(
         r'href=["\']([^"\']*?/?(TD_(\d{2})%20(\d{2})%20(\d{4})(?:\s*\(\d+\))?\.xlsx))["\']',
         re.IGNORECASE
@@ -119,11 +150,9 @@ def find_latest_td_link(html: str) -> tuple[str, str]:
     if not matches:
         raise RuntimeError("No TD_*.xlsx links found on BCB page")
 
-    # Sort by date descending, take most recent
     matches.sort(key=lambda x: x[0], reverse=True)
     _, date_str, href = matches[0]
 
-    # Build full URL if relative
     if href.startswith("http"):
         url = href
     elif href.startswith("/"):
@@ -134,49 +163,94 @@ def find_latest_td_link(html: str) -> tuple[str, str]:
     return url, date_str
 
 
+def _is_category_row(cell_a_text: str) -> str | None:
+    """Check if this row is a category header. Returns canonical category name or None."""
+    upper = cell_a_text.upper().strip()
+    for key, canonical in CATEGORY_MAP.items():
+        if upper == key:
+            return canonical
+    return None
+
+
+def _should_stop(cell_a_text: str) -> bool:
+    """Check if we've hit the footer section and should stop parsing."""
+    upper = cell_a_text.upper().strip()
+    for marker in STOP_MARKERS:
+        if marker in upper:
+            return True
+    return False
+
+
+def _should_skip(cell_a_text: str) -> bool:
+    """Check if this row is a header/label that should be skipped."""
+    return bool(SKIP_PATTERNS.match(cell_a_text.strip()))
+
+
+def _row_has_rate_data(row: tuple, min_col: int = 1, max_col: int = 21) -> bool:
+    """Check if a row has at least one numeric value in the rate columns that looks like a real rate (0-100)."""
+    for i in range(min_col, min(max_col, len(row))):
+        v = row[i]
+        if v is not None and isinstance(v, (int, float)) and v != 0 and v < 100:
+            return True
+    return False
+
+
 def parse_excel(filepath: str) -> list[tuple]:
-    """Parse sheet2 (TASAS PASIVAS) and return list of (entidad, moneda, producto, plazo, tasa)."""
+    """Parse sheet2 (TASAS PASIVAS) with category-aware iteration.
+
+    Returns list of (entidad, moneda, producto, plazo, tasa, categoria).
+    """
     wb = load_workbook(filepath, data_only=True, read_only=True)
 
     # Sheet 2 is the passive rates sheet
     sheet_names = wb.sheetnames
     if len(sheet_names) < 2:
-        # Try first sheet if only one exists
         ws = wb.active
     else:
         ws = wb[sheet_names[1]]
 
     rows_data = []
-    data_started = False
-    data_start_row = 14  # First bank data row (after BANCOS MULTIPLES header + separator)
+    current_category = None
+    parsing_started = False  # Wait until we hit first category
 
     for row_idx, row in enumerate(ws.iter_rows(min_row=1, values_only=True), start=1):
-        if row_idx < data_start_row:
+        # Skip header rows (rows 1-11 are title/headers/column labels)
+        if row_idx <= 11:
             continue
 
-        # Col A = entity name
-        entidad = row[0] if len(row) > 0 else None
-        if entidad is None or not isinstance(entidad, str) or not entidad.strip():
+        # Get cell A value
+        cell_a = row[0] if len(row) > 0 else None
+        if cell_a is None or not isinstance(cell_a, str) or not cell_a.strip():
             continue
 
-        entidad = entidad.strip()
+        cell_a_text = cell_a.strip()
 
-        # Skip category headers
-        if entidad.upper() in CATEGORY_HEADERS or entidad.upper().startswith("ENTIDADES "):
+        # Check if we should stop (BCB footer section)
+        if _should_stop(cell_a_text):
+            break
+
+        # Check if this is a category header
+        cat = _is_category_row(cell_a_text)
+        if cat is not None:
+            current_category = cat
+            parsing_started = True
             continue
 
-        # Check if this row has any numeric values (filter out pure text rows)
-        has_values = False
-        for i in range(1, min(21, len(row))):
-            v = row[i] if i < len(row) else None
-            if v is not None and isinstance(v, (int, float)) and v != 0:
-                has_values = True
-                break
-
-        if not has_values:
+        # Don't parse until we've seen the first category
+        if not parsing_started:
             continue
 
-        # Extract BOB rates
+        # Skip known header/label patterns
+        if _should_skip(cell_a_text):
+            continue
+
+        # Skip rows that don't have any reasonable rate data (values 0-100)
+        if not _row_has_rate_data(row):
+            continue
+
+        # This is an entity data row — extract rates
+        entidad = cell_a_text
+
         def get_val(col_idx):
             if col_idx >= len(row):
                 return None
@@ -184,40 +258,42 @@ def parse_excel(filepath: str) -> list[tuple]:
             if v is None or not isinstance(v, (int, float)):
                 return None
             if v == 0:
-                return None  # Zero means no product offered
+                return None  # Zero = bank doesn't offer this product
+            if v >= 100:
+                return None  # Likely not a rate (could be a plazo or other number)
             return round(float(v), 4)
 
         # Caja de Ahorro BOB
         ca_bob = get_val(COL_CA_BOB)
         if ca_bob is not None:
-            rows_data.append((entidad, "BOB", "CAJA_AHORRO", None, ca_bob))
+            rows_data.append((entidad, "BOB", "CAJA_AHORRO", None, ca_bob, current_category))
 
         # DPF BOB (8 plazos)
         for i, plazo in enumerate(DPF_PLAZOS):
             val = get_val(COL_DPF_BOB_START + i)
             if val is not None:
-                rows_data.append((entidad, "BOB", "DPF", plazo, val))
+                rows_data.append((entidad, "BOB", "DPF", plazo, val, current_category))
 
         # Caja de Ahorro USD
         ca_usd = get_val(COL_CA_USD)
         if ca_usd is not None:
-            rows_data.append((entidad, "USD", "CAJA_AHORRO", None, ca_usd))
+            rows_data.append((entidad, "USD", "CAJA_AHORRO", None, ca_usd, current_category))
 
         # DPF USD (8 plazos)
         for i, plazo in enumerate(DPF_PLAZOS):
             val = get_val(COL_DPF_USD_START + i)
             if val is not None:
-                rows_data.append((entidad, "USD", "DPF", plazo, val))
+                rows_data.append((entidad, "USD", "DPF", plazo, val, current_category))
 
         # UFV
         ufv = get_val(COL_UFV)
         if ufv is not None:
-            rows_data.append((entidad, "UFV", "DPF", None, ufv))
+            rows_data.append((entidad, "UFV", "DPF", None, ufv, current_category))
 
         # MVDOL
         mvdol = get_val(COL_MVDOL)
         if mvdol is not None:
-            rows_data.append((entidad, "MVDOL", "DPF", None, mvdol))
+            rows_data.append((entidad, "MVDOL", "DPF", None, mvdol, current_category))
 
     wb.close()
     return rows_data
@@ -295,11 +371,12 @@ def main():
     fetch_date = datetime.now(timezone.utc).isoformat()
     inserted = 0
     try:
-        for entidad, moneda, producto, plazo, tasa in rows_data:
+        for entidad, moneda, producto, plazo, tasa, categoria in rows_data:
             conn.execute(
-                "INSERT OR IGNORE INTO bcb_dpf_rates (fetch_date, report_date, entidad, moneda, producto, plazo, tasa) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?)",
-                (fetch_date, report_date, entidad, moneda, producto, plazo, tasa)
+                "INSERT OR IGNORE INTO bcb_dpf_rates "
+                "(fetch_date, report_date, entidad, moneda, producto, plazo, tasa, categoria) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (fetch_date, report_date, entidad, moneda, producto, plazo, tasa, categoria)
             )
             inserted += 1
         conn.commit()
