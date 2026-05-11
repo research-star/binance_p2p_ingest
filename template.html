@@ -287,6 +287,28 @@ body.theme-dark .fb-stog{background:rgba(255,255,255,.04);border-color:rgba(255,
 body.theme-dark .fb-stog-check{border-color:rgba(255,255,255,.20)}
 body.theme-dark .fb-stog.active{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:#e6ebf2}
 body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);color:#6b7d92}
+/* ── DPF Tab ── */
+.fb-dpf-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:14px 18px;margin-bottom:14px}
+.fb-dpf-fcol{display:flex;flex-direction:column;gap:6px}
+.fb-flab{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
+.fb-pills{display:flex;gap:4px;flex-wrap:wrap}
+.fb-pill{padding:6px 12px;border-radius:5px;border:1px solid var(--border-color);background:transparent;font-size:11px;color:var(--text-secondary);cursor:pointer;font-weight:500;font-family:inherit;transition:all .15s}
+.fb-pill:hover{background:var(--bg-tertiary);color:var(--text-primary)}
+.fb-pill.active{background:#2c4a6b;color:#fff;border-color:#2c4a6b}
+.fb-chart-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:16px 20px}
+.fb-chart-head{margin-bottom:12px}
+.fb-chart-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.fb-chart-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+.fb-dpf-table{width:100%;border-collapse:collapse;font-size:12px}
+.fb-dpf-table th,.fb-dpf-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
+.fb-dpf-table th{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
+.fb-dpf-table td.val{text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:500}
+.fb-dpf-table tr:hover{background:rgba(44,74,107,.04)}
+.fb-dpf-bar-bg{background:rgba(44,74,107,.08);border-radius:4px;overflow:hidden;height:8px;min-width:60px}
+.fb-dpf-bar{height:8px;background:#1e4d7a;border-radius:4px}
+body.theme-dark .fb-dpf-table tr:hover{background:rgba(255,255,255,.04)}
+body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
+@media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
 </style></head>
 <body>
 
@@ -301,7 +323,7 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
     <span class="fb-logo">FinanzasBo</span>
     <div class="fb-tabs">
       <button class="fb-tab active" data-tab="dollar">D&oacute;lar</button>
-      <button class="fb-tab" disabled>Rendimientos DPF <span class="fb-soon">&middot; soon</span></button>
+      <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
     </div>
   </div>
   <div class="fb-navbar-right">
@@ -312,6 +334,7 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
     </button>
   </div>
 </nav>
+<div id="tab-dolar">
 <!-- Sub-header -->
 <div class="fb-subheader">
   <div>
@@ -354,6 +377,68 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
+</div><!-- /tab-dolar -->
+
+<div id="tab-dpf" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>Rendimientos DPF y Caja de Ahorro</h1>
+      <div class="fb-subtitle">Tasas pasivas de entidades financieras &middot; Fuente: BCB &middot; Reporte al <span id="dpfReportDate">&mdash;</span></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="fb-dpf-filters">
+      <div class="fb-dpf-fcol">
+        <span class="fb-flab">Tipo de dep&oacute;sito</span>
+        <div class="fb-pills">
+          <button class="fb-pill" data-filter="tipo" data-value="CAJA_AHORRO">Caja de Ahorro</button>
+          <button class="fb-pill active" data-filter="tipo" data-value="DPF">DPF</button>
+        </div>
+      </div>
+      <div class="fb-dpf-fcol" id="dpf-plazo-group">
+        <span class="fb-flab">Plazo (d&iacute;as)</span>
+        <div class="fb-pills">
+          <button class="fb-pill" data-filter="plazo" data-value="30">30</button>
+          <button class="fb-pill" data-filter="plazo" data-value="60">60</button>
+          <button class="fb-pill" data-filter="plazo" data-value="90">90</button>
+          <button class="fb-pill" data-filter="plazo" data-value="180">180</button>
+          <button class="fb-pill active" data-filter="plazo" data-value="360">360</button>
+          <button class="fb-pill" data-filter="plazo" data-value="720">720</button>
+          <button class="fb-pill" data-filter="plazo" data-value="1080">1080</button>
+          <button class="fb-pill" data-filter="plazo" data-value="-1">Mayor</button>
+        </div>
+      </div>
+      <div class="fb-dpf-fcol">
+        <span class="fb-flab">Moneda</span>
+        <div class="fb-pills">
+          <button class="fb-pill active" data-filter="moneda" data-value="BOB">BOB</button>
+          <button class="fb-pill" data-filter="moneda" data-value="USD">USD</button>
+          <button class="fb-pill" data-filter="moneda" data-value="UFV">UFV</button>
+        </div>
+      </div>
+    </div>
+    <div class="fb-chart-card">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title" id="dpf-table-title">DPF &middot; 360 d&iacute;as &middot; BOB &middot; Entidades Financieras</div>
+        <div class="fb-chart-sub">Ordenado de mayor a menor tasa</div>
+      </div>
+      <table class="fb-dpf-table" id="dpf-rates-table">
+        <thead>
+          <tr>
+            <th>Entidad</th>
+            <th style="text-align:right;">Tasa (%)</th>
+            <th>Comparativo</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="fb-chart-source">Datos: Banco Central de Bolivia &middot; &Uacute;ltima actualizaci&oacute;n: <span id="dpfSourceDate">&mdash;</span></div>
+    </div>
+    <div id="dpf-empty-state" style="display:none;padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13px;">
+      A&uacute;n no hay datos del BCB disponibles. El sistema descargar&aacute; el primer reporte ma&ntilde;ana a las 09:30.
+    </div>
+  </div>
+</div><!-- /tab-dpf -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
   <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
@@ -1934,5 +2019,108 @@ function initHelpTooltips(){
     window.addEventListener('resize',()=>{if(pop.classList.contains('show'))place()});
   });
 }
+
+// ═══ TAB SWITCHING ═══
+document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    if(tab.classList.contains('active')) return;
+    document.querySelectorAll('.fb-tab[data-tab]').forEach(function(t){t.classList.remove('active')});
+    tab.classList.add('active');
+    var target=tab.dataset.tab;
+    document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
+    document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
+    if(target==='dpf') renderDpfTable();
+  });
+});
+
+// ═══ DPF TAB LOGIC ═══
+(function(){
+  var dpfState={tipo:'DPF',plazo:360,moneda:'BOB'};
+  var dpfData=DATA.dpf_data||{report_date:null,rates:[]};
+
+  // Set report date in UI
+  var rdEl=document.getElementById('dpfReportDate');
+  var rdSrc=document.getElementById('dpfSourceDate');
+  if(dpfData.report_date){
+    if(rdEl) rdEl.textContent=dpfData.report_date;
+    if(rdSrc) rdSrc.textContent=dpfData.report_date;
+  }
+
+  // Show empty state if no data
+  var emptyEl=document.getElementById('dpf-empty-state');
+  var tableEl=document.getElementById('dpf-rates-table');
+  var filtersEl=document.querySelector('.fb-dpf-filters');
+  if(!dpfData.rates||!dpfData.rates.length){
+    if(emptyEl) emptyEl.style.display='';
+    if(tableEl) tableEl.style.display='none';
+    if(filtersEl) filtersEl.style.display='none';
+  }
+
+  window.renderDpfTable=function(){
+    if(!dpfData.rates||!dpfData.rates.length) return;
+    var rates=dpfData.rates;
+    var filtered=rates.filter(function(r){
+      if(r.producto!==dpfState.tipo) return false;
+      if(dpfState.tipo==='DPF'&&r.plazo!==dpfState.plazo) return false;
+      if(r.moneda!==dpfState.moneda) return false;
+      return true;
+    });
+    filtered.sort(function(a,b){
+      if(a.tasa==null) return 1;
+      if(b.tasa==null) return -1;
+      return b.tasa-a.tasa;
+    });
+    var maxTasa=0;
+    filtered.forEach(function(r){if(r.tasa!=null&&r.tasa>maxTasa)maxTasa=r.tasa});
+
+    var tbody=document.querySelector('#dpf-rates-table tbody');
+    if(!tbody) return;
+    tbody.innerHTML='';
+
+    filtered.forEach(function(r){
+      var tr=document.createElement('tr');
+      var tdEnt=document.createElement('td');
+      tdEnt.textContent=r.entidad;
+      var tdVal=document.createElement('td');
+      tdVal.className='val';
+      tdVal.textContent=r.tasa!=null?r.tasa.toFixed(2):'—';
+      var tdBar=document.createElement('td');
+      if(r.tasa!=null&&maxTasa>0){
+        var pct=(r.tasa/maxTasa*100).toFixed(1);
+        tdBar.innerHTML='<div class="fb-dpf-bar-bg"><div class="fb-dpf-bar" style="width:'+pct+'%"></div></div>';
+      } else {
+        tdBar.innerHTML='<span style="color:var(--text-muted);font-size:11px;">sin datos</span>';
+      }
+      tr.appendChild(tdEnt);tr.appendChild(tdVal);tr.appendChild(tdBar);
+      tbody.appendChild(tr);
+    });
+
+    // Update title
+    var titleEl=document.getElementById('dpf-table-title');
+    if(titleEl){
+      var title=dpfState.tipo==='CAJA_AHORRO'
+        ?'Caja de Ahorro \u00b7 '+dpfState.moneda+' \u00b7 Entidades Financieras'
+        :'DPF \u00b7 '+(dpfState.plazo===-1?'Mayor':dpfState.plazo+' d\u00edas')+' \u00b7 '+dpfState.moneda+' \u00b7 Entidades Financieras';
+      titleEl.textContent=title;
+    }
+
+    // Show/hide plazo group
+    var plazoGroup=document.getElementById('dpf-plazo-group');
+    if(plazoGroup) plazoGroup.style.display=dpfState.tipo==='DPF'?'':'none';
+  };
+
+  // Filter pill clicks
+  document.querySelectorAll('.fb-dpf-filters .fb-pill').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var filter=btn.dataset.filter;
+      var value=btn.dataset.value;
+      if(filter==='plazo') value=parseInt(value,10);
+      dpfState[filter]=value;
+      btn.parentElement.querySelectorAll('.fb-pill').forEach(function(b){b.classList.remove('active')});
+      btn.classList.add('active');
+      renderDpfTable();
+    });
+  });
+})();
 </script>
 </body></html>

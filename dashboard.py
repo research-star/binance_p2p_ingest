@@ -465,6 +465,26 @@ def process_data(db_path: Path) -> dict:
         dow_mon = (dow_sqlite - 1) % 7  # Sun(0)→6, Mon(1)→0, Tue(2)→1, etc.
         activity_matrix[dow_mon][hour] = round(row['total_amount'])
 
+    # ── DPF rates (from bcb_dpf_rates table, if exists) ──
+    dpf_data = {'report_date': None, 'rates': []}
+    try:
+        latest_dpf_row = conn.execute("SELECT MAX(report_date) FROM bcb_dpf_rates").fetchone()
+        latest_dpf_date = latest_dpf_row[0] if latest_dpf_row else None
+        if latest_dpf_date:
+            dpf_rows = conn.execute("""
+                SELECT entidad, moneda, producto, plazo, tasa
+                FROM bcb_dpf_rates WHERE report_date = ?
+                ORDER BY entidad, moneda, producto, plazo
+            """, (latest_dpf_date,)).fetchall()
+            dpf_data = {
+                'report_date': latest_dpf_date,
+                'rates': [{'entidad': r['entidad'], 'moneda': r['moneda'],
+                           'producto': r['producto'], 'plazo': r['plazo'],
+                           'tasa': r['tasa']} for r in dpf_rows]
+            }
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+
     conn.close()
 
     return {
@@ -476,6 +496,7 @@ def process_data(db_path: Path) -> dict:
         'flow_per_snapshot': flow_per_snapshot,
         'order_book': order_book,
         'activity_heatmap': activity_matrix,
+        'dpf_data': dpf_data,
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
