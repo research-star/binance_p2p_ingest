@@ -901,9 +901,11 @@ function xaxisForView(base, v){
   const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView()};
   // range explícito del rango activo: fuerza al eje a redibujarse con cada
   // cambio de selector y evita que Plotly conserve autorange/rangeslider
-  // del render anterior.
+  // del render anterior. Padding de medio día en daily/hourly para que los
+  // markers del primer/último punto no queden clippeados en el borde.
   if(v && v.x && v.x.length){
-    cfg.range = [v.x[0], v.x[v.x.length-1]];
+    const padMs = currentView==='snapshot' ? 0 : 12*3600000;
+    cfg.range = [new Date(v.x[0].getTime() - padMs), new Date(v.x[v.x.length-1].getTime() + padMs)];
     cfg.autorange = false;
   }
   delete cfg.dtick;
@@ -968,8 +970,13 @@ function rVwap(c,v){
     // se reactualizaban con el chart.
     const hist=meta.bcb_ref_history;
     const xMin=x.length?x[0].getTime():null, xMax=x.length?x[x.length-1].getTime():null;
+    // Filtro por fecha-string (YYYY-MM-DD) para no excluir el BCB del primer
+    // día, cuya entry parsea a medianoche local pero v.x[0] en daily/hourly
+    // es el último snapshot del día (~20h después).
+    const xMinDate = x.length ? x[0].toISOString().slice(0,10) : null;
+    const xMaxDate = x.length ? x[x.length-1].toISOString().slice(0,10) : null;
     const histWithT=hist.map(e=>({...e, t:new Date(e.fecha+'T00:00:00').getTime()}));
-    let inRange = (xMin!=null && xMax!=null) ? histWithT.filter(e=>e.t>=xMin && e.t<=xMax) : [];
+    let inRange = (xMinDate!=null && xMaxDate!=null) ? histWithT.filter(e=>e.fecha>=xMinDate && e.fecha<=xMaxDate) : [];
     if(!inRange.length && xMax!=null){
       // Tomar el último BCB anterior al rango como referencia constante.
       const prev = histWithT.filter(e=>e.t<=xMax).pop();
