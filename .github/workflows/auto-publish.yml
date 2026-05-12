@@ -1,0 +1,35 @@
+name: Auto-publish dashboard
+
+# Dispara publish_dashboard.py en el VPS cada push a main, excepto cuando el
+# único cambio es bcb_referencial.json (commits del cron BCB — el publish de
+# */12 los recoge en su ciclo normal sin necesidad de force-deploy).
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'bcb_referencial.json'
+
+concurrency:
+  group: publish-dashboard
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.HETZNER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H 46.62.158.88 >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Pull + cache bust + force publish on VPS
+        run: |
+          ssh -i ~/.ssh/id_ed25519 binance@46.62.158.88 \
+            "cd /opt/binance_p2p && \
+             git pull --rebase origin main && \
+             rm -f /var/log/binance_p2p/publish_dashboard.last_size && \
+             .venv/bin/python scripts/publish_dashboard.py"
