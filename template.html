@@ -951,11 +951,11 @@ function rVwap(c,v){
     {_side:'buy', x:x,y:v.vb50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
     {_side:'buy', x:x,y:v.vb25,fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
     {_side:'buy', x:x,y:v.vb5, fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {_side:'buy', x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines'},
+    {_side:'buy', x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}},
     {_side:'sell',x:x,y:v.vs50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
     {_side:'sell',x:x,y:v.vs25,fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
     {_side:'sell',x:x,y:v.vs5, fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {_side:'sell',x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines'},
+    {_side:'sell',x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines+markers',marker:{size:2,color:c.sell}},
     // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
     {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
   ];
@@ -983,8 +983,8 @@ function rVwap(c,v){
       traces.push({x:x,y:x.map(()=>e.venta), name:'BCB Ref Venta '+e.venta, line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
     }else if(inRange.length>1){
       const hx=inRange.map(e=>new Date(e.t));
-      traces.push({x:hx,y:inRange.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefCompra},connectgaps:false});
-      traces.push({x:hx,y:inRange.map(e=>e.venta), name:'BCB Ref Venta', line:{color:c.bcbRefVenta,width:1.4,dash:'dot'},mode:'lines+markers',marker:{size:4,color:c.bcbRefVenta},connectgaps:false});
+      traces.push({x:hx,y:inRange.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot',shape:'hv'},mode:'lines+markers',marker:{size:5,color:c.bcbRefCompra},connectgaps:false});
+      traces.push({x:hx,y:inRange.map(e=>e.venta), name:'BCB Ref Venta', line:{color:c.bcbRefVenta,width:1.4,dash:'dot',shape:'hv'},mode:'lines+markers',marker:{size:5,color:c.bcbRefVenta},connectgaps:false});
     }
   }
   Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
