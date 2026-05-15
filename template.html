@@ -382,11 +382,8 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
     <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartConc"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco <span class="help-tip" tabindex="0" aria-label="Granularidad del panel"><span class="help-icon">i</span><span class="help-pop">Granularidad diaria: muestra el &uacute;ltimo snapshot del &uacute;ltimo d&iacute;a disponible dentro del rango activo. Al mover el selector de fechas, salta al cierre de d&iacute;a m&aacute;s cercano (no al &uacute;ltimo ts exacto del rango).</span></span></h2><p>Anuncios y profundidad por m&eacute;todo de pago.</p><p class="snap-stamp">Snapshot del <span id="banksSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="bankTable"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><p style="font-size:12px;color:var(--text-muted);margin-bottom:6px" id="merchantsConcText"></p><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="topMerchants"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="outliers" draggable="true"><div class="section-header"><div class="sh-left"><h2>Outliers detectados <span class="help-tip" tabindex="0" aria-label="Detalle outliers"><span class="help-icon">i</span><span class="help-pop">Detectados sobre TODOS los merchants del &uacute;ltimo snapshot, no solo el top por profundidad. La densidad alta del lado Venta es estructural &mdash; ajustar <code>OUTLIER_THRESHOLDS</code> en c&oacute;digo si quer&eacute;s foco solo en casos extremos.</span></span></h2><p>Anuncios fuera del rango central del mercado.</p><p class="snap-stamp">Snapshot del <span id="outliersSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="outliersTable"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="flow" draggable="true"><div class="section-header"><div class="sh-left"><h2>Merchants activos</h2><p>Merchants &uacute;nicos por side. Barras: nuevos (+) y desaparecidos (-) vs punto anterior.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartFlow"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="heatmap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Mapa de calor por hora del d&iacute;a</h2><p>Promedio de cada m&eacute;trica por hora (Bolivia) usando todos los snapshots disponibles. Valores normalizados por fila.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartHeatmap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="orderbook" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad del libro de &oacute;rdenes</h2><p>Cantidad acumulada (USDT) por nivel de precio. &Uacute;ltima snapshot.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOrderBook"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="activity_hm" draggable="true"><div class="section-header"><div class="sh-left"><h2>Actividad por hora y d&iacute;a de la semana</h2><p>Volumen total (USDT) agregado. Horarios pico en zona Bolivia (UTC-4).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartActivityHm"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -1254,8 +1251,9 @@ function rOffer(c){
 }
 
 function rHeatmap(c){
-  const hm=aggregateHeatmap(activeRange.fromIdx, activeRange.toIdx);
   const el=document.getElementById('chartHeatmap');
+  if(!el) return;
+  const hm=aggregateHeatmap(activeRange.fromIdx, activeRange.toIdx);
   if(!hm||!hm.metrics||!hm.metrics.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   // Normalize each row 0..1 for color; keep real values in customdata for hover
   const z=[], text=[], labels=[];
@@ -1319,9 +1317,10 @@ function rOrderBook(c){
 
 // ═══ NEW CHART: Activity Heatmap by hour-day (I) ═══
 function rActivityHm(c){
-  var matrix=DATA.activity_heatmap;
   var el=document.getElementById('chartActivityHm');
-  if(!matrix||!matrix.length){if(el)el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(!el) return;
+  var matrix=DATA.activity_heatmap;
+  if(!matrix||!matrix.length){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   var dayLabels=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
   var hourLabels=Array.from({length:24},function(_,i){return i+'h'});
   var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
@@ -1504,12 +1503,12 @@ document.querySelectorAll('.side-chk input[type="checkbox"]').forEach(inp=>{
 const DEFAULT_LAYOUT = [
   {id:'vwap',full:true},
   {id:'spread',full:false},{id:'spread_evo',full:false},
-  {id:'depth',full:false},{id:'heatmap',full:false},
-  {id:'orderbook',full:false},{id:'activity_hm',full:false},
+  {id:'depth',full:false},
+  {id:'orderbook',full:false},
   {id:'offer_range',full:true},
   {id:'ratio',full:false},{id:'conc',full:false},
   {id:'bank',full:false},{id:'flow',full:false},
-  {id:'merchants',full:true},{id:'outliers',full:true}
+  {id:'merchants',full:true}
 ];
 
 function loadLayout(){
@@ -1548,7 +1547,7 @@ function resizePanelCharts(panel){
   },50)});
 }
 // \u2550\u2550\u2550 PANEL VISIBILITY (Ocultar / FAB M\u00e1s gr\u00e1ficas) \u2550\u2550\u2550
-const HIDDEN_BY_DEFAULT = ['flow','bank','ratio','spread','depth','outliers'];
+const HIDDEN_BY_DEFAULT = ['flow','bank','ratio','spread','depth'];
 let panelVisibility = {};
 
 function loadVisibility(){
@@ -1697,11 +1696,11 @@ function closeFabPopup(returnFocus){
 // Mapas de tipo de panel.
 const PANEL_CHART_DIV = {
   vwap:'chartVwap', spread:'chartSpread', depth:'chartDepth',
-  spread_evo:'chartSpreadEvo', orderbook:'chartOrderBook', activity_hm:'chartActivityHm',
+  spread_evo:'chartSpreadEvo', orderbook:'chartOrderBook',
   ratio:'chartRatio', conc:'chartConc',
-  flow:'chartFlow', offer_range:'chartOffer', heatmap:'chartHeatmap'
+  flow:'chartFlow', offer_range:'chartOffer'
 };
-const PANEL_TABLE_ROOT = {bank:'bankTable', merchants:'topMerchants', outliers:'outliersTable'};
+const PANEL_TABLE_ROOT = {bank:'bankTable', merchants:'topMerchants'};
 
 function _stamp(){
   const d=new Date(), pad=n=>String(n).padStart(2,'0');
