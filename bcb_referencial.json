@@ -720,5 +720,12 @@
     "source": "bcb_venta_svg",
     "fetched_at_utc": "2026-05-14T15:35:04.636987Z",
     "venta": 10.32
+  },
+  {
+    "fecha": "2026-05-15",
+    "compra": 10.04,
+    "source": "bcb_venta_svg",
+    "fetched_at_utc": "2026-05-15T12:05:04.815025Z",
+    "venta": 10.25
   }
 ]
