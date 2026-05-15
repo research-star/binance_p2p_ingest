@@ -1,611 +1,254 @@
-# HANDOFF.md — Estado detallado del proyecto
+# HANDOFF.md — Contrato canon del Ingeniero Jefe
 
-Última actualización: 2026-05-08
+Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
+reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
+aparte (`docs/history.md`, `docs/backups.md`).
 
----
-
-## Fase 1: Ingesta cruda
-
-**Estado:** ✅ Completa y funcionando.
-
-- `ingest.py` captura snapshots completos (BUY + SELL) del libro P2P USDT/BOB.
-- Guarda JSON crudo gzipeado en `snapshots/YYYY-MM-DD/`.
-- **~1,560 snapshots acumulados** (9 abr → 29 abr 2026), cadencia ~10 min.
-  Días recientes: 138/día (cobertura ~96% del esperado, gap mínimo por jitter).
-  Hueco de DNS local 28-abr 05:26→06:07 UTC (~5 snapshots fallidos como
-  WARNING en `logs/ingest.log`; loop sobrevivió sin relanzar).
-- Modos: una captura, `--loop` (cada 10 min), `--dry-run`.
-- **Watchdog activo:** `watchdog.py` corre cada 5 min vía Windows Task Scheduler
-  ("P2P Watchdog", configurada con `pythonw.exe` para que no muestre consola).
-  Chequea último snapshot <15 min y verifica con `Get-CimInstance` si hay
-  proceso `ingest.py` activo. Si está caído, relanza con `DETACHED_PROCESS`.
-  Loop ininterrumpido desde el 2026-04-24 18:44 (≥3 días, 0 caídas).
-- **Corre en VPS Hetzner desde 2026-05-07 23:41 UTC.** Ver sección
-  **Migración Hetzner 2026-05-07**. El watchdog de Task Scheduler en laptop
-  quedó `Disabled` durante el período de gracia de rollback.
-
-### Corrección histórica importante
-
-El `tradeType` del API de Binance P2P es desde la perspectiva del **taker**,
-no del maker. Esto significa:
-- **BUY** = taker compra USDT → maker vende USDT al taker
-- **SELL** = taker vende USDT → maker compra USDT del taker
-
-Esto afecta la lectura de VWAP y spreads: el "precio BUY" es el precio al que
-un taker puede comprar USDT, o sea el precio al que el merchant vende.
+Última actualización: 2026-05-13.
 
 ---
 
-## Fase 2: Normalización
+## 0. Estado vivo HOY
 
-**Estado:** ✅ Completa. **Incremental por default desde 2026-05-07.**
+El proyecto productivo corre en **VPS Hetzner** (`binance@46.62.158.88`,
+`/opt/binance_p2p`, venv `.venv/`). La laptop ya no ingiere — solo hace pull
+de backups y, opcionalmente, dashboard local.
 
-`normalize.py` lee snapshots crudos y produce `p2p_normalized.db` (SQLite).
-1 fila = 1 anuncio en 1 snapshot. PK: `(snapshot_ts_utc, side, adv_no)`.
+| Componente | Dónde corre | Cadencia | Health |
+|---|---|---|---|
+| `ingest.py --loop` | VPS systemd (`binance-ingest.service`) | 24/7, snapshot cada 10 min | `HC_INGEST` (ping desde watchdog) |
+| `normalize.py` | VPS cron user `binance` | `*/5 * * * *` | `HC_NORMALIZE` |
+| `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
+| `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
+| `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
+| Laptop ingest | ❌ desactivado | — | — |
+| Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
+| GitHub Pages | rama `gh-pages` | rebuild ~30-60 s tras push de `publish_dashboard.py` | — |
+
+**Workflow `auto-publish.yml`:** dispara `publish_dashboard.py` en VPS en
+cada push a `main`, **excepto** cuando el único cambio es
+`bcb_referencial.json` (esos los recoge el cron `*/12` en su ciclo normal,
+no fuerzan publish).
+
+---
+
+## 1. Reglas para tickets
+
+### Antes de empezar
+Leer este `HANDOFF.md` + `CLAUDE.md`. Eso es el contrato completo. Todo lo
+demás es referencia (runbooks, código fuente, historia).
+
+### Naming de branches
+Formato real en este repo (CLAUDE.md dice `feature/...` — ignorá eso, está desactualizado):
+
+- `feat/...` — nuevo código
+- `fix/...` — corrección de bug
+- `docs/...` — solo documentación
+- `chore/...` — wiring, cleanup, scripts temporales
+- `refactor/...` — cambio sin alterar comportamiento
+
+### Convención de commits
+`tipo: descripción corta`. Tipos: `feat`, `fix`, `docs`, `refactor`, `test`,
+`chore`. Sub-scope opcional entre paréntesis:
+`feat(chart): per-series toggle buttons for VWAP`.
+
+### PR vs push directo
+La regla operante real (no la idealizada en `CLAUDE.md`):
+
+| Tipo de cambio | Vía |
+|---|---|
+| Código (features, refactors, fixes sustantivos) | **PR obligatorio** |
+| `template.html`, `dashboard.py`, `normalize.py`, `ingest.py`, `bcb_referencial.py` | **PR obligatorio** |
+| `bcb_referencial.json` (data autocommiteada por VPS cron) | Push directo OK |
+| Docs cortos (typos, fechas, links) | Push directo OK |
+| Scripts temporales (con commit subsecuente que limpia) | Push directo OK |
+| Workflow init vía UI GitHub | Push directo OK |
+
+Si dudás, abrí PR. Push directo a `main` **solo** si tu cambio cae en una
+de las filas verdes.
+
+### Dónde se toca cada cosa
+- **Dashboard visual** (CSS, layout, JS de gráficos, KPIs): `template.html`.
+  El 80% de los tickets visuales viven acá, **no** en `dashboard.py`.
+- **Lógica de cálculo del dashboard** (queries, agregados, métricas): `dashboard.py`.
+- **Pipeline crudo → SQLite**: `ingest.py` (Fase 1), `normalize.py` (Fase 2).
+- **Publish a Pages**: `scripts/publish_dashboard.py` + `.github/workflows/auto-publish.yml`.
+- **BCB scrape**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
+- **Constantes compartidas**: `config.py`.
+
+---
+
+## 2. Pipeline (Fase 1/2/3) — referencia técnica
+
+### Fase 1 — Ingesta cruda
+
+`ingest.py` captura snapshots completos del libro USDT/BOB (BUY + SELL) del
+endpoint `/bapi/c2c/v2/friendly/c2c/adv/search` de Binance, guarda JSON
+gzipeado en `snapshots/YYYY-MM-DD/<stem>.json.gz`. Cadencia default 10 min
+(configurable vía `--interval`). Modos: una captura, `--loop`, `--dry-run`.
+
+**`tradeType` del API (importante):** desde la perspectiva del **taker**.
+- `BUY` = taker compra USDT → maker vende al taker
+- `SELL` = taker vende USDT → maker compra del taker
+
+### Fase 2 — Normalización
+
+`normalize.py` aplana snapshots → `p2p_normalized.db` (SQLite). 1 fila =
+1 anuncio en 1 snapshot. PK `(snapshot_ts_utc, side, adv_no)`. Incremental
+por default vía watermark `last_snapshot_stem` en tabla `normalize_state`.
 Idempotente.
 
-### Modos
+Modos:
+- `python normalize.py` — incremental (default), exit 0 silencioso si no hay trabajo.
+- `--full-rebuild` — vacía `ads`, resetea watermark, reprocesa todo. Necesario tras
+  cambios de schema o **primera corrida sobre DB vieja sin tabla `normalize_state`**.
+- `--since YYYY-MM-DD` — reprocesa rango (no toca watermark, debugging).
+- `--status` — muestra watermark, pendientes, totales. No procesa.
 
-- `python normalize.py` → **incremental** (default). Procesa solo archivos con
-  stem > watermark. Sin trabajo → exit 0 silencioso. Pensado para correr cada
-  5 min vía cron sin penalidad.
-- `python normalize.py --full-rebuild` → vacía `ads`, resetea watermark,
-  reprocesa todo. Necesario tras cambios de schema o **al actualizar el código
-  por primera vez** (la DB previa no tiene tabla `normalize_state` poblada).
-- `python normalize.py --since YYYY-MM-DD` → reprocesa rango específico para
-  debugging. **No toca el watermark.**
-- `python normalize.py --status` → muestra watermark actual, snapshots
-  pendientes, totales en DB. No procesa.
+Features:
+- Doble entrada: lee de `snapshots/` + `$P2P_BACKUP_DIR` opcional. Deduplica por nombre.
+- `quality_tier` A/B/C materializado como columna. Threshold drift requiere `--full-rebuild`.
+- `banks` como JSON array + `n_banks` (banco es tag, no filtro).
+- 0 restricciones estructuradas al taker, 0 KYC keywords en remarks/auto_reply del libro boliviano.
+- Lockfile cooperativo con detección de PID stale.
 
-### Watermark
+Optimizaciones SQLite: WAL, `synchronous=NORMAL`, `cache_size=-65536`,
+`temp_store=MEMORY`, índice covering `idx_ads_flow (snapshot_ts_utc, side,
+advertiser_id)`, una transacción por batch.
 
-- Tabla `normalize_state(key, value, updated_at)`, key=`last_snapshot_stem`.
-- Valor: stem del archivo (`20260507T162114Z_snapshot`). Lex-comparable y
-  cronológico por construcción (formato ISO).
-- Toda corrida lee/escribe el watermark en la **misma transacción** que los
-  inserts → crash a mitad rollbackea el batch entero.
+### Fase 3 — Análisis / Dashboard
 
-### Features
+`dashboard.py` lee `p2p_normalized.db` + `bcb_referencial.json` +
+`template.html`, produce `index.html` autocontenido (~770 KB) con
+Plotly.js. Publicado en `https://research-star.github.io/binance_p2p_ingest/`.
+Opcional `--csv` exporta métricas por snapshot.
 
-- **Doble entrada:** lee de `snapshots/` local + directorio de backup opcional
-  (configurable vía env `P2P_BACKUP_DIR`, p. ej. OneDrive/Dropbox/disco externo).
-  Flag `--no-input2` para ignorar el backup. Deduplica por nombre de archivo.
-- **Aplanado base:** extrae price, surplus, cantidad, min/max por transacción
-  (BOB y USDT), comisiones, banks, metadata del merchant.
-- **quality_tier (A/B/C):** vive en `normalize.py` y se materializa como
-  columna. Threshold drift requiere `--full-rebuild` para repropagar (issue
-  follow-up: mover a VIEW para evaluación lazy).
-  - **A:** merchant + ≥100 órdenes/mes + ≥95% completado + ≥500 USDT surplus (~50%)
-  - **B:** merchant que no llega a A, o user con ≥20 órdenes/mes (~27%)
-  - **C:** resto (~23%)
-- **banks como tags:** JSON array + `n_banks`.
-- **Validación estructural:** **0 restricciones estructuradas al taker** en
-  todo el libro boliviano, **0 remarks/auto_reply con keywords KYC**.
-- **Lockfile cooperativo** (`p2p_normalized.db.lock`) con detección de PID
-  stale. Segunda instancia simultánea sale limpia (exit 0) sin reprocesar.
+11 paneles: VWAP por profundidad, Spread efectivo, Profundidad por lado,
+Curva de deciles ("tijera"), Ratio SELL/BUY, Concentración top-5 merchants,
+Cobertura por banco, Merchants principales, Volatilidad intradiaria,
+Merchants activos, Mapa de calor hora × métrica.
 
-### Optimizaciones SQLite aplicadas
-
-- WAL ya estaba activo desde antes.
-- `synchronous=NORMAL`, `cache_size=-65536` (64 MB), `temp_store=MEMORY`.
-- Nuevo índice covering `idx_ads_flow (snapshot_ts_utc, side, advertiser_id)`
-  → la query del panel "merchant flow" del dashboard pasa de `SCAN ads` a
-  `SCAN COVERING INDEX`.
-- Una transacción por batch (no commit-per-snapshot) → full-rebuild ~1.7×
-  más rápido (~135s → ~77s sobre 2676 snapshots).
-
-### Migración tras pull
-
-La primera corrida del nuevo código sobre una DB vieja **abortará con exit 2**
-(watermark vacío). Bootstrap explícito por diseño (evita ambigüedades):
-
-```bash
-python normalize.py --full-rebuild   # una vez, ~80s
-python normalize.py                   # de ahí en adelante, segundos
-```
-
-### Pendientes no-bloqueantes
-
-- `minSingleTransAmount` como flag en VWAP → decisión: ignorar en métrica principal.
-- VWAP alternativo usando `maxSingleTransAmount` → postpuesto a final del proyecto.
+Features clave:
+- Toggle temporal: Cada snapshot → Por hora → Por día.
+- 5 temas preset + custom guardables, paneles drag & drop, layout
+  persistente en `localStorage`.
+- Huecos >20 min como franjas grises (`shapes: rect, opacity:0.08`).
+- Eje X con `nticks:8`, `tickformat:'%d %b'`, `tickangle:-30`.
+- Hover dinámico por vista (`%d %b · %H:%M` → `%Hh` → `%d %b`).
+- BCB referencial: histórico compra (tabla v2 HTML) + venta (SVG hist),
+  merge en `bcb_referencial.json` (119 entradas a la fecha). KPI + línea
+  en VWAP con `connectgaps:false` para fines de semana como cortes.
 
 ---
 
-## Fase 3: Análisis / Dashboard
+## 3. Topología productiva VPS
 
-**Estado:** 🟢 Sustancialmente construida, dashboard funcional (~770 KB).
-Publicado en GitHub Pages: `https://research-star.github.io/binance_p2p_ingest/`.
+**Host:** Hetzner, IP `46.62.158.88`, hostname `p2p-ingest-prod`, Ubuntu
+24.04 LTS, 38 GB disco / 3.7 GB RAM / 2 GB swap (`/swapfile`,
+`vm.swappiness=10`).
 
-`dashboard.py` genera `index.html` autocontenido con Plotly.js (más un alias
-`p2p_dashboard.html` local por compatibilidad, no trackeado).
-Todo se recalcula desde `p2p_normalized.db`. Opcional `--csv` para exportar
-métricas por snapshot.
+**User dedicado:** `binance` (uid 1000). Sudo restringido por
+`/etc/sudoers.d/binance` a 5 operaciones sobre `binance-ingest.service`:
+`restart`, `start`, `stop`, `enable`, `disable`. Sin sudo full.
 
-### Métricas / Paneles implementados (11)
+**Paths:**
+- Código: `/opt/binance_p2p/` (clone de `main`, deploy key `id_ed25519_github` privada del VPS con write access)
+- venv: `/opt/binance_p2p/.venv/`
+- DB: `/opt/binance_p2p/p2p_normalized.db`
+- Snapshots crudos: `/opt/binance_p2p/snapshots/YYYY-MM-DD/`
+- Logs: `/var/log/binance_p2p/{ingest.log, ingest.err, normalize.log, watchdog.log, bcb_ref.log, publish_dashboard.log}`
+- Env vars (incluye `HC_*`): `/opt/binance_p2p/.env`
 
-1. **VWAP por profundidad** (5/10/25/50%) con bandas — serie temporal BUY+SELL
-2. **Spread efectivo** a múltiples profundidades (5/10/25/50%)
-3. **Profundidad por lado** (BUY vs SELL) — área apilada
-4. **Curva de deciles** (la "tijera") — VWAP acumulado 10%→100%
-5. **Ratio SELL/BUY** — asimetría de oferta/demanda
-6. **Concentración top-5 merchants** — % controlado por los 5 mayores
-7. **Cobertura por banco** — tabla con anuncios, profundidad, %
-8. **Merchants principales** — tabla top 10 BUY y SELL side-by-side
-9. **Volatilidad intradiaria** — rango (max−min) VWAP por día (solo vista "Por día")
-10. **Merchants activos** — serie temporal de merchants únicos + flujo nuevos/desaparecidos
-11. **Mapa de calor hora × métrica** — 24h (Bolivia UTC−4) × 6 métricas, normalizado
+**systemd unit:** `binance-ingest.service` (`Type=simple`, `Restart=on-failure`,
+`RestartSec=30`). Append a `ingest.log`/`ingest.err`.
 
-### Features del dashboard
-
-- **Toggle temporal (en orden):** Cada snapshot → Por hora → Por día. Cada
-  vista usa el último snapshot de cada período.
-- **Sistema de temas:** 5 presets en la barra (Claro, Beige, Oscuro + Otros
-  con Negro/ink) + temas custom guardables (import/export JSON, máx 5).
-- **Paneles movibles y redimensionables:** drag & drop entre posiciones,
-  toggle ancho completo/medio, layout persiste en `localStorage`.
-- **Eje X profesional:** `nticks: 8`, `tickformat: '%d %b'`, `tickangle: -30`
-  en todos los gráficos temporales (Plotly elige posiciones automáticamente).
-- **Hover dinámico por vista:** `hoverformat` cambia según vista activa —
-  `%d %b · %H:%M` en "Cada snapshot", `%d %b · %Hh` en "Por hora",
-  `%d %b` en "Por día" (commit `462ac21`, 2026-04-28).
-- **Huecos visibles:** Python detecta gaps >20 min entre snapshots; JS los
-  renderiza como franjas grises semitransparentes en todos los gráficos
-  temporales (`shapes: rect, opacity:0.08`). Aclarado en descripción del VWAP.
-- **Interacción Plotly:** drag-to-pan, scroll zoom, rangeslider en los 5 gráficos
-  temporales, hover mode `x unified`. Leyendas arriba (`y:1.08`).
-- **BCB referencial (`bcb_referencial.py`):**
-  - Histórico de **compra**: scraper de la tabla HTML en
-    `/valor_referencial_compra_svg_v2.php` (fila "BANCOS PROMEDIO PONDERADO"),
-    desde 1-dic-2025.
-  - Histórico de **venta**: scraper de los pares `cell-text`/`cell-value` (con
-    variantes `--highlight`) en `/valor_referencial_venta_svg.php`, ~106 días.
-  - Merge por fecha en `bcb_referencial.json` (`{fecha, compra, venta, source}`).
-  - KPI "TC Referencial BCB" + serie temporal en el VWAP (con `connectgaps:false`
-    para que fines de semana se vean como cortes naturales).
-- **Líneas de referencia en el VWAP:** BCB Ref Compra y Venta visibles por
-  default, BCB oficial 6.96 oculto por defecto (aplastaba la escala).
-- **Filtro temporal del histórico BCB:** `load_bcb_ref(first_date)` filtra
-  para que solo se grafiquen fechas dentro del rango de snapshots.
-
----
-
-## Migración Hetzner 2026-05-07
-
-**Estado:** ✅ Producción en VPS Hetzner. La laptop ya no corre el ingest.
-
-### Cutover
-
-- **Stop laptop ingest:** 2026-05-07 22:00 UTC (PID 20192 muerto, P2P Watchdog
-  Task Scheduler `Disabled`).
-- **VPS go-live:** 2026-05-07 23:41:37 UTC (`systemctl enable --now
-  binance-ingest.service`).
-- **Gap de captura:** ~1 h 34 min entre último snapshot laptop
-  (`20260507T220741Z`) y primer snapshot VPS (`20260507T234137Z`). Costo
-  único conocido del cutover (kill → migración + bootstrap → go-live).
-
-### Conteos / verificación
-
-| Métrica | Pre-migración (laptop) | Post-bootstrap (VPS) |
-|---|---|---|
-| `ads` rows | 935,699 | 1,030,075 |
-| max `snapshot_ts_utc` | 2026-05-06T03:19:07Z | 2026-05-07T22:07:41Z |
-| snapshots files | 2,709 | 2,709 (creciendo +138/día) |
-
-**Bit-identity de la migración (Step 3.5):** `checksum_db.py` global hash
-local vs VPS (post-scp, pre-`--full-rebuild`):
-
+**Cron del user `binance`:**
 ```
-c5ad8a68fc77394854fb169197c68541a5c5b95b1a025bff23865ff67ae201b5  IDENTICAL
+*/5  * * * *       cd /opt/binance_p2p && .venv/bin/python normalize.py
+*/5  * * * *       cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
+*/12 * * * *       cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py
+5,35 12-15 * * 1-5 cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh \
+                       >> /var/log/binance_p2p/bcb_ref.log 2>&1
 ```
 
-El `--full-rebuild` posterior agregó +94k filas (snapshots ya copiados pero
-no procesados por la versión vieja del laptop) e introdujo el covering index
-`idx_ads_flow`, lo que justifica el crecimiento físico de la DB de ~422 MB
-a ~548 MB (esperado, no es regresión).
+**Auto-publish workflow** (`.github/workflows/auto-publish.yml`):
+- Dispara en cada push a `main`, con `paths-ignore: bcb_referencial.json`.
+- SSH al VPS → `git pull --rebase origin main` → borra
+  `publish_dashboard.last_size` (cache bust) → `.venv/bin/python scripts/publish_dashboard.py`.
+- Secret: `HETZNER_SSH_KEY` (repo settings).
+- Concurrency: grupo `publish-dashboard`, `cancel-in-progress: false`.
 
-> Nota: la diff `records_inserted=1,035,926` (bruto) vs `ads count=1,030,075`
-> (post-dedup) es comportamiento esperado de `INSERT OR REPLACE` colapsando
-> duplicados intra-snapshot que el API ocasionalmente devuelve en bordes de
-> paginación BUY/SELL.
+**Healthchecks (healthchecks.io):**
+- `HC_INGEST` — pingeado desde `scripts/watchdog.py` cuando hay snapshot reciente. Confirmado en código del repo.
+- `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
+- `HC_BCB` — **pendiente** (ver § 6).
 
-### Topología productiva
-
-- **VPS:** Hetzner — Ubuntu 24.04 LTS, IP `46.62.158.88`, hostname
-  `p2p-ingest-prod`. 38 GB disco / 3.7 GB RAM / 2 GB swap (`/swapfile`,
-  `vm.swappiness=10`).
-- **User dedicado:** `binance` (uid 1000). Sudo restringido por
-  `/etc/sudoers.d/binance` a 5 operaciones sobre `binance-ingest.service`:
-  `restart`, `start`, `stop`, `enable`, `disable`. Sin sudo full.
-- **Paths:**
-  - Código: `/opt/binance_p2p/` (clone de `main` desde GitHub vía deploy key
-    con write access, `id_ed25519_github` privada local del VPS).
-  - Logs: `/var/log/binance_p2p/{ingest.log, ingest.err, normalize.log,
-    watchdog.log}`.
-  - DB: `/opt/binance_p2p/p2p_normalized.db`.
-  - Snapshots crudos: `/opt/binance_p2p/snapshots/YYYY-MM-DD/`.
-- **systemd unit:** `binance-ingest.service` (`Type=simple`,
-  `Restart=on-failure`, `RestartSec=30`, append a `ingest.log`/`ingest.err`).
-- **Cron del user `binance`** (instalado desde `/tmp/binance-crontab`):
-  ```
-  */5 * * * * cd /opt/binance_p2p && .venv/bin/python normalize.py
-  */5 * * * * cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
-  # */12 * * * * scripts/publish_dashboard.py  ← DESACTIVADO hasta A1
-  ```
-  La línea de dashboard publish queda comentada porque
-  `scripts/publish_dashboard.py` aún no existe (workstream A1 separado).
-- **Hardening SSH:** `PasswordAuthentication no`, `PermitRootLogin no`,
-  `KbdInteractiveAuthentication no` (drop-in
-  `/etc/ssh/sshd_config.d/99-hardening.conf`). `ufw` activo permitiendo solo
-  22/tcp (v4+v6). `fail2ban` con jail `sshd` activa.
-
-### SSH desde laptop
-
+**SSH desde laptop:**
 ```bash
 ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88
 ```
+`root` está bloqueado tras hardening (`PasswordAuthentication no`,
+`PermitRootLogin no`, `KbdInteractiveAuthentication no` en
+`/etc/ssh/sshd_config.d/99-hardening.conf`). Usar Hetzner Rescue Console
+si necesitás root real.
 
-`root` está bloqueado a propósito tras el hardening. No intentes entrar como
-root vía SSH — usá Hetzner Rescue Console si necesitás root real.
-
-### Backup laptop-pull (operación diaria)
-
-`backup.env` configurado en la raíz del repo con valores reales del VPS
-(gitignored). Subcomandos:
-
-```bash
-python scripts/backup.py db          # snapshot consistente VPS → ~/backups/db/p2p_normalized_<TS>.db
-python scripts/backup.py snapshots   # incremental: pulls solo files nuevos
-python scripts/backup.py status      # versiones locales + GFS
-python scripts/backup.py prune       # aplica GFS sobre db/
-python scripts/backup.py restore --target X --version YYYY-MM-DDTHHMMSSZ
-```
-
-**Smoke test post-cutover (2026-05-08):** dos `db` consecutivos confirmaron
-IDENTICAL (n_rows=1,035,079, global=`e3db585bd213ff5f...`). `restore`
-produce copia byte-idéntica (md5=`f8c6df21...`).
-
-### Limitación conocida: bulk-seed inicial de snapshots
-
-`backup.py snapshots` usa `sftp -b` batch con `get` por archivo. Eficiente para
-runs incrementales (decenas/centenas de archivos nuevos), **inviable para
-bulk-pull desde cero** (~36 min para 2,710 archivos chicos en pruebas reales).
-
-**Mitigación manual** para first-time setup en una máquina nueva:
-
-```bash
-ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 \
-    'cd /opt/binance_p2p && tar -cf - snapshots' \
-    | tar -xf - -C ~/backups/
-```
-
-(~50 s para 150 MB / 2,710 archivos.) Después de eso, `backup.py snapshots`
-opera incremental sin problemas.
-
-**Mejora futura (no-bloqueante):** flag `--bulk-seed` en `backup.py snapshots`
-que use tar internamente en el primer pull.
-
-### Procedimiento de rollback (válido por 7 días, hasta 2026-05-14)
-
-Si algo crítico falla en el VPS y querés volver al laptop:
-
-```bash
-# 1. Parar el VPS
-ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 \
-    'sudo systemctl stop binance-ingest.service && \
-     sudo systemctl disable binance-ingest.service && \
-     crontab -u binance -r'
-
-# 2. En la laptop: restaurar la DB pre-migración
-cd /c/Dev/binance_p2p_ingest
-mv p2p_normalized.db p2p_normalized.db.failed-vps
-mv p2p_normalized.db.pre-migration-20260507T180022Z p2p_normalized.db
-
-# 3. Re-habilitar la P2P Watchdog del Task Scheduler
-schtasks /Change /TN "P2P Watchdog" /ENABLE
-
-# 4. Lanzar el loop (el watchdog lo recogerá automáticamente si muere)
-pythonw.exe ingest.py --loop
-```
-
-**MANTENER `p2p_normalized.db.pre-migration-20260507T180022Z` intacto en la
-laptop hasta el 2026-05-14**. Es el único rollback duro disponible. Después
-de esa fecha, el rollback requiere bajar la DB del VPS via `backup.py db`
-(que sí es válido pero menos directo).
+**Firewall + fail2ban:** `ufw` permite solo `22/tcp` (v4+v6). `fail2ban`
+jail `sshd` activa.
 
 ---
 
-## Archivos del proyecto
+## 4. Backups
 
-| Archivo | Rol |
-|---|---|
-| `ingest.py` | Captura snapshots del libro P2P |
-| `normalize.py` | Aplanar snapshots a SQLite |
-| `dashboard.py` | Generar HTML autocontenido |
-| `bcb_referencial.py` | Scraper compra (tabla v2) + venta (SVG hist) del BCB |
-| `config.py` | Constantes compartidas (BCB_RATE, rutas default, intervalos). Importado por todos los scripts productivos. |
-| `template.html` | Plantilla HTML del dashboard (CSS/JS). `dashboard.py` la lee y reemplaza el `__DATA_PLACEHOLDER__`. |
-| `scripts/watchdog.py` | Relanzar loop de ingesta si se cae |
-| `scripts/update.bat` | Pipeline: bcb → normalize → dashboard (con `PYTHONIOENCODING=utf-8`) |
-| `scripts/backup.py` | Backup a Hetzner Storage Box (SFTP vía rclone). Subcomandos: db, snapshots, prune, verify, restore, status |
-| `scripts/test_backup_retention.py` | Tests unitarios de la lógica GFS (sin frameworks externos) |
-| `backup.env` | Credenciales y paths del Storage Box. **Gitignored.** Plantilla en `backup.env.example` |
-| `.claude/skills/actualizar-dashboard/SKILL.md` | Skill local que ejecuta el pipeline end-to-end con verificación por paso. Soporta `--publish` (push a Pages) y sync opcional si `P2P_BACKUP_DIR` definida. Reemplaza correr `scripts/update.bat` a mano. Creada 2026-04-29. |
-| `scripts/sync_snapshots.bat` | `robocopy /MIR` snapshots → `$P2P_BACKUP_DIR` |
-| `scripts/watchdog.bat` | Wrapper para Task Scheduler (no usado actualmente: la tarea corre `pythonw.exe scripts\watchdog.py` directo) |
-| `p2p_normalized.db` | SQLite generado (reconstruible, no trackeado) |
-| `bcb_referencial.json` | Histórico acumulado del BCB (sí trackeado, ~106 entradas) |
-| `index.html` | Dashboard final (regenerado por update.bat, servido por GitHub Pages) |
+La laptop hace **pull desde el VPS** vía ssh/scp/sftp built-in (sin rsync,
+sin software adicional). Snapshots son inmutables → pull incremental por
+filename diff. DB: política GFS (7 daily + 4 weekly + 3 monthly).
+Subcomandos: `python scripts/backup.py {db,snapshots,prune,verify,restore,status}`.
+Validado end-to-end el 2026-05-08 contra VPS productivo.
+
+**Runbook completo (setup, retención, restore, scheduling, validación):
+`docs/backups.md`.**
 
 ---
 
-## Operación diaria
+## 5. WIP / áreas calientes
 
-1. **`ingest.py --loop`** corre 24/7 en background.
-2. **Watchdog** (Task Scheduler "P2P Watchdog", cada 5 min) lo relanza si cae.
-3. Para refrescar el dashboard publicado, opciones:
-   - **Recomendado:** decirle a Claude "actualizá el dashboard" (sin push) o
-     "actualizá el dashboard --publish" (con push). La skill
-     `actualizar-dashboard` corre el pipeline con verificación por paso.
-   - **Manual:** `scripts\update.bat` + `git add . && git commit -m "..." && git push`.
-   - El push gatilla rebuild de GitHub Pages (~30-60s).
-   - Pages a veces deja deployments atascados — se desbloquean marcándolos
-     `inactive` vía API y empujando un commit nuevo.
+Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
 
-### Gotchas operativos
-
-- **Encoding `cp1252` en Windows:** ✅ resuelto el 2026-04-29. Los `print()`
-  de `normalize.py` y `bcb_referencial.py` ya no usan caracteres fuera de
-  ASCII (`✓` → `[OK]`, `→` → `->`, `⚠` → `[WARN]`, `── ──` → `--- ---`,
-  `—` → `--`, `·` → `|`). Los scripts corren limpio en cualquier shell de
-  Windows sin `PYTHONIOENCODING=utf-8`. `update.bat` y la skill mantienen
-  la env var por defensa pero ya no es necesaria.
-
-### Refactor de organización (2026-04-29)
-
-- `config.py` centraliza constantes (BCB_RATE, rutas default, intervalo de
-  ingesta, umbral del watchdog). Todos los scripts productivos importan de ahí.
-- `template.html` extraído de `dashboard.py` (antes inline como `HTML_TEMPLATE`).
-  `dashboard.py` lo lee con `TEMPLATE_HTML.read_text()` y hace el replace del
-  placeholder. Editar el dashboard visual = editar `template.html`.
-- `scripts/` agrupa los wrappers operativos (watchdog.py + .bat, update.bat,
-  sync_snapshots.bat). Todos los `.bat` hacen `cd /d %~dp0..` para volver a la
-  raíz del proyecto antes de ejecutar.
-- Task Scheduler "P2P Watchdog" actualizado a `pythonw.exe scripts\watchdog.py`
-  (WD sigue siendo la raíz del proyecto).
-- **BCB agendado diario:** ✅ migrado de Windows a VPS el 2026-05-11 (PR #20).
-  Cron del user `binance@p2p-ingest-prod`:
-  `5,35 12-15 * * 1-5 cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh >> /var/log/binance_p2p/bcb_ref.log 2>&1`
-  — 8 corridas/día, 8:05–11:35 BO, lun-vie. Wrapper `scripts/bcb_scrape_and_commit.sh`
-  invoca `bcb_referencial.py` (backfill total, idempotente), commitea + pushea
-  a `CURRENT_BRANCH` solo si `bcb_referencial.json` cambió. Reemplaza la
-  Task Scheduler local "BCB Referencial Diario" (deshabilitada en el mismo PR).
-  Healthcheck pendiente, ver **TODO follow-up** más abajo.
+- **Dashboard visual** — trabajo activo en formato post-PR-H: per-series
+  toggles del VWAP (Compra default), BCB Ref stepped (hv), padding del eje
+  temporal, KPIs uniformes, iconos/favicon/OG image. PRs recientes: #13,
+  #14, #17, #19, #21, #22.
+- **BCB scraper** — recién migrado a VPS cron (PR #20, 2026-05-11).
+  Healthcheck `HC_BCB` pendiente (ver § 6).
+- **Auto-publish workflow** — agregado 2026-05-12 (`a0b6c2f`). Vigilar
+  primeras semanas por edge cases (workflow se atasca, cache bust no toma
+  efecto, race con cron `*/12`, etc.).
 
 ---
 
-## Backups laptop-pull: cómo operar y restaurar
+## 6. Pendientes abiertos
 
-**Estado:** ✅ implementado y validado end-to-end el **2026-05-08** contra el
-VPS productivo (ver sección **Migración Hetzner 2026-05-07**).
-
-**Arquitectura:** la laptop hace **pull desde el VPS** vía ssh/scp/sftp (todo
-built-in en OpenSSH client de Win11; rsync NO se usa para evitar instalar
-software adicional). Snapshots son inmutables → pull incremental por filename
-diff via `sftp -b` batch mode. Costo recurrente: $0.
-
-### Setup inicial (una vez por máquina)
-
-1. **OpenSSH client en Windows** (ya viene en Win11; en Win10 verificar con
-   `Get-WindowsCapability -Online -Name OpenSSH.Client*`).
-2. **Generar SSH key** específica del VPS (si no existe ya):
-   ```
-   ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_hetzner -C "hetzner $(date +%Y-%m)"
-   ```
-   Subir la pública al VPS (`ssh-copy-id` o append manual a
-   `/root/.ssh/authorized_keys`).
-3. **`apt install sqlite3` en el VPS** (~200 KB, requerido para el
-   `.backup` consistente).
-4. **Configurar `backup.env`** (gitignored):
-   ```
-   cp backup.env.example backup.env
-   # editar con VPS_HOST, VPS_USER, VPS_PORT, VPS_DB_PATH, VPS_SNAPSHOTS_PATH,
-   # SSH_KEY_PATH, LOCAL_BACKUP_ROOT
-   ```
-5. **Smoke test de conectividad**:
-   ```
-   ssh -i ~/.ssh/id_ed25519_hetzner root@<VPS_HOST> 'echo ok && which sqlite3'
-   ```
-
-### Comandos diarios
-
-```
-python scripts/backup.py db          # ssh+sqlite3 .backup → scp pull → cleanup
-python scripts/backup.py snapshots   # ssh+find diff → sftp -b batch get
-python scripts/backup.py prune       # GFS sobre $LOCAL_BACKUP_ROOT/db/
-python scripts/backup.py status      # resumen rápido
-python scripts/backup.py verify      # cuenta + tamaño locales
-```
-
-### Pipeline interno
-
-- **db**: SSH al VPS → `sqlite3 $VPS_DB_PATH ".backup /tmp/p2p_backup_<stamp>.db"`
-  → `scp` pull a `~/backups/db/p2p_normalized_<stamp>.db` → SSH cleanup del
-  tmp remoto (en `finally`, garantizado).
-- **snapshots**: SSH al VPS → `find $VPS_SNAPSHOTS_PATH -type f -name '*.json*'`
-  → diff con files locales por path relativo → `sftp -b` batch mode con `get`
-  para los nuevos. Una sola conexión SFTP, no scp-per-file.
-
-### Política de retención GFS (solo db/, snapshots/ se conservan forever)
-
-- **7 daily**: el más reciente de cada uno de los últimos 7 días distintos con backup.
-- **4 weekly**: el más antiguo de cada una de las 4 ISO weeks inmediatamente
-  anteriores al tramo daily (semanas que no se cruzan con daily).
-- **3 monthly**: el más antiguo de cada uno de los 3 meses anteriores al tramo weekly.
-- **Total**: hasta 14 versiones, ~125 días de cobertura.
-
-Gaps en el calendario (días sin backup por VPS caído) se saltan: el tramo
-daily son los **7 días distintos con ≥1 backup**, no los 7 días calendario.
-
-Lógica testeada en `scripts/test_backup_retention.py` (13 casos, todos
-pasando: empty/single, multi-per-day, gaps, steady-state, idempotencia,
-no-overlap entre tranches).
-
-### Restaurar
-
-```
-python scripts/backup.py restore --target /tmp/restore-test
-# trae la última versión por default. Para una específica:
-python scripts/backup.py restore --target /tmp/restore-test \
-                                  --version 2026-05-07T120000Z
-```
-
-Validación: comparar checksums con la DB local original:
-
-```
-python scripts/checksum_db.py /tmp/restore-test/p2p_normalized_*.db p2p_normalized.db
-# debe imprimir "IDENTICAL"
-```
-
-### Estructura local
-
-```
-$LOCAL_BACKUP_ROOT/    (default: ~/backups)
-├── db/
-│   ├── p2p_normalized_2026-05-07T120000Z.db
-│   ├── p2p_normalized_2026-05-08T120000Z.db
-│   └── ...
-└── snapshots/         ← mirror del VPS (inmutable, sin retención)
-    └── YYYY-MM-DD/...
-```
-
-### Scheduling vía Windows Task Scheduler
-
-`scripts/install_task_scheduler.ps1` registra una tarea `Binance P2P Backup`
-que dispara `db && snapshots && prune` diario a las 04:00 hora local. **No se
-ejecuta automáticamente** — corré explícitamente:
-
-```
-# Mostrar el plan (no registra nada)
-powershell -ExecutionPolicy Bypass -File scripts\install_task_scheduler.ps1 -Action Show
-
-# Registrar la tarea
-powershell -ExecutionPolicy Bypass -File scripts\install_task_scheduler.ps1 -Action Register
-
-# Ver estado
-powershell -ExecutionPolicy Bypass -File scripts\install_task_scheduler.ps1 -Action Status
-
-# Desregistrar
-powershell -ExecutionPolicy Bypass -File scripts\install_task_scheduler.ps1 -Action Unregister
-```
-
-La tarea invoca Git Bash con `python scripts/backup.py db && snapshots && prune`
-en el directorio del repo. Trigger configurable con `-Time HH:mm`.
-
-### Logging
-
-Una línea estructurada por operación a stderr, mismo estilo que `normalize.py`:
-
-```
-[backup] mode=db target=p2p_normalized_2026-05-07T120000Z.db size_mb=537.1 sqlite_backup_s=4.20 scp_pull_s=42.50
-[backup] mode=snapshots remote=2700 local_before=2685 pulled=15/15 duration_s=3.10
-[backup] mode=prune total=15 keep=14 deleted=1 duration_s=0.05
-```
-
-### Lockfile
-
-`backup.py` usa lockfile cooperativo per-subcomando (`.backup.<cmd>.lock`,
-PID-aware). Diseñado para correr vía Task Scheduler sin overlap con
-instancias previas.
-
-### Validación
-
-- **Unit tests** (sin red): `python scripts/test_backup_retention.py` corre
-  los 13 casos de la lógica GFS. Idempotencia, gaps, steady-state,
-  oldest-of-week / oldest-of-month, no-overlap entre tranches.
-- **Smoke test contra VPS** (manual, requiere VPS configurado):
-  1. `ssh -i ~/.ssh/id_ed25519_hetzner root@<VPS_HOST> 'echo ok'`
-     (valida key + conectividad)
-  2. Subir un `p2p_normalized.db` de prueba al VPS:
-     `scp local.db root@VPS:/opt/binance_p2p/p2p_normalized.db`
-  3. `python scripts/backup.py db` → debe aparecer en `~/backups/db/`.
-  4. `python scripts/backup.py restore --target /tmp/r` y comparar con
-     `scripts/checksum_db.py` → `IDENTICAL`.
-- **End-to-end con datos reales**: pendiente hasta deploy del proyecto
-  productivo al VPS (5.2).
-
----
-
-## Auditoría visual (2026-04-29) — ✅ Corregida
-
-Hallazgos detectados el 27-abr y resueltos en bloque el 29-abr:
-
-**Alta** (todo en español + KPIs claros):
-- ✅ BUY/SELL → Compra/Venta en Volatilidad, Merchants activos (Flow), Ratio,
-  Spread, sub-headers de Merchants principales y heatmap labels.
-- ✅ KPI Asimetría: subtítulo "Venta / Compra (profundidad)" + decimales `.toFixed(2)`.
-- ✅ KPI TC Referencial BCB: label aclarado a "TC Referencial BCB (venta)";
-  subtítulo agrega unidad "BOB/USDT".
-- ✅ KPI TC Oficial BCB: subtítulo "Prima P2P vs oficial: +X%" + `bcb_rate.toFixed(2)`.
-
-**Media** (unidades + headers):
-- ✅ Tabla Merchants: `USDT`/`%`/`VWAP` → `Profundidad (USDT)` / `% del lado` /
-  `VWAP (BOB)`.
-- ✅ Ejes Y con título: VWAP `BOB/USDT`, Spread `BOB`, Profundidad `USDT`,
-  Ratio `×` (con `ticksuffix:'×'`).
-- ✅ Tooltips: `hovermode:'x unified'` ya muestra el yaxis title arriba — al
-  agregar títulos quedaron contextualizados sin tocar `hovertemplate`.
-
-**Baja** (pulido):
-- ✅ Decimales uniformes: precios `.4f` (VWAP, Spread, Decile, Volatilidad);
-  porcentajes `.2f` (Concentración); ratios `.2f` (KPI Asimetría, gráfico Ratio);
-  profundidad `,.0f` (no tiene sentido decimal en USDT enteros grandes).
-- ✅ Descripción de Curva de deciles: agregada frase "La «tijera» revela
-  anuncios trampa" en el subtítulo del panel.
-- Capitalización: "Por día" / "por día" no aparece minúsculo en código actual.
-
----
-
-## TODO follow-up — cache key del publish
-
-`scripts/publish_dashboard.py` saltea publish cuando `(n_snap, n_rows)` no
-cambió desde el último run. Esto previene publish redundante cuando solo
-cambia un timestamp, pero NO se invalida cuando cambia código
-(`template.html`, `static/`).
-
-Consecuencia: deploys de cambios visuales sin cambio de dataset esperan hasta
-el próximo snapshot + próximo tick del cron (~22 min worst case) para
-reflejarse en gh-pages.
-
-Fix propuesto: agregar al cache key un hash de `template.html` +
-`listdir(static/)`, o usar el commit hash de main. Tarea no urgente,
-anotada tras PR #19.
-
-- **BCB scraper HC ping**: crear UUID en healthchecks.io, agregarlo a
-  `/opt/binance_p2p/.env` como `HC_BCB`, y appendear `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
-  al cron line de BCB. Sin esto, una falla del scraper es silenciosa hasta
-  que se note un hueco en la gráfica del dashboard. Tarea no urgente, anotada
-  en PR #20.
-
----
-
-## Pendientes
-
-- [x] **Hosting de la ingesta** — VPS Hetzner desde 2026-05-07 (ver sección
-      Migración Hetzner). Loop corre 24/7 como systemd service, normalize y
-      watchdog vía cron del user `binance`.
-- [x] **GitHub Pages** — publicado en `research-star.github.io/binance_p2p_ingest/`.
-- [x] **Repo Git + `.gitignore`** — inicializado. Historial saneado con
-      `git filter-repo` (sin datos personales).
-- [x] **Watchdog operativo** — Task Scheduler corriendo cada 5 min.
-- [x] **Histórico BCB compra+venta scrapeado** — 106 días reales del BCB.
-- [x] **Auditoría visual** — corregida en bloque el 2026-04-29 (Alta+Media+Baja).
-- [ ] **VWAP alternativo con `maxSingleTransAmount`** — postpuesto a final.
+- [ ] **`HC_BCB` healthcheck** — crear UUID en healthchecks.io, agregar a
+      `/opt/binance_p2p/.env` como `HC_BCB`, y appendear
+      `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
+      al cron line del BCB. Sin esto, falla del scraper es silenciosa.
+      (Follow-up de PR #20.)
+- [ ] **Cache key de `publish_dashboard.py`** — el cache `(n_snap, n_rows)`
+      no invalida con cambios de código (`template.html`, `static/`).
+      Consecuencia: deploys visuales sin cambio de dataset esperan hasta
+      próximo snapshot + próximo tick del cron (~22 min worst case). Fix
+      propuesto: agregar hash de `template.html` + `listdir(static/)`, o
+      usar commit hash de main. **Ticket Notion: "Cache key de
+      publish_dashboard.py no invalida con cambios de código".**
+- [ ] **`quality_tier` como VIEW** — actualmente materializado como columna.
+      Threshold drift requiere `--full-rebuild` para repropagar. Mover a
+      VIEW para evaluación lazy.
+- [ ] **VWAP alternativo con `maxSingleTransAmount`** — postpuesto a final del proyecto.
 - [ ] **Análisis de reacción a eventos macro** (feriados, anuncios BCB,
-      quincenas de pago, etc.).
-- [ ] **Automatizar `update.bat` + push** vía Task Scheduler (cada N horas)
-      para que Pages se refresque sin intervención manual.
-- [x] **Agendar `bcb_referencial.py` diario** — Task Scheduler "BCB Referencial
-      Diario", lun-vie 12:00 BOL (2026-04-29).
-- [x] **Encoding ASCII en `print()` de normalize/bcb** — eliminado el
-      requerimiento de `PYTHONIOENCODING=utf-8` (2026-04-29).
-- [ ] Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`.
+      quincenas de pago) — pendiente de prioridad.
+- [ ] **Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`** —
+      pendiente sin contexto suficiente; evaluar si abrir ticket o cerrar.
+- [ ] **Cierre del período de gracia de rollback** (expira 2026-05-14):
+      ¿borrar `p2p_normalized.db.pre-migration-20260507T180022Z` (442 MB
+      untracked) de la laptop? ¿desinstalar Task Scheduler "P2P Watchdog"
+      o dejar `Disabled` como reserva?
