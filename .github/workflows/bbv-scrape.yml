@@ -1,0 +1,63 @@
+name: BBV daily scrape
+
+# Corre todos los días a las 18:00 BO (22:00 UTC), después del cierre de la BBV.
+# El BBV publica el resumen diario poco después del cierre. Si el commit
+# modifica bbv_data.json, el workflow `auto-publish.yml` se dispara y regenera
+# el dashboard con la data fresca.
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 22:00 UTC = 18:00 Bolivia
+  workflow_dispatch: {}    # también ejecutable manualmente desde GitHub
+
+concurrency:
+  group: bbv-scrape
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write   # necesario para commitear bbv_data.json al repo
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdfplumber>=0.10.0
+
+      - name: Run bbv_ingest.py
+        id: scrape
+        run: python bbv_ingest.py
+
+      - name: Upload bbv_data.json as artifact (for inspection if commit fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bbv_data
+          path: bbv_data.json
+          retention-days: 30
+
+      - name: Commit + push if bbv_data.json changed
+        if: success()
+        run: |
+          git config user.name  "bbv-scraper-bot"
+          git config user.email "bbv-scraper@finanzasbo.com"
+          if git diff --quiet bbv_data.json; then
+            echo "No changes to bbv_data.json — skipping commit"
+            exit 0
+          fi
+          git add bbv_data.json
+          git commit -m "chore(bbv): scrape $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push

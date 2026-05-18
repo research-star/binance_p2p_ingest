@@ -19,7 +19,7 @@ from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, TEMPLATE_HTML
+from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BBV_DATA_JSON, TEMPLATE_HTML
 
 DEFAULT_DB = NORMALIZED_DB
 DEFAULT_OUTPUT = DASHBOARD_HTML
@@ -561,6 +561,23 @@ def main():
 
     template = TEMPLATE_HTML.read_text(encoding='utf-8')
     html = template.replace('__DATA_PLACEHOLDER__', json.dumps(data))
+
+    # BBV: inject live data if bbv_data.json exists, else fall through to the
+    # hardcoded BBV_DATA_FALLBACK defined in template.html. Graceful degradation
+    # so the dashboard never breaks if the scraper is missing or failed.
+    if BBV_DATA_JSON.exists():
+        try:
+            bbv_raw = BBV_DATA_JSON.read_text(encoding='utf-8')
+            json.loads(bbv_raw)  # sanity check
+            bbv_inject = bbv_raw
+            print(f"  · BBV: usando datos live de {BBV_DATA_JSON}")
+        except Exception as e:
+            print(f"  · BBV: {BBV_DATA_JSON} ilegible ({e}), usando fallback")
+            bbv_inject = "BBV_DATA_FALLBACK"
+    else:
+        print(f"  · BBV: {BBV_DATA_JSON} no existe, usando fallback hardcoded")
+        bbv_inject = "BBV_DATA_FALLBACK"
+    html = html.replace('__BBV_DATA_PLACEHOLDER__', bbv_inject)
 
     with open(args.output, 'w', encoding='utf-8') as f:
         f.write(html)

@@ -2728,11 +2728,11 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     return info.nm+" — "+info.desc;
   }
 
-  // TODO: replace this hardcoded const with data injected by dashboard.py
-  // from the bbv_ingest.py output. Today's snapshot, parsed manually from
-  // https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (2026-05-15) and
-  // https://www2.bbv.com.bo/mercados/montos-negociados/instrumentos-negociados/
-  const BBV_DATA = {
+  // Snapshot hardcoded del 2026-05-15 — sirve de fallback si bbv_data.json
+  // no existe o está corrupto. Fuentes:
+  //   https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (PDF diario)
+  //   https://www2.bbv.com.bo/mercados/montos-negociados/instrumentos-negociados/ (bonos)
+  const BBV_DATA_FALLBACK = {
     date: "2026-05-15",
     rates: [
       // Tasas anuales (yield section)
@@ -2825,6 +2825,11 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       ]
     }
   };
+
+  // Datos live inyectados por dashboard.py desde bbv_data.json.
+  // Si el archivo no existe o está mal, el placeholder se reemplaza por
+  // BBV_DATA_FALLBACK (referencia al snapshot hardcoded de arriba).
+  const BBV_DATA = __BBV_DATA_PLACEHOLDER__;
 
   var bbvState = {currency:'ALL', scope:'ALL', issuer:'ALL', sortKey:'issuer', sortDir:1};
 

@@ -22,6 +22,7 @@ LOGS_DIR = Path("logs")
 NORMALIZED_DB = Path("p2p_normalized.db")
 DASHBOARD_HTML = Path("index.html")
 BCB_REF_JSON = Path("bcb_referencial.json")
+BBV_DATA_JSON = Path("bbv_data.json")
 TEMPLATE_HTML = Path(__file__).parent / "template.html"
 
 # Backup opcional de snapshots (env var P2P_BACKUP_DIR). Si no está definida
