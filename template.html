@@ -1008,7 +1008,7 @@ function rDepth(c,v){
     {_side:'buy', x:x,y:v.buy_depth, name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
     {_side:'sell',x:x,y:v.sell_depth,name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
   ], 'depth');
-  Plotly.react('chartDepth',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC);
+  Plotly.react('chartDepth',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f',automargin:true},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC);
 }
 function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
 function rConc(c,v){
