@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#f5f7fa;--bg-secondary:#ffffff;--bg-tertiary:#dde8ef;--border-color:rgba(44,74,107,0.10);--text-primary:#2c4a6b;--text-secondary:#2c4a6b;--text-muted:#6b7d92;--text-soft:#8c9aab;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:28px;--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0}
+:root{--bg-primary:#f5f7fa;--bg-secondary:#ffffff;--bg-tertiary:#dde8ef;--border-color:rgba(44,74,107,0.10);--text-primary:#2c4a6b;--text-secondary:#2c4a6b;--text-muted:#6b7d92;--text-soft:#8c9aab;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:28px;--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
 *,*::before,*::after{transition:background-color .3s,color .3s,border-color .3s}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg-primary);color:var(--text-primary);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh}
@@ -242,7 +242,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .error-banner.show{display:block}
 .error-banner .eb-retry{margin-left:8px;font-size:11px;opacity:.85}
 /* ── Navbar ── */
-.fb-navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
+.fb-navbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
 .fb-navbar-left{display:flex;align-items:center;gap:16px}
 .fb-navbar-right{display:flex;align-items:center;gap:8px}
 .fb-logo{font-size:22px;font-weight:700;color:var(--blue-accent);letter-spacing:-.01em}
@@ -256,7 +256,7 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-icon-btn{width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--border-color);border-radius:6px;background:transparent;color:var(--text-muted);cursor:pointer;font-size:11px;font-weight:500;transition:all .15s;padding:0}
 .fb-icon-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
 /* ── Sub-header ── */
-.fb-subheader{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 12px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
+.fb-subheader{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 12px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:var(--nav-h);z-index:51}
 .fb-subheader h1{font-size:26px;font-weight:700;color:var(--text-primary);letter-spacing:-.02em}
 .fb-subtitle{font-size:13px;color:var(--text-muted);margin-top:2px}
 .fb-subheader-stats{display:flex;gap:20px;align-items:center}
@@ -264,7 +264,8 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-stat-label{display:block;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
 .fb-stat-value{display:block;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500;color:var(--text-primary)}
 /* ── KPI Uniform Grid ── */
-.fb-kpi-wrap{padding:12px 18px 0;background:var(--bg-primary)}
+#kpis{position:sticky;top:calc(var(--nav-h) + var(--sub-h));z-index:50}
+.fb-kpi-wrap{padding:12px 18px 0;background:var(--bg-primary);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .fb-kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding-bottom:12px}
 .fb-kpi-card{padding:14px 16px;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary)}
 .fb-kpi-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -279,7 +280,14 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .ds-chip.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 .ds-chip:disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
 @media(max-width:900px){.fb-kpi-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.fb-kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){
+  .fb-navbar,.fb-subheader{position:static}
+  #kpis{top:0}
+  .fb-kpi-wrap{padding:8px 0 0}
+  .fb-kpi-grid{display:flex;grid-template-columns:none;overflow-x:auto;gap:8px;padding:0 12px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .fb-kpi-grid::-webkit-scrollbar{display:none}
+  .fb-kpi-card{flex:0 0 auto;min-width:160px;scroll-snap-align:start}
+}
 @media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
 .fb-mono{font-family:'IBM Plex Mono',monospace}
 .fb-chart-source{font-size:10px;color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
@@ -2217,6 +2225,17 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       renderDpfScatter();
     });
   });
+})();
+
+(function(){
+  function measure(){
+    var nav=document.querySelector('.fb-navbar');
+    var sub=document.querySelector('#tab-dolar .fb-subheader');
+    document.documentElement.style.setProperty('--nav-h',(nav?nav.offsetHeight:0)+'px');
+    document.documentElement.style.setProperty('--sub-h',(sub?sub.offsetHeight:0)+'px');
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',measure);}else{measure();}
+  window.addEventListener('resize',measure);
 })();
 </script>
 </body></html>
