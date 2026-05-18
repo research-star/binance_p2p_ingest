@@ -113,36 +113,54 @@ def cleanup_worktree(path: Path):
         shutil.rmtree(path, ignore_errors=True)
 
 
-def db_metrics() -> tuple[int, int]:
+def db_metrics() -> tuple[int, int, str | None]:
+    """Devuelve (n_snapshots_ads, n_rows_ads, max_fecha_embi).
+
+    `max_fecha_embi` se incluye en la cache key porque embi_spreads se puebla
+    desde un cron independiente y, sin esto, un publish puede skipear cuando
+    `ads` no avanzó pero embi sí. Elegimos max(fecha) por simpleza vs hash del
+    payload completo: cualquier append de día nuevo dispara republish, y el
+    parser UPSERT no produce overwrites silenciosos del mismo (fecha,pais) (los
+    valores históricos son inmutables salvo correcciones — y una corrección
+    igual debe disparar republish, lo cual implica chequear más que max(fecha)
+    en un fix futuro si surge el caso).
+    """
     try:
         c = sqlite3.connect(str(DB_PATH))
         n_snap = c.execute("SELECT COUNT(DISTINCT snapshot_ts_utc) FROM ads").fetchone()[0]
         n_rows = c.execute("SELECT COUNT(*) FROM ads").fetchone()[0]
+        try:
+            embi_max = c.execute("SELECT MAX(fecha) FROM embi_spreads").fetchone()[0]
+        except sqlite3.OperationalError:
+            embi_max = None  # tabla aún no existe
         c.close()
-        return n_snap, n_rows
+        return n_snap, n_rows, embi_max
     except Exception:
-        return 0, 0
+        return 0, 0, None
 
 
 def read_last_state():
-    """Devuelve dict {size, n_snap, n_rows} o None.
+    """Devuelve dict {size, n_snap, n_rows, embi_max} o None.
 
-    Acepta también el formato legacy v1 donde el archivo era solo un int (size).
-    En ese caso devuelve {size: <int>, n_snap: None, n_rows: None}.
+    Acepta también el formato legacy v1 (int) y v2 (sin embi_max). En esos
+    casos devuelve embi_max=None lo cual fuerza un republish la primera vez
+    que la tabla embi_spreads se popula.
     """
     if not LAST_SIZE_STATE_PATH.exists():
         return None
     try:
         raw = LAST_SIZE_STATE_PATH.read_text().strip()
         if raw.startswith("{"):
-            return json.loads(raw)
-        return {"size": int(raw), "n_snap": None, "n_rows": None}
+            state = json.loads(raw)
+            state.setdefault("embi_max", None)
+            return state
+        return {"size": int(raw), "n_snap": None, "n_rows": None, "embi_max": None}
     except (ValueError, OSError):
         return None
 
 
-def write_last_state(size: int, n_snap: int, n_rows: int):
-    state = {"size": size, "n_snap": n_snap, "n_rows": n_rows}
+def write_last_state(size: int, n_snap: int, n_rows: int, embi_max: str | None):
+    state = {"size": size, "n_snap": n_snap, "n_rows": n_rows, "embi_max": embi_max}
     try:
         LAST_SIZE_STATE_PATH.write_text(json.dumps(state))
     except OSError as e:
@@ -176,17 +194,18 @@ def _run(t0: float) -> int:
         # No fallamos: seguimos con el código local.
 
     # Skip rápido si el dataset no avanzó (ahorra el gasto de dashboard.py)
-    n_snap, n_rows = db_metrics()
+    n_snap, n_rows, embi_max = db_metrics()
     last = read_last_state()
     if (last is not None
             and last.get("n_snap") == n_snap
             and last.get("n_rows") == n_rows
+            and last.get("embi_max") == embi_max
             and last.get("size") is not None):
         # Refresh state mtime sin cambiar contenido (idempotente)
-        write_last_state(last["size"], n_snap, n_rows)
+        write_last_state(last["size"], n_snap, n_rows, embi_max)
         total_s = time.time() - t0
         emit(f"[publish] mode=skip reason=dataset_unchanged "
-             f"snapshots={n_snap} rows={n_rows} "
+             f"snapshots={n_snap} rows={n_rows} embi_max={embi_max} "
              f"total_s={total_s:.2f}")
         return 0
 
@@ -234,7 +253,7 @@ def _run(t0: float) -> int:
         return 1
 
     try:
-        return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows)
+        return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows, embi_max)
     finally:
         cleanup_worktree(WORKTREE_PATH)
         if TMP_INDEX_PATH.exists():
@@ -242,7 +261,7 @@ def _run(t0: float) -> int:
 
 
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
-                     n_snap: int, n_rows: int) -> int:
+                     n_snap: int, n_rows: int, embi_max: str | None) -> int:
     existing_index = WORKTREE_PATH / "index.html"
     shutil.copyfile(TMP_INDEX_PATH, existing_index)
 
@@ -281,7 +300,7 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
     except subprocess.CalledProcessError:
         commit_short = "?"
 
-    write_last_state(new_size, n_snap, n_rows)
+    write_last_state(new_size, n_snap, n_rows, embi_max)
 
     total_s = time.time() - t0
     size_kb = new_size / 1024

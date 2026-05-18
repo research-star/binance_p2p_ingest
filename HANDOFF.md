@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-05-13.
+Última actualización: 2026-05-18.
 
 ---
 
@@ -20,6 +20,7 @@ de backups y, opcionalmente, dashboard local.
 | `normalize.py` | VPS cron user `binance` | `*/5 * * * *` | `HC_NORMALIZE` |
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
+| `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -74,6 +75,8 @@ de las filas verdes.
 - **Pipeline crudo → SQLite**: `ingest.py` (Fase 1), `normalize.py` (Fase 2).
 - **Publish a Pages**: `scripts/publish_dashboard.py` + `.github/workflows/auto-publish.yml`.
 - **BCB scrape**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
+- **EMBI scrape (BCRD)**: `ingest_embi.py` (lógica + cron one-liner). Snapshot Excel +
+  ETag cache en `/opt/binance_p2p/embi_audit/` (fuera del repo).
 - **Constantes compartidas**: `config.py`.
 
 ---
@@ -115,6 +118,32 @@ Features:
 Optimizaciones SQLite: WAL, `synchronous=NORMAL`, `cache_size=-65536`,
 `temp_store=MEMORY`, índice covering `idx_ads_flow (snapshot_ts_utc, side,
 advertiser_id)`, una transacción por batch.
+
+### Fase 2.5 — EMBI / Riesgo País (lateral)
+
+`ingest_embi.py` descarga diariamente el Excel del BCRD ("Serie Histórica
+Spread del EMBI") y lo unpivotea a tabla SQLite `embi_spreads (fecha, pais,
+spread_bps)` con PK `(fecha, pais)`. Cobertura: Bolivia + 7 peers LATAM
+explícitos (Argentina, Brasil, Chile, Colombia, México, Perú, Ecuador) +
+Uruguay, Paraguay, Venezuela, Panamá, El Salvador, Costa Rica, Guatemala,
+Honduras + agregados `global` y `latino`.
+
+Unidad de guardado: bps (Excel viene en percentage points, ingest multiplica × 100).
+
+Comportamiento del script:
+- `If-None-Match: <etag>` (persistido en `embi_audit/.last_etag`) → BCRD
+  responde 304 si el Excel no cambió. 304 = exit 0 limpio, sin tocar SQLite.
+- Si 200: snapshot a `embi_audit/embi_YYYY-MM-DD.xlsx` (fecha BO), parse,
+  UPSERT idempotente, rota archivos `embi_*.xlsx` con mtime > 7 días.
+- Mapeo header→país canónico es **explícito** (no parsea el header). Si BCRD
+  agrega columnas, el script falla con error claro en vez de poblar con basura.
+- HC ping start/success/fail con body (resumen o stacktrace). Graceful si
+  `HC_EMBI` vacío.
+
+Cron: `0 10,22 * * *` UTC (06:00 y 18:00 BO, todos los días). Cobertura
+dual: 18:00 BO captura el republish del mismo día (BCRD republica ~10:30 BO);
+06:00 BO captura si se atrasó al día anterior. ETag hace que la mayoría de
+corridas sean 304 no-op.
 
 ### Fase 3 — Análisis / Dashboard
 
@@ -169,6 +198,8 @@ Features clave:
 */12 * * * *       cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py
 5,35 12-15 * * 1-5 cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh \
                        >> /var/log/binance_p2p/bcb_ref.log 2>&1
+0    10,22 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_embi.py \
+                       >> /var/log/binance_p2p/embi.log 2>&1
 ```
 
 **Auto-publish workflow** (`.github/workflows/auto-publish.yml`):
@@ -182,6 +213,7 @@ Features clave:
 - `HC_INGEST` — pingeado desde `scripts/watchdog.py` cuando hay snapshot reciente. Confirmado en código del repo.
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
+- `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
 
 **SSH desde laptop:**
 ```bash
@@ -233,13 +265,17 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
       al cron line del BCB. Sin esto, falla del scraper es silenciosa.
       (Follow-up de PR #20.)
-- [ ] **Cache key de `publish_dashboard.py`** — el cache `(n_snap, n_rows)`
-      no invalida con cambios de código (`template.html`, `static/`).
+- [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
+      `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
+      invalidar con cambios de código (`template.html`, `static/`).
       Consecuencia: deploys visuales sin cambio de dataset esperan hasta
       próximo snapshot + próximo tick del cron (~22 min worst case). Fix
       propuesto: agregar hash de `template.html` + `listdir(static/)`, o
       usar commit hash de main. **Ticket Notion: "Cache key de
-      publish_dashboard.py no invalida con cambios de código".**
+      publish_dashboard.py no invalida con cambios de código".** Update
+      2026-05-18: la pieza de embi_max_fecha cubre el caso de la tabla
+      `embi_spreads`, pero el agujero genérico de "cambio de código sin
+      cambio de dataset" sigue abierto.
 - [ ] **`quality_tier` como VIEW** — actualmente materializado como columna.
       Threshold drift requiere `--full-rebuild` para repropagar. Mover a
       VIEW para evaluación lazy.
