@@ -1419,7 +1419,7 @@ function updateKpis(){
     kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vb10,ref.compra), ICONS.compra, 'buy')+
     kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vs10,ref.venta), ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
-    kpi('TC Oficial BCB', fmt2(meta.bcb_rate), 'Prima P2P: +'+fmt2(premium)+'%', ICONS.bcb, null)+
+    kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', 'TC Oficial BCB: '+fmt2(meta.bcb_rate), ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
     kpi('BCB Ref', fmt2(ref.compra)+' / '+fmt2(ref.venta), 'Compra \u00b7 Venta (BOB/USDT)', ICONS.bcb, null)+
     '</div></div>';
