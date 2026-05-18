@@ -229,6 +229,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
 /* ── Side checkbox group (en toolbar, a la derecha del view-toggle) ── */
 .side-chk-group{display:inline-flex;gap:0}
+.panel-side-toggle{display:inline-flex;gap:0;margin-top:8px}
 .side-chk{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s;user-select:none;line-height:1}
 .side-chk:first-of-type{border-radius:4px 0 0 4px}
 .side-chk:last-of-type{border-radius:0 4px 4px 0;margin-right:0}
@@ -379,24 +380,17 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 
 
 <div class="content">
-  <div class="toolbar">
-    <div class="side-chk-group" id="sideChkGroup" role="group" aria-label="Filtro de lado direccional"
-         title="Filtra paneles direccionales. Spread, Ratio, Heatmap, Decil y Bancos son agregados de ambos lados, no se ven afectados.">
-      <label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label>
-      <label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label>
-    </div>
-  </div>
 
   <div class="panel-grid" id="panelGrid">
     <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra VWAP 10%</span></button><button type="button" class="fb-stog active" data-trace="venta" style="--fb-trace-color:#6b7d92"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#6b7d92"></span><span class="fb-stog-label">Venta VWAP 10%</span></button><button type="button" class="fb-stog active" data-trace="bcb-compra" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Compra</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-venta" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Venta</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-oficial" style="--fb-trace-color:#8c8c8c"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#8c8c8c"></span><span class="fb-stog-label">BCB Oficial</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="spread" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread efectivo</h2><p>Diferencia VWAP Compra &minus; Venta por profundidad (BOB).</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpread"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="spread_evo" draggable="true"><div class="section-header"><div class="sh-left"><h2>Spread compra-venta</h2><p>Diferencia entre precio venta VWAP y precio compra VWAP</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartSpreadEvo"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p><div class="panel-side-toggle" data-panel="depth" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="ratio" draggable="true"><div class="section-header"><div class="sh-left"><h2>Ratio Venta / Compra</h2><p>&gt;1 = m&aacute;s oferta que demanda.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartRatio"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartConc"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section" data-panel="conc" draggable="true"><div class="section-header"><div class="sh-left"><h2>Concentraci&oacute;n Top 5</h2><p>% de profundidad de los 5 merchants m&aacute;s grandes.</p><div class="panel-side-toggle" data-panel="conc" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartConc"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="bank" draggable="true"><div class="section-header"><div class="sh-left"><h2>Cobertura por banco <span class="help-tip" tabindex="0" aria-label="Granularidad del panel"><span class="help-icon">i</span><span class="help-pop">Granularidad diaria: muestra el &uacute;ltimo snapshot del &uacute;ltimo d&iacute;a disponible dentro del rango activo. Al mover el selector de fechas, salta al cierre de d&iacute;a m&aacute;s cercano (no al &uacute;ltimo ts exacto del rango).</span></span></h2><p>Anuncios y profundidad por m&eacute;todo de pago.</p><p class="snap-stamp">Snapshot del <span id="banksSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="bankTable"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><p style="font-size:12px;color:var(--text-muted);margin-bottom:6px" id="merchantsConcText"></p><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="topMerchants"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="merchants" draggable="true"><div class="section-header"><div class="sh-left"><p style="font-size:12px;color:var(--text-muted);margin-bottom:6px" id="merchantsConcText"></p><h2>Merchants principales <span class="help-tip" tabindex="0" aria-label="Detalle de pills de outlier"><span class="help-icon">i</span><span class="help-pop">Pills marcan anuncios cuyo precio se aleja del VWAP 10% de su lado: amarillo &plusmn;5%, rojo &plusmn;10%. Los outliers pueden ser anuncios cebo, manipulaci&oacute;n de VWAP visible o lurkers &mdash; el pill no asume intenci&oacute;n, solo marca anuncios fuera del rango central del mercado.<br><br>En el lado Venta es esperable ver densidad alta de pills (&gt;50% del libro) por la cola estructural de cambistas no-competitivos en el P2P boliviano. Para focalizar outliers extremos ajustar la constante <code>OUTLIER_THRESHOLDS</code> en el c&oacute;digo.</span></span></h2><p>Top 10 por profundidad &middot; pills marcan desviaci&oacute;n del VWAP 10% de su lado.</p><div class="panel-side-toggle" data-panel="merchants" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="merchantsSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="topMerchants"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="orderbook" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad del libro de &oacute;rdenes</h2><p>Cantidad acumulada (USDT) por nivel de precio. &Uacute;ltima snapshot.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOrderBook"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
@@ -591,19 +585,18 @@ function applyTheme(id){
 }
 
 // ═══ PLOTLY ═══
-// ═══ SIDE FILTER STATE ═══
-let sideFilter = 'both';   // 'both' | 'buy' | 'sell'
-function showBuy(){return sideFilter==='both'||sideFilter==='buy'}
-function showSell(){return sideFilter==='both'||sideFilter==='sell'}
-// Helper compartido para todos los renderers reactivos: filtra un array
-// de traces en función del sideFilter activo. Cada trace direccional
-// declara _side:'buy'|'sell'; las neutras (sin _side) pasan siempre.
-// Plotly ignora propiedades desconocidas como _side, así que el filtro
-// es transparente al render.
-function filterDirectionalTraces(traces){
+// ═══ SIDE FILTER STATE (per panel) ═══
+const panelSideFilter = {
+  vwap:'both', depth:'both', offer_range:'both',
+  conc:'both', merchants:'both', orderbook:'both'
+};
+function panelShowBuy(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='buy'}
+function panelShowSell(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='sell'}
+function filterDirectionalTraces(traces, panelId){
+  const sb=panelShowBuy(panelId), ss=panelShowSell(panelId);
   return traces.filter(t=>{
-    if(t&&t._side==='buy')  return showBuy();
-    if(t&&t._side==='sell') return showSell();
+    if(t&&t._side==='buy')  return sb;
+    if(t&&t._side==='sell') return ss;
     return true;
   });
 }
@@ -972,7 +965,7 @@ function rVwap(c,v){
     // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
     {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
   ];
-  const traces=filterDirectionalTraces(allTraces);
+  const traces=filterDirectionalTraces(allTraces, 'vwap');
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
     // Filtrar el histórico BCB al rango visible. Si no hay puntos dentro,
     // usamos el último BCB <= xMax como referencia constante a través del
@@ -1014,7 +1007,7 @@ function rDepth(c,v){
   const traces=filterDirectionalTraces([
     {_side:'buy', x:x,y:v.buy_depth, name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
     {_side:'sell',x:x,y:v.sell_depth,name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
-  ]);
+  ], 'depth');
   Plotly.react('chartDepth',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f'},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC);
 }
 function rRatio(c,v){const L=BL(c),x=v.x;Plotly.react('chartRatio',[{x:x,y:v.depth_ratio,name:'Venta / Compra',fill:'tozeroy',fillcolor:hexToRgba(c.neutral,.08),line:{color:c.neutral,width:1.5},mode:'lines'},{x:x,y:x.map(()=>1),name:'Equilibrio',line:{color:c.textMuted,width:.8,dash:'dash'}}],{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'×',font:{size:10,color:c.textMuted}},ticksuffix:'×',tickformat:'.2f'},shapes:gapShapes(c),height:chartHeight('chartRatio')},PC)}
@@ -1023,7 +1016,7 @@ function rConc(c,v){
   const traces=filterDirectionalTraces([
     {_side:'buy', x:x,y:v.t5buy, name:'Top 5 compra',line:{color:c.buy,width:1.5},mode:'lines'},
     {_side:'sell',x:x,y:v.t5sell,name:'Top 5 venta', line:{color:c.sell,width:1.5},mode:'lines'}
-  ]);
+  ], 'conc');
   Plotly.react('chartConc',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero'},shapes:gapShapes(c),height:chartHeight('chartConc')},PC);
 }
 function rBank(c){
@@ -1123,8 +1116,8 @@ function rMerchants(){
       '<tbody>'+rows+'</tbody></table></div>';
   };
   const blocks=[];
-  if(showBuy())  blocks.push(renderSide('Compra',data.BUY,'BUY'));
-  if(showSell()) blocks.push(renderSide('Venta', data.SELL,'SELL'));
+  if(panelShowBuy('merchants'))  blocks.push(renderSide('Compra',data.BUY,'BUY'));
+  if(panelShowSell('merchants')) blocks.push(renderSide('Venta', data.SELL,'SELL'));
   // Si solo un lado, una columna; si ambos, dos.
   const gridCls = blocks.length===1 ? 'merchants-grid one-col' : 'merchants-grid';
   document.getElementById('topMerchants').innerHTML='<div class="'+gridCls+'">'+blocks.join('')+'</div>';
@@ -1142,8 +1135,8 @@ function rOutliers(){
   if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   const refs={BUY:ml.vwap10_buy, SELL:ml.vwap10_sell};
   const sides=[];
-  if(showBuy())  sides.push('BUY');
-  if(showSell()) sides.push('SELL');
+  if(panelShowBuy('merchants'))  sides.push('BUY');
+  if(panelShowSell('merchants')) sides.push('SELL');
   const rows=[];
   for(const side of sides){
     for(const m of (ml[side]||[])){
@@ -1209,7 +1202,7 @@ function rFlow(c){
     {_side:'sell',x:x,y:flow.map(f=>f.new_sell), name:'Nuevos Venta', type:'bar',marker:{color:hexToRgba(c.sell,.5)}},
     {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
     {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'Total Venta', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
-  ]);
+  ], 'flow');
   Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
@@ -1217,9 +1210,10 @@ function rOffer(c){
   const el=document.getElementById('chartOffer');
   if(!el) return;
   const stamp=document.getElementById('offerSnapStamp');
-  // El agregador ya filtra ads, cuantiles, bins y oferentes por sideFilter.
+  // El agregador ya filtra ads, cuantiles, bins y oferentes por el filtro del panel.
   // La línea de oferentes refleja únicos del lado visible (o ambos en 'both').
-  const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx, sideFilter);
+  const sf=panelSideFilter.offer_range;
+  const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx, sf);
   if(!od){
     _purgeAndClear(el);
     el.innerHTML='<div class="view-hint">Sin data en el rango activo</div>';
@@ -1227,7 +1221,7 @@ function rOffer(c){
     return;
   }
   if(stamp&&od.snapshot_ts){
-    const sideLabel = sideFilter==='buy' ? ' · solo Compra' : sideFilter==='sell' ? ' · solo Venta' : ' · Compra + Venta';
+    const sideLabel = sf==='buy' ? ' · solo Compra' : sf==='sell' ? ' · solo Venta' : ' · Compra + Venta';
     stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+sideLabel;
   }
   if(od.empty){
@@ -1240,9 +1234,9 @@ function rOffer(c){
   // construimos solo la(s) traza(s) del lado, sin pasar por
   // filterDirectionalTraces (no aplica acá porque el dataset ya viene filtrado).
   const traces=[];
-  if(showBuy())  traces.push({type:'bar', name:'Compra', x:od.labels, y:od.buy,
+  if(panelShowBuy('offer_range'))  traces.push({type:'bar', name:'Compra', x:od.labels, y:od.buy,
     marker:{color:c.buy}, opacity:0.55, yaxis:'y'});
-  if(showSell()) traces.push({type:'bar', name:'Venta',  x:od.labels, y:od.sell,
+  if(panelShowSell('offer_range')) traces.push({type:'bar', name:'Venta',  x:od.labels, y:od.sell,
     marker:{color:c.sell}, opacity:0.55, yaxis:'y'});
   // Oferentes únicos: refleja el subset filtrado.
   traces.push({type:'scatter', mode:'lines+markers', name:'Nro. de oferentes',
@@ -1479,37 +1473,38 @@ function applyDateRange(state, persist){
   replotAllCharts();
 }
 
-// Side filter (2 checkboxes; ambas desmarcadas = prohibido)
-function syncSideChkUI(){
-  const buyOn  = sideFilter==='both'||sideFilter==='buy';
-  const sellOn = sideFilter==='both'||sideFilter==='sell';
-  const buyEl  = document.querySelector('.side-chk[data-side="buy"]');
-  const sellEl = document.querySelector('.side-chk[data-side="sell"]');
-  const buyInp = buyEl  && buyEl.querySelector('input');
-  const sellInp= sellEl && sellEl.querySelector('input');
-  if(buyEl)  buyEl.classList.toggle('is-checked', buyOn);
-  if(sellEl) sellEl.classList.toggle('is-checked', sellOn);
-  if(buyInp)  buyInp.checked  = buyOn;
-  if(sellInp) sellInp.checked = sellOn;
+// Side filter por panel (2 checkboxes; ambas desmarcadas = prohibido)
+function syncPanelSideUI(panelId){
+  const wrap=document.querySelector('.panel-side-toggle[data-panel="'+panelId+'"]');
+  if(!wrap) return;
+  const f=panelSideFilter[panelId]||'both';
+  const buyOn=f==='both'||f==='buy';
+  const sellOn=f==='both'||f==='sell';
+  const buyEl=wrap.querySelector('.side-chk[data-side="buy"]');
+  const sellEl=wrap.querySelector('.side-chk[data-side="sell"]');
+  if(buyEl){buyEl.classList.toggle('is-checked',buyOn);const i=buyEl.querySelector('input');if(i)i.checked=buyOn}
+  if(sellEl){sellEl.classList.toggle('is-checked',sellOn);const i=sellEl.querySelector('input');if(i)i.checked=sellOn}
 }
-function applySideFilter(side, persist){
+function applyPanelSide(panelId, side){
   if(side!=='both'&&side!=='buy'&&side!=='sell') side='both';
-  sideFilter=side;
-  if(persist!==false) localStorage.setItem('dashboard-side-filter', side);
-  syncSideChkUI();
+  panelSideFilter[panelId]=side;
+  syncPanelSideUI(panelId);
   replotAllCharts();
 }
-document.querySelectorAll('.side-chk input[type="checkbox"]').forEach(inp=>{
+document.querySelectorAll('.panel-side-toggle input[type="checkbox"]').forEach(inp=>{
   inp.addEventListener('change',()=>{
-    const buyInp  = document.querySelector('.side-chk[data-side="buy"] input');
-    const sellInp = document.querySelector('.side-chk[data-side="sell"] input');
+    const wrap=inp.closest('.panel-side-toggle');
+    if(!wrap) return;
+    const panelId=wrap.dataset.panel;
+    const buyInp=wrap.querySelector('.side-chk[data-side="buy"] input');
+    const sellInp=wrap.querySelector('.side-chk[data-side="sell"] input');
     if(!buyInp.checked && !sellInp.checked){
       // Prohibido: revertir el cambio que dejaría ambas desmarcadas.
       inp.checked = true;
       return;
     }
     const newSide = (buyInp.checked && sellInp.checked) ? 'both' : (buyInp.checked ? 'buy' : 'sell');
-    applySideFilter(newSide);
+    applyPanelSide(panelId, newSide);
   });
 });
 
@@ -2019,10 +2014,7 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
 // ═══ INIT ═══
 (function(){
   // Layout bloqueado: orden y visibilidad fijos en HTML, sin restaurar desde localStorage.
-  // Restaurar side filter antes de cualquier render.
-  const savedSide=localStorage.getItem('dashboard-side-filter');
-  if(savedSide==='buy'||savedSide==='sell'||savedSide==='both') sideFilter=savedSide;
-  syncSideChkUI();
+  // Filtro de lado: ahora es per-panel, default 'both' al cargar (sin persistencia).
 
   activeRange = rangeFromState(dateRangeState);
 
