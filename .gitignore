@@ -80,6 +80,7 @@ normalize.py.OLD_BASELINE
 # Snapshots crudos (no trackear en git)
 snapshots/
 alt/
+bbv_snapshots/
 
 # Dashboard: el archivo servido por GitHub Pages es index.html (sí trackeado).
 # p2p_dashboard.html es un alias local por compatibilidad, no se sube.

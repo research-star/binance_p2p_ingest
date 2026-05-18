@@ -337,6 +337,21 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
 body.theme-dark .fb-dpf-table tr:hover{background:rgba(255,255,255,.04)}
 body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 @media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
+/* ── BBV table & filters ── */
+.fb-bbv-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:14px 18px;margin-bottom:14px}
+.fb-bbv-fcol{display:flex;flex-direction:column;gap:6px}
+.fb-bbv-table{width:100%;border-collapse:collapse;font-size:12px}
+.fb-bbv-table th,.fb-bbv-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
+.fb-bbv-table th{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500;cursor:pointer;user-select:none}
+.fb-bbv-table th:hover{color:var(--text-primary)}
+.fb-bbv-table th.num,.fb-bbv-table td.num{text-align:right;font-family:'IBM Plex Mono',monospace}
+.fb-bbv-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
+.fb-bbv-table td.rate-cell.neg{color:var(--orange)}
+.fb-bbv-table td.rate-cell.pos-strong{color:var(--green)}
+.fb-bbv-table td.issuer{font-family:'Outfit',sans-serif;font-weight:600;color:var(--text-primary)}
+.fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
+body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
+@media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
 </style></head>
 <body>
 
@@ -352,6 +367,7 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
     <div class="fb-tabs">
       <button class="fb-tab active" data-tab="dollar">D&oacute;lar</button>
       <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
+      <button class="fb-tab" data-tab="bbv">BBV</button>
       <button class="fb-tab" disabled>Noticias <span class="fb-soon">Soon</span></button>
     </div>
   </div>
@@ -476,6 +492,63 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
     </div>
   </div>
 </div><!-- /tab-dpf -->
+
+<div id="tab-bbv" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>Bolsa Boliviana de Valores</h1>
+      <div class="fb-subtitle">Tasas de rendimiento por emisor &middot; Fuente: BBV resumen diario &middot; Datos al <span id="bbvReportDate">&mdash;</span></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="fb-bbv-filters">
+      <div class="fb-bbv-fcol">
+        <span class="fb-flab">Moneda</span>
+        <div class="fb-pills" data-filter-group="currency">
+          <button class="fb-pill active" data-value="ALL">Todas</button>
+          <button class="fb-pill" data-value="BOB">BOB</button>
+          <button class="fb-pill" data-value="USD">USD</button>
+          <button class="fb-pill" data-value="UFV">UFV</button>
+          <button class="fb-pill" data-value="OTHER">Otras</button>
+        </div>
+      </div>
+      <div class="fb-bbv-fcol">
+        <span class="fb-flab">Tipo</span>
+        <div class="fb-pills" data-filter-group="scope">
+          <button class="fb-pill active" data-value="ALL">Todos</button>
+          <button class="fb-pill" data-value="yield">Tasas anuales</button>
+          <button class="fb-pill" data-value="reporto">Reporto</button>
+        </div>
+      </div>
+      <div class="fb-bbv-fcol">
+        <span class="fb-flab">Emisor</span>
+        <div class="fb-pills" id="bbvIssuerPills">
+          <button class="fb-pill active" data-value="ALL">Todos</button>
+          <!-- issuer pills populated by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="fb-chart-card">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Tasas de rendimiento por emisor y plazo</div>
+        <div class="fb-chart-sub" id="bbvTableSub">Mostrando &mdash; filas</div>
+      </div>
+      <table class="fb-bbv-table" id="bbv-rates-table">
+        <thead>
+          <tr>
+            <th data-sort-key="issuer">Emisor</th>
+            <th data-sort-key="currency">Moneda</th>
+            <th data-sort-key="type">Instrumento</th>
+            <th data-sort-key="term">Plazo (d&iacute;as)</th>
+            <th class="num" data-sort-key="rate">Tasa</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="fb-chart-source">Datos: Bolsa Boliviana de Valores &middot; Resumen diario</div>
+    </div>
+  </div>
+</div><!-- /tab-bbv -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
   <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
@@ -2073,7 +2146,9 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     var target=tab.dataset.tab;
     document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
     document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
+    document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
     if(target==='dpf'){renderDpfTable();renderDpfScatter();}
+    if(target==='bbv'){renderBbv();}
   });
 });
 
@@ -2216,6 +2291,159 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       btn.classList.add('active');
       renderDpfTable();
       renderDpfScatter();
+    });
+  });
+})();
+
+// ═══ BBV TAB ═══
+(function(){
+  // TODO: replace this hardcoded const with data injected by dashboard.py
+  // from the bbv_ingest.py output. Today's snapshot, parsed manually from
+  // https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (2026-05-15).
+  const BBV_DATA = {
+    date: "2026-05-15",
+    rates: [
+      // Tasas anuales (yield section)
+      {issuer:"BIS", currency:"BOB", type:"DPF",     term:"1-15",     rate:7.00,  scope:"yield"},
+      {issuer:"BIS", currency:"BOB", type:"DPF",     term:"1081+",    rate:2.15,  scope:"yield"},
+      {issuer:"BCB", currency:"BOB", type:"LRS",     term:"91-135",   rate:10.30, scope:"yield"},
+      {issuer:"BCB", currency:"BOB", type:"LRS",     term:"136-180",  rate:10.49, scope:"yield"},
+      {issuer:"BCB", currency:"UFV", type:"BBS",     term:"136-180",  rate:0.50,  scope:"yield"},
+      {issuer:"BGA", currency:"USD", type:"DPF",     term:"16-30",    rate:0.00,  scope:"yield"},
+      {issuer:"BME", currency:"USD", type:"DPF",     term:"16-30",    rate:0.00,  scope:"yield"},
+      {issuer:"BNB", currency:"USD", type:"DPF",     term:"1-15",     rate:0.00,  scope:"yield"},
+      {issuer:"BNB", currency:"USD", type:"DPF",     term:"46-90",    rate:0.00,  scope:"yield"},
+      {issuer:"BNB", currency:"USD", type:"DPF",     term:"361-540",  rate:0.00,  scope:"yield"},
+      {issuer:"FEF", currency:"USD", type:"DPF",     term:"46-90",    rate:0.00,  scope:"yield"},
+      {issuer:"FIE", currency:"USD", type:"DPF",     term:"1-15",     rate:0.00,  scope:"yield"},
+      {issuer:"FIE", currency:"USD", type:"DPF",     term:"136-180",  rate:0.00,  scope:"yield"},
+      // Reporto
+      {issuer:"BEC", currency:"BOB", type:"REPORTO", term:"1-7",      rate:7.30,  scope:"reporto"},
+      {issuer:"BEC", currency:"BOB", type:"REPORTO", term:"38-45",    rate:3.00,  scope:"reporto"},
+      {issuer:"BIS", currency:"BOB", type:"REPORTO", term:"8-15",     rate:3.15,  scope:"reporto"},
+      {issuer:"BME", currency:"BOB", type:"REPORTO", term:"1-7",      rate:7.30,  scope:"reporto"},
+      {issuer:"BNB", currency:"BOB", type:"REPORTO", term:"1-7",      rate:7.30,  scope:"reporto"},
+      {issuer:"BNB", currency:"BOB", type:"REPORTO", term:"8-15",     rate:7.50,  scope:"reporto"},
+      {issuer:"BNB", currency:"BOB", type:"REPORTO", term:"31-37",    rate:5.50,  scope:"reporto"},
+      {issuer:"BSO", currency:"BOB", type:"REPORTO", term:"38-45",    rate:3.00,  scope:"reporto"},
+      {issuer:"BTB", currency:"BOB", type:"REPORTO", term:"38-45",    rate:3.00,  scope:"reporto"},
+      {issuer:"FIE", currency:"BOB", type:"REPORTO", term:"16-22",    rate:5.50,  scope:"reporto"},
+      {issuer:"FIE", currency:"BOB", type:"REPORTO", term:"23-30",    rate:5.50,  scope:"reporto"},
+      {issuer:"FIE", currency:"BOB", type:"REPORTO", term:"38-45",    rate:3.00,  scope:"reporto"},
+      {issuer:"IID", currency:"BLP", type:"REPORTO", term:"38-45",    rate:8.50,  scope:"reporto"},
+      {issuer:"POL", currency:"BLP", type:"REPORTO", term:"38-45",    rate:3.00,  scope:"reporto"},
+      {issuer:"BCB", currency:"BRS", type:"REPORTO", term:"23-30",    rate:6.00,  scope:"reporto"},
+      {issuer:"BCB", currency:"LRS", type:"REPORTO", term:"1-7",      rate:6.00,  scope:"reporto"},
+      {issuer:"BCB", currency:"LRS", type:"REPORTO", term:"8-15",     rate:4.00,  scope:"reporto"},
+      {issuer:"FCZ", currency:"PGB", type:"REPORTO", term:"38-45",    rate:5.50,  scope:"reporto"},
+      {issuer:"MDS", currency:"PGB", type:"REPORTO", term:"38-45",    rate:5.00,  scope:"reporto"},
+      {issuer:"MSL", currency:"PGB", type:"REPORTO", term:"38-45",    rate:5.00,  scope:"reporto"},
+      {issuer:"NUT", currency:"PGB", type:"REPORTO", term:"38-45",    rate:5.50,  scope:"reporto"},
+      {issuer:"BIS", currency:"DMV", type:"DPF",     term:"16-22",    rate:2.91,  scope:"reporto"},
+      {issuer:"BME", currency:"UFV", type:"-",       term:"1-7",      rate:-6.50, scope:"reporto"},
+      {issuer:"BME", currency:"UFV", type:"-",       term:"23-30",    rate:-5.00, scope:"reporto"},
+      {issuer:"BUN", currency:"UFV", type:"-",       term:"16-22",    rate:-9.50, scope:"reporto"},
+      {issuer:"BCB", currency:"BBS", type:"-",       term:"1-7",      rate:-6.50, scope:"reporto"}
+    ]
+  };
+
+  var bbvState = {currency:'ALL', scope:'ALL', issuer:'ALL', sortKey:'issuer', sortDir:1};
+
+  function termSortKey(term){
+    if(term==='1081+') return 9999;
+    var m=term.match(/^(\d+)/);
+    return m ? parseInt(m[1],10) : 0;
+  }
+  function matchesCurrency(r, f){
+    if(f==='ALL') return true;
+    if(f==='OTHER') return ['BOB','USD','UFV'].indexOf(r.currency)===-1;
+    return r.currency===f;
+  }
+  function rateClass(r){
+    if(r.rate<0) return 'rate-cell neg';
+    if(r.rate>=7) return 'rate-cell pos-strong';
+    return 'rate-cell';
+  }
+  function fmtRate(rate){ return (rate>=0?'+':'')+rate.toFixed(2)+'%'; }
+  function getIssuers(){
+    var s=new Set();
+    BBV_DATA.rates.forEach(function(r){s.add(r.issuer);});
+    return Array.from(s).sort();
+  }
+  function renderIssuerPills(){
+    var wrap=document.getElementById('bbvIssuerPills');
+    if(!wrap) return;
+    var html='<button class="fb-pill '+(bbvState.issuer==='ALL'?'active':'')+'" data-value="ALL">Todos</button>';
+    getIssuers().forEach(function(iss){
+      html+='<button class="fb-pill '+(bbvState.issuer===iss?'active':'')+'" data-value="'+iss+'">'+iss+'</button>';
+    });
+    wrap.innerHTML=html;
+  }
+  function filteredRows(){
+    return BBV_DATA.rates.filter(function(r){
+      if(!matchesCurrency(r, bbvState.currency)) return false;
+      if(bbvState.scope!=='ALL' && r.scope!==bbvState.scope) return false;
+      if(bbvState.issuer!=='ALL' && r.issuer!==bbvState.issuer) return false;
+      return true;
+    });
+  }
+  function sortedRows(rows){
+    var k=bbvState.sortKey, d=bbvState.sortDir;
+    return rows.slice().sort(function(a,b){
+      var av, bv;
+      if(k==='term'){ av=termSortKey(a.term); bv=termSortKey(b.term); }
+      else if(k==='rate'){ av=a.rate; bv=b.rate; }
+      else { av=a[k]||''; bv=b[k]||''; }
+      if(av<bv) return -1*d;
+      if(av>bv) return 1*d;
+      return 0;
+    });
+  }
+  function renderTable(){
+    var rows=sortedRows(filteredRows());
+    var tbody=document.querySelector('#bbv-rates-table tbody');
+    if(!tbody) return;
+    if(!rows.length){
+      tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Sin filas con los filtros activos.</td></tr>';
+    } else {
+      tbody.innerHTML=rows.map(function(r){
+        return '<tr>'+
+          '<td class="issuer">'+r.issuer+'</td>'+
+          '<td>'+r.currency+'</td>'+
+          '<td>'+r.type+'</td>'+
+          '<td>'+r.term+'</td>'+
+          '<td class="num '+rateClass(r)+'">'+fmtRate(r.rate)+'</td>'+
+        '</tr>';
+      }).join('');
+    }
+    var sub=document.getElementById('bbvTableSub');
+    if(sub) sub.textContent='Mostrando '+rows.length+' fila'+(rows.length===1?'':'s')+' de '+BBV_DATA.rates.length+' totales';
+  }
+  window.renderBbv = function(){
+    var dt=document.getElementById('bbvReportDate');
+    if(dt) dt.textContent=BBV_DATA.date;
+    renderIssuerPills();
+    renderTable();
+  };
+  // Filter pill clicks (delegated per group)
+  document.querySelectorAll('#tab-bbv .fb-pills').forEach(function(group){
+    group.addEventListener('click', function(e){
+      var btn = e.target.closest('.fb-pill');
+      if(!btn) return;
+      var groupKey = group.dataset.filterGroup || 'issuer';
+      bbvState[groupKey] = btn.dataset.value;
+      group.querySelectorAll('.fb-pill').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      renderTable();
+    });
+  });
+  // Column sort
+  document.querySelectorAll('#bbv-rates-table th[data-sort-key]').forEach(function(th){
+    th.addEventListener('click', function(){
+      var k=th.dataset.sortKey;
+      if(bbvState.sortKey===k) bbvState.sortDir=-bbvState.sortDir;
+      else { bbvState.sortKey=k; bbvState.sortDir=1; }
+      renderTable();
     });
   });
 })();
