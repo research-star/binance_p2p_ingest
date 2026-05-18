@@ -494,6 +494,36 @@ def process_data(db_path: Path) -> dict:
     except Exception:
         pass  # Table doesn't exist yet — graceful degradation
 
+    # ── EMBI spreads (from embi_spreads table, if exists) ──
+    # Schema columnar: fechas + paises + series[pais] alineadas por índice.
+    # None donde el país no tiene observación esa fecha (pre-debut o feriado).
+    embi_data = {'fecha_actualizado': None, 'paises': [],
+                 'fechas': [], 'series': {}}
+    try:
+        # Trim a últimos 5 años en el payload del JSON inline (la tabla SQLite
+        # conserva todo el histórico, 2007→). Sin esto, embi_data agrega ~880 KB
+        # al index.html. Trimming-only en read; el ingest no se toca.
+        embi_rows = conn.execute(
+            "SELECT fecha, pais, spread_bps FROM embi_spreads "
+            "WHERE fecha >= date('now', '-5 years') "
+            "ORDER BY fecha, pais"
+        ).fetchall()
+        if embi_rows:
+            fechas = sorted({r['fecha'] for r in embi_rows})
+            paises = sorted({r['pais'] for r in embi_rows})
+            fecha_idx = {f: i for i, f in enumerate(fechas)}
+            series = {p: [None] * len(fechas) for p in paises}
+            for r in embi_rows:
+                series[r['pais']][fecha_idx[r['fecha']]] = r['spread_bps']
+            embi_data = {
+                'fecha_actualizado': fechas[-1],
+                'paises': paises,
+                'fechas': fechas,
+                'series': series,
+            }
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+
     conn.close()
 
     return {
@@ -506,6 +536,7 @@ def process_data(db_path: Path) -> dict:
         'order_book': order_book,
         'activity_heatmap': activity_matrix,
         'dpf_data': dpf_data,
+        'embi_data': embi_data,
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
