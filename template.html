@@ -197,7 +197,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .help-pop code{font-family:'IBM Plex Mono',monospace;font-size:10.5px;background:var(--bg-secondary);padding:1px 4px;border-radius:3px}
 
 /* ── Panel grid ── */
-.panel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.panel-grid{display:grid;grid-template-columns:1fr;gap:16px}
 .panel-grid .section{margin-bottom:0}
 .panel-grid .section.full-width{grid-column:1/-1}
 .section .section-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
@@ -211,6 +211,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .sh-ctrl-btn.panel-menu-btn{font-size:18px;line-height:1}
 .section.drag-over{outline:2px dashed var(--blue-accent);outline-offset:-2px}
 .section.dragging{opacity:.4}
+/* ── Layout lock: panels fijos, sin drag, sin hide, solo descargas en menú ⋮ ── */
+.sh-ctrl-btn.drag-handle{display:none !important}
+.fab-more{display:none !important}
+.panel-menu-item[data-action="hide"],
+.panel-menu-item[data-action="toggle-width"],
+.panel-menu-item[data-action="move-up"],
+.panel-menu-item[data-action="move-down"]{display:none}
 
 /* ── Footer ── */
 .footer{padding:16px 48px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text-muted);text-align:center;border-top:1px solid var(--border-color)}
@@ -2011,13 +2018,7 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
 
 // ═══ INIT ═══
 (function(){
-  // Restore layout
-  const layout=loadLayout();
-  if(layout)applyLayout(layout);
-  // Cargar visibility (respeta clave existente, default si no existe)
-  loadVisibility();
-  applyVisibilityImmediate();
-  updateFab();
+  // Layout bloqueado: orden y visibilidad fijos en HTML, sin restaurar desde localStorage.
   // Restaurar side filter antes de cualquier render.
   const savedSide=localStorage.getItem('dashboard-side-filter');
   if(savedSide==='buy'||savedSide==='sell'||savedSide==='both') sideFilter=savedSide;
