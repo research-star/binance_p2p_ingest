@@ -13,13 +13,21 @@ Produce un .html autocontenido que se abre en cualquier navegador.
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / '.env')
+except ImportError:
+    pass  # graceful: sin dotenv, env vars deben venir del entorno (counter → "—")
+
 from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, TEMPLATE_HTML
+from scripts.fetch_umami_stats import fetch_visits
 
 DEFAULT_DB = NORMALIZED_DB
 DEFAULT_OUTPUT = DASHBOARD_HTML
@@ -537,6 +545,50 @@ def export_hourly_csv(data: dict, csv_path: Path):
 
 
 
+# ── Umami injection (counter + tracker) ────────────────────────────────────
+
+def _fmt_visits(n):
+    """None → '—'. Int → separador de miles estilo '3,247' (mismo que hardcode)."""
+    if n is None:
+        return '—'
+    try:
+        return f"{int(n):,}"
+    except (TypeError, ValueError):
+        return '—'
+
+
+def _inject_umami(html: str) -> str:
+    """Reemplaza __VISITS_TODAY__, __VISITS_MONTH__ y __UMAMI_SCRIPT__ en el
+    template. Si faltan env vars o la API falla, los counters quedan en '—' y
+    el <script> de tracking no se emite."""
+    api_key = os.environ.get('UMAMI_API_KEY', '').strip()
+    website_id = os.environ.get('UMAMI_WEBSITE_ID', '').strip()
+    host = os.environ.get('UMAMI_HOST', '').strip()
+    script_url = os.environ.get('UMAMI_SCRIPT_URL', '').strip()
+    auth_header = os.environ.get('UMAMI_AUTH_HEADER', '').strip() or None
+    path_prefix = os.environ.get('UMAMI_API_PATH_PREFIX', '').strip() or None
+
+    if api_key and website_id and host:
+        kwargs = {}
+        if auth_header: kwargs['auth_header'] = auth_header
+        if path_prefix: kwargs['path_prefix'] = path_prefix
+        stats = fetch_visits(api_key, website_id, host, **kwargs)
+    else:
+        stats = {'visits_today': None, 'visits_month': None}
+
+    html = html.replace('__VISITS_TODAY__', _fmt_visits(stats['visits_today']))
+    html = html.replace('__VISITS_MONTH__', _fmt_visits(stats['visits_month']))
+
+    if website_id and (script_url or host):
+        src = script_url or f"{host.rstrip('/')}/script.js"
+        tag = (f'<script async defer src="{src}" '
+               f'data-website-id="{website_id}"></script>')
+    else:
+        tag = ''
+    html = html.replace('__UMAMI_SCRIPT__', tag)
+    return html
+
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -561,6 +613,7 @@ def main():
 
     template = TEMPLATE_HTML.read_text(encoding='utf-8')
     html = template.replace('__DATA_PLACEHOLDER__', json.dumps(data))
+    html = _inject_umami(html)
 
     with open(args.output, 'w', encoding='utf-8') as f:
         f.write(html)

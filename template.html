@@ -16,6 +16,8 @@
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#2c4a6b">
 <title>P2P USDT/BOB — Dashboard</title>
+<!-- Umami analytics (only emitted if UMAMI_WEBSITE_ID present at build time) -->
+__UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -430,8 +432,8 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
     <div class="fb-subtitle">Binance Bolivia &middot; Actualizado <span id="lastUpdateStamp">&mdash;</span></div>
   </div>
   <div class="fb-subheader-stats">
-    <div class="fb-stat"><span class="fb-stat-label">Visitas hoy</span><span class="fb-stat-value">147</span></div>
-    <div class="fb-stat"><span class="fb-stat-label">Visitas mes</span><span class="fb-stat-value">3,247</span></div>
+    <div class="fb-stat"><span class="fb-stat-label">Visitas hoy</span><span class="fb-stat-value">__VISITS_TODAY__</span></div>
+    <div class="fb-stat"><span class="fb-stat-label">Visitas mes</span><span class="fb-stat-value">__VISITS_MONTH__</span></div>
   </div>
 </div>
 
