@@ -53,6 +53,9 @@ desktop.ini
 # Claude local
 .claude/
 
+# Personal Claude Code memory (per-developer flow, not committed)
+CLAUDE.local.md
+
 # Logs
 logs/
 *.log
