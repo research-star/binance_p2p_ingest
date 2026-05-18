@@ -2346,23 +2346,106 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
 
 // ═══ BBV TAB ═══
 (function(){
-  // Ticker → full emisor name. Sources:
-  //   · BBV /instrumentos-negociados/ scrape (confirmed): BNB, BEC, BME, FEF, MSL, POL, BCB
-  //   · Bolivian financial sector knowledge (high confidence, verify): BIS, BGA, BSO, FIE, BUN
-  //   · Uncertain: BTB, FFO, NFB, FCZ, MDS, NUT, IID (shown as ticker only)
+  // Ticker → nombre del emisor. Fuente: BBV codigos.pdf
+  //   https://www.bbv.com.bo/Media/Default/InformacionBursatil/codigos.pdf
+  // Uso el "nombre corto" del BBV (compacto y reconocible). El completo es legal.
   const BBV_ISSUERS = {
-    "BNB": "Banco Nacional de Bolivia S.A.",
-    "BEC": "Banco Económico S.A.",
-    "BME": "Banco Mercantil Santa Cruz S.A.",
-    "FEF": "Banco PyME Ecofuturo S.A.",
-    "MSL": "San Lucas S.A.",
-    "POL": "PROLEGA S.A.",
-    "BCB": "Banco Central de Bolivia",
+    // Bancos
     "BIS": "Banco BISA S.A.",
     "BGA": "Banco Ganadero S.A.",
-    "BSO": "Banco Sol S.A.",
+    "BNB": "Banco Nacional de Bolivia S.A.",
+    "BME": "Banco Mercantil Santa Cruz S.A.",
+    "BEC": "Banco Económico S.A.",
+    "BSO": "Banco Solidario S.A.",
+    "BTB": "Banco de Crédito de Bolivia S.A.",
+    "BUN": "Banco Unión S.A.",
+    "FEF": "Banco PyME Ecofuturo S.A.",
+    "FFO": "Banco Fortaleza S.A.",
     "FIE": "Banco FIE S.A.",
-    "BUN": "Banco Unión S.A."
+    "FCO": "Banco PyME de la Comunidad S.A.",
+    "FPR": "Banco Prodem S.A.",
+    "FSL": "Banco Fassil S.A.",
+    "NFB": "Banco de Desarrollo Productivo S.A.M.",
+    "BCB": "Banco Central de Bolivia",
+    // Petróleo / energía
+    "EPA": "YPFB Andina S.A.",
+    "PCH": "YPFB Chaco S.A.",
+    "TRD": "YPFB Transporte S.A.",
+    "TRA": "Transierra S.A.",
+    "EPE": "Equipetrol S.A.",
+    // Agroindustria / oleaginosas / azúcar
+    "AGU": "Ingenio Sucroalcoholero Aguaí S.A.",
+    "NUT": "Nutrioil S.A.",
+    "IOL": "Industrias Oleaginosas S.A.",
+    "GRB": "Gravetal Bolivia S.A.",
+    "POL": "Prolega S.A.",
+    "FIN": "Industrias de Aceite S.A.",
+    "SOF": "Granja Avícola Sofía Ltda.",
+    "MSL": "San Lucas S.A.",
+    // Eléctricas
+    "COR": "ENDE Corani S.A.",
+    "EEO": "ENDE de Oruro S.A.",
+    "ELF": "ELFEC S.A.",
+    "ELP": "DELAPAZ S.A.",
+    "GUA": "ENDE Guaracachi S.A.",
+    "GYE": "Gas & Electricidad S.A.",
+    "TDE": "ENDE Transmisión S.A.",
+    "VAH": "ENDE Valle Hermoso S.A.",
+    "BPC": "COBEE S.A.",
+    // Cemento
+    "FAN": "FANCESA",
+    "SBC": "SOBOCE S.A.",
+    "ITA": "ITACAMBA Cemento S.A.",
+    // Seguros
+    "ALG": "Alianza S.A. (Seguros)",
+    "ALI": "Alianza Vida S.A.",
+    "BSG": "BISA Seguros S.A.",
+    "CGU": "Crediseguro Personales S.A.",
+    "CPE": "Crediseguro Generales S.A.",
+    "CRU": "Fortaleza Seguros S.A.",
+    "LSP": "Nacional Seguros Patrimoniales S.A.",
+    "LVI": "La Vitalicia S.A.",
+    "NSP": "Nacional Seguros Vida y Salud S.A.",
+    "SIS": "Seguros Illimani S.A.",
+    "GNI": "Grupo Nacional Vida S.A.",
+    "PRS": "Seguros Provida S.A.",
+    "SCV": "Santa Cruz Vida y Salud S.A.",
+    // Servicios financieros (leasing/SAFI/titularización/almacenera)
+    "BIA": "BISA S.A. Agencia de Bolsa",
+    "BIL": "BISA Leasing S.A.",
+    "BIT": "BISA Soc. de Titularización S.A.",
+    "BNL": "BNB Leasing S.A.",
+    "FLE": "Fortaleza Leasing S.A.",
+    "RAI": "Almacenes Internacionales (RAISA)",
+    "SBI": "BISA SAFI S.A.",
+    "SCF": "Credifondo SAFI S.A.",
+    "SNA": "BNB SAFI S.A.",
+    // Servicios
+    "HLT": "Hotel Los Tajibos S.A.",
+    "CTM": "Clínica Metropolitana Las Américas S.A.",
+    "VID": "INTEGRA S.A.",
+    // Industria
+    "PLR": "Tigre S.A. (Tubos y Cables)",
+    "TYS": "TOYOSA S.A.",
+    "TSM": "Industria Textil TSM S.A.",
+    "PTF": "Plastiforte S.R.L.",
+    "DIN": "Droguería INTI S.A.",
+    "DMT": "DISMATEC",
+    "CAC": "Ameco S.A.",
+    "ICT": "Incotec S.A.",
+    "BVC": "Bodegas La Concepción S.A.",
+    // Transporte
+    "EFO": "Ferroviaria Oriental S.A.",
+    "FCA": "Ferroviaria Andina S.A.",
+    // Telecom
+    "TCB": "Telecel S.A.",
+    // Cooperativas / IFDs
+    "CJN": "Coop. Jesús Nazareno R.L.",
+    "CRE": "Crédito con Educación Rural IFD",
+    "IDI": "Diaconía IFD",
+    // Gobierno
+    "MLP": "G.A.M. de La Paz",
+    "TGN": "Tesoro General de la Nación"
   };
   function issuerName(ticker){
     return BBV_ISSUERS[ticker] || ticker;
