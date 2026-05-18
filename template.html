@@ -348,7 +348,11 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .fb-bbv-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
 .fb-bbv-table td.rate-cell.neg{color:var(--orange)}
 .fb-bbv-table td.rate-cell.pos-strong{color:var(--green)}
-.fb-bbv-table td.issuer{font-family:'Outfit',sans-serif;font-weight:600;color:var(--text-primary)}
+.fb-bbv-table td.issuer{font-family:'Outfit',sans-serif;color:var(--text-primary)}
+.fb-bbv-table .issuer-name{font-weight:600}
+.fb-bbv-table .issuer-ticker{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:3px;margin-left:6px;letter-spacing:.04em}
+.fb-bbv-table td.bond-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.02em}
+.fb-bbv-issuer-filter{display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0;padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:6px}
 .fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
 body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
@@ -546,6 +550,51 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <tbody></tbody>
       </table>
       <div class="fb-chart-source">Datos: Bolsa Boliviana de Valores &middot; Resumen diario</div>
+    </div>
+
+    <div class="fb-chart-card" style="margin-top:16px;">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Bonos negociados &mdash; movimientos del d&iacute;a</div>
+        <div class="fb-chart-sub">Mayores variaciones de precio (alzas y bajas) ordenadas por |%var|</div>
+      </div>
+      <div class="fb-bbv-issuer-filter">
+        <span class="fb-flab">Filtrar por emisor</span>
+        <div class="fb-pills" id="bbvBondsIssuerPills">
+          <button class="fb-pill active" data-value="ALL">Todos</button>
+          <!-- populated by JS -->
+        </div>
+      </div>
+      <table class="fb-bbv-table" id="bbv-bonds-movers-table">
+        <thead>
+          <tr>
+            <th>Clave de pizarra</th>
+            <th>Emisor</th>
+            <th class="num">Precio (BOB)</th>
+            <th class="num">% Tasa</th>
+            <th class="num">% Var</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="fb-chart-source">Datos: BBV &middot; instrumentos negociados</div>
+    </div>
+
+    <div class="fb-chart-card" style="margin-top:16px;">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Bonos m&aacute;s negociados (rotaciones)</div>
+        <div class="fb-chart-sub">Top por n&uacute;mero de operaciones en el d&iacute;a</div>
+      </div>
+      <table class="fb-bbv-table" id="bbv-bonds-traded-table">
+        <thead>
+          <tr>
+            <th>Clave de pizarra</th>
+            <th>Emisor</th>
+            <th class="num">N&deg; operaciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="fb-chart-source">Datos: BBV &middot; instrumentos negociados</div>
     </div>
   </div>
 </div><!-- /tab-bbv -->
@@ -2297,9 +2346,32 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
 
 // ═══ BBV TAB ═══
 (function(){
+  // Ticker → full emisor name. Sources:
+  //   · BBV /instrumentos-negociados/ scrape (confirmed): BNB, BEC, BME, FEF, MSL, POL, BCB
+  //   · Bolivian financial sector knowledge (high confidence, verify): BIS, BGA, BSO, FIE, BUN
+  //   · Uncertain: BTB, FFO, NFB, FCZ, MDS, NUT, IID (shown as ticker only)
+  const BBV_ISSUERS = {
+    "BNB": "Banco Nacional de Bolivia S.A.",
+    "BEC": "Banco Económico S.A.",
+    "BME": "Banco Mercantil Santa Cruz S.A.",
+    "FEF": "Banco PyME Ecofuturo S.A.",
+    "MSL": "San Lucas S.A.",
+    "POL": "PROLEGA S.A.",
+    "BCB": "Banco Central de Bolivia",
+    "BIS": "Banco BISA S.A.",
+    "BGA": "Banco Ganadero S.A.",
+    "BSO": "Banco Sol S.A.",
+    "FIE": "Banco FIE S.A.",
+    "BUN": "Banco Unión S.A."
+  };
+  function issuerName(ticker){
+    return BBV_ISSUERS[ticker] || ticker;
+  }
+
   // TODO: replace this hardcoded const with data injected by dashboard.py
   // from the bbv_ingest.py output. Today's snapshot, parsed manually from
-  // https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (2026-05-15).
+  // https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (2026-05-15) and
+  // https://www2.bbv.com.bo/mercados/montos-negociados/instrumentos-negociados/
   const BBV_DATA = {
     date: "2026-05-15",
     rates: [
@@ -2344,7 +2416,54 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       {issuer:"BME", currency:"UFV", type:"-",       term:"23-30",    rate:-5.00, scope:"reporto"},
       {issuer:"BUN", currency:"UFV", type:"-",       term:"16-22",    rate:-9.50, scope:"reporto"},
       {issuer:"BCB", currency:"BBS", type:"-",       term:"1-7",      rate:-6.50, scope:"reporto"}
-    ]
+    ],
+    bonds: {
+      // From https://www2.bbv.com.bo/mercados/montos-negociados/instrumentos-negociados/
+      top_gainers: [
+        {code:"BNBN00582025", issuer:"BNB", price:412551.92,  rate:7.30,  vpct:14.14},
+        {code:"BNBN00297422", issuer:"BNB", price:1837434.60, rate:7.30,  vpct:13.68},
+        {code:"BNBN00298122", issuer:"BNB", price:1524302.66, rate:7.30,  vpct:13.68},
+        {code:"BNBN00297522", issuer:"BNB", price:1937873.14, rate:7.30,  vpct:13.67},
+        {code:"BNBN00297822", issuer:"BNB", price:2256913.23, rate:7.30,  vpct:13.67},
+        {code:"BECN04060325", issuer:"BEC", price:517266.05,  rate:7.30,  vpct:12.89},
+        {code:"BMEN20422724", issuer:"BME", price:516681.26,  rate:7.30,  vpct:12.44},
+        {code:"BECN03666423", issuer:"BEC", price:547638.09,  rate:7.30,  vpct:12.26},
+        {code:"BECN03196722", issuer:"BEC", price:2419143.24, rate:7.30,  vpct:12.23},
+        {code:"BNBN00471324", issuer:"BNB", price:511252.76,  rate:7.30,  vpct:11.78},
+        {code:"NR00522609",   issuer:"BCB", price:921.82,     rate:10.64, vpct:1.78},
+        {code:"NR00392615",   issuer:"BCB", price:936.25,     rate:10.30, vpct:0.94},
+        {code:"U001042443",   issuer:"BCB", price:1007.08,    rate:0.00,  vpct:0.43},
+        {code:"NR00522605",   issuer:"BCB", price:931.01,     rate:10.30, vpct:0.12},
+        {code:"NR00392619",   issuer:"BCB", price:929.28,     rate:10.30, vpct:0.08},
+        {code:"NR00522610",   issuer:"BCB", price:921.02,     rate:10.50, vpct:0.03}
+      ],
+      top_losers: [
+        {code:"NR00782605",  issuer:"BCB", price:1001.37, rate:6.00, vpct:-2.63},
+        {code:"MSL-PB1-N2U", issuer:"MSL", price:1050.00, rate:5.00, vpct:-1.10}
+      ],
+      most_traded: [
+        {code:"FEFE43083026", issuer:"FEF", ops:98},
+        {code:"BNBE00528524", issuer:"BNB", ops:97},
+        {code:"BNBE00528424", issuer:"BNB", ops:94},
+        {code:"BNBE00528024", issuer:"BNB", ops:93},
+        {code:"POL-4-N1U-24", issuer:"POL", ops:92},
+        {code:"FEFE43083226", issuer:"FEF", ops:90},
+        {code:"FEFE43083126", issuer:"FEF", ops:90},
+        {code:"BNBE00528224", issuer:"BNB", ops:87},
+        {code:"FEFE43082926", issuer:"FEF", ops:84},
+        {code:"BNBE00528124", issuer:"BNB", ops:82},
+        {code:"FEFE43083526", issuer:"FEF", ops:77},
+        {code:"U001042444",   issuer:"BCB", ops:9},
+        {code:"BNBN25612021", issuer:"BNB", ops:8},
+        {code:"BNBN25612121", issuer:"BNB", ops:8},
+        {code:"BNBN25611621", issuer:"BNB", ops:8},
+        {code:"BNBN25611721", issuer:"BNB", ops:8},
+        {code:"BNBN25611221", issuer:"BNB", ops:8},
+        {code:"BNBN25611021", issuer:"BNB", ops:8},
+        {code:"BNBN25611921", issuer:"BNB", ops:8},
+        {code:"BNBN25611321", issuer:"BNB", ops:8}
+      ]
+    }
   };
 
   var bbvState = {currency:'ALL', scope:'ALL', issuer:'ALL', sortKey:'issuer', sortDir:1};
@@ -2407,8 +2526,12 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Sin filas con los filtros activos.</td></tr>';
     } else {
       tbody.innerHTML=rows.map(function(r){
+        var nm=issuerName(r.issuer);
+        var emHtml=(nm===r.issuer)
+          ? '<span class="issuer-ticker">'+r.issuer+'</span>'
+          : '<span class="issuer-name">'+nm+'</span> <span class="issuer-ticker">'+r.issuer+'</span>';
         return '<tr>'+
-          '<td class="issuer">'+r.issuer+'</td>'+
+          '<td class="issuer">'+emHtml+'</td>'+
           '<td>'+r.currency+'</td>'+
           '<td>'+r.type+'</td>'+
           '<td>'+r.term+'</td>'+
@@ -2419,11 +2542,97 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     var sub=document.getElementById('bbvTableSub');
     if(sub) sub.textContent='Mostrando '+rows.length+' fila'+(rows.length===1?'':'s')+' de '+BBV_DATA.rates.length+' totales';
   }
+  // ─── BONDS panel ───
+  var bondsIssuerFilter = 'ALL';
+
+  function fmtMoney(v){
+    return v.toLocaleString('es-BO', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function bondIssuerCell(ticker){
+    var nm=issuerName(ticker);
+    if(nm===ticker) return '<span class="issuer-ticker">'+ticker+'</span>';
+    return '<span class="issuer-name">'+nm+'</span> <span class="issuer-ticker">'+ticker+'</span>';
+  }
+  function getBondIssuers(){
+    var s=new Set();
+    var b=BBV_DATA.bonds||{};
+    (b.top_gainers||[]).forEach(function(r){s.add(r.issuer);});
+    (b.top_losers||[]).forEach(function(r){s.add(r.issuer);});
+    (b.most_traded||[]).forEach(function(r){s.add(r.issuer);});
+    return Array.from(s).sort();
+  }
+  function renderBondsIssuerPills(){
+    var wrap=document.getElementById('bbvBondsIssuerPills');
+    if(!wrap) return;
+    var html='<button class="fb-pill '+(bondsIssuerFilter==='ALL'?'active':'')+'" data-value="ALL">Todos</button>';
+    getBondIssuers().forEach(function(iss){
+      html+='<button class="fb-pill '+(bondsIssuerFilter===iss?'active':'')+'" data-value="'+iss+'">'+iss+'</button>';
+    });
+    wrap.innerHTML=html;
+  }
+  function renderBondsMovers(){
+    var b=BBV_DATA.bonds||{};
+    var rows=[].concat(b.top_gainers||[], b.top_losers||[]);
+    if(bondsIssuerFilter!=='ALL') rows=rows.filter(function(r){return r.issuer===bondsIssuerFilter;});
+    rows.sort(function(a,b){return Math.abs(b.vpct)-Math.abs(a.vpct);});
+    var tbody=document.querySelector('#bbv-bonds-movers-table tbody');
+    if(!tbody) return;
+    if(!rows.length){
+      tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Sin bonos con el filtro activo.</td></tr>';
+      return;
+    }
+    tbody.innerHTML=rows.map(function(r){
+      var varClass = r.vpct>0 ? 'rate-cell pos-strong' : (r.vpct<0 ? 'rate-cell neg' : 'rate-cell');
+      var sign = r.vpct>=0 ? '+' : '';
+      return '<tr>'+
+        '<td class="bond-code">'+r.code+'</td>'+
+        '<td class="issuer">'+bondIssuerCell(r.issuer)+'</td>'+
+        '<td class="num">'+fmtMoney(r.price)+'</td>'+
+        '<td class="num">'+r.rate.toFixed(2)+'%</td>'+
+        '<td class="num '+varClass+'">'+sign+r.vpct.toFixed(2)+'%</td>'+
+      '</tr>';
+    }).join('');
+  }
+  function renderBondsTraded(){
+    var b=BBV_DATA.bonds||{};
+    var rows=(b.most_traded||[]).slice();
+    if(bondsIssuerFilter!=='ALL') rows=rows.filter(function(r){return r.issuer===bondsIssuerFilter;});
+    rows.sort(function(a,b){return b.ops-a.ops;});
+    var tbody=document.querySelector('#bbv-bonds-traded-table tbody');
+    if(!tbody) return;
+    if(!rows.length){
+      tbody.innerHTML='<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:24px">Sin bonos con el filtro activo.</td></tr>';
+      return;
+    }
+    tbody.innerHTML=rows.map(function(r){
+      return '<tr>'+
+        '<td class="bond-code">'+r.code+'</td>'+
+        '<td class="issuer">'+bondIssuerCell(r.issuer)+'</td>'+
+        '<td class="num">'+r.ops+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+  // Bonds emisor filter click handler (delegated)
+  document.querySelectorAll('#bbvBondsIssuerPills').forEach(function(wrap){
+    wrap.addEventListener('click', function(e){
+      var btn=e.target.closest('.fb-pill');
+      if(!btn) return;
+      bondsIssuerFilter=btn.dataset.value;
+      wrap.querySelectorAll('.fb-pill').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      renderBondsMovers();
+      renderBondsTraded();
+    });
+  });
+
   window.renderBbv = function(){
     var dt=document.getElementById('bbvReportDate');
     if(dt) dt.textContent=BBV_DATA.date;
     renderIssuerPills();
     renderTable();
+    renderBondsIssuerPills();
+    renderBondsMovers();
+    renderBondsTraded();
   };
   // Filter pill clicks (delegated per group)
   document.querySelectorAll('#tab-bbv .fb-pills').forEach(function(group){
