@@ -1421,7 +1421,7 @@ function updateKpis(){
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
     kpi('TC Oficial BCB', fmt2(meta.bcb_rate), 'Prima P2P: +'+fmt2(premium)+'%', ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
-    kpi('Asimetr\u00eda', fmt2(last.depth_ratio)+'\u00d7', 'Venta / Compra', ICONS.asimetria, null)+
+    kpi('BCB Ref', fmt2(ref.compra)+' / '+fmt2(ref.venta), 'Compra \u00b7 Venta (BOB/USDT)', ICONS.bcb, null)+
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
