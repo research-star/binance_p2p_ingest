@@ -1250,7 +1250,7 @@ function rOffer(c){
     showlegend:true,
     legend:{orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:{size:11,family:'Outfit',color:c.fontcolor}},
     xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30},
-    yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted}}, tickformat:',.0f', rangemode:'tozero'},
+    yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted},standoff:12}, tickformat:',.0f', rangemode:'tozero', automargin:true},
     yaxis2:{overlaying:'y', side:'right', showgrid:false, fixedrange:true,
       tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
       title:{text:'Nro. oferentes',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
