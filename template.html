@@ -353,6 +353,15 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .fb-bbv-table .issuer-ticker{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:3px;margin-left:6px;letter-spacing:.04em}
 .fb-bbv-table td.bond-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-secondary);letter-spacing:.02em}
 .fb-bbv-issuer-filter{display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0;padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:6px}
+.fb-bbv-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
+.fb-bbv-glossary{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.fb-bbv-gloss-col h4{font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin:0 0 10px 0}
+.fb-bbv-gloss-table{width:100%;border-collapse:collapse;font-size:11px}
+.fb-bbv-gloss-table td{padding:6px 8px;border-bottom:1px solid var(--border-color);vertical-align:top;line-height:1.45}
+.fb-bbv-gloss-table td.code{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--text-primary);width:56px;white-space:nowrap}
+.fb-bbv-gloss-table td.nm{font-weight:500;color:var(--text-primary);width:180px;font-family:'Outfit',sans-serif}
+.fb-bbv-gloss-table td.desc{color:var(--text-muted)}
+@media(max-width:900px){.fb-bbv-glossary{grid-template-columns:1fr;gap:20px}}
 .fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
 body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
@@ -595,6 +604,28 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <tbody></tbody>
       </table>
       <div class="fb-chart-source">Datos: BBV &middot; instrumentos negociados</div>
+    </div>
+
+    <div class="fb-chart-card" style="margin-top:16px;">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Glosario &mdash; instrumentos y monedas</div>
+        <div class="fb-chart-sub">Referencia r&aacute;pida de los c&oacute;digos usados en las tablas de arriba. Pas&aacute; el mouse sobre cualquier c&oacute;digo de Moneda o Instrumento en la tabla de tasas para ver lo mismo en tooltip.</div>
+      </div>
+      <div class="fb-bbv-glossary">
+        <div class="fb-bbv-gloss-col">
+          <h4>Instrumentos</h4>
+          <table class="fb-bbv-gloss-table" id="bbv-gloss-instruments">
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="fb-bbv-gloss-col">
+          <h4>Monedas y unidades de cuenta</h4>
+          <table class="fb-bbv-gloss-table" id="bbv-gloss-currencies">
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="fb-chart-source">Definiciones: BBV codigos.pdf &middot; BCB</div>
     </div>
   </div>
 </div><!-- /tab-bbv -->
@@ -2451,6 +2482,41 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     return BBV_ISSUERS[ticker] || ticker;
   }
 
+  // Códigos de instrumentos del mercado de valores boliviano
+  const BBV_INSTRUMENTS = {
+    "DPF":     {nm:"Depósitos a Plazo Fijo",         desc:"Certificados de depósito a plazo fijo emitidos por bancos comerciales. Instrumento de ahorro más común."},
+    "LRS":     {nm:"Letras BCB Prepagables",         desc:"Deuda de corto plazo del Banco Central de Bolivia, con opción de redención anticipada. Herramienta de política monetaria."},
+    "LBS":     {nm:"Letras BCB",                     desc:"Deuda de corto plazo del Banco Central de Bolivia (sin opción de prepago)."},
+    "BBS":     {nm:"Bonos BCB",                      desc:"Bonos de mediano/largo plazo emitidos por el Banco Central de Bolivia."},
+    "BRS":     {nm:"Bonos BCB Prepagables",          desc:"Bonos BCB con opción de redención anticipada por el emisor."},
+    "LTS":     {nm:"Letras del Tesoro",              desc:"Deuda soberana de corto plazo emitida por el Tesoro General de la Nación."},
+    "BTS":     {nm:"Bonos del Tesoro",               desc:"Deuda soberana de largo plazo emitida por el Tesoro General de la Nación."},
+    "BLP":     {nm:"Bonos a Largo Plazo",            desc:"Bonos corporativos de largo plazo. Emisores típicos: Prolega, San Lucas, agroindustria."},
+    "BCP":     {nm:"Bonos a Corto Plazo",            desc:"Bonos corporativos de corto plazo."},
+    "BBB":     {nm:"Bonos Bancarios Bursátiles",     desc:"Bonos emitidos por bancos comerciales y negociados en bolsa."},
+    "PGB":     {nm:"Pagarés Bursátiles",             desc:"Pagarés corporativos de corto plazo negociados en la BBV."},
+    "REPORTO": {nm:"Reporto (Repurchase Agreement)", desc:"Préstamo de muy corto plazo (1–45 días) garantizado con valores: venta + acuerdo de recompra. La diferencia de precios = interés."}
+  };
+
+  // Monedas y unidades de cuenta del mercado boliviano
+  const BBV_CURRENCIES = {
+    "BOB": {nm:"Boliviano",                                 desc:"Moneda nacional de Bolivia. Cotización oficial BCB ~6.96 BOB/USD."},
+    "USD": {nm:"Dólar Estadounidense",                      desc:"Dólar de Estados Unidos. Instrumentos denominados directamente en USD."},
+    "UFV": {nm:"Unidad de Fomento a la Vivienda",           desc:"Unidad de cuenta indexada a inflación. NO es moneda física: el BCB publica diariamente su valor en BOB. Tasa negativa = pérdida real de poder adquisitivo."},
+    "DMV": {nm:"Bolivianos con Mantenimiento de Valor",     desc:"BOB con cláusula de mantenimiento de valor anclada al USD. Se liquida en BOB pero sigue al dólar para protegerse de devaluación."}
+  };
+
+  function instrumentTitle(code){
+    var info=BBV_INSTRUMENTS[code];
+    if(!info) return code;
+    return info.nm+" — "+info.desc;
+  }
+  function currencyTitle(code){
+    var info=BBV_CURRENCIES[code];
+    if(!info) return code;
+    return info.nm+" — "+info.desc;
+  }
+
   // TODO: replace this hardcoded const with data injected by dashboard.py
   // from the bbv_ingest.py output. Today's snapshot, parsed manually from
   // https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf (2026-05-15) and
@@ -2613,10 +2679,12 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
         var emHtml=(nm===r.issuer)
           ? '<span class="issuer-ticker">'+r.issuer+'</span>'
           : '<span class="issuer-name">'+nm+'</span> <span class="issuer-ticker">'+r.issuer+'</span>';
+        var ccyTitle=currencyTitle(r.currency).replace(/"/g,'&quot;');
+        var typTitle=instrumentTitle(r.type).replace(/"/g,'&quot;');
         return '<tr>'+
           '<td class="issuer">'+emHtml+'</td>'+
-          '<td>'+r.currency+'</td>'+
-          '<td>'+r.type+'</td>'+
+          '<td class="has-help" title="'+ccyTitle+'">'+r.currency+'</td>'+
+          '<td class="has-help" title="'+typTitle+'">'+r.type+'</td>'+
           '<td>'+r.term+'</td>'+
           '<td class="num '+rateClass(r)+'">'+fmtRate(r.rate)+'</td>'+
         '</tr>';
@@ -2708,6 +2776,24 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     });
   });
 
+  function renderGlossarySection(tbodyId, dict){
+    var tbody=document.querySelector('#'+tbodyId+' tbody');
+    if(!tbody) return;
+    var keys=Object.keys(dict);
+    tbody.innerHTML=keys.map(function(k){
+      var info=dict[k];
+      return '<tr>'+
+        '<td class="code">'+k+'</td>'+
+        '<td class="nm">'+info.nm+'</td>'+
+        '<td class="desc">'+info.desc+'</td>'+
+      '</tr>';
+    }).join('');
+  }
+  function renderBbvGlossary(){
+    renderGlossarySection('bbv-gloss-instruments', BBV_INSTRUMENTS);
+    renderGlossarySection('bbv-gloss-currencies', BBV_CURRENCIES);
+  }
+
   window.renderBbv = function(){
     var dt=document.getElementById('bbvReportDate');
     if(dt) dt.textContent=BBV_DATA.date;
@@ -2716,6 +2802,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     renderBondsIssuerPills();
     renderBondsMovers();
     renderBondsTraded();
+    renderBbvGlossary();
   };
   // Filter pill clicks (delegated per group)
   document.querySelectorAll('#tab-bbv .fb-pills').forEach(function(group){
