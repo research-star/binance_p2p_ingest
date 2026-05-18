@@ -3,3 +3,4 @@
 #   config.py → todos stdlib (sqlite3, json, gzip, urllib, re, pathlib, etc.)
 requests>=2.31.0
 openpyxl>=3.1.0
+pdfplumber>=0.10.0  # bbv_ingest.py — daily BBV PDF parser
