@@ -145,6 +145,10 @@ dual: 18:00 BO captura el republish del mismo día (BCRD republica ~10:30 BO);
 06:00 BO captura si se atrasó al día anterior. ETag hace que la mayoría de
 corridas sean 304 no-op.
 
+`dashboard.py` trimea a **últimos 5 años** al embeber `embi_data` en el JSON
+inline del `index.html` (sin esto el payload crece ~880 KB). La tabla SQLite
+conserva todo el histórico (2007→) para análisis offline o backfill futuro.
+
 ### Fase 3 — Análisis / Dashboard
 
 `dashboard.py` lee `p2p_normalized.db` + `bcb_referencial.json` +
