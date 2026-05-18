@@ -362,6 +362,35 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .fb-bbv-gloss-table td.nm{font-weight:500;color:var(--text-primary);width:180px;font-family:'Outfit',sans-serif}
 .fb-bbv-gloss-table td.desc{color:var(--text-muted)}
 @media(max-width:900px){.fb-bbv-glossary{grid-template-columns:1fr;gap:20px}}
+/* ── Guide tab ── */
+.fb-guide{max-width:920px;margin:0 auto;padding-bottom:48px}
+.fb-guide-toc{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:12px 16px;margin-bottom:24px;position:sticky;top:calc(var(--nav-h) + var(--sub-h));z-index:40}
+.fb-guide-toc .fb-flab{margin-right:8px}
+.fb-guide-toc a{font-family:'Outfit',sans-serif;font-size:12px;color:var(--text-secondary);text-decoration:none;padding:5px 10px;border-radius:4px;background:transparent;border:1px solid transparent;transition:all .15s}
+.fb-guide-toc a:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--border-color)}
+.fb-guide-section{margin-bottom:32px;scroll-margin-top:calc(var(--nav-h) + var(--sub-h) + 80px)}
+.fb-guide-section h2{font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;color:var(--text-primary);margin:0 0 12px 0;padding-bottom:8px;border-bottom:1px solid var(--border-color)}
+.fb-guide-section p{font-size:13px;line-height:1.55;color:var(--text-secondary);margin:0 0 12px 0}
+.fb-guide-section ul,.fb-guide-section ol{font-size:13px;line-height:1.55;color:var(--text-secondary);margin:0 0 12px 0;padding-left:22px}
+.fb-guide-section li{margin-bottom:4px}
+.fb-guide-section a{color:var(--blue-accent);text-decoration:none;border-bottom:1px dotted var(--blue-accent)}
+.fb-guide-section a:hover{border-bottom-style:solid}
+.fb-guide-section code{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:var(--bg-tertiary);padding:1px 5px;border-radius:3px;color:var(--text-primary)}
+.fb-guide-help{font-size:11.5px !important;color:var(--text-muted) !important;font-style:italic}
+.fb-guide-section details{border:1px solid var(--border-color);border-radius:6px;background:var(--bg-secondary);margin-bottom:8px;overflow:hidden}
+.fb-guide-section details summary{padding:10px 14px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;color:var(--text-primary);background:var(--bg-secondary);transition:background .15s;list-style:none;display:flex;align-items:center;gap:8px}
+.fb-guide-section details summary::-webkit-details-marker{display:none}
+.fb-guide-section details summary::before{content:'▸';font-size:10px;color:var(--text-muted);transition:transform .15s;display:inline-block}
+.fb-guide-section details[open] summary::before{transform:rotate(90deg)}
+.fb-guide-section details summary:hover{background:var(--bg-tertiary)}
+.fb-guide-section details[open] summary{border-bottom:1px solid var(--border-color)}
+.fb-guide-section details > *:not(summary){padding:12px 14px}
+.fb-guide-section details > *:not(summary):first-of-type{padding-top:14px}
+.fb-guide-section details p:last-child,.fb-guide-section details ul:last-child,.fb-guide-section details ol:last-child{margin-bottom:0}
+/* Issuers table in guide: hide empty desc column to make table compact */
+#guide-issuers td.desc{display:none}
+#guide-issuers td.code{width:64px}
+#guide-issuers td.nm{width:auto}
 .fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
 body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
@@ -381,6 +410,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
       <button class="fb-tab active" data-tab="dollar">D&oacute;lar</button>
       <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
       <button class="fb-tab" data-tab="bbv">BBV</button>
+      <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
       <button class="fb-tab" disabled>Noticias <span class="fb-soon">Soon</span></button>
     </div>
   </div>
@@ -629,6 +659,185 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
     </div>
   </div>
 </div><!-- /tab-bbv -->
+
+<div id="tab-guide" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>Gu&iacute;a del dashboard</h1>
+      <div class="fb-subtitle">Glosario, conceptos clave y c&oacute;mo interpretar cada panel</div>
+    </div>
+  </div>
+  <div class="content fb-guide">
+
+    <nav class="fb-guide-toc" aria-label="Contenidos">
+      <span class="fb-flab">Contenidos</span>
+      <a href="#g-intro">Introducci&oacute;n</a>
+      <a href="#g-tabs">Las pesta&ntilde;as</a>
+      <a href="#g-concepts">Conceptos clave</a>
+      <a href="#g-currencies">Monedas</a>
+      <a href="#g-instruments">Instrumentos</a>
+      <a href="#g-issuers">Emisores</a>
+      <a href="#g-sources">Fuentes</a>
+    </nav>
+
+    <section id="g-intro" class="fb-guide-section">
+      <h2>Introducci&oacute;n</h2>
+      <p>FinanzasBo es un dashboard del mercado financiero boliviano enfocado en tres frentes complementarios:</p>
+      <ul>
+        <li><strong>Mercado P2P USDT/BOB</strong> en Binance Bolivia &mdash; con qu&eacute; prima sobre el TC oficial est&aacute; cotizando el d&oacute;lar paralelo. Actualizado cada ~10 minutos.</li>
+        <li><strong>Rendimientos de Dep&oacute;sitos a Plazo Fijo (DPF)</strong> por entidad financiera y plazo. Fuente: Banco Central de Bolivia. Actualizado diariamente.</li>
+        <li><strong>Bolsa Boliviana de Valores (BBV)</strong> &mdash; tasas pasivas de los bancos, movimientos de bonos corporativos y emisores listados. Actualizado diariamente.</li>
+      </ul>
+      <p>La idea es ver el mercado boliviano con todas sus dimensiones en un solo lugar: el costo del d&oacute;lar paralelo, lo que rinde guardarte en BOB en un banco, y lo que rinde invertir en deuda corporativa o soberana en la BBV.</p>
+    </section>
+
+    <section id="g-tabs" class="fb-guide-section">
+      <h2>Las pesta&ntilde;as</h2>
+      <details open>
+        <summary><strong>D&oacute;lar</strong> &mdash; mercado P2P USDT/BOB</summary>
+        <p>11 paneles del libro de anuncios de Binance Bolivia. Lo m&aacute;s importante para entender el d&iacute;a a d&iacute;a:</p>
+        <ul>
+          <li><strong>USDT Compra / USDT Venta</strong> (KPIs arriba) &mdash; precio VWAP 10% de profundidad. Compra = d&oacute;nde compr&aacute;s USDT; Venta = d&oacute;nde lo vend&eacute;s.</li>
+          <li><strong>Prima P2P</strong> &mdash; cu&aacute;nto por encima del TC oficial BCB est&aacute; el mercado P2P. Hoy ~44%.</li>
+          <li><strong>BCB Ref</strong> &mdash; las dos tasas referenciales que publica el BCB (compra y venta). Distintas del TC oficial; m&aacute;s cercanas al P2P.</li>
+          <li><strong>Spread</strong>, <strong>Profundidad</strong>, <strong>Ratio Venta/Compra</strong> &mdash; m&eacute;tricas del libro.</li>
+          <li><strong>VWAP por nivel de profundidad</strong> &mdash; el gr&aacute;fico principal. Bandas 5/25/50% muestran el deterioro del precio si comprar&iacute;as m&aacute;s vol.</li>
+          <li><strong>Merchants principales</strong>, <strong>Concentraci&oacute;n Top 5</strong> &mdash; qui&eacute;n est&aacute; haciendo el mercado.</li>
+        </ul>
+        <p><strong>Filtros Compra/Venta:</strong> cada panel direccional tiene su propio toggle. Podes ocultar uno de los lados para focalizar el an&aacute;lisis.</p>
+      </details>
+      <details>
+        <summary><strong>Rendimientos DPF</strong> &mdash; tasas pasivas por entidad</summary>
+        <p>Tabla de tasas que ofrecen bancos, microfinancieras, cooperativas y otras entidades por captar tu plata en un Dep&oacute;sito a Plazo Fijo (DPF). Filtros por:</p>
+        <ul>
+          <li><strong>Tipo de dep&oacute;sito</strong>: DPF o Caja de Ahorro</li>
+          <li><strong>Plazo</strong>: 30, 60, 90, 180, 360, 720, 1080 d&iacute;as, o &gt;1080</li>
+          <li><strong>Moneda</strong>: BOB / USD / UFV</li>
+          <li><strong>Categor&iacute;a</strong>: Bancos M&uacute;ltiples, Microfinanzas, Bancos PyME, Vivienda, Cooperativas, IFD</li>
+        </ul>
+        <p>Fuente: archivos G y O del monitoreo ASFI a trav&eacute;s del BCB.</p>
+      </details>
+      <details>
+        <summary><strong>BBV</strong> &mdash; bolsa boliviana de valores</summary>
+        <p>Tres componentes:</p>
+        <ul>
+          <li><strong>Tasas de rendimiento por emisor y plazo</strong> &mdash; las tasas que pagan bancos, BCB y otros emisores a hoy. Filtrable por moneda, tipo (anual vs reporto) y emisor.</li>
+          <li><strong>Bonos del d&iacute;a &mdash; movimientos</strong> &mdash; alzas y bajas de precio de los bonos corporativos negociados hoy en la BBV. Filtrable por emisor.</li>
+          <li><strong>Bonos m&aacute;s negociados</strong> &mdash; top por n&uacute;mero de operaciones.</li>
+        </ul>
+        <p>Datos: BBV resumen diario (PDF) + BBV instrumentos negociados (web).</p>
+      </details>
+      <details>
+        <summary><strong>Noticias</strong> <em>(pr&oacute;ximamente)</em></summary>
+        <p>Pesta&ntilde;a en desarrollo. Idea: agregador de hechos relevantes ASFI/BBV y noticias macro relevantes para el contexto monetario boliviano.</p>
+      </details>
+    </section>
+
+    <section id="g-concepts" class="fb-guide-section">
+      <h2>Conceptos clave</h2>
+
+      <details>
+        <summary><strong>VWAP</strong> &mdash; Volume Weighted Average Price</summary>
+        <p>Precio promedio ponderado por volumen. En el dashboard, el <strong>VWAP 10%</strong> es el precio promedio que conseguir&iacute;as si tomaras el 10% superior del libro de un lado. Es m&aacute;s representativo que el "mejor precio" porque incluye el deterioro al consumir varias &oacute;rdenes.</p>
+        <p>Los niveles 5/10/25/50 dan una idea de la <em>profundidad real</em>: cu&aacute;nto se deteriora el precio cuando consum&iacute;s m&aacute;s liquidez.</p>
+      </details>
+
+      <details>
+        <summary><strong>Compra vs Venta (perspectiva del taker)</strong></summary>
+        <p><strong>Cr&iacute;tico:</strong> el <code>tradeType</code> en Binance P2P se reporta desde la perspectiva del <strong>taker</strong>, no del maker.</p>
+        <ul>
+          <li><strong>BUY (Compra)</strong>: el <em>taker</em> compra USDT &rarr; el maker est&aacute; vendiendo USDT.</li>
+          <li><strong>SELL (Venta)</strong>: el <em>taker</em> vende USDT &rarr; el maker est&aacute; comprando USDT.</li>
+        </ul>
+        <p>En el dashboard, cuando dice "VWAP Compra" o "Profundidad Compra", se refiere al lado donde el taker compra. Si vas a comprar USDT en P2P, mir&aacute; ese lado.</p>
+      </details>
+
+      <details>
+        <summary><strong>BCB Oficial vs BCB Ref</strong></summary>
+        <p>El Banco Central de Bolivia publica dos referencias de tipo de cambio que se ven en el dashboard:</p>
+        <ul>
+          <li><strong>TC Oficial BCB (~6.96 BOB/USD)</strong>: la cotizaci&oacute;n oficial, fija desde 2011. No refleja el mercado real porque hay restricciones cambiarias.</li>
+          <li><strong>BCB Ref Compra / Venta</strong>: tasas referenciales m&aacute;s recientes que publica el BCB (compra y venta separadas). Est&aacute;n m&aacute;s cerca del P2P pero todav&iacute;a por debajo. Sirve como benchmark intermedio.</li>
+        </ul>
+        <p>El gap entre el TC oficial y el P2P es lo que llamamos <strong>Prima P2P</strong>. Hoy ~44%.</p>
+      </details>
+
+      <details>
+        <summary><strong>Prima P2P</strong></summary>
+        <p>F&oacute;rmula: <code>Prima = (P2P_compra_VWAP10 / TC_BCB_oficial - 1) &times; 100</code>. Mide cu&aacute;nto m&aacute;s caro est&aacute; el USDT en el mercado P2P comparado con el TC oficial. Indicador clave del nivel de estr&eacute;s cambiario.</p>
+      </details>
+
+      <details>
+        <summary><strong>Profundidad (Depth)</strong></summary>
+        <p>USDT totales disponibles en anuncios activos del libro. <strong>Compra</strong> = USDT que los makers est&aacute;n vendiendo (disponibles para que vos compres). <strong>Venta</strong> = USDT que los makers est&aacute;n comprando (vos pod&eacute;s venderles).</p>
+        <p>M&aacute;s profundidad = mercado m&aacute;s l&iacute;quido, menos slippage al operar.</p>
+      </details>
+
+      <details>
+        <summary><strong>Asimetr&iacute;a / Ratio Venta / Compra</strong></summary>
+        <p>Ratio entre profundidad del lado Venta y del lado Compra. <strong>&gt;1 = m&aacute;s oferta que demanda</strong> (m&aacute;s gente queriendo vender USDT). <strong>&lt;1 = m&aacute;s demanda que oferta</strong>. Hoy ~3.87&times; significa que hay casi 4&times; m&aacute;s liquidez del lado venta que del lado compra.</p>
+      </details>
+
+      <details>
+        <summary><strong>Spread</strong></summary>
+        <p>Diferencia entre el VWAP Compra y el VWAP Venta al mismo nivel de profundidad. Es lo que pagar&iacute;as si fueras a tomar ambos lados (e.g. arbitrar entre P2P y otro mercado). Spreads chicos = mercado eficiente.</p>
+      </details>
+
+      <details>
+        <summary><strong>REPORTO</strong> &mdash; Repurchase Agreement (Repo)</summary>
+        <p>Pr&eacute;stamo de corto plazo (1&ndash;45 d&iacute;as) colateralizado con valores. Mec&aacute;nica:</p>
+        <ol>
+          <li>Parte A "vende" un valor a Parte B por dinero hoy.</li>
+          <li>Acuerdan que A "recomprar&aacute;" el mismo valor en una fecha futura, a un precio mayor.</li>
+          <li>La diferencia de precio = inter&eacute;s. Eso es lo que el BBV publica como "tasa de reporto".</li>
+        </ol>
+        <p>Es el instrumento de liquidez de corto plazo m&aacute;s usado en la BBV. Bancos y agencias de bolsa lo usan constantemente para manejar caja.</p>
+      </details>
+
+      <details>
+        <summary><strong>UFV</strong> &mdash; Unidad de Fomento a la Vivienda</summary>
+        <p><strong>NO es moneda f&iacute;sica.</strong> Es una unidad de cuenta cuyo valor en BOB el BCB recalcula a diario seg&uacute;n el IPC (&iacute;ndice de precios al consumidor). Un dep&oacute;sito o bono "en UFV" est&aacute; indexado a inflaci&oacute;n: su valor nominal en BOB sube con la inflaci&oacute;n.</p>
+        <p>Una <strong>tasa UFV negativa</strong> en el dashboard significa que el rendimiento real (sobre inflaci&oacute;n) es negativo &mdash; el inversor est&aacute; <em>perdiendo</em> poder adquisitivo a pesar de que su saldo nominal crezca. Es se&ntilde;al de represi&oacute;n financiera o inflaci&oacute;n alta.</p>
+      </details>
+
+      <details>
+        <summary><strong>DMV</strong> &mdash; Bolivianos con Mantenimiento de Valor</summary>
+        <p>BOB con cl&aacute;usula de mantenimiento de valor anclada al USD. El instrumento se liquida en BOB pero su valor de redenci&oacute;n sigue al d&oacute;lar. Se usa para protegerse de una devaluaci&oacute;n del BOB sin tener USD directamente.</p>
+      </details>
+    </section>
+
+    <section id="g-currencies" class="fb-guide-section">
+      <h2>Monedas y unidades de cuenta</h2>
+      <p class="fb-guide-help">Tambi&eacute;n pod&eacute;s pasar el mouse por encima de cualquier c&oacute;digo de moneda en la tabla de tasas de la pesta&ntilde;a BBV para ver lo mismo como tooltip.</p>
+      <table class="fb-bbv-gloss-table" id="guide-currencies"><tbody></tbody></table>
+    </section>
+
+    <section id="g-instruments" class="fb-guide-section">
+      <h2>Instrumentos financieros</h2>
+      <p class="fb-guide-help">Los c&oacute;digos que us&aacute; la BBV para distinguir tipos de deuda y operaciones.</p>
+      <table class="fb-bbv-gloss-table" id="guide-instruments"><tbody></tbody></table>
+    </section>
+
+    <section id="g-issuers" class="fb-guide-section">
+      <h2>Emisores listados en la BBV</h2>
+      <p class="fb-guide-help">Mapeo ticker &rarr; nombre del emisor. Fuente: BBV codigos.pdf (cat&aacute;logo oficial).</p>
+      <table class="fb-bbv-gloss-table" id="guide-issuers"><tbody></tbody></table>
+    </section>
+
+    <section id="g-sources" class="fb-guide-section">
+      <h2>Fuentes de datos</h2>
+      <ul>
+        <li><strong>Binance P2P USDT/BOB</strong>: snapshots del libro de anuncios cada ~10 minutos.</li>
+        <li><strong>BCB Tipo de Cambio Referencial</strong>: scrapeado diariamente desde el SVG del BCB (compra y venta).</li>
+        <li><strong>Rendimientos DPF</strong>: archivos G y O del monitoreo ASFI, recolectados desde el BCB.</li>
+        <li><strong>BBV Bolet&iacute;n Diario</strong>: PDF p&uacute;blico con tasas de rendimiento por emisor y montos negociados. <a href="https://www.bbv.com.bo/Media/Default/Home/Resumen.pdf" target="_blank" rel="noopener">Ver PDF</a></li>
+        <li><strong>BBV Instrumentos Negociados</strong>: scrape del HTML din&aacute;mico con bonos del d&iacute;a. <a href="https://www2.bbv.com.bo/mercados/montos-negociados/instrumentos-negociados/" target="_blank" rel="noopener">Ver p&aacute;gina</a></li>
+        <li><strong>BBV Codificaci&oacute;n</strong>: cat&aacute;logo oficial de tickers, instrumentos y monedas. <a href="https://www.bbv.com.bo/Media/Default/InformacionBursatil/codigos.pdf" target="_blank" rel="noopener">Ver PDF</a></li>
+      </ul>
+    </section>
+
+  </div>
+</div><!-- /tab-guide -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
   <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
@@ -2227,8 +2436,10 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
     document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
     document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
+    var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
     if(target==='dpf'){renderDpfTable();renderDpfScatter();}
     if(target==='bbv'){renderBbv();}
+    if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   });
 });
 
@@ -2793,6 +3004,25 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     renderGlossarySection('bbv-gloss-instruments', BBV_INSTRUMENTS);
     renderGlossarySection('bbv-gloss-currencies', BBV_CURRENCIES);
   }
+
+  // Guide tab — reuses BBV reference data
+  function renderGuideIssuers(){
+    var tbody=document.querySelector('#guide-issuers tbody');
+    if(!tbody) return;
+    var keys=Object.keys(BBV_ISSUERS).sort();
+    tbody.innerHTML=keys.map(function(k){
+      return '<tr>'+
+        '<td class="code">'+k+'</td>'+
+        '<td class="nm">'+BBV_ISSUERS[k]+'</td>'+
+        '<td class="desc"></td>'+
+      '</tr>';
+    }).join('');
+  }
+  window.renderGuide = function(){
+    renderGlossarySection('guide-instruments', BBV_INSTRUMENTS);
+    renderGlossarySection('guide-currencies', BBV_CURRENCIES);
+    renderGuideIssuers();
+  };
 
   window.renderBbv = function(){
     var dt=document.getElementById('bbvReportDate');
