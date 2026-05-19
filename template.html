@@ -413,6 +413,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
       <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
       <button class="fb-tab" data-tab="bbv">BBV</button>
       <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
+      <button class="fb-tab" data-tab="riesgo-pais">Riesgo Pa&iacute;s</button>
       <button class="fb-tab" disabled>Noticias <span class="fb-soon">Soon</span></button>
     </div>
   </div>
@@ -840,6 +841,28 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 
   </div>
 </div><!-- /tab-guide -->
+
+<div id="tab-riesgo-pais" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>Riesgo Pa&iacute;s EMBI</h1>
+      <div class="fb-subtitle">EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span></div>
+    </div>
+  </div>
+  <div id="riesgoKpis"></div>
+  <div class="content">
+    <div class="fb-chart-card">
+      <div class="fb-chart-head">
+        <div class="fb-chart-title">Spread soberano por pa&iacute;s</div>
+        <div class="fb-chart-sub">Pas&aacute; el mouse sobre el gr&aacute;fico para ver todos los pa&iacute;ses activos en esa fecha. Series en bps.</div>
+      </div>
+      <div class="fb-series-toggles" id="riesgoCountryToggles" style="margin-bottom:10px"></div>
+      <div class="fb-view-toggle" id="riesgoRange" style="margin-bottom:12px"></div>
+      <div id="riesgoChart" style="height:440px;"></div>
+      <div class="fb-chart-source">Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices</div>
+    </div>
+  </div>
+</div><!-- /tab-riesgo-pais -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
   <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
@@ -2439,9 +2462,11 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
     document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
     var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
+    var trp=document.getElementById('tab-riesgo-pais'); if(trp) trp.style.display=target==='riesgo-pais'?'':'none';
     if(target==='dpf'){renderDpfTable();renderDpfScatter();}
     if(target==='bbv'){renderBbv();}
     if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
+    if(target==='riesgo-pais' && typeof window.renderRiesgoPais==='function'){window.renderRiesgoPais();}
   });
 });
 
@@ -3057,6 +3082,211 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       renderTable();
     });
   });
+})();
+
+// ═══ RIESGO PAÍS TAB ═══
+(function(){
+  var EMBI = (typeof DATA==='object' && DATA.embi_data)
+    ? DATA.embi_data
+    : {fecha_actualizado:null,paises:[],fechas:[],series:{}};
+
+  var SERIES_ORDER = ['bolivia','latino','global','argentina','brasil','chile','colombia','mexico','peru','ecuador'];
+  var DEFAULT_ACTIVE = ['bolivia','latino'];
+  var COUNTRY_LABELS = {
+    bolivia:'Bolivia', latino:'LATINO', global:'Global',
+    argentina:'Argentina', brasil:'Brasil', chile:'Chile',
+    colombia:'Colombia', mexico:'México', peru:'Perú', ecuador:'Ecuador'
+  };
+  var COUNTRY_COLORS = {
+    bolivia:'#d4773a', latino:'#1e4d7a', global:'#6b7d92',
+    argentina:'#bd5e84', brasil:'#3d8a5f', chile:'#a86b2c',
+    colombia:'#5589c0', mexico:'#7c5a9e', peru:'#c97a3a', ecuador:'#3c8a8a'
+  };
+  // Rango = nº de fechas hábiles atrás (no días calendario — el Excel BCRD
+  // tiene gaps de fines de semana). Aproximación: 21 días hábiles/mes.
+  var RANGE_DAYS = {'1M':21, '6M':126, '1Y':252, '5Y':1260};
+  var DEFAULT_RANGE = '1Y';
+
+  var state = {range: DEFAULT_RANGE, activeSet: new Set(DEFAULT_ACTIVE)};
+  var rendered = false;
+  var elKpis, elToggles, elRange, elChart;
+
+  function lastNonNull(arr){
+    if(!arr) return null;
+    for(var i=arr.length-1;i>=0;i--) if(arr[i]!=null) return {idx:i,val:arr[i]};
+    return null;
+  }
+  function deltaSteps(arr, n){
+    // Δ = último valor no-null menos el valor n observaciones no-null hacia atrás.
+    var last=lastNonNull(arr);
+    if(!last) return null;
+    var c=0, j=last.idx-1;
+    while(j>=0 && c<n){ if(arr[j]!=null){c++; if(c===n) break;} j--; }
+    if(j<0||arr[j]==null) return null;
+    return last.val - arr[j];
+  }
+  function fmtBps(v){ return v==null?'—':Math.round(v)+' bps'; }
+  function fmtDelta(d){
+    if(d==null) return '—';
+    return (d>=0?'+':'')+Math.round(d)+' bps';
+  }
+  function deltaColor(d){
+    if(d==null) return 'var(--text-muted)';
+    return d>0 ? 'var(--orange)' : (d<0 ? 'var(--green)' : 'var(--text-muted)');
+  }
+  function arrow(d){
+    if(d==null||d===0) return '';
+    return d>0 ? '▲' : '▼';
+  }
+
+  function renderKpis(){
+    if(!elKpis) return;
+    var bol = EMBI.series.bolivia || [];
+    var lat = EMBI.series.latino || [];
+    var bolLast = lastNonNull(bol);
+    var latLast = lastNonNull(lat);
+    var bol1d  = deltaSteps(bol, 1);
+    var bol30d = deltaSteps(bol, 21); // ~30 días calendario ≈ 21 hábiles
+    var lat1d  = deltaSteps(lat, 1);
+
+    function card(label, value, sub, subColor){
+      return '<div class="fb-kpi-card">'
+        + '<div class="fb-kpi-head"><div class="fb-kpi-label">'+label+'</div></div>'
+        + '<div class="fb-kpi-value">'+value+'</div>'
+        + '<div class="fb-kpi-sub" style="color:'+(subColor||'var(--text-muted)')+'">'+sub+'</div>'
+        + '</div>';
+    }
+    elKpis.innerHTML = '<div class="fb-kpi-wrap"><div class="fb-kpi-grid" style="grid-template-columns:repeat(3,1fr)">'
+      + card('Bolivia',
+          bolLast ? fmtBps(bolLast.val) : '—',
+          (arrow(bol1d)+' '+fmtDelta(bol1d)+' (1d)').trim(),
+          deltaColor(bol1d))
+      + card('Bolivia 30d',
+          fmtDelta(bol30d),
+          'Cambio últimos ~30 días hábiles',
+          deltaColor(bol30d))
+      + card('LATINO',
+          latLast ? fmtBps(latLast.val) : '—',
+          (arrow(lat1d)+' '+fmtDelta(lat1d)+' (1d)').trim(),
+          deltaColor(lat1d))
+      + '</div></div>';
+  }
+
+  function renderToggles(){
+    if(!elToggles) return;
+    elToggles.innerHTML = SERIES_ORDER.map(function(k){
+      var active = state.activeSet.has(k);
+      var color  = COUNTRY_COLORS[k];
+      return '<button type="button" class="fb-stog '+(active?'active':'inactive')+'" '
+        +'data-country="'+k+'" style="--fb-trace-color:'+color+'">'
+        +'<span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
+        +'<span class="fb-stog-line solid" style="color:'+color+'"></span>'
+        +'<span class="fb-stog-label">'+COUNTRY_LABELS[k]+'</span>'
+        +'</button>';
+    }).join('');
+  }
+
+  function renderRangeButtons(){
+    if(!elRange) return;
+    elRange.innerHTML = Object.keys(RANGE_DAYS).map(function(k){
+      return '<button type="button" class="ds-chip '+(state.range===k?'active':'')+'" data-range="'+k+'">'+k+'</button>';
+    }).join('');
+  }
+
+  function sliceData(){
+    var fechas = EMBI.fechas || [];
+    if(!fechas.length) return {fechas:[], startIdx:0};
+    var n = RANGE_DAYS[state.range];
+    var startIdx = Math.max(0, fechas.length - n);
+    return {fechas: fechas.slice(startIdx), startIdx: startIdx};
+  }
+
+  function buildTraces(){
+    var sl = sliceData();
+    return SERIES_ORDER.map(function(k){
+      var s = (EMBI.series[k]||[]).slice(sl.startIdx);
+      return {
+        type: 'scatter',
+        mode: 'lines',
+        name: COUNTRY_LABELS[k],
+        x: sl.fechas,
+        y: s,
+        line: {color: COUNTRY_COLORS[k], width: k==='bolivia' ? 2.5 : 1.6},
+        visible: state.activeSet.has(k),
+        connectgaps: false,
+        hovertemplate: COUNTRY_LABELS[k]+': %{y:.0f} bps<extra></extra>'
+      };
+    });
+  }
+
+  function getLayout(){
+    var isDark = document.body.classList.contains('theme-dark');
+    var gridc  = isDark ? 'rgba(255,255,255,.08)' : 'rgba(120,120,120,.10)';
+    var fontc  = isDark ? '#aab4c2' : '#576471';
+    return {
+      autosize: true,
+      margin: {l: 56, r: 16, t: 8, b: 36},
+      xaxis: {showgrid: true, gridcolor: gridc, tickformat: '%d %b \'%y', nticks: 8, tickangle: 0},
+      yaxis: {title: {text: 'Spread (bps)', font: {size: 11, color: fontc}}, showgrid: true, gridcolor: gridc},
+      hovermode: 'x unified',
+      showlegend: false,
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      font: {family: "'Outfit', system-ui, sans-serif", size: 11, color: fontc}
+    };
+  }
+
+  function plotFull(){
+    if(!elChart || typeof Plotly==='undefined') return;
+    Plotly.newPlot(elChart, buildTraces(), getLayout(), {displayModeBar:false, responsive:true});
+  }
+
+  function applyVisibility(){
+    if(!elChart || !elChart.data) return;
+    var vis = SERIES_ORDER.map(function(k){return state.activeSet.has(k);});
+    Plotly.restyle(elChart, {visible: vis});
+  }
+
+  function attachHandlers(){
+    elToggles.addEventListener('click', function(e){
+      var btn = e.target.closest('.fb-stog');
+      if(!btn) return;
+      var k = btn.dataset.country;
+      if(state.activeSet.has(k)){
+        state.activeSet.delete(k);
+        btn.classList.remove('active'); btn.classList.add('inactive');
+      } else {
+        state.activeSet.add(k);
+        btn.classList.remove('inactive'); btn.classList.add('active');
+      }
+      applyVisibility();
+    });
+    elRange.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-range]');
+      if(!btn || btn.classList.contains('active')) return;
+      elRange.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      state.range = btn.dataset.range;
+      plotFull(); // re-plot porque cambian las x del trace
+    });
+  }
+
+  window.renderRiesgoPais = function(){
+    elKpis    = document.getElementById('riesgoKpis');
+    elToggles = document.getElementById('riesgoCountryToggles');
+    elRange   = document.getElementById('riesgoRange');
+    elChart   = document.getElementById('riesgoChart');
+    var elDate = document.getElementById('riesgoDate');
+    if(elDate) elDate.textContent = EMBI.fecha_actualizado || '—';
+    renderKpis();
+    if(!rendered){
+      renderToggles();
+      renderRangeButtons();
+      attachHandlers();
+      rendered = true;
+    }
+    plotFull();
+  };
 })();
 
 (function(){

@@ -149,6 +149,22 @@ corridas sean 304 no-op.
 inline del `index.html` (sin esto el payload crece ~880 KB). La tabla SQLite
 conserva todo el histórico (2007→) para análisis offline o backfill futuro.
 
+**Frontend tab "Riesgo País"** (en `template.html`):
+- Tab insertada entre "Guía" y el placeholder "Noticias Soon".
+- Lazy render: `window.renderRiesgoPais()` se invoca solo al activar la tab
+  (mismo patrón que renderBbv, renderGuide).
+- 3 KPIs hero: Bolivia (último + Δ 1d), Bolivia Δ 30d (~21 hábiles), LATINO
+  (último + Δ 1d).
+- Multi-toggle país (10 series: Bolivia, LATINO, Global, + 7 peers LATAM) con
+  patrón `.fb-stog` (idéntico al toggle VWAP del tab Dólar). Default activos:
+  Bolivia + LATINO.
+- Toggle rango temporal (1M / 6M / 1Y / 5Y) con patrón `.ds-chip`. Default 1Y.
+  Rango en *días hábiles* (no calendario) porque el Excel BCRD tiene gaps de
+  fines de semana — 1M ≈ 21 obs, 5Y ≈ 1260 obs.
+- Sin nueva dependencia JS: usa Plotly ya cargado para el tab Dólar.
+- Sin persistencia (no localStorage): estado de toggles en memoria de la
+  sesión.
+
 ### Fase 3 — Análisis / Dashboard
 
 `dashboard.py` lee `p2p_normalized.db` + `bcb_referencial.json` +
