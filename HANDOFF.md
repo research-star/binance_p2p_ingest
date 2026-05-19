@@ -172,6 +172,12 @@ client-side.
   editar ese bloque CSS, no el JS.
 - Bolivia destaca: ámbar saturado (`#d97706`) + line width 2.8 vs 1.4 de los
   peers + opacity 0.85 en peers para reforzar protagonismo visual.
+- **Paleta por bandera nacional** (peers): Argentina celeste, Brasil verde,
+  Chile rojo, Colombia azul, Ecuador amarillo, México verde oscuro, Perú
+  carmesí. LATINO y Global usan grises neutros para señalar su rol de
+  benchmark. Colombia usa azul (no amarillo) y México verde oscuro (no rojo)
+  para evitar choques con Bolivia/Ecuador/Chile/Perú. Dark mode sube
+  luminosidad de los colores oscuros (Brasil/Colombia/México/Perú).
 - Theme-aware: un MutationObserver sobre `body.class` re-renderea el chart si
   el usuario cambia tema mientras la tab está visible.
 - Sin nueva dependencia JS: usa Plotly ya cargado para el tab Dólar.

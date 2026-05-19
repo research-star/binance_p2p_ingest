@@ -329,16 +329,19 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
   --chart-grid:rgba(120,120,120,0.10);
   --chart-axis-text:#576471;
   --chart-spike:rgba(44,74,107,0.25);
-  --chart-color-bolivia:#d97706;
-  --chart-color-latino:#1e4d7a;
-  --chart-color-global:#8c9aab;
-  --chart-color-argentina:#a4607a;
-  --chart-color-brasil:#5a8f6f;
-  --chart-color-chile:#a87a44;
-  --chart-color-colombia:#6a9bbf;
-  --chart-color-mexico:#8c7aab;
-  --chart-color-peru:#bf8a5e;
-  --chart-color-ecuador:#5e9b9b;
+  /* Paleta por bandera nacional. Bolivia (ámbar) destaca por width+opacity
+     en el JS, no por luminosidad. Colombia usa azul (no amarillo) y México
+     verde oscuro (no rojo) para evitar choques con Bolivia/Ecuador/Chile. */
+  --chart-color-bolivia:#d97706;    /* ámbar — protagónica */
+  --chart-color-latino:#6b7280;     /* gris medio — benchmark regional */
+  --chart-color-global:#9ca3af;     /* gris claro — benchmark global */
+  --chart-color-argentina:#74acdf;  /* celeste bandera */
+  --chart-color-brasil:#009c3b;     /* verde bandera */
+  --chart-color-chile:#d52b1e;      /* rojo bandera */
+  --chart-color-colombia:#003893;   /* azul bandera */
+  --chart-color-ecuador:#ffcc00;    /* amarillo bandera (matiz distinto al ámbar) */
+  --chart-color-mexico:#006847;     /* verde oscuro bandera */
+  --chart-color-peru:#c8102e;       /* carmesí bandera */
 }
 body.theme-dark{
   --chart-tooltip-bg:#1c2632;
@@ -347,16 +350,18 @@ body.theme-dark{
   --chart-grid:rgba(255,255,255,0.08);
   --chart-axis-text:#a8b4c0;
   --chart-spike:rgba(255,255,255,0.25);
+  /* Dark mode: subir luminosidad de los colores oscuros (Brasil/Colombia/
+     México/Perú); claros (Argentina/Ecuador) y Bolivia se mantienen. */
   --chart-color-bolivia:#f59e0b;
-  --chart-color-latino:#5589c0;
-  --chart-color-global:#8c9aab;
-  --chart-color-argentina:#c08099;
-  --chart-color-brasil:#7ab093;
-  --chart-color-chile:#c89968;
-  --chart-color-colombia:#85b6d8;
-  --chart-color-mexico:#a899c9;
-  --chart-color-peru:#d4a47d;
-  --chart-color-ecuador:#80b5b5;
+  --chart-color-latino:#9ca3af;
+  --chart-color-global:#cbd5e1;
+  --chart-color-argentina:#9cc7ea;
+  --chart-color-brasil:#2ebe5e;
+  --chart-color-chile:#e64539;
+  --chart-color-colombia:#4f7ac7;
+  --chart-color-ecuador:#ffdb4d;
+  --chart-color-mexico:#2e9266;
+  --chart-color-peru:#e8425a;
 }
 /* ── DPF Tab ── */
 .fb-dpf-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:14px 18px;margin-bottom:14px}
