@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinanzasBo</title>
+<style>html,body{margin:0;background:#f5f7fa;color:#2c4a6b;font:14px/1.4 system-ui,sans-serif}.w{padding:40px 20px;text-align:center}</style>
+</head>
+<body>
+<div class="w">Redirigiendo…</div>
+<script>
+  // Capture requested path (incl. querystring + hash) and bounce to "/" with
+  // ?path=<encoded>. The SPA reads it, history.replaceState's to the real
+  // path, and activates the matching tab. Fallbacks to "/" if no match.
+  (function(){
+    var p = window.location.pathname + window.location.search + window.location.hash;
+    window.location.replace('/?path=' + encodeURIComponent(p));
+  })();
+</script>
+</body>
+</html>
