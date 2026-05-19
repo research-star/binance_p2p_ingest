@@ -500,12 +500,12 @@ def process_data(db_path: Path) -> dict:
     embi_data = {'fecha_actualizado': None, 'paises': [],
                  'fechas': [], 'series': {}}
     try:
-        # Trim a últimos 5 años en el payload del JSON inline (la tabla SQLite
-        # conserva todo el histórico, 2007→). Sin esto, embi_data agrega ~880 KB
-        # al index.html. Trimming-only en read; el ingest no se toca.
+        # Embebe todo el histórico (2007→). El payload completo agrega ~880 KB
+        # al index.html (vs ~239 KB del trimming a 5 años). Tradeoff aceptado:
+        # el toggle "Max" del frontend lo necesita; el resto de rangos clip
+        # client-side.
         embi_rows = conn.execute(
             "SELECT fecha, pais, spread_bps FROM embi_spreads "
-            "WHERE fecha >= date('now', '-5 years') "
             "ORDER BY fecha, pais"
         ).fetchall()
         if embi_rows:
