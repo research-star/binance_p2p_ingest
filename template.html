@@ -2451,24 +2451,88 @@ function initHelpTooltips(){
   });
 }
 
-// ═══ TAB SWITCHING ═══
+// ═══ TAB SWITCHING + ROUTING ═══
+// Slug → tabId. La home (Dólar) es '/'. Slugs en español alineados con UX
+// boliviano. 'noticias' NO está mapeada porque la tab está deshabilitada
+// (placeholder Soon); paths a /noticias caen en el fallback → '/'.
+var ROUTE_MAP = {
+  '/':       'dollar',
+  '/dpf':    'dpf',
+  '/bbv':    'bbv',
+  '/guia':   'guide',
+  '/riesgo': 'riesgo-pais'
+};
+// Inverso para el pushState al click. Calcular una vez.
+var TAB_TO_SLUG = Object.keys(ROUTE_MAP).reduce(function(acc, slug){
+  acc[ROUTE_MAP[slug]] = slug; return acc;
+}, {});
+// Títulos por tab (mejora SEO + UX en bookmarks).
+var TAB_TITLES = {
+  'dollar':      'FinanzasBo — Mercado P2P USDT/BOB',
+  'dpf':         'FinanzasBo — Rendimientos DPF',
+  'bbv':         'FinanzasBo — Bolsa Boliviana de Valores',
+  'guide':       'FinanzasBo — Guía del dashboard',
+  'riesgo-pais': 'FinanzasBo — Riesgo País EMBI'
+};
+
+function activateTab(target){
+  // Toggle visual del tab header
+  document.querySelectorAll('.fb-tab[data-tab]').forEach(function(t){
+    t.classList.toggle('active', t.dataset.tab === target);
+  });
+  // Mostrar/ocultar contenedores
+  document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
+  document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
+  document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
+  var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
+  var trp=document.getElementById('tab-riesgo-pais'); if(trp) trp.style.display=target==='riesgo-pais'?'':'none';
+  // Lazy render per tab
+  if(target==='dpf'){renderDpfTable();renderDpfScatter();}
+  if(target==='bbv'){renderBbv();}
+  if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
+  if(target==='riesgo-pais' && typeof window.renderRiesgoPais==='function'){window.renderRiesgoPais();}
+  // Título
+  if(TAB_TITLES[target]) document.title = TAB_TITLES[target];
+}
+
 document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
   tab.addEventListener('click',function(){
     if(tab.classList.contains('active')) return;
-    document.querySelectorAll('.fb-tab[data-tab]').forEach(function(t){t.classList.remove('active')});
-    tab.classList.add('active');
-    var target=tab.dataset.tab;
-    document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
-    document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
-    document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
-    var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
-    var trp=document.getElementById('tab-riesgo-pais'); if(trp) trp.style.display=target==='riesgo-pais'?'':'none';
-    if(target==='dpf'){renderDpfTable();renderDpfScatter();}
-    if(target==='bbv'){renderBbv();}
-    if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
-    if(target==='riesgo-pais' && typeof window.renderRiesgoPais==='function'){window.renderRiesgoPais();}
+    var target = tab.dataset.tab;
+    activateTab(target);
+    // Actualizar URL sin recargar
+    var slug = TAB_TO_SLUG[target];
+    if(slug && window.location.pathname !== slug){
+      history.pushState({tab: target}, '', slug);
+    }
   });
 });
+
+// Back/forward del browser
+window.addEventListener('popstate', function(){
+  var path = window.location.pathname;
+  var target = ROUTE_MAP[path] || 'dollar';
+  activateTab(target);
+});
+
+// Init: resolver path al cargar
+(function(){
+  // Caso 404 redirect: index.html cargado con ?path=... → reconstruir URL real
+  var qs = new URLSearchParams(window.location.search);
+  var fromQs = qs.get('path');
+  if(fromQs){
+    // Limpiar la URL: replace porque no queremos que back vuelva al ?path=
+    history.replaceState(null, '', fromQs);
+  }
+  var path = window.location.pathname;
+  if(ROUTE_MAP[path]){
+    activateTab(ROUTE_MAP[path]);
+  } else {
+    // Path no reconocido → home, sin entry en history
+    history.replaceState(null, '', '/');
+    activateTab('dollar');
+  }
+})();
 
 // ═══ DPF TAB LOGIC ═══
 (function(){

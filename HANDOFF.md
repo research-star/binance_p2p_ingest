@@ -165,6 +165,38 @@ conserva todo el histórico (2007→) para análisis offline o backfill futuro.
 - Sin persistencia (no localStorage): estado de toggles en memoria de la
   sesión.
 
+### Routing por paths (SPA + 404 trick)
+
+URLs limpias por tab via HTML5 History API:
+
+| Slug | Tab id (`data-tab`) | Título |
+|---|---|---|
+| `/` | `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
+| `/dpf` | `dpf` | FinanzasBo — Rendimientos DPF |
+| `/bbv` | `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
+| `/guia` | `guide` | FinanzasBo — Guía del dashboard |
+| `/riesgo` | `riesgo-pais` | FinanzasBo — Riesgo País EMBI |
+
+El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
+`// ═══ TAB SWITCHING + ROUTING ═══`). Slug → tab id; el `<title>` se
+actualiza junto con la activación.
+
+**Entrada directa a sub-paths** (ej. `finanzasbo.com/bbv` desde bookmark o
+link externo): GitHub Pages no encuentra el archivo y sirve `404.html`
+(comiteado en `static/404.html`, copiado a la raíz de `gh-pages` por
+`publish_dashboard.py`). Ese 404 redirige a `/?path=%2Fbbv`. El init del SPA
+lee el `?path`, hace `history.replaceState` a `/bbv`, y activa la tab. UX:
+una sola redirección casi imperceptible.
+
+**Navegación interna**: click en tab dispara `history.pushState(slug)`. Back
+y forward del browser disparan `popstate` que re-activa la tab sin recargar.
+
+`/noticias` NO está en `ROUTE_MAP` (la tab es un placeholder "Soon"
+deshabilitado). Cuando esa tab se implemente, agregar la entrada.
+
+Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
++ activa Dólar.
+
 ### Fase 3 — Análisis / Dashboard
 
 `dashboard.py` lee `p2p_normalized.db` + `bcb_referencial.json` +
