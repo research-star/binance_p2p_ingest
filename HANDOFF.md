@@ -165,7 +165,7 @@ client-side.
   Default 1Y. Rango en *días hábiles* (no calendario) porque el Excel BCRD
   tiene gaps de fines de semana — 1M ≈ 21 obs, 5Y ≈ 1260 obs, Max = todo.
 - **Styling centralizado**: paleta de colores, tooltip, ejes y grid viven en
-  CSS variables (`--chart-color-*`, `--chart-tooltip-*`, `--chart-grid`, etc.)
+  CSS variables (`--chart-color-*`, `--tooltip-*`, `--chart-grid`, etc.)
   bajo `:root{}` + override en `body.theme-dark{}` dentro del bloque
   `/* ── Riesgo País chart styles ── */` del `<style>` de template.html.
   El JS las consume con `getComputedStyle`. Para retocar look del chart,
