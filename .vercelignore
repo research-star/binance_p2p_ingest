@@ -1,0 +1,12 @@
+requirements.txt
+*.py
+scripts/
+docs/
+snapshots/
+logs/
+*.db
+*.db.pre-migration-*
+HANDOFF.md
+CLAUDE.md
+backup.env.example
+.github/
