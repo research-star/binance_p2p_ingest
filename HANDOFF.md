@@ -359,3 +359,84 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       ¿borrar `p2p_normalized.db.pre-migration-20260507T180022Z` (442 MB
       untracked) de la laptop? ¿desinstalar Task Scheduler "P2P Watchdog"
       o dejar `Disabled` como reserva?
+
+---
+
+## 7. Hoja de estilo — tokens y theming
+
+Sistema de design tokens introducido en `refactor/css-tokens` (PR1 invisible).
+Define la "hoja de estilo compartida" del proyecto sin cambiar el archivo
+físico — todo el CSS sigue viviendo inline en `template.html`, ahora con una
+capa de tokens al principio del `<style>`.
+
+### Capas del sistema visual (de menor a mayor especificidad)
+
+1. **`:root{}` base** en `template.html` (~L25): defaults light de las vars
+   semánticas (bg/text/border/color-*) y estructurales (`--nav-h`, `--sub-h`,
+   `--kpi-value-size` ahora alias deprecado de `--text-5xl`).
+2. **`:root{}` de design tokens** (~L26-L62): tipografías, escala de tamaños,
+   radios, sombras y tooltip vars compartidos. Bloque nuevo del PR-tokens.
+3. **`:root{}` extendido del chart EMBI** (~L325-L345): paleta `--chart-color-*`
+   (banderas nacionales) + axis/grid (`--chart-grid`, `--chart-axis-text`,
+   `--chart-spike`). Tooltip ya no vive acá — se centralizó en (2).
+4. **JS dinámico** (`THEMES.paper/.slate` + `applyTheme()`, ~L946-1009):
+   reescribe vars semánticas via `root.style.setProperty()` al togglear tema.
+   Maneja `bg-*`, `text-*`, `color-*`, `border-color`. NO maneja design tokens.
+5. **`body.theme-dark{}` CSS** (~L346-L385): overrides para las vars que no
+   pasan por JS (chart palette del EMBI, `--tooltip-bg/border/text`).
+
+### Categorías de tokens
+
+| Categoría | Tokens | Theme-dependent | Override en |
+|---|---|---|---|
+| Tipografías | `--font-display`, `--font-body`, `--font-mono` | no | — |
+| Tamaños texto | `--text-2xs` ... `--text-5xl` (11 niveles) | no | — |
+| Radios | `--radius-xs/sm/md/lg/xl` + `--radius-pill` | no | — |
+| Sombras | `--shadow-sm/md/lg/xl` | sí (pendiente) | PR2 (hoy sin override) |
+| Tooltip | `--tooltip-bg/text/border/font` | sí | `body.theme-dark{}` (los 3 de color; `--tooltip-font` sin override) |
+| Bg/text/border/color-* | (existentes) | sí | JS `THEMES.paper/.slate` |
+| Chart EMBI | `--chart-color-*`, `--chart-grid`, etc. | sí | `body.theme-dark{}` |
+
+### Pendientes de PR1 → PR2
+
+- **Overrides dark de `--shadow-*`**: hoy los 4 tokens viven solo en `:root`
+  con su valor único (alpha .06/.18/.24 sobre `rgba(0,0,0,...)`). En dark mode
+  resuelven al mismo valor → sombras casi invisibles. Bug latente preservado
+  tal cual (era el estado anterior). Override validado va en PR2.
+- **Migración de los 3 hoverlabels de Plotly al sistema `--tooltip-*`**:
+  - VWAP P2P ([template.html:1316](template.html#L1316), función `BL(c)`): hoy consume `c.bgTertiary`,
+    `c.borderColor`, `c.textPrimary` via JS `THEMES`.
+  - DPF scatter ([template.html:2706](template.html#L2706)): hoy hardcodea `#fff`, `'Inter'`, `#2c4a6b` —
+    no es theme-aware, bug visible en dark mode.
+  - EMBI Riesgo País ([template.html:3392-3394](template.html#L3392-L3394)): ya migrado, consume `cssVar('--tooltip-*')`.
+  En PR2 unificar los 3 al patrón EMBI con `cssVar('--tooltip-*')`.
+- **Migración de colores hardcodeados**: literales hex `#1e4d7a`, `#6b7d92`,
+  `#5589c0`, `#8c8c8c` que aparecen en `style="--fb-trace-color:..."` inline
+  ([template.html:493-502](template.html#L493-L502)) y en `.fb-pill.active` ([template.html:373](template.html#L373)). PR2 introduce capa de
+  color tokens semánticos.
+- **Paleta Plotly hardcodeada en JS**: ~25 colores en `THEMES_PLOTLY` y
+  layouts JS de Plotly ([template.html:1711-1772](template.html#L1711-L1772), [template.html:2610-2642](template.html#L2610-L2642)). PR2 si se decide
+  ampliar el sistema a JS-side palette.
+
+### Reglas de uso
+
+- **Cuándo agregar un token**: valor literal repetido ≥2 veces, con razón
+  funcional/semántica (no accidental), con override potencial por tema.
+- **Cuándo NO**: uso único (literal directo OK), valor derivable (composiciones
+  como `var(--radius-sm) 0 0 var(--radius-sm)`), valores intencionalmente
+  contextuales (`rgba(0,0,0,0)` transparente Plotly).
+- **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')` con fallback
+  (pendiente para VWAP P2P y DPF — ver arriba).
+- **Para retocar el chart EMBI**: editar el bloque `/* ── Riesgo País chart
+  styles ── */`, no el JS.
+- **Tokens nuevos NO van en `THEMES.paper/.slate` JS**: ese sistema gestiona
+  solo vars semánticas (bg/text/color). Los design tokens tienen su override
+  dark (cuando aplica) en `body.theme-dark{}` CSS.
+
+### Tokens deprecados / alias
+
+- `--kpi-value-size` → alias de `--text-5xl` (`--kpi-value-size: var(--text-5xl)`
+  en L25). Se mantiene para no romper `.kpi .value` ni los entries actuales
+  en `THEMES.paper/.slate` JS (que escriben `'kpi-value-size':'28px'`).
+  Marcar para futura limpieza cuando se migre la regla `.kpi .value` y los
+  entries JS.
