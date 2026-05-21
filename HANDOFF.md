@@ -145,22 +145,41 @@ dual: 18:00 BO captura el republish del mismo día (BCRD republica ~10:30 BO);
 06:00 BO captura si se atrasó al día anterior. ETag hace que la mayoría de
 corridas sean 304 no-op.
 
-`dashboard.py` trimea a **últimos 5 años** al embeber `embi_data` en el JSON
-inline del `index.html` (sin esto el payload crece ~880 KB). La tabla SQLite
-conserva todo el histórico (2007→) para análisis offline o backfill futuro.
+`dashboard.py` embebe **el histórico completo** de `embi_spreads` en el JSON
+inline del `index.html` (~880 KB adicionales; payload total `index.html`
+~1.67 MB). El trimming a 5 años se retiró en PR #29 adendum para soportar
+el toggle "Max" del frontend que muestra todo el histórico (Bolivia
+2012-11-30 → hoy, peers 2007-10-29 → hoy). Los otros rangos clippean
+client-side.
 
 **Frontend tab "Riesgo País"** (en `template.html`):
 - Tab insertada entre "Guía" y el placeholder "Noticias Soon".
 - Lazy render: `window.renderRiesgoPais()` se invoca solo al activar la tab
   (mismo patrón que renderBbv, renderGuide).
-- 3 KPIs hero: Bolivia (último + Δ 1d), Bolivia Δ 30d (~21 hábiles), LATINO
+- 3 KPIs hero: Bolivia (último + Δ 1d), Bolivia Δ 1M (~21 hábiles), LATINO
   (último + Δ 1d).
 - Multi-toggle país (10 series: Bolivia, LATINO, Global, + 7 peers LATAM) con
   patrón `.fb-stog` (idéntico al toggle VWAP del tab Dólar). Default activos:
   Bolivia + LATINO.
-- Toggle rango temporal (1M / 6M / 1Y / 5Y) con patrón `.ds-chip`. Default 1Y.
-  Rango en *días hábiles* (no calendario) porque el Excel BCRD tiene gaps de
-  fines de semana — 1M ≈ 21 obs, 5Y ≈ 1260 obs.
+- Toggle rango temporal (1M / 6M / 1Y / 5Y / Max) con patrón `.ds-chip`.
+  Default 1Y. Rango en *días hábiles* (no calendario) porque el Excel BCRD
+  tiene gaps de fines de semana — 1M ≈ 21 obs, 5Y ≈ 1260 obs, Max = todo.
+- **Styling centralizado**: paleta de colores, tooltip, ejes y grid viven en
+  CSS variables (`--chart-color-*`, `--chart-tooltip-*`, `--chart-grid`, etc.)
+  bajo `:root{}` + override en `body.theme-dark{}` dentro del bloque
+  `/* ── Riesgo País chart styles ── */` del `<style>` de template.html.
+  El JS las consume con `getComputedStyle`. Para retocar look del chart,
+  editar ese bloque CSS, no el JS.
+- Bolivia destaca: ámbar saturado (`#d97706`) + line width 2.8 vs 1.4 de los
+  peers + opacity 0.85 en peers para reforzar protagonismo visual.
+- **Paleta por bandera nacional** (peers): Argentina celeste, Brasil verde,
+  Chile rojo, Colombia azul, Ecuador amarillo, México verde oscuro, Perú
+  carmesí. LATINO y Global usan grises neutros para señalar su rol de
+  benchmark. Colombia usa azul (no amarillo) y México verde oscuro (no rojo)
+  para evitar choques con Bolivia/Ecuador/Chile/Perú. Dark mode sube
+  luminosidad de los colores oscuros (Brasil/Colombia/México/Perú).
+- Theme-aware: un MutationObserver sobre `body.class` re-renderea el chart si
+  el usuario cambia tema mientras la tab está visible.
 - Sin nueva dependencia JS: usa Plotly ya cargado para el tab Dólar.
 - Sin persistencia (no localStorage): estado de toggles en memoria de la
   sesión.

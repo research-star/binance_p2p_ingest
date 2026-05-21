@@ -317,6 +317,52 @@ body.theme-dark .fb-stog{background:rgba(255,255,255,.04);border-color:rgba(255,
 body.theme-dark .fb-stog-check{border-color:rgba(255,255,255,.20)}
 body.theme-dark .fb-stog.active{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:#e6ebf2}
 body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);color:#6b7d92}
+
+/* ── Riesgo País chart styles ────────────────────────────────────────
+   Variables consumidas por el JS del tab Riesgo País vía getComputedStyle.
+   Toda la paleta y el styling del chart EMBI vive acá — para retocar look,
+   editar este bloque, no el JS. */
+:root{
+  --chart-tooltip-bg:#ffffff;
+  --chart-tooltip-border:rgba(44,74,107,0.18);
+  --chart-tooltip-text:#2c4a6b;
+  --chart-grid:rgba(120,120,120,0.10);
+  --chart-axis-text:#576471;
+  --chart-spike:rgba(44,74,107,0.25);
+  /* Paleta por bandera nacional. Bolivia (ámbar) destaca por width+opacity
+     en el JS, no por luminosidad. Colombia usa azul (no amarillo) y México
+     verde oscuro (no rojo) para evitar choques con Bolivia/Ecuador/Chile. */
+  --chart-color-bolivia:#d97706;    /* ámbar — protagónica */
+  --chart-color-latino:#6b7280;     /* gris medio — benchmark regional */
+  --chart-color-global:#9ca3af;     /* gris claro — benchmark global */
+  --chart-color-argentina:#74acdf;  /* celeste bandera */
+  --chart-color-brasil:#009c3b;     /* verde bandera */
+  --chart-color-chile:#d52b1e;      /* rojo bandera */
+  --chart-color-colombia:#003893;   /* azul bandera */
+  --chart-color-ecuador:#ffcc00;    /* amarillo bandera (matiz distinto al ámbar) */
+  --chart-color-mexico:#006847;     /* verde oscuro bandera */
+  --chart-color-peru:#c8102e;       /* carmesí bandera */
+}
+body.theme-dark{
+  --chart-tooltip-bg:#1c2632;
+  --chart-tooltip-border:rgba(255,255,255,0.14);
+  --chart-tooltip-text:#e6ebf2;
+  --chart-grid:rgba(255,255,255,0.08);
+  --chart-axis-text:#a8b4c0;
+  --chart-spike:rgba(255,255,255,0.25);
+  /* Dark mode: subir luminosidad de los colores oscuros (Brasil/Colombia/
+     México/Perú); claros (Argentina/Ecuador) y Bolivia se mantienen. */
+  --chart-color-bolivia:#f59e0b;
+  --chart-color-latino:#9ca3af;
+  --chart-color-global:#cbd5e1;
+  --chart-color-argentina:#9cc7ea;
+  --chart-color-brasil:#2ebe5e;
+  --chart-color-chile:#e64539;
+  --chart-color-colombia:#4f7ac7;
+  --chart-color-ecuador:#ffdb4d;
+  --chart-color-mexico:#2e9266;
+  --chart-color-peru:#e8425a;
+}
 /* ── DPF Tab ── */
 .fb-dpf-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:8px;padding:14px 18px;margin-bottom:14px}
 .fb-dpf-fcol{display:flex;flex-direction:column;gap:6px}
@@ -3161,14 +3207,19 @@ window.addEventListener('popstate', function(){
     argentina:'Argentina', brasil:'Brasil', chile:'Chile',
     colombia:'Colombia', mexico:'México', peru:'Perú', ecuador:'Ecuador'
   };
-  var COUNTRY_COLORS = {
-    bolivia:'#d4773a', latino:'#1e4d7a', global:'#6b7d92',
-    argentina:'#bd5e84', brasil:'#3d8a5f', chile:'#a86b2c',
-    colombia:'#5589c0', mexico:'#7c5a9e', peru:'#c97a3a', ecuador:'#3c8a8a'
-  };
+  // Colores leídos en runtime desde CSS variables (--chart-color-*) para que
+  // dark mode y futuros retoques sean editables sin tocar JS.
+  function cssVar(name, fallback){
+    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return v || fallback;
+  }
+  function getColor(country){
+    return cssVar('--chart-color-'+country, '#888');
+  }
   // Rango = nº de fechas hábiles atrás (no días calendario — el Excel BCRD
   // tiene gaps de fines de semana). Aproximación: 21 días hábiles/mes.
-  var RANGE_DAYS = {'1M':21, '6M':126, '1Y':252, '5Y':1260};
+  // 'Max' usa Infinity para tomar todo el histórico (Math.max(0,len-Inf)=0).
+  var RANGE_DAYS = {'1M':21, '6M':126, '1Y':252, '5Y':1260, 'Max':Infinity};
   var DEFAULT_RANGE = '1Y';
 
   var state = {range: DEFAULT_RANGE, activeSet: new Set(DEFAULT_ACTIVE)};
@@ -3225,9 +3276,9 @@ window.addEventListener('popstate', function(){
           bolLast ? fmtBps(bolLast.val) : '—',
           (arrow(bol1d)+' '+fmtDelta(bol1d)+' (1d)').trim(),
           deltaColor(bol1d))
-      + card('Bolivia 30d',
+      + card('Bolivia Δ 1M',
           fmtDelta(bol30d),
-          'Cambio últimos ~30 días hábiles',
+          'Cambio últimos ~21 días hábiles',
           deltaColor(bol30d))
       + card('LATINO',
           latLast ? fmtBps(latLast.val) : '—',
@@ -3240,7 +3291,7 @@ window.addEventListener('popstate', function(){
     if(!elToggles) return;
     elToggles.innerHTML = SERIES_ORDER.map(function(k){
       var active = state.activeSet.has(k);
-      var color  = COUNTRY_COLORS[k];
+      var color  = 'var(--chart-color-'+k+')';
       return '<button type="button" class="fb-stog '+(active?'active':'inactive')+'" '
         +'data-country="'+k+'" style="--fb-trace-color:'+color+'">'
         +'<span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
@@ -3269,13 +3320,15 @@ window.addEventListener('popstate', function(){
     var sl = sliceData();
     return SERIES_ORDER.map(function(k){
       var s = (EMBI.series[k]||[]).slice(sl.startIdx);
+      var isBolivia = k==='bolivia';
       return {
         type: 'scatter',
         mode: 'lines',
         name: COUNTRY_LABELS[k],
         x: sl.fechas,
         y: s,
-        line: {color: COUNTRY_COLORS[k], width: k==='bolivia' ? 2.5 : 1.6},
+        line: {color: getColor(k), width: isBolivia ? 2.8 : 1.4},
+        opacity: isBolivia ? 1 : 0.85,
         visible: state.activeSet.has(k),
         connectgaps: false,
         hovertemplate: COUNTRY_LABELS[k]+': %{y:.0f} bps<extra></extra>'
@@ -3283,16 +3336,56 @@ window.addEventListener('popstate', function(){
     });
   }
 
+  // Eje X: format adaptativo según rango — días sueltos en 1M, mes en 6M/1Y,
+  // mes+año en 5Y, año en Max.
+  function xTickFormat(){
+    switch(state.range){
+      case '1M':  return '%d %b';
+      case '6M':  return '%b';
+      case '1Y':  return '%b';
+      case '5Y':  return "%b '%y";
+      case 'Max': return '%Y';
+      default:    return '%b %y';
+    }
+  }
+
   function getLayout(){
-    var isDark = document.body.classList.contains('theme-dark');
-    var gridc  = isDark ? 'rgba(255,255,255,.08)' : 'rgba(120,120,120,.10)';
-    var fontc  = isDark ? '#aab4c2' : '#576471';
+    var gridc  = cssVar('--chart-grid', 'rgba(120,120,120,.10)');
+    var fontc  = cssVar('--chart-axis-text', '#576471');
+    var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
+    var tipBg  = cssVar('--chart-tooltip-bg', '#fff');
+    var tipBd  = cssVar('--chart-tooltip-border', 'rgba(44,74,107,.18)');
+    var tipFg  = cssVar('--chart-tooltip-text', '#2c4a6b');
     return {
       autosize: true,
-      margin: {l: 56, r: 16, t: 8, b: 36},
-      xaxis: {showgrid: true, gridcolor: gridc, tickformat: '%d %b \'%y', nticks: 8, tickangle: 0},
-      yaxis: {title: {text: 'Spread (bps)', font: {size: 11, color: fontc}}, showgrid: true, gridcolor: gridc},
+      margin: {l: 60, r: 16, t: 12, b: 36},
+      xaxis: {
+        showgrid: false,
+        tickformat: xTickFormat(),
+        nticks: 8,
+        tickangle: 0,
+        showspikes: true,
+        spikemode: 'across',
+        spikethickness: 1,
+        spikedash: 'dot',
+        spikecolor: spikec,
+        showline: false,
+        zeroline: false
+      },
+      yaxis: {
+        title: null,
+        ticksuffix: ' bps',
+        tickformat: ',d',
+        showgrid: true,
+        gridcolor: gridc,
+        zeroline: false
+      },
       hovermode: 'x unified',
+      hoverlabel: {
+        bgcolor: tipBg,
+        bordercolor: tipBd,
+        font: {family: "'IBM Plex Mono', monospace", size: 12, color: tipFg}
+      },
       showlegend: false,
       paper_bgcolor: 'rgba(0,0,0,0)',
       plot_bgcolor: 'rgba(0,0,0,0)',
@@ -3347,6 +3440,12 @@ window.addEventListener('popstate', function(){
       renderToggles();
       renderRangeButtons();
       attachHandlers();
+      // Re-plot al cambiar tema (CSS vars cambian, colores y tooltip también).
+      // Sólo dispara si la tab está visible para no malgastar paint en bg.
+      new MutationObserver(function(){
+        var tab = document.getElementById('tab-riesgo-pais');
+        if(elChart && tab && tab.style.display !== 'none') plotFull();
+      }).observe(document.body, {attributes:true, attributeFilter:['class']});
       rendered = true;
     }
     plotFull();
