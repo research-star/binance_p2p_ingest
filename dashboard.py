@@ -108,13 +108,18 @@ def vwap_by_depth(prices_and_sizes, pct):
 def process_data(db_path: Path) -> dict:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
+    # Filtro de calidad: las queries de precio/profundidad/métricas leen ads_verified
+    # (is_merchant=1 = MASS + BLOCK, excluye usuarios regulares). La detección de
+    # cobertura (existencia de snapshots, abajo) sigue sobre `ads` crudo para no
+    # confundir un snapshot sin merchants con un hueco real.
+    conn.execute("CREATE TEMP VIEW ads_verified AS SELECT * FROM ads WHERE is_merchant=1")
     timestamps = [r[0] for r in conn.execute(
         "SELECT DISTINCT snapshot_ts_utc FROM ads WHERE snapshot_ts_utc >= '2026-05-08 00:00:00' ORDER BY snapshot_ts_utc"
     ).fetchall()]
     ts_data = []
     for ts in timestamps:
         rows = conn.execute(
-            "SELECT side, price, surplus_usdt, advertiser_id FROM ads WHERE snapshot_ts_utc=?",
+            "SELECT side, price, surplus_usdt, advertiser_id FROM ads_verified WHERE snapshot_ts_utc=?",
             (ts,)).fetchall()
         buy_raw = [(r['price'], r['surplus_usdt'], r['advertiser_id']) for r in rows if r['side'] == 'BUY']
         sell_raw = [(r['price'], r['surplus_usdt'], r['advertiser_id']) for r in rows if r['side'] == 'SELL']
@@ -150,7 +155,7 @@ def process_data(db_path: Path) -> dict:
     hourly = _group_last(ts_data, lambda ts: ts[:13])
     daily = _group_last(ts_data, lambda ts: ts[:10])
     last_ts = timestamps[-1]
-    bank_rows = conn.execute("SELECT banks, surplus_usdt FROM ads WHERE snapshot_ts_utc=?", (last_ts,)).fetchall()
+    bank_rows = conn.execute("SELECT banks, surplus_usdt FROM ads_verified WHERE snapshot_ts_utc=?", (last_ts,)).fetchall()
     bank_stats = {}
     total_depth_last = 0
     for r in bank_rows:
@@ -178,7 +183,7 @@ def process_data(db_path: Path) -> dict:
         rows = conn.execute("""
             SELECT side, advertiser_nick, advertiser_id, price, surplus_usdt,
                    n_banks, month_order_count
-            FROM ads WHERE snapshot_ts_utc=?
+            FROM ads_verified WHERE snapshot_ts_utc=?
         """, (view_ts,)).fetchall()
         agg = {}
         for r in rows:
@@ -215,7 +220,7 @@ def process_data(db_path: Path) -> dict:
     ids_by_ts = defaultdict(lambda: {'BUY': set(), 'SELL': set()})
     if all_ts_list:
         rows = conn.execute(
-            "SELECT snapshot_ts_utc, side, advertiser_id FROM ads WHERE snapshot_ts_utc >= '2026-05-08 00:00:00'"
+            "SELECT snapshot_ts_utc, side, advertiser_id FROM ads_verified WHERE snapshot_ts_utc >= '2026-05-08 00:00:00'"
         ).fetchall()
         for r in rows:
             ids_by_ts[r['snapshot_ts_utc']][r['side']].add(r['advertiser_id'])
@@ -319,7 +324,7 @@ def process_data(db_path: Path) -> dict:
     ml_rows = conn.execute("""
         SELECT side, advertiser_nick, advertiser_id, price, surplus_usdt,
                n_banks, month_order_count
-        FROM ads WHERE snapshot_ts_utc=?
+        FROM ads_verified WHERE snapshot_ts_utc=?
     """, (last_ts_str,)).fetchall()
     ml_agg = {}
     for r in ml_rows:
@@ -360,7 +365,7 @@ def process_data(db_path: Path) -> dict:
     for d in daily:
         ts = d['ts']
         rows_b = conn.execute(
-            "SELECT banks, surplus_usdt FROM ads WHERE snapshot_ts_utc=?",
+            "SELECT banks, surplus_usdt FROM ads_verified WHERE snapshot_ts_utc=?",
             (ts,)).fetchall()
         bs = {}
         total = 0.0
@@ -400,7 +405,7 @@ def process_data(db_path: Path) -> dict:
     for d in daily:
         ts = d['ts']
         rows_o = conn.execute(
-            "SELECT side, price, surplus_usdt, advertiser_id FROM ads WHERE snapshot_ts_utc=?",
+            "SELECT side, price, surplus_usdt, advertiser_id FROM ads_verified WHERE snapshot_ts_utc=?",
             (ts,)).fetchall()
         buy_ps  = sorted([(r['price'], r['surplus_usdt']) for r in rows_o
                           if r['side'] == 'BUY' and r['price'] and r['surplus_usdt']],
@@ -448,7 +453,7 @@ def process_data(db_path: Path) -> dict:
 
     # ── Order book: individual ads from last snapshot for depth chart ──
     ob_rows = conn.execute(
-        "SELECT side, price, surplus_usdt FROM ads WHERE snapshot_ts_utc=? AND price IS NOT NULL AND surplus_usdt IS NOT NULL",
+        "SELECT side, price, surplus_usdt FROM ads_verified WHERE snapshot_ts_utc=? AND price IS NOT NULL AND surplus_usdt IS NOT NULL",
         (last_ts_str,)).fetchall()
     order_book = {
         'buy': [{'p': round(r['price'], 2), 'a': round(r['surplus_usdt'], 2)} for r in ob_rows if r['side'] == 'BUY'],
@@ -461,7 +466,7 @@ def process_data(db_path: Path) -> dict:
             CAST(strftime('%w', snapshot_ts_utc, '-4 hours') AS INTEGER) AS dow,
             CAST(strftime('%H', snapshot_ts_utc, '-4 hours') AS INTEGER) AS hour,
             SUM(surplus_usdt) AS total_amount
-        FROM ads
+        FROM ads_verified
         WHERE snapshot_ts_utc >= '2026-05-08 00:00:00'
         GROUP BY dow, hour
     """).fetchall()
