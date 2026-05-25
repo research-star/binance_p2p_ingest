@@ -1167,7 +1167,7 @@ function aggregateHeatmap(rangeFromIdx, rangeToIdx){
     {key:'buy_depth',  label:'Profundidad Compra'},
     {key:'sell_depth', label:'Profundidad Venta'},
     {key:'sp10',       label:'Spread 10%'},
-    {key:'n_ads',      label:'Anuncios'},
+    {key:'n_ads',      label:'Anuncios verificados'},
     {key:'vb10',       label:'VWAP 10% Compra'},
     {key:'vs10',       label:'VWAP 10% Venta'},
   ];
@@ -1503,7 +1503,7 @@ function rBank(c){
   }
   el.innerHTML='<table class="bank-table"><thead><tr>'+
     '<th data-sort-key="name" aria-sort="none">Banco<span class="sort-arrow"></span></th>'+
-    '<th class="num" data-sort-key="count" aria-sort="none" title="Anuncios activos en el último snapshot del rango">Anuncios (último snapshot)<span class="sort-arrow"></span></th>'+
+    '<th class="num" data-sort-key="count" aria-sort="none" title="Anuncios activos en el último snapshot del rango">Anuncios verificados (último snapshot)<span class="sort-arrow"></span></th>'+
     '<th class="num" data-sort-key="depth" aria-sort="none">Profundidad (USDT)<span class="sort-arrow"></span></th>'+
     '<th class="num" data-sort-key="pct" aria-sort="none">Cobertura<span class="sort-arrow"></span></th>'+
     '</tr></thead><tbody>'+bk.map(b=>'<tr data-sort-name="'+(b.name||'').replace(/"/g,'&quot;')+'" data-sort-count="'+b.count+'" data-sort-depth="'+b.depth+'" data-sort-pct="'+(b.depth_pct!=null?b.depth_pct:'')+'"><td>'+b.name+'</td><td class="num">'+fmtInt(b.count)+'</td><td class="num bar-cell"><div class="bar-fill" style="width:'+(b.depth/mx*100)+'%;background:'+bc+'"></div>'+fmtInt(b.depth)+'</td><td class="num">'+fmtPctCoverage(b.depth_pct)+'</td></tr>').join('')+'</tbody></table>';

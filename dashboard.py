@@ -256,7 +256,7 @@ def process_data(db_path: Path) -> dict:
         ('buy_depth',  'Profundidad Compra'),
         ('sell_depth', 'Profundidad Venta'),
         ('sp10',       'Spread 10%'),
-        ('n_ads',      'Anuncios'),
+        ('n_ads',      'Anuncios verificados'),
         ('vb10',       'VWAP 10% Compra'),
         ('vs10',       'VWAP 10% Venta'),
     ]
