@@ -298,6 +298,67 @@ si necesitás root real.
 **Firewall + fail2ban:** `ufw` permite solo `22/tcp` (v4+v6). `fail2ban`
 jail `sshd` activa.
 
+### Verificación post-deploy
+
+Tras merge a `main`, el flujo automático es: workflow `auto-publish` → SSH al
+VPS → `git pull` → cache bust (`rm -f /var/log/binance_p2p/publish_dashboard.last_size`)
+→ `publish_dashboard.py` → push a `gh-pages` → GH Pages rebuild (~30-60 s).
+Verificar contra `finanzasbo.com` directo puede devolver HTML viejo porque el
+CDN del custom domain cachea agresivamente — eso **no significa que el deploy
+falló**. La fuente de verdad post-deploy es la rama `gh-pages`.
+
+**1) Confirmar que el deploy completó**
+
+- Workflow:
+  ```
+  gh run list --workflow=auto-publish.yml --limit 2 --json status,conclusion,headSha,databaseId,url
+  gh run watch <run-id> --exit-status
+  ```
+- Commit de `gh-pages`:
+  ```
+  gh api repos/research-star/binance_p2p_ingest/commits/gh-pages \
+    --jq '{sha,date:.commit.committer.date,msg:.commit.message,author:.commit.committer.name}'
+  ```
+  Debe tener `author: "binance VPS"` y `date` posterior al `mergedAt` del PR.
+
+**2) Verificar el HTML en vivo evitando cache stale**
+
+- **Preferido** — bypassa el CDN del custom domain:
+  ```
+  curl -sL https://raw.githubusercontent.com/research-star/binance_p2p_ingest/gh-pages/index.html -o /tmp/raw.html
+  ```
+- **Alternativa** — custom domain con cache-buster agresivo:
+  ```
+  curl -sL -H "Cache-Control: no-cache" -H "Pragma: no-cache" \
+       "https://www.finanzasbo.com/?_cb=$(date +%s%N)" -o /tmp/live.html
+  ```
+  El cache-buster nanosegundo (`%s%N`) bustea casos donde `?_cb=<epoch>`
+  integer no fue suficiente — visto en verificación de PR #36 con CDN del
+  custom domain.
+
+**3) Campo a chequear**
+
+`meta.generated_at` (string ISO embebida en el payload JSON inline del
+`index.html`) debe ser `>=` el `mergedAt` del PR. Si es anterior al merge, el
+HTML que estás viendo es de un publish previo (cache stale del CDN, o el
+publish post-merge aún no llegó al CDN).
+
+**4) Diagnóstico cuando algo no cuadra**
+
+| Síntoma | Causa probable | Acción |
+|---|---|---|
+| Custom domain devuelve HTML viejo, raw `gh-pages` está fresco (`generated_at` posterior al merge) | Cache CDN stale | Esperar, o re-fetch con cache-buster nanosec + headers no-cache. **NO es deploy roto.** |
+| Raw `gh-pages` también está viejo (`generated_at` anterior al merge) | Deploy roto o skipeado | Investigar `gh run view <run-id>` y `/var/log/binance_p2p/dashboard.log` en el VPS. |
+| Workflow dice `success` en ~5-10 s en lugar de ~20 s | Race-lock con cron `*/12` (publish salió limpio sin generar HTML porque el cron tenía el lock cooperativo) | Esperar al próximo tick del cron, o forzar manual: `ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 "cd /opt/binance_p2p && rm -f /var/log/binance_p2p/publish_dashboard.last_size && .venv/bin/python scripts/publish_dashboard.py"`. |
+
+> **Caveat histórico** (PR #36, 2026-05-25): un cache stale del CDN se
+> diagnosticó inicialmente como race-lock entre cron y workflow. La race no
+> existió — el commit de `gh-pages` ya tenía timestamp posterior al merge,
+> confirmando que el workflow sí pusheó a tiempo. Antes de diagnosticar
+> race, **contrastar siempre el `date` del commit `gh-pages` contra el
+> `mergedAt` del PR**; si el commit `gh-pages` es posterior al merge, el
+> deploy está OK y el síntoma es cache stale.
+
 ---
 
 ## 4. Backups

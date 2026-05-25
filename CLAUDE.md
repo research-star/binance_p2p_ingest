@@ -26,6 +26,8 @@ Este archivo describe el proyecto y sus convenciones — el "qué" y el "cómo s
 
 **Convención recomendada**: si hay otro colaborador con PR abierto sobre archivos que toca tu trabajo, conviene coordinar antes de mergear. No es regla rígida — los colaboradores la manejan entre ellos.
 
+**Verificación post-deploy**: tras merge a `main`, fuente de verdad es la rama `gh-pages` — NO `finanzasbo.com`, porque el CDN del custom domain cachea y puede servir HTML viejo (eso NO es deploy roto). Verificá contra el raw de `gh-pages`, o el custom domain con cache-buster nanosegundo + headers `no-cache`. `meta.generated_at` debe ser posterior al `mergedAt` del PR. Detalle y comandos: `HANDOFF.md` § Verificación post-deploy.
+
 ## Anti-patrones del proyecto
 
 - NO tocar `p2p_normalized.db.pre-migration-*` (snapshots de rollback del cutover Hetzner).
