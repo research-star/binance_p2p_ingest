@@ -468,16 +468,17 @@ capa de tokens al principio del `<style>`.
   `#5589c0`, `#8c8c8c` que aparecen en `style="--fb-trace-color:..."` inline
   ([template.html:493-502](template.html#L493-L502)) y en `.fb-pill.active` ([template.html:373](template.html#L373)). PR2 introduce capa de
   color tokens semánticos.
-- **Paleta Plotly hardcodeada en JS** (PR2c): ~25 colores en stops de heatmap,
-  categorías DPF, axis text y línea Spread Evo. La mayoría no son tokenizables
-  invisiblemente porque las vars semánticas existentes cambian en dark — PR2c
-  decide ruta (tokens nuevos vs. fixes deliberados de dark).
+- **Paleta de colores de los charts Plotly**: sigue hardcodeada en JS
+  (~25 literales en stops de heatmap, categorías DPF, axis text, línea Spread
+  Evo). Pendiente de tokenizar — la mayoría no son tokenizables invisiblemente
+  porque las vars semánticas existentes cambian en dark, así que requiere
+  decisiones de cómo se ve cada chart en dark mode antes de migrar.
 
-**Cerrado por `fix/unify-plotly-tooltips` (PR2a):** los 3 hoverlabels Plotly
-(VWAP P2P, DPF, EMBI) consumen `cssVar('--tooltip-*')`. `--tooltip-bg` apunta
-ahora a `--bg-tertiary` (celeste sólido en light, override `#1c2632` en dark).
-EMBI bajó `size` de 12 a 11 para unificarse. Helper `cssVar()` promovido a
-scope módulo (eliminada copia local en EMBI IIFE).
+**Estado actual de tooltips Plotly:** los 3 charts (VWAP P2P, DPF, EMBI)
+comparten estilo via `cssVar('--tooltip-*')`. `--tooltip-bg` apunta a
+`--bg-tertiary` (celeste sólido en light, override literal `#1c2632` en dark
+porque `--bg-tertiary` slate es semi-transparente). Helper `cssVar()` vive a
+scope módulo (cerca de `getC()`), reutilizable por cualquier chart.
 
 ### Reglas de uso
 
@@ -487,7 +488,7 @@ scope módulo (eliminada copia local en EMBI IIFE).
   como `var(--radius-sm) 0 0 var(--radius-sm)`), valores intencionalmente
   contextuales (`rgba(0,0,0,0)` transparente Plotly).
 - **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Los 3 charts
-  ya migrados (P2P/DPF/EMBI) en `fix/unify-plotly-tooltips` (PR2a).
+  actuales (P2P / DPF / EMBI) ya consumen este patrón.
 - **Para retocar el chart EMBI**: editar el bloque `/* ── Riesgo País chart
   styles ── */`, no el JS.
 - **Tokens nuevos NO van en `THEMES.paper/.slate` JS**: ese sistema gestiona
