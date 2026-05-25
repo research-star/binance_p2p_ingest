@@ -454,7 +454,7 @@ capa de tokens al principio del `<style>`.
 | Tamaños texto | `--text-2xs` ... `--text-5xl` (11 niveles) | no | — |
 | Radios | `--radius-xs/sm/md/lg/xl` + `--radius-pill` | no | — |
 | Sombras | `--shadow-sm/md/lg/xl` | sí (pendiente) | PR2 (hoy sin override) |
-| Tooltip | `--tooltip-bg/text/border/font` | sí | `body.theme-dark{}` (los 3 de color; `--tooltip-font` sin override) |
+| Tooltip | `--tooltip-bg/text/border/font` | sí | `body.theme-dark{}` (solo `--tooltip-bg` literal; el resto resuelve vía `--border-color` / `--text-primary` / `--font-mono` que ya son theme-aware) |
 | Bg/text/border/color-* | (existentes) | sí | JS `THEMES.paper/.slate` |
 | Chart EMBI | `--chart-color-*`, `--chart-grid`, etc. | sí | `body.theme-dark{}` |
 
@@ -464,20 +464,20 @@ capa de tokens al principio del `<style>`.
   con su valor único (alpha .06/.18/.24 sobre `rgba(0,0,0,...)`). En dark mode
   resuelven al mismo valor → sombras casi invisibles. Bug latente preservado
   tal cual (era el estado anterior). Override validado va en PR2.
-- **Migración de los 3 hoverlabels de Plotly al sistema `--tooltip-*`**:
-  - VWAP P2P ([template.html:1316](template.html#L1316), función `BL(c)`): hoy consume `c.bgTertiary`,
-    `c.borderColor`, `c.textPrimary` via JS `THEMES`.
-  - DPF scatter ([template.html:2706](template.html#L2706)): hoy hardcodea `#fff`, `'Inter'`, `#2c4a6b` —
-    no es theme-aware, bug visible en dark mode.
-  - EMBI Riesgo País ([template.html:3392-3394](template.html#L3392-L3394)): ya migrado, consume `cssVar('--tooltip-*')`.
-  En PR2 unificar los 3 al patrón EMBI con `cssVar('--tooltip-*')`.
 - **Migración de colores hardcodeados**: literales hex `#1e4d7a`, `#6b7d92`,
   `#5589c0`, `#8c8c8c` que aparecen en `style="--fb-trace-color:..."` inline
   ([template.html:493-502](template.html#L493-L502)) y en `.fb-pill.active` ([template.html:373](template.html#L373)). PR2 introduce capa de
   color tokens semánticos.
-- **Paleta Plotly hardcodeada en JS**: ~25 colores en `THEMES_PLOTLY` y
-  layouts JS de Plotly ([template.html:1711-1772](template.html#L1711-L1772), [template.html:2610-2642](template.html#L2610-L2642)). PR2 si se decide
-  ampliar el sistema a JS-side palette.
+- **Paleta Plotly hardcodeada en JS** (PR2c): ~25 colores en stops de heatmap,
+  categorías DPF, axis text y línea Spread Evo. La mayoría no son tokenizables
+  invisiblemente porque las vars semánticas existentes cambian en dark — PR2c
+  decide ruta (tokens nuevos vs. fixes deliberados de dark).
+
+**Cerrado por `fix/unify-plotly-tooltips` (PR2a):** los 3 hoverlabels Plotly
+(VWAP P2P, DPF, EMBI) consumen `cssVar('--tooltip-*')`. `--tooltip-bg` apunta
+ahora a `--bg-tertiary` (celeste sólido en light, override `#1c2632` en dark).
+EMBI bajó `size` de 12 a 11 para unificarse. Helper `cssVar()` promovido a
+scope módulo (eliminada copia local en EMBI IIFE).
 
 ### Reglas de uso
 
@@ -486,8 +486,8 @@ capa de tokens al principio del `<style>`.
 - **Cuándo NO**: uso único (literal directo OK), valor derivable (composiciones
   como `var(--radius-sm) 0 0 var(--radius-sm)`), valores intencionalmente
   contextuales (`rgba(0,0,0,0)` transparente Plotly).
-- **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')` con fallback
-  (pendiente para VWAP P2P y DPF — ver arriba).
+- **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Los 3 charts
+  ya migrados (P2P/DPF/EMBI) en `fix/unify-plotly-tooltips` (PR2a).
 - **Para retocar el chart EMBI**: editar el bloque `/* ── Riesgo País chart
   styles ── */`, no el JS.
 - **Tokens nuevos NO van en `THEMES.paper/.slate` JS**: ese sistema gestiona

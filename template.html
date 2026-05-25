@@ -1330,6 +1330,11 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx, sideF){
   };
 }
 
+function cssVar(name, fallback){
+  var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
 function getC(){
   const t=activeThemeValues;
   return{
@@ -1349,7 +1354,7 @@ function getC(){
     accentWarm:    t['color-accent-warm']   || t.orange
   };
 }
-function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
+function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:cssVar('--tooltip-font'),size:11,color:cssVar('--tooltip-text')},bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border')},hovermode:'x unified'}}
 const PC={displayModeBar:false,responsive:true,scrollZoom:false};
 function xaWithSlider(xa){
   xa.rangeslider={visible:false};
@@ -2739,7 +2744,7 @@ window.addEventListener('popstate', function(){
       legend:{orientation:'h',x:0,y:-0.20,font:{size:10,color:'#6b7d92'}},
       margin:{l:60,r:20,t:10,b:80},
       paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
-      hoverlabel:{bgcolor:'#fff',bordercolor:'rgba(44,74,107,0.20)',font:{color:'#2c4a6b',family:'Inter',size:11}}
+      hoverlabel:{bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border'),font:{color:cssVar('--tooltip-text'),family:cssVar('--tooltip-font'),size:11}}
     };
     Plotly.newPlot('dpf-scatter-chart',traces,layout,{responsive:true,displayModeBar:false,scrollZoom:false});
   };
@@ -3243,12 +3248,8 @@ window.addEventListener('popstate', function(){
     argentina:'Argentina', brasil:'Brasil', chile:'Chile',
     colombia:'Colombia', mexico:'México', peru:'Perú', ecuador:'Ecuador'
   };
-  // Colores leídos en runtime desde CSS variables (--chart-color-*) para que
-  // dark mode y futuros retoques sean editables sin tocar JS.
-  function cssVar(name, fallback){
-    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    return v || fallback;
-  }
+  // Colores leídos en runtime desde CSS variables (--chart-color-*) vía
+  // helper cssVar() definido a nivel módulo (cerca de getC()).
   function getColor(country){
     return cssVar('--chart-color-'+country, '#888');
   }
@@ -3420,7 +3421,7 @@ window.addEventListener('popstate', function(){
       hoverlabel: {
         bgcolor: tipBg,
         bordercolor: tipBd,
-        font: {family: "'IBM Plex Mono', monospace", size: 12, color: tipFg}
+        font: {family: "'IBM Plex Mono', monospace", size: 11, color: tipFg}
       },
       showlegend: false,
       paper_bgcolor: 'rgba(0,0,0,0)',
