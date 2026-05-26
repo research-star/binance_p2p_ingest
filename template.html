@@ -23,13 +23,13 @@ __UMAMI_SCRIPT__
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--bg-primary:#f5f7fa;--bg-secondary:#ffffff;--bg-tertiary:#dde8ef;--border-color:rgba(44,74,107,0.10);--text-primary:#2c4a6b;--text-secondary:#2c4a6b;--text-muted:#6b7d92;--text-soft:#8c9aab;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
-/* ── Design tokens (PR1 — invisible refactor) ─────────────────────
+/* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
-   Overrides dark de --shadow-* validados en PR2 (hoy preservan el
-   bug latente de sombras invisibles en dark mode). Los --tooltip-*
-   son rename atómico de --chart-tooltip-* (valor preservado en
-   light Y dark; overrides dark renombrados en body.theme-dark{}). */
+   Tooltips Plotly: --tooltip-bg apunta a --bg-tertiary (celeste sólido
+   en light). En dark, body.theme-dark{} fuerza un literal porque
+   --bg-tertiary slate es semi-transparente — incompatible con la regla
+   de "cero transparencia" del tooltip. */
 :root{
   --font-display:'Outfit',system-ui,sans-serif;
   --font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -55,9 +55,9 @@ __UMAMI_SCRIPT__
   --shadow-md:0 6px 20px rgba(0,0,0,.18);
   --shadow-lg:0 8px 24px rgba(0,0,0,.18);
   --shadow-xl:0 10px 32px rgba(0,0,0,.24);
-  --tooltip-bg:var(--bg-secondary);
+  --tooltip-bg:var(--bg-tertiary);
   --tooltip-text:var(--text-primary);
-  --tooltip-border:rgba(44,74,107,0.18);
+  --tooltip-border:var(--border-color);
   --tooltip-font:var(--font-mono);
 }
 *,*::before,*::after{transition:background-color .3s,color .3s,border-color .3s}
@@ -380,9 +380,9 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
   --chart-color-peru:#c8102e;       /* carmesí bandera */
 }
 body.theme-dark{
+  /* --tooltip-bg literal: --bg-tertiary en slate es transparente (rgba .15);
+     mantener override sólido para cumplir "CERO transparencia" en dark. */
   --tooltip-bg:#1c2632;
-  --tooltip-border:rgba(255,255,255,0.14);
-  --tooltip-text:#e6ebf2;
   --chart-grid:rgba(255,255,255,0.08);
   --chart-axis-text:#a8b4c0;
   --chart-spike:rgba(255,255,255,0.25);
@@ -1330,6 +1330,11 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx, sideF){
   };
 }
 
+function cssVar(name, fallback){
+  var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+
 function getC(){
   const t=activeThemeValues;
   return{
@@ -1349,7 +1354,7 @@ function getC(){
     accentWarm:    t['color-accent-warm']   || t.orange
   };
 }
-function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:'IBM Plex Mono',size:11,color:c.textPrimary},bgcolor:c.bgTertiary,bordercolor:c.borderColor},hovermode:'x unified'}}
+function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:cssVar('--tooltip-font'),size:11,color:cssVar('--tooltip-text')},bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border')},hovermode:'x unified'}}
 const PC={displayModeBar:false,responsive:true,scrollZoom:false};
 function xaWithSlider(xa){
   xa.rangeslider={visible:false};
@@ -2739,7 +2744,7 @@ window.addEventListener('popstate', function(){
       legend:{orientation:'h',x:0,y:-0.20,font:{size:10,color:'#6b7d92'}},
       margin:{l:60,r:20,t:10,b:80},
       paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
-      hoverlabel:{bgcolor:'#fff',bordercolor:'rgba(44,74,107,0.20)',font:{color:'#2c4a6b',family:'Inter',size:11}}
+      hoverlabel:{bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border'),font:{color:cssVar('--tooltip-text'),family:cssVar('--tooltip-font'),size:11}}
     };
     Plotly.newPlot('dpf-scatter-chart',traces,layout,{responsive:true,displayModeBar:false,scrollZoom:false});
   };
@@ -3243,12 +3248,8 @@ window.addEventListener('popstate', function(){
     argentina:'Argentina', brasil:'Brasil', chile:'Chile',
     colombia:'Colombia', mexico:'México', peru:'Perú', ecuador:'Ecuador'
   };
-  // Colores leídos en runtime desde CSS variables (--chart-color-*) para que
-  // dark mode y futuros retoques sean editables sin tocar JS.
-  function cssVar(name, fallback){
-    var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    return v || fallback;
-  }
+  // Colores leídos en runtime desde CSS variables (--chart-color-*) vía
+  // helper cssVar() definido a nivel módulo (cerca de getC()).
   function getColor(country){
     return cssVar('--chart-color-'+country, '#888');
   }
@@ -3420,7 +3421,7 @@ window.addEventListener('popstate', function(){
       hoverlabel: {
         bgcolor: tipBg,
         bordercolor: tipBd,
-        font: {family: "'IBM Plex Mono', monospace", size: 12, color: tipFg}
+        font: {family: "'IBM Plex Mono', monospace", size: 11, color: tipFg}
       },
       showlegend: false,
       paper_bgcolor: 'rgba(0,0,0,0)',
