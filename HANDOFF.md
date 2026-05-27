@@ -437,14 +437,14 @@ capa de tokens al principio del `<style>`.
    `--kpi-value-size` ahora alias deprecado de `--text-5xl`).
 2. **`:root{}` de design tokens** (~L26-L62): tipografías, escala de tamaños,
    radios, sombras y tooltip vars compartidos. Bloque nuevo del PR-tokens.
-3. **`:root{}` extendido del chart EMBI** (~L325-L345): paleta `--chart-color-*`
-   (banderas nacionales) + axis/grid (`--chart-grid`, `--chart-axis-text`,
-   `--chart-spike`). Tooltip ya no vive acá — se centralizó en (2).
-4. **JS dinámico** (`THEMES.paper/.slate` + `applyTheme()`, ~L946-1009):
-   reescribe vars semánticas via `root.style.setProperty()` al togglear tema.
-   Maneja `bg-*`, `text-*`, `color-*`, `border-color`. NO maneja design tokens.
-5. **`body.theme-dark{}` CSS** (~L346-L385): overrides para las vars que no
-   pasan por JS (chart palette del EMBI, `--tooltip-bg/border/text`).
+3. **JS dinámico** (`THEMES.paper/.slate` + `applyTheme()`): reescribe via
+   `root.style.setProperty()` al togglear tema. Maneja vars semánticas
+   (`bg-*`, `text-*`, `color-*`, `border-color`) y además los tokens que
+   son consumidos por JS via `cssVar()` — hoy `--tooltip-bg` y los 13
+   chart tokens (ver "Delivery de tokens" abajo).
+4. **`body.theme-dark{}` CSS**: overrides dark de tokens consumidos sólo
+   por CSS — hoy `--shadow-sm/md/lg/xl` + reglas ad hoc por componente
+   (`.pill-*`, `.fb-stog`, etc.).
 
 ### Categorías de tokens
 
@@ -453,10 +453,10 @@ capa de tokens al principio del `<style>`.
 | Tipografías | `--font-display`, `--font-body`, `--font-mono` | no | — |
 | Tamaños texto | `--text-2xs` ... `--text-5xl` (11 niveles) | no | — |
 | Radios | `--radius-xs/sm/md/lg/xl` + `--radius-pill` | no | — |
-| Sombras | `--shadow-sm/md/lg/xl` | sí (pendiente) | PR2 (hoy sin override) |
-| Tooltip | `--tooltip-bg/text/border/font` | sí | `body.theme-dark{}` (solo `--tooltip-bg` literal; el resto resuelve vía `--border-color` / `--text-primary` / `--font-mono` que ya son theme-aware) |
+| Sombras | `--shadow-sm/md/lg/xl` | sí | `body.theme-dark{}` (CSS-consumed) |
+| Tooltip | `--tooltip-bg` (literal) + `--tooltip-text/border/font` (vía vars theme-aware) | sí | JS `THEMES.paper/.slate` (`--tooltip-bg` se consume por `cssVar()`) |
 | Bg/text/border/color-* | (existentes) | sí | JS `THEMES.paper/.slate` |
-| Chart EMBI | `--chart-color-*`, `--chart-grid`, etc. | sí | `body.theme-dark{}` |
+| Chart EMBI | `--chart-color-*` (10), `--chart-grid`, `--chart-axis-text`, `--chart-spike` | sí | JS `THEMES.paper/.slate` (consumidos por `cssVar()` en el JS del EMBI) |
 
 ### Pendientes de PR1 → PR2
 
@@ -475,10 +475,10 @@ capa de tokens al principio del `<style>`.
   decisiones de cómo se ve cada chart en dark mode antes de migrar.
 
 **Estado actual de tooltips Plotly:** los 3 charts (VWAP P2P, DPF, EMBI)
-comparten estilo via `cssVar('--tooltip-*')`. `--tooltip-bg` apunta a
-`--bg-tertiary` (celeste sólido en light, override literal `#1c2632` en dark
-porque `--bg-tertiary` slate es semi-transparente). Helper `cssVar()` vive a
-scope módulo (cerca de `getC()`), reutilizable por cualquier chart.
+comparten estilo via `cssVar('--tooltip-*')`. `--tooltip-bg` se entrega
+desde `THEMES.paper/.slate` (`#dde8ef` light, `#1c2632` dark sólido).
+Helper `cssVar()` vive a scope módulo (cerca de `getC()`), reutilizable
+por cualquier chart.
 
 ### Reglas de uso
 
@@ -489,11 +489,24 @@ scope módulo (cerca de `getC()`), reutilizable por cualquier chart.
   contextuales (`rgba(0,0,0,0)` transparente Plotly).
 - **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Los 3 charts
   actuales (P2P / DPF / EMBI) ya consumen este patrón.
-- **Para retocar el chart EMBI**: editar el bloque `/* ── Riesgo País chart
-  styles ── */`, no el JS.
-- **Tokens nuevos NO van en `THEMES.paper/.slate` JS**: ese sistema gestiona
-  solo vars semánticas (bg/text/color). Los design tokens tienen su override
-  dark (cuando aplica) en `body.theme-dark{}` CSS.
+- **Para retocar valores del chart EMBI**: editar `THEMES.paper/.slate` en
+  el JS (`--chart-color-*`, `--chart-grid`, `--chart-axis-text`, `--chart-spike`).
+  Para retocar el layout (legenda, tickformats, etc.) editar el JS del EMBI.
+- **Delivery de tokens theme-dependent**: depende de quién los consume.
+  - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
+    viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
+    `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
+    encuentra. Hoy en `THEMES`: `--tooltip-bg`, `--chart-grid`,
+    `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`
+    (bolivia/latino/global/argentina/brasil/chile/colombia/ecuador/mexico/peru).
+  - **Consumidos sólo por CSS** (selectores `var(--token)` en reglas que
+    aplican a descendientes del `<body>`) → pueden vivir en `:root` para
+    el default light + `body.theme-dark{}` para el override dark. Hoy en
+    `body.theme-dark{}`: `--shadow-sm/md/lg/xl`, más overrides ad hoc
+    (`.pill-yellow/.pill-red`, `.fb-stog*`, etc.).
+  - **Razón**: las CSS vars no cascadean hacia arriba — un override en
+    `body.theme-dark{}` no alcanza a `documentElement`, así que `cssVar()`
+    leería el default light en dark mode. Bug arreglado en PR2b/PR2b.1.
 
 ### Tokens deprecados / alias
 
