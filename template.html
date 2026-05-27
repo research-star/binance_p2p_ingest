@@ -378,6 +378,13 @@ body.theme-dark{
   /* --tooltip-bg literal: --bg-tertiary en slate es transparente (rgba .15);
      mantener override sólido para cumplir "CERO transparencia" en dark. */
   --tooltip-bg:#1c2632;
+  /* Sombras dark: misma geometría que light, alpha más alto para que
+     se vean sobre el fondo slate (sin overrides resolverían al valor
+     light rgba(0,0,0,.06-.24) y quedaban invisibles). */
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 6px 20px rgba(0,0,0,.45);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.50);
+  --shadow-xl:0 10px 32px rgba(0,0,0,.55);
   --chart-grid:rgba(255,255,255,0.08);
   --chart-axis-text:#a8b4c0;
   --chart-spike:rgba(255,255,255,0.25);
