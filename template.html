@@ -406,33 +406,32 @@ body.theme-dark{
 .fb-chart-head{margin-bottom:12px}
 .fb-chart-title{font-size:var(--text-md);font-weight:600;color:var(--text-primary)}
 .fb-chart-sub{font-size:var(--text-sm);color:var(--text-muted);margin-top:2px}
-.fb-dpf-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
-.fb-dpf-table th,.fb-dpf-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
-.fb-dpf-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
-.fb-dpf-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
-.fb-dpf-table tr:hover{background:rgba(44,74,107,.04)}
+/* ── Data tables (DPF + BBV) ── */
+.fb-data-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
+.fb-data-table th,.fb-data-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
+.fb-data-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
+.fb-data-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
+.fb-data-table th[data-sort-key]:hover{color:var(--text-primary)}
+.fb-data-table tr:hover{background:rgba(44,74,107,.04)}
+body.theme-dark .fb-data-table tr:hover{background:rgba(255,255,255,.04)}
+.fb-data-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
+.fb-data-table th.num,.fb-data-table td.num{text-align:right;font-family:var(--font-mono)}
+.fb-data-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
+.fb-data-table td.rate-cell.neg{color:var(--orange)}
+.fb-data-table td.rate-cell.pos-strong{color:var(--green)}
+.fb-data-table td.issuer{font-family:var(--font-display);color:var(--text-primary)}
+.fb-data-table .issuer-name{font-weight:600}
+.fb-data-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
+.fb-data-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
+.fb-data-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
 .fb-dpf-bar-bg{background:rgba(44,74,107,.08);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
 .fb-dpf-bar{height:8px;background:#1e4d7a;border-radius:var(--radius-sm)}
-body.theme-dark .fb-dpf-table tr:hover{background:rgba(255,255,255,.04)}
 body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 @media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
 /* ── BBV table & filters ── */
 .fb-bbv-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
 .fb-bbv-fcol{display:flex;flex-direction:column;gap:6px}
-.fb-bbv-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
-.fb-bbv-table th,.fb-bbv-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
-.fb-bbv-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500;cursor:pointer;user-select:none}
-.fb-bbv-table th:hover{color:var(--text-primary)}
-.fb-bbv-table th.num,.fb-bbv-table td.num{text-align:right;font-family:var(--font-mono)}
-.fb-bbv-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
-.fb-bbv-table td.rate-cell.neg{color:var(--orange)}
-.fb-bbv-table td.rate-cell.pos-strong{color:var(--green)}
-.fb-bbv-table td.issuer{font-family:var(--font-display);color:var(--text-primary)}
-.fb-bbv-table .issuer-name{font-weight:600}
-.fb-bbv-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
-.fb-bbv-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
 .fb-bbv-issuer-filter{display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0;padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-md)}
-.fb-bbv-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
 .fb-bbv-glossary{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .fb-bbv-gloss-col h4{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin:0 0 10px 0}
 .fb-bbv-gloss-table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
@@ -470,8 +469,6 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 #guide-issuers td.desc{display:none}
 #guide-issuers td.code{width:64px}
 #guide-issuers td.nm{width:auto}
-.fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
-body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
 </style></head>
 <body>
@@ -590,7 +587,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title" id="dpf-table-title">DPF &middot; 360 d&iacute;as &middot; BOB &middot; Entidades Financieras</div>
         <div class="fb-chart-sub">Ordenado de mayor a menor tasa</div>
       </div>
-      <table class="fb-dpf-table" id="dpf-rates-table">
+      <table class="fb-data-table" id="dpf-rates-table">
         <thead>
           <tr>
             <th>Entidad</th>
@@ -656,7 +653,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title">Tasas de rendimiento por emisor y plazo</div>
         <div class="fb-chart-sub" id="bbvTableSub">Mostrando &mdash; filas</div>
       </div>
-      <table class="fb-bbv-table" id="bbv-rates-table">
+      <table class="fb-data-table" id="bbv-rates-table">
         <thead>
           <tr>
             <th data-sort-key="issuer">Emisor</th>
@@ -683,14 +680,14 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
           <!-- populated by JS -->
         </div>
       </div>
-      <table class="fb-bbv-table" id="bbv-bonds-movers-table">
+      <table class="fb-data-table" id="bbv-bonds-movers-table">
         <thead>
           <tr>
-            <th>Clave de pizarra</th>
-            <th>Emisor</th>
-            <th class="num">Precio (BOB)</th>
-            <th class="num">% Tasa</th>
-            <th class="num">% Var</th>
+            <th data-sort-key="bondCode">Clave de pizarra</th>
+            <th data-sort-key="issuer">Emisor</th>
+            <th class="num" data-sort-key="price">Precio (BOB)</th>
+            <th class="num" data-sort-key="ratePct">% Tasa</th>
+            <th class="num" data-sort-key="varPct">% Var</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -703,12 +700,12 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title">Bonos m&aacute;s negociados (rotaciones)</div>
         <div class="fb-chart-sub">Top por n&uacute;mero de operaciones en el d&iacute;a</div>
       </div>
-      <table class="fb-bbv-table" id="bbv-bonds-traded-table">
+      <table class="fb-data-table" id="bbv-bonds-traded-table">
         <thead>
           <tr>
-            <th>Clave de pizarra</th>
-            <th>Emisor</th>
-            <th class="num">N&deg; operaciones</th>
+            <th data-sort-key="bondCode">Clave de pizarra</th>
+            <th data-sort-key="issuer">Emisor</th>
+            <th class="num" data-sort-key="ops">N&deg; operaciones</th>
           </tr>
         </thead>
         <tbody></tbody>
