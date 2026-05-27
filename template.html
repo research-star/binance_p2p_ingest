@@ -137,15 +137,23 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .section-header p{font-size:var(--text-base);font-weight:400;color:var(--text-muted);margin-top:3px;line-height:1.4}
 .section-body{padding:16px 20px 20px}
 
+/* ── Rank tables (entity lists with sortable headers) ──
+   Base compartida por .bank-table, .merchants-table, .outliers-table.
+   Cada variante encapsula su densidad, emphasis de primera columna y
+   variantes side; la base centraliza typography, num align, hover y
+   sort cursor. */
+.fb-rank-table{width:100%;border-collapse:collapse}
+.fb-rank-table th{text-align:left;font-family:var(--font-display);font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border-color)}
+.fb-rank-table td{font-family:var(--font-mono);color:var(--text-secondary);font-variant-numeric:tabular-nums;border-bottom:1px solid var(--border-color)}
+.fb-rank-table th.num,.fb-rank-table td.num{text-align:right}
+.fb-rank-table tr:hover td{background:var(--bg-tertiary)}
+.fb-rank-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
+.fb-rank-table th[data-sort-key]:hover{color:var(--text-primary)}
+
 /* ── Bank table ── */
-.bank-table{width:100%;border-collapse:collapse}
-.bank-table th{text-align:left;font-family:var(--font-display);font-size:var(--text-xs);font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:10px 14px;border-bottom:1px solid var(--border-color)}
-.bank-table th.num{text-align:right}
-.merchants-table th.num{text-align:right}
-.bank-table td{padding:8px 14px;border-bottom:1px solid var(--border-color);font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);font-variant-numeric:tabular-nums}
-.bank-table td.num{text-align:right}
+.bank-table th{padding:10px 14px;font-size:var(--text-xs)}
+.bank-table td{padding:8px 14px;font-size:var(--text-sm)}
 .bank-table td:first-child{font-family:var(--font-display);font-weight:500;font-size:var(--text-base);color:var(--text-primary)}
-.bank-table tr:hover td{background:var(--bg-tertiary)}
 .bar-cell{position:relative;z-index:1}
 .bar-fill{position:absolute;left:0;top:2px;bottom:2px;border-radius:var(--radius-xs);z-index:-1}
 
@@ -154,12 +162,10 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .merchants-grid.one-col{grid-template-columns:1fr}
 @media(max-width:900px){.merchants-grid{grid-template-columns:1fr}}
 .merchants-side h3{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:6px}
-.merchants-table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
-.merchants-table th{text-align:left;font-family:var(--font-display);font-size:var(--text-2xs);font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px;border-bottom:1px solid var(--border-color);white-space:nowrap}
-.merchants-table td{padding:5px 8px;border-bottom:1px solid var(--border-color);font-family:var(--font-mono);color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
+.merchants-table{font-size:var(--text-sm)}
+.merchants-table th{padding:6px 8px;font-size:var(--text-2xs);white-space:nowrap}
+.merchants-table td{padding:5px 8px;white-space:nowrap}
 .merchants-table td.nick{font-family:var(--font-display);color:var(--text-primary);font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis}
-.merchants-table td.num{text-align:right}
-.merchants-table tr:hover td{background:var(--bg-tertiary)}
 .view-hint{padding:36px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-base);font-style:italic}
 .pill{display:inline-block;padding:1px 8px;border-radius:var(--radius-xl);font-size:var(--text-2xs);font-weight:600;letter-spacing:.04em;text-transform:lowercase;font-family:var(--font-display);font-variant-numeric:normal}
 .pill-yellow{background:rgba(168,200,224,.25);color:#5589c0}
@@ -169,15 +175,12 @@ body.theme-dark .pill-red{background:rgba(90,140,196,.25);color:#5a8cc4}
 .snap-stamp{font-size:var(--text-sm);color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
 .outliers-scroll{max-height:420px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--radius-sm)}
 .outliers-scroll thead th{position:sticky;top:0;background:var(--bg-secondary);z-index:2}
-.outliers-table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
-.outliers-table th{text-align:left;font-family:var(--font-display);font-size:var(--text-2xs);font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:8px 10px;border-bottom:1px solid var(--border-color);white-space:nowrap}
-.outliers-table th.num{text-align:right}
-.outliers-table td{padding:5px 10px;border-bottom:1px solid var(--border-color);font-family:var(--font-mono);color:var(--text-secondary);white-space:nowrap;font-variant-numeric:tabular-nums}
-.outliers-table td.num{text-align:right}
+.outliers-table{font-size:var(--text-sm)}
+.outliers-table th{padding:8px 10px;font-size:var(--text-2xs);white-space:nowrap}
+.outliers-table td{padding:5px 10px;white-space:nowrap}
 .outliers-table td.nick{font-family:var(--font-display);color:var(--text-primary);font-weight:500;max-width:200px;overflow:hidden;text-overflow:ellipsis}
 .outliers-table td.side-buy{color:var(--color-buy);font-family:var(--font-display);font-weight:500}
 .outliers-table td.side-sell{color:var(--color-sell);font-family:var(--font-display);font-weight:500}
-.outliers-table tr:hover td{background:var(--bg-tertiary)}
 .panel-toggle{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-display);font-size:var(--text-sm);font-weight:500;color:var(--text-secondary);cursor:pointer;user-select:none;margin-top:6px}
 .panel-toggle input[type="checkbox"]{margin:0;accent-color:var(--blue-accent);cursor:pointer}
 
@@ -214,9 +217,7 @@ body.theme-dark .pill-red{background:rgba(90,140,196,.25);color:#5a8cc4}
 .panel-menu-item .pmi-state{color:var(--text-muted);font-weight:400;font-family:var(--font-mono);font-size:var(--text-sm)}
 .panel-menu-divider{height:1px;background:var(--border-color);margin:4px 4px}
 
-/* ── Sort headers en tablas ── */
-.bank-table th[data-sort-key],.merchants-table th[data-sort-key],.outliers-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
-.bank-table th[data-sort-key]:hover,.merchants-table th[data-sort-key]:hover,.outliers-table th[data-sort-key]:hover{color:var(--text-primary)}
+/* ── Sort header arrow indicator (cursor + hover viven en .fb-rank-table) ── */
 .sort-arrow{display:inline-block;width:8px;margin-left:4px;color:var(--blue-accent);font-size:var(--text-2xs);font-weight:700}
 th[aria-sort="ascending"] .sort-arrow::before{content:'↑'}
 th[aria-sort="descending"] .sort-arrow::before{content:'↓'}
@@ -1473,7 +1474,7 @@ function rBank(c){
   if(stampEl){
     stampEl.textContent = new Date(data.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
-  el.innerHTML='<table class="bank-table"><thead><tr>'+
+  el.innerHTML='<table class="fb-rank-table bank-table"><thead><tr>'+
     '<th data-sort-key="name" aria-sort="none">Banco<span class="sort-arrow"></span></th>'+
     '<th class="num" data-sort-key="count" aria-sort="none" title="Anuncios activos en el último snapshot del rango">Anuncios verificados (último snapshot)<span class="sort-arrow"></span></th>'+
     '<th class="num" data-sort-key="depth" aria-sort="none">Profundidad (USDT)<span class="sort-arrow"></span></th>'+
@@ -1543,7 +1544,7 @@ function rMerchants(){
         '<td class="num">'+fmtInt(m.month_order_count)+'</td>'+
       '</tr>';
     }).join('');
-    return '<div class="merchants-side"><h3>'+label+'</h3><table class="merchants-table">'+
+    return '<div class="merchants-side"><h3>'+label+'</h3><table class="fb-rank-table merchants-table">'+
       '<thead><tr>'+
         '<th>#</th>'+
         '<th data-sort-key="nick" aria-sort="none">Nick<span class="sort-arrow"></span></th>'+
@@ -1591,7 +1592,7 @@ function rOutliers(){
     return;
   }
   const levelRank={red:2, yellow:1};
-  const html='<table class="outliers-table"><thead><tr>'+
+  const html='<table class="fb-rank-table outliers-table"><thead><tr>'+
     '<th data-sort-key="side" aria-sort="none">Lado<span class="sort-arrow"></span></th>'+
     '<th data-sort-key="nick" aria-sort="none">Merchant<span class="sort-arrow"></span></th>'+
     '<th class="num" data-sort-key="depth" aria-sort="none">Depth (USDT)<span class="sort-arrow"></span></th>'+
@@ -2407,7 +2408,7 @@ document.addEventListener('click',e=>{
   if(!th) return;
   const table=th.closest('table');
   if(!table) return;
-  if(!table.matches('.bank-table, .merchants-table, .outliers-table')) return;
+  if(!table.matches('.fb-rank-table')) return;
   sortTable(table, th);
 });
 
