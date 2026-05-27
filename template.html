@@ -26,10 +26,10 @@ __UMAMI_SCRIPT__
 /* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
-   Tooltips Plotly: --tooltip-bg apunta a --bg-tertiary (celeste sólido
-   en light). En dark, body.theme-dark{} fuerza un literal porque
-   --bg-tertiary slate es semi-transparente — incompatible con la regla
-   de "cero transparencia" del tooltip. */
+   Tooltips Plotly: --tooltip-bg lo escribe applyTheme() sobre
+   documentElement (paper #dde8ef, slate #1c2632) porque cssVar() lee
+   de documentElement y un override en body.theme-dark{} no llegaría
+   al JS. El default abajo (var(--bg-tertiary)) es solo fallback. */
 :root{
   --font-display:'Outfit',system-ui,sans-serif;
   --font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
@@ -129,11 +129,6 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .content{padding:20px 48px 48px;max-width:1440px;margin:0 auto}
 .toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .view-toggle{display:flex;gap:0}
-.toggle-btn{padding:7px 18px;font-family:var(--font-display);font-size:var(--text-base);font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s}
-.toggle-btn:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
-.toggle-btn:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-right:0}
-.toggle-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.toggle-btn.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 
 /* ── Sections ── */
 .section{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);margin-bottom:16px;overflow:hidden}
@@ -380,9 +375,13 @@ body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:
   --chart-color-peru:#c8102e;       /* carmesí bandera */
 }
 body.theme-dark{
-  /* --tooltip-bg literal: --bg-tertiary en slate es transparente (rgba .15);
-     mantener override sólido para cumplir "CERO transparencia" en dark. */
-  --tooltip-bg:#1c2632;
+  /* Sombras dark: misma geometría que light, alpha más alto para que
+     se vean sobre el fondo slate (sin overrides resolverían al valor
+     light rgba(0,0,0,.06-.24) y quedaban invisibles). */
+  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
+  --shadow-md:0 6px 20px rgba(0,0,0,.45);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.50);
+  --shadow-xl:0 10px 32px rgba(0,0,0,.55);
   --chart-grid:rgba(255,255,255,0.08);
   --chart-axis-text:#a8b4c0;
   --chart-spike:rgba(255,255,255,0.25);
@@ -408,36 +407,36 @@ body.theme-dark{
 .fb-pill:hover{background:var(--bg-tertiary);color:var(--text-primary)}
 .fb-pill.active{background:#2c4a6b;color:#fff;border-color:#2c4a6b}
 .fb-chart-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:16px 20px}
+.fb-chart-card--elevated{box-shadow:var(--shadow-md)}
 .fb-chart-head{margin-bottom:12px}
 .fb-chart-title{font-size:var(--text-md);font-weight:600;color:var(--text-primary)}
 .fb-chart-sub{font-size:var(--text-sm);color:var(--text-muted);margin-top:2px}
-.fb-dpf-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
-.fb-dpf-table th,.fb-dpf-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
-.fb-dpf-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
-.fb-dpf-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
-.fb-dpf-table tr:hover{background:rgba(44,74,107,.04)}
+/* ── Data tables (DPF + BBV) ── */
+.fb-data-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
+.fb-data-table th,.fb-data-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
+.fb-data-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
+.fb-data-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
+.fb-data-table th[data-sort-key]:hover{color:var(--text-primary)}
+.fb-data-table tr:hover{background:rgba(44,74,107,.04)}
+body.theme-dark .fb-data-table tr:hover{background:rgba(255,255,255,.04)}
+.fb-data-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
+.fb-data-table th.num,.fb-data-table td.num{text-align:right;font-family:var(--font-mono)}
+.fb-data-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
+.fb-data-table td.rate-cell.neg{color:var(--orange)}
+.fb-data-table td.rate-cell.pos-strong{color:var(--green)}
+.fb-data-table td.issuer{font-family:var(--font-display);color:var(--text-primary)}
+.fb-data-table .issuer-name{font-weight:600}
+.fb-data-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
+.fb-data-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
+.fb-data-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
 .fb-dpf-bar-bg{background:rgba(44,74,107,.08);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
 .fb-dpf-bar{height:8px;background:#1e4d7a;border-radius:var(--radius-sm)}
-body.theme-dark .fb-dpf-table tr:hover{background:rgba(255,255,255,.04)}
 body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 @media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
 /* ── BBV table & filters ── */
 .fb-bbv-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
 .fb-bbv-fcol{display:flex;flex-direction:column;gap:6px}
-.fb-bbv-table{width:100%;border-collapse:collapse;font-size:var(--text-base)}
-.fb-bbv-table th,.fb-bbv-table td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-color)}
-.fb-bbv-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500;cursor:pointer;user-select:none}
-.fb-bbv-table th:hover{color:var(--text-primary)}
-.fb-bbv-table th.num,.fb-bbv-table td.num{text-align:right;font-family:var(--font-mono)}
-.fb-bbv-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
-.fb-bbv-table td.rate-cell.neg{color:var(--orange)}
-.fb-bbv-table td.rate-cell.pos-strong{color:var(--green)}
-.fb-bbv-table td.issuer{font-family:var(--font-display);color:var(--text-primary)}
-.fb-bbv-table .issuer-name{font-weight:600}
-.fb-bbv-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
-.fb-bbv-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
 .fb-bbv-issuer-filter{display:flex;flex-direction:column;gap:6px;margin:0 0 12px 0;padding:10px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-md)}
-.fb-bbv-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
 .fb-bbv-glossary{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .fb-bbv-gloss-col h4{font-family:var(--font-display);font-size:var(--text-sm);font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin:0 0 10px 0}
 .fb-bbv-gloss-table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
@@ -475,8 +474,6 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 #guide-issuers td.desc{display:none}
 #guide-issuers td.code{width:64px}
 #guide-issuers td.nm{width:auto}
-.fb-bbv-table tr:hover{background:rgba(44,74,107,.04)}
-body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
 </style></head>
 <body>
@@ -595,7 +592,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title" id="dpf-table-title">DPF &middot; 360 d&iacute;as &middot; BOB &middot; Entidades Financieras</div>
         <div class="fb-chart-sub">Ordenado de mayor a menor tasa</div>
       </div>
-      <table class="fb-dpf-table" id="dpf-rates-table">
+      <table class="fb-data-table" id="dpf-rates-table">
         <thead>
           <tr>
             <th>Entidad</th>
@@ -661,7 +658,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title">Tasas de rendimiento por emisor y plazo</div>
         <div class="fb-chart-sub" id="bbvTableSub">Mostrando &mdash; filas</div>
       </div>
-      <table class="fb-bbv-table" id="bbv-rates-table">
+      <table class="fb-data-table" id="bbv-rates-table">
         <thead>
           <tr>
             <th data-sort-key="issuer">Emisor</th>
@@ -688,14 +685,14 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
           <!-- populated by JS -->
         </div>
       </div>
-      <table class="fb-bbv-table" id="bbv-bonds-movers-table">
+      <table class="fb-data-table" id="bbv-bonds-movers-table">
         <thead>
           <tr>
-            <th>Clave de pizarra</th>
-            <th>Emisor</th>
-            <th class="num">Precio (BOB)</th>
-            <th class="num">% Tasa</th>
-            <th class="num">% Var</th>
+            <th data-sort-key="bondCode">Clave de pizarra</th>
+            <th data-sort-key="issuer">Emisor</th>
+            <th class="num" data-sort-key="price">Precio (BOB)</th>
+            <th class="num" data-sort-key="ratePct">% Tasa</th>
+            <th class="num" data-sort-key="varPct">% Var</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -708,12 +705,12 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
         <div class="fb-chart-title">Bonos m&aacute;s negociados (rotaciones)</div>
         <div class="fb-chart-sub">Top por n&uacute;mero de operaciones en el d&iacute;a</div>
       </div>
-      <table class="fb-bbv-table" id="bbv-bonds-traded-table">
+      <table class="fb-data-table" id="bbv-bonds-traded-table">
         <thead>
           <tr>
-            <th>Clave de pizarra</th>
-            <th>Emisor</th>
-            <th class="num">N&deg; operaciones</th>
+            <th data-sort-key="bondCode">Clave de pizarra</th>
+            <th data-sort-key="issuer">Emisor</th>
+            <th class="num" data-sort-key="ops">N&deg; operaciones</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -933,7 +930,7 @@ body.theme-dark .fb-bbv-table tr:hover{background:rgba(255,255,255,.04)}
   </div>
   <div id="riesgoKpis"></div>
   <div class="content">
-    <div class="fb-chart-card">
+    <div class="fb-chart-card fb-chart-card--elevated">
       <div class="fb-chart-head">
         <div class="fb-chart-title">Spread soberano por pa&iacute;s</div>
         <div class="fb-chart-sub">Pas&aacute; el mouse sobre el gr&aacute;fico para ver todos los pa&iacute;ses activos en esa fecha. Series en bps.</div>
@@ -980,8 +977,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
