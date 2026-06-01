@@ -2486,9 +2486,10 @@ function activateTab(target){
   document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
   var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
   var trp=document.getElementById('tab-riesgo-pais'); if(trp) trp.style.display=target==='riesgo-pais'?'':'none';
-  // Lazy render per tab
-  if(target==='dpf'){renderDpfTable();renderDpfScatter();}
-  if(target==='bbv'){renderBbv();}
+  // Lazy render per tab. Guardas con typeof por si activateTab corre antes de
+  // que los IIFE de cada tab asignen window.renderXxx (ver init diferido más abajo).
+  if(target==='dpf' && typeof window.renderDpfTable==='function' && typeof window.renderDpfScatter==='function'){window.renderDpfTable();window.renderDpfScatter();}
+  if(target==='bbv' && typeof window.renderBbv==='function'){window.renderBbv();}
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   if(target==='riesgo-pais' && typeof window.renderRiesgoPais==='function'){window.renderRiesgoPais();}
   // Título
@@ -2515,22 +2516,32 @@ window.addEventListener('popstate', function(){
   activateTab(target);
 });
 
-// Init: resolver path al cargar
+// Init: resolver path al cargar.
+// El history.replaceState corre temprano (sincrónico al parse) para que la barra
+// de URL no muestre /?path=... ni siquiera por un frame. Pero activateTab se
+// difiere hasta DOMContentLoaded porque las funciones renderDpfTable/renderBbv
+// se asignan a window dentro de IIFE que parsean DESPUÉS de este bloque; si
+// llamáramos a activateTab acá, F5 en /dpf o /bbv tiraría ReferenceError y la
+// tabla quedaría vacía hasta el primer click en otra tab.
 (function(){
-  // Caso 404 redirect: index.html cargado con ?path=... → reconstruir URL real
   var qs = new URLSearchParams(window.location.search);
   var fromQs = qs.get('path');
   if(fromQs){
-    // Limpiar la URL: replace porque no queremos que back vuelva al ?path=
     history.replaceState(null, '', fromQs);
   }
   var path = window.location.pathname;
+  var initialTarget;
   if(ROUTE_MAP[path]){
-    activateTab(ROUTE_MAP[path]);
+    initialTarget = ROUTE_MAP[path];
   } else {
-    // Path no reconocido → home, sin entry en history
     history.replaceState(null, '', '/');
-    activateTab('dollar');
+    initialTarget = 'dollar';
+  }
+  function runInitial(){ activateTab(initialTarget); }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', runInitial);
+  } else {
+    runInitial();
   }
 })();
 
