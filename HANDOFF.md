@@ -474,7 +474,7 @@ capa de tokens al principio del `<style>`.
   o reescribir HTML generado por `dashboard.py` (para inline) o refactor de
   las reglas CSS para que consuman `var(--token)`.
 - **Heatmap per-cell text en la frontera value≈0.6**: el threshold de
-  `heatmapTextColors()` ([template.html:1310-1313](template.html#L1310-L1313)) clasifica cada celda como
+  `heatmapTextColors()` ([template.html:1318](template.html#L1318)) clasifica cada celda como
   high/low según valor normalizado ≥0.6. En la frontera exacta, el texto
   de "low" sobre celda de luminosidad mid-alta (y el de "high" sobre celda
   mid-baja en su lado) da contraste ~3:1, sub-WCAG-AA 4.5:1 para texto. El

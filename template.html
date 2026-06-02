@@ -1794,7 +1794,9 @@ function rActivityHm(c){
   var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
   // Normalizamos contra maxZ para que el helper pueda aplicar threshold 0.6
   // sobre valores [0..1] — mismo contrato que rHeatmap (que normaliza por fila).
-  var zNorm=maxZ>0?matrix.map(function(row){return row.map(function(v){return v==null?null:v/maxZ})}):matrix;
+  // Si maxZ=0, divisor=1 evita NaN y zNorm queda en ceros (todos < 0.6 = text-low).
+  var divisor=maxZ||1;
+  var zNorm=matrix.map(function(row){return row.map(function(v){return v==null?null:v/divisor})});
   var textColors=heatmapTextColors(zNorm);
   var textMatrix=matrix.map(function(row){return row.map(function(v){return formatCompact(v)})});
   var cs=heatmapColorscale();
