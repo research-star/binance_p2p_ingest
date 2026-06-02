@@ -440,7 +440,7 @@ capa de tokens al principio del `<style>`.
 3. **JS dinámico** (`THEMES.paper/.slate` + `applyTheme()`): reescribe via
    `root.style.setProperty()` al togglear tema. Maneja vars semánticas
    (`bg-*`, `text-*`, `color-*`, `border-color`) y además los tokens que
-   son consumidos por JS via `cssVar()` — hoy `--tooltip-bg` y los 13
+   son consumidos por JS via `cssVar()` — hoy `--tooltip-bg` y los 28
    chart tokens (ver "Delivery de tokens" abajo).
 4. **`body.theme-dark{}` CSS**: overrides dark de tokens consumidos sólo
    por CSS — hoy `--shadow-sm/md/lg/xl` + reglas ad hoc por componente
@@ -456,29 +456,48 @@ capa de tokens al principio del `<style>`.
 | Sombras | `--shadow-sm/md/lg/xl` | sí | `body.theme-dark{}` (CSS-consumed) |
 | Tooltip | `--tooltip-bg` (literal) + `--tooltip-text/border/font` (vía vars theme-aware) | sí | JS `THEMES.paper/.slate` (`--tooltip-bg` se consume por `cssVar()`) |
 | Bg/text/border/color-* | (existentes) | sí | JS `THEMES.paper/.slate` |
-| Chart EMBI | `--chart-color-*` (10), `--chart-grid`, `--chart-axis-text`, `--chart-spike` | sí | JS `THEMES.paper/.slate` (consumidos por `cssVar()` en el JS del EMBI) |
+| Chart EMBI (Riesgo País) | `--chart-color-*` (10 países), `--chart-grid`, `--chart-axis-text`, `--chart-spike` | sí | JS `THEMES.paper/.slate` |
+| Chart heatmap (P2P + Activity) | `--chart-heatmap-0/25/50/75/100` (gradient stops), `--chart-heatmap-text-high/low` (per-cell text) | sí | JS `THEMES.paper/.slate` |
+| Chart DPF scatter | `--chart-dpf-bancos-multiples/microfinanzas/bancos-pyme/ent-vivienda/cooperativas/ifd` (6 categóricos) | sí | JS `THEMES.paper/.slate` |
+| Chart spread evo P2P | `--chart-spread-line` (color de la línea única) | sí | JS `THEMES.paper/.slate` |
+| Chart markers (shared) | `--chart-marker-outline` (halo decorativo α=.6, color = bg-secondary del tema) | sí | JS `THEMES.paper/.slate` |
 
-### Pendientes de PR1 → PR2
+### Tech debt residual
 
-- **Overrides dark de `--shadow-*`**: hoy los 4 tokens viven solo en `:root`
-  con su valor único (alpha .06/.18/.24 sobre `rgba(0,0,0,...)`). En dark mode
-  resuelven al mismo valor → sombras casi invisibles. Bug latente preservado
-  tal cual (era el estado anterior). Override validado va en PR2.
-- **Migración de colores hardcodeados**: literales hex `#1e4d7a`, `#6b7d92`,
-  `#5589c0`, `#8c8c8c` que aparecen en `style="--fb-trace-color:..."` inline
-  ([template.html:493-502](template.html#L493-L502)) y en `.fb-pill.active` ([template.html:373](template.html#L373)). PR2 introduce capa de
-  color tokens semánticos.
-- **Paleta de colores de los charts Plotly**: sigue hardcodeada en JS
-  (~25 literales en stops de heatmap, categorías DPF, axis text, línea Spread
-  Evo). Pendiente de tokenizar — la mayoría no son tokenizables invisiblemente
-  porque las vars semánticas existentes cambian en dark, así que requiere
-  decisiones de cómo se ve cada chart en dark mode antes de migrar.
+- **Migración de colores hardcodeados en CSS/HTML (fuera de Plotly JS)**:
+  literales hex `#1e4d7a`, `#6b7d92`, `#5589c0`, `#8c8c8c` aparecen en
+  `style="--fb-trace-color:..."` inline en los 5 toggles del panel VWAP
+  ([template.html:497](template.html#L497)), y hex hardcodeados en CSS puro
+  (`.fb-pill.active`, `.fb-dpf-bar`, `.pill-yellow/.pill-red`, `.fb-stog*`,
+  `.error-banner`). No bloqueante — los valores coinciden con tokens
+  semánticos existentes (`color-buy/sell/bcb-*`), pero la migración requiere
+  o reescribir HTML generado por `dashboard.py` (para inline) o refactor de
+  las reglas CSS para que consuman `var(--token)`.
+- **Heatmap per-cell text en la frontera value≈0.6**: el threshold de
+  `heatmapTextColors()` ([template.html:1318](template.html#L1318)) clasifica cada celda como
+  high/low según valor normalizado ≥0.6. En la frontera exacta, el texto
+  de "low" sobre celda de luminosidad mid-alta (y el de "high" sobre celda
+  mid-baja en su lado) da contraste ~3:1, sub-WCAG-AA 4.5:1 para texto. El
+  problema existe simétricamente en ambos temas y resolverlo requiere mover
+  el threshold (cambia clasificación visual de las celdas, decisión de
+  diseño). No bloqueante mientras los valores en la frontera sean infrecuentes.
 
-**Estado actual de tooltips Plotly:** los 3 charts (VWAP P2P, DPF, EMBI)
-comparten estilo via `cssVar('--tooltip-*')`. `--tooltip-bg` se entrega
-desde `THEMES.paper/.slate` (`#dde8ef` light, `#1c2632` dark sólido).
-Helper `cssVar()` vive a scope módulo (cerca de `getC()`), reutilizable
-por cualquier chart.
+**Estado actual de tooltips Plotly:** todos los charts (VWAP P2P, Spread,
+Depth, Ratio, Conc, Heatmap, Activity Heatmap, SpreadEvo, OrderBook, Offer,
+DPF scatter, EMBI Riesgo País) comparten estilo via `cssVar('--tooltip-*')`.
+`--tooltip-bg` se entrega desde `THEMES.paper/.slate` (`#dde8ef` light,
+`#1c2632` dark sólido). Helper `cssVar()` vive a scope módulo (cerca de
+`getC()`), reutilizable por cualquier chart.
+
+**Estado actual de chrome Plotly (axis text, grid, line/marker colors):**
+los charts que pasan por `BL(c)` (VWAP, Spread, Depth, Ratio, Conc, Heatmap,
+ActivityHm, SpreadEvo, OrderBook, Offer) heredan font/tickfont/gridcolor
+desde `getC()` que lee `text-secondary/text-muted/border-color` de
+`activeThemeValues`. El DPF scatter define layout propio (no pasa por
+`BL`) y consume `cssVar('--text-muted')` / `cssVar('--chart-grid')` /
+`cssVar('--chart-marker-outline')` directo. El EMBI define layout propio
+y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
+`cssVar('--chart-spike')`.
 
 ### Reglas de uso
 
@@ -487,18 +506,34 @@ por cualquier chart.
 - **Cuándo NO**: uso único (literal directo OK), valor derivable (composiciones
   como `var(--radius-sm) 0 0 var(--radius-sm)`), valores intencionalmente
   contextuales (`rgba(0,0,0,0)` transparente Plotly).
-- **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Los 3 charts
-  actuales (P2P / DPF / EMBI) ya consumen este patrón.
-- **Para retocar valores del chart EMBI**: editar `THEMES.paper/.slate` en
-  el JS (`--chart-color-*`, `--chart-grid`, `--chart-axis-text`, `--chart-spike`).
-  Para retocar el layout (legenda, tickformats, etc.) editar el JS del EMBI.
+- **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Todos los
+  charts ya consumen este patrón.
+- **Para retocar paleta de un chart**: editar `THEMES.paper/.slate` en el JS.
+  - Chart EMBI: `--chart-color-*` (países), `--chart-grid`, `--chart-axis-text`, `--chart-spike`.
+  - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
+  - DPF scatter: `--chart-dpf-*` (6 categóricos) — chrome (`--text-muted`, `--chart-grid`, `--chart-marker-outline`) se hereda.
+  - Spread evo P2P: `--chart-spread-line`.
+  - Cualquier scatter con marker outline: `--chart-marker-outline`.
+
+  Para retocar el layout (legenda, tickformats, márgenes) editar el JS del
+  chart correspondiente.
+- **Helper compartido para heatmaps**: `heatmapColorscale()` y
+  `heatmapTextColors(zNorm)` ([template.html](template.html)) son scope módulo y consumen los
+  tokens `--chart-heatmap-*` via `cssVar()`. Ambos heatmaps (P2P por hora,
+  Activity por día×hora) los usan — la rampa y el threshold 0.6 quedan
+  garantizados-idénticos por construcción. Cualquier nuevo heatmap debe
+  pasar por estos helpers en lugar de definir colorscale propia.
 - **Delivery de tokens theme-dependent**: depende de quién los consume.
   - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
     viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
     `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
-    encuentra. Hoy en `THEMES`: `--tooltip-bg`, `--chart-grid`,
-    `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`
-    (bolivia/latino/global/argentina/brasil/chile/colombia/ecuador/mexico/peru).
+    encuentra. Hoy en `THEMES` (29 tokens chart/tooltip):
+    - Tooltip: `--tooltip-bg`.
+    - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`.
+    - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
+    - DPF scatter: 6 `--chart-dpf-*`.
+    - Spread evo P2P: `--chart-spread-line`.
+    - Markers (shared): `--chart-marker-outline`.
   - **Consumidos sólo por CSS** (selectores `var(--token)` en reglas que
     aplican a descendientes del `<body>`) → pueden vivir en `:root` para
     el default light + `body.theme-dark{}` para el override dark. Hoy en
@@ -506,7 +541,7 @@ por cualquier chart.
     (`.pill-yellow/.pill-red`, `.fb-stog*`, etc.).
   - **Razón**: las CSS vars no cascadean hacia arriba — un override en
     `body.theme-dark{}` no alcanza a `documentElement`, así que `cssVar()`
-    leería el default light en dark mode. Bug arreglado en PR2b/PR2b.1.
+    leería el default light en dark mode.
 
 ### Tokens deprecados / alias
 

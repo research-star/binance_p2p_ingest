@@ -948,8 +948,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -1301,6 +1301,23 @@ function aggregateOfferDistribution(rangeFromIdx, rangeToIdx, sideF){
 function cssVar(name, fallback){
   var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return v || fallback;
+}
+
+// Heatmap palette helpers — compartidos por rHeatmap y rActivityHm para que el
+// colorscale y la lógica de texto per-cell no puedan divergir. Threshold 0.6
+// sobre valores normalizados [0..1] determina cuál token de texto aplica.
+function heatmapColorscale(){
+  return [
+    [0,    cssVar('--chart-heatmap-0')],
+    [0.25, cssVar('--chart-heatmap-25')],
+    [0.5,  cssVar('--chart-heatmap-50')],
+    [0.75, cssVar('--chart-heatmap-75')],
+    [1,    cssVar('--chart-heatmap-100')]
+  ];
+}
+function heatmapTextColors(zNorm){
+  var hi=cssVar('--chart-heatmap-text-high'), lo=cssVar('--chart-heatmap-text-low');
+  return zNorm.map(function(row){return row.map(function(v){return(v!=null&&v>=0.6)?hi:lo})});
 }
 
 function getC(){
@@ -1717,9 +1734,9 @@ function rHeatmap(c){
     text.push(vals.map(v=>v==null?'—':formatCompact(v)));
   }
   const L=BL(c);
-  const cs=[[0,'#dde8ef'],[0.25,'#a8c8e0'],[0.5,'#5589c0'],[0.75,'#2c4a6b'],[1,'#162844']];
-  // Per-cell text color: white on dark cells, navy on light cells
-  const textColors=z.map(function(row){return row.map(function(v){return(v!=null&&v>=0.6)?'#ffffff':'#162844'})});
+  const cs=heatmapColorscale();
+  // Per-cell text color: token-based, flips entre light/dark según el tema.
+  const textColors=heatmapTextColors(z);
   Plotly.react('chartHeatmap',[{
     z:z,x:hm.hours.map(h=>String(h).padStart(2,'0')+'h'),y:labels,
     type:'heatmap',colorscale:cs,showscale:false,
@@ -1735,7 +1752,7 @@ function rSpreadEvo(c,v){
   var spreadY=v.vs10.map(function(sell,i){return(sell!=null&&v.vb10[i]!=null)?sell-v.vb10[i]:null});
   Plotly.react('chartSpreadEvo',[{
     x:x,y:spreadY,name:'Spread',type:'scatter',mode:'lines',
-    line:{color:'#2c4a6b',width:2},
+    line:{color:cssVar('--chart-spread-line'),width:2},
     hovertemplate:'%{y:.2f} BOB<extra></extra>'
   }],{...L,
     xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),
@@ -1775,10 +1792,14 @@ function rActivityHm(c){
   var dayLabels=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
   var hourLabels=Array.from({length:24},function(_,i){return i+'h'});
   var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
-  var threshold=maxZ*0.6;
-  var textColors=matrix.map(function(row){return row.map(function(v){return v>=threshold?'#ffffff':'#162844'})});
+  // Normalizamos contra maxZ para que el helper pueda aplicar threshold 0.6
+  // sobre valores [0..1] — mismo contrato que rHeatmap (que normaliza por fila).
+  // Si maxZ=0, divisor=1 evita NaN y zNorm queda en ceros (todos < 0.6 = text-low).
+  var divisor=maxZ||1;
+  var zNorm=matrix.map(function(row){return row.map(function(v){return v==null?null:v/divisor})});
+  var textColors=heatmapTextColors(zNorm);
   var textMatrix=matrix.map(function(row){return row.map(function(v){return formatCompact(v)})});
-  var cs=[[0,'#dde8ef'],[0.25,'#a8c8e0'],[0.5,'#5589c0'],[0.75,'#2c4a6b'],[1,'#162844']];
+  var cs=heatmapColorscale();
   var L=BL(c);
   Plotly.react('chartActivityHm',[{
     z:matrix,x:hourLabels,y:dayLabels,
@@ -2691,15 +2712,18 @@ window.addEventListener('popstate', function(){
     var moneda=dpfState.moneda;
     var categorias=['BANCOS MULTIPLES','MICROFINANZAS','BANCOS PYME','ENT. VIVIENDA','COOPERATIVAS','IFD'];
     var colors={
-      'BANCOS MULTIPLES':'#1e4d7a',
-      'MICROFINANZAS':'#5589c0',
-      'BANCOS PYME':'#7ba3c4',
-      'ENT. VIVIENDA':'#9ec0d8',
-      'COOPERATIVAS':'#a8c8e0',
-      'IFD':'#8c8c8c'
+      'BANCOS MULTIPLES':cssVar('--chart-dpf-bancos-multiples'),
+      'MICROFINANZAS':cssVar('--chart-dpf-microfinanzas'),
+      'BANCOS PYME':cssVar('--chart-dpf-bancos-pyme'),
+      'ENT. VIVIENDA':cssVar('--chart-dpf-ent-vivienda'),
+      'COOPERATIVAS':cssVar('--chart-dpf-cooperativas'),
+      'IFD':cssVar('--chart-dpf-ifd')
     };
     function plazoLabel(p){return p===-1?'Mayor':String(p);}
     var plazoOrder=['30','60','90','180','360','720','1080','Mayor'];
+    var axisText=cssVar('--text-muted');
+    var gridLine=cssVar('--chart-grid');
+    var markerOutline=cssVar('--chart-marker-outline');
 
     var traces=categorias.map(function(cat){
       var rates=dpfData.rates.filter(function(r){
@@ -2710,17 +2734,17 @@ window.addEventListener('popstate', function(){
         y:rates.map(function(r){return r.tasa;}),
         type:'scatter',mode:'markers',
         name:cat.charAt(0)+cat.slice(1).toLowerCase().replace('_',' '),
-        marker:{color:colors[cat],size:8,line:{color:'rgba(255,255,255,0.6)',width:1}},
+        marker:{color:colors[cat],size:8,line:{color:markerOutline,width:1}},
         text:rates.map(function(r){return r.entidad;}),
         hovertemplate:'<b>%{text}</b><br>Plazo: %{x} d\u00edas<br>Tasa: %{y:.2f}%<extra></extra>'
       };
     });
 
     var layout={
-      xaxis:{title:{text:'Plazo (d\u00edas)',font:{size:11,color:'#6b7d92'}},type:'category',categoryorder:'array',categoryarray:plazoOrder,tickfont:{size:10,color:'#6b7d92',family:'IBM Plex Mono'},fixedrange:true,automargin:true},
-      yaxis:{title:{text:'Tasa (%)',font:{size:11,color:'#6b7d92'}},tickformat:'.2f',tickfont:{size:10,color:'#6b7d92',family:'IBM Plex Mono'},gridcolor:'rgba(44,74,107,0.04)',fixedrange:true,automargin:true,rangemode:'tozero'},
+      xaxis:{title:{text:'Plazo (d\u00edas)',font:{size:11,color:axisText}},type:'category',categoryorder:'array',categoryarray:plazoOrder,tickfont:{size:10,color:axisText,family:'IBM Plex Mono'},fixedrange:true,automargin:true},
+      yaxis:{title:{text:'Tasa (%)',font:{size:11,color:axisText}},tickformat:'.2f',tickfont:{size:10,color:axisText,family:'IBM Plex Mono'},gridcolor:gridLine,fixedrange:true,automargin:true,rangemode:'tozero'},
       showlegend:true,
-      legend:{orientation:'h',x:0,y:-0.20,font:{size:10,color:'#6b7d92'}},
+      legend:{orientation:'h',x:0,y:-0.20,font:{size:10,color:axisText}},
       margin:{l:60,r:20,t:10,b:80},
       paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',
       hoverlabel:{bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border'),font:{color:cssVar('--tooltip-text'),family:cssVar('--tooltip-font'),size:11}}
