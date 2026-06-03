@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-05-18.
+Última actualización: 2026-06-03.
 
 ---
 
@@ -21,8 +21,8 @@ de backups y, opcionalmente, dashboard local.
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
-| `ingest_ine_pib.py` | VPS cron user `binance` | diario en ventana post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` |
-| `ingest_ine_ipc.py` | VPS cron user `binance` | día 1-10 c/6 h hasta detectar release nuevo (mensual) | `HC_INE_IPC` |
+| `ingest_ine_pib.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` pendiente |
+| `ingest_ine_ipc.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | día 1-10 c/6 h hasta detectar release nuevo (mensual) | `HC_INE_IPC` pendiente |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -404,6 +404,12 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
       al cron line del BCB. Sin esto, falla del scraper es silenciosa.
       (Follow-up de PR #20.)
+- [ ] **Deploy INE Bolivia (PIB + IPC) a VPS** — código en repo (`ingest_ine_pib.py`,
+      `ingest_ine_ipc.py`, `ine_parser.py`, migración SQL). Falta correr el
+      runbook completo de `DEPLOY_INE.md`: registrar `HC_INE_PIB` y `HC_INE_IPC`
+      en healthchecks.io, aplicar la migración 0001 en `p2p_normalized.db` prod,
+      primer run manual, instalar las 6 líneas de cron. Hasta que se ejecute,
+      las tablas `ine_pib`/`ine_ipc` en prod están vacías.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
@@ -642,6 +648,16 @@ Cada XLSX trae la serie completa desde el inicio del cuadro. `INSERT OR
 REPLACE` por la PK hace upsert idempotente. Si INE publica una revisión
 retroactiva (ej. corrige un trimestre viejo), el cambio entra
 automáticamente sin migración. No hay backfill incremental separado.
+
+**Guardia anti-collapse:** antes del `INSERT OR REPLACE`, ambos scripts
+validan que no haya dos filas del batch con la misma PK con valores
+distintos. Si las hubiera, el script falla con `RuntimeError` antes de
+tocar la DB. Esto detecta typos del INE en labels de año/dimensión que
+en otra circunstancia colapsarían silenciosamente datos del año A sobre
+el año B (caso real observado: cuadro `pib_trim_02_01_01` release
+2026-05 trae el label `'2022p)'` sin paréntesis abrir; el parser
+tolera ese caso específico via regex, y la guardia cubre cualquier
+variante futura).
 
 ### Audit folder
 

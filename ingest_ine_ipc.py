@@ -86,6 +86,10 @@ def hc_ping(suffix: str = "", body: str = ""):
 # ── Audit folder ──────────────────────────────────────────────────────────
 
 def ensure_audit_dir() -> Path | None:
+    """Best-effort. None si OS no es POSIX (Windows normaliza /opt/... a
+    C:\\opt\\... silenciosamente) o si mkdir falla."""
+    if os.name != "posix":
+        return None
     target = INE_AUDIT_DIR / FAMILY
     try:
         target.mkdir(parents=True, exist_ok=True)
@@ -149,6 +153,11 @@ def fetch_cuadro(cuadro_id: str) -> tuple[bytes, str, str]:
                   f"err={e}", file=sys.stderr)
             continue
         if resp.status_code == 200:
+            if resp.content[:4] != b"PK\x03\x04":
+                print(f"[ine-ipc] WARN host={host} cuadro={cuadro_id} "
+                      f"non_xlsx_magic bytes={resp.content[:8]!r}",
+                      file=sys.stderr)
+                continue
             disp = resp.headers.get("Content-Disposition", "")
             m = CONTENT_DISPOSITION_FILENAME_RE.search(disp)
             filename = m.group(1) if m else f"{cuadro_id}.xlsx"
@@ -201,6 +210,21 @@ def init_schema(conn: sqlite3.Connection):
 
 def upsert_ipc(conn: sqlite3.Connection, cuadro_id: str,
                rows: list[dict]) -> tuple[int, int, str]:
+    """Pre-check de colapso (periodo, indicador) con valores distintos —
+    misma red de seguridad que en PIB. Si el INE cambia el slugify de una
+    división y dos divisiones colapsan al mismo slug, falla loud en vez de
+    silentmente reescribir una con la otra."""
+    seen: dict[tuple[str, str], float | None] = {}
+    for r in rows:
+        key = (r["periodo"], r["indicador"])
+        v = r["valor"]
+        if key in seen and seen[key] != v:
+            raise RuntimeError(
+                f"{cuadro_id}: colapso (periodo, indicador) con valores "
+                f"distintos — periodo={key[0]!r} ind={key[1]!r} "
+                f"prev={seen[key]!r} now={v!r}."
+            )
+        seen[key] = v
     payload = [
         (r["periodo"], cuadro_id, r["indicador"], r["valor"],
          r["unidad"], r.get("base_year"))

@@ -45,7 +45,13 @@ MOJI_FIX = [
     ("�", "?"),
 ]
 
-YEAR_PRELIM_RE = re.compile(r"^\s*(\d{4})(\s*\(p\))?\s*$")
+YEAR_PRELIM_RE = re.compile(
+    # Tolerante: el INE a veces publica labels malformados como '2022p)' (sin
+    # paréntesis abrir) — ver pib_trim_02_01_01 R171 release 2026-05.
+    # Acepta '2024', '2024(p)', '2024 (p)', '2024p)', '2024(p', '2024 P'.
+    r"^\s*(\d{4})\s*(\(?\s*p\s*\)?)?\s*$",
+    re.IGNORECASE,
+)
 
 QUARTER_RE = re.compile(r"^\s*(I|II|III|IV)\s+Trimestre\s*$", re.IGNORECASE)
 QUARTER_MAP = {"I": "Q1", "II": "Q2", "III": "Q3", "IV": "Q4"}
@@ -359,11 +365,11 @@ def _ipc_4sheets_parse(wb, cfg: dict) -> list[dict]:
         ws = _find_ipc_sheet(wb, pattern)
         if ws is None:
             raise RuntimeError(f"IPC: no encontré hoja para patrón {pattern.pattern!r}")
-        # base_year sólo aplica al índice nivel; en var % es None.
+        # base_year sólo aplica al índice nivel; en var % es None (no aplica
+        # — una variación porcentual no tiene base year intrínseca).
         base_year = cfg.get("base_year") if indicador == "indice" else None
         out.extend(_ipc_single_header_parse(
-            ws, indicador=indicador, unidad=unidad,
-            base_year=base_year or cfg.get("base_year"),
+            ws, indicador=indicador, unidad=unidad, base_year=base_year,
         ))
     return out
 
@@ -425,8 +431,14 @@ def parse_ipc_coicop(path: Path, cfg: dict) -> list[dict]:
                 if not div_label:
                     continue
                 div_slug = slugify(div_label)
-                # Indicador compound: '<metric>_<division_slug>'.
-                indicador = f"{metric}_{div_slug}"
+                # Indicador compound. División 0 es "ÍNDICE GENERAL" (total
+                # Bolivia, igual al cuadro ipc_nacional_general); usamos sufijo
+                # '_total' para que la query LIKE '<metric>_d__%' la deje fuera
+                # y el bar chart de 12 divisiones no la incluya como 13ra barra.
+                if div_id == 0:
+                    indicador = f"{metric}_total"
+                else:
+                    indicador = f"{metric}_{div_slug}"
                 for col, (year, month_num) in col_to_ym.items():
                     v = _to_float(ws.cell(r, col).value)
                     periodo = f"{year:04d}-{month_num:02d}"
@@ -436,7 +448,7 @@ def parse_ipc_coicop(path: Path, cfg: dict) -> list[dict]:
                         "indicador_label": f"{metric} · {div_label}",
                         "valor": v,
                         "unidad": unidad,
-                        "base_year": base_year or cfg.get("base_year"),
+                        "base_year": base_year,
                         "division_id": div_id,
                     })
         return out

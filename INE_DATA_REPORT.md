@@ -1,8 +1,17 @@
 # INE Bolivia — Reporte de datos macro (PIB + IPC)
 
 Insumo para diseño de la futura tab Macroeconomía en el dashboard.
-Generado contra `ine_test.db` (DB local de prueba) tras la primera corrida
-exitosa de `ingest_ine_pib.py` + `ingest_ine_ipc.py` el **2026-06-03**.
+Generado contra `ine_test.db` (DB local de prueba, ignorada via `.gitignore`)
+tras la primera corrida exitosa de `ingest_ine_pib.py` + `ingest_ine_ipc.py`
+el **2026-06-03**.
+
+Para reproducir los conteos y valores que aparecen abajo:
+```bash
+rm -f ./ine_test.db
+python ingest_ine_pib.py --db ./ine_test.db
+python ingest_ine_ipc.py --db ./ine_test.db
+# Queries puntuales con sqlite3 ./ine_test.db
+```
 
 Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 
@@ -12,7 +21,7 @@ Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 
 - **8 cuadros** ingeridos del INE Bolivia (5 PIB + 3 IPC), persistidos en
   3 tablas SQLite (`ine_pib`, `ine_ipc`, `ine_ingest_state`).
-- **~18 000 filas** de data real cubriendo:
+- **18 024 filas** de data real (8 020 PIB + 10 004 IPC) cubriendo:
   - **PIB:** 1980-2024 anual + 1990 Q1 - 2024 Q4 trimestral
   - **IPC:** 1937-presente (serie empalmada) y 2018-2026 (Base 2016 vigente)
 - **Última inflación interanual (May 2026): +12.51%** — Bolivia atraviesa el
@@ -32,11 +41,11 @@ Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 |---|---|---|---|---|---|
 | `pib_trim_01_01_01` | PIB por actividad económica, precios constantes | Miles de Bs 1990 | Trimestral + roll-up anual | 1990 Q1 → 2024 Q4 | 2 625 |
 | `pib_trim_01_01_04` | Variación interanual del PIB por actividad | % YoY | Trimestral + anual | 1991 → 2024 Q4 | 2 550 |
-| `pib_trim_02_01_01` | PIB por componente del gasto, precios constantes | Miles de Bs 1990 | Trimestral + anual | 1990 Q1 → 2024 Q4 | 1 190 |
+| `pib_trim_02_01_01` | PIB por componente del gasto, precios constantes | Miles de Bs 1990 | Trimestral + anual | 1990 Q1 → 2024 Q4 | 1 225 |
 | `pib_anual_serie_actividad` | Serie histórica PIB anual por actividad | Miles de Bs 1990 | Anual | 1980 → 2024 | 1 305 |
 | `pib_anual_serie_gasto` | Serie histórica PIB anual por gasto | Miles de Bs 1990 | Anual | 1980 → 2024 | 315 |
 | `ipc_nacional_general` | IPC Bolivia (índice + 3 variaciones) | índice 2016=100 / % | Mensual | 2018-01 → 2026-05 | 404 non-null |
-| `ipc_division_coicop` | IPC por división COICOP (12 divisiones + general) | índice 2016=100 / % | Mensual | 2018-01 → 2026-05 | 5 252 |
+| `ipc_division_coicop` | IPC por división COICOP (12 divisiones COICOP + 1 fila "ÍNDICE GENERAL" / total Bolivia) | índice 2016=100 / % | Mensual | 2018-01 → 2026-05 | 5 252 |
 | `ipc_empalmada` | Serie histórica IPC empalmada (incluye hiperinflación 1985) | índice 2016=100 / % | Mensual | 1937-01 → 2026-05 | 4 267 non-null |
 
 **Indicador** dentro de cada cuadro IPC:
@@ -45,9 +54,20 @@ Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 - `var_acumulada` — variación % YTD (desde diciembre del año anterior)
 - `var_12m` — variación % vs mismo mes año anterior (inflación interanual)
 
-Para `ipc_division_coicop` los indicadores vienen compuestos: `<metric>_<division_slug>`
-(ej. `var_12m_alimentos_y_bebidas_no_alcoholicas`). Esto da 4 métricas × 13
-divisiones = 52 indicadores únicos.
+Para `ipc_division_coicop` los indicadores vienen compuestos:
+- División 0 (total Bolivia, "ÍNDICE GENERAL"): `<metric>_total`
+  (ej. `var_12m_total`).
+- Divisiones 1-12 (subgrupos COICOP): `<metric>_<division_slug>`
+  (ej. `var_12m_alimentos_y_bebidas_no_alcoholicas`).
+
+Eso da 4 métricas × (1 total + 12 divisiones) = 52 indicadores únicos. Para
+graficar solo las 12 divisiones: `WHERE indicador LIKE 'var_12m_%' AND
+indicador != 'var_12m_total'`.
+
+**Semántica de `base_year`:** sólo el indicador `indice` (nivel del índice)
+lleva `base_year='2016'`. Los 3 indicadores de variación (`var_mensual`,
+`var_acumulada`, `var_12m`) son porcentajes; su `base_year` es `NULL`
+porque conceptualmente no aplica.
 
 ---
 
@@ -83,13 +103,13 @@ divisiones = 52 indicadores únicos.
 
 ## 3. Snapshot reciente: IPC por División COICOP, Mayo 2026
 
-Variación interanual (12 meses) por las 13 divisiones:
+Variación interanual (12 meses) por las 12 divisiones + total Bolivia:
 
 | Ranking | División | Var 12m (May 2026) |
 |---|---|---:|
 | 1 | Transporte | **+31.35%** |
 | 2 | Alimentos y bebidas no alcohólicas | +16.28% |
-| 3 | Alimentos y bebidas consumidos fuera del hogar | +15.69% |
+| 3 | Alimentos y bebidas consumidos fuera del hogar | +15.68% |
 | 4 | Salud | +13.07% |
 | 5 | Bebidas alcohólicas y tabaco | +13.00% |
 | — | **Índice General Bolivia** | **+12.51%** |
@@ -242,9 +262,9 @@ entra en V1 del tab Macroeconomía.
 ### Tier B — desagregación accionable
 
 4. **IPC por división COICOP, var 12m, último mes** (`ipc_division_coicop`
-   → `indicador LIKE 'var_12m_%'`). Bar chart horizontal con 12 divisiones
-   ordenadas. Diagnóstico de "qué está caro este mes" — Transporte,
-   Alimentos, Salud.
+   → `WHERE indicador LIKE 'var_12m_%' AND indicador != 'var_12m_total'`).
+   Bar chart horizontal con 12 divisiones ordenadas. Diagnóstico de "qué
+   está caro este mes" — Transporte, Alimentos, Salud.
 5. **IPC por división COICOP, evolución 2018-presente** (mismo cuadro,
    serie tiempo). Comparar drivers entre periodos.
 
@@ -289,6 +309,13 @@ entra en V1 del tab Macroeconomía.
   `INSERT OR REPLACE` por (cuadro, periodo, dimension|indicador) hace
   upsert idempotente. Si INE publica revisión retroactiva de un trimestre
   viejo, el cambio entra automáticamente.
+- **Guardia contra collapse silencioso:** el upsert (PIB y IPC) verifica
+  antes de insertar que no haya dos filas con la misma PK con valores
+  distintos. Si las hubiera (típicamente por un typo del INE en el label
+  de un año, ej. `'2022p)'` sin paréntesis abrir, observado en el cuadro
+  `pib_trim_02_01_01` release 2026-05), falla loud con `RuntimeError` y
+  pide inspeccionar el XLSX. El parser ya tolera ese caso específico; la
+  guardia cubre futuras variantes.
 
 ---
 

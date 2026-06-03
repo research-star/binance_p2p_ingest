@@ -105,7 +105,7 @@ Conteos de referencia (release 2026-05):
 |---|---:|
 | `pib_trim_01_01_01` | ~2 625 |
 | `pib_trim_01_01_04` | ~2 550 |
-| `pib_trim_02_01_01` | ~1 190 |
+| `pib_trim_02_01_01` | ~1 225 |
 | `pib_anual_serie_actividad` | ~1 305 |
 | `pib_anual_serie_gasto` | ~315 |
 | `ipc_nacional_general` | ~432 (404 non-null) |
@@ -179,19 +179,26 @@ sudo install -d -o binance -g binance /var/log/binance_p2p
 
 ## Paso 5 — Smoke test del cron
 
-Esperar al próximo tick (`15 5,11,17,23 1-10 * *` → si es entre día 1-10
-del mes, el próximo cuarto día). O forzar un test manual:
+El cron IPC corre `15 5,11,17,23 1-10 * *` UTC → durante los días 1-10 del
+mes hay 4 ticks diarios (05:15 / 11:15 / 17:15 / 23:15 UTC, todos visibles
+también como 01:15 / 07:15 / 13:15 / 19:15 hora Bolivia). Esperar al próximo
+tick de esos 4. Fuera del día 1-10 hay que ejecutarlo manualmente para
+validar el wiring del crontab:
 
 ```bash
 ssh binance@46.62.158.88
-# Verificar que la env var del HC está expandida en el shell del cron
-cat /var/log/binance_p2p/ine_ipc.log | tail -30
-
-# Verificar ping en healthchecks.io: la UI debe mostrar "Up" o "Late".
+# Confirmar que las entradas del crontab están donde corresponde.
+crontab -l | grep -E 'ine_(pib|ipc)'
+# Forzar un run manual con --force para que no skipee por md5_unchanged.
+cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py --force
+# Verificar el log que produciría el cron.
+tail -30 /var/log/binance_p2p/ine_ipc.log
 ```
 
-Si el cron tiró `mode=skip` (porque el run manual ya populó), está OK —
-la cadena de detección de release está funcionando.
+Después de un tick real del cron, verificar en `healthchecks.io` que el UUID
+`HC_INE_IPC` muestra "Up" (último ping reciente, sin grace expirada). Si el
+cron tiró `mode=skip` (porque el run manual ya populó), está OK — la cadena
+de detección de release está funcionando idempotentemente.
 
 ---
 

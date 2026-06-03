@@ -92,7 +92,13 @@ def hc_ping(suffix: str = "", body: str = ""):
 # ── Audit folder ──────────────────────────────────────────────────────────
 
 def ensure_audit_dir() -> Path | None:
-    """Best-effort. Devuelve la subcarpeta de la familia o None si OS falló."""
+    """Best-effort. Devuelve la subcarpeta de la familia o None si OS no es POSIX
+    o si el mkdir falló. En Windows, INE_AUDIT_DIR='/opt/binance_p2p/ine_audit'
+    se normaliza silenciosamente a 'C:\\opt\\...' — degradamos antes de tocar
+    el FS para no contaminar el root del drive en dev/laptop."""
+    if os.name != "posix":
+        # Dev en laptop Windows: el audit dir vive sólo en el VPS prod.
+        return None
     target = INE_AUDIT_DIR / FAMILY
     try:
         target.mkdir(parents=True, exist_ok=True)
@@ -158,6 +164,13 @@ def fetch_cuadro(cuadro_id: str) -> tuple[bytes, str, str]:
                   f"err={e}", file=sys.stderr)
             continue
         if resp.status_code == 200:
+            # Validar magic bytes ZIP (XLSX = OOXML zip container). Si el host
+            # devuelve un captive HTML con 200 OK, fallar y probar el secundario.
+            if resp.content[:4] != b"PK\x03\x04":
+                print(f"[ine-pib] WARN host={host} cuadro={cuadro_id} "
+                      f"non_xlsx_magic bytes={resp.content[:8]!r}",
+                      file=sys.stderr)
+                continue
             disp = resp.headers.get("Content-Disposition", "")
             m = CONTENT_DISPOSITION_FILENAME_RE.search(disp)
             filename = m.group(1) if m else f"{cuadro_id}.xlsx"
@@ -202,7 +215,28 @@ def init_schema(conn: sqlite3.Connection):
 
 def upsert_pib(conn: sqlite3.Connection, cuadro_id: str,
                rows: list[dict]) -> tuple[int, int, str]:
-    """Devuelve (rows_upserted, n_dimensions, last_periodo)."""
+    """Devuelve (rows_upserted, n_dimensions, last_periodo).
+
+    Pre-check: rechaza el batch si dos filas comparten (periodo, dimension)
+    con valores distintos. Esto detecta typos del INE en labels de año (ej.
+    '2022p)' sin paréntesis abrir) que harían que un año se atribuya
+    silenciosamente al anterior. El INSERT OR REPLACE final asume que tras
+    este check no hay colapsos accidentales."""
+    seen: dict[tuple[str, str], float | None] = {}
+    for r in rows:
+        key = (r["periodo"], r["dimension"])
+        v = r["valor"]
+        if key in seen:
+            prev = seen[key]
+            if prev != v:
+                raise RuntimeError(
+                    f"{cuadro_id}: colapso (periodo, dimension) con valores "
+                    f"distintos — periodo={key[0]!r} dim={key[1]!r} "
+                    f"prev={prev!r} now={v!r}. Probable typo del INE en un "
+                    f"label de año (ej. '2022p)' sin paréntesis abrir). "
+                    f"Revisar el XLSX antes de insertar."
+                )
+        seen[key] = v
     payload = [
         (r["periodo"], cuadro_id, r["dimension"], r["valor"],
          r["unidad"], int(r["is_preliminary"]))
