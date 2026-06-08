@@ -47,9 +47,31 @@ CREATE TABLE IF NOT EXISTS ine_ipc (
 CREATE INDEX IF NOT EXISTS idx_ine_ipc_ind
   ON ine_ipc (cuadro, indicador, periodo);
 
+-- IPP (Índice de Precios al Productor).
+-- Misma forma que `ine_ipc` (mensual, indicadores compuestos para el cuadro
+-- sectorial), tabla separada porque IPP mide precios al productor industrial
+-- y no es directamente comparable con el IPC de consumidor. base_year = '2016'.
+-- `cuadro`: 'ipp_nacional' (Bolivia agregado) | 'ipp_grandes_grupos' (sector
+--   actividad: 0=total, 1-6=Agricolas/Industria/Otros minerales y gas/
+--   Pecuaria/Pesca/Servicios).
+-- `indicador`: para ipp_nacional → {indice, var_mensual, var_acumulada, var_12m}.
+--   Para ipp_grandes_grupos → '<metric>_<grupo_slug>' (28 = 4 × 7), con
+--   '<metric>_total' para el grupo 0 (ÍNDICE GENERAL, replica del nacional).
+CREATE TABLE IF NOT EXISTS ine_ipp (
+  periodo     TEXT NOT NULL,
+  cuadro      TEXT NOT NULL,
+  indicador   TEXT NOT NULL,
+  valor       REAL,
+  unidad      TEXT NOT NULL,
+  base_year   TEXT,
+  PRIMARY KEY (cuadro, periodo, indicador)
+);
+CREATE INDEX IF NOT EXISTS idx_ine_ipp_ind
+  ON ine_ipp (cuadro, indicador, periodo);
+
 -- Ingest state (reemplaza el patrón .last_etag de EMBI porque el Nextcloud del INE
 -- no emite ETag/Last-Modified). 1 fila por cuadro_id. Detección de release vía
--- (a) parsing de Content-Disposition para IPC (filename versionado YYYY_MM) y
+-- (a) parsing de Content-Disposition para IPC/IPP (filename versionado YYYY_MM) y
 -- (b) MD5 del body para PIB (filename estático, release dentro del XLSX).
 CREATE TABLE IF NOT EXISTS ine_ingest_state (
   cuadro             TEXT PRIMARY KEY,

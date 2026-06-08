@@ -476,6 +476,13 @@ LAYOUT_DISPATCH = {
     "ipc_nacional":              parse_ipc_nacional,
     "ipc_coicop_doubleheader":   parse_ipc_coicop,
     "ipc_empalmada":             parse_ipc_empalmada,
+    # IPP reusa los adapters de IPC — la estructura del XLSX (4 hojas
+    # 1.1-1.4, header single/double-band, base 2016=100) es idéntica;
+    # sólo cambia la semántica del eje no-temporal (grandes grupos de
+    # actividad vs divisiones COICOP). Los cuadros se discriminan por
+    # `cuadro` namespaceado, no por layout.
+    "ipp_nacional":              parse_ipc_nacional,
+    "ipp_grandes_grupos":        parse_ipc_coicop,
 }
 
 
