@@ -7,6 +7,8 @@ auto-publish; el deploy backend requiere intervención manual.
 
 VPS: `binance@46.62.158.88`, working dir `/opt/binance_p2p`, venv `.venv/`.
 
+**Estado al 2026-06-08: solo IPC + IPP desplegados. PIB pausado por decisión** — código en main, tabla `ine_pib` creada vacía, sin cron, `HC_INE_PIB` pausado en UI de Diego. Para reanudar PIB: agregar las 5 líneas cron PIB + env var `HC_INE_PIB` + correr `ingest_ine_pib.py` (no requiere re-migrar).
+
 ---
 
 ## Pre-flight (antes de tocar VPS)

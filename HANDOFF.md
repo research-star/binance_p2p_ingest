@@ -21,8 +21,9 @@ de backups y, opcionalmente, dashboard local.
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
-| `ingest_ine_pib.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` pendiente |
-| `ingest_ine_ipc.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | día 1-10 c/6 h hasta detectar release nuevo (mensual) | `HC_INE_IPC` pendiente |
+| `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
+| `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
+| `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -568,14 +569,22 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
 
 ---
 
-## 8. Ingest INE Bolivia (macro: PIB + IPC)
+## 8. Ingest INE Bolivia (macro: PIB + IPC + IPP)
 
 Ingesta de cuadros estadísticos del **Instituto Nacional de Estadística** de
-Bolivia (PIB y IPC) desde el Nextcloud/Owncloud público del INE
+Bolivia (PIB, IPC, IPP) desde el Nextcloud/Owncloud público del INE
 (`nimbus.ine.gob.bo` + `nube.ine.gob.bo`, dos hosts conviviendo). Espeja la
 estructura de `ingest_embi.py` con dos adaptaciones por características
 distintas de la fuente: (a) no hay ETag/Last-Modified, (b) hay múltiples
 cuadros por familia.
+
+**Estado de deploy (2026-06-08): solo inflación desplegada.** IPC e IPP
+corren en cron VPS y tienen tablas pobladas (`ine_ipc`, `ine_ipp`). PIB
+quedó **PAUSADO por decisión estratégica** — el código está en main, la
+tabla `ine_pib` se creó vacía durante la migración (para facilitar reanudar
+sin re-migrar), pero el ingest NO está scheduleado y `HC_INE_PIB` está
+pausado en la UI de healthchecks.io. Reanudar es: agregar 5 líneas cron +
+1 env var `HC_INE_PIB` + primer `ingest_ine_pib.py` manual.
 
 ### Componentes
 
