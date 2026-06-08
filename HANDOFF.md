@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-05-18.
+Última actualización: 2026-06-03.
 
 ---
 
@@ -21,6 +21,8 @@ de backups y, opcionalmente, dashboard local.
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
+| `ingest_ine_pib.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` pendiente |
+| `ingest_ine_ipc.py` | VPS cron user `binance` (pendiente de deploy — ver `DEPLOY_INE.md`) | día 1-10 c/6 h hasta detectar release nuevo (mensual) | `HC_INE_IPC` pendiente |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -77,6 +79,11 @@ de las filas verdes.
 - **BCB scrape**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
 - **EMBI scrape (BCRD)**: `ingest_embi.py` (lógica + cron one-liner). Snapshot Excel +
   ETag cache en `/opt/binance_p2p/embi_audit/` (fuera del repo).
+- **INE Bolivia macro (PIB + IPC)**: `ingest_ine_pib.py` / `ingest_ine_ipc.py`
+  (entry points por familia, mismas convenciones que EMBI). Parser compartido
+  en `ine_parser.py`. Catálogo de cuadros y mapeo host/token en
+  `config.INE_CUADROS`. Snapshot XLSX y estado por cuadro en
+  `/opt/binance_p2p/ine_audit/{pib,ipc}/` (fuera del repo).
 - **Constantes compartidas**: `config.py`.
 
 ---
@@ -397,6 +404,12 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
       al cron line del BCB. Sin esto, falla del scraper es silenciosa.
       (Follow-up de PR #20.)
+- [ ] **Deploy INE Bolivia (PIB + IPC) a VPS** — código en repo (`ingest_ine_pib.py`,
+      `ingest_ine_ipc.py`, `ine_parser.py`, migración SQL). Falta correr el
+      runbook completo de `DEPLOY_INE.md`: registrar `HC_INE_PIB` y `HC_INE_IPC`
+      en healthchecks.io, aplicar la migración 0001 en `p2p_normalized.db` prod,
+      primer run manual, instalar las 6 líneas de cron. Hasta que se ejecute,
+      las tablas `ine_pib`/`ine_ipc` en prod están vacías.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
@@ -550,3 +563,135 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
   en `THEMES.paper/.slate` JS (que escriben `'kpi-value-size':'28px'`).
   Marcar para futura limpieza cuando se migre la regla `.kpi .value` y los
   entries JS.
+
+---
+
+## 8. Ingest INE Bolivia (macro: PIB + IPC)
+
+Ingesta de cuadros estadísticos del **Instituto Nacional de Estadística** de
+Bolivia (PIB y IPC) desde el Nextcloud/Owncloud público del INE
+(`nimbus.ine.gob.bo` + `nube.ine.gob.bo`, dos hosts conviviendo). Espeja la
+estructura de `ingest_embi.py` con dos adaptaciones por características
+distintas de la fuente: (a) no hay ETag/Last-Modified, (b) hay múltiples
+cuadros por familia.
+
+### Componentes
+
+| Archivo | Rol |
+|---|---|
+| `ingest_ine_pib.py` | Entry point de la familia **PIB** (5 cuadros V1) |
+| `ingest_ine_ipc.py` | Entry point de la familia **IPC** (3 cuadros V1) |
+| `ine_parser.py` | Adapters de parsing por layout (5 layouts soportados) |
+| `config.INE_CUADROS` | Registry de cuadros: host primario, token, family, layout, metadata |
+| `scripts/migrations/0001_ine_tables.sql` | DDL idempotente de las 3 tablas |
+
+### Catálogo V1
+
+8 cuadros. Detalles: `config.INE_CUADROS`.
+
+- **PIB Trimestral** (host nimbus, layout `pib_trim_vertical`): `pib_trim_01_01_01`
+  (PIB cte por actividad), `pib_trim_01_01_04` (var YoY actividad),
+  `pib_trim_02_01_01` (PIB cte por gasto). Cobertura 1990 Q1–presente.
+- **PIB Anual Serie Histórica** (host nube, layout `pib_anual_wide`):
+  `pib_anual_serie_actividad`, `pib_anual_serie_gasto`. Cobertura 1980–presente.
+- **IPC** (host nube): `ipc_nacional_general` (layout `ipc_nacional`),
+  `ipc_division_coicop` (layout `ipc_coicop_doubleheader`), `ipc_empalmada`
+  (layout `ipc_empalmada`). Cobertura IPC nacional 2018–presente; serie
+  empalmada 1937–presente.
+
+Fuera del scope V1: IPM, IPP, PIB departamental, IPC por ciudad, Referencia 2017.
+
+### Layouts de parsing
+
+| Layout | Forma | Cuadros |
+|---|---|---|
+| `pib_trim_vertical` | Periodo en filas (5 filas/año), dimensiones en columnas | PIB Trimestral (3) |
+| `pib_anual_wide` | Series en filas, años en columnas C-AU | PIB Anual Serie Histórica (2) |
+| `ipc_nacional` | Mes en filas, años en columnas (4 hojas = 4 indicadores) | IPC Nacional general |
+| `ipc_coicop_doubleheader` | División en filas, doble header (año mergeado + mes), 4 hojas | IPC División COICOP |
+| `ipc_empalmada` | Mes en filas, 90 años en columnas (4 hojas) | IPC Empalmada |
+
+Quirks comunes que el parser maneja: mojibake CP1252-en-UTF-8, sufijo `(p)`
+preliminar, filas separadoras vacías, filas total trailing (`PROM. ANUAL`,
+`ACUMULADA`), labels multi-línea (PIB anual), unidad declarada en fila
+aparte (no en headers), año mergeado en header del COICOP.
+
+### Schema (3 tablas, ver `scripts/migrations/0001_ine_tables.sql`)
+
+- **`ine_pib`** — PK `(cuadro, periodo, dimension)`. `periodo` es `'YYYY-Qn'`
+  para trim o `'YYYY'` para anual. `dimension` es sector económico o
+  componente del gasto (slugified). `unidad` ∈ {`miles_bs_1990`, `pct_yoy`, …}.
+  `is_preliminary` flagea años con `(p)` en el header.
+- **`ine_ipc`** — PK `(cuadro, periodo, indicador)`. `periodo` es `'YYYY-MM'`.
+  Para IPC nacional/empalmada: `indicador` ∈ {`indice`, `var_mensual`,
+  `var_acumulada`, `var_12m`}. Para IPC COICOP: `indicador` es compound
+  `<metric>_<division_slug>` (52 combinaciones únicas).
+  `unidad` ∈ {`indice_base_2016`, `pct_mensual`, `pct_acumulada`, `pct_12m`}.
+- **`ine_ingest_state`** — PK `cuadro`. 1 fila por cuadro_id (8 total V1).
+  Sustituye al patrón `.last_etag`-en-disco de EMBI porque el Nextcloud del
+  INE no emite ETag ni Last-Modified.
+
+### Detección de release (asimétrica por familia)
+
+- **IPC**: el filename del `Content-Disposition` trae `YYYY_MM` (ej.
+  `Nal-2026_05_…`). El campo `release_id` se extrae del filename. Detección
+  barata a futuro vía HEAD si el dataset crece, hoy GET completo.
+- **PIB**: filename estático (`01.01.01.xlsx`). La fecha vive **dentro** del
+  XLSX (título R8). `release_id` = prefijo del MD5 del body. Siempre se
+  descarga y se compara MD5 contra `ine_ingest_state` antes de re-parsear.
+
+Si MD5 no cambió → `mode=skip` instantáneo, no toca DB ni audit.
+
+### Idempotencia y backfill
+
+Cada XLSX trae la serie completa desde el inicio del cuadro. `INSERT OR
+REPLACE` por la PK hace upsert idempotente. Si INE publica una revisión
+retroactiva (ej. corrige un trimestre viejo), el cambio entra
+automáticamente sin migración. No hay backfill incremental separado.
+
+**Guardia anti-collapse:** antes del `INSERT OR REPLACE`, ambos scripts
+validan que no haya dos filas del batch con la misma PK con valores
+distintos. Si las hubiera, el script falla con `RuntimeError` antes de
+tocar la DB. Esto detecta typos del INE en labels de año/dimensión que
+en otra circunstancia colapsarían silenciosamente datos del año A sobre
+el año B (caso real observado: cuadro `pib_trim_02_01_01` release
+2026-05 trae el label `'2022p)'` sin paréntesis abrir; el parser
+tolera ese caso específico via regex, y la guardia cubre cualquier
+variante futura).
+
+### Audit folder
+
+`/opt/binance_p2p/ine_audit/{pib,ipc}/<cuadro_id>_<release_id>.xlsx`.
+Rotación 60 días (vs 7 de EMBI — los releases INE son infrecuentes).
+Namespaceo obligatorio por familia y por cuadro_id porque INE reusa el
+filename `01.01.01.xlsx` para PIB Trimestral Y PIB Anual con contenido
+distinto.
+
+### Healthchecks
+
+- `HC_INE_PIB` y `HC_INE_IPC` — UUIDs en `healthchecks.io`, leídos como env
+  vars del crontab. Si la env var falta, el script loguea warning y sigue
+  (no aborta). Cubre `start` / éxito (con body resumen) / `fail` con
+  stacktrace.
+- Diferencia vs EMBI: el HC_EMBI quedó sin registrar por mucho tiempo —
+  para INE el ping se cablea desde el día 1, pero arranca solo cuando los
+  UUIDs estén en el entorno (no requiere re-deploy).
+
+### Hosts y fallback
+
+Los share tokens del INE en general resuelven en ambos hosts (`nimbus` y
+`nube`). El fetch primero prueba el host primario declarado en
+`config.INE_CUADROS`; si devuelve 4xx/5xx, prueba el secundario con el
+mismo token. Si ambos fallan → error claro.
+
+### Pendientes / TODO
+
+- **Re-scrape del hub HTML como fallback** cuando el token rota
+  (`bs4` + `lxml` pendientes de instalar en VPS). No bloquea V1 — el HC
+  alerta si un cuadro 404ea.
+- **Frontend (tab Macro / sub-toggles PIB / IPC / etc)**: no se toca en V1
+  del backend. Diseño separado (megarun siguiente).
+- **Threshold de detección de release para PIB**: hoy siempre descarga el
+  XLSX para comparar MD5. Si el ancho de banda llegara a ser problema, se
+  puede agregar HEAD con `Range: bytes=0-0` + comparación de
+  `Content-Length` (cambio implica contenido nuevo).

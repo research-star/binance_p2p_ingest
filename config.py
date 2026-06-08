@@ -34,3 +34,82 @@ INGEST_INTERVAL_S = 600  # 10 min
 
 # ── Watchdog ────────────────────────────────────────────────────────────────
 WATCHDOG_STALE_MIN = 15
+
+# ── INE Bolivia ingest ──────────────────────────────────────────────────────
+# Audit folder en VPS prod; en laptop dev OSError → degradación elegante.
+INE_AUDIT_DIR = Path("/opt/binance_p2p/ine_audit")
+
+# Dos hosts conviven: nimbus (Nextcloud nuevo, 303→200) y nube (Owncloud, 200 directo).
+# Mismo token a veces resuelve en ambos; mantener primary + fallback explícito.
+INE_HOSTS = {
+    "nimbus": "https://nimbus.ine.gob.bo",
+    "nube":   "https://nube.ine.gob.bo",
+}
+
+# Cuadro registry — V1 scope, 8 cuadros.
+# `host` es el host primario confirmado; el fallback es el OTRO host con el mismo token.
+# `family` = 'pib' | 'ipc' (selecciona el ingest script).
+# `layout` selecciona el adapter de parsing en ine_parser.py.
+# `unit` (PIB) / `base_year` (IPC) son metadata persistida en cada fila.
+# `dimension_kind` (PIB) describe el eje no-temporal del cuadro.
+INE_CUADROS = {
+    # ── PIB Trimestral (host nimbus, layout vertical) ──
+    "pib_trim_01_01_01": {
+        "host": "nimbus", "token": "LgCGFBWiz2QccwP",
+        "family": "pib", "layout": "pib_trim_vertical",
+        "desc": "PIB constante por actividad (trimestral, base 1990)",
+        "unit": "miles_bs_1990", "dimension_kind": "actividad",
+    },
+    "pib_trim_01_01_04": {
+        "host": "nimbus", "token": "r6rwwCc9LqddEys",
+        "family": "pib", "layout": "pib_trim_vertical",
+        "desc": "Var YoY PIB constante por actividad (trimestral)",
+        "unit": "pct_yoy", "dimension_kind": "actividad",
+    },
+    "pib_trim_02_01_01": {
+        "host": "nimbus", "token": "HPaSw4gp9LG8Xit",
+        "family": "pib", "layout": "pib_trim_vertical",
+        "desc": "PIB constante por gasto (trimestral, base 1990)",
+        "unit": "miles_bs_1990", "dimension_kind": "gasto",
+    },
+    # ── PIB Anual Serie Histórica (host nube, layout wide) ──
+    "pib_anual_serie_actividad": {
+        "host": "nube", "token": "5HukXcuvSj76wKo",
+        "family": "pib", "layout": "pib_anual_wide",
+        "desc": "Serie histórica PIB cte por actividad 1980-presente",
+        "unit": "miles_bs_1990", "dimension_kind": "actividad",
+    },
+    "pib_anual_serie_gasto": {
+        "host": "nube", "token": "dksqGfnoVsCeeq6",
+        "family": "pib", "layout": "pib_anual_wide",
+        "desc": "Serie histórica PIB cte por gasto 1980-presente",
+        "unit": "miles_bs_1990", "dimension_kind": "gasto",
+    },
+    # ── IPC (host nube) ──
+    "ipc_nacional_general": {
+        "host": "nube", "token": "P2HkvtlKILPhbvB",
+        "family": "ipc", "layout": "ipc_nacional",
+        "desc": "IPC Nacional: índice general + var mensual/acumulada/12 meses",
+        "base_year": "2016",
+    },
+    "ipc_division_coicop": {
+        "host": "nube", "token": "xiffVcALyTuppvB",
+        "family": "ipc", "layout": "ipc_coicop_doubleheader",
+        "desc": "IPC por División COICOP (12 divisiones + total general)",
+        "base_year": "2016",
+    },
+    "ipc_empalmada": {
+        "host": "nube", "token": "Jyfc30EJeAiTMvh",
+        "family": "ipc", "layout": "ipc_empalmada",
+        "desc": "IPC Serie Histórica Empalmada (1937-presente, base 2016)",
+        "base_year": "2016",
+    },
+}
+
+
+def ine_url(cuadro_id: str, host_override: str | None = None) -> str:
+    """URL de descarga del share Nextcloud/Owncloud. host_override permite probar
+    el fallback (el otro host) si el primario devolvió 404."""
+    c = INE_CUADROS[cuadro_id]
+    host = host_override or c["host"]
+    return f"{INE_HOSTS[host]}/index.php/s/{c['token']}/download"

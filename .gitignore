@@ -69,6 +69,11 @@ p2p_normalized.db.lock
 p2p_normalized.db.bak.*
 p2p_metrics.csv
 
+# INE local test DB (usada por ingest_ine_{pib,ipc}.py en dev contra --db ./ine_test.db)
+ine_test.db
+ine_test.db-shm
+ine_test.db-wal
+
 # Artefactos de testing/benchmark de normalize.py (no versionar)
 p2p_baseline_old.db*
 p2p_old_frozen.db*
