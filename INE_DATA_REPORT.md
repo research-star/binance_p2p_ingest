@@ -198,32 +198,41 @@ Sirve para anticipar movimientos del IPC (cuando un shock en costos
 productivos sube el IPP, el IPC suele seguir con 1-3 meses de lag) y
 para diagnosticar qué sectores están comprimiendo márgenes.
 
-**IPP Bolivia agregado nacional, últimos 12 meses + abril 2026:**
+**IPP Bolivia agregado nacional, últimos 12 meses + abril 2026** (valores extraídos directo de `ine_test.db`):
 
 | Mes | Índice (base 2016=100) | Var mensual | Var acumulada YTD | Var 12 meses |
 |---|---:|---:|---:|---:|
-| 2025-05 | 137.65 | +0.39% | +9.06% | **+21.13%** |
-| 2025-06 | 144.46 | +4.95% | +14.45% | +25.96% |
-| 2025-07 | 145.04 | +0.40% | +14.91% | +25.62% |
-| 2025-08 | 146.71 | +1.15% | +16.23% | +24.69% |
-| 2025-09 | 145.97 | -0.50% | +15.65% | +23.07% |
-| 2025-10 | 147.30 | +0.91% | +16.71% | +22.05% |
-| 2025-11 | 147.86 | +0.38% | +17.16% | +20.84% |
-| 2025-12 | 148.06 | +0.13% | **+17.31%** | +20.39% |
-| 2026-01 | 152.55 | +3.03% | +3.03% | +20.96% |
-| 2026-02 | 154.42 | +1.23% | +4.30% | +20.42% |
-| 2026-03 | 154.24 | -0.12% | +4.18% | +17.96% |
+| 2025-05 | 137.73 | +3.62% | +10.48% | +21.93% |
+| 2025-06 | 143.01 | +3.83% | +14.71% | +24.31% |
+| 2025-07 | 146.26 | +2.27% | +17.32% | +26.39% |
+| **2025-08** | **148.84** | +1.76% | +19.39% | **+27.42%** (pico ciclo) |
+| 2025-09 | 151.19 | +1.58% | +21.27% | +25.95% |
+| 2025-10 | 153.28 | +1.39% | +22.95% | +25.81% |
+| 2025-11 | 153.34 | +0.04% | +23.00% | +25.13% |
+| 2025-12 | 153.91 | +0.37% | **+23.46%** (cierre anual) | +23.46% |
+| 2026-01 | 154.90 | +0.64% | +0.64% | +21.99% |
+| 2026-02 | 155.00 | +0.07% | +0.71% | +20.15% |
+| 2026-03 | 154.25 | -0.49% | +0.22% | +17.33% |
 | **2026-04** | **151.45** | **-1.81%** | **-1.60%** | **+13.94%** |
 
 **Observaciones clave:**
-- **El IPP YTD 2026 cayó -1.60%** (vs cierre 2025) — primera deflación
-  acumulada significativa post-shock 2024-2025. Esto suele anticipar
-  desaceleración del IPC en los meses siguientes (compresión de
-  márgenes corriendo abajo en la cadena).
-- **Var 12m bajando** de +25.96% (Jun 2025) a +13.94% (Abr 2026) →
-  desaceleración productor está corriendo MÁS RÁPIDO que la del IPC
-  (que también baja pero más despacio). Brecha consumidor-productor
-  posiblemente se está cerrando.
+- **Pico de inflación productor: 2025-08 con +27.42% YoY** — el shock
+  combustibles/transporte se reflejó primero en el IPP (Jun-Sep 2025
+  todos arriba de 25% YoY) antes que en el IPC (que tocó pico +24.86%
+  en Jul 2025).
+- **IPP YTD 2025 cerró en +23.46%** — más alto que el IPC YTD 2025
+  (+20.40%). El productor absorbió primero el shock; el consumidor
+  recibió la presión con lag.
+- **Reversión en 2026**: IPP YTD Abr **-1.60%** (deflación productor)
+  vs IPC YTD May **+2.62%** (todavía inflacionario suave). Brecha
+  consumidor-productor cerrándose **al revés**: productor ya bajó,
+  consumidor todavía no. Esto suele anticipar enfriamiento del IPC
+  con 1-3 meses de lag.
+- **Var 12m bajando** desde el pico +27.42% (Ago 2025) hasta +13.94%
+  (Abr 2026) — desaceleración productor de **13.5 puntos** en 8 meses.
+  El IPC bajó del pico +24.86% (Jul 2025) a +12.51% (May 2026), también
+  ~12 puntos en 10 meses. Velocidad similar, pero el productor empezó
+  a bajar primero.
 
 ### Por sector de actividad (Grandes Grupos), abril 2026
 
@@ -251,8 +260,17 @@ para diagnosticar qué sectores están comprimiendo márgenes.
 
 ### Cobertura y notas
 
-- Cobertura IPP: 2017-01 a 2026-04 (~9 años, 112 meses). Mucho más
-  corta que el IPC empalmada — no hay serie empalmada de IPP.
+- Cobertura IPP **con data real**: 2017-01 a 2026-04 (~9 años, 112 meses).
+  Mucho más corta que el IPC empalmada — no hay serie empalmada de IPP.
+- **Para queries de "último mes disponible"** filtrar `WHERE valor IS NOT
+  NULL`: en `ipp_nacional` (igual que en `ipc_nacional_general`) el
+  parser persiste filas placeholder con `valor=NULL` para los meses
+  futuros del año en curso (2026-05..2026-12 al release 2026-04).
+  `MAX(periodo) WHERE valor IS NOT NULL` devuelve el último mes con
+  data real; `MAX(periodo)` sin filtro devuelve el final del año en
+  curso. Asimetría con `ipp_grandes_grupos` que sólo crea filas para
+  (año, mes) con header válido — el double-header parser no crea
+  scaffold.
 - Base year: 2016=100 (mismo que IPC).
 - "Agricolas" en el XLSX del INE está escrito sin tilde (typo en
   source). El parser lo slugifica a `agricolas` literal — preservamos

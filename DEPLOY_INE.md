@@ -118,7 +118,7 @@ Conteos de referencia (releases vigentes: PIB → 2024-Q4, IPC → 2026-05, IPP 
 | `ipp_nacional` | ~480 (448 non-null) |
 | `ipp_grandes_grupos` | ~3 136 |
 
-Sanity check con un valor headline conocido:
+Sanity check con valores headline conocidos:
 
 ```bash
 ssh binance@46.62.158.88 'cd /opt/binance_p2p && sqlite3 p2p_normalized.db "
@@ -130,6 +130,16 @@ WHERE cuadro=\"ipc_nacional_general\" AND periodo=\"2026-05\" ORDER BY indicador
 # var_12m|12.51
 # var_acumulada|2.62
 # var_mensual|2.13
+
+ssh binance@46.62.158.88 'cd /opt/binance_p2p && sqlite3 p2p_normalized.db "
+SELECT indicador, ROUND(valor,2) FROM ine_ipp
+WHERE cuadro=\"ipp_nacional\" AND periodo=\"2026-04\" ORDER BY indicador;
+"'
+# esperado:
+# indice|151.45
+# var_12m|13.94
+# var_acumulada|-1.60
+# var_mensual|-1.81
 ```
 
 ---
@@ -233,7 +243,7 @@ validar el wiring del crontab:
 ```bash
 ssh binance@46.62.158.88
 # Confirmar que las entradas del crontab están donde corresponde.
-crontab -l | grep -E 'ine_(pib|ipc)'
+crontab -l | grep -E 'ine_(pib|ipc|ipp)'
 # Forzar un run manual con --force para que no skipee por md5_unchanged.
 cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py --force
 # Verificar el log que produciría el cron.
@@ -249,14 +259,15 @@ de detección de release está funcionando idempotentemente.
 
 ## Paso 6 — Rotación de audit
 
-El audit folder (`/opt/binance_p2p/ine_audit/{pib,ipc}/`) se crea
+El audit folder (`/opt/binance_p2p/ine_audit/{pib,ipc,ipp}/`) se crea
 automáticamente en el primer run. La rotación interna (60 días) corre al
-final de cada ejecución de `ingest_ine_pib.py` / `ingest_ine_ipc.py`.
+final de cada ejecución de los 3 scripts (`ingest_ine_pib.py` /
+`ingest_ine_ipc.py` / `ingest_ine_ipp.py`).
 
 Verificación opcional:
 
 ```bash
-ssh binance@46.62.158.88 'ls -la /opt/binance_p2p/ine_audit/pib/ /opt/binance_p2p/ine_audit/ipc/'
+ssh binance@46.62.158.88 'ls -la /opt/binance_p2p/ine_audit/pib/ /opt/binance_p2p/ine_audit/ipc/ /opt/binance_p2p/ine_audit/ipp/'
 ```
 
 ---
@@ -271,6 +282,7 @@ Si algo sale mal y hay que revertir:
 ssh binance@46.62.158.88 'cd /opt/binance_p2p && sqlite3 p2p_normalized.db "
 DELETE FROM ine_pib;
 DELETE FROM ine_ipc;
+DELETE FROM ine_ipp;
 DELETE FROM ine_ingest_state;
 "'
 ```
@@ -284,15 +296,17 @@ corrida del cron).
 ssh binance@46.62.158.88 'cd /opt/binance_p2p && sqlite3 p2p_normalized.db "
 DROP TABLE ine_pib;
 DROP TABLE ine_ipc;
+DROP TABLE ine_ipp;
 DROP TABLE ine_ingest_state;
 DROP INDEX IF EXISTS idx_ine_pib_dim;
 DROP INDEX IF EXISTS idx_ine_ipc_ind;
+DROP INDEX IF EXISTS idx_ine_ipp_ind;
 "'
 ```
 
 ### Cron
 
-Comentar (con `#`) las 6 líneas agregadas al crontab. Los HC vars pueden
+Comentar (con `#`) las 7 líneas agregadas al crontab. Los HC vars pueden
 quedar — son inertes.
 
 ### Código
@@ -336,6 +350,18 @@ CREATE TABLE IF NOT EXISTS ine_ipc (
 );
 CREATE INDEX IF NOT EXISTS idx_ine_ipc_ind
   ON ine_ipc (cuadro, indicador, periodo);
+
+CREATE TABLE IF NOT EXISTS ine_ipp (
+  periodo     TEXT NOT NULL,
+  cuadro      TEXT NOT NULL,
+  indicador   TEXT NOT NULL,
+  valor       REAL,
+  unidad      TEXT NOT NULL,
+  base_year   TEXT,
+  PRIMARY KEY (cuadro, periodo, indicador)
+);
+CREATE INDEX IF NOT EXISTS idx_ine_ipp_ind
+  ON ine_ipp (cuadro, indicador, periodo);
 
 CREATE TABLE IF NOT EXISTS ine_ingest_state (
   cuadro             TEXT PRIMARY KEY,
