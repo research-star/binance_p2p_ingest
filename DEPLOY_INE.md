@@ -1,9 +1,9 @@
 # DEPLOY_INE.md — Runbook de deploy del ingest INE Bolivia (macro)
 
 Este documento describe el deploy a producción VPS Hetzner de los scripts
-`ingest_ine_pib.py` + `ingest_ine_ipc.py`. **Se ejecuta DESPUÉS del merge
-del PR** — los pasos acá NO los corre el cron de auto-publish; el deploy
-backend requiere intervención manual.
+`ingest_ine_pib.py` + `ingest_ine_ipc.py` + `ingest_ine_ipp.py`. **Se ejecuta
+DESPUÉS del merge del PR** — los pasos acá NO los corre el cron de
+auto-publish; el deploy backend requiere intervención manual.
 
 VPS: `binance@46.62.158.88`, working dir `/opt/binance_p2p`, venv `.venv/`.
 
@@ -12,11 +12,11 @@ VPS: `binance@46.62.158.88`, working dir `/opt/binance_p2p`, venv `.venv/`.
 ## Pre-flight (antes de tocar VPS)
 
 1. **PR merged a `main`.** Confirmar con `gh pr view <#>` que `state=MERGED`.
-2. **HC UUIDs registrados.** En `healthchecks.io` (cuenta Diego), crear:
-   - "ine_pib" → copiar UUID a anotar
-   - "ine_ipc" → copiar UUID a anotar
-   - Ambos schedule: "Monthly" o "Custom" según preferencia. El deploy
-     inicial puede usar "Grace" largo (24 h) y ajustar después.
+2. **3 HC UUIDs registrados en `healthchecks.io`** (cuenta Diego). Config
+   exacta de cada uno está en la sección "Configuración de healthchecks.io"
+   abajo — leerla antes de crear los checks para que el schedule en modo
+   Cron, la timezone (`America/La_Paz`) y el grace time queden alineados
+   con el cron real del crontab.
 3. **Verificar deps en VPS.** Mínimas: `requests`, `openpyxl` (ya OK al
    2026-06-03, confirmado por la recon previa). No requiere `pandas`,
    `numpy`, `xlrd`. Opcionalmente: `beautifulsoup4` + `lxml` (sólo si en
@@ -37,13 +37,13 @@ ssh binance@46.62.158.88 'cd /opt/binance_p2p && git pull --ff-only origin main 
 ```
 
 Esperado: el último commit es el merge del PR. Archivos nuevos visibles:
-`ingest_ine_pib.py`, `ingest_ine_ipc.py`, `ine_parser.py`,
+`ingest_ine_pib.py`, `ingest_ine_ipc.py`, `ingest_ine_ipp.py`, `ine_parser.py`,
 `scripts/migrations/0001_ine_tables.sql`, `DEPLOY_INE.md`,
 `INE_DATA_REPORT.md`. `config.py` y `HANDOFF.md` modificados.
 
 ---
 
-## Paso 2 — Migración SQL (crear las 3 tablas en prod)
+## Paso 2 — Migración SQL (crear las 4 tablas en prod)
 
 Idempotente (DDL usa `CREATE TABLE IF NOT EXISTS`). Seguro de re-correr.
 
@@ -57,7 +57,7 @@ Verificar:
 ```bash
 ssh binance@46.62.158.88 \
   'cd /opt/binance_p2p && sqlite3 p2p_normalized.db ".tables ine_%"'
-# esperado: ine_pib  ine_ingest_state  ine_ipc
+# esperado: ine_pib  ine_ingest_state  ine_ipc  ine_ipp
 ```
 
 ```bash
@@ -81,11 +81,14 @@ ssh binance@46.62.158.88
 cd /opt/binance_p2p
 export HC_INE_PIB='<UUID_PIB_AQUI>'
 export HC_INE_IPC='<UUID_IPC_AQUI>'
+export HC_INE_IPP='<UUID_IPP_AQUI>'
 
 # PIB primero (más rows). Logs van a stdout (capturar).
 .venv/bin/python ingest_ine_pib.py 2>&1 | tee /tmp/ine_pib_first_run.log
 # IPC.
 .venv/bin/python ingest_ine_ipc.py 2>&1 | tee /tmp/ine_ipc_first_run.log
+# IPP.
+.venv/bin/python ingest_ine_ipp.py 2>&1 | tee /tmp/ine_ipp_first_run.log
 exit
 ```
 
@@ -95,11 +98,12 @@ Verificar conteos:
 ssh binance@46.62.158.88 'cd /opt/binance_p2p && sqlite3 p2p_normalized.db "
 SELECT cuadro, COUNT(*) AS rows FROM ine_pib GROUP BY cuadro;
 SELECT cuadro, COUNT(*) AS rows FROM ine_ipc GROUP BY cuadro;
+SELECT cuadro, COUNT(*) AS rows FROM ine_ipp GROUP BY cuadro;
 SELECT * FROM ine_ingest_state ORDER BY cuadro;
 "'
 ```
 
-Conteos de referencia (release 2026-05):
+Conteos de referencia (releases vigentes: PIB → 2024-Q4, IPC → 2026-05, IPP → 2026-04):
 
 | Cuadro | Filas esperadas |
 |---|---:|
@@ -111,6 +115,8 @@ Conteos de referencia (release 2026-05):
 | `ipc_nacional_general` | ~432 (404 non-null) |
 | `ipc_division_coicop` | ~5 252 |
 | `ipc_empalmada` | ~4 320 (4 267 non-null) |
+| `ipp_nacional` | ~480 (448 non-null) |
+| `ipp_grandes_grupos` | ~3 136 |
 
 Sanity check con un valor headline conocido:
 
@@ -145,6 +151,7 @@ HC_INGEST/HC_NORMALIZE/HC_DASHBOARD ya vivos). Líneas verbatim a añadir
 # Healthcheck UUIDs INE (env vars expandidas por cron al ejecutar)
 HC_INE_PIB=<UUID_PIB_AQUI>
 HC_INE_IPC=<UUID_IPC_AQUI>
+HC_INE_IPP=<UUID_IPP_AQUI>
 
 # INE PIB Trimestral — polleo diario en ventana post-cierre Q (release ~90 d lag)
 # Cubre los 4 trimestres con holgura: día +60 a día +120 post-fin-de-Q
@@ -158,15 +165,19 @@ HC_INE_IPC=<UUID_IPC_AQUI>
 
 # INE IPC — día 1-10 c/6 h hasta detectar release nuevo (publicación mensual)
 15 5,11,17,23 1-10 * * cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py >> /var/log/binance_p2p/ine_ipc.log 2>&1 && curl -fsS --max-time 10 https://hc-ping.com/$HC_INE_IPC > /dev/null
+
+# INE IPP — día 1-10 c/6 h, misma cadencia que IPC (publicación mensual)
+# (offset 15 min para no traslapar requests al mismo host nube.ine.gob.bo)
+30 5,11,17,23 1-10 * * cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py >> /var/log/binance_p2p/ine_ipp.log 2>&1 && curl -fsS --max-time 10 https://hc-ping.com/$HC_INE_IPP > /dev/null
 ```
 
 Notas:
 - Los HC ping van **solo en el cuadro headline** de cada familia
-  (PIB Trimestral 01.01.01 e IPC en cualquier run): si ese cuadro pasa,
+  (PIB Trimestral 01.01.01 e IPC/IPP en cualquier run): si ese cuadro pasa,
   consideramos la cadencia healthy. Los otros cuadros que skipean por
   MD5 no necesitan ping individual.
 - `cd /opt/binance_p2p` antes del venv, idéntico al patrón del crontab vivo.
-- `stdout+stderr` → `/var/log/binance_p2p/ine_{pib,ipc}.log`. Asegurarse
+- `stdout+stderr` → `/var/log/binance_p2p/ine_{pib,ipc,ipp}.log`. Asegurarse
   de que el directorio existe y `binance` tiene permiso de write:
 
 ```bash
@@ -174,6 +185,40 @@ sudo install -d -o binance -g binance /var/log/binance_p2p
 ```
 
 (Probablemente ya está creado para los otros logs — verificar.)
+
+---
+
+## Configuración de healthchecks.io (los 3 checks INE)
+
+Crear 3 checks en `healthchecks.io` ANTES del Paso 4 para tener los UUIDs.
+Config exacta por check abajo. El cron del VPS corre en **UTC**; las
+expresiones de schedule abajo se especifican en timezone **America/La_Paz**
+(equivalentemente, BO local = UTC − 4 todo el año) — HC convierte
+internamente y la próxima ejecución esperada se calcula correctamente.
+
+| Check | Schedule Type | Cron expression | Timezone | Grace time | Pings que recibe |
+|---|---|---|---|---|---|
+| **ine_pib** | Cron | `30 7 * * *` | `America/La_Paz` | **6 hours** | Diario, sólo desde el cron line del cuadro `pib_trim_01_01_01` (los otros 4 cuadros PIB skipean por MD5 y no pingean) |
+| **ine_ipc** | Cron | `15 1,7,13,19 1-10 * *` | `America/La_Paz` | **90 min** | Hasta 4×/día entre días 1-10 del mes, hasta detectar release nuevo (luego skip por MD5). Fuera del día 1-10 NO se espera ping → schedule sólo cubre esos 10 días |
+| **ine_ipp** | Cron | `30 1,7,13,19 1-10 * *` | `America/La_Paz` | **90 min** | Idéntico a IPC pero offset 15 min (no traslapar requests al mismo host nube.ine.gob.bo) |
+
+Pasos exactos en la UI de healthchecks.io para cada uno:
+
+1. **Add Check** → Name = `ine_pib` / `ine_ipc` / `ine_ipp` (respectivamente).
+2. **Schedule** tab → seleccionar **"Cron"** (no "Simple") → pegar la expresión de la tabla.
+3. **Timezone** dropdown → buscar y seleccionar `America/La_Paz`.
+4. **Grace time** → setear a 6 h / 90 min según la fila.
+5. Copiar el **UUID** que muestra la URL del check (`https://healthchecks.io/checks/<UUID>/details/`)
+   o el botón "Show ping URL" → es lo que va en las env vars del crontab.
+6. (Opcional) bajo "Notifications" / "Integrations", habilitar email / Slack /
+   Telegram según preferencia para alertas de fail.
+
+**Cómo cada script pingea al HC** (referencia rápida, ya cableado en código):
+
+- En éxito: `requests.get(f'https://hc-ping.com/{UUID}')` (con `body=` resumen vía POST).
+- En `start`: `requests.get(f'https://hc-ping.com/{UUID}/start')` — opcional, marca inicio.
+- En fail: `requests.post(f'https://hc-ping.com/{UUID}/fail', data=stacktrace)`.
+- Si la env var falta (`HC_INE_*` vacío) → degradación silenciosa, no aborta el ingest.
 
 ---
 

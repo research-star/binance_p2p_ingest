@@ -404,12 +404,14 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
       al cron line del BCB. Sin esto, falla del scraper es silenciosa.
       (Follow-up de PR #20.)
-- [ ] **Deploy INE Bolivia (PIB + IPC) a VPS** — código en repo (`ingest_ine_pib.py`,
-      `ingest_ine_ipc.py`, `ine_parser.py`, migración SQL). Falta correr el
-      runbook completo de `DEPLOY_INE.md`: registrar `HC_INE_PIB` y `HC_INE_IPC`
-      en healthchecks.io, aplicar la migración 0001 en `p2p_normalized.db` prod,
-      primer run manual, instalar las 6 líneas de cron. Hasta que se ejecute,
-      las tablas `ine_pib`/`ine_ipc` en prod están vacías.
+- [ ] **Deploy INE Bolivia (PIB + IPC + IPP) a VPS** — código en repo
+      (`ingest_ine_pib.py`, `ingest_ine_ipc.py`, `ingest_ine_ipp.py`,
+      `ine_parser.py`, migración SQL). Falta correr el runbook completo de
+      `DEPLOY_INE.md`: registrar `HC_INE_PIB` / `HC_INE_IPC` / `HC_INE_IPP`
+      en healthchecks.io (config exacta documentada en el runbook),
+      aplicar la migración 0001 en `p2p_normalized.db` prod, primer run
+      manual, instalar las 7 líneas de cron. Hasta que se ejecute, las
+      tablas `ine_pib`/`ine_ipc`/`ine_ipp` en prod están vacías.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
@@ -579,11 +581,12 @@ cuadros por familia.
 
 | Archivo | Rol |
 |---|---|
-| `ingest_ine_pib.py` | Entry point de la familia **PIB** (5 cuadros V1) |
-| `ingest_ine_ipc.py` | Entry point de la familia **IPC** (3 cuadros V1) |
-| `ine_parser.py` | Adapters de parsing por layout (5 layouts soportados) |
+| `ingest_ine_pib.py` | Entry point de la familia **PIB** (5 cuadros) |
+| `ingest_ine_ipc.py` | Entry point de la familia **IPC** (3 cuadros) |
+| `ingest_ine_ipp.py` | Entry point de la familia **IPP** (2 cuadros) |
+| `ine_parser.py` | Adapters de parsing por layout (5 funciones, 7 keys vía aliases) |
 | `config.INE_CUADROS` | Registry de cuadros: host primario, token, family, layout, metadata |
-| `scripts/migrations/0001_ine_tables.sql` | DDL idempotente de las 3 tablas |
+| `scripts/migrations/0001_ine_tables.sql` | DDL idempotente de las 4 tablas |
 
 ### Catálogo V1
 
@@ -598,8 +601,13 @@ cuadros por familia.
   `ipc_division_coicop` (layout `ipc_coicop_doubleheader`), `ipc_empalmada`
   (layout `ipc_empalmada`). Cobertura IPC nacional 2018–presente; serie
   empalmada 1937–presente.
+- **IPP** (Índice de Precios al Productor, host nube): `ipp_nacional`
+  (layout `ipp_nacional`), `ipp_grandes_grupos` (layout `ipp_grandes_grupos`).
+  Cobertura 2017-01 a presente, base 2016=100. Estructuralmente idéntico al
+  IPC, los layouts son aliases en `LAYOUT_DISPATCH` que reutilizan
+  `parse_ipc_nacional` y `parse_ipc_coicop` respectivamente.
 
-Fuera del scope V1: IPM, IPP, PIB departamental, IPC por ciudad, Referencia 2017.
+Fuera del scope: IPM, PIB departamental, IPC por ciudad, Referencia 2017.
 
 ### Layouts de parsing
 
@@ -607,8 +615,8 @@ Fuera del scope V1: IPM, IPP, PIB departamental, IPC por ciudad, Referencia 2017
 |---|---|---|
 | `pib_trim_vertical` | Periodo en filas (5 filas/año), dimensiones en columnas | PIB Trimestral (3) |
 | `pib_anual_wide` | Series en filas, años en columnas C-AU | PIB Anual Serie Histórica (2) |
-| `ipc_nacional` | Mes en filas, años en columnas (4 hojas = 4 indicadores) | IPC Nacional general |
-| `ipc_coicop_doubleheader` | División en filas, doble header (año mergeado + mes), 4 hojas | IPC División COICOP |
+| `ipc_nacional` / `ipp_nacional` (alias) | Mes en filas, años en columnas (4 hojas = 4 indicadores) | IPC Nacional general, IPP Nacional |
+| `ipc_coicop_doubleheader` / `ipp_grandes_grupos` (alias) | División en filas, doble header (año mergeado + mes), 4 hojas | IPC División COICOP (13 divs), IPP Grandes Grupos (7 grupos actividad) |
 | `ipc_empalmada` | Mes en filas, 90 años en columnas (4 hojas) | IPC Empalmada |
 
 Quirks comunes que el parser maneja: mojibake CP1252-en-UTF-8, sufijo `(p)`
@@ -616,7 +624,7 @@ preliminar, filas separadoras vacías, filas total trailing (`PROM. ANUAL`,
 `ACUMULADA`), labels multi-línea (PIB anual), unidad declarada en fila
 aparte (no en headers), año mergeado en header del COICOP.
 
-### Schema (3 tablas, ver `scripts/migrations/0001_ine_tables.sql`)
+### Schema (4 tablas, ver `scripts/migrations/0001_ine_tables.sql`)
 
 - **`ine_pib`** — PK `(cuadro, periodo, dimension)`. `periodo` es `'YYYY-Qn'`
   para trim o `'YYYY'` para anual. `dimension` es sector económico o
@@ -627,15 +635,23 @@ aparte (no en headers), año mergeado en header del COICOP.
   `var_acumulada`, `var_12m`}. Para IPC COICOP: `indicador` es compound
   `<metric>_<division_slug>` (52 combinaciones únicas).
   `unidad` ∈ {`indice_base_2016`, `pct_mensual`, `pct_acumulada`, `pct_12m`}.
-- **`ine_ingest_state`** — PK `cuadro`. 1 fila por cuadro_id (8 total V1).
+- **`ine_ipp`** — misma forma que `ine_ipc`. PK `(cuadro, periodo, indicador)`.
+  Para `ipp_nacional`: `indicador` ∈ {`indice`, `var_mensual`, `var_acumulada`,
+  `var_12m`}. Para `ipp_grandes_grupos`: `indicador` es compound
+  `<metric>_<grupo_slug>` (28 combinaciones = 4 × 7), con `_total` para
+  div 0 (grupo "ÍNDICE GENERAL"). Tabla separada de `ine_ipc` porque IPP
+  mide precios al productor industrial, no del consumidor — los dashboards
+  los modelan como series independientes.
+- **`ine_ingest_state`** — PK `cuadro`. 1 fila por cuadro_id (10 total con IPP).
   Sustituye al patrón `.last_etag`-en-disco de EMBI porque el Nextcloud del
   INE no emite ETag ni Last-Modified.
 
 ### Detección de release (asimétrica por familia)
 
-- **IPC**: el filename del `Content-Disposition` trae `YYYY_MM` (ej.
-  `Nal-2026_05_…`). El campo `release_id` se extrae del filename. Detección
-  barata a futuro vía HEAD si el dataset crece, hoy GET completo.
+- **IPC / IPP**: el filename del `Content-Disposition` trae `YYYY_MM` (ej.
+  `Nal-2026_05_…` para IPC, `IPP-2026_04_…` para IPP). El campo `release_id`
+  se extrae del filename. Detección barata a futuro vía HEAD si el dataset
+  crece, hoy GET completo.
 - **PIB**: filename estático (`01.01.01.xlsx`). La fecha vive **dentro** del
   XLSX (título R8). `release_id` = prefijo del MD5 del body. Siempre se
   descarga y se compara MD5 contra `ine_ingest_state` antes de re-parsear.
@@ -649,15 +665,26 @@ REPLACE` por la PK hace upsert idempotente. Si INE publica una revisión
 retroactiva (ej. corrige un trimestre viejo), el cambio entra
 automáticamente sin migración. No hay backfill incremental separado.
 
-**Guardia anti-collapse:** antes del `INSERT OR REPLACE`, ambos scripts
-validan que no haya dos filas del batch con la misma PK con valores
-distintos. Si las hubiera, el script falla con `RuntimeError` antes de
-tocar la DB. Esto detecta typos del INE en labels de año/dimensión que
-en otra circunstancia colapsarían silenciosamente datos del año A sobre
-el año B (caso real observado: cuadro `pib_trim_02_01_01` release
-2026-05 trae el label `'2022p)'` sin paréntesis abrir; el parser
-tolera ese caso específico via regex, y la guardia cubre cualquier
-variante futura).
+**Guardia anti-collapse:** antes del `INSERT OR REPLACE`, los 3 scripts
+(PIB, IPC, IPP) validan que no haya dos filas del batch con la misma PK
+con valores distintos. Si las hubiera, el script falla con `RuntimeError`
+antes de tocar la DB. Esto detecta typos del INE en labels de año/dimensión
+que en otra circunstancia colapsarían silenciosamente datos del año A sobre
+el año B (caso real observado: cuadro `pib_trim_02_01_01` release 2026-05
+trae el label `'2022p)'` sin paréntesis abrir; el parser tolera ese caso
+específico via regex, y la guardia cubre cualquier variante futura).
+
+### PIB Trimestral — lag estructural del XLSX
+
+INE publica los cuadros XLSX del hub PIB Trimestral con ~17 meses de lag
+respecto al trimestre más reciente (al 2026-06-08, el XLSX más fresco
+llega hasta Q4 2024). Las **notas de prensa PDF** sí adelantan ~12 meses
+respecto al XLSX — ej. la nota Q4 2025 se publicó el 2026-04-21 antes
+de que los cuadros oficiales se refresquen. Apuesta razonable: los XLSX
+saltarán a "1990-2025" entre julio-octubre 2026 (patrón histórico).
+**No es bug** del ingest — el lag es del INE, no nuestro. Si en algún
+momento se decide ingerir las cifras de las notas PDF, sería un alcance
+nuevo (PDF table extraction, no XLSX).
 
 ### Audit folder
 

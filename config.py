@@ -104,6 +104,22 @@ INE_CUADROS = {
         "desc": "IPC Serie Histórica Empalmada (1937-presente, base 2016)",
         "base_year": "2016",
     },
+    # ── IPP (Índice de Precios al Productor, host nube) ──
+    # Estructuralmente idéntico al IPC: 4 hojas (1.1-1.4), single-band header
+    # para el nacional / double-band para el sectorial. Reutiliza los mismos
+    # adapters via aliases en LAYOUT_DISPATCH. Base year confirmado 2016=100.
+    "ipp_nacional": {
+        "host": "nube", "token": "jiPDzh0nsOiDGY0",
+        "family": "ipp", "layout": "ipp_nacional",
+        "desc": "IPP Bolivia agregado: índice general + var mensual/acumulada/12 meses",
+        "base_year": "2016",
+    },
+    "ipp_grandes_grupos": {
+        "host": "nube", "token": "RbTQhRDB6bpuPWx",
+        "family": "ipp", "layout": "ipp_grandes_grupos",
+        "desc": "IPP por Grandes Grupos (6 sectores actividad + total general)",
+        "base_year": "2016",
+    },
 }
 
 
