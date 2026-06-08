@@ -19,19 +19,30 @@ Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 
 ## En 90 segundos: qué tenemos
 
-- **8 cuadros** ingeridos del INE Bolivia (5 PIB + 3 IPC), persistidos en
-  3 tablas SQLite (`ine_pib`, `ine_ipc`, `ine_ingest_state`).
-- **18 024 filas** de data real (8 020 PIB + 10 004 IPC) cubriendo:
+- **10 cuadros** ingeridos del INE Bolivia (5 PIB + 3 IPC + 2 IPP),
+  persistidos en 4 tablas SQLite (`ine_pib`, `ine_ipc`, `ine_ipp`,
+  `ine_ingest_state`).
+- **21 640 filas** de data real (8 020 PIB + 10 004 IPC + 3 616 IPP) cubriendo:
   - **PIB:** 1980-2024 anual + 1990 Q1 - 2024 Q4 trimestral
   - **IPC:** 1937-presente (serie empalmada) y 2018-2026 (Base 2016 vigente)
-- **Última inflación interanual (May 2026): +12.51%** — Bolivia atraviesa el
-  segundo año consecutivo con inflación >10%, tras décadas en rango 0-6%.
-- **Sectores con presión inflacionaria fuerte** (May 2026 var 12m):
-  Transporte +31.3%, Alimentos +16.3%, Salud +13.1%. Único con deflación:
-  Comunicaciones -4.8%.
+  - **IPP:** 2017-2026 (Base 2016, 2 cuadros)
+- **Última inflación interanual al consumidor (IPC May 2026): +12.51%** —
+  Bolivia atraviesa el segundo año consecutivo con inflación >10%, tras
+  décadas en rango 0-6%.
+- **Inflación al productor (IPP Abr 2026): +13.94% YoY**, pero **desacelerando**
+  fuerte (-1.81% mensual, -1.60% YTD acumulado) — primera señal de
+  compresión de costos productivos que suele anticipar enfriamiento del IPC
+  en 1-3 meses.
+- **Sectores IPC con presión fuerte** (May 2026 var 12m): Transporte +31.3%,
+  Alimentos +16.3%, Salud +13.1%. Único con deflación: Comunicaciones -4.8%.
+- **Sectores IPP líderes** (Abr 2026 var 12m): Pecuaria +25.76%, Industria
+  manufacturera +18.92%. Deflación productor: Pesca -5.07%, Agricolas -1.36%.
 - **PIB Q4 2024 (preliminar) cayó 2.6% YoY**. Petróleo crudo y gas: -15%.
   Industria manufacturera: -5%. Minería: +10% (único en alza). Señal de
-  recesión sectorial difundida.
+  recesión sectorial difundida. **Nota:** INE publicó Q4 2025 vía PDF de
+  prensa (caída acumulada anual -1.58%) pero el XLSX oficial todavía está
+  en Q4 2024 — lag estructural ~17 meses, esperamos refresh entre julio-
+  octubre 2026.
 
 ---
 
@@ -47,6 +58,8 @@ Release vigente: **Mayo 2026** (IPC) y **2024 Q4** (PIB).
 | `ipc_nacional_general` | IPC Bolivia (índice + 3 variaciones) | índice 2016=100 / % | Mensual | 2018-01 → 2026-05 | 404 non-null |
 | `ipc_division_coicop` | IPC por división COICOP (12 divisiones COICOP + 1 fila "ÍNDICE GENERAL" / total Bolivia) | índice 2016=100 / % | Mensual | 2018-01 → 2026-05 | 5 252 |
 | `ipc_empalmada` | Serie histórica IPC empalmada (incluye hiperinflación 1985) | índice 2016=100 / % | Mensual | 1937-01 → 2026-05 | 4 267 non-null |
+| `ipp_nacional` | IPP Bolivia agregado (índice + 3 variaciones) | índice 2016=100 / % | Mensual | 2017-01 → 2026-04 | 448 non-null |
+| `ipp_grandes_grupos` | IPP por Grandes Grupos (6 sectores actividad + 1 total) | índice 2016=100 / % | Mensual | 2017-01 → 2026-04 | 3 136 |
 
 **Indicador** dentro de cada cuadro IPC:
 - `indice` — nivel del IPC, base 2016=100
@@ -177,7 +190,98 @@ PIB por **componente del gasto** (Q4 2024, todos preliminares):
 
 ---
 
-## 5. Serie larga: IPC Empalmada 1937-2026
+## 5. Snapshot reciente: IPP Bolivia, Abril 2026 (último release)
+
+El IPP (Índice de Precios al Productor) mide precios en la **boca de
+fábrica / origen del productor**, antes de llegar al consumidor final.
+Sirve para anticipar movimientos del IPC (cuando un shock en costos
+productivos sube el IPP, el IPC suele seguir con 1-3 meses de lag) y
+para diagnosticar qué sectores están comprimiendo márgenes.
+
+**IPP Bolivia agregado nacional, últimos 12 meses + abril 2026** (valores extraídos directo de `ine_test.db`):
+
+| Mes | Índice (base 2016=100) | Var mensual | Var acumulada YTD | Var 12 meses |
+|---|---:|---:|---:|---:|
+| 2025-05 | 137.73 | +3.62% | +10.48% | +21.93% |
+| 2025-06 | 143.01 | +3.83% | +14.71% | +24.31% |
+| 2025-07 | 146.26 | +2.27% | +17.32% | +26.39% |
+| **2025-08** | **148.84** | +1.76% | +19.39% | **+27.42%** (pico ciclo) |
+| 2025-09 | 151.19 | +1.58% | +21.27% | +25.95% |
+| 2025-10 | 153.28 | +1.39% | +22.95% | +25.81% |
+| 2025-11 | 153.34 | +0.04% | +23.00% | +25.13% |
+| 2025-12 | 153.91 | +0.37% | **+23.46%** (cierre anual) | +23.46% |
+| 2026-01 | 154.90 | +0.64% | +0.64% | +21.99% |
+| 2026-02 | 155.00 | +0.07% | +0.71% | +20.15% |
+| 2026-03 | 154.25 | -0.49% | +0.22% | +17.33% |
+| **2026-04** | **151.45** | **-1.81%** | **-1.60%** | **+13.94%** |
+
+**Observaciones clave:**
+- **Pico de inflación productor: 2025-08 con +27.42% YoY** — el shock
+  combustibles/transporte se reflejó primero en el IPP (Jun-Sep 2025
+  todos arriba de 25% YoY) antes que en el IPC (que tocó pico +24.86%
+  en Jul 2025).
+- **IPP YTD 2025 cerró en +23.46%** — más alto que el IPC YTD 2025
+  (+20.40%). El productor absorbió primero el shock; el consumidor
+  recibió la presión con lag.
+- **Reversión en 2026**: IPP YTD Abr **-1.60%** (deflación productor)
+  vs IPC YTD May **+2.62%** (todavía inflacionario suave). Brecha
+  consumidor-productor cerrándose **al revés**: productor ya bajó,
+  consumidor todavía no. Esto suele anticipar enfriamiento del IPC
+  con 1-3 meses de lag.
+- **Var 12m bajando** desde el pico +27.42% (Ago 2025) hasta +13.94%
+  (Abr 2026) — desaceleración productor de **13.5 puntos** en 8 meses.
+  El IPC bajó del pico +24.86% (Jul 2025) a +12.51% (May 2026), también
+  ~12 puntos en 10 meses. Velocidad similar, pero el productor empezó
+  a bajar primero.
+
+### Por sector de actividad (Grandes Grupos), abril 2026
+
+7 grupos. División 0 (ÍNDICE GENERAL) replica el agregado nacional.
+
+| Ranking | Grandes Grupos | Var 12m (Abr 2026) |
+|---|---|---:|
+| 1 | Pecuaria | **+25.76%** |
+| 2 | Industria Manufacturera | +18.92% |
+| — | **Índice General** | **+13.94%** |
+| 3 | Servicios | +13.49% |
+| 4 | Otros Minerales y Gas Natural | +4.81% |
+| 5 | Agricolas | -1.36% (deflación) |
+| 6 | **Pesca** | **-5.07%** (mayor deflación) |
+
+**Hallazgos:**
+- **Pecuaria (+25.76%) e Industria Manufacturera (+18.92%) lideran**
+  la inflación productor. Pecuaria conecta con el shock de Alimentos
+  del IPC (+16.28% en Mayo 2026) — un trimestre delay típico.
+- **Agricolas y Pesca con deflación interanual.** Producción primaria
+  pre-procesada está bajando precio mientras alimentos procesados
+  suben — sugiere apreciación del valor agregado de la cadena.
+- **Servicios (+13.49%) ≈ IPC Servicios** — el componente menos volátil
+  de la cesta de precios.
+
+### Cobertura y notas
+
+- Cobertura IPP **con data real**: 2017-01 a 2026-04 (~9 años, 112 meses).
+  Mucho más corta que el IPC empalmada — no hay serie empalmada de IPP.
+- **Para queries de "último mes disponible"** filtrar `WHERE valor IS NOT
+  NULL`: en `ipp_nacional` (igual que en `ipc_nacional_general`) el
+  parser persiste filas placeholder con `valor=NULL` para los meses
+  futuros del año en curso (2026-05..2026-12 al release 2026-04).
+  `MAX(periodo) WHERE valor IS NOT NULL` devuelve el último mes con
+  data real; `MAX(periodo)` sin filtro devuelve el final del año en
+  curso. Asimetría con `ipp_grandes_grupos` que sólo crea filas para
+  (año, mes) con header válido — el double-header parser no crea
+  scaffold.
+- Base year: 2016=100 (mismo que IPC).
+- "Agricolas" en el XLSX del INE está escrito sin tilde (typo en
+  source). El parser lo slugifica a `agricolas` literal — preservamos
+  el typo del INE para no romper la trazabilidad.
+- Indicador del grupo 0 = `<metric>_total` (mismo patrón que IPC COICOP).
+  Query "las 6 actividades productivas": `WHERE indicador LIKE
+  'var_12m_%' AND indicador != 'var_12m_total'`.
+
+---
+
+## 6. Serie larga: IPC Empalmada 1937-2026
 
 La serie empalmada del INE encadena 3 bases (1936, 2007, 2016) → cada mes
 está expresado en términos comparables a base 2016=100. Hace posible
@@ -219,7 +323,7 @@ fuerte para storytelling.
 
 ---
 
-## 6. Cobertura, calidad, gaps
+## 7. Cobertura, calidad, gaps
 
 - **Preliminares (`is_preliminary=1`):** todos los años PIB 2017-2024 están
   marcados como preliminares (sufijo `(p)` en el header del XLSX del INE).
@@ -241,7 +345,7 @@ fuerte para storytelling.
 
 ---
 
-## 7. Series candidatas para la UI
+## 8. Series candidatas para la UI
 
 Lista jerarquizada por valor narrativo. **No prioriza** — Diego decide qué
 entra en V1 del tab Macroeconomía.
@@ -280,22 +384,36 @@ entra en V1 del tab Macroeconomía.
    → último Q). Bar chart con 14 sectores, separar los positivos de los
    negativos. Diagnóstico de "qué se está contrayendo".
 
+### Tier C-bis — IPP
+
+9. **IPP vs IPC interanual, overlay 2017-presente** (`ipp_nacional`
+   `indicador='var_12m'` + `ipc_nacional_general` `indicador='var_12m'`).
+   Doble línea, eje X mensual. Útil para anticipar dirección del IPC:
+   históricamente el IPP cambia de signo / pendiente antes que el IPC.
+10. **IPP por Grandes Grupos, var 12m, último mes** (`ipp_grandes_grupos`
+    → `WHERE indicador LIKE 'var_12m_%' AND indicador != 'var_12m_total'`).
+    Bar chart con 6 sectores (Pecuaria, Industria Manufacturera, Servicios,
+    Otros Minerales y Gas Natural, Agricolas, Pesca). Análogo al IPC COICOP
+    pero del lado productor — diagnóstico de "qué cadena de costos está
+    presionando".
+
 ### Tier D — bridges con el resto del dashboard
 
-9. **Tipo de cambio paralelo USDT/BOB (existente) vs inflación interanual
-   (nueva).** Doble eje. Argumento natural: el shock de combustibles
-   2025 alimenta tanto la inflación como la prima paralela del USDT.
-10. **EMBI Bolivia (existente) vs PIB var 12m (nuevo).** Doble eje. La
+11. **Tipo de cambio paralelo USDT/BOB (existente) vs inflación interanual
+    (nueva).** Doble eje. Argumento natural: el shock de combustibles
+    2025 alimenta tanto la inflación como la prima paralela del USDT.
+12. **EMBI Bolivia (existente) vs PIB var 12m (nuevo).** Doble eje. La
     correlación negativa (riesgo soberano sube cuando el PIB cae) es un
     relato canónico del análisis macro emergente.
 
 ---
 
-## 8. Notas operativas
+## 9. Notas operativas
 
 - **Detección de release:**
-  - IPC: el filename del Content-Disposition incluye `YYYY_MM` (ej.
-    `Nal-2026_05_…`) → release_id viene del filename, barato de detectar.
+  - IPC / IPP: el filename del Content-Disposition incluye `YYYY_MM` (ej.
+    `Nal-2026_05_…`, `IPP-2026_04_…`) → release_id viene del filename,
+    barato de detectar.
   - PIB: filename estático (`01.01.01.xlsx`) → release_id = prefix MD5 del
     body. Más caro (hay que descargar) pero PIB se publica con baja
     frecuencia (trimestral con ~90 días de lag), así que está bien.
@@ -319,7 +437,7 @@ entra en V1 del tab Macroeconomía.
 
 ---
 
-## 9. Apéndice: schema SQLite vivo
+## 10. Apéndice: schema SQLite vivo
 
 ```sql
 -- ine_pib
@@ -340,14 +458,23 @@ unidad      TEXT NOT NULL           -- 'indice_base_2016' | 'pct_*'
 base_year   TEXT                    -- '2016' | NULL
 PRIMARY KEY (cuadro, periodo, indicador)
 
+-- ine_ipp (misma forma que ine_ipc, tabla separada por semántica)
+periodo     TEXT NOT NULL           -- 'YYYY-MM'
+cuadro      TEXT NOT NULL           -- 'ipp_nacional' | 'ipp_grandes_grupos'
+indicador   TEXT NOT NULL           -- 'indice' / 'var_*' / '<metric>_<grupo>'
+valor       REAL
+unidad      TEXT NOT NULL           -- 'indice_base_2016' | 'pct_*'
+base_year   TEXT                    -- '2016' | NULL
+PRIMARY KEY (cuadro, periodo, indicador)
+
 -- ine_ingest_state
 cuadro             TEXT PRIMARY KEY
-last_filename      TEXT             -- del Content-Disposition (IPC) o estático (PIB)
+last_filename      TEXT             -- del Content-Disposition (IPC/IPP) o estático (PIB)
 last_md5           TEXT             -- hex md5 del body
-last_release_id    TEXT             -- 'YYYY_MM' (IPC) | prefix MD5 (PIB)
+last_release_id    TEXT             -- 'YYYY_MM' (IPC/IPP) | prefix MD5 (PIB)
 last_fetched_at    TEXT NOT NULL    -- ISO UTC
 ```
 
 Queries de ejemplo para el frontend están en el código del próximo
 megarun (Macro tab); por ahora cualquier `SELECT` ad-hoc sobre estas
-3 tablas devuelve data clean.
+4 tablas devuelve data clean.
