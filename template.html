@@ -335,6 +335,7 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-mono{font-family:var(--font-mono)}
 .fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
+.fb-macro-subnav{display:flex;gap:6px;align-items:center;margin:0 0 8px;padding:10px 18px;position:sticky;top:var(--nav-h);z-index:51;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
 .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
 .fb-stog{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
 .fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid rgba(44,74,107,.30);background:transparent;flex-shrink:0;transition:all .15s}
@@ -460,10 +461,10 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
     <span class="fb-logo">FinanzasBo</span>
     <div class="fb-tabs">
       <button class="fb-tab active" data-tab="dollar">D&oacute;lar</button>
+      <button class="fb-tab" data-tab="macro">Macro</button>
       <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
       <button class="fb-tab" data-tab="bbv">BBV</button>
       <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
-      <button class="fb-tab" data-tab="riesgo-pais">Riesgo Pa&iacute;s</button>
       <button class="fb-tab" disabled>Noticias <span class="fb-soon">Soon</span></button>
     </div>
   </div>
@@ -892,27 +893,45 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
   </div>
 </div><!-- /tab-guide -->
 
-<div id="tab-riesgo-pais" style="display:none;">
+<div id="tab-macro" style="display:none;">
+  <!-- Header ÚNICO: el h1 no cambia; el subtítulo se swapea por subtab (ver activateMacroSubtab). -->
   <div class="fb-subheader">
     <div>
-      <h1>Riesgo Pa&iacute;s EMBI</h1>
-      <div class="fb-subtitle">EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span></div>
+      <h1>Macroeconom&iacute;a</h1>
+      <div class="fb-subtitle" id="macroSubtitle">&mdash;</div>
     </div>
   </div>
-  <div id="riesgoKpis"></div>
-  <div class="content">
-    <div class="fb-chart-card fb-chart-card--elevated">
-      <div class="fb-chart-head">
-        <div class="fb-chart-title">Spread soberano por pa&iacute;s</div>
-        <div class="fb-chart-sub">Pas&aacute; el mouse sobre el gr&aacute;fico para ver todos los pa&iacute;ses activos en esa fecha. Series en bps.</div>
+  <!-- Subnav: REUSA .fb-view-toggle + .ds-chip. Switchea sub-paneles vía data-subtab. -->
+  <nav class="fb-view-toggle fb-macro-subnav" id="macroSubnav" aria-label="Sub-secciones de Macroeconom&iacute;a">
+    <button class="ds-chip active" data-subtab="riesgo" type="button">Riesgo pa&iacute;s</button>
+    <button class="ds-chip" data-subtab="inflacion" type="button">Inflaci&oacute;n <span class="fb-soon">Soon</span></button>
+  </nav>
+  <!-- Sub-panel default: Riesgo País (contenido EMBI re-alojado; ids internos intactos). -->
+  <div id="subtab-riesgo">
+    <div id="riesgoKpis"></div>
+    <div class="content">
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">Spread soberano por pa&iacute;s</div>
+          <div class="fb-chart-sub">Pas&aacute; el mouse sobre el gr&aacute;fico para ver todos los pa&iacute;ses activos en esa fecha. Series en bps.</div>
+        </div>
+        <div class="fb-series-toggles" id="riesgoCountryToggles" style="margin-bottom:10px"></div>
+        <div class="fb-view-toggle" id="riesgoRange" style="margin-bottom:12px"></div>
+        <div id="riesgoChart" style="height:440px;"></div>
+        <div class="fb-chart-source">Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices</div>
       </div>
-      <div class="fb-series-toggles" id="riesgoCountryToggles" style="margin-bottom:10px"></div>
-      <div class="fb-view-toggle" id="riesgoRange" style="margin-bottom:12px"></div>
-      <div id="riesgoChart" style="height:440px;"></div>
-      <div class="fb-chart-source">Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices</div>
     </div>
   </div>
-</div><!-- /tab-riesgo-pais -->
+  <!-- Sub-panel: Inflación (placeholder Soon; contenido del megarun siguiente). -->
+  <div id="subtab-inflacion" style="display:none;">
+    <div class="content">
+      <div class="fb-chart-card" style="text-align:center;padding:48px">
+        <h2 style="margin:0 0 8px">Inflaci&oacute;n <span class="fb-soon">Soon</span></h2>
+        <p class="fb-subtitle" style="margin:0">Pr&oacute;ximamente: IPC / IPP del INE.</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-macro -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
   <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
@@ -2528,48 +2547,102 @@ function initHelpTooltips(){
 }
 
 // ═══ TAB SWITCHING + ROUTING ═══
-// Slug → tabId. La home (Dólar) es '/'. Slugs en español alineados con UX
-// boliviano. 'noticias' NO está mapeada porque la tab está deshabilitada
-// (placeholder Soon); paths a /noticias caen en el fallback → '/'.
+// Cada slug resuelve a {tab, subtab?}. La home (Dólar) es '/'. Macro tiene
+// subtabs deep-linkables vía slugs PLANOS (un solo nivel, sin parser nuevo):
+// /riesgo (preservado) y /inflacion; /macro resuelve al subtab default.
+// 'noticias' NO está mapeada (tab deshabilitada) → cae en fallback '/'.
 var ROUTE_MAP = {
-  '/':       'dollar',
-  '/dpf':    'dpf',
-  '/bbv':    'bbv',
-  '/guia':   'guide',
-  '/riesgo': 'riesgo-pais'
+  '/':          {tab:'dollar'},
+  '/macro':     {tab:'macro', subtab:'riesgo'},
+  '/riesgo':    {tab:'macro', subtab:'riesgo'},
+  '/inflacion': {tab:'macro', subtab:'inflacion'},
+  '/dpf':       {tab:'dpf'},
+  '/bbv':       {tab:'bbv'},
+  '/guia':      {tab:'guide'}
 };
-// Inverso para el pushState al click. Calcular una vez.
-var TAB_TO_SLUG = Object.keys(ROUTE_MAP).reduce(function(acc, slug){
-  acc[ROUTE_MAP[slug]] = slug; return acc;
-}, {});
-// Títulos por tab (mejora SEO + UX en bookmarks).
+// Registro tabId → id del contenedor DOM. Resuelve el mismatch dollar↔tab-dolar
+// y permite togglear los contenedores por loop (sin bloque hardcodeado por tab).
+var TAB_PANELS = {
+  dollar: 'tab-dolar',
+  macro:  'tab-macro',
+  dpf:    'tab-dpf',
+  bbv:    'tab-bbv',
+  guide:  'tab-guide'
+};
+// Lista GENÉRICA de subtabs de Macro. Reactivar un subtab pausado (ej. PIB) =
+// agregar un entry acá + su <div id="subtab-ID"> + su chip; cero refactor.
+// El primero de la lista es el default al entrar a Macro / resolver bare /macro.
+var MACRO_SUBTABS = [
+  { id:'riesgo', slug:'/riesgo', title:'FinanzasBo — Riesgo País EMBI',
+    subtitle:'EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span>',
+    render:function(){ if(typeof window.renderRiesgoPais==='function') window.renderRiesgoPais(); } },
+  { id:'inflacion', slug:'/inflacion', title:'FinanzasBo — Inflación',
+    subtitle:'Pr&oacute;ximamente: IPC / IPP del INE.',
+    render:null }
+];
+// Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
 var TAB_TITLES = {
-  'dollar':      'FinanzasBo — Mercado P2P USDT/BOB',
-  'dpf':         'FinanzasBo — Rendimientos DPF',
-  'bbv':         'FinanzasBo — Bolsa Boliviana de Valores',
-  'guide':       'FinanzasBo — Guía del dashboard',
-  'riesgo-pais': 'FinanzasBo — Riesgo País EMBI'
+  'dollar': 'FinanzasBo — Mercado P2P USDT/BOB',
+  'dpf':    'FinanzasBo — Rendimientos DPF',
+  'bbv':    'FinanzasBo — Bolsa Boliviana de Valores',
+  'guide':  'FinanzasBo — Guía del dashboard'
 };
+// Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
+// slug del subtab activo, no un slug de tab.
+var TAB_TO_SLUG = {};
+Object.keys(ROUTE_MAP).forEach(function(slug){
+  var r = ROUTE_MAP[slug];
+  if(!r.subtab) TAB_TO_SLUG[r.tab] = slug;
+});
 
-function activateTab(target){
+var macroState = { current: null };
+
+function activateMacroSubtab(subId){
+  // Resolver: pedido → último activo → primero de la lista (default).
+  var sub = MACRO_SUBTABS.find(function(s){return s.id===subId;})
+        ||  MACRO_SUBTABS.find(function(s){return s.id===macroState.current;})
+        ||  MACRO_SUBTABS[0];
+  macroState.current = sub.id;
+  // Chips activos (loop sobre la lista, no hardcode).
+  document.querySelectorAll('#macroSubnav .ds-chip[data-subtab]').forEach(function(c){
+    c.classList.toggle('active', c.dataset.subtab === sub.id);
+  });
+  // Sub-paneles (loop sobre la lista). Se hace visible ANTES del render para
+  // que Plotly dimensione bien (necesita el contenedor visible).
+  MACRO_SUBTABS.forEach(function(s){
+    var p = document.getElementById('subtab-'+s.id);
+    if(p) p.style.display = (s.id===sub.id) ? '' : 'none';
+  });
+  // Subtítulo swapeable (header único: el h1 "Macroeconomía" no cambia).
+  var st = document.getElementById('macroSubtitle');
+  if(st) st.innerHTML = sub.subtitle || '';
+  // Título del documento.
+  if(sub.title) document.title = sub.title;
+  // Lazy render de la subtab (el propio render trae guard anti-rebuild).
+  if(typeof sub.render === 'function') sub.render();
+}
+
+function activateTab(target, subtab){
   // Toggle visual del tab header
   document.querySelectorAll('.fb-tab[data-tab]').forEach(function(t){
     t.classList.toggle('active', t.dataset.tab === target);
   });
-  // Mostrar/ocultar contenedores
-  document.getElementById('tab-dolar').style.display=target==='dollar'?'':'none';
-  document.getElementById('tab-dpf').style.display=target==='dpf'?'':'none';
-  document.getElementById('tab-bbv').style.display=target==='bbv'?'':'none';
-  var tg=document.getElementById('tab-guide'); if(tg) tg.style.display=target==='guide'?'':'none';
-  var trp=document.getElementById('tab-riesgo-pais'); if(trp) trp.style.display=target==='riesgo-pais'?'':'none';
+  // Mostrar/ocultar contenedores top-level por loop (adiós bloque hardcodeado).
+  Object.keys(TAB_PANELS).forEach(function(tid){
+    var el = document.getElementById(TAB_PANELS[tid]);
+    if(el) el.style.display = (tid===target) ? '' : 'none';
+  });
   // Lazy render per tab. Guardas con typeof por si activateTab corre antes de
   // que los IIFE de cada tab asignen window.renderXxx (ver init diferido más abajo).
   if(target==='dpf' && typeof window.renderDpfTable==='function' && typeof window.renderDpfScatter==='function'){window.renderDpfTable();window.renderDpfScatter();}
   if(target==='bbv' && typeof window.renderBbv==='function'){window.renderBbv();}
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
-  if(target==='riesgo-pais' && typeof window.renderRiesgoPais==='function'){window.renderRiesgoPais();}
-  // Título
-  if(TAB_TITLES[target]) document.title = TAB_TITLES[target];
+  // Macro delega en su subtab (que pone su propio título); el resto usa TAB_TITLES.
+  if(target==='macro'){
+    activateMacroSubtab(subtab);
+  } else if(TAB_TITLES[target]){
+    document.title = TAB_TITLES[target];
+  }
 }
 
 document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
@@ -2577,19 +2650,41 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     if(tab.classList.contains('active')) return;
     var target = tab.dataset.tab;
     activateTab(target);
-    // Actualizar URL sin recargar
-    var slug = TAB_TO_SLUG[target];
+    // Actualizar URL sin recargar. Macro pushea el slug del subtab activo.
+    var slug;
+    if(target==='macro'){
+      var cur = macroState.current || MACRO_SUBTABS[0].id;
+      var s = MACRO_SUBTABS.find(function(x){return x.id===cur;});
+      slug = s && s.slug;
+    } else {
+      slug = TAB_TO_SLUG[target];
+    }
     if(slug && window.location.pathname !== slug){
-      history.pushState({tab: target}, '', slug);
+      history.pushState({tab: target, subtab: macroState.current}, '', slug);
     }
   });
 });
 
+// Subnav de Macro: switch de subtab + pushState al slug plano del subtab.
+(function(){
+  var nav = document.getElementById('macroSubnav');
+  if(!nav) return;
+  nav.addEventListener('click', function(e){
+    var chip = e.target.closest('.ds-chip[data-subtab]');
+    if(!chip || chip.disabled || chip.classList.contains('active')) return;
+    var subId = chip.dataset.subtab;
+    activateMacroSubtab(subId);
+    var sub = MACRO_SUBTABS.find(function(s){return s.id===subId;});
+    if(sub && sub.slug && window.location.pathname !== sub.slug){
+      history.pushState({tab:'macro', subtab:subId}, '', sub.slug);
+    }
+  });
+})();
+
 // Back/forward del browser
 window.addEventListener('popstate', function(){
-  var path = window.location.pathname;
-  var target = ROUTE_MAP[path] || 'dollar';
-  activateTab(target);
+  var r = ROUTE_MAP[window.location.pathname] || {tab:'dollar'};
+  activateTab(r.tab, r.subtab);
 });
 
 // Init: resolver path al cargar.
@@ -2606,14 +2701,14 @@ window.addEventListener('popstate', function(){
     history.replaceState(null, '', fromQs);
   }
   var path = window.location.pathname;
-  var initialTarget;
+  var initial;
   if(ROUTE_MAP[path]){
-    initialTarget = ROUTE_MAP[path];
+    initial = ROUTE_MAP[path];
   } else {
     history.replaceState(null, '', '/');
-    initialTarget = 'dollar';
+    initial = {tab:'dollar'};
   }
-  function runInitial(){ activateTab(initialTarget); }
+  function runInitial(){ activateTab(initial.tab, initial.subtab); }
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded', runInitial);
   } else {
@@ -3483,8 +3578,9 @@ window.addEventListener('popstate', function(){
       // Re-plot al cambiar tema (CSS vars cambian, colores y tooltip también).
       // Sólo dispara si la tab está visible para no malgastar paint en bg.
       new MutationObserver(function(){
-        var tab = document.getElementById('tab-riesgo-pais');
-        if(elChart && tab && tab.style.display !== 'none') plotFull();
+        // Visible sólo si Macro + subtab Riesgo están ambos display:''.
+        // offsetParent==null cuando cualquier ancestro está display:none.
+        if(elChart && elChart.offsetParent !== null) plotFull();
       }).observe(document.body, {attributes:true, attributeFilter:['class']});
       rendered = true;
     }
