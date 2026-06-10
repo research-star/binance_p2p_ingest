@@ -127,8 +127,6 @@ colaborador fresco no las ve en un clone:
   componentes, snapshot del template, handoffs de mockups). Fue el input
   normativo del PR #48 (tab Noticias). Pedírselo a Diego si un ticket lo
   referencia.
-- **`p2p_normalized.db.pre-migration-*`** — snapshots de rollback del cutover
-  Hetzner (intocables, ver Anti-patrones de CLAUDE.md).
 - **`p2p_dashboard.html`** — alias local del build de inspección, ignorado
   por git. Ojo: `index.html` SÍ está trackeado (es el archivo que sirve
   GitHub Pages) — el build local solo lo ensucia en el working tree; no
@@ -519,12 +517,13 @@ las referencias existentes a §6–§8.
       quincenas de pago) — pendiente de prioridad.
 - [ ] **Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`** —
       pendiente sin contexto suficiente; evaluar si abrir ticket o cerrar.
-- [ ] **Cierre del período de gracia de rollback** — pendiente de decisión
-      de Diego (la fecha original, 2026-05-14, venció sin resolverse):
-      ¿borrar `p2p_normalized.db.pre-migration-20260507T180022Z` (442 MB
-      untracked) de la laptop? ¿desinstalar Task Scheduler "P2P Watchdog"
-      o dejar `Disabled` como reserva? Los snapshots NO se tocan hasta que
-      Diego decida.
+- [x] **Cierre del período de gracia de rollback** — CERRADO (2026-06-10,
+      pre-autorizado por Diego): `p2p_normalized.db.pre-migration-*` borrado
+      de la laptop tras verificar cadena de backup fresca (pull del VPS del
+      mismo día, `quick_check` ok, retención GFS aplicada, task diario
+      registrado). Queda abierto solo el sub-ítem del Task Scheduler
+      "P2P Watchdog" viejo: sigue `Disabled` como reserva; desinstalarlo es
+      decisión de Diego.
 
 ---
 
