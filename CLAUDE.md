@@ -28,18 +28,35 @@ Este archivo describe el proyecto y sus convenciones — el "qué" y el "cómo s
 
 **Verificación post-deploy**: tras merge a `main`, fuente de verdad es la rama `gh-pages` — NO `finanzasbo.com`, porque el CDN del custom domain cachea y puede servir HTML viejo (eso NO es deploy roto). Verificá contra el raw de `gh-pages`, o el custom domain con cache-buster nanosegundo + headers `no-cache`. `meta.generated_at` debe ser posterior al `mergedAt` del PR. Detalle y comandos: `HANDOFF.md` § Verificación post-deploy.
 
+## Política de merge
+
+- CC (Claude Code) **nunca mergea por iniciativa propia**: abre el PR y frena.
+- Merge por CC **solo** con un brief que lo autorice explícitamente para ese PR.
+- Mecánica autorizada: **merge commit** (`gh pr merge N --merge`), sin squash
+  ni rebase; branch borrada post-merge (`--delete-branch`).
+- Verificación obligatoria: `gh pr view N --json state,mergedAt` debe devolver
+  `MERGED` + timestamp.
+
 ## Anti-patrones del proyecto
 
 - NO tocar `p2p_normalized.db.pre-migration-*` (snapshots de rollback del cutover Hetzner).
 - NO usar `git add -A` ni `git add .` — agregar archivos por nombre.
 - NO bypassar hooks (`--no-verify`) ni firmas.
-- NO commitear archivos no listados explícitamente en el brief que estás ejecutando.
-- NO modificar este `CLAUDE.md`, `HANDOFF.md`, ni `docs/*` sin un brief explícito que lo pida.
+- NO commitear **cambios** fuera del alcance del brief que estás ejecutando.
+  La unidad es el cambio, no el archivo: tocar un archivo listado no autoriza
+  cualquier edición dentro de él. Cambio adyacente solo si evita shippear algo
+  que el cambio principal vuelve falso (docs, copy de UI, contadores), y se
+  reporta como decisión propia (precedente: entrada de la Guía en PR #48).
+- NO modificar este `CLAUDE.md`, `HANDOFF.md`, ni `docs/*` sin un brief
+  explícito que lo pida. **Excepción**: los briefs de implementación incluyen
+  por regla actualizar las secciones de `HANDOFF.md` que el cambio vuelva
+  falsas — el brief de implementación ES la autorización para ese
+  mantenimiento (no hace falta brief aparte).
 - NO ejecutar comandos destructivos (`rm -rf`, `git reset --hard`, force-push) sin confirmar.
 
 ## Referencias canónicas (orden de prioridad)
 
-1. `HANDOFF.md` — estado vivo, reglas operativas, topología VPS, pendientes abiertos. **Leelo al inicio de cualquier ticket.**
+1. `HANDOFF.md` — estado vivo, reglas operativas, topología VPS, pendientes abiertos. **Al inicio de cualquier ticket: §0 (estado vivo) y §1 (reglas) siempre; del resto, las secciones que toque el scope del ticket.** Leerlo completo solo cuando el ticket lo amerite (cambios transversales, onboarding).
 2. `docs/history.md` — contexto histórico (cutover, gotchas resueltos, decisiones cerradas).
 3. `docs/backups.md` — runbook backup laptop-pull.
 4. `README.md` — setup público, deploy Pages.
