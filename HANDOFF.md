@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-06-03.
+Última actualización: 2026-06-09.
 
 ---
 
@@ -161,7 +161,8 @@ el toggle "Max" del frontend que muestra todo el histórico (Bolivia
 client-side.
 
 **Frontend tab "Riesgo País"** (en `template.html`):
-- Tab insertada entre "Guía" y el placeholder "Noticias Soon".
+- Vive como subtab "Riesgo país" dentro de la tab Macro (reorganización
+  de navbar + subnav Macro, PR #47).
 - Lazy render: `window.renderRiesgoPais()` se invoca solo al activar la tab
   (mismo patrón que renderBbv, renderGuide).
 - 3 KPIs hero: Bolivia (último + Δ 1d), Bolivia Δ 1M (~21 hábiles), LATINO
@@ -194,19 +195,26 @@ client-side.
 
 ### Routing por paths (SPA + 404 trick)
 
-URLs limpias por tab via HTML5 History API:
+URLs limpias por tab via HTML5 History API. Estado post-PR #47 (navbar
+reordenada + subnav Macro) y post tab Noticias:
 
-| Slug | Tab id (`data-tab`) | Título |
+| Slug | Resuelve a | Título |
 |---|---|---|
-| `/` | `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
-| `/dpf` | `dpf` | FinanzasBo — Rendimientos DPF |
-| `/bbv` | `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
-| `/guia` | `guide` | FinanzasBo — Guía del dashboard |
-| `/riesgo` | `riesgo-pais` | FinanzasBo — Riesgo País EMBI |
+| `/` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
+| `/macro` | tab `macro`, subtab default (`riesgo`) | FinanzasBo — Riesgo País EMBI |
+| `/riesgo` | tab `macro`, subtab `riesgo` | FinanzasBo — Riesgo País EMBI |
+| `/inflacion` | tab `macro`, subtab `inflacion` (placeholder Soon) | FinanzasBo — Inflación |
+| `/dpf` | tab `dpf` | FinanzasBo — Rendimientos DPF |
+| `/bbv` | tab `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
+| `/guia` | tab `guide` | FinanzasBo — Guía del dashboard |
+| `/noticias` | tab `noticias` | FinanzasBo — Noticias |
 
 El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
-`// ═══ TAB SWITCHING + ROUTING ═══`). Slug → tab id; el `<title>` se
-actualiza junto con la activación.
+`// ═══ TAB SWITCHING + ROUTING ═══`); cada entrada resuelve a
+`{tab, subtab?}`. Registros hermanos: `TAB_PANELS` (tab id → id del
+contenedor DOM), `TAB_TITLES` (título del documento) y `MACRO_SUBTABS`
+(lista genérica de subtabs de Macro con su slug plano, título y render
+lazy). El `<title>` se actualiza junto con la activación.
 
 **Entrada directa a sub-paths** (ej. `finanzasbo.com/bbv` desde bookmark o
 link externo): GitHub Pages no encuentra el archivo y sirve `404.html`
@@ -218,11 +226,51 @@ una sola redirección casi imperceptible.
 **Navegación interna**: click en tab dispara `history.pushState(slug)`. Back
 y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 
-`/noticias` NO está en `ROUTE_MAP` (la tab es un placeholder "Soon"
-deshabilitado). Cuando esa tab se implemente, agregar la entrada.
+~~`/noticias` NO está en `ROUTE_MAP`~~ — regla cumplida en
+`feat/noticias-tab`: la tab Noticias está activa y `/noticias` mapeada
+(ver § Frontend tab "Noticias" abajo).
 
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 + activa Dólar.
+
+**Frontend tab "Noticias"** (en `template.html`):
+- Variante D ("Terminal · tabla densa") del mockup de Claude Design
+  (`design-system/Noticias-Handoff.md`, no committeado). Activada en
+  `feat/noticias-tab`: botón nav `data-tab="noticias"`, contenedor
+  `#tab-noticias`, lazy render `window.renderNoticias()` (patrón
+  renderBbv/renderGuide).
+- **Datos placeholder embebidos** (precedente BBV: consts inline en el JS
+  del template, namespace `NOTICIAS_*`): 5 portales de prensa, 6
+  categorías, 15 notas curadas + generador determinista de volumen
+  (mulberry32, seed fijo) que completa ~10±2 notas/día en los últimos
+  30 días. Contenido ILUSTRATIVO — badge "Datos de ejemplo" en el
+  subheader (un solo nodo `.nt-badge-demo`, trivial de quitar) +
+  disclaimer al pie de la sección.
+- **Rebase temporal**: el dataset está anclado a 2026-06-03 (fecha del
+  mockup) y en runtime se desplaza (hoy − ancla) días, de modo que "hoy"
+  siempre tiene notas y el slider de 30 días es coherente. El `inDays`
+  de la agenda (KPI "Próximo hecho") se computa, no se hardcodea.
+- **Interacciones** (estado en memoria, sin persistencia): chips de
+  categoría multi-select con "Todas" como toggle total y conteos del
+  dataset completo; toggle "Solo guardadas"; slider de 30 días (burbuja
+  con clamp, marcas decorativas por día con nota, HOY outline, flechas
+  ±1 día, botón "Todos los días"); tabla densa de 7 columnas con thead
+  sticky y scroll interno (max-height 520px, scrollbar visible);
+  acordeón de detalle de fila única; acciones por fila (leído /
+  guardado / detalle) vía event delegation. Los tres filtros se
+  intersectan. Orden fijo desc por `date+time` — **sin sort
+  interactivo** (decisión cerrada; la tabla no usa `.fb-rank-table` ni
+  `data-sort-key` justamente para no heredar el sort genérico ni chocar
+  con el sort propio de BBV).
+- **Schema por nota** (el que deberá respetar la fuente real):
+  `{id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title,
+  summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote}`.
+- **Migración futura**: cuando exista el feed real, el namespace
+  `NOTICIAS_*` se reemplaza por una clave `noticias` en el dict que arma
+  `dashboard.py` (`DATA.noticias`), manteniendo el schema.
+- Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
+  `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
+  que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).
 
 ### Fase 3 — Análisis / Dashboard
 
@@ -477,6 +525,7 @@ capa de tokens al principio del `<style>`.
 | Chart DPF scatter | `--chart-dpf-bancos-multiples/microfinanzas/bancos-pyme/ent-vivienda/cooperativas/ifd` (6 categóricos) | sí | JS `THEMES.paper/.slate` |
 | Chart spread evo P2P | `--chart-spread-line` (color de la línea única) | sí | JS `THEMES.paper/.slate` |
 | Chart markers (shared) | `--chart-marker-outline` (halo decorativo α=.6, color = bg-secondary del tema) | sí | JS `THEMES.paper/.slate` |
+| Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (5 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
 
 ### Tech debt residual
 
@@ -543,13 +592,19 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
   - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
     viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
     `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
-    encuentra. Hoy en `THEMES` (29 tokens chart/tooltip):
+    encuentra. Hoy en `THEMES` (43 tokens chart/tooltip/noticias):
     - Tooltip: `--tooltip-bg`.
     - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`.
     - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
     - DPF scatter: 6 `--chart-dpf-*`.
     - Spread evo P2P: `--chart-spread-line`.
     - Markers (shared): `--chart-marker-outline`.
+    - Noticias: 6 `--cat-*`, 5 `--src-*`, 3 `--impact-*`. Caso especial:
+      los consume **CSS** (reglas `.nt-*` + custom prop `--nt-c` inline),
+      no `cssVar()`, pero viven en `THEMES` igual — el inline style de
+      `documentElement` hereda hacia abajo, así light y dark quedan en
+      un solo lugar en vez de partirse entre `:root{}` y
+      `body.theme-dark{}`.
   - **Consumidos sólo por CSS** (selectores `var(--token)` en reglas que
     aplican a descendientes del `<body>`) → pueden vivir en `:root` para
     el default light + `body.theme-dark{}` para el override dark. Hoy en
