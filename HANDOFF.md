@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-06-09.
+Última actualización: 2026-06-10.
 
 ---
 
@@ -43,7 +43,7 @@ Leer este `HANDOFF.md` + `CLAUDE.md`. Eso es el contrato completo. Todo lo
 demás es referencia (runbooks, código fuente, historia).
 
 ### Naming de branches
-Formato real en este repo (CLAUDE.md dice `feature/...` — ignorá eso, está desactualizado):
+Formato real en este repo (alineado con CLAUDE.md):
 
 - `feat/...` — nuevo código
 - `fix/...` — corrección de bug
@@ -57,7 +57,7 @@ Formato real en este repo (CLAUDE.md dice `feature/...` — ignorá eso, está d
 `feat(chart): per-series toggle buttons for VWAP`.
 
 ### PR vs push directo
-La regla operante real (no la idealizada en `CLAUDE.md`):
+La regla operativa, alineada con `CLAUDE.md` (acá con el detalle por archivo):
 
 | Tipo de cambio | Vía |
 |---|---|
@@ -80,12 +80,59 @@ de las filas verdes.
 - **BCB scrape**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
 - **EMBI scrape (BCRD)**: `ingest_embi.py` (lógica + cron one-liner). Snapshot Excel +
   ETag cache en `/opt/binance_p2p/embi_audit/` (fuera del repo).
-- **INE Bolivia macro (PIB + IPC)**: `ingest_ine_pib.py` / `ingest_ine_ipc.py`
-  (entry points por familia, mismas convenciones que EMBI). Parser compartido
-  en `ine_parser.py`. Catálogo de cuadros y mapeo host/token en
-  `config.INE_CUADROS`. Snapshot XLSX y estado por cuadro en
-  `/opt/binance_p2p/ine_audit/{pib,ipc}/` (fuera del repo).
+- **INE Bolivia macro (PIB + IPC + IPP)**: `ingest_ine_pib.py` /
+  `ingest_ine_ipc.py` / `ingest_ine_ipp.py` (entry points por familia,
+  mismas convenciones que EMBI). Parser compartido en `ine_parser.py`.
+  Catálogo de cuadros y mapeo host/token en `config.INE_CUADROS`. Snapshot
+  XLSX y estado por cuadro en `/opt/binance_p2p/ine_audit/{pib,ipc,ipp}/`
+  (fuera del repo).
 - **Constantes compartidas**: `config.py`.
+
+### Preview local (frontend)
+
+Para ver un cambio de `template.html` / `dashboard.py` funcionando antes de
+abrir PR (la skill `actualizar-dashboard` de `.claude/skills/` automatiza el
+pipeline completo con data fresca del VPS; esto es la versión manual mínima):
+
+1. **Build**: `python dashboard.py` regenera `index.html` local desde
+   `p2p_normalized.db`. Para no ensuciar el working tree, generar a un
+   directorio temporal (dashboard.py no crea el directorio padre):
+   `New-Item -ItemType Directory -Force "$env:TEMP\fb-preview" | Out-Null;
+   python dashboard.py --output "$env:TEMP\fb-preview\index.html"`.
+   Como el output se llama `index.html`, también escribe un alias
+   `p2p_dashboard.html` al lado (inocuo en un temp dir).
+   **No commitear `index.html`** — el publish productivo lo hace el VPS.
+2. **Servir**: `python -m http.server 8000 --directory <dir del build>`.
+   NO abrir con `file://` — rompe el routing por History API.
+3. **Deep-links** (ej. `/noticias`, `/riesgo`): `http.server` no replica el
+   truco 404.html de GitHub Pages. Probar el mismo code-path con
+   `http://localhost:8000/?path=%2Fnoticias` (es lo que el 404 redirige).
+4. **Validación automatizada** (opcional): Playwright vive en el cache de npx
+   de esta máquina, no en `node_modules`. Desde un script Node:
+   `NODE_PATH="<npm cache>/_npx/<hash>/node_modules" node script.js` — localizar
+   el hash con `find "$(npm config get cache)/_npx" -name playwright -type d`.
+   Chromium bundled ya instalado (`chromium.launch()`).
+
+### Artefactos no commiteados (solo esta laptop)
+
+Cosas que existen en la máquina de trabajo y NO están en el repo — un
+colaborador fresco no las ve en un clone:
+
+- **`CLAUDE.local.md`** — flujo personal de Diego con Claude Code (formato de
+  briefs, protocolo de reporte, anti-patrones del flujo). Complementa
+  `CLAUDE.md` sin contradecirlo.
+- **`.claude/settings.local.json`** — permisos locales de Claude Code
+  (allowlist mínima: lecturas git/gh, pipeline local, preview, test tooling).
+- **`design-system/`** — kit de diseño exportado de Claude Design (galería de
+  componentes, snapshot del template, handoffs de mockups). Fue el input
+  normativo del PR #48 (tab Noticias). Pedírselo a Diego si un ticket lo
+  referencia.
+- **`p2p_normalized.db.pre-migration-*`** — snapshots de rollback del cutover
+  Hetzner (intocables, ver Anti-patrones de CLAUDE.md).
+- **`p2p_dashboard.html`** — alias local del build de inspección, ignorado
+  por git. Ojo: `index.html` SÍ está trackeado (es el archivo que sirve
+  GitHub Pages) — el build local solo lo ensucia en el working tree; no
+  commitearlo (ver § Preview local).
 
 ---
 
@@ -430,19 +477,12 @@ Validado end-to-end el 2026-05-08 contra VPS productivo.
 
 ---
 
-## 5. WIP / áreas calientes
+## 5. — retirada
 
-Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
-
-- **Dashboard visual** — trabajo activo en formato post-PR-H: per-series
-  toggles del VWAP (Compra default), BCB Ref stepped (hv), padding del eje
-  temporal, KPIs uniformes, iconos/favicon/OG image. PRs recientes: #13,
-  #14, #17, #19, #21, #22.
-- **BCB scraper** — recién migrado a VPS cron (PR #20, 2026-05-11).
-  Healthcheck `HC_BCB` pendiente (ver § 6).
-- **Auto-publish workflow** — agregado 2026-05-12 (`a0b6c2f`). Vigilar
-  primeras semanas por edge cases (workflow se atasca, cache bust no toma
-  efecto, race con cron `*/12`, etc.).
+Sección retirada (2026-06-10): el "WIP / áreas calientes" mantenido a mano
+quedaba fósil en cada merge. El estado vivo está en **§0** y el tracking de
+workstreams en **Notion**. Se conserva el número de sección para no romper
+las referencias existentes a §6–§8.
 
 ---
 
@@ -453,14 +493,13 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
       al cron line del BCB. Sin esto, falla del scraper es silenciosa.
       (Follow-up de PR #20.)
-- [ ] **Deploy INE Bolivia (PIB + IPC + IPP) a VPS** — código en repo
-      (`ingest_ine_pib.py`, `ingest_ine_ipc.py`, `ingest_ine_ipp.py`,
-      `ine_parser.py`, migración SQL). Falta correr el runbook completo de
-      `DEPLOY_INE.md`: registrar `HC_INE_PIB` / `HC_INE_IPC` / `HC_INE_IPP`
-      en healthchecks.io (config exacta documentada en el runbook),
-      aplicar la migración 0001 en `p2p_normalized.db` prod, primer run
-      manual, instalar las 7 líneas de cron. Hasta que se ejecute, las
-      tablas `ine_pib`/`ine_ipc`/`ine_ipp` en prod están vacías.
+- [x] **Deploy INE inflación (IPC + IPP) a VPS** — HECHO (2026-06-08):
+      cron instalado, `HC_INE_IPC`/`HC_INE_IPP` activos, tablas `ine_ipc` /
+      `ine_ipp` pobladas en prod. Detalle en §8.
+- [ ] **Deploy INE PIB** — código en main y tabla `ine_pib` creada (vacía),
+      pero el ingest quedó **PAUSADO por decisión estratégica** (lag
+      estructural del XLSX del INE, ver §8). Reanudar = 5 líneas de cron +
+      env var `HC_INE_PIB` (pausado en healthchecks.io) + primer run manual.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
@@ -480,10 +519,12 @@ Mantenido manualmente. Actualizar al abrir PR nuevo o iniciar workstream.
       quincenas de pago) — pendiente de prioridad.
 - [ ] **Limpiar carpeta `.json` espuria en `snapshots/2026-04-09/`** —
       pendiente sin contexto suficiente; evaluar si abrir ticket o cerrar.
-- [ ] **Cierre del período de gracia de rollback** (expira 2026-05-14):
+- [ ] **Cierre del período de gracia de rollback** — pendiente de decisión
+      de Diego (la fecha original, 2026-05-14, venció sin resolverse):
       ¿borrar `p2p_normalized.db.pre-migration-20260507T180022Z` (442 MB
       untracked) de la laptop? ¿desinstalar Task Scheduler "P2P Watchdog"
-      o dejar `Disabled` como reserva?
+      o dejar `Disabled` como reserva? Los snapshots NO se tocan hasta que
+      Diego decida.
 
 ---
 
@@ -503,9 +544,9 @@ capa de tokens al principio del `<style>`.
    radios, sombras y tooltip vars compartidos. Bloque nuevo del PR-tokens.
 3. **JS dinámico** (`THEMES.paper/.slate` + `applyTheme()`): reescribe via
    `root.style.setProperty()` al togglear tema. Maneja vars semánticas
-   (`bg-*`, `text-*`, `color-*`, `border-color`) y además los tokens que
-   son consumidos por JS via `cssVar()` — hoy `--tooltip-bg` y los 28
-   chart tokens (ver "Delivery de tokens" abajo).
+   (`bg-*`, `text-*`, `color-*`, `border-color`) y además los 43 tokens
+   de chart/tooltip/noticias entregados via `THEMES` (ver "Delivery de
+   tokens" abajo).
 4. **`body.theme-dark{}` CSS**: overrides dark de tokens consumidos sólo
    por CSS — hoy `--shadow-sm/md/lg/xl` + reglas ad hoc por componente
    (`.pill-*`, `.fb-stog`, etc.).
@@ -752,7 +793,7 @@ nuevo (PDF table extraction, no XLSX).
 
 ### Audit folder
 
-`/opt/binance_p2p/ine_audit/{pib,ipc}/<cuadro_id>_<release_id>.xlsx`.
+`/opt/binance_p2p/ine_audit/{pib,ipc,ipp}/<cuadro_id>_<release_id>.xlsx`.
 Rotación 60 días (vs 7 de EMBI — los releases INE son infrecuentes).
 Namespaceo obligatorio por familia y por cuadro_id porque INE reusa el
 filename `01.01.01.xlsx` para PIB Trimestral Y PIB Anual con contenido
