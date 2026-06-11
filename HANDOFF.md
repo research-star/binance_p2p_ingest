@@ -87,13 +87,16 @@ de las filas verdes.
   Catálogo de cuadros y mapeo host/token en `config.INE_CUADROS`. Snapshot
   XLSX y estado por cuadro en `/opt/binance_p2p/ine_audit/{pib,ipc,ipp}/`
   (fuera del repo).
-- **Noticias (scraper de prensa)**: `ingest_noticias.py` (CLI, mismas
-  convenciones que EMBI/INE) sobre el módulo `noticias_ingest/`
-  (scraper + scoring TF-IDF portado de `research-star/boletines`;
-  fuentes/keywords en `noticias_ingest/scraper.py`, mapeos al schema del
-  frontend en `noticias_ingest/transform.py`, modelo committeado en
-  `noticias_ingest/modelo_relevancia.pkl` ~722 KB). Runtime (caché de URLs
-  TTL 7d + CSV de diagnóstico) en `noticias_ingest/data/` (gitignored).
+- **Noticias (dos carriles)**: `ingest_noticias.py` (CLI, mismas
+  convenciones que EMBI/INE) sobre el módulo `noticias_ingest/`:
+  carril Bolivia = scraper + scoring TF-IDF portado de
+  `research-star/boletines` (fuentes/keywords en
+  `noticias_ingest/scraper.py`, modelo committeado en
+  `noticias_ingest/modelo_relevancia.pkl` ~722 KB); carril Latam = RSS
+  de Bloomberg Línea sección Latinoamérica en `noticias_ingest/latam.py`
+  (sin scoring). Mapeos al schema del frontend en
+  `noticias_ingest/transform.py`. Runtime (caché de URLs TTL 7d + CSV de
+  diagnóstico) en `noticias_ingest/data/` (gitignored).
 - **Constantes compartidas**: `config.py`.
 
 ### Preview local (frontend)
@@ -292,28 +295,49 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   `feat/noticias-tab`: botón nav `data-tab="noticias"`, contenedor
   `#tab-noticias`, lazy render `window.renderNoticias()` (patrón
   renderBbv/renderGuide).
-- **Feed real desde `feat/noticias-real`**: las notas vienen de
-  `DATA.noticias` (dashboard.py lee los últimos 30 días — ventana
-  exacta del slider — de la tabla `noticias` de `p2p_normalized.db`,
-  patrón graceful dpf/embi: tabla ausente → `[]` → estado vacío sano).
-  La tabla la puebla `ingest_noticias.py` (1 corrida/día): scrape de 13
-  portales → scoring TF-IDF 0-10 → corte editorial `puntaje >= 6.7` →
-  dedupe fuzzy inter-día (7 días, umbral 0.70) → top-10 desc → INSERT
-  OR IGNORE (PK = hash del link normalizado). DDL espejado en
-  `scripts/migrations/0002_noticias.sql`.
+- **Feed real desde `feat/noticias-real`**, dos carriles en la MISMA
+  corrida diaria de `ingest_noticias.py` (un cron, un HC; fail-safe por
+  carril — si uno falla el otro corre, y cualquier carril en error
+  pingea fail):
+  - **Bolivia**: scrape de 13 portales → scoring TF-IDF 0-10 (fail-closed
+    sin modelo) → corte editorial `puntaje >= 6.7` → dedupe fuzzy
+    inter-día (7 días, umbral 0.70) → top-10/día.
+  - **Latam** (desde `feat/noticias-latam`): sección Latinoamérica de
+    Bloomberg Línea vía RSS outboundfeeds (`noticias_ingest/latam.py`),
+    SIN scoring — el criterio editorial de Bloomberg es el filtro
+    (decisión de Diego). pubDate últimas 24 h, orden desc, cupo 5/día
+    con presupuesto INDEPENDIENTE del top-10. `impact='medio'` fijo,
+    `puntaje=0.0` como sentinela "sin scoring" en la DB. El feed de
+    sección es flaky (a veces 500/vacío, y cuando responde mezcla otras
+    secciones): SIEMPRE se filtra por path `/latinoamerica/` del link,
+    con fallback al feed raíz.
+  Ambos carriles desembocan en la tabla `noticias` (INSERT OR IGNORE,
+  PK = hash del link/guid normalizado; DDL en
+  `scripts/migrations/0002_noticias.sql`). `DATA.noticias` = últimos 30
+  días (dashboard.py, patrón graceful dpf/embi).
 - Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
-  `noticias_ingest/transform.py`; tokens `--src-*` en ambos THEMES) y 6
-  categorías (mapeo 11 temas de boletines → 6 categorías en
-  `transform.TEMA_CATEGORIA`; "mundo" hoy no recibe notas — el scraper
-  solo cubre prensa boliviana). `impact` por bandas de puntaje:
-  ≥8 alto · 7–7.99 medio · resto bajo. `ntSrcTag` tiene fallback
-  defensivo para slugs fuera del catálogo.
+  `noticias_ingest/transform.py`) y 6 categorías —
+  `economia|hidrocarburos|agro|mineria|latam|politica` ("mundo" se
+  renombró a "latam" en `feat/noticias-latam`; la alimenta solo el
+  carril Bloomberg). Mapeo 11 temas de boletines → categorías en
+  `transform.TEMA_CATEGORIA`. `impact` por bandas de puntaje:
+  ≥8 alto · 7–7.99 medio · resto bajo (carril Bolivia). Los chips de
+  categoría tienen **auto-hide**: sin notas en la ventana de 30 días no
+  se muestran. `ntSrcTag` tiene fallback defensivo para slugs fuera del
+  catálogo.
+- **Colores de marca por portal** (`feat/noticias-latam`): los tokens
+  `--src-*` de ambos THEMES son el color de marca real de cada medio
+  (investigado de logos/CSS oficiales), ajustado SOLO en luminosidad
+  HSL por tema hasta contraste AA ≥4.5:1 contra `bg-secondary` (paper
+  `#ffffff` / slate `#122237`). Mecanismo visual: dot + nombre del
+  portal coloreados vía `--nt-c` (patrón preexistente, sin CSS nuevo).
 - **"Hoy" del tab** (`NT_TODAY`): derivado de `meta.generated_at` (UTC)
   convertido a hora Bolivia (UTC-4 fijo) — determinista entre visitantes;
-  fallback al reloj del cliente. `date`/`time` de cada nota son la
-  fecha/hora de la corrida del scraper en hora Bolivia (una corrida
-  diaria ⇒ todas las notas del día comparten hora; honesto, no se
-  inventan horas de publicación).
+  fallback al reloj del cliente. `date`/`time` por carril: Bolivia usa
+  la fecha/hora de la corrida (no se inventan horas de publicación);
+  latam usa el pubDate REAL del RSS convertido a hora Bolivia. La
+  columna Hora se quitó de la tabla (solo fecha visible); `time` se
+  sigue persistiendo y ordena el feed (`date+time` desc).
 - **Agenda placeholder**: `NOTICIAS_EVENTS_BASE` sigue siendo dato de
   ejemplo; el badge `.nt-badge-demo` quedó scopeado SOLO al KPI
   "Próximo hecho" (las noticias reales no llevan badge). El rebase
@@ -323,8 +347,8 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   categoría multi-select con "Todas" como toggle total y conteos del
   dataset completo; toggle "Solo guardadas"; slider de 30 días (burbuja
   con clamp, marcas decorativas por día con nota, HOY outline, flechas
-  ±1 día, botón "Todos los días"); tabla densa de 7 columnas con thead
-  sticky y scroll interno (max-height 520px, scrollbar visible);
+  ±1 día, botón "Todos los días"); tabla densa de 6 columnas (sin Hora)
+  con thead sticky y scroll interno (max-height 520px, scrollbar visible);
   acordeón de detalle de fila única con link "Ver nota original" al
   artículo del portal; acciones por fila (leído / guardado / detalle)
   vía event delegation. Los tres filtros se intersectan. Orden fijo
@@ -414,7 +438,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
-- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body; fail-closed si el modelo TF-IDF no carga). UUID en `.env` (activo desde 2026-06-11; ping de prueba OK). Cadencia diaria → period 24h sugerido.
+- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. El fail-closed sin modelo TF-IDF aplica solo al carril Bolivia (latam corre igual). UUID en `.env` (activo desde 2026-06-11). Cadencia diaria → period 24h sugerido.
 
 **SSH desde laptop:**
 ```bash

@@ -878,7 +878,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
       </details>
       <details>
         <summary><strong>Noticias</strong></summary>
-        <p>Selecci&oacute;n autom&aacute;tica diaria de hechos relevantes de 13 portales de prensa boliviana (El Deber, Correo del Sur, Unitel, La Raz&oacute;n, Bloomberg L&iacute;nea, Eju!, El D&iacute;a, Br&uacute;jula Digital, Noticias Fides, Erbol, Urgente.bo, Opini&oacute;n, Los Tiempos), puntuados por relevancia econ&oacute;mica y clasificados por categor&iacute;a e impacto (top 10 del d&iacute;a). Filtros por categor&iacute;a y guardadas, navegaci&oacute;n por d&iacute;a de los &uacute;ltimos 30, y detalle expandible por fila con enlace al art&iacute;culo original.</p>
+        <p>Selecci&oacute;n autom&aacute;tica diaria de hechos relevantes de 13 portales de prensa boliviana (El Deber, Correo del Sur, Unitel, La Raz&oacute;n, Bloomberg L&iacute;nea, Eju!, El D&iacute;a, Br&uacute;jula Digital, Noticias Fides, Erbol, Urgente.bo, Opini&oacute;n, Los Tiempos), puntuados por relevancia econ&oacute;mica y clasificados por categor&iacute;a e impacto (top 10 del d&iacute;a). La categor&iacute;a <strong>Latam</strong> suma hasta 5 notas/d&iacute;a de la secci&oacute;n Latinoam&eacute;rica de Bloomberg L&iacute;nea (selecci&oacute;n editorial del medio, sin puntaje propio, impacto medio fijo, con fecha real de publicaci&oacute;n). Filtros por categor&iacute;a y guardadas, navegaci&oacute;n por d&iacute;a de los &uacute;ltimos 30, y detalle expandible por fila con enlace al art&iacute;culo original.</p>
         <p>El KPI &ldquo;Pr&oacute;ximo hecho&rdquo; (agenda) todav&iacute;a muestra <em>datos de ejemplo</em>.</p>
       </details>
     </section>
@@ -1033,7 +1033,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
   <div class="fb-subheader">
     <div>
       <h1>Noticias</h1>
-      <div class="fb-subtitle">Hechos relevantes de la prensa boliviana, seleccionados a diario por relevancia &middot; Actualizado <span id="ntUpdateStamp">&mdash;</span></div>
+      <div class="fb-subtitle">Hechos relevantes de la prensa boliviana y de Bloomberg L&iacute;nea Latinoam&eacute;rica &middot; Actualizado <span id="ntUpdateStamp">&mdash;</span></div>
     </div>
     <div class="fb-subheader-stats">
       <div class="fb-stat"><span class="fb-stat-label">Visitas hoy</span><span class="fb-stat-value">__VISITS_TODAY__</span></div>
@@ -1076,7 +1076,6 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
         <table class="fb-data-table nt-table">
           <thead><tr>
             <th style="width:96px">Fecha</th>
-            <th style="width:64px">Hora</th>
             <th style="width:90px">Fuente</th>
             <th>Titular</th>
             <th style="width:170px">Categor&iacute;a</th>
@@ -1086,7 +1085,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
           <tbody id="ntTbody"></tbody>
         </table>
       </div>
-      <div class="nt-section-foot">Fuentes: 13 portales de prensa boliviana &middot; selecci&oacute;n autom&aacute;tica diaria por relevancia (top 10) &middot; res&uacute;menes propios, el detalle enlaza al art&iacute;culo original de cada portal</div>
+      <div class="nt-section-foot">Fuentes: 13 portales de prensa boliviana (selecci&oacute;n autom&aacute;tica diaria por relevancia, top 10) + Bloomberg L&iacute;nea Latinoam&eacute;rica (hasta 5/d&iacute;a, selecci&oacute;n editorial del medio) &middot; res&uacute;menes propios, el detalle enlaza al art&iacute;culo original</div>
     </div>
   </div>
 </div><!-- /tab-noticias -->
@@ -1125,8 +1124,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-mundo':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1e6b8c','src-correosur':'#7a5ea8','src-unitel':'#c0564a','src-larazon':'#2c4a6b','src-bloomberg':'#c47e2a','src-eju':'#3d7a5c','src-eldia':'#a3543e','src-brujula':'#4a6ea8','src-fides':'#5b8a3c','src-erbol':'#7d4f6b','src-urgente':'#b3663b','src-opinion':'#3b7d8a','src-lostiempos':'#6b5b3b','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-mundo':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#5aa9c7','src-correosur':'#a98ed6','src-unitel':'#e07a6e','src-larazon':'#6ea3d9','src-bloomberg':'#e0a44e','src-eju':'#5cb88a','src-eldia':'#d98a76','src-brujula':'#7e9fd9','src-fides':'#93c46e','src-erbol':'#c489ad','src-urgente':'#d99a5e','src-opinion':'#6ec2d4','src-lostiempos':'#c4ad7a','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -3751,11 +3750,15 @@ window.addEventListener('popstate', function(){
 
 // ═══ NOTICIAS TAB (variante D "Terminal") — feed real ═══
 // Noticias reales: DATA.noticias (dashboard.py lee la tabla `noticias` de
-// p2p_normalized.db, poblada a diario por ingest_noticias.py — top-10 por
-// relevancia de 13 portales). Schema por nota:
+// p2p_normalized.db, poblada a diario por ingest_noticias.py en DOS
+// carriles: top-10 por relevancia de 13 portales bolivianos + hasta 5 de
+// Bloomberg Línea Latinoamérica (categoría latam, sin scoring, selección
+// editorial del medio)). Schema por nota:
 // {id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title, summary,
 //  detail, topics:[..], impact:'alto|medio|bajo', sourceNote, url}.
-// date/time son la fecha/hora de la corrida del scraper (hora Bolivia).
+// date/time por carril (hora Bolivia): corrida del scraper para los
+// portales bolivianos, pubDate REAL para latam. La UI muestra solo la
+// fecha; time persiste y ordena (date+time desc).
 // La AGENDA (NOTICIAS_EVENTS_BASE) sigue siendo placeholder — badge
 // "ejemplo" scopeado al KPI "Próximo hecho".
 (function(){
@@ -3782,10 +3785,10 @@ window.addEventListener('popstate', function(){
     hidrocarburos: { id:'hidrocarburos', name:'Hidrocarburos', color:'var(--cat-hidrocarburos)' },
     agro:          { id:'agro',          name:'Agro',          color:'var(--cat-agro)' },
     mineria:       { id:'mineria',       name:'Minería',       color:'var(--cat-mineria)' },
-    mundo:         { id:'mundo',         name:'Mundo',         color:'var(--cat-mundo)' },
+    latam:         { id:'latam',         name:'Latam',         color:'var(--cat-latam)' },
     politica:      { id:'politica',      name:'Política',      color:'var(--cat-politica)' }
   };
-  const NOTICIAS_CAT_ORDER = ['economia','hidrocarburos','agro','mineria','mundo','politica'];
+  const NOTICIAS_CAT_ORDER = ['economia','hidrocarburos','agro','mineria','latam','politica'];
 
   // ── "Hoy" y helpers de fecha ──
   function ntParseD(d){ const p=d.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
@@ -3814,7 +3817,7 @@ window.addEventListener('popstate', function(){
     { id:'e2', category:'hidrocarburos', date:'2026-06-10', title:'YPFB presenta su informe de producción y subvención' },
     { id:'e3', category:'agro',          date:'2026-06-12', title:'Cierre de la campaña de verano de soya en Santa Cruz' },
     { id:'e4', category:'politica',      date:'2026-06-15', title:'La Asamblea trata el crédito externo por USD 1.800 M' },
-    { id:'e5', category:'mundo',         date:'2026-06-18', title:'Reunión del Mercosur: comercio en monedas locales' }
+    { id:'e5', category:'latam',         date:'2026-06-18', title:'Reunión del Mercosur: comercio en monedas locales' }
   ];
 
   // ── Feed real: DATA.noticias (últimos 30 días; la ventana la garantiza la
@@ -3906,12 +3909,18 @@ window.addEventListener('popstate', function(){
       + '</div></div>';
   }
 
+  // Auto-hide: una categoría sin notas en la ventana de 30 días no muestra
+  // chip (p.ej. latam los días sin publicaciones del feed). "Todas" se
+  // evalúa sobre las VISIBLES para que el estado sea alcanzable por chips.
+  function ntCatsVisibles(){ return NOTICIAS_CAT_ORDER.filter(id=>ntCatCounts[id]>0); }
+  function ntAllCatsOn(){ return ntCatsVisibles().every(id=>ntState.cats.has(id)); }
+
   function ntRenderChips(){
     const el=document.getElementById('ntCatChips'); if(!el) return;
-    const allOn = ntState.cats.size===NOTICIAS_CAT_ORDER.length;
+    const allOn = ntAllCatsOn();
     el.innerHTML =
       '<button type="button" class="fb-pill nt-chip'+(allOn?' active':'')+'" data-cat="all">Todas</button>'
-      + NOTICIAS_CAT_ORDER.map(id=>{
+      + ntCatsVisibles().map(id=>{
           const c=NOTICIAS_CATEGORIES[id], on=ntState.cats.has(id);
           return '<button type="button" class="fb-pill nt-chip'+(on?' active':'')+'" data-cat="'+id+'" style="--nt-c:'+c.color+'">'
             + '<span class="pdot"></span>'+ntEsc(c.name)
@@ -3954,11 +3963,11 @@ window.addEventListener('popstate', function(){
     const tbody=document.getElementById('ntTbody'); if(!tbody) return;
     const visible=ntVisible();
     const sub=document.getElementById('ntTableSub');
-    if(sub) sub.innerHTML = 'Densa, ordenada por hora · clic en una fila para ver el detalle · '
+    if(sub) sub.innerHTML = 'Densa, ordenada por fecha · clic en una fila para ver el detalle · '
       + (ntState.day ? ntEsc(ntFmtDayLong(ntState.day)) : 'últimos 30 días')
       + ' · ' + visible.length + ' ' + (visible.length===1?'nota':'notas');
     if(!visible.length){
-      tbody.innerHTML = '<tr><td colspan="7"><div class="nt-empty">No hay notas '
+      tbody.innerHTML = '<tr><td colspan="6"><div class="nt-empty">No hay notas '
         + (ntState.day ? 'para el '+ntEsc(ntFmtDayLong(ntState.day)) : 'para los filtros seleccionados')
         + '.</div></td></tr>';
       return;
@@ -3966,9 +3975,11 @@ window.addEventListener('popstate', function(){
     tbody.innerHTML = visible.map(n=>{
       const isRead=ntState.read.has(n.id), isSaved=ntState.saved.has(n.id), isOpen=ntState.expanded===n.id;
       const topic = n.topics && n.topics.length ? '<span class="nt-topic">'+ntEsc(n.topics[0])+'</span>' : '';
+      // Sin columna Hora: solo fecha visible. n.time sigue en la data (DB y
+      // sort por date+time) — latam trae hora real de publicación, Bolivia
+      // la de corrida.
       let html = '<tr class="nt-row'+(isRead?' is-read':'')+'" data-id="'+ntEsc(n.id)+'">'
         + '<td class="nt-fecha">'+ntFmtDay(n.date)+'</td>'
-        + '<td class="nt-hora">'+ntEsc(n.time)+'</td>'
         + '<td>'+ntSrcTag(n.source)+'</td>'
         + '<td class="nt-title">'+ntEsc(n.title)+'</td>'
         + '<td class="nt-cats"><div class="nt-catwrap">'+ntCatTag(n.category)+topic+'</div></td>'
@@ -3980,7 +3991,7 @@ window.addEventListener('popstate', function(){
         + '</div></td></tr>';
       if(isOpen){
         const portal = NOTICIAS_PORTALS[n.source] || { full:n.source };
-        html += '<tr class="nt-detail-row"><td colspan="7"><div class="nt-detail">'
+        html += '<tr class="nt-detail-row"><td colspan="6"><div class="nt-detail">'
           + ntEsc(n.detail)
           + '<div class="nt-detail-meta">'
           + '<span>Fuente: <b>'+ntEsc(portal.full)+'</b></span>'
@@ -3999,7 +4010,7 @@ window.addEventListener('popstate', function(){
   // ── Mutadores ──
   function ntToggleCat(id){
     if(id==='all'){
-      if(ntState.cats.size===NOTICIAS_CAT_ORDER.length) ntState.cats.clear();
+      if(ntAllCatsOn()) ntState.cats.clear();
       else NOTICIAS_CAT_ORDER.forEach(k=>ntState.cats.add(k));
     } else {
       if(ntState.cats.has(id)) ntState.cats.delete(id); else ntState.cats.add(id);
