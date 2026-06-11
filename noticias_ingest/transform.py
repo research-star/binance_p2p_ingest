@@ -39,9 +39,9 @@ PORTAL_SLUGS = {
     "Los Tiempos": "lostiempos",
 }
 
-# 11 temas de boletines (+ fallback "General") → 6 categorías del frontend.
-# "mundo" queda sin tema fuente: el scraper solo cubre prensa boliviana y
-# el gate TERMINOS_BOLIVIA descarta lo internacional sin ángulo local.
+# 11 temas de boletines (+ fallback "General") → categorías del frontend.
+# "latam" no es target de ningún tema: la alimenta exclusivamente el carril
+# RSS de Bloomberg Línea (build_nota_latam), sin scoring.
 TEMA_CATEGORIA = {
     "Combustibles / YPFB": "hidrocarburos",
     "Tipo de cambio / Dólar": "economia",
@@ -136,5 +136,55 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "puntaje": cand["puntaje"],
         "score_crudo": cand.get("score_crudo"),
         "score_ajustado": cand.get("score_ajustado"),
+        "created_at_utc": ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+
+def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None) -> dict:
+    """Entry RSS de Bloomberg Línea (sección Latinoamérica) → nota.
+
+    Sin scoring: impact='medio' fijo (v1) y puntaje=0.0 como sentinela del
+    carril (la columna es NOT NULL; 0 nunca colisiona con el carril Bolivia,
+    cuyo piso editorial es 6.7). date/time = pubDate REAL convertido a hora
+    Bolivia — la UI hoy no muestra hora, pero se persiste igual.
+    """
+    from .scraper import limpiar_html  # import local para evitar ciclo
+
+    if ahora_utc is None:
+        ahora_utc = datetime.now(timezone.utc)
+    pub_bo = pub_utc.astimezone(BOLIVIA_TZ)
+
+    descripcion = limpiar_html(getattr(entry, "summary", "") or "")
+    contenido = ""
+    cont = getattr(entry, "content", None)
+    if cont:
+        contenido = limpiar_html(cont[0].value or "")
+        # Bloomberg embebe bloques "Ver más: <link relacionado>" dentro del
+        # cuerpo; al aplanar el HTML quedan pegados al texto. Cortar ahí.
+        contenido = contenido.split("Ver más:")[0].strip()
+
+    link = entry.link
+    guid = getattr(entry, "id", "") or link
+    autor = (getattr(entry, "author", "") or "").strip()
+    source_note = f"Bloomberg Línea · {autor}" if autor else "Bloomberg Línea · bloomberglinea.com"
+
+    return {
+        "id": hash_link(guid),
+        "date": pub_bo.strftime("%Y-%m-%d"),
+        "time": pub_bo.strftime("%H:%M"),
+        "source": "bloomberg",
+        "category": "latam",
+        "title": (getattr(entry, "title", "") or "").strip(),
+        "summary": _truncar(descripcion, SUMMARY_MAX),
+        "detail": _truncar(contenido, DETAIL_MAX) if contenido else descripcion,
+        "topics": [],
+        "impact": "medio",
+        "sourceNote": source_note,
+        "url": link,
+        "portal": "Bloomberg Línea",
+        "tema": "",
+        "puntaje": 0.0,
+        "score_crudo": None,
+        "score_ajustado": None,
         "created_at_utc": ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }

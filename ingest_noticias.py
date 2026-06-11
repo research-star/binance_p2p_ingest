@@ -1,31 +1,33 @@
 #!/usr/bin/env python3
 """
-ingest_noticias.py — Pipeline diario de la tab Noticias.
+ingest_noticias.py — Pipeline diario de la tab Noticias. Dos carriles:
 
-Flujo: scrape 13 portales (noticias_ingest/scraper.py, port de boletines)
+BOLIVIA: scrape 13 portales (noticias_ingest/scraper.py, port de boletines)
 → score TF-IDF → filtro editorial puntaje >= 6.7 → dedupe inter-día fuzzy
-contra los últimos 7 días de la tabla `noticias` → top-10 desc → INSERT
-idempotente en p2p_normalized.db.
+→ presupuesto top-10/día → INSERT idempotente.
+Fail-closed en scoring: sin modelo TF-IDF el carril NO corre (el corte 6.7
+está calibrado para la escala TF-IDF; el fallback keywords la rompería en
+silencio).
 
-Idempotencia (tres capas):
-  1. Caché de URLs vistas (TTL 7 días, noticias_ingest/data/cache_urls.db):
-     una re-corrida del mismo día no re-procesa URLs ya vistas.
-  2. PRIMARY KEY = hash del link normalizado → INSERT OR IGNORE.
-  3. Dedupe fuzzy por título (token_sort_ratio >= 0.70) contra la DB.
+LATAM: sección Latinoamérica de Bloomberg Línea vía RSS
+(noticias_ingest/latam.py) — SIN scoring, su criterio editorial es el
+filtro. pubDate últimas 24 h, orden desc, cupo 5/día con presupuesto
+INDEPENDIENTE del carril Bolivia. date/time = pubDate real.
 
-Healthcheck: HC_NOTICIAS (env var, en VPS via /opt/binance_p2p/.env).
-Graceful si falta: warning y sigue, patrón HC_INE_*.
+Fail-safe por carril: si un carril falla, el otro corre igual; el body del
+ping a HC_NOTICIAS reporta qué carriles corrieron y cuántas insertó cada
+uno. Cualquier carril en error → ping fail + exit 1 (lo insertado por el
+carril sano persiste).
 
-Fail-closed en scoring: si el modelo TF-IDF no está disponible (pkl
-ausente/ilegible o descartado por sus umbrales de calidad), la corrida
-pingea fail y sale 1 SIN scrapear ni insertar — el corte editorial 6.7
-está calibrado para la escala TF-IDF y el fallback keywords (conteos
-enteros) la rompería en silencio.
+Idempotencia (ambos carriles): PK = hash del link/guid normalizado
+(INSERT OR IGNORE) + dedupe fuzzy por título (>= 0.70) contra los últimos
+7 días de la tabla + presupuesto diario que descuenta lo ya insertado hoy.
+El carril Bolivia suma su caché de URLs vistas (TTL 7 días).
 
 Uso:
-    python ingest_noticias.py                  # corrida normal contra p2p_normalized.db
+    python ingest_noticias.py                  # corrida normal
     python ingest_noticias.py --db test.db     # DB alternativa (dev)
-    python ingest_noticias.py --dry-run        # scrape + score + dedupe, sin escribir
+    python ingest_noticias.py --dry-run        # sin escribir en la DB
 """
 
 from __future__ import annotations
@@ -39,7 +41,7 @@ import sqlite3
 import sys
 import time
 import traceback
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -52,13 +54,14 @@ except ImportError:
 import requests
 
 from config import NORMALIZED_DB
-from noticias_ingest import scraper
-from noticias_ingest.transform import build_nota
+from noticias_ingest import latam, scraper
+from noticias_ingest.transform import build_nota, build_nota_latam
 
 # ── Constantes ────────────────────────────────────────────────────────────
 
-UMBRAL_PUNTAJE = 6.7   # corte editorial de la tab (decisión cerrada del brief)
-TOP_N = 10             # tope diario
+UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
+TOP_N = 10             # tope diario carril Bolivia
+LATAM_TOP_N = 5        # tope diario carril latam (presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
 UMBRAL_DEDUP_DB = 0.70
 
@@ -85,19 +88,21 @@ def hc_ping(suffix: str = "", body: str = ""):
 # ── Schema ────────────────────────────────────────────────────────────────
 # Espejo versionado en scripts/migrations/0002_noticias.sql (se aplica a
 # mano en el VPS); este DDL idempotente cubre dev y re-corridas.
+# Nota: en filas del carril latam, puntaje=0.0 es sentinela "sin scoring"
+# (la columna es NOT NULL; el piso del carril Bolivia es 6.7, no colisiona).
 
 DDL = """
 CREATE TABLE IF NOT EXISTS noticias (
     id              TEXT PRIMARY KEY,   -- hash MD5 corto del link normalizado
-    date            TEXT NOT NULL,      -- YYYY-MM-DD de la corrida (hora Bolivia, UTC-4)
-    time            TEXT NOT NULL,      -- HH:MM de la corrida (hora Bolivia, UTC-4)
+    date            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4): corrida (BO) / pubDate (latam)
+    time            TEXT NOT NULL,      -- HH:MM (Bolivia UTC-4): corrida (BO) / pubDate (latam)
     source          TEXT NOT NULL,      -- slug del portal (key de NOTICIAS_PORTALS)
-    category        TEXT NOT NULL,      -- economia|hidrocarburos|agro|mineria|mundo|politica
+    category        TEXT NOT NULL,      -- economia|hidrocarburos|agro|mineria|latam|politica
     title           TEXT NOT NULL,
     summary         TEXT NOT NULL DEFAULT '',
     detail          TEXT NOT NULL DEFAULT '',
     topics          TEXT NOT NULL DEFAULT '[]',  -- JSON array (tema original de boletines)
-    impact          TEXT NOT NULL,      -- alto|medio|bajo (bandas sobre puntaje)
+    impact          TEXT NOT NULL,      -- alto|medio|bajo (bandas sobre puntaje; latam: medio fijo)
     source_note     TEXT NOT NULL DEFAULT '',
     url             TEXT NOT NULL,
     portal          TEXT NOT NULL,      -- nombre original del portal
@@ -119,8 +124,8 @@ def init_schema(conn: sqlite3.Connection):
 # ── Dedupe inter-día ──────────────────────────────────────────────────────
 
 def titulos_recientes(conn: sqlite3.Connection, dias: int = DEDUPE_DIAS) -> list:
-    """Títulos de los últimos `dias` días de la tabla noticias (para dedupe
-    fuzzy). Si la tabla está vacía devuelve []."""
+    """Títulos de los últimos `dias` días de la tabla noticias (ambos
+    carriles) para dedupe fuzzy. [] si la tabla está vacía."""
     rows = conn.execute(
         "SELECT title FROM noticias WHERE date >= date('now', '-4 hours', ?)",
         (f"-{dias} days",)
@@ -134,6 +139,27 @@ def es_repetida(titulo: str, titulos_previos: list) -> bool:
         if scraper.similitud(limpio, scraper._titulo_limpio(previo)) >= UMBRAL_DEDUP_DB:
             return True
     return False
+
+
+# ── Inserción común ───────────────────────────────────────────────────────
+
+def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
+    insertadas = 0
+    for n in notas:
+        cur = conn.execute(
+            """INSERT OR IGNORE INTO noticias
+               (id, date, time, source, category, title, summary, detail,
+                topics, impact, source_note, url, portal, tema, puntaje,
+                score_crudo, score_ajustado, created_at_utc)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (n["id"], n["date"], n["time"], n["source"], n["category"],
+             n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
+             n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
+             n["puntaje"], n["score_crudo"], n["score_ajustado"],
+             n["created_at_utc"]))
+        insertadas += cur.rowcount
+    conn.commit()
+    return insertadas
 
 
 # ── Debug CSV (gitignored; diagnóstico de la corrida y tuning de bandas) ──
@@ -151,6 +177,138 @@ def escribir_csv_debug(candidatos: list, fecha: str):
     return out
 
 
+# ── Carril Bolivia ────────────────────────────────────────────────────────
+
+def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
+    """Scrape + score + corte 6.7 + dedupe + presupuesto top-N + insert.
+    Devuelve dict-resumen; estado='error' nunca propaga excepción."""
+    res = {"estado": "ok", "insertadas": 0, "candidatos": 0,
+           "sobre_umbral": 0, "dedupe": 0, "detalle": "", "scoring": "desconocido"}
+    try:
+        # Fail-closed: sin modelo TF-IDF este carril no corre.
+        modelo = scraper.get_modelo()
+        res["scoring"] = "tfidf" if modelo.disponible else "keywords"
+        if not modelo.disponible:
+            res["estado"] = "error"
+            res["detalle"] = (f"modelo_no_disponible (fail-closed): "
+                              f"{modelo.motivo_rechazo or 'pkl ausente o ilegible'}")
+            return res
+
+        candidatos, descartados, ok, fail = scraper.correr_scraper()
+        if not ok:
+            res["estado"] = "error"
+            res["detalle"] = f"scrape_total_fail: 0/{len(scraper.FUENTES)} portales ok"
+            return res
+        if fail:
+            print(f"[noticias] WARN portales_fail: {', '.join(fail)}", file=sys.stderr)
+
+        # El href del frontend solo admite http/https: un portal comprometido
+        # no debe poder colar un scheme ejecutable (javascript:/data:).
+        candidatos = [c for c in candidatos
+                      if urlparse(c["link"]).scheme in ("http", "https")]
+        res["candidatos"] = len(candidatos)
+
+        notas = [build_nota(c, ahora_utc) for c in candidatos]
+        escribir_csv_debug(candidatos, fecha_bo)
+
+        seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
+        seleccion.sort(key=lambda n: -n["puntaje"])
+        res["sobre_umbral"] = len(seleccion)
+
+        # Presupuesto diario: descuenta lo ya insertado hoy en ESTE carril
+        # (excluye latam: presupuestos independientes).
+        ya_hoy = conn.execute(
+            "SELECT COUNT(*) FROM noticias WHERE date = ? AND category != 'latam'",
+            (fecha_bo,)).fetchone()[0]
+        budget = max(0, args.top - ya_hoy)
+        if ya_hoy:
+            print(f"[noticias] bolivia: ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
+
+        finales = []
+        for n in seleccion:
+            if len(finales) >= budget:
+                break
+            if es_repetida(n["title"], previos):
+                res["dedupe"] += 1
+                continue
+            finales.append(n)
+            previos.append(n["title"])
+
+        if args.dry_run:
+            for n in finales:
+                print(f"[noticias] dry-run bolivia: {n['puntaje']:.1f} "
+                      f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
+        else:
+            res["insertadas"] = insertar_notas(conn, finales)
+    except Exception:
+        conn.rollback()  # aislamiento por carril: no dejar inserts a medias
+        tb = traceback.format_exc()
+        print(f"[noticias] ERROR lane_bolivia:\n{tb}", file=sys.stderr)
+        res["estado"] = "error"
+        res["detalle"] = tb.strip().splitlines()[-1][:200]
+    return res
+
+
+# ── Carril Latam ──────────────────────────────────────────────────────────
+
+def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
+    """RSS Bloomberg Línea sección Latinoamérica: pubDate 24h, orden desc,
+    cupo independiente, sin scoring. estado='error' solo si el feed no
+    entregó nada utilizable (0 ítems en 24h con feed sano es ok)."""
+    res = {"estado": "ok", "insertadas": 0, "items_24h": 0,
+           "dedupe": 0, "detalle": ""}
+    try:
+        entries = latam.fetch_entries_latam()
+        if not entries:
+            res["estado"] = "error"
+            res["detalle"] = "feed_sin_items: sección y fallback no entregaron nada"
+            return res
+
+        recientes = latam.entries_ultimas_24h(entries, ahora_utc)
+        res["items_24h"] = len(recientes)
+
+        notas = []
+        for pub_utc, e in recientes:
+            n = build_nota_latam(pub_utc, e, ahora_utc)
+            if urlparse(n["url"]).scheme in ("http", "https"):
+                notas.append(n)
+
+        # Presupuesto independiente, por día de corrida (BO) sobre
+        # created_at_utc: el `date` de estas filas es el pubDate, que puede
+        # caer en ayer — el cupo es de inserción diaria, no de fecha visible.
+        ya_hoy = conn.execute(
+            "SELECT COUNT(*) FROM noticias WHERE category = 'latam' "
+            "AND date(created_at_utc, '-4 hours') = ?",
+            (fecha_bo,)).fetchone()[0]
+        budget = max(0, args.top_latam - ya_hoy)
+        if ya_hoy:
+            print(f"[noticias] latam: ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
+
+        finales = []
+        for n in notas:
+            if len(finales) >= budget:
+                break
+            if es_repetida(n["title"], previos):
+                res["dedupe"] += 1
+                continue
+            finales.append(n)
+            previos.append(n["title"])
+
+        if args.dry_run:
+            for n in finales:
+                print(f"[noticias] dry-run latam: {n['date']} {n['time']} "
+                      f"{n['title'][:70]}")
+        else:
+            res["insertadas"] = insertar_notas(conn, finales)
+    except Exception:
+        conn.rollback()  # aislamiento por carril: no dejar inserts a medias
+        tb = traceback.format_exc()
+        print(f"[noticias] ERROR lane_latam:\n{tb}", file=sys.stderr)
+        res["estado"] = "error"
+        res["detalle"] = tb.strip().splitlines()[-1][:200]
+    return res
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -158,11 +316,13 @@ def main() -> int:
     ap.add_argument("--db", type=Path, default=NORMALIZED_DB,
                     help=f"Path a la DB (default: {NORMALIZED_DB})")
     ap.add_argument("--dry-run", action="store_true",
-                    help="Scrape + score + dedupe, sin escribir en la DB")
+                    help="Corre ambos carriles sin escribir en la DB")
     ap.add_argument("--top", type=int, default=TOP_N,
-                    help=f"Tope de notas a insertar (default: {TOP_N})")
+                    help=f"Tope diario carril Bolivia (default: {TOP_N})")
+    ap.add_argument("--top-latam", type=int, default=LATAM_TOP_N,
+                    help=f"Tope diario carril latam (default: {LATAM_TOP_N})")
     ap.add_argument("--umbral", type=float, default=UMBRAL_PUNTAJE,
-                    help=f"Puntaje mínimo de selección (default: {UMBRAL_PUNTAJE})")
+                    help=f"Puntaje mínimo carril Bolivia (default: {UMBRAL_PUNTAJE})")
     args = ap.parse_args()
 
     # El scraper portado loguea con logging; los ingest del repo hablan por
@@ -173,95 +333,15 @@ def main() -> int:
     t0 = time.time()
     hc_ping("start")
     ahora_utc = datetime.now(timezone.utc)
+    fecha_bo = (ahora_utc.astimezone(timezone(timedelta(hours=-4)))).strftime("%Y-%m-%d")
 
-    # Fail-closed (addendum del brief): sin modelo TF-IDF no hay corrida.
-    modelo = scraper.get_modelo()
-    if not modelo.disponible:
-        msg = (f"[noticias] ERROR modelo_no_disponible (fail-closed): "
-               f"{modelo.motivo_rechazo or 'pkl ausente o ilegible'} — "
-               f"no se scrapea ni inserta")
-        print(msg, file=sys.stderr)
-        hc_ping("fail", body=msg)
-        return 1
-
-    try:
-        candidatos, descartados, ok, fail = scraper.correr_scraper()
-    except Exception:
-        tb = traceback.format_exc()
-        print(f"[noticias] ERROR scraper_crash:\n{tb}", file=sys.stderr)
-        hc_ping("fail", body=tb[-1500:])
-        return 1
-
-    # Fallo total de scrape (red caída, IP bloqueada, markup rot masivo):
-    # correr_scraper no lanza — lo acumula en `fail`. Sin esto la corrida
-    # pingearía éxito y el feed se congelaría en silencio.
-    if not ok:
-        msg = f"[noticias] ERROR scrape_total_fail: 0/{len(scraper.FUENTES)} portales ok"
-        print(msg, file=sys.stderr)
-        hc_ping("fail", body=msg)
-        return 1
-
-    # El href del frontend solo admite http/https: un portal comprometido no
-    # debe poder colar un scheme ejecutable (javascript:/data:) vía link.
-    candidatos = [c for c in candidatos
-                  if urlparse(c["link"]).scheme in ("http", "https")]
-
-    notas = [build_nota(c, ahora_utc) for c in candidatos]
-    fecha = notas[0]["date"] if notas else ahora_utc.strftime("%Y-%m-%d")
-    csv_path = escribir_csv_debug(candidatos, fecha)
-
-    seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
-    seleccion.sort(key=lambda n: -n["puntaje"])
-    print(f"[noticias] candidatos={len(candidatos)} descartados_scoring={len(descartados)} "
-          f"sobre_umbral={len(seleccion)} umbral={args.umbral}")
-
-    insertadas = 0
-    repetidas = 0
     try:
         conn = sqlite3.connect(str(args.db))
         try:
             init_schema(conn)
             previos = titulos_recientes(conn)
-
-            # Tope DIARIO: el presupuesto descuenta lo ya insertado hoy, así
-            # una re-corrida (recovery manual, doble disparo) no infla el día
-            # más allá de `--top` aunque los portales hayan publicado nuevo.
-            ya_hoy = conn.execute(
-                "SELECT COUNT(*) FROM noticias WHERE date = ?", (fecha,)
-            ).fetchone()[0]
-            budget = max(0, args.top - ya_hoy)
-            if ya_hoy:
-                print(f"[noticias] ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
-
-            finales = []
-            for n in seleccion:
-                if len(finales) >= budget:
-                    break
-                if es_repetida(n["title"], previos):
-                    repetidas += 1
-                    continue
-                finales.append(n)
-                previos.append(n["title"])  # dedupe también dentro de la selección
-
-            if args.dry_run:
-                for n in finales:
-                    print(f"[noticias] dry-run: {n['puntaje']:.1f} [{n['category']}] "
-                          f"{n['portal']}: {n['title'][:70]}")
-            else:
-                for n in finales:
-                    cur = conn.execute(
-                        """INSERT OR IGNORE INTO noticias
-                           (id, date, time, source, category, title, summary, detail,
-                            topics, impact, source_note, url, portal, tema, puntaje,
-                            score_crudo, score_ajustado, created_at_utc)
-                           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-                        (n["id"], n["date"], n["time"], n["source"], n["category"],
-                         n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
-                         n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
-                         n["puntaje"], n["score_crudo"], n["score_ajustado"],
-                         n["created_at_utc"]))
-                    insertadas += cur.rowcount
-                conn.commit()
+            res_bo = lane_bolivia(conn, args, ahora_utc, fecha_bo, previos)
+            res_lt = lane_latam(conn, args, ahora_utc, fecha_bo, previos)
         finally:
             conn.close()
     except Exception:
@@ -271,19 +351,27 @@ def main() -> int:
         return 1
 
     dur = time.time() - t0
-    # `scoring` viaja en el body del hc_ping. Con el fail-closed de arriba
-    # siempre será tfidf; se mantiene como invariante observable.
-    scoring = "tfidf" if scraper.get_modelo().disponible else "keywords"
-    summary = (f"[noticias] mode={'dry-run' if args.dry_run else 'ok'} "
-               f"scoring={scoring} "
-               f"fecha={fecha} candidatos={len(candidatos)} sobre_umbral={len(seleccion)} "
-               f"dedupe_interdia={repetidas} insertadas={insertadas} "
-               f"portales_ok={len(ok)} portales_fail={len(fail)} "
-               f"csv={csv_path.name} duration_s={dur:.0f}")
-    print(summary)
-    if fail:
-        print(f"[noticias] WARN portales_fail: {', '.join(fail)}", file=sys.stderr)
+    # El modo de scoring lo reporta el carril Bolivia (re-instanciar el
+    # modelo acá podría re-lanzar la excepción que el lane ya absorbió).
+    scoring = res_bo.get("scoring", "desconocido")
 
+    def _lane_str(nombre, r, extra):
+        if r["estado"] == "error":
+            return f"{nombre}=ERROR({r['detalle']})"
+        return f"{nombre}=ok insertadas={r['insertadas']} {extra} dedupe={r['dedupe']}"
+
+    summary = (f"[noticias] mode={'dry-run' if args.dry_run else 'ok'} "
+               f"scoring={scoring} fecha={fecha_bo} "
+               + _lane_str("bolivia", res_bo,
+                           f"candidatos={res_bo['candidatos']} sobre_umbral={res_bo['sobre_umbral']}")
+               + " | "
+               + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
+               + f" duration_s={dur:.0f}")
+    print(summary)
+
+    if res_bo["estado"] == "error" or res_lt["estado"] == "error":
+        hc_ping("fail", body=summary)
+        return 1
     hc_ping(body=summary)
     return 0
 
