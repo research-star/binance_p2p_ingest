@@ -16,6 +16,12 @@ Idempotencia (tres capas):
 Healthcheck: HC_NOTICIAS (env var, en VPS via /opt/binance_p2p/.env).
 Graceful si falta: warning y sigue, patrón HC_INE_*.
 
+Fail-closed en scoring: si el modelo TF-IDF no está disponible (pkl
+ausente/ilegible o descartado por sus umbrales de calidad), la corrida
+pingea fail y sale 1 SIN scrapear ni insertar — el corte editorial 6.7
+está calibrado para la escala TF-IDF y el fallback keywords (conteos
+enteros) la rompería en silencio.
+
 Uso:
     python ingest_noticias.py                  # corrida normal contra p2p_normalized.db
     python ingest_noticias.py --db test.db     # DB alternativa (dev)
@@ -168,6 +174,16 @@ def main() -> int:
     hc_ping("start")
     ahora_utc = datetime.now(timezone.utc)
 
+    # Fail-closed (addendum del brief): sin modelo TF-IDF no hay corrida.
+    modelo = scraper.get_modelo()
+    if not modelo.disponible:
+        msg = (f"[noticias] ERROR modelo_no_disponible (fail-closed): "
+               f"{modelo.motivo_rechazo or 'pkl ausente o ilegible'} — "
+               f"no se scrapea ni inserta")
+        print(msg, file=sys.stderr)
+        hc_ping("fail", body=msg)
+        return 1
+
     try:
         candidatos, descartados, ok, fail = scraper.correr_scraper()
     except Exception:
@@ -255,9 +271,8 @@ def main() -> int:
         return 1
 
     dur = time.time() - t0
-    # `scoring` viaja en el body del hc_ping: una degradación a keywords
-    # (pkl ilegible en el venv) es invisible de otro modo en una corrida
-    # unattended, y el corte 6.7 está calibrado para la escala TF-IDF.
+    # `scoring` viaja en el body del hc_ping. Con el fail-closed de arriba
+    # siempre será tfidf; se mantiene como invariante observable.
     scoring = "tfidf" if scraper.get_modelo().disponible else "keywords"
     summary = (f"[noticias] mode={'dry-run' if args.dry_run else 'ok'} "
                f"scoring={scoring} "
@@ -266,9 +281,6 @@ def main() -> int:
                f"portales_ok={len(ok)} portales_fail={len(fail)} "
                f"csv={csv_path.name} duration_s={dur:.0f}")
     print(summary)
-    if scoring != "tfidf":
-        print("[noticias] WARN scoring degradado a keywords (modelo TF-IDF no "
-              "disponible) — el corte 6.7 está calibrado para TF-IDF", file=sys.stderr)
     if fail:
         print(f"[noticias] WARN portales_fail: {', '.join(fail)}", file=sys.stderr)
 
