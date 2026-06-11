@@ -87,6 +87,11 @@ snapshots/
 alt/
 bbv_snapshots/
 
+# Noticias: runtime del scraper (caché de URLs TTL 7d + CSVs de diagnóstico,
+# regenerables cada corrida). El modelo noticias_ingest/modelo_relevancia.pkl
+# SÍ se trackea (decisión del brief: artefacto <10MB necesario para scoring).
+noticias_ingest/data/
+
 # Dashboard: el archivo servido por GitHub Pages es index.html (sí trackeado).
 # p2p_dashboard.html es un alias local por compatibilidad, no se sube.
 p2p_dashboard.html
