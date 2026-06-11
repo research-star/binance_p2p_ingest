@@ -529,6 +529,29 @@ def process_data(db_path: Path) -> dict:
     except Exception:
         pass  # Table doesn't exist yet — graceful degradation
 
+    # ── Noticias (from noticias table, if exists) ──
+    # Últimos 30 días en hora Bolivia (UTC-4): el slider del tab cubre
+    # exactamente [hoy-29 .. hoy] y el frontend no clampa — la ventana la
+    # garantiza esta query. Schema por nota: HANDOFF.md § Frontend tab Noticias.
+    noticias_data = []
+    try:
+        noticias_rows = conn.execute(
+            "SELECT id, date, time, source, category, title, summary, detail, "
+            "       topics, impact, source_note, url "
+            "FROM noticias "
+            "WHERE date >= date('now', '-4 hours', '-29 days') "
+            "ORDER BY date DESC, time DESC, puntaje DESC"
+        ).fetchall()
+        noticias_data = [{
+            'id': r['id'], 'date': r['date'], 'time': r['time'],
+            'source': r['source'], 'category': r['category'],
+            'title': r['title'], 'summary': r['summary'], 'detail': r['detail'],
+            'topics': json.loads(r['topics'] or '[]'),
+            'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
+        } for r in noticias_rows]
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+
     conn.close()
 
     return {
@@ -542,6 +565,7 @@ def process_data(db_path: Path) -> dict:
         'activity_heatmap': activity_matrix,
         'dpf_data': dpf_data,
         'embi_data': embi_data,
+        'noticias': noticias_data,
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
