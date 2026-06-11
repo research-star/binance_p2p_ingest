@@ -465,6 +465,10 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
    El color puntual de cada tag llega por la custom prop --nt-c seteada
    inline desde el JS (mismo patrón que --fb-trace-color en .fb-stog). */
 .nt-badge-demo{display:inline-flex;align-items:center;padding:2px 9px;border-radius:var(--radius-pill);font-size:var(--text-2xs);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--orange);background:var(--orange-muted);border:1px dashed var(--orange);vertical-align:3px;margin-left:10px}
+/* Badge "ejemplo" scopeado a la agenda: vive dentro del label del KPI "Próximo hecho" */
+.fb-kpi-label .nt-badge-demo{vertical-align:baseline;margin-left:6px;padding:1px 7px}
+.nt-detail-meta a{color:var(--blue-accent);text-decoration:none;border-bottom:1px dotted var(--blue-accent)}
+.nt-detail-meta a:hover{opacity:.8}
 .fb-kpi-value .unit{font-size:.5em;font-weight:500;color:var(--text-muted);letter-spacing:.04em;margin-left:3px}
 /* filter bar — misma gramática que .fb-dpf-filters / .fb-bbv-filters */
 .nt-filterbar{display:flex;align-items:center;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
@@ -873,9 +877,9 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
         <p>Datos: BBV resumen diario (PDF) + BBV instrumentos negociados (web).</p>
       </details>
       <details>
-        <summary><strong>Noticias</strong> <em>(datos de ejemplo)</em></summary>
-        <p>Agregador de hechos relevantes de la prensa boliviana e internacional (El Deber, Correo del Sur, Unitel, La Raz&oacute;n, Bloomberg) clasificados por categor&iacute;a e impacto. Filtros por categor&iacute;a y guardadas, navegaci&oacute;n por d&iacute;a de los &uacute;ltimos 30, y detalle expandible por fila.</p>
-        <p><strong>Por ahora muestra contenido ilustrativo de ejemplo</strong> &mdash; la conexi&oacute;n a fuentes reales llega en una fase posterior.</p>
+        <summary><strong>Noticias</strong></summary>
+        <p>Selecci&oacute;n autom&aacute;tica diaria de hechos relevantes de 13 portales de prensa boliviana (El Deber, Correo del Sur, Unitel, La Raz&oacute;n, Bloomberg L&iacute;nea, Eju!, El D&iacute;a, Br&uacute;jula Digital, Noticias Fides, Erbol, Urgente.bo, Opini&oacute;n, Los Tiempos), puntuados por relevancia econ&oacute;mica y clasificados por categor&iacute;a e impacto (top 10 del d&iacute;a). Filtros por categor&iacute;a y guardadas, navegaci&oacute;n por d&iacute;a de los &uacute;ltimos 30, y detalle expandible por fila con enlace al art&iacute;culo original.</p>
+        <p>El KPI &ldquo;Pr&oacute;ximo hecho&rdquo; (agenda) todav&iacute;a muestra <em>datos de ejemplo</em>.</p>
       </details>
     </section>
 
@@ -1028,9 +1032,8 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 <div id="tab-noticias" style="display:none;">
   <div class="fb-subheader">
     <div>
-      <!-- Badge "Datos de ejemplo": un solo nodo; quitar cuando se conecte la fuente real. -->
-      <h1>Noticias <span class="nt-badge-demo">Datos de ejemplo</span></h1>
-      <div class="fb-subtitle">Hechos relevantes de la prensa boliviana e internacional, por categor&iacute;a &middot; Actualizado <span id="ntUpdateStamp">&mdash;</span></div>
+      <h1>Noticias</h1>
+      <div class="fb-subtitle">Hechos relevantes de la prensa boliviana, seleccionados a diario por relevancia &middot; Actualizado <span id="ntUpdateStamp">&mdash;</span></div>
     </div>
     <div class="fb-subheader-stats">
       <div class="fb-stat"><span class="fb-stat-label">Visitas hoy</span><span class="fb-stat-value">__VISITS_TODAY__</span></div>
@@ -1083,7 +1086,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
           <tbody id="ntTbody"></tbody>
         </table>
       </div>
-      <div class="nt-section-foot">Fuentes: El Deber &middot; Correo del Sur &middot; Unitel &middot; La Raz&oacute;n &middot; Bloomberg &mdash; contenido de ejemplo</div>
+      <div class="nt-section-foot">Fuentes: 13 portales de prensa boliviana &middot; selecci&oacute;n autom&aacute;tica diaria por relevancia (top 10) &middot; res&uacute;menes propios, el detalle enlaza al art&iacute;culo original de cada portal</div>
     </div>
   </div>
 </div><!-- /tab-noticias -->
@@ -1122,8 +1125,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-mundo':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1e6b8c','src-correosur':'#7a5ea8','src-unitel':'#c0564a','src-larazon':'#2c4a6b','src-bloomberg':'#c47e2a','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-mundo':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#5aa9c7','src-correosur':'#a98ed6','src-unitel':'#e07a6e','src-larazon':'#6ea3d9','src-bloomberg':'#e0a44e','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-mundo':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1e6b8c','src-correosur':'#7a5ea8','src-unitel':'#c0564a','src-larazon':'#2c4a6b','src-bloomberg':'#c47e2a','src-eju':'#3d7a5c','src-eldia':'#a3543e','src-brujula':'#4a6ea8','src-fides':'#5b8a3c','src-erbol':'#7d4f6b','src-urgente':'#b3663b','src-opinion':'#3b7d8a','src-lostiempos':'#6b5b3b','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-mundo':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#5aa9c7','src-correosur':'#a98ed6','src-unitel':'#e07a6e','src-larazon':'#6ea3d9','src-bloomberg':'#e0a44e','src-eju':'#5cb88a','src-eldia':'#d98a76','src-brujula':'#7e9fd9','src-fides':'#93c46e','src-erbol':'#c489ad','src-urgente':'#d99a5e','src-opinion':'#6ec2d4','src-lostiempos':'#c4ad7a','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -3746,24 +3749,34 @@ window.addEventListener('popstate', function(){
   };
 })();
 
-// ═══ NOTICIAS TAB (variante D "Terminal") — datos placeholder ═══
-// Dataset ILUSTRATIVO embebido siguiendo el precedente BBV (consts inline en
-// template.html). Sólo prensa: El Deber · Correo del Sur · Unitel · La Razón ·
-// Bloomberg. MIGRACIÓN FUTURA: cuando exista la fuente real, el namespace
-// NOTICIAS_* se reemplaza por una clave `noticias` en el dict que arma
-// dashboard.py (DATA.noticias), manteniendo el schema por nota:
+// ═══ NOTICIAS TAB (variante D "Terminal") — feed real ═══
+// Noticias reales: DATA.noticias (dashboard.py lee la tabla `noticias` de
+// p2p_normalized.db, poblada a diario por ingest_noticias.py — top-10 por
+// relevancia de 13 portales). Schema por nota:
 // {id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title, summary,
-//  detail, topics:[..], impact:'alto|medio|bajo', sourceNote}.
+//  detail, topics:[..], impact:'alto|medio|bajo', sourceNote, url}.
+// date/time son la fecha/hora de la corrida del scraper (hora Bolivia).
+// La AGENDA (NOTICIAS_EVENTS_BASE) sigue siendo placeholder — badge
+// "ejemplo" scopeado al KPI "Próximo hecho".
 (function(){
-  // ── Catálogos ──
+  // ── Catálogos (los 13 portales de noticias_ingest/scraper.py FUENTES;
+  //    las keys son los slugs de noticias_ingest/transform.py PORTAL_SLUGS) ──
   const NOTICIAS_PORTALS = {
-    eldeber:   { id:'eldeber',   name:'El Deber',       full:'El Deber · Santa Cruz',  color:'var(--src-eldeber)' },
-    correosur: { id:'correosur', name:'Correo del Sur', full:'Correo del Sur · Sucre', color:'var(--src-correosur)' },
-    unitel:    { id:'unitel',    name:'Unitel',         full:'Unitel · red nacional',  color:'var(--src-unitel)' },
-    larazon:   { id:'larazon',   name:'La Razón',       full:'La Razón · La Paz',      color:'var(--src-larazon)' },
-    bloomberg: { id:'bloomberg', name:'Bloomberg',      full:'Bloomberg Línea',        color:'var(--src-bloomberg)' }
+    eldeber:    { id:'eldeber',    name:'El Deber',       full:'El Deber · Santa Cruz',     color:'var(--src-eldeber)' },
+    correosur:  { id:'correosur',  name:'Correo del Sur', full:'Correo del Sur · Sucre',    color:'var(--src-correosur)' },
+    unitel:     { id:'unitel',     name:'Unitel',         full:'Unitel · red nacional',     color:'var(--src-unitel)' },
+    larazon:    { id:'larazon',    name:'La Razón',       full:'La Razón · La Paz',         color:'var(--src-larazon)' },
+    bloomberg:  { id:'bloomberg',  name:'Bloomberg',      full:'Bloomberg Línea',           color:'var(--src-bloomberg)' },
+    eju:        { id:'eju',        name:'Eju!',           full:'Eju! · Santa Cruz',         color:'var(--src-eju)' },
+    eldia:      { id:'eldia',      name:'El Día',         full:'El Día · Santa Cruz',       color:'var(--src-eldia)' },
+    brujula:    { id:'brujula',    name:'Brújula',        full:'Brújula Digital',           color:'var(--src-brujula)' },
+    fides:      { id:'fides',      name:'Fides',          full:'Agencia de Noticias Fides', color:'var(--src-fides)' },
+    erbol:      { id:'erbol',      name:'Erbol',          full:'Erbol · La Paz',            color:'var(--src-erbol)' },
+    urgente:    { id:'urgente',    name:'Urgente.bo',     full:'Urgente.bo · La Paz',       color:'var(--src-urgente)' },
+    opinion:    { id:'opinion',    name:'Opinión',        full:'Opinión · Cochabamba',      color:'var(--src-opinion)' },
+    lostiempos: { id:'lostiempos', name:'Los Tiempos',    full:'Los Tiempos · Cochabamba',  color:'var(--src-lostiempos)' }
   };
-  const NOTICIAS_PORTAL_ORDER = ['eldeber','correosur','unitel','larazon','bloomberg'];
+  const NOTICIAS_PORTAL_ORDER = ['eldeber','correosur','unitel','larazon','bloomberg','eju','eldia','brujula','fides','erbol','urgente','opinion','lostiempos'];
   const NOTICIAS_CATEGORIES = {
     economia:      { id:'economia',      name:'Economía',      color:'var(--cat-economia)' },
     hidrocarburos: { id:'hidrocarburos', name:'Hidrocarburos', color:'var(--cat-hidrocarburos)' },
@@ -3774,97 +3787,28 @@ window.addEventListener('popstate', function(){
   };
   const NOTICIAS_CAT_ORDER = ['economia','hidrocarburos','agro','mineria','mundo','politica'];
 
-  // ── Ancla temporal y rebase ──
-  // El dataset curado y la agenda están anclados a 2026-06-03 (fecha del
-  // mockup). En runtime se desplazan (hoy − ancla) días para que "hoy"
-  // siempre tenga notas y el slider de 30 días sea coherente.
-  const NT_ANCHOR = '2026-06-03';
+  // ── "Hoy" y helpers de fecha ──
   function ntParseD(d){ const p=d.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
   function ntISO(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
   function ntAddDays(iso,delta){ const p=iso.split('-').map(Number); return ntISO(new Date(p[0],p[1]-1,p[2]+delta)); }
-  const NT_TODAY = ntISO(new Date());
+  // "Hoy" del DATO: generated_at (UTC) convertido a hora Bolivia (UTC-4 fijo,
+  // sin DST). Determinista entre visitantes — un visitante en otra timezone ve
+  // la misma ventana de 30 días que uno en La Paz. Fallback: reloj del cliente.
+  const NT_TODAY = (function(){
+    try{
+      const g = Date.parse(meta.generated_at);
+      if(!isNaN(g)) return new Date(g - 4*3600000).toISOString().slice(0,10);
+    }catch(e){}
+    return ntISO(new Date());
+  })();
+  // Ancla y rebase SOLO para la agenda placeholder (NOTICIAS_EVENTS_BASE):
+  // sin esto sus fechas fijas de junio 2026 envejecen y el KPI "Próximo
+  // hecho" mostraría días negativos. Muere cuando la agenda sea real.
+  const NT_ANCHOR = '2026-06-03';
   const NT_DELTA = Math.round((ntParseD(NT_TODAY)-ntParseD(NT_ANCHOR))/86400000);
 
-  // ── 15 notas curadas (fechas ancladas; el rebase corre al final) ──
-  const NOTICIAS_CURADAS = [
-    { id:'n01', source:'bloomberg', category:'economia', date:'2026-06-03', time:'08:40',
-      title:'La prima del dólar paralelo en Bolivia supera el 40% pese a la intervención del BCB',
-      summary:'El USDT/BOB en el mercado P2P cotiza con una prima cercana al 43% sobre el tipo de cambio oficial de 6,96.',
-      detail:'Bloomberg Línea reporta que la brecha entre el dólar oficial y el paralelo se mantiene por encima del 40% ante la escasez de reservas líquidas. La autoridad monetaria amplió cupos de venta a importadores priorizados, pero la demanda sigue canalizándose al mercado informal de stablecoins.',
-      topics:['Dólar','Reservas'], impact:'alto', sourceNote:'Bloomberg Línea · Mercados' },
-    { id:'n02', source:'eldeber', category:'hidrocarburos', date:'2026-06-03', time:'07:15',
-      title:'YPFB reporta caída de producción de gas y una factura récord por importación de diésel',
-      summary:'La estatal admite que la subvención de combustibles vuelve a presionar las cuentas fiscales del segundo semestre.',
-      detail:'Según El Deber, la producción de gas natural retrocedió frente al año pasado, mientras la importación de diésel y gasolina se encarece por la escasez de divisas. El gasto en subvención se mantiene como una de las mayores presiones sobre el Tesoro General de la Nación.',
-      topics:['Gas','Subvención','Fiscal'], impact:'alto', sourceNote:'El Deber · Economía' },
-    { id:'n03', source:'larazon', category:'economia', date:'2026-06-02', time:'17:05',
-      title:'El INE confirma una inflación interanual de 20,5% a mayo, la más alta en dos décadas',
-      summary:'Alimentos y transporte concentran el mayor aporte al índice de precios al consumidor.',
-      detail:'La Razón informa que el Instituto Nacional de Estadística confirmó una inflación interanual de 20,5% a mayo, impulsada por los rubros de alimentos (+29%) y transporte (+23%). El dato presiona las tasas reales y el poder adquisitivo de los hogares.',
-      topics:['Inflación','Precios'], impact:'alto', sourceNote:'La Razón · Economía' },
-    { id:'n04', source:'unitel', category:'hidrocarburos', date:'2026-06-02', time:'16:20',
-      title:'Escasez de combustible: los surtidores racionan diésel en cuatro departamentos',
-      summary:'Largas filas de transportistas y productores se reportan en Santa Cruz, Cochabamba, Tarija y Beni.',
-      detail:'Unitel constató filas de varias horas en surtidores que aplican racionamiento de diésel. Gremios del transporte pesado advierten afectaciones a la cadena de abastecimiento y a la cosecha agrícola si la provisión no se normaliza en los próximos días.',
-      topics:['Diésel','Transporte'], impact:'alto', sourceNote:'Unitel · Nacional' },
-    { id:'n05', source:'correosur', category:'agro', date:'2026-06-02', time:'12:30',
-      title:'Productores de soya advierten pérdidas por falta de diésel en plena cosecha',
-      summary:'El sector agroindustrial cruceño estima riesgos en la campaña de verano por la escasez de combustible.',
-      detail:'Correo del Sur recoge la alerta de los productores de oleaginosas, que vinculan la falta de diésel con retrasos en la cosecha de soya. Los gremios piden priorizar la dotación al agro para no comprometer las exportaciones y el abastecimiento interno de aceite.',
-      topics:['Soya','Exportación'], impact:'medio', sourceNote:'Correo del Sur · Capitales' },
-    { id:'n06', source:'bloomberg', category:'mundo', date:'2026-06-01', time:'18:00',
-      title:'La Fed mantiene tasas y los mercados emergentes sienten la presión cambiaria',
-      summary:'El dólar fuerte complica el financiamiento externo de las economías de la región.',
-      detail:'Bloomberg señala que la decisión de la Reserva Federal de mantener tasas altas prolonga la presión sobre las monedas emergentes. Para países con spreads soberanos elevados como Bolivia, el costo de acceder a mercados externos se mantiene en niveles prohibitivos.',
-      topics:['Tasas','Global'], impact:'medio', sourceNote:'Bloomberg Línea · Mundo' },
-    { id:'n07', source:'eldeber', category:'economia', date:'2026-06-01', time:'11:40',
-      title:'Largas filas en bancos por el racionamiento de dólares para importadores',
-      summary:'Empresas denuncian demoras de semanas para acceder a divisas al tipo de cambio oficial.',
-      detail:'El Deber documenta la persistencia de filas en entidades financieras para la compra de dólares. Importadores de insumos y bienes de capital reportan que el cupo asignado no cubre la demanda, lo que empuja parte de las operaciones al mercado paralelo.',
-      topics:['Dólar','Importación'], impact:'alto', sourceNote:'El Deber · Economía' },
-    { id:'n08', source:'larazon', category:'politica', date:'2026-05-31', time:'19:20',
-      title:'La Asamblea debate la ley de créditos externos por USD 1.800 millones',
-      summary:'El oficialismo y la oposición tensionan la aprobación del financiamiento multilateral pendiente.',
-      detail:'La Razón informa que el debate en la Asamblea Legislativa se concentra en la aprobación de créditos externos clave para sostener las reservas y proyectos de inversión. El bloqueo legislativo de los préstamos es señalado por analistas como un factor de presión adicional sobre las divisas.',
-      topics:['Crédito','Asamblea'], impact:'medio', sourceNote:'La Razón · Política' },
-    { id:'n09', source:'unitel', category:'agro', date:'2026-05-30', time:'09:50',
-      title:'La sequía en el Chaco golpea la ganadería y eleva el precio de la carne',
-      summary:'Productores reportan mortandad de ganado y menor oferta en mercados del oriente.',
-      detail:'Unitel recorrió zonas del Chaco afectadas por la prolongada sequía, donde la falta de agua y forraje compromete el hato ganadero. El menor abastecimiento ya se refleja en alzas del precio de la carne en mercados de Santa Cruz y Tarija.',
-      topics:['Ganadería','Sequía'], impact:'medio', sourceNote:'Unitel · Regional' },
-    { id:'n10', source:'correosur', category:'mineria', date:'2026-05-29', time:'15:10',
-      title:'Cooperativas mineras de Potosí bloquean por el precio del oro y las regalías',
-      summary:'El conflicto interrumpe vías clave y reaviva el debate sobre la exportación de minerales.',
-      detail:'Correo del Sur reporta bloqueos de cooperativas mineras que exigen cambios en el régimen de regalías en un contexto de precios internacionales del oro al alza. El sector reclama mayor participación de los ingresos por exportación de minerales.',
-      topics:['Oro','Regalías'], impact:'medio', sourceNote:'Correo del Sur · Nacional' },
-    { id:'n11', source:'bloomberg', category:'economia', date:'2026-05-28', time:'10:05',
-      title:'El riesgo país de Bolivia cierra cerca de 1.900 pb, el más alto de la región',
-      summary:'El spread soberano se mantiene muy por encima del promedio latinoamericano de unos 450 pb.',
-      detail:'Bloomberg destaca que el EMBI de Bolivia se sostiene cerca de los 1.900 puntos básicos, reflejando la incertidumbre sobre el financiamiento externo y el calendario de vencimientos. El nivel encarece cualquier intento de retorno a los mercados internacionales de deuda.',
-      topics:['Riesgo País','Deuda'], impact:'alto', sourceNote:'Bloomberg Línea · Mercados' },
-    { id:'n12', source:'eldeber', category:'mundo', date:'2026-05-27', time:'08:20',
-      title:'Brasil y Argentina buscan ampliar el comercio bilateral con Bolivia en moneda local',
-      summary:'Las mesas técnicas exploran mecanismos de pago que reduzcan el uso de dólares.',
-      detail:'El Deber informa sobre conversaciones para ampliar el comercio regional usando monedas locales, una alternativa frente a la escasez de divisas. La medida apunta a sostener el intercambio de gas, granos y manufacturas con los socios del Mercosur.',
-      topics:['Comercio','Mercosur'], impact:'bajo', sourceNote:'El Deber · Mundo' },
-    { id:'n13', source:'larazon', category:'hidrocarburos', date:'2026-05-26', time:'16:45',
-      title:'Bolivia negocia nuevos contratos de exploración gasífera con empresas extranjeras',
-      summary:'El Gobierno busca revertir la declinación de reservas probadas de gas natural.',
-      detail:'La Razón reporta que YPFB avanza en rondas de negociación para atraer inversión en exploración de gas. El objetivo es frenar la caída de la producción que en la última década pasó de exportador neto a una balanza energética cada vez más ajustada.',
-      topics:['Gas','Inversión'], impact:'medio', sourceNote:'La Razón · Economía' },
-    { id:'n14', source:'correosur', category:'agro', date:'2026-05-24', time:'14:30',
-      title:'Exportadores de quinua de Oruro reportan caída de pedidos por la brecha cambiaria',
-      summary:'La incertidumbre del tipo de cambio complica los contratos en dólares del sector.',
-      detail:'Correo del Sur recoge la preocupación de los exportadores de quinua del altiplano, que vinculan la caída de pedidos con la dificultad para cerrar pagos en dólares. El sector pide reglas claras de acceso a divisas para sostener su competitividad externa.',
-      topics:['Quinua','Exportación'], impact:'bajo', sourceNote:'Correo del Sur · Capitales' },
-    { id:'n15', source:'unitel', category:'politica', date:'2026-05-23', time:'11:10',
-      title:'Gobierno y oposición tensionan el debate por el Presupuesto General 2026',
-      summary:'El tratamiento del PGE concentra la discusión sobre el déficit fiscal y la subvención.',
-      detail:'Unitel sigue el pulso político en torno al Presupuesto General del Estado, donde el déficit fiscal y el gasto en subvención de combustibles son los puntos más controvertidos. El desenlace condicionará la sostenibilidad de las cuentas públicas del año.',
-      topics:['Presupuesto','Fiscal'], impact:'medio', sourceNote:'Unitel · Política' }
-  ];
-
-  // ── Agenda: próximos hechos (inDays se computa en runtime, no se hardcodea) ──
+  // ── Agenda: próximos hechos — PLACEHOLDER (datos de ejemplo, badge en el
+  //    KPI "Próximo hecho"). inDays se computa en runtime, no se hardcodea. ──
   const NOTICIAS_EVENTS_BASE = [
     { id:'e1', category:'economia',      date:'2026-06-08', title:'INE publica el IPC de mayo (dato definitivo)' },
     { id:'e2', category:'hidrocarburos', date:'2026-06-10', title:'YPFB presenta su informe de producción y subvención' },
@@ -3873,220 +3817,11 @@ window.addEventListener('popstate', function(){
     { id:'e5', category:'mundo',         date:'2026-06-18', title:'Reunión del Mercosur: comercio en monedas locales' }
   ];
 
-  // ── Generador determinista de volumen (mulberry32, seed fijo): completa
-  //    cada uno de los 30 días anclados hasta ~10±2 notas ──
-  const NOTICIAS_GENERADAS = (function(){
-    function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
-    const rnd  = mulberry32(20260603);
-    const int  = (a,b)=>a+Math.floor(rnd()*(b-a+1));
-    const pick = arr=>arr[Math.floor(rnd()*arr.length)];
-    const bs   = v=>v.toFixed(2).replace('.',',');
-
-    const CIUDADES = ['Santa Cruz','La Paz','Cochabamba','El Alto','Tarija','Sucre','Oruro','Potosí','Trinidad'];
-    const FRONTERAS = ['Argentina','Perú','Chile','Brasil'];
-    const ZONAS_GAS = ['el Chaco tarijeño','el subandino sur','el norte de La Paz'];
-    const SECCION = { economia:'Economía', hidrocarburos:'Energía', agro:'Agro', mineria:'Minería', mundo:'Mundo', politica:'Política' };
-
-    // Series diarias: evolucionan con el índice del día (0 = hace 29 días … 29 = hoy)
-    const SERIES = [
-      { cat:'economia', srcs:['bloomberg','eldeber'], impact:'alto', topics:['Dólar','Reservas'],
-        mk:(di)=>{ const r=9.52+di*0.014+(rnd()-0.5)*0.06, p=(r/6.96-1)*100; return {
-          title:`El dólar paralelo opera en Bs ${bs(r)} y la prima llega al ${p.toFixed(0)}%`,
-          summary:`El USDT/BOB cotiza en torno a Bs ${bs(r)} en el mercado P2P, frente al oficial de 6,96.`,
-          detail:`Operadores del mercado paralelo reportan un tipo de cambio de referencia de Bs ${bs(r)} por dólar, una prima de ${p.toFixed(1)}% sobre el oficial. La oferta de divisas sigue limitada y parte de la demanda se canaliza vía stablecoins.` }; } },
-      { every:3, cat:'economia', srcs:['bloomberg'], impact:'medio', topics:['Riesgo País','Deuda'],
-        mk:(di)=>{ const pb=1845+di*2+int(-12,12); return {
-          title:`El riesgo país se mantiene en torno a ${pb.toLocaleString('es-BO')} puntos básicos`,
-          summary:`El spread soberano sigue entre los más altos de la región, lejos del promedio latinoamericano.`,
-          detail:`El EMBI de Bolivia cerró la jornada cerca de los ${pb.toLocaleString('es-BO')} puntos básicos. El nivel refleja la incertidumbre sobre el financiamiento externo y mantiene cerrado el acceso a los mercados internacionales de deuda.` }; } },
-      { cat:'hidrocarburos', srcs:['unitel','eldeber'], impact:'medio', topics:['Diésel','Transporte'],
-        mk:()=>{ const c=pick(CIUDADES), h=int(3,9); return {
-          title:`Filas de hasta ${h} horas por diésel en surtidores de ${c}`,
-          summary:`Transportistas y particulares reportan espera prolongada para cargar combustible.`,
-          detail:`En surtidores de ${c} se registraron filas de hasta ${h} horas para cargar diésel. Los administradores señalan que la provisión llega de forma irregular y se agota en pocas horas.` }; } }
-    ];
-
-    // Pool de plantillas: se reutilizan entre días con parámetros distintos
-    const POOL = [
-      { cat:'economia', srcs:['eldeber','larazon'], impact:'medio', topics:['Dólar','Banca'],
-        mk:()=>{ const m=int(4,10)*50; return {
-          title:`Bancos ajustan a USD ${m} semanales el cupo de retiro en dólares`,
-          summary:`Las entidades financieras vuelven a recalibrar los límites de retiro de moneda extranjera.`,
-          detail:`Clientes de varias entidades reportan que el cupo de retiro en ventanilla se fijó en torno a USD ${m} por semana. Los bancos atribuyen la medida a la menor disponibilidad de billetes físicos.` }; } },
-      { cat:'economia', srcs:['bloomberg','larazon'], impact:'medio', topics:['Banca'],
-        mk:()=>{ const p=int(3,8); return {
-          title:`Los depósitos en dólares caen ${p}% en el sistema financiero`,
-          summary:`La dolarización de ahorros fuera del sistema continúa, según cifras del regulador.`,
-          detail:`Los depósitos en moneda extranjera acumulan una caída de ${p}% en el año. Analistas vinculan el retroceso con la preferencia por mantener divisas fuera del sistema ante la brecha cambiaria.` }; } },
-      { cat:'economia', srcs:['larazon','bloomberg'], impact:'alto', topics:['Reservas'],
-        mk:()=>{ const m=int(3,8)*10; return {
-          title:`El BCB monetiza oro por USD ${m} millones para sostener las reservas`,
-          summary:`La autoridad monetaria recurre otra vez a las reservas en oro para obtener liquidez.`,
-          detail:`El Banco Central concretó una nueva operación con sus reservas en oro por unos USD ${m} millones. La entidad defiende la medida como un mecanismo para honrar deuda externa y sostener la provisión de divisas.` }; } },
-      { cat:'economia', srcs:['unitel','eldeber'], impact:'medio', topics:['Precios','Inflación'],
-        mk:()=>{ const c=pick(CIUDADES), m=int(4,9)*10; return {
-          title:`La canasta básica se encarece Bs ${m} en un mes en ${c}`,
-          summary:`Amas de casa y comerciantes confirman alzas sostenidas en alimentos esenciales.`,
-          detail:`Un sondeo en mercados de ${c} muestra que la canasta básica subió alrededor de Bs ${m} en las últimas cuatro semanas, con los mayores incrementos en aceite, arroz y carne.` }; } },
-      { cat:'economia', srcs:['eldeber','correosur'], impact:'bajo', topics:['Remesas','Dólar'],
-        mk:()=>{ const p=int(5,12); return {
-          title:`Las remesas crecen ${p}% interanual y alivian la escasez de divisas`,
-          summary:`Los envíos desde el exterior se consolidan como una fuente clave de dólares.`,
-          detail:`Las remesas familiares registraron un crecimiento interanual de ${p}%, con España, Estados Unidos y Chile como principales orígenes. El flujo ayuda a oxigenar el mercado cambiario.` }; } },
-      { cat:'economia', srcs:['larazon'], impact:'bajo', topics:['Banca','Tasas'],
-        mk:()=>{ const t=int(14,19); return {
-          title:`El crédito al consumo se encarece: tasas ya superan el ${t}% anual`,
-          summary:`El encarecimiento del fondeo se traslada a los préstamos de los hogares.`,
-          detail:`Entidades financieras ajustaron al alza las tasas de los créditos de consumo, que en algunos productos superan el ${t}% anual. El microcrédito muestra una tendencia similar.` }; } },
-      { cat:'hidrocarburos', srcs:['unitel','eldeber'], impact:'medio', topics:['Diésel'],
-        mk:()=>{ const c=pick(CIUDADES), n=int(15,40); return {
-          title:`YPFB despacha ${n} cisternas de diésel a ${c} para normalizar la provisión`,
-          summary:`La estatal asegura que el abastecimiento se regularizará en las próximas horas.`,
-          detail:`YPFB informó el despacho de ${n} cisternas de diésel hacia ${c} y pidió a la población no sobreabastecerse. Gremios del transporte se mantienen en emergencia hasta que la provisión sea regular.` }; } },
-      { cat:'hidrocarburos', srcs:['unitel','correosur'], impact:'medio', topics:['Combustible','Frontera'],
-        mk:()=>{ const m=int(8,25), f=pick(FRONTERAS); return {
-          title:`Incautan ${m} mil litros de combustible de contrabando en la frontera con ${f}`,
-          summary:`Operativos militares interceptan cargamentos que salían del país.`,
-          detail:`Un operativo en la frontera con ${f} permitió incautar cerca de ${m}.000 litros de combustible subvencionado que era sacado de contrabando. Las autoridades anuncian más controles en rutas alternas.` }; } },
-      { cat:'hidrocarburos', srcs:['larazon','eldeber'], impact:'bajo', topics:['GLP'],
-        mk:()=>{ const p=int(8,18); return {
-          title:`La demanda de GLP sube ${p}% por el invierno y YPFB refuerza la distribución`,
-          summary:`La estatal garantiza el abastecimiento de garrafas pese al pico estacional.`,
-          detail:`Con la llegada del invierno, la demanda de GLP creció alrededor de ${p}%. YPFB amplió los puntos de venta directa y descartó un desabastecimiento del energético.` }; } },
-      { cat:'hidrocarburos', srcs:['eldeber','larazon'], impact:'alto', topics:['Subvención','Fiscal'],
-        mk:()=>{ const m=int(6,9)*100; return {
-          title:`La subvención a combustibles ya supera los USD ${m} millones en el año`,
-          summary:`El costo fiscal de mantener los precios congelados sigue creciendo.`,
-          detail:`Según datos oficiales, el gasto en subvención de combustibles acumula más de USD ${m} millones en lo que va del año, una de las mayores presiones sobre el Tesoro y las divisas.` }; } },
-      { cat:'hidrocarburos', srcs:['larazon','bloomberg'], impact:'medio', topics:['Gas','Inversión'],
-        mk:()=>{ const z=pick(ZONAS_GAS); return {
-          title:`Avanza la negociación de un nuevo contrato de exploración gasífera en ${z}`,
-          summary:`YPFB busca socios para revertir la declinación de las reservas de gas.`,
-          detail:`La estatal petrolera informó avances en la negociación de un contrato de exploración en ${z}. El objetivo es incorporar reservas frente a la caída sostenida de la producción.` }; } },
-      { cat:'agro', srcs:['eldeber','bloomberg'], impact:'medio', topics:['Soya','Exportación'],
-        mk:()=>{ const p=int(5,15); return {
-          title:`Las exportaciones de soya caen ${p}% por la falta de diésel y los bloqueos`,
-          summary:`La agroindustria advierte que la logística encarece la campaña.`,
-          detail:`Los despachos de soya y derivados retrocedieron ${p}% frente al año pasado. El sector atribuye la caída a la escasez de diésel, los bloqueos intermitentes y la menor molienda.` }; } },
-      { cat:'agro', srcs:['unitel','correosur'], impact:'medio', topics:['Precios'],
-        mk:()=>{ const c=pick(CIUDADES), v=int(18,24); return {
-          title:`El kilo de pollo sube a Bs ${v} en mercados de ${c}`,
-          summary:`Comerciantes atribuyen el alza al costo del alimento balanceado y la logística.`,
-          detail:`En mercados de ${c} el kilo de pollo se vende hasta en Bs ${v}. Avicultores señalan que el encarecimiento del maíz, la soya y el transporte presiona los precios al consumidor.` }; } },
-      { cat:'agro', srcs:['correosur','unitel'], impact:'medio', topics:['Clima'],
-        mk:()=>{ const h=int(10,40)/10; return {
-          title:`Heladas afectan ${bs(h)} mil hectáreas de cultivos en el altiplano`,
-          summary:`Productores de papa y quinua piden apoyo ante las pérdidas por el frío.`,
-          detail:`Las heladas de los últimos días dañaron alrededor de ${bs(h)} mil hectáreas de cultivos en municipios del altiplano. Los gobiernos locales evalúan declaratorias de emergencia agrícola.` }; } },
-      { cat:'agro', srcs:['eldeber'], impact:'bajo', topics:['Arroz','Exportación'],
-        mk:()=>({
-          title:'Arroceros piden liberar la exportación de excedentes tras una buena cosecha',
-          summary:'El sector estima un superávit que podría venderse a mercados vecinos.',
-          detail:'Productores de arroz solicitan certificados de exportación para colocar excedentes en países vecinos. Aseguran que el mercado interno está abastecido y que la venta externa daría liquidez al sector.' }) },
-      { cat:'mineria', srcs:['bloomberg','correosur'], impact:'medio', topics:['Oro'],
-        mk:()=>({
-          title:'El oro marca un nuevo máximo y dinamiza la actividad de las cooperativas',
-          summary:'El precio internacional vuelve a batir récords e impulsa la producción aurífera.',
-          detail:'La cotización internacional del oro alcanzó un nuevo máximo histórico. En Bolivia, las cooperativas auríferas amplían frentes de trabajo, mientras persiste el debate sobre regalías y control de la comercialización.' }) },
-      { cat:'mineria', srcs:['bloomberg','larazon'], impact:'bajo', topics:['Zinc','Exportación'],
-        mk:()=>{ const p=int(3,12); return {
-          title:`Las exportaciones de zinc suben ${p}% por mejores precios internacionales`,
-          summary:`La minería mediana aprovecha la recuperación de los metales industriales.`,
-          detail:`El valor exportado de zinc creció ${p}% interanual, impulsado por los precios internacionales. El mineral se mantiene entre los principales generadores de divisas del país.` }; } },
-      { cat:'mineria', srcs:['correosur'], impact:'bajo', topics:['Regalías'],
-        mk:()=>{ const p=int(10,25); return {
-          title:`Las regalías mineras de Potosí crecen ${p}% interanual`,
-          summary:`Los buenos precios de los minerales mejoran los ingresos departamentales.`,
-          detail:`La gobernación de Potosí reporta un incremento de ${p}% en las regalías mineras respecto al año pasado, explicado por las cotizaciones del zinc, la plata y el oro.` }; } },
-      { cat:'mineria', srcs:['larazon','bloomberg'], impact:'medio', topics:['Litio'],
-        mk:()=>({
-          title:'El programa de litio en Uyuni suma avances pero la producción sigue lejos de la meta',
-          summary:'Los convenios con socios extranjeros avanzan a ritmo más lento de lo previsto.',
-          detail:'Autoridades informaron avances en los convenios de extracción directa de litio en el salar de Uyuni. Analistas advierten que la producción comercial todavía está lejos de los volúmenes comprometidos.' }) },
-      { cat:'mundo', srcs:['bloomberg'], impact:'bajo', topics:['Petróleo'],
-        mk:()=>{ const v=int(78,88); return {
-          title:`El Brent opera en torno a USD ${v} por barril`,
-          summary:`El precio del crudo marca el costo de la factura boliviana de importación.`,
-          detail:`El petróleo Brent cotizó cerca de USD ${v} por barril. Para Bolivia, importador neto de diésel y gasolina, el nivel del crudo define buena parte del costo de la subvención.` }; } },
-      { cat:'mundo', srcs:['bloomberg','eldeber'], impact:'bajo', topics:['Comercio'],
-        mk:()=>({
-          title:'El real brasileño se fortalece y encarece las importaciones desde Brasil',
-          summary:'El tipo de cambio regional mueve el comercio de frontera.',
-          detail:'La apreciación del real frente al dólar encarece los productos brasileños que ingresan al país. Comerciantes de frontera reportan menor movimiento en las compras al por mayor.' }) },
-      { cat:'mundo', srcs:['bloomberg'], impact:'medio', topics:['Tasas','Global'],
-        mk:()=>({
-          title:'Mercados emergentes atentos a las señales de la Fed sobre recortes de tasas',
-          summary:'El costo del financiamiento externo sigue atado a la política monetaria de EE.UU.',
-          detail:'Los inversores reposicionan sus carteras a la espera de definiciones de la Reserva Federal. Para economías con spreads altos como Bolivia, cualquier alivio en las tasas globales llega amortiguado.' }) },
-      { cat:'mundo', srcs:['eldeber','larazon'], impact:'bajo', topics:['Comercio','Frontera'],
-        mk:()=>({
-          title:'El comercio fronterizo con Argentina se reactiva por el diferencial cambiario',
-          summary:'Compradores cruzan la frontera en busca de precios más convenientes.',
-          detail:'El movimiento comercial en pasos fronterizos con Argentina volvió a crecer, impulsado por el diferencial de precios y tipo de cambio. Los gremios locales piden controles para proteger al comercio formal.' }) },
-      { cat:'politica', srcs:['larazon','unitel'], impact:'medio', topics:['Crédito','Asamblea'],
-        mk:()=>{ const m=int(3,9)*100; return {
-          title:`La Asamblea posterga el tratamiento de créditos externos por USD ${m} millones`,
-          summary:`El financiamiento multilateral sigue trabado en el Legislativo.`,
-          detail:`La sesión prevista para tratar créditos externos por unos USD ${m} millones volvió a postergarse por falta de acuerdos. Analistas advierten que la demora agrava la escasez de divisas.` }; } },
-      { cat:'politica', srcs:['unitel'], impact:'medio', topics:['Transporte','Diésel'],
-        mk:()=>({
-          title:'Gobierno y transportistas instalan una mesa de diálogo por el abastecimiento de diésel',
-          summary:'El sector condiciona la suspensión de medidas de presión a resultados concretos.',
-          detail:'Representantes del transporte pesado y del Ejecutivo instalaron una mesa técnica para garantizar la provisión de diésel. Los gremios advierten que retomarán las movilizaciones si no hay resultados.' }) },
-      { cat:'politica', srcs:['larazon','eldeber'], impact:'alto', topics:['Dólar','Política'],
-        mk:()=>({
-          title:'El Ejecutivo descarta modificar el tipo de cambio oficial de Bs 6,96',
-          summary:'El Gobierno ratifica la política cambiaria pese a la brecha con el paralelo.',
-          detail:'Voceros oficiales reiteraron que no está en evaluación un ajuste del tipo de cambio oficial. Economistas insisten en que la brecha con el paralelo seguirá presionando precios e importaciones.' }) },
-      { cat:'politica', srcs:['unitel','larazon'], impact:'medio', topics:['Reservas','Asamblea'],
-        mk:()=>({
-          title:'Comisión legislativa pide un informe al BCB sobre el nivel de las reservas',
-          summary:'Legisladores buscan precisiones sobre la posición de divisas y oro del país.',
-          detail:'La Comisión de Planificación solicitó al Banco Central un informe detallado sobre las reservas internacionales. El requerimiento se suma al debate por el uso del oro monetario.' }) }
-    ];
-
-    // Notas curadas ya existentes por día (sobre fechas ancladas)
-    const curated = {}; NOTICIAS_CURADAS.forEach(n=>{ curated[n.date]=(curated[n.date]||0)+1; });
-
-    const gen = [];
-    for (let di=0; di<30; di++){
-      const date = ntAddDays(NT_ANCHOR, di-29);
-      const target = int(8,12);
-      let need = target - (curated[date]||0);
-      const dayItems = [];
-      const usedPool = new Set();
-      SERIES.forEach(s=>{
-        if (need<=0) return;
-        if (s.every && di % s.every !== 0) return;
-        dayItems.push({ tpl:s, body:s.mk(di) }); need--;
-      });
-      let guard = 0;
-      while (need>0 && guard++<200){
-        const ti = int(0, POOL.length-1);
-        if (usedPool.has(ti)) continue;
-        usedPool.add(ti);
-        const t = POOL[ti];
-        dayItems.push({ tpl:t, body:t.mk(di) }); need--;
-      }
-      dayItems.forEach((it,i)=>{
-        const src = pick(it.tpl.srcs);
-        const hh = int(6,21), mm = int(0,11)*5;
-        gen.push({
-          id:'g'+date.replace(/-/g,'')+'x'+i,
-          source:src, category:it.tpl.cat, date,
-          time:String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0'),
-          title:it.body.title, summary:it.body.summary, detail:it.body.detail,
-          topics:it.tpl.topics, impact:it.tpl.impact,
-          sourceNote:NOTICIAS_PORTALS[src].name+' · '+SECCION[it.tpl.cat]
-        });
-      });
-    }
-    return gen;
-  })();
-
-  // ── Rebase temporal: curadas + generadas + agenda desplazadas a "hoy" ──
-  const NOTICIAS_NEWS = NOTICIAS_CURADAS.concat(NOTICIAS_GENERADAS)
-    .map(n=>Object.assign({}, n, { date: ntAddDays(n.date, NT_DELTA) }));
+  // ── Feed real: DATA.noticias (últimos 30 días; la ventana la garantiza la
+  //    query de dashboard.py). Default graceful estilo EMBI: sin clave o
+  //    tabla vacía → tab con estado vacío sano, no rompe. ──
+  const NOTICIAS_NEWS = (typeof DATA==='object' && Array.isArray(DATA.noticias)) ? DATA.noticias : [];
+  // Agenda placeholder rebasada a "hoy" para que no envejezca.
   const NOTICIAS_EVENTS = NOTICIAS_EVENTS_BASE.map(e=>{
     const date = ntAddDays(e.date, NT_DELTA);
     return Object.assign({}, e, { date, inDays: Math.round((ntParseD(date)-ntParseD(NT_TODAY))/86400000) });
@@ -4131,7 +3866,8 @@ window.addEventListener('popstate', function(){
 
   // ── Átomos de markup ──
   function ntSrcTag(id){
-    const s = NOTICIAS_PORTALS[id];
+    // Fallback defensivo: un slug fuera del catálogo no debe tirar la tabla.
+    const s = NOTICIAS_PORTALS[id] || { name:id, color:'var(--text-muted)' };
     return '<span class="nt-src" style="--nt-c:'+s.color+'"><span class="sdot"></span>'+ntEsc(s.name)+'</span>';
   }
   function ntCatTag(id){
@@ -4141,7 +3877,7 @@ window.addEventListener('popstate', function(){
   function ntImpact(level){
     const n = level==='alto'?3:level==='medio'?2:1;
     let bars=''; for(let i=0;i<3;i++) bars+='<i class="'+(i<n?'on':'')+'"></i>';
-    return '<span class="nt-impact '+level+'"><span class="ibar">'+bars+'</span>'+level+'</span>';
+    return '<span class="nt-impact '+ntEsc(level)+'"><span class="ibar">'+bars+'</span>'+ntEsc(level)+'</span>';
   }
 
   // ── Filtro intersectado (categoría ∩ guardadas ∩ día), orden fijo desc ──
@@ -4162,10 +3898,10 @@ window.addEventListener('popstate', function(){
     const alto=NOTICIAS_NEWS.filter(n=>n.impact==='alto').length;
     const ev=NOTICIAS_EVENTS[0];
     el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid fb-kpi-grid--5">'
-      + kpi('Noticias hoy', String(hoy.length), lastTime?('actualizado '+lastTime):'sin notas hoy', NT_KICON.hoy, null)
+      + kpi('Noticias hoy', String(hoy.length), lastTime?('actualizado '+ntEsc(lastTime)):'sin notas hoy', NT_KICON.hoy, null)
       + kpi('Portales', String(NOTICIAS_PORTAL_ORDER.length), 'medios monitoreados', NT_KICON.medios, null)
       + kpi('Impacto alto', String(alto), 'marcadas como relevantes', NT_KICON.impacto, null)
-      + kpi('Próximo hecho', '+'+ev.inDays+'<span class="unit">d</span>', NOTICIAS_CATEGORIES[ev.category].name+' · '+ntFmtDay(ev.date), NT_KICON.evento, null)
+      + kpi('Próximo hecho <span class="nt-badge-demo">ejemplo</span>', '+'+ev.inDays+'<span class="unit">d</span>', NOTICIAS_CATEGORIES[ev.category].name+' · '+ntFmtDay(ev.date), NT_KICON.evento, null)
       + kpi('Guardadas', String(ntState.saved.size), 'en esta sesión', NT_KICON.guardadas, null)
       + '</div></div>';
   }
@@ -4230,9 +3966,9 @@ window.addEventListener('popstate', function(){
     tbody.innerHTML = visible.map(n=>{
       const isRead=ntState.read.has(n.id), isSaved=ntState.saved.has(n.id), isOpen=ntState.expanded===n.id;
       const topic = n.topics && n.topics.length ? '<span class="nt-topic">'+ntEsc(n.topics[0])+'</span>' : '';
-      let html = '<tr class="nt-row'+(isRead?' is-read':'')+'" data-id="'+n.id+'">'
+      let html = '<tr class="nt-row'+(isRead?' is-read':'')+'" data-id="'+ntEsc(n.id)+'">'
         + '<td class="nt-fecha">'+ntFmtDay(n.date)+'</td>'
-        + '<td class="nt-hora">'+n.time+'</td>'
+        + '<td class="nt-hora">'+ntEsc(n.time)+'</td>'
         + '<td>'+ntSrcTag(n.source)+'</td>'
         + '<td class="nt-title">'+ntEsc(n.title)+'</td>'
         + '<td class="nt-cats"><div class="nt-catwrap">'+ntCatTag(n.category)+topic+'</div></td>'
@@ -4243,11 +3979,13 @@ window.addEventListener('popstate', function(){
         + '<button type="button" class="nt-act icon" data-act="toggle" title="'+(isOpen?'Cerrar detalle':'Ver detalle')+'">'+ntIconChevron(isOpen)+'</button>'
         + '</div></td></tr>';
       if(isOpen){
+        const portal = NOTICIAS_PORTALS[n.source] || { full:n.source };
         html += '<tr class="nt-detail-row"><td colspan="7"><div class="nt-detail">'
           + ntEsc(n.detail)
           + '<div class="nt-detail-meta">'
-          + '<span>Fuente: <b>'+ntEsc(NOTICIAS_PORTALS[n.source].full)+'</b></span>'
+          + '<span>Fuente: <b>'+ntEsc(portal.full)+'</b></span>'
           + '<span>Ref: <b>'+ntEsc(n.sourceNote)+'</b></span>'
+          + (n.url && /^https?:\/\//i.test(n.url) ? '<span><a href="'+ntEsc(n.url)+'" target="_blank" rel="noopener noreferrer">Ver nota original ↗</a></span>' : '')
           + '</div></div></td></tr>';
       }
       return html;
@@ -4296,7 +4034,7 @@ window.addEventListener('popstate', function(){
     const sf=document.getElementById('ntScaleFrom'), st=document.getElementById('ntScaleTo');
     if(sf) sf.textContent = ntFmtDay(NT_DAYS[0]);
     if(st) st.textContent = 'hoy · '+ntFmtDay(NT_TODAY);
-    // Stamp del subheader: hora de la nota más reciente de hoy (dataset placeholder).
+    // Stamp del subheader: hora de la nota más reciente de hoy (feed real).
     const stamp=document.getElementById('ntUpdateStamp');
     if(stamp){
       const hoy=NOTICIAS_NEWS.filter(n=>n.date===NT_TODAY);
