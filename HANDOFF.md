@@ -24,6 +24,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
+| `ingest_noticias.py` | Código en main — **cron VPS pendiente (FASE B, requiere autorización)** | (planificado) diario 11:30 UTC (07:30 BO) — ver pendiente en §6 (colisión con `ine_ipp`) | `HC_NOTICIAS` (cableado en código; UUID se activa en FASE B) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -86,6 +87,13 @@ de las filas verdes.
   Catálogo de cuadros y mapeo host/token en `config.INE_CUADROS`. Snapshot
   XLSX y estado por cuadro en `/opt/binance_p2p/ine_audit/{pib,ipc,ipp}/`
   (fuera del repo).
+- **Noticias (scraper de prensa)**: `ingest_noticias.py` (CLI, mismas
+  convenciones que EMBI/INE) sobre el módulo `noticias_ingest/`
+  (scraper + scoring TF-IDF portado de `research-star/boletines`;
+  fuentes/keywords en `noticias_ingest/scraper.py`, mapeos al schema del
+  frontend en `noticias_ingest/transform.py`, modelo committeado en
+  `noticias_ingest/modelo_relevancia.pkl` ~722 KB). Runtime (caché de URLs
+  TTL 7d + CSV de diagnóstico) en `noticias_ingest/data/` (gitignored).
 - **Constantes compartidas**: `config.py`.
 
 ### Preview local (frontend)
@@ -284,35 +292,52 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   `feat/noticias-tab`: botón nav `data-tab="noticias"`, contenedor
   `#tab-noticias`, lazy render `window.renderNoticias()` (patrón
   renderBbv/renderGuide).
-- **Datos placeholder embebidos** (precedente BBV: consts inline en el JS
-  del template, namespace `NOTICIAS_*`): 5 portales de prensa, 6
-  categorías, 15 notas curadas + generador determinista de volumen
-  (mulberry32, seed fijo) que completa ~10±2 notas/día en los últimos
-  30 días. Contenido ILUSTRATIVO — badge "Datos de ejemplo" en el
-  subheader (un solo nodo `.nt-badge-demo`, trivial de quitar) +
-  disclaimer al pie de la sección.
-- **Rebase temporal**: el dataset está anclado a 2026-06-03 (fecha del
-  mockup) y en runtime se desplaza (hoy − ancla) días, de modo que "hoy"
-  siempre tiene notas y el slider de 30 días es coherente. El `inDays`
-  de la agenda (KPI "Próximo hecho") se computa, no se hardcodea.
+- **Feed real desde `feat/noticias-real`**: las notas vienen de
+  `DATA.noticias` (dashboard.py lee los últimos 30 días — ventana
+  exacta del slider — de la tabla `noticias` de `p2p_normalized.db`,
+  patrón graceful dpf/embi: tabla ausente → `[]` → estado vacío sano).
+  La tabla la puebla `ingest_noticias.py` (1 corrida/día): scrape de 13
+  portales → scoring TF-IDF 0-10 → corte editorial `puntaje >= 6.7` →
+  dedupe fuzzy inter-día (7 días, umbral 0.70) → top-10 desc → INSERT
+  OR IGNORE (PK = hash del link normalizado). DDL espejado en
+  `scripts/migrations/0002_noticias.sql`.
+- Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
+  `noticias_ingest/transform.py`; tokens `--src-*` en ambos THEMES) y 6
+  categorías (mapeo 11 temas de boletines → 6 categorías en
+  `transform.TEMA_CATEGORIA`; "mundo" hoy no recibe notas — el scraper
+  solo cubre prensa boliviana). `impact` por bandas de puntaje:
+  ≥8 alto · 7–7.99 medio · resto bajo. `ntSrcTag` tiene fallback
+  defensivo para slugs fuera del catálogo.
+- **"Hoy" del tab** (`NT_TODAY`): derivado de `meta.generated_at` (UTC)
+  convertido a hora Bolivia (UTC-4 fijo) — determinista entre visitantes;
+  fallback al reloj del cliente. `date`/`time` de cada nota son la
+  fecha/hora de la corrida del scraper en hora Bolivia (una corrida
+  diaria ⇒ todas las notas del día comparten hora; honesto, no se
+  inventan horas de publicación).
+- **Agenda placeholder**: `NOTICIAS_EVENTS_BASE` sigue siendo dato de
+  ejemplo; el badge `.nt-badge-demo` quedó scopeado SOLO al KPI
+  "Próximo hecho" (las noticias reales no llevan badge). El rebase
+  `NT_ANCHOR`/`NT_DELTA` sobrevive únicamente para que la agenda no
+  envejezca; muere cuando la agenda sea real.
 - **Interacciones** (estado en memoria, sin persistencia): chips de
   categoría multi-select con "Todas" como toggle total y conteos del
   dataset completo; toggle "Solo guardadas"; slider de 30 días (burbuja
   con clamp, marcas decorativas por día con nota, HOY outline, flechas
   ±1 día, botón "Todos los días"); tabla densa de 7 columnas con thead
   sticky y scroll interno (max-height 520px, scrollbar visible);
-  acordeón de detalle de fila única; acciones por fila (leído /
-  guardado / detalle) vía event delegation. Los tres filtros se
-  intersectan. Orden fijo desc por `date+time` — **sin sort
-  interactivo** (decisión cerrada; la tabla no usa `.fb-rank-table` ni
-  `data-sort-key` justamente para no heredar el sort genérico ni chocar
-  con el sort propio de BBV).
-- **Schema por nota** (el que deberá respetar la fuente real):
+  acordeón de detalle de fila única con link "Ver nota original" al
+  artículo del portal; acciones por fila (leído / guardado / detalle)
+  vía event delegation. Los tres filtros se intersectan. Orden fijo
+  desc por `date+time` — **sin sort interactivo** (decisión cerrada; la
+  tabla no usa `.fb-rank-table` ni `data-sort-key` justamente para no
+  heredar el sort genérico ni chocar con el sort propio de BBV).
+- **Schema por nota** (contrato backend → frontend):
   `{id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title,
-  summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote}`.
-- **Migración futura**: cuando exista el feed real, el namespace
-  `NOTICIAS_*` se reemplaza por una clave `noticias` en el dict que arma
-  `dashboard.py` (`DATA.noticias`), manteniendo el schema.
+  summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote,
+  url}` (`url` se agregó para el link al artículo original; `summary`
+  hoy no se renderiza — se persiste para uso futuro). `detail` es un
+  extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio
+  público).
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).
@@ -498,6 +523,22 @@ las referencias existentes a §6–§8.
       pero el ingest quedó **PAUSADO por decisión estratégica** (lag
       estructural del XLSX del INE, ver §8). Reanudar = 5 líneas de cron +
       env var `HC_INE_PIB` (pausado en healthchecks.io) + primer run manual.
+- [ ] **Deploy tab Noticias — FASE B (requiere autorización explícita de
+      Diego post-merge)** — código en main; en el VPS falta: (1) `git pull`;
+      (2) `pip install` de las deps nuevas en `.venv` (feedparser, bs4,
+      trafilatura, rapidfuzz, scikit-learn, cloudscraper, curl_cffi,
+      googlenewsdecoder — bs4/lxml ya estaban pendientes); (3) migración
+      `scripts/migrations/0002_noticias.sql` (o dejar que el primer run
+      cree la tabla); (4) corrida manual de prueba + verificar filas;
+      (5) cron diario — el brief pide 11:30 UTC (07:30 BO) pero **colisiona
+      con `ine_ipp` (`30 5,11,17,23 1-10 * *`) los días 1-10 de cada mes**;
+      propuesta: 11:45 UTC, decide el IJ; (6) UUID `HC_NOTICIAS` en
+      `/opt/binance_p2p/.env` (el ping ya está cableado en el código,
+      arranca solo). Nota: la cache key del publish (`n_snap, n_rows,
+      embi_max_fecha`) NO incluye noticias — las notas del día entran al
+      próximo republish disparado por snapshots de ads (~12-22 min tras el
+      cron); si se quiere garantía, extender la key con
+      `max(date)` de `noticias` (precedente exacto: `embi_max_fecha`).
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
@@ -565,7 +606,7 @@ capa de tokens al principio del `<style>`.
 | Chart DPF scatter | `--chart-dpf-bancos-multiples/microfinanzas/bancos-pyme/ent-vivienda/cooperativas/ifd` (6 categóricos) | sí | JS `THEMES.paper/.slate` |
 | Chart spread evo P2P | `--chart-spread-line` (color de la línea única) | sí | JS `THEMES.paper/.slate` |
 | Chart markers (shared) | `--chart-marker-outline` (halo decorativo α=.6, color = bg-secondary del tema) | sí | JS `THEMES.paper/.slate` |
-| Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (5 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
+| Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (13 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
 
 ### Tech debt residual
 
@@ -632,14 +673,14 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
   - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
     viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
     `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
-    encuentra. Hoy en `THEMES` (43 tokens chart/tooltip/noticias):
+    encuentra. Hoy en `THEMES` (51 tokens chart/tooltip/noticias):
     - Tooltip: `--tooltip-bg`.
     - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`.
     - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
     - DPF scatter: 6 `--chart-dpf-*`.
     - Spread evo P2P: `--chart-spread-line`.
     - Markers (shared): `--chart-marker-outline`.
-    - Noticias: 6 `--cat-*`, 5 `--src-*`, 3 `--impact-*`. Caso especial:
+    - Noticias: 6 `--cat-*`, 13 `--src-*`, 3 `--impact-*`. Caso especial:
       los consume **CSS** (reglas `.nt-*` + custom prop `--nt-c` inline),
       no `cssVar()`, pero viven en `THEMES` igual — el inline style de
       `documentElement` hereda hacia abajo, así light y dark quedan en
