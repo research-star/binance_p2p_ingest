@@ -24,7 +24,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
-| `ingest_noticias.py` | Código en main — **cron VPS pendiente (FASE B, requiere autorización)** | (planificado) diario 11:30 UTC (07:30 BO) — ver pendiente en §6 (colisión con `ine_ipp`) | `HC_NOTICIAS` (cableado en código; UUID se activa en FASE B) |
+| `ingest_noticias.py` | VPS cron user `binance` | `45 11 * * *` UTC (07:45 BO, diario 7/7; corrido de 11:30 para no colisionar con `ine_ipp` días 1-10) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -382,22 +382,25 @@ Features clave:
 - venv: `/opt/binance_p2p/.venv/`
 - DB: `/opt/binance_p2p/p2p_normalized.db`
 - Snapshots crudos: `/opt/binance_p2p/snapshots/YYYY-MM-DD/`
-- Logs: `/var/log/binance_p2p/{ingest.log, ingest.err, normalize.log, watchdog.log, bcb_ref.log, publish_dashboard.log}`
+- Logs: `/var/log/binance_p2p/{ingest.log, ingest.err, normalize.log, watchdog.log, bcb_ref.log, dashboard.log, embi.log, ine_ipc.log, ine_ipp.log, noticias.log}`
 - Env vars (incluye `HC_*`): `/opt/binance_p2p/.env`
 
 **systemd unit:** `binance-ingest.service` (`Type=simple`, `Restart=on-failure`,
 `RestartSec=30`). Append a `ingest.log`/`ingest.err`.
 
-**Cron del user `binance`:**
+**Cron del user `binance`** (sincronizado con `crontab -l` real el 2026-06-11;
+los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 ```
-*/5  * * * *       cd /opt/binance_p2p && .venv/bin/python normalize.py
-*/5  * * * *       cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
-*/12 * * * *       cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py
-5,35 12-15 * * 1-5 cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh \
-                       >> /var/log/binance_p2p/bcb_ref.log 2>&1
-0    10,22 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_embi.py \
-                       >> /var/log/binance_p2p/embi.log 2>&1
+*/5  * * * *        cd /opt/binance_p2p && .venv/bin/python normalize.py   (+ curl $HC_NORMALIZE)
+*/5  * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
+*/12 * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py   (+ curl $HC_DASHBOARD)
+5,35 12-15 * * 1-5  cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh
+0    10,22 * * *    cd /opt/binance_p2p && .venv/bin/python ingest_embi.py
+15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
+30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
+45   11 * * *       cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
 ```
+(Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
 
 **Auto-publish workflow** (`.github/workflows/auto-publish.yml`):
 - Dispara en cada push a `main`, con `paths-ignore: bcb_referencial.json`.
@@ -411,6 +414,7 @@ Features clave:
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
+- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body; fail-closed si el modelo TF-IDF no carga). UUID en `.env` (activo desde 2026-06-11; ping de prueba OK). Cadencia diaria → period 24h sugerido.
 
 **SSH desde laptop:**
 ```bash
@@ -523,22 +527,24 @@ las referencias existentes a §6–§8.
       pero el ingest quedó **PAUSADO por decisión estratégica** (lag
       estructural del XLSX del INE, ver §8). Reanudar = 5 líneas de cron +
       env var `HC_INE_PIB` (pausado en healthchecks.io) + primer run manual.
-- [ ] **Deploy tab Noticias — FASE B (requiere autorización explícita de
-      Diego post-merge)** — código en main; en el VPS falta: (1) `git pull`;
-      (2) `pip install` de las deps nuevas en `.venv` (feedparser, bs4,
-      trafilatura, rapidfuzz, scikit-learn, cloudscraper, curl_cffi,
-      googlenewsdecoder — bs4/lxml ya estaban pendientes); (3) migración
-      `scripts/migrations/0002_noticias.sql` (o dejar que el primer run
-      cree la tabla); (4) corrida manual de prueba + verificar filas;
-      (5) cron diario — el brief pide 11:30 UTC (07:30 BO) pero **colisiona
-      con `ine_ipp` (`30 5,11,17,23 1-10 * *`) los días 1-10 de cada mes**;
-      propuesta: 11:45 UTC, decide el IJ; (6) UUID `HC_NOTICIAS` en
-      `/opt/binance_p2p/.env` (el ping ya está cableado en el código,
-      arranca solo). Nota: la cache key del publish (`n_snap, n_rows,
+- [x] **Deploy tab Noticias — FASE B** — HECHO (2026-06-11, autorizado por
+      Diego; PR #50 mergeado): deps instaladas en `.venv` (sklearn **pineado
+      1.8.x en el venv** — 1.9 cargaba el pkl con `InconsistentVersionWarning`;
+      requirements acota `<1.9`), migración `0002_noticias.sql` aplicada,
+      corrida de prueba OK (95 candidatos, 10 filas insertadas, 41 s,
+      `scoring=tfidf`), cron `45 11 * * *` UTC instalado (11:45, corrido de
+      11:30 por colisión con `ine_ipp` días 1-10; backup del crontab previo
+      en `/tmp/crontab.pre-noticias.bak` del VPS), `HC_NOTICIAS` en `.env`
+      con ping de prueba OK. Addendum fail-closed (sin modelo TF-IDF → fail
+      + exit 1, sin scrape) entregado en PR aparte post-deploy.
+      **Caveat vigente**: la cache key del publish (`n_snap, n_rows,
       embi_max_fecha`) NO incluye noticias — las notas del día entran al
       próximo republish disparado por snapshots de ads (~12-22 min tras el
-      cron); si se quiere garantía, extender la key con
-      `max(date)` de `noticias` (precedente exacto: `embi_max_fecha`).
+      cron); si se quiere garantía, extender la key con `max(date)` de
+      `noticias` (precedente exacto: `embi_max_fecha`).
+      **Watch-item**: La Razón falló su primer scrape desde la IP del VPS
+      (12/13 portales OK) — puede ser transitorio o bloqueo a IP datacenter;
+      vigilar los primeros días en `noticias.log`.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
       `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
       invalidar con cambios de código (`template.html`, `static/`).
