@@ -7,13 +7,15 @@ python-dotenv>=1.0,<2.0
 
 # Scraper de noticias (ingest_noticias.py + noticias_ingest/, port de boletines).
 # scikit-learn carga noticias_ingest/modelo_relevancia.pkl (TF-IDF, entrenado
-# con sklearn 1.8.0). El pickle NO garantiza compat entre versiones: tope <2.0
-# deliberado — subir de major implica re-picklear el modelo en boletines.
+# con sklearn 1.8.0). El pickle NO garantiza compat entre versiones: 1.9 ya
+# emite InconsistentVersionWarning al cargarlo (verificado en VPS) y el ingest
+# es fail-closed sin modelo → tope <1.9. Subir de minor = re-picklear el
+# modelo en boletines primero.
 feedparser>=6.0
 beautifulsoup4>=4.12
 trafilatura>=2.0
 rapidfuzz>=3.0
-scikit-learn>=1.8,<2.0
+scikit-learn>=1.8,<1.9
 cloudscraper>=1.2
 curl_cffi>=0.10
 googlenewsdecoder>=0.1.7
