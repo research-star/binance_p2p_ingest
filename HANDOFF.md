@@ -682,6 +682,7 @@ capa de tokens al principio del `<style>`.
 | Tooltip | `--tooltip-bg` (literal) + `--tooltip-text/border/font` (vía vars theme-aware) | sí | JS `THEMES.paper/.slate` (`--tooltip-bg` se consume por `cssVar()`) |
 | Bg/text/border/color-* | (existentes) | sí | JS `THEMES.paper/.slate` |
 | Chart EMBI (Riesgo País) | `--chart-color-*` (10 países), `--chart-grid`, `--chart-axis-text`, `--chart-spike` | sí | JS `THEMES.paper/.slate` |
+| Bandas riesgo EMBI (Riesgo País) | `--chart-band-low/mid/high` (fills rect, alpha baked-in) + `--chart-band-label-low/mid/high` (texto annotations) | sí | JS `THEMES.paper/.slate` |
 | Chart heatmap (P2P + Activity) | `--chart-heatmap-0/25/50/75/100` (gradient stops), `--chart-heatmap-text-high/low` (per-cell text) | sí | JS `THEMES.paper/.slate` |
 | Chart DPF scatter | `--chart-dpf-bancos-multiples/microfinanzas/bancos-pyme/ent-vivienda/cooperativas/ifd` (6 categóricos) | sí | JS `THEMES.paper/.slate` |
 | Chart spread evo P2P | `--chart-spread-line` (color de la línea única) | sí | JS `THEMES.paper/.slate` |
@@ -737,7 +738,7 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
 - **Plotly hoverlabel**: siempre via `cssVar('--tooltip-*')`. Todos los
   charts ya consumen este patrón.
 - **Para retocar paleta de un chart**: editar `THEMES.paper/.slate` en el JS.
-  - Chart EMBI: `--chart-color-*` (países), `--chart-grid`, `--chart-axis-text`, `--chart-spike`.
+  - Chart EMBI: `--chart-color-*` (países), `--chart-grid`, `--chart-axis-text`, `--chart-spike`; bandas de régimen de riesgo: `--chart-band-low/mid/high` + `--chart-band-label-low/mid/high`.
   - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
   - DPF scatter: `--chart-dpf-*` (6 categóricos) — chrome (`--text-muted`, `--chart-grid`, `--chart-marker-outline`) se hereda.
   - Spread evo P2P: `--chart-spread-line`.
@@ -755,9 +756,10 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
   - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
     viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
     `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
-    encuentra. Hoy en `THEMES` (75 tokens chart/tooltip/noticias/inflación):
+    encuentra. Hoy en `THEMES` (81 tokens chart/tooltip/noticias/inflación):
     - Tooltip: `--tooltip-bg`.
-    - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`.
+    - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, los 10 `--chart-color-*`,
+      y 6 de bandas de riesgo (`--chart-band-low/mid/high` + `--chart-band-label-low/mid/high`).
     - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
     - DPF scatter: 6 `--chart-dpf-*`.
     - Spread evo P2P: `--chart-spread-line`.
