@@ -627,9 +627,8 @@ las referencias existentes a §6–§8.
       pre-autorizado por Diego): `p2p_normalized.db.pre-migration-*` borrado
       de la laptop tras verificar cadena de backup fresca (pull del VPS del
       mismo día, `quick_check` ok, retención GFS aplicada, task diario
-      registrado). Queda abierto solo el sub-ítem del Task Scheduler
-      "P2P Watchdog" viejo: sigue `Disabled` como reserva; desinstalarlo es
-      decisión de Diego.
+      registrado). El Task Scheduler "P2P Watchdog" viejo fue desinstalado
+      el 2026-06-12 (pre-autorizado). Ítem completamente cerrado.
 
 ---
 
