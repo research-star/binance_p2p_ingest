@@ -249,6 +249,22 @@ client-side.
 - Sin persistencia (no localStorage): estado de toggles en memoria de la
   sesión.
 
+**Card "Servicio de deuda en bonos soberanos"** (segundo card de la subtab,
+debajo del chart EMBI):
+- Barras apiladas Plotly con el servicio anual (capital + cupones, USD MM) de
+  los bonos soberanos 2026-2031, una traza por emisión (2017 / 2022 / 2026),
+  total anual como anotación sobre cada barra. 3 KPIs arriba (servicio total,
+  pico intermedio 2028, bullet 2031).
+- **Dataset estático embebido** en JS (`const DEBT_SCHEDULE`, junto a su
+  render en `template.html`) — desviación deliberada del patrón `DATA.*`:
+  términos contractuales inmutables, no pasan por `dashboard.py`. Si Bolivia
+  emite/recompra/canjea deuda, se edita el literal y se redeploya.
+- Render lazy: `window.renderDeudaSoberana()`, colgado del mismo hook de
+  `MACRO_SUBTABS` que `renderRiesgoPais()`. Theme-aware vía MutationObserver
+  propio (mismo patrón que EMBI).
+- Colores: tokens `--chart-debt-em2017/em2022/em2026` en `THEMES.paper/.slate`
+  (ramp azul cronológico + ámbar para la emisión 2026, protagonista del bullet).
+
 **Frontend subtab "Inflación"** (en `template.html`, hermano de Riesgo País
 dentro de Macro):
 - Payload `DATA.inflacion`: `dashboard.py` pivotea `ine_ipc`/`ine_ipp` a
@@ -669,6 +685,8 @@ capa de tokens al principio del `<style>`.
 | Chart heatmap (P2P + Activity) | `--chart-heatmap-0/25/50/75/100` (gradient stops), `--chart-heatmap-text-high/low` (per-cell text) | sí | JS `THEMES.paper/.slate` |
 | Chart DPF scatter | `--chart-dpf-bancos-multiples/microfinanzas/bancos-pyme/ent-vivienda/cooperativas/ifd` (6 categóricos) | sí | JS `THEMES.paper/.slate` |
 | Chart spread evo P2P | `--chart-spread-line` (color de la línea única) | sí | JS `THEMES.paper/.slate` |
+| Chart inflación (IPC/IPP) | `--chart-ipc-general`, `--chart-ipp-general`, `--chart-infl-total`, 12 `--chart-ipc-*`, 6 `--chart-ipp-*` | sí | JS `THEMES.paper/.slate` |
+| Chart deuda soberana (Riesgo País) | `--chart-debt-em2017/em2022/em2026` (3 categóricos por emisión) | sí | JS `THEMES.paper/.slate` |
 | Chart markers (shared) | `--chart-marker-outline` (halo decorativo α=.6, color = bg-secondary del tema) | sí | JS `THEMES.paper/.slate` |
 | Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (13 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
 
@@ -737,12 +755,15 @@ y consume `cssVar('--chart-axis-text')` / `cssVar('--chart-grid')` /
   - **Consumidos por JS via `cssVar()`** (que lee de `documentElement`) →
     viven en `THEMES.paper/.slate`. `applyTheme()` los escribe sobre
     `documentElement` via `root.style.setProperty()`, donde `cssVar()` los
-    encuentra. Hoy en `THEMES` (51 tokens chart/tooltip/noticias):
+    encuentra. Hoy en `THEMES` (75 tokens chart/tooltip/noticias/inflación):
     - Tooltip: `--tooltip-bg`.
     - EMBI: `--chart-grid`, `--chart-axis-text`, `--chart-spike`, y los 10 `--chart-color-*`.
     - Heatmap (P2P + Activity): `--chart-heatmap-0/25/50/75/100`, `--chart-heatmap-text-high/low`.
     - DPF scatter: 6 `--chart-dpf-*`.
     - Spread evo P2P: `--chart-spread-line`.
+    - Inflación: `--chart-ipc-general`, `--chart-ipp-general`, `--chart-infl-total`,
+      12 `--chart-ipc-*` (divisiones COICOP) y 6 `--chart-ipp-*` (secciones).
+    - Deuda soberana (Riesgo País): 3 `--chart-debt-em*`.
     - Markers (shared): `--chart-marker-outline`.
     - Noticias: 6 `--cat-*`, 13 `--src-*`, 3 `--impact-*`. Caso especial:
       los consume **CSS** (reglas `.nt-*` + custom prop `--nt-c` inline),
