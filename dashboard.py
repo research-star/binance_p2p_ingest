@@ -48,6 +48,35 @@ BANK_CANONICAL = {
     'TigoMoney':       'Tigo Money',
 }
 
+# Labels legibles para los slugs del INE (divisiones COICOP del IPC y grandes
+# grupos del IPP). El slug interno preserva el source del INE tal cual —
+# incluido el typo 'agricolas' sin tilde — y el display se corrige acá.
+# Orden de inserción = orden canónico COICOP / orden del cuadro IPP; el
+# frontend lo respeta para leyendas y lo re-ordena solo donde la vista lo
+# pide (ranking).
+INE_IPC_DIVISIONES = {
+    'alimentos_y_bebidas_no_alcoholicas':            'Alimentos y bebidas no alcohólicas',
+    'bebidas_alcoholicas_y_tabaco':                  'Bebidas alcohólicas y tabaco',
+    'prendas_de_vestir_y_calzado':                   'Prendas de vestir y calzado',
+    'vivienda_y_servicios_basicos':                  'Vivienda y servicios básicos',
+    'muebles_bienes_y_servicios_domesticos':         'Muebles y servicios domésticos',
+    'salud':                                         'Salud',
+    'transporte':                                    'Transporte',
+    'comunicaciones':                                'Comunicaciones',
+    'recreacion_y_cultura':                          'Recreación y cultura',
+    'educacion':                                     'Educación',
+    'alimentos_y_bebidas_consumidos_fuera_del_hogar': 'Alimentos fuera del hogar',
+    'bienes_y_servicios_diversos':                   'Bienes y servicios diversos',
+}
+INE_IPP_GRUPOS = {
+    'agricolas':                     'Agrícolas',
+    'pecuaria':                      'Pecuaria',
+    'pesca':                         'Pesca',
+    'otros_minerales_y_gas_natural': 'Otros minerales y gas natural',
+    'industria_manufacturera':       'Industria manufacturera',
+    'servicios':                     'Servicios',
+}
+
 
 def load_bcb_ref(first_date: str | None = None) -> dict:
     """Lee bcb_referencial.json (array de {fecha,compra,venta}). Soporta formato
@@ -529,6 +558,87 @@ def process_data(db_path: Path) -> dict:
     except Exception:
         pass  # Table doesn't exist yet — graceful degradation
 
+    # ── Inflación INE (from ine_ipc / ine_ipp tables, if exist) ──
+    # Shape columnar estilo EMBI: `periodos` + series alineadas por índice,
+    # None donde falta la observación. Indicadores tal cual vienen del INE
+    # (pivot, no recálculo). `valor IS NOT NULL` siempre: el parser INE
+    # persiste filas placeholder para los meses futuros del año en curso.
+    # El slug 'total' de los cuadros desagregados replica el agregado
+    # nacional (verificado idéntico en data real) — se omite del payload;
+    # el frontend usa `general` donde necesita el total.
+    def _inflacion_familia(table: str, cuadro_nacional: str,
+                           cuadro_desglose: str, labels: dict) -> dict | None:
+        metricas_nac = ('var_12m', 'var_mensual', 'var_acumulada')
+        metricas_des = ('var_12m', 'var_mensual')
+        nac_rows = conn.execute(
+            f"SELECT periodo, indicador, valor FROM {table} "
+            f"WHERE cuadro = ? AND valor IS NOT NULL",
+            (cuadro_nacional,)).fetchall()
+        des_rows = conn.execute(
+            f"SELECT periodo, indicador, valor FROM {table} "
+            f"WHERE cuadro = ? AND valor IS NOT NULL",
+            (cuadro_desglose,)).fetchall()
+        # Split por prefijo en Python (LIKE con '_' es wildcard en SQL).
+        nac = [(r['periodo'], r['indicador'], r['valor']) for r in nac_rows
+               if r['indicador'] in metricas_nac]
+        des = []
+        for r in des_rows:
+            for m in metricas_des:
+                if r['indicador'].startswith(m + '_'):
+                    slug = r['indicador'][len(m) + 1:]
+                    if slug != 'total':
+                        des.append((r['periodo'], m, slug, r['valor']))
+                    break
+        if not nac:
+            return None
+        periodos = sorted({p for p, _, _ in nac} | {p for p, _, _, _ in des})
+        p_idx = {p: i for i, p in enumerate(periodos)}
+        general = {m: [None] * len(periodos) for m in metricas_nac}
+        for p, ind, val in nac:
+            general[ind][p_idx[p]] = round(val, 4)
+        # Slugs en orden canónico del mapa de labels; los desconocidos (cambios
+        # futuros del INE) se anexan al final con label derivado, no se dropean.
+        slugs_data = {s for _, _, s, _ in des}
+        slugs = [s for s in labels if s in slugs_data] \
+            + sorted(slugs_data - set(labels))
+        desglose = {
+            s: {'label': labels.get(s, s.replace('_', ' ').capitalize()),
+                **{m: [None] * len(periodos) for m in metricas_des}}
+            for s in slugs
+        }
+        for p, m, s, val in des:
+            desglose[s][m][p_idx[p]] = round(val, 4)
+        # KPIs precomputados: métricas del último periodo con var_12m no-null.
+        ultimo_p = max((p for p, ind, _ in nac if ind == 'var_12m'),
+                       default=None)
+        ultimo = None
+        if ultimo_p is not None:
+            i = p_idx[ultimo_p]
+            ultimo = {'periodo': ultimo_p,
+                      **{m: general[m][i] for m in metricas_nac}}
+        return {'periodos': periodos, 'general': general,
+                'desglose': desglose, 'ultimo': ultimo}
+
+    inflacion_data = {'ipc': None, 'ipp': None, 'ultimo': {'ipc': None, 'ipp': None}}
+    try:
+        ipc = _inflacion_familia('ine_ipc', 'ipc_nacional_general',
+                                 'ipc_division_coicop', INE_IPC_DIVISIONES)
+        if ipc:
+            inflacion_data['ultimo']['ipc'] = ipc.pop('ultimo')
+            ipc['divisiones'] = ipc.pop('desglose')
+            inflacion_data['ipc'] = ipc
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+    try:
+        ipp = _inflacion_familia('ine_ipp', 'ipp_nacional',
+                                 'ipp_grandes_grupos', INE_IPP_GRUPOS)
+        if ipp:
+            inflacion_data['ultimo']['ipp'] = ipp.pop('ultimo')
+            ipp['grupos'] = ipp.pop('desglose')
+            inflacion_data['ipp'] = ipp
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+
     # ── Noticias (from noticias table, if exists) ──
     # Últimos 30 días en hora Bolivia (UTC-4): el slider del tab cubre
     # exactamente [hoy-29 .. hoy] y el frontend no clampa — la ventana la
@@ -565,6 +675,7 @@ def process_data(db_path: Path) -> dict:
         'activity_heatmap': activity_matrix,
         'dpf_data': dpf_data,
         'embi_data': embi_data,
+        'inflacion': inflacion_data,
         'noticias': noticias_data,
         'gaps': gaps,
         'meta': {
