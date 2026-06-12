@@ -371,11 +371,12 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   latam usa el pubDate REAL del RSS convertido a hora Bolivia. La
   columna Hora se quitó de la tabla (solo fecha visible); `time` se
   sigue persistiendo y ordena el feed (`date+time` desc).
-- **Agenda placeholder**: `NOTICIAS_EVENTS_BASE` sigue siendo dato de
-  ejemplo; el badge `.nt-badge-demo` quedó scopeado SOLO al KPI
-  "Próximo hecho" (las noticias reales no llevan badge). El rebase
-  `NT_ANCHOR`/`NT_DELTA` sobrevive únicamente para que la agenda no
-  envejezca; muere cuando la agenda sea real.
+- **Agenda placeholder**: eliminada. El KPI "Próximo hecho" (datos de
+  ejemplo con badge `.nt-badge-demo`) se quitó del hero junto con
+  `NOTICIAS_EVENTS_BASE` y el rebase `NT_ANCHOR`/`NT_DELTA`; el hero de
+  Noticias quedó en 4 KPIs (Noticias hoy, Portales, Impacto alto,
+  Guardadas). Si la agenda se vuelve real algún día, se reintroduce
+  desde cero.
 - **Interacciones** (estado en memoria, sin persistencia): chips de
   categoría multi-select con "Todas" como toggle total y conteos del
   dataset completo; toggle "Solo guardadas"; slider de 30 días (burbuja
