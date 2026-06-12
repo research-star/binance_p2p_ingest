@@ -249,6 +249,39 @@ client-side.
 - Sin persistencia (no localStorage): estado de toggles en memoria de la
   sesión.
 
+**Frontend subtab "Inflación"** (en `template.html`, hermano de Riesgo País
+dentro de Macro):
+- Payload `DATA.inflacion`: `dashboard.py` pivotea `ine_ipc`/`ine_ipp` a
+  shape columnar estilo EMBI — `{ipc:{periodos, general:{var_12m,
+  var_mensual, var_acumulada}, divisiones:{slug:{label, var_12m, var_mensual,
+  peso?, contrib?}}}, ipp:{..., grupos:{...}}, ultimo:{ipc, ipp}}`. Siempre
+  `valor IS NOT NULL` (el parser INE deja placeholders NULL en meses futuros
+  del año en curso). `ipc`/`ipp` llegan `null` si su tabla falta o está
+  vacía → card de fallback sin crash. Peso payload ~55 KB (vs ~880 KB EMBI).
+- **Contribuciones derivadas** (`contrib`/`peso`): el INE no publica
+  ponderaciones en los cuadros ingeridos, pero el índice total es Laspeyres
+  EXACTO de las divisiones; `_laspeyres_contrib()` (dashboard.py) recupera
+  los pesos base 2016 por mínimos cuadrados (stdlib, sin numpy) y deriva
+  `c_i(t) = w_i·ΔI_i/I_T(t−12)·100`. Doble guarda fail-closed: reconstrucción
+  del índice casi exacta + suma de contribuciones replica la `var_12m`
+  publicada (verificado: error 0.000 IPC / 0.001 IPP); si no valida, el
+  payload va sin `contrib` y el hero degrada a líneas.
+- 4 KPIs hero: IPC interanual / mensual / acumulada + IPP interanual, con Δ
+  en pts vs mes anterior (color: aceleración orange, desaceleración green).
+- Chart hero dual: **Contribuciones** (default; barras apiladas por división
+  COICOP + línea IPC total, `barmode:relative`, anotaciones de pico y último
+  dato) ↔ **Líneas** (IPC vs IPP var 12m). Chips `.ds-chip`.
+- Desglose dual-card (IPC por división COICOP + IPP por grandes grupos) con
+  vista **Ranking** (bar horizontal del último mes, total destacado) ↔
+  **Series** (multi-línea con leyenda `.fb-stog`, total en línea punteada;
+  defaults: total + 2 drivers) y métrica 12m ↔ mensual.
+- Lazy render: `window.renderInflacion()` colgado del hook `render` de
+  `MACRO_SUBTABS`; theme-aware vía MutationObserver con guard
+  `offsetParent` (mismo patrón que Riesgo País).
+- Tokens: `--chart-ipc-general` (ámbar hero), `--chart-ipp-general` (azul),
+  `--chart-infl-total` (traza total punteada), + `--chart-ipc-<slug>` (12
+  divisiones) y `--chart-ipp-<slug>` (6 grupos) en `THEMES.paper/.slate`.
+
 ### Routing por paths (SPA + 404 trick)
 
 URLs limpias por tab via HTML5 History API. Estado post-PR #47 (navbar
@@ -259,7 +292,7 @@ reordenada + subnav Macro) y post tab Noticias:
 | `/` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
 | `/macro` | tab `macro`, subtab default (`riesgo`) | FinanzasBo — Riesgo País EMBI |
 | `/riesgo` | tab `macro`, subtab `riesgo` | FinanzasBo — Riesgo País EMBI |
-| `/inflacion` | tab `macro`, subtab `inflacion` (placeholder Soon) | FinanzasBo — Inflación |
+| `/inflacion` | tab `macro`, subtab `inflacion` (IPC/IPP INE) | FinanzasBo — Inflación |
 | `/dpf` | tab `dpf` | FinanzasBo — Rendimientos DPF |
 | `/bbv` | tab `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
 | `/guia` | tab `guide` | FinanzasBo — Guía del dashboard |
@@ -562,16 +595,18 @@ las referencias existentes a §6–§8.
       con ping de prueba OK. Addendum fail-closed (sin modelo TF-IDF → fail
       + exit 1, sin scrape) entregado en PR aparte post-deploy.
       **Caveat vigente**: la cache key del publish (`n_snap, n_rows,
-      embi_max_fecha`) NO incluye noticias — las notas del día entran al
-      próximo republish disparado por snapshots de ads (~12-22 min tras el
-      cron); si se quiere garantía, extender la key con `max(date)` de
-      `noticias` (precedente exacto: `embi_max_fecha`).
+      embi_max, ipc_max, ipp_max`) NO incluye noticias — las notas del día
+      entran al próximo republish disparado por snapshots de ads (~12-22 min
+      tras el cron); si se quiere garantía, extender la key con `max(date)`
+      de `noticias` (precedente exacto: `embi_max`).
       **Watch-item**: La Razón falló su primer scrape desde la IP del VPS
       (12/13 portales OK) — puede ser transitorio o bloqueo a IP datacenter;
       vigilar los primeros días en `noticias.log`.
 - [ ] **Cache key de `publish_dashboard.py`** — el cache (ahora
-      `(n_snap, n_rows, embi_max_fecha)` desde feat/embi-ingest) sigue sin
-      invalidar con cambios de código (`template.html`, `static/`).
+      `(n_snap, n_rows, embi_max, ipc_max, ipp_max)`; los dos últimos son
+      `MAX(periodo) WHERE valor IS NOT NULL` de `ine_ipc`/`ine_ipp`, sumados
+      en feat/inflacion-contenido para que un release del INE republique)
+      sigue sin invalidar con cambios de código (`template.html`, `static/`).
       Consecuencia: deploys visuales sin cambio de dataset esperan hasta
       próximo snapshot + próximo tick del cron (~22 min worst case). Fix
       propuesto: agregar hash de `template.html` + `listdir(static/)`, o

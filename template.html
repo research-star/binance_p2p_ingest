@@ -1000,7 +1000,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
   <!-- Subnav: REUSA .fb-view-toggle + .ds-chip. Switchea sub-paneles vía data-subtab. -->
   <nav class="fb-macro-subnav" id="macroSubnav" aria-label="Sub-secciones de Macroeconom&iacute;a">
     <button class="fb-macro-tab active" data-subtab="riesgo" type="button">Riesgo pa&iacute;s</button>
-    <button class="fb-macro-tab" data-subtab="inflacion" type="button">Inflaci&oacute;n <span class="fb-soon">Soon</span></button>
+    <button class="fb-macro-tab" data-subtab="inflacion" type="button">Inflaci&oacute;n</button>
   </nav>
   <!-- Sub-panel default: Riesgo País (contenido EMBI re-alojado; ids internos intactos). -->
   <div id="subtab-riesgo">
@@ -1018,12 +1018,48 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
       </div>
     </div>
   </div>
-  <!-- Sub-panel: Inflación (placeholder Soon; contenido del megarun siguiente). -->
+  <!-- Sub-panel: Inflación (IPC/IPP del INE). Render lazy: window.renderInflacion,
+       colgado del hook render de MACRO_SUBTABS (mismo patrón que Riesgo País). -->
   <div id="subtab-inflacion" style="display:none;">
+    <div id="inflKpis"></div>
     <div class="content">
-      <div class="fb-chart-card" style="text-align:center;padding:48px">
-        <h2 style="margin:0 0 8px">Inflaci&oacute;n <span class="fb-soon">Soon</span></h2>
-        <p class="fb-subtitle" style="margin:0">Pr&oacute;ximamente: IPC / IPP del INE.</p>
+      <div class="fb-chart-card fb-chart-card--elevated" id="inflGeneralCard">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">Inflaci&oacute;n al consumidor: qu&eacute; la explica</div>
+          <div class="fb-chart-sub" id="inflGeneralSub">&mdash;</div>
+        </div>
+        <div class="fb-view-toggle" id="inflGeneralChips" style="margin-bottom:12px"></div>
+        <div id="inflGeneralChart" style="height:420px;"></div>
+        <div class="fb-chart-source">Fuente: Instituto Nacional de Estad&iacute;stica &middot; base 2016=100</div>
+      </div>
+      <!-- Toolbar del desglose: vista (Ranking/Series) + métrica (12m/mensual),
+           aplican a las dos cards de abajo (IPC y IPP). -->
+      <div class="fb-chart-card" id="inflControls" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center;padding:12px 20px;">
+        <div><span class="fb-kpi-label" style="margin-right:8px">Vista</span><span class="fb-view-toggle" id="inflViewChips" style="margin-top:0"></span></div>
+        <div><span class="fb-kpi-label" style="margin-right:8px">M&eacute;trica</span><span class="fb-view-toggle" id="inflMetricChips" style="margin-top:0"></span></div>
+      </div>
+      <div class="fb-chart-card" id="inflIpcCard" style="margin-top:16px;">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">IPC por divisi&oacute;n COICOP</div>
+          <div class="fb-chart-sub" id="inflIpcSub">&mdash;</div>
+        </div>
+        <div class="fb-series-toggles" id="inflIpcToggles" style="margin-bottom:10px"></div>
+        <div id="inflIpcChart" style="height:460px;"></div>
+        <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP &middot; base 2016=100</div>
+      </div>
+      <div class="fb-chart-card" id="inflIppCard" style="margin-top:16px;">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">IPP por grandes grupos de actividad</div>
+          <div class="fb-chart-sub" id="inflIppSub">&mdash;</div>
+        </div>
+        <div class="fb-series-toggles" id="inflIppToggles" style="margin-bottom:10px"></div>
+        <div id="inflIppChart" style="height:400px;"></div>
+        <div class="fb-chart-source">Fuente: INE &middot; IPP por grandes grupos &middot; base 2016=100</div>
+      </div>
+      <!-- Fallback de degradación: visible solo si DATA.inflacion llega sin IPC ni IPP. -->
+      <div class="fb-chart-card" id="inflEmpty" style="display:none;text-align:center;padding:48px;">
+        <h2 style="margin:0 0 8px">Inflaci&oacute;n</h2>
+        <p class="fb-subtitle" style="margin:0">A&uacute;n no hay datos del INE disponibles. Las series IPC/IPP aparecen autom&aacute;ticamente con el pr&oacute;ximo release.</p>
       </div>
     </div>
   </div>
@@ -1124,8 +1160,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -2735,8 +2771,8 @@ var MACRO_SUBTABS = [
     subtitle:'EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span>',
     render:function(){ if(typeof window.renderRiesgoPais==='function') window.renderRiesgoPais(); } },
   { id:'inflacion', slug:'/inflacion', title:'FinanzasBo — Inflación',
-    subtitle:'Pr&oacute;ximamente: IPC / IPP del INE.',
-    render:null }
+    subtitle:'Precios al consumidor (IPC) y al productor (IPP) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
+    render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } }
 ];
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
 var TAB_TITLES = {
@@ -3745,6 +3781,477 @@ window.addEventListener('popstate', function(){
       rendered = true;
     }
     plotFull();
+  };
+})();
+
+// ═══ INFLACIÓN SUBTAB (IPC / IPP del INE) ═══
+// DATA.inflacion: dashboard.py pivotea ine_ipc/ine_ipp a shape columnar estilo
+// EMBI — {ipc:{periodos:[...], general:{var_12m,var_mensual,var_acumulada},
+// divisiones:{slug:{label,var_12m,var_mensual,peso?,contrib?}}},
+// ipp:{..., grupos:{...}},
+// ultimo:{ipc:{periodo,var_12m,var_mensual,var_acumulada}, ipp:{...}}}.
+// `contrib` (contribución de la división a la var 12m del total, en pts) y
+// `peso` son derivados fail-closed en dashboard.py (_laspeyres_contrib): si
+// las guardas no validan, las keys NO vienen y el hero degrada a la vista de
+// líneas. ipc/ipp llegan null si su tabla no existe o está vacía →
+// degradación elegante (card de fallback, sin crash).
+(function(){
+  var INF = (typeof DATA==='object' && DATA.inflacion)
+    ? DATA.inflacion
+    : {ipc:null, ipp:null, ultimo:{ipc:null, ipp:null}};
+  var ULT = INF.ultimo || {ipc:null, ipp:null};
+
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  function periodoLargo(p){
+    if(!p) return '—';
+    return MESES[parseInt(p.slice(5,7),10)-1]+' '+p.slice(0,4);
+  }
+  function fmtPct(v,dec){
+    if(v==null) return '—';
+    var d=(dec==null)?2:dec;
+    return (v>0?'+':'')+v.toFixed(d)+'%';
+  }
+  function lastNonNull(arr){
+    if(!arr) return null;
+    for(var i=arr.length-1;i>=0;i--) if(arr[i]!=null) return {idx:i,val:arr[i]};
+    return null;
+  }
+  function deltaPts(arr){
+    // Δ en puntos porcentuales: último no-null menos el no-null anterior.
+    var l=lastNonNull(arr);
+    if(!l) return null;
+    for(var j=l.idx-1;j>=0;j--) if(arr[j]!=null) return l.val-arr[j];
+    return null;
+  }
+  function deltaColor(d){
+    if(d==null) return 'var(--text-muted)';
+    // Aceleración de la inflación = orange; desaceleración = green.
+    return d>0 ? 'var(--orange)' : (d<0 ? 'var(--green)' : 'var(--text-muted)');
+  }
+  function arrow(d){ return (d==null||d===0)?'':(d>0?'▲':'▼'); }
+  function fmtDeltaPts(d){
+    if(d==null) return '';
+    return (d>0?'+':'')+d.toFixed(2)+' pts';
+  }
+
+  // Descriptor por familia: dimsKey difiere (divisiones/grupos) pero el shape
+  // interno es idéntico, así que todo el render es genérico sobre esta lista.
+  var FAMILIES = [
+    {key:'ipc', label:'IPC', data:INF.ipc,
+     dims:(INF.ipc&&INF.ipc.divisiones)||{},
+     chartId:'inflIpcChart', togglesId:'inflIpcToggles', subId:'inflIpcSub',
+     cardId:'inflIpcCard', tokenPrefix:'--chart-ipc-',
+     totalLabel:'IPC general',
+     defaultActive:['total','transporte','alimentos_y_bebidas_no_alcoholicas']},
+    {key:'ipp', label:'IPP', data:INF.ipp,
+     dims:(INF.ipp&&INF.ipp.grupos)||{},
+     chartId:'inflIppChart', togglesId:'inflIppToggles', subId:'inflIppSub',
+     cardId:'inflIppCard', tokenPrefix:'--chart-ipp-',
+     totalLabel:'IPP general',
+     defaultActive:['total','pecuaria','industria_manufacturera']}
+  ];
+  function hasData(f){ return !!(f.data && f.data.periodos && f.data.periodos.length); }
+
+  // Vistas del desglose (elegidas en el gate del PR: Ranking + Series).
+  var VIEWS = [
+    {id:'A', label:'Ranking'},
+    {id:'B', label:'Series'}
+  ];
+  var METRICS = [
+    {id:'var_12m', label:'12 meses'},
+    {id:'var_mensual', label:'Mensual'}
+  ];
+  var METRIC_DESC = {var_12m:'variación % a 12 meses', var_mensual:'variación % mensual'};
+  // Vistas del chart hero: contribuciones apiladas (default) ↔ líneas IPC/IPP.
+  var GENERAL_VIEWS = [
+    {id:'contrib', label:'Contribuciones'},
+    {id:'lineas', label:'Líneas'}
+  ];
+
+  var state = {view:'A', metric:'var_12m', general:'contrib', active:{}};
+  FAMILIES.forEach(function(f){
+    var avail = Object.keys(f.dims);
+    state.active[f.key] = new Set(f.defaultActive.filter(function(s){
+      return s==='total' || avail.indexOf(s)>=0;
+    }));
+  });
+  var rendered = false;
+
+  // Para Plotly se resuelve el hex (cssVar); para DOM se referencia la CSS var
+  // en vivo (se actualiza sola con el tema, mismo patrón que Riesgo País).
+  function dimColor(f, slug){
+    if(slug==='total') return cssVar('--chart-infl-total', '#444');
+    return cssVar(f.tokenPrefix+slug, '#888');
+  }
+  function dimVarRef(f, slug){
+    return slug==='total' ? 'var(--chart-infl-total)' : 'var('+f.tokenPrefix+slug+')';
+  }
+
+  function baseLayout(){
+    var gridc  = cssVar('--chart-grid', 'rgba(120,120,120,.10)');
+    var fontc  = cssVar('--chart-axis-text', '#576471');
+    var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
+    var tipBg  = cssVar('--tooltip-bg', '#fff');
+    var tipBd  = cssVar('--tooltip-border', 'rgba(44,74,107,.18)');
+    var tipFg  = cssVar('--tooltip-text', '#2c4a6b');
+    return {
+      autosize: true,
+      margin: {l: 56, r: 16, t: 12, b: 36},
+      xaxis: {
+        type: 'date', showgrid: false, nticks: 8, tickangle: 0,
+        showspikes: true, spikemode: 'across', spikethickness: 1,
+        spikedash: 'dot', spikecolor: spikec, showline: false, zeroline: false
+      },
+      yaxis: {
+        ticksuffix: '%', tickformat: '.1f', showgrid: true,
+        gridcolor: gridc, zeroline: true, zerolinecolor: gridc
+      },
+      hovermode: 'x unified',
+      hoverlabel: {
+        bgcolor: tipBg, bordercolor: tipBd,
+        font: {family: "'IBM Plex Mono', monospace", size: 11, color: tipFg}
+      },
+      showlegend: false,
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      font: {family: "'Outfit', system-ui, sans-serif", size: 11, color: fontc}
+    };
+  }
+  var PLOTLY_CFG = {displayModeBar:false, responsive:true};
+
+  // ── Chart hero: contribuciones apiladas (default) ↔ líneas IPC vs IPP ──
+  // La vista de contribuciones requiere que el payload traiga `contrib` en
+  // TODAS las divisiones (all-or-nothing del backend); si no, se fuerza la
+  // vista de líneas y los chips se ocultan.
+  function contribOk(){
+    var f = FAMILIES[0]; // IPC
+    if(!hasData(f)) return false;
+    var slugs = Object.keys(f.dims);
+    return slugs.length > 0 && slugs.every(function(s){
+      return Array.isArray(f.dims[s].contrib);
+    });
+  }
+  var GENERAL_SUBS = {
+    contrib: 'Contribución de cada división COICOP a la inflación interanual, en puntos. Las barras suman la línea del IPC total.',
+    lineas: 'IPC e IPP, variación % a 12 meses. El IPP suele anticipar los giros del IPC con 1-3 meses de rezago.'
+  };
+  function plotGeneral(){
+    var el = document.getElementById('inflGeneralChart');
+    if(!el || typeof Plotly==='undefined') return;
+    var canContrib = contribOk();
+    var chips = document.getElementById('inflGeneralChips');
+    if(chips) chips.style.display = canContrib ? '' : 'none';
+    var mode = (state.general==='contrib' && canContrib) ? 'contrib' : 'lineas';
+    var sub = document.getElementById('inflGeneralSub');
+    if(sub) sub.textContent = GENERAL_SUBS[mode];
+    if(mode==='contrib') plotGeneralContrib(el);
+    else plotGeneralLineas(el);
+  }
+  function plotGeneralContrib(el){
+    var f = FAMILIES[0]; // IPC
+    var per = f.data.periodos;
+    var traces = Object.keys(f.dims).map(function(s){
+      var d = f.dims[s];
+      return {
+        type:'bar', name:d.label, x:per, y:d.contrib,
+        marker:{color:dimColor(f,s), line:{width:0}},
+        hovertemplate:d.label+': %{y:.2f} pts<extra></extra>'
+      };
+    });
+    var serie = f.data.general.var_12m;
+    traces.push({
+      type:'scatter', mode:'lines', name:'IPC (total)',
+      x:per, y:serie,
+      line:{color:cssVar('--chart-infl-total'), width:2.6},
+      connectgaps:false, legendrank:1,
+      hovertemplate:'IPC total: %{y:.2f}%<extra></extra>'
+    });
+    var L = baseLayout();
+    L.barmode = 'relative';   // apila positivos arriba y negativos bajo cero
+    L.bargap = 0.15;
+    L.xaxis.tickformat = "%b '%y";
+    L.xaxis.nticks = 10;
+    L.showlegend = true;
+    L.legend = {orientation:'v', x:1.01, y:1, font:{size:10}};
+    L.margin = {l:56, r:8, t:24, b:36};
+    // Anotaciones estilo "key contributions": pico del ciclo + último dato.
+    var peakIdx = null;
+    serie.forEach(function(v,i){ if(v!=null && (peakIdx==null || v>serie[peakIdx])) peakIdx = i; });
+    var last = lastNonNull(serie);
+    L.annotations = [];
+    if(peakIdx!=null) L.annotations.push({
+      x:per[peakIdx], y:serie[peakIdx], text:'<b>'+fmtPct(serie[peakIdx],1)+'</b>',
+      showarrow:false, yshift:14,
+      font:{size:12, color:cssVar('--text-primary','#2c4a6b')}
+    });
+    if(last && last.idx!==peakIdx) L.annotations.push({
+      x:per[last.idx], y:last.val, text:'<b>'+fmtPct(last.val,1)+'</b>',
+      showarrow:false, xanchor:'left', xshift:10,
+      font:{size:12, color:cssVar('--text-primary','#2c4a6b')},
+      bgcolor:cssVar('--tooltip-bg','#fff'), borderpad:3
+    });
+    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
+  }
+  function plotGeneralLineas(el){
+    var traces = [];
+    FAMILIES.forEach(function(f){
+      if(!hasData(f)) return;
+      var isIpc = f.key==='ipc';
+      traces.push({
+        type:'scatter', mode:'lines', name:f.label,
+        x:f.data.periodos, y:f.data.general.var_12m,
+        line:{color:cssVar(isIpc?'--chart-ipc-general':'--chart-ipp-general'), width:isIpc?2.8:1.8},
+        connectgaps:false,
+        hovertemplate:f.label+': %{y:.2f}%<extra></extra>'
+      });
+    });
+    var L = baseLayout();
+    L.xaxis.tickformat = "%b '%y";
+    L.xaxis.nticks = 10;
+    L.showlegend = true;
+    L.legend = {orientation:'h', x:0, y:1.08, font:{size:11}};
+    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
+  }
+
+  // ── Vista A: bar ranking horizontal del último período ──
+  function plotRanking(f, el){
+    var m = state.metric;
+    var items = [];
+    var tot = lastNonNull(f.data.general[m]);
+    if(tot) items.push({slug:'total', label:f.totalLabel, val:tot.val});
+    Object.keys(f.dims).forEach(function(s){
+      var l = lastNonNull(f.dims[s][m]);
+      if(l) items.push({slug:s, label:f.dims[s].label, val:l.val});
+    });
+    // Ascendente: Plotly pinta categorías de abajo hacia arriba → mayor arriba.
+    items.sort(function(a,b){return a.val-b.val;});
+    var L = baseLayout();
+    L.hovermode = 'closest';
+    L.margin = {l:10, r:64, t:8, b:32};
+    L.xaxis = {ticksuffix:'%', tickformat:'.0f', showgrid:true,
+               gridcolor:L.yaxis.gridcolor, zeroline:true,
+               zerolinecolor:cssVar('--chart-axis-text','#576471'),
+               showline:false};
+    L.yaxis = {type:'category', automargin:true, showgrid:false, zeroline:false};
+    Plotly.newPlot(el, [{
+      type:'bar', orientation:'h',
+      x:items.map(function(it){return it.val;}),
+      y:items.map(function(it){return it.slug==='total' ? '<b>'+it.label+'</b>' : it.label;}),
+      marker:{color:items.map(function(it){return dimColor(f, it.slug);})},
+      text:items.map(function(it){return fmtPct(it.val,1);}),
+      textposition:'outside', cliponaxis:false,
+      textfont:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--chart-axis-text','#576471')},
+      hovertemplate:'%{y}: %{x:.2f}%<extra></extra>'
+    }], L, PLOTLY_CFG);
+  }
+
+  // ── Vista B: multi-línea con leyenda interactiva (patrón EMBI) ──
+  function seriesOrder(f){ return ['total'].concat(Object.keys(f.dims)); }
+  function plotSeries(f, el){
+    var m = state.metric;
+    var traces = seriesOrder(f).map(function(s){
+      var isTot = s==='total';
+      var label = isTot ? f.totalLabel : f.dims[s].label;
+      return {
+        type:'scatter', mode:'lines', name:label,
+        x:f.data.periodos, y:isTot ? f.data.general[m] : f.dims[s][m],
+        line:{color:dimColor(f,s), width:isTot?2.6:1.5, dash:isTot?'dash':'solid'},
+        visible:state.active[f.key].has(s),
+        connectgaps:false,
+        hovertemplate:label+': %{y:.2f}%<extra></extra>'
+      };
+    });
+    var L = baseLayout();
+    L.xaxis.tickformat = "%b '%y";
+    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
+  }
+  function applySeriesVisibility(f){
+    if(state.view!=='B') return;
+    var el = document.getElementById(f.chartId);
+    if(!el || !el.data) return;
+    Plotly.restyle(el, {visible: seriesOrder(f).map(function(s){return state.active[f.key].has(s);})});
+  }
+
+  function familySub(f){
+    var m = METRIC_DESC[state.metric];
+    var u = ULT[f.key];
+    var lastP = u ? periodoLargo(u.periodo) : '—';
+    if(state.view==='A') return 'Ranking del último mes ('+lastP+') · '+m;
+    return 'Series mensuales · '+m+' · activá series desde la leyenda';
+  }
+
+  function plotDesglose(f){
+    if(!hasData(f)) return;
+    var el = document.getElementById(f.chartId);
+    if(!el || typeof Plotly==='undefined') return;
+    var sub = document.getElementById(f.subId);
+    if(sub) sub.textContent = familySub(f);
+    var tog = document.getElementById(f.togglesId);
+    if(tog) tog.style.display = (state.view==='B') ? '' : 'none';
+    if(state.view==='A') plotRanking(f, el);
+    else plotSeries(f, el);
+  }
+  function plotAll(){
+    plotGeneral();
+    FAMILIES.forEach(plotDesglose);
+  }
+
+  function renderKpis(){
+    var el = document.getElementById('inflKpis');
+    if(!el) return;
+    var ipc = ULT.ipc, ipp = ULT.ipp;
+    var dIpc = INF.ipc ? deltaPts(INF.ipc.general.var_12m) : null;
+    var dIpp = INF.ipp ? deltaPts(INF.ipp.general.var_12m) : null;
+    function card(label, value, sub, subColor){
+      return '<div class="fb-kpi-card">'
+        + '<div class="fb-kpi-head"><div class="fb-kpi-label">'+label+'</div></div>'
+        + '<div class="fb-kpi-value">'+value+'</div>'
+        + '<div class="fb-kpi-sub" style="color:'+(subColor||'var(--text-muted)')+'">'+sub+'</div>'
+        + '</div>';
+    }
+    el.innerHTML = '<div class="fb-kpi-wrap"><div class="fb-kpi-grid" style="grid-template-columns:repeat(4,1fr)">'
+      + card('IPC interanual',
+          ipc ? fmtPct(ipc.var_12m) : '—',
+          ipc ? (arrow(dIpc)+' '+fmtDeltaPts(dIpc)+' vs mes anterior · '+periodoLargo(ipc.periodo)).trim() : 'sin datos',
+          deltaColor(dIpc))
+      + card('IPC mensual',
+          ipc ? fmtPct(ipc.var_mensual) : '—',
+          ipc ? ('vs mes anterior · '+periodoLargo(ipc.periodo)) : 'sin datos',
+          null)
+      + card('IPC acumulada',
+          ipc ? fmtPct(ipc.var_acumulada) : '—',
+          ipc ? ('año corrido a '+periodoLargo(ipc.periodo)) : 'sin datos',
+          null)
+      + card('IPP interanual',
+          ipp ? fmtPct(ipp.var_12m) : '—',
+          ipp ? (arrow(dIpp)+' '+fmtDeltaPts(dIpp)+' vs mes anterior · '+periodoLargo(ipp.periodo)).trim() : 'sin datos',
+          deltaColor(dIpp))
+      + '</div></div>';
+  }
+
+  // Chips: vista del hero (contribuciones/líneas) + vista y métrica del desglose.
+  function renderControlChips(){
+    var gc = document.getElementById('inflGeneralChips');
+    if(gc) gc.innerHTML = GENERAL_VIEWS.map(function(o){
+      return '<button type="button" class="ds-chip '+(state.general===o.id?'active':'')+'" data-gview="'+o.id+'">'+o.label+'</button>';
+    }).join('');
+    var vc = document.getElementById('inflViewChips');
+    if(vc) vc.innerHTML = VIEWS.map(function(o){
+      return '<button type="button" class="ds-chip '+(state.view===o.id?'active':'')+'" data-view="'+o.id+'">'+o.label+'</button>';
+    }).join('');
+    var mc = document.getElementById('inflMetricChips');
+    if(mc) mc.innerHTML = METRICS.map(function(o){
+      return '<button type="button" class="ds-chip '+(state.metric===o.id?'active':'')+'" data-metric="'+o.id+'">'+o.label+'</button>';
+    }).join('');
+  }
+
+  function renderToggles(f){
+    var el = document.getElementById(f.togglesId);
+    if(!el || !hasData(f)) return;
+    el.innerHTML = seriesOrder(f).map(function(s){
+      var isTot = s==='total';
+      var active = state.active[f.key].has(s);
+      var color = dimVarRef(f, s);
+      return '<button type="button" class="fb-stog '+(active?'active':'inactive')+'" '
+        +'data-fam="'+f.key+'" data-slug="'+s+'" style="--fb-trace-color:'+color+'">'
+        +'<span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
+        +'<span class="fb-stog-line '+(isTot?'dashed':'solid')+'" style="color:'+color+'"></span>'
+        +'<span class="fb-stog-label">'+(isTot?f.totalLabel:f.dims[s].label)+'</span>'
+        +'</button>';
+    }).join('');
+  }
+
+  function attachHandlers(){
+    var gc = document.getElementById('inflGeneralChips');
+    if(gc) gc.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-gview]');
+      if(!btn || btn.classList.contains('active')) return;
+      state.general = btn.dataset.gview;
+      gc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      plotGeneral();
+    });
+    var vc = document.getElementById('inflViewChips');
+    if(vc) vc.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-view]');
+      if(!btn || btn.classList.contains('active')) return;
+      state.view = btn.dataset.view;
+      vc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      FAMILIES.forEach(plotDesglose);
+    });
+    var mc = document.getElementById('inflMetricChips');
+    if(mc) mc.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-metric]');
+      if(!btn || btn.classList.contains('active')) return;
+      state.metric = btn.dataset.metric;
+      mc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      FAMILIES.forEach(plotDesglose);
+    });
+    FAMILIES.forEach(function(f){
+      var tog = document.getElementById(f.togglesId);
+      if(!tog) return;
+      tog.addEventListener('click', function(e){
+        var btn = e.target.closest('.fb-stog');
+        if(!btn) return;
+        var s = btn.dataset.slug;
+        var set = state.active[f.key];
+        if(set.has(s)){
+          set.delete(s);
+          btn.classList.remove('active'); btn.classList.add('inactive');
+        } else {
+          set.add(s);
+          btn.classList.remove('inactive'); btn.classList.add('active');
+        }
+        applySeriesVisibility(f);
+      });
+    });
+  }
+
+  window.renderInflacion = function(){
+    var hasIpc = hasData(FAMILIES[0]), hasIpp = hasData(FAMILIES[1]);
+    var elDate = document.getElementById('inflDate');
+    if(elDate){
+      var parts = [];
+      if(ULT.ipc) parts.push(periodoLargo(ULT.ipc.periodo)+' (IPC)');
+      if(ULT.ipp) parts.push(periodoLargo(ULT.ipp.periodo)+' (IPP)');
+      elDate.textContent = parts.length ? parts.join(' · ') : '—';
+    }
+    var empty = document.getElementById('inflEmpty');
+    var kpis = document.getElementById('inflKpis');
+    var controls = document.getElementById('inflControls');
+    var gen = document.getElementById('inflGeneralCard');
+    if(!hasIpc && !hasIpp){
+      // Degradación: tablas INE ausentes/vacías → fallback único, sin crash.
+      if(empty) empty.style.display = '';
+      if(kpis) kpis.style.display = 'none';
+      if(controls) controls.style.display = 'none';
+      if(gen) gen.style.display = 'none';
+      FAMILIES.forEach(function(f){
+        var card = document.getElementById(f.cardId);
+        if(card) card.style.display = 'none';
+      });
+      return;
+    }
+    FAMILIES.forEach(function(f){
+      var card = document.getElementById(f.cardId);
+      if(card) card.style.display = hasData(f) ? '' : 'none';
+    });
+    renderKpis();
+    if(!rendered){
+      renderControlChips();
+      FAMILIES.forEach(renderToggles);
+      attachHandlers();
+      // Re-plot al cambiar tema, sólo si el subtab está visible (offsetParent
+      // null cuando cualquier ancestro está display:none) — patrón Riesgo País.
+      new MutationObserver(function(){
+        var el = document.getElementById('inflGeneralChart');
+        if(el && el.offsetParent !== null) plotAll();
+      }).observe(document.body, {attributes:true, attributeFilter:['class']});
+      rendered = true;
+    }
+    plotAll();
   };
 })();
 

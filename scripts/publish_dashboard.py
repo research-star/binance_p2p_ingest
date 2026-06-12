@@ -113,8 +113,9 @@ def cleanup_worktree(path: Path):
         shutil.rmtree(path, ignore_errors=True)
 
 
-def db_metrics() -> tuple[int, int, str | None]:
-    """Devuelve (n_snapshots_ads, n_rows_ads, max_fecha_embi).
+def db_metrics() -> tuple[int, int, str | None, str | None, str | None]:
+    """Devuelve (n_snapshots_ads, n_rows_ads, max_fecha_embi, max_periodo_ipc,
+    max_periodo_ipp).
 
     `max_fecha_embi` se incluye en la cache key porque embi_spreads se puebla
     desde un cron independiente y, sin esto, un publish puede skipear cuando
@@ -124,6 +125,13 @@ def db_metrics() -> tuple[int, int, str | None]:
     valores históricos son inmutables salvo correcciones — y una corrección
     igual debe disparar republish, lo cual implica chequear más que max(fecha)
     en un fix futuro si surge el caso).
+
+    `max_periodo_ipc` / `max_periodo_ipp` (tablas ine_ipc / ine_ipp): misma
+    lógica para los releases mensuales del INE. El MAX exige `valor IS NOT
+    NULL` porque el parser INE persiste filas placeholder (valor NULL) para
+    los meses futuros del año en curso — sin el filtro, la key quedaría
+    clavada en diciembre y un release nuevo no republicaría. Mismo caveat que
+    EMBI: una revisión retroactiva sin mes nuevo no cambia la key.
     """
     try:
         c = sqlite3.connect(str(DB_PATH))
@@ -133,18 +141,30 @@ def db_metrics() -> tuple[int, int, str | None]:
             embi_max = c.execute("SELECT MAX(fecha) FROM embi_spreads").fetchone()[0]
         except sqlite3.OperationalError:
             embi_max = None  # tabla aún no existe
+
+        def _ine_max(table: str) -> str | None:
+            try:
+                return c.execute(
+                    f"SELECT MAX(periodo) FROM {table} WHERE valor IS NOT NULL"
+                ).fetchone()[0]
+            except sqlite3.OperationalError:
+                return None  # tabla aún no existe
+
+        ipc_max = _ine_max("ine_ipc")
+        ipp_max = _ine_max("ine_ipp")
         c.close()
-        return n_snap, n_rows, embi_max
+        return n_snap, n_rows, embi_max, ipc_max, ipp_max
     except Exception:
-        return 0, 0, None
+        return 0, 0, None, None, None
 
 
 def read_last_state():
-    """Devuelve dict {size, n_snap, n_rows, embi_max} o None.
+    """Devuelve dict {size, n_snap, n_rows, embi_max, ipc_max, ipp_max} o None.
 
-    Acepta también el formato legacy v1 (int) y v2 (sin embi_max). En esos
-    casos devuelve embi_max=None lo cual fuerza un republish la primera vez
-    que la tabla embi_spreads se popula.
+    Acepta también los formatos legacy v1 (int), v2 (sin embi_max) y v3 (sin
+    ipc_max/ipp_max). En esos casos los campos faltantes quedan en None, lo
+    cual fuerza un republish la primera vez que la tabla correspondiente se
+    popula.
     """
     if not LAST_SIZE_STATE_PATH.exists():
         return None
@@ -153,14 +173,19 @@ def read_last_state():
         if raw.startswith("{"):
             state = json.loads(raw)
             state.setdefault("embi_max", None)
+            state.setdefault("ipc_max", None)
+            state.setdefault("ipp_max", None)
             return state
-        return {"size": int(raw), "n_snap": None, "n_rows": None, "embi_max": None}
+        return {"size": int(raw), "n_snap": None, "n_rows": None,
+                "embi_max": None, "ipc_max": None, "ipp_max": None}
     except (ValueError, OSError):
         return None
 
 
-def write_last_state(size: int, n_snap: int, n_rows: int, embi_max: str | None):
-    state = {"size": size, "n_snap": n_snap, "n_rows": n_rows, "embi_max": embi_max}
+def write_last_state(size: int, n_snap: int, n_rows: int, embi_max: str | None,
+                     ipc_max: str | None, ipp_max: str | None):
+    state = {"size": size, "n_snap": n_snap, "n_rows": n_rows,
+             "embi_max": embi_max, "ipc_max": ipc_max, "ipp_max": ipp_max}
     try:
         LAST_SIZE_STATE_PATH.write_text(json.dumps(state))
     except OSError as e:
@@ -194,18 +219,21 @@ def _run(t0: float) -> int:
         # No fallamos: seguimos con el código local.
 
     # Skip rápido si el dataset no avanzó (ahorra el gasto de dashboard.py)
-    n_snap, n_rows, embi_max = db_metrics()
+    n_snap, n_rows, embi_max, ipc_max, ipp_max = db_metrics()
     last = read_last_state()
     if (last is not None
             and last.get("n_snap") == n_snap
             and last.get("n_rows") == n_rows
             and last.get("embi_max") == embi_max
+            and last.get("ipc_max") == ipc_max
+            and last.get("ipp_max") == ipp_max
             and last.get("size") is not None):
         # Refresh state mtime sin cambiar contenido (idempotente)
-        write_last_state(last["size"], n_snap, n_rows, embi_max)
+        write_last_state(last["size"], n_snap, n_rows, embi_max, ipc_max, ipp_max)
         total_s = time.time() - t0
         emit(f"[publish] mode=skip reason=dataset_unchanged "
              f"snapshots={n_snap} rows={n_rows} embi_max={embi_max} "
+             f"ipc_max={ipc_max} ipp_max={ipp_max} "
              f"total_s={total_s:.2f}")
         return 0
 
@@ -253,7 +281,8 @@ def _run(t0: float) -> int:
         return 1
 
     try:
-        return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows, embi_max)
+        return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows,
+                                embi_max, ipc_max, ipp_max)
     finally:
         cleanup_worktree(WORKTREE_PATH)
         if TMP_INDEX_PATH.exists():
@@ -261,7 +290,8 @@ def _run(t0: float) -> int:
 
 
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
-                     n_snap: int, n_rows: int, embi_max: str | None) -> int:
+                     n_snap: int, n_rows: int, embi_max: str | None,
+                     ipc_max: str | None, ipp_max: str | None) -> int:
     existing_index = WORKTREE_PATH / "index.html"
     shutil.copyfile(TMP_INDEX_PATH, existing_index)
 
@@ -300,7 +330,7 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
     except subprocess.CalledProcessError:
         commit_short = "?"
 
-    write_last_state(new_size, n_snap, n_rows, embi_max)
+    write_last_state(new_size, n_snap, n_rows, embi_max, ipc_max, ipp_max)
 
     total_s = time.time() - t0
     size_kb = new_size / 1024

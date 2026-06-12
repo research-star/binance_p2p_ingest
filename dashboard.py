@@ -48,6 +48,103 @@ BANK_CANONICAL = {
     'TigoMoney':       'Tigo Money',
 }
 
+# Labels legibles para los slugs del INE (divisiones COICOP del IPC y grandes
+# grupos del IPP). El slug interno preserva el source del INE tal cual —
+# incluido el typo 'agricolas' sin tilde — y el display se corrige acá.
+# Orden de inserción = orden canónico COICOP / orden del cuadro IPP; el
+# frontend lo respeta para leyendas y lo re-ordena solo donde la vista lo
+# pide (ranking).
+INE_IPC_DIVISIONES = {
+    'alimentos_y_bebidas_no_alcoholicas':            'Alimentos y bebidas no alcohólicas',
+    'bebidas_alcoholicas_y_tabaco':                  'Bebidas alcohólicas y tabaco',
+    'prendas_de_vestir_y_calzado':                   'Prendas de vestir y calzado',
+    'vivienda_y_servicios_basicos':                  'Vivienda y servicios básicos',
+    'muebles_bienes_y_servicios_domesticos':         'Muebles y servicios domésticos',
+    'salud':                                         'Salud',
+    'transporte':                                    'Transporte',
+    'comunicaciones':                                'Comunicaciones',
+    'recreacion_y_cultura':                          'Recreación y cultura',
+    'educacion':                                     'Educación',
+    'alimentos_y_bebidas_consumidos_fuera_del_hogar': 'Alimentos fuera del hogar',
+    'bienes_y_servicios_diversos':                   'Bienes y servicios diversos',
+}
+INE_IPP_GRUPOS = {
+    'agricolas':                     'Agrícolas',
+    'pecuaria':                      'Pecuaria',
+    'pesca':                         'Pesca',
+    'otros_minerales_y_gas_natural': 'Otros minerales y gas natural',
+    'industria_manufacturera':       'Industria manufacturera',
+    'servicios':                     'Servicios',
+}
+
+
+def _laspeyres_contrib(idx_div: dict, idx_tot: dict, var12_tot: dict):
+    """Recupera las ponderaciones fijas del índice total (Laspeyres base 2016)
+    a partir de los índices de división que ya ingerimos, y deriva la
+    contribución de cada división a la variación 12m del total:
+
+        c_i(t) = w_i · (I_i(t) − I_i(t−12)) / I_T(t−12) · 100
+
+    El INE no publica las ponderaciones en los cuadros que ingerimos, pero el
+    total es combinación lineal EXACTA de las divisiones (verificado: error de
+    reconstrucción 0.000 en IPC y 0.001 en IPP sobre toda la serie), así que
+    los pesos se recuperan por mínimos cuadrados. Doble guarda fail-closed:
+    si la reconstrucción del índice no es casi exacta, o la suma de
+    contribuciones no replica la var_12m publicada (tolerancias abajo),
+    devuelve (None, None) y el payload va sin contribuciones — el frontend
+    degrada a la vista de líneas. Sin numpy: ecuaciones normales + eliminación
+    gaussiana (sistema chico, n=12), dashboard.py se mantiene stdlib-only.
+
+    idx_div: {slug: {periodo: indice}}, idx_tot/var12_tot: {periodo: valor}.
+    Devuelve (pesos {slug: w}, contrib {slug: {periodo: pts}}).
+    """
+    slugs = sorted(idx_div)
+    n = len(slugs)
+    periodos = [p for p in sorted(idx_tot)
+                if all(p in idx_div[s] for s in slugs)]
+    if n == 0 or len(periodos) < n + 12:
+        return None, None
+    rows = [[idx_div[s][p] for s in slugs] for p in periodos]
+    y = [idx_tot[p] for p in periodos]
+    # Matriz aumentada de ecuaciones normales (XᵀX | Xᵀy), Gauss-Jordan con
+    # pivoteo parcial.
+    aug = [[sum(r[i] * r[j] for r in rows) for j in range(n)]
+           + [sum(r[i] * yk for r, yk in zip(rows, y))] for i in range(n)]
+    for col in range(n):
+        piv = max(range(col, n), key=lambda r: abs(aug[r][col]))
+        if abs(aug[piv][col]) < 1e-9:
+            return None, None
+        aug[col], aug[piv] = aug[piv], aug[col]
+        for r in range(n):
+            if r != col and aug[r][col]:
+                factor = aug[r][col] / aug[col][col]
+                aug[r] = [a - factor * b for a, b in zip(aug[r], aug[col])]
+    pesos = {s: aug[i][n] / aug[i][i] for i, s in enumerate(slugs)}
+    # Guarda 1: pesos sanos + reconstrucción casi exacta del índice total.
+    recon_err = max(abs(sum(pesos[s] * idx_div[s][p] for s in slugs) - idx_tot[p])
+                    for p in periodos)
+    if (recon_err > 0.02 or abs(sum(pesos.values()) - 1) > 0.001
+            or min(pesos.values()) <= 0):
+        return None, None
+    contrib = {s: {} for s in slugs}
+    diffs = []
+    for p in periodos:
+        p12 = f"{int(p[:4]) - 1}-{p[5:]}"
+        if p12 not in idx_tot or any(p12 not in idx_div[s] for s in slugs):
+            continue
+        base = idx_tot[p12]
+        total = 0.0
+        for s in slugs:
+            c = pesos[s] * (idx_div[s][p] - idx_div[s][p12]) / base * 100
+            contrib[s][p] = c
+            total += c
+        if p in var12_tot:
+            diffs.append(abs(total - var12_tot[p]))
+    # Guarda 2: la suma de contribuciones replica la var 12m publicada.
+    if not diffs or max(diffs) > 0.05:
+        return None, None
+    return pesos, contrib
+
 
 def load_bcb_ref(first_date: str | None = None) -> dict:
     """Lee bcb_referencial.json (array de {fecha,compra,venta}). Soporta formato
@@ -529,6 +626,110 @@ def process_data(db_path: Path) -> dict:
     except Exception:
         pass  # Table doesn't exist yet — graceful degradation
 
+    # ── Inflación INE (from ine_ipc / ine_ipp tables, if exist) ──
+    # Shape columnar estilo EMBI: `periodos` + series alineadas por índice,
+    # None donde falta la observación. Indicadores tal cual vienen del INE
+    # (pivot, no recálculo). `valor IS NOT NULL` siempre: el parser INE
+    # persiste filas placeholder para los meses futuros del año en curso.
+    # El slug 'total' de los cuadros desagregados replica el agregado
+    # nacional (verificado idéntico en data real) — se omite del payload;
+    # el frontend usa `general` donde necesita el total.
+    def _inflacion_familia(table: str, cuadro_nacional: str,
+                           cuadro_desglose: str, labels: dict) -> dict | None:
+        metricas_nac = ('var_12m', 'var_mensual', 'var_acumulada')
+        metricas_des = ('var_12m', 'var_mensual')
+        nac_rows = conn.execute(
+            f"SELECT periodo, indicador, valor FROM {table} "
+            f"WHERE cuadro = ? AND valor IS NOT NULL",
+            (cuadro_nacional,)).fetchall()
+        des_rows = conn.execute(
+            f"SELECT periodo, indicador, valor FROM {table} "
+            f"WHERE cuadro = ? AND valor IS NOT NULL",
+            (cuadro_desglose,)).fetchall()
+        # Split por prefijo en Python (LIKE con '_' es wildcard en SQL).
+        # Los índices por división + total y la var_12m del total alimentan
+        # el cálculo de contribuciones (no viajan crudos en el payload).
+        nac = [(r['periodo'], r['indicador'], r['valor']) for r in nac_rows
+               if r['indicador'] in metricas_nac]
+        des = []
+        idx_div, idx_tot, var12_tot = {}, {}, {}
+        for r in des_rows:
+            ind, p, val = r['indicador'], r['periodo'], r['valor']
+            if ind.startswith('indice_'):
+                slug = ind[len('indice_'):]
+                if slug == 'total':
+                    idx_tot[p] = val
+                else:
+                    idx_div.setdefault(slug, {})[p] = val
+                continue
+            if ind == 'var_12m_total':
+                var12_tot[p] = val
+            for m in metricas_des:
+                if ind.startswith(m + '_'):
+                    slug = ind[len(m) + 1:]
+                    if slug != 'total':
+                        des.append((p, m, slug, val))
+                    break
+        if not nac:
+            return None
+        periodos = sorted({p for p, _, _ in nac} | {p for p, _, _, _ in des})
+        p_idx = {p: i for i, p in enumerate(periodos)}
+        general = {m: [None] * len(periodos) for m in metricas_nac}
+        for p, ind, val in nac:
+            general[ind][p_idx[p]] = round(val, 4)
+        # Slugs en orden canónico del mapa de labels; los desconocidos (cambios
+        # futuros del INE) se anexan al final con label derivado, no se dropean.
+        slugs_data = {s for _, _, s, _ in des}
+        slugs = [s for s in labels if s in slugs_data] \
+            + sorted(slugs_data - set(labels))
+        desglose = {
+            s: {'label': labels.get(s, s.replace('_', ' ').capitalize()),
+                **{m: [None] * len(periodos) for m in metricas_des}}
+            for s in slugs
+        }
+        for p, m, s, val in des:
+            desglose[s][m][p_idx[p]] = round(val, 4)
+        # Contribuciones a la var 12m del total (vista apilada del frontend).
+        # All-or-nothing: solo se adjuntan si TODOS los slugs del desglose las
+        # tienen — una suma parcial de barras apiladas sería engañosa.
+        pesos, contrib = _laspeyres_contrib(idx_div, idx_tot, var12_tot)
+        if contrib and all(s in contrib for s in slugs):
+            for s in slugs:
+                desglose[s]['peso'] = round(pesos[s], 4)
+                desglose[s]['contrib'] = [
+                    round(contrib[s][p], 4) if p in contrib[s] else None
+                    for p in periodos]
+        # KPIs precomputados: métricas del último periodo con var_12m no-null.
+        ultimo_p = max((p for p, ind, _ in nac if ind == 'var_12m'),
+                       default=None)
+        ultimo = None
+        if ultimo_p is not None:
+            i = p_idx[ultimo_p]
+            ultimo = {'periodo': ultimo_p,
+                      **{m: general[m][i] for m in metricas_nac}}
+        return {'periodos': periodos, 'general': general,
+                'desglose': desglose, 'ultimo': ultimo}
+
+    inflacion_data = {'ipc': None, 'ipp': None, 'ultimo': {'ipc': None, 'ipp': None}}
+    try:
+        ipc = _inflacion_familia('ine_ipc', 'ipc_nacional_general',
+                                 'ipc_division_coicop', INE_IPC_DIVISIONES)
+        if ipc:
+            inflacion_data['ultimo']['ipc'] = ipc.pop('ultimo')
+            ipc['divisiones'] = ipc.pop('desglose')
+            inflacion_data['ipc'] = ipc
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+    try:
+        ipp = _inflacion_familia('ine_ipp', 'ipp_nacional',
+                                 'ipp_grandes_grupos', INE_IPP_GRUPOS)
+        if ipp:
+            inflacion_data['ultimo']['ipp'] = ipp.pop('ultimo')
+            ipp['grupos'] = ipp.pop('desglose')
+            inflacion_data['ipp'] = ipp
+    except Exception:
+        pass  # Table doesn't exist yet — graceful degradation
+
     # ── Noticias (from noticias table, if exists) ──
     # Últimos 30 días en hora Bolivia (UTC-4): el slider del tab cubre
     # exactamente [hoy-29 .. hoy] y el frontend no clampa — la ventana la
@@ -565,6 +766,7 @@ def process_data(db_path: Path) -> dict:
         'activity_heatmap': activity_matrix,
         'dpf_data': dpf_data,
         'embi_data': embi_data,
+        'inflacion': inflacion_data,
         'noticias': noticias_data,
         'gaps': gaps,
         'meta': {
