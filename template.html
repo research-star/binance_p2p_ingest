@@ -1016,6 +1016,18 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
         <div id="riesgoChart" style="height:440px;"></div>
         <div class="fb-chart-source">Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices</div>
       </div>
+      <!-- Cronograma servicio deuda soberana 2026-2031. Dataset estático embebido
+           en JS (const DEBT_SCHEDULE, junto a su render) — no pasa por dashboard.py.
+           Render lazy: window.renderDeudaSoberana, colgado del hook de la subtab. -->
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">Servicio de deuda en bonos soberanos</div>
+          <div class="fb-chart-sub">Capital + cupones por a&ntilde;o seg&uacute;n emisi&oacute;n, 2026-2031. En millones de USD.</div>
+        </div>
+        <div id="deudaKpis"></div>
+        <div id="deudaChart" style="height:400px;"></div>
+        <div class="fb-chart-source">Capital + cupones (USD MM). Cifras seg&uacute;n t&eacute;rminos contractuales de cada emisi&oacute;n; cupones semestrales. Bono 2031: vencimiento &uacute;nico seg&uacute;n t&eacute;rminos de colocaci&oacute;n. Fuentes: prospectos de emisi&oacute;n, MEFP, Cbonds.</div>
+      </div>
     </div>
   </div>
   <!-- Sub-panel: Inflación (IPC/IPP del INE). Render lazy: window.renderInflacion,
@@ -1160,8 +1172,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#1e4d7a','chart-debt-em2022':'#5589c0','chart-debt-em2026':'#d97706'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#5a8cc4','chart-debt-em2022':'#9cc3e8','chart-debt-em2026':'#f59e0b'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -2769,7 +2781,10 @@ var TAB_PANELS = {
 var MACRO_SUBTABS = [
   { id:'riesgo', slug:'/riesgo', title:'FinanzasBo — Riesgo País EMBI',
     subtitle:'EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span>',
-    render:function(){ if(typeof window.renderRiesgoPais==='function') window.renderRiesgoPais(); } },
+    render:function(){
+      if(typeof window.renderRiesgoPais==='function') window.renderRiesgoPais();
+      if(typeof window.renderDeudaSoberana==='function') window.renderDeudaSoberana();
+    } },
   { id:'inflacion', slug:'/inflacion', title:'FinanzasBo — Inflación',
     subtitle:'Precios al consumidor (IPC) y al productor (IPP) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
     render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } }
@@ -3781,6 +3796,117 @@ window.addEventListener('popstate', function(){
       rendered = true;
     }
     plotFull();
+  };
+})();
+
+// ═══ CRONOGRAMA SERVICIO DEUDA SOBERANA (segundo card de la subtab Riesgo País) ═══
+(function(){
+  // Dataset estático embebido — desviación deliberada del patrón DATA.*:
+  // son términos contractuales inmutables de las 3 emisiones vigentes
+  // (2017/2022/2026), no series que dashboard.py deba refrescar. Si Bolivia
+  // emite, recompra o canjea deuda, se edita acá y se redeploya.
+  // Servicio anual = capital + cupones (semestrales), en USD MM.
+  var DEBT_SCHEDULE = {
+    years: [2026, 2027, 2028, 2029, 2030, 2031],
+    series: [
+      { id: 'em2017', label: 'Emisión 2017 (4,5% · vto 2028)',
+        values: [370.8, 355.8, 340.8, 0, 0, 0] },
+      { id: 'em2022', label: 'Emisión 2022 (7,5% · vto 2030)',
+        values: [63.8, 63.8, 336.5, 315.2, 294.0, 0] },
+      { id: 'em2026', label: 'Emisión 2026 (9,45% · vto 2031)',
+        values: [47.3, 94.5, 94.5, 94.5, 94.5, 1047.3] }
+    ],
+    totals: [481.8, 514.1, 771.8, 409.7, 388.5, 1047.3]
+  };
+  var rendered = false;
+
+  function fmtMm(v){ return '$' + fmtInt(v) + ' MM'; }
+  function kpiCard(label, value, sub){
+    return '<div class="fb-kpi-card">'
+      + '<div class="fb-kpi-head"><div class="fb-kpi-label">'+label+'</div></div>'
+      + '<div class="fb-kpi-value">'+value+'</div>'
+      + '<div class="fb-kpi-sub" style="color:var(--text-muted)">'+sub+'</div>'
+      + '</div>';
+  }
+
+  function renderKpis(){
+    var el = document.getElementById('deudaKpis');
+    if(!el) return;
+    var total = DEBT_SCHEDULE.totals.reduce(function(a,b){return a+b;}, 0);
+    // Pico intermedio: año de mayor servicio excluyendo el bullet final.
+    var peakIdx = 0;
+    DEBT_SCHEDULE.totals.slice(0,-1).forEach(function(v,i){
+      if(v > DEBT_SCHEDULE.totals[peakIdx]) peakIdx = i;
+    });
+    var lastIdx = DEBT_SCHEDULE.years.length - 1;
+    el.innerHTML = '<div class="fb-kpi-grid" style="grid-template-columns:repeat(3,1fr)">'
+      + kpiCard('Servicio total 2026-2031', fmtMm(total),
+          'Capital + cupones de las 3 emisiones vigentes')
+      + kpiCard('Pico intermedio', DEBT_SCHEDULE.years[peakIdx]+' · '+fmtMm(DEBT_SCHEDULE.totals[peakIdx]),
+          'Última cuota del bono 2017 + primera del 2022')
+      + kpiCard('Bullet', DEBT_SCHEDULE.years[lastIdx]+' · '+fmtMm(DEBT_SCHEDULE.totals[lastIdx]),
+          'Vencimiento único del bono 2026')
+      + '</div>';
+  }
+
+  function plotDeuda(){
+    var el = document.getElementById('deudaChart');
+    if(!el || typeof Plotly==='undefined') return;
+    // Años como categoría: 6 barras, sin ticks fraccionales de eje lineal.
+    var x = DEBT_SCHEDULE.years.map(String);
+    var traces = DEBT_SCHEDULE.series.map(function(s){
+      return {
+        type:'bar', name:s.label, x:x,
+        // 0 → null: la serie no participa ese año y el hover unificado no
+        // muestra filas "$0 MM".
+        y:s.values.map(function(v){return v===0 ? null : v;}),
+        marker:{color:cssVar('--chart-debt-'+s.id), line:{width:0}},
+        hovertemplate:s.label+': $%{y:,.0f} MM<extra></extra>'
+      };
+    });
+    var gridc = cssVar('--chart-grid', 'rgba(120,120,120,.10)');
+    var fontc = cssVar('--chart-axis-text', '#576471');
+    var L = {
+      autosize:true,
+      barmode:'stack',
+      bargap:0.35,
+      margin:{l:56, r:16, t:8, b:64},
+      xaxis:{type:'category', showgrid:false, tickangle:0, showline:false, zeroline:false},
+      yaxis:{tickformat:',d', showgrid:true, gridcolor:gridc, zeroline:false,
+             rangemode:'tozero', title:{text:'USD MM', font:{size:10, color:fontc}}},
+      hovermode:'x unified',
+      hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(44,74,107,.18)'),
+                  font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#2c4a6b')}},
+      showlegend:true,
+      legend:{orientation:'h', x:0, y:-0.1, yanchor:'top', font:{size:10}},
+      paper_bgcolor:'rgba(0,0,0,0)',
+      plot_bgcolor:'rgba(0,0,0,0)',
+      font:{family:"'Outfit', system-ui, sans-serif", size:11, color:fontc},
+      // Total anual sobre cada barra, redondeado a entero. x = índice de
+      // categoría (numérico), NO el string del año: en Plotly 2.35 una
+      // annotation con x string sobre eje category rompe silenciosamente
+      // el hover de todo el chart (verificado en local).
+      annotations: DEBT_SCHEDULE.years.map(function(yr, i){
+        return {x:i, y:DEBT_SCHEDULE.totals[i], text:'<b>'+fmtInt(DEBT_SCHEDULE.totals[i])+'</b>',
+                showarrow:false, yshift:12,
+                font:{size:11, color:cssVar('--text-primary','#2c4a6b')}};
+      })
+    };
+    Plotly.newPlot(el, traces, L, {displayModeBar:false, responsive:true});
+  }
+
+  window.renderDeudaSoberana = function(){
+    renderKpis();
+    if(!rendered){
+      // Re-plot al cambiar tema, solo si el card está visible (mismo patrón
+      // que el chart EMBI de arriba).
+      new MutationObserver(function(){
+        var el = document.getElementById('deudaChart');
+        if(el && el.offsetParent !== null) plotDeuda();
+      }).observe(document.body, {attributes:true, attributeFilter:['class']});
+      rendered = true;
+    }
+    plotDeuda();
   };
 })();
 
