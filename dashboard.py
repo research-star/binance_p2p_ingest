@@ -78,6 +78,74 @@ INE_IPP_GRUPOS = {
 }
 
 
+def _laspeyres_contrib(idx_div: dict, idx_tot: dict, var12_tot: dict):
+    """Recupera las ponderaciones fijas del índice total (Laspeyres base 2016)
+    a partir de los índices de división que ya ingerimos, y deriva la
+    contribución de cada división a la variación 12m del total:
+
+        c_i(t) = w_i · (I_i(t) − I_i(t−12)) / I_T(t−12) · 100
+
+    El INE no publica las ponderaciones en los cuadros que ingerimos, pero el
+    total es combinación lineal EXACTA de las divisiones (verificado: error de
+    reconstrucción 0.000 en IPC y 0.001 en IPP sobre toda la serie), así que
+    los pesos se recuperan por mínimos cuadrados. Doble guarda fail-closed:
+    si la reconstrucción del índice no es casi exacta, o la suma de
+    contribuciones no replica la var_12m publicada (tolerancias abajo),
+    devuelve (None, None) y el payload va sin contribuciones — el frontend
+    degrada a la vista de líneas. Sin numpy: ecuaciones normales + eliminación
+    gaussiana (sistema chico, n=12), dashboard.py se mantiene stdlib-only.
+
+    idx_div: {slug: {periodo: indice}}, idx_tot/var12_tot: {periodo: valor}.
+    Devuelve (pesos {slug: w}, contrib {slug: {periodo: pts}}).
+    """
+    slugs = sorted(idx_div)
+    n = len(slugs)
+    periodos = [p for p in sorted(idx_tot)
+                if all(p in idx_div[s] for s in slugs)]
+    if n == 0 or len(periodos) < n + 12:
+        return None, None
+    rows = [[idx_div[s][p] for s in slugs] for p in periodos]
+    y = [idx_tot[p] for p in periodos]
+    # Matriz aumentada de ecuaciones normales (XᵀX | Xᵀy), Gauss-Jordan con
+    # pivoteo parcial.
+    aug = [[sum(r[i] * r[j] for r in rows) for j in range(n)]
+           + [sum(r[i] * yk for r, yk in zip(rows, y))] for i in range(n)]
+    for col in range(n):
+        piv = max(range(col, n), key=lambda r: abs(aug[r][col]))
+        if abs(aug[piv][col]) < 1e-9:
+            return None, None
+        aug[col], aug[piv] = aug[piv], aug[col]
+        for r in range(n):
+            if r != col and aug[r][col]:
+                factor = aug[r][col] / aug[col][col]
+                aug[r] = [a - factor * b for a, b in zip(aug[r], aug[col])]
+    pesos = {s: aug[i][n] / aug[i][i] for i, s in enumerate(slugs)}
+    # Guarda 1: pesos sanos + reconstrucción casi exacta del índice total.
+    recon_err = max(abs(sum(pesos[s] * idx_div[s][p] for s in slugs) - idx_tot[p])
+                    for p in periodos)
+    if (recon_err > 0.02 or abs(sum(pesos.values()) - 1) > 0.001
+            or min(pesos.values()) <= 0):
+        return None, None
+    contrib = {s: {} for s in slugs}
+    diffs = []
+    for p in periodos:
+        p12 = f"{int(p[:4]) - 1}-{p[5:]}"
+        if p12 not in idx_tot or any(p12 not in idx_div[s] for s in slugs):
+            continue
+        base = idx_tot[p12]
+        total = 0.0
+        for s in slugs:
+            c = pesos[s] * (idx_div[s][p] - idx_div[s][p12]) / base * 100
+            contrib[s][p] = c
+            total += c
+        if p in var12_tot:
+            diffs.append(abs(total - var12_tot[p]))
+    # Guarda 2: la suma de contribuciones replica la var 12m publicada.
+    if not diffs or max(diffs) > 0.05:
+        return None, None
+    return pesos, contrib
+
+
 def load_bcb_ref(first_date: str | None = None) -> dict:
     """Lee bcb_referencial.json (array de {fecha,compra,venta}). Soporta formato
     viejo (dict) como fallback. Devuelve dict con latest + history.
@@ -579,15 +647,28 @@ def process_data(db_path: Path) -> dict:
             f"WHERE cuadro = ? AND valor IS NOT NULL",
             (cuadro_desglose,)).fetchall()
         # Split por prefijo en Python (LIKE con '_' es wildcard en SQL).
+        # Los índices por división + total y la var_12m del total alimentan
+        # el cálculo de contribuciones (no viajan crudos en el payload).
         nac = [(r['periodo'], r['indicador'], r['valor']) for r in nac_rows
                if r['indicador'] in metricas_nac]
         des = []
+        idx_div, idx_tot, var12_tot = {}, {}, {}
         for r in des_rows:
+            ind, p, val = r['indicador'], r['periodo'], r['valor']
+            if ind.startswith('indice_'):
+                slug = ind[len('indice_'):]
+                if slug == 'total':
+                    idx_tot[p] = val
+                else:
+                    idx_div.setdefault(slug, {})[p] = val
+                continue
+            if ind == 'var_12m_total':
+                var12_tot[p] = val
             for m in metricas_des:
-                if r['indicador'].startswith(m + '_'):
-                    slug = r['indicador'][len(m) + 1:]
+                if ind.startswith(m + '_'):
+                    slug = ind[len(m) + 1:]
                     if slug != 'total':
-                        des.append((r['periodo'], m, slug, r['valor']))
+                        des.append((p, m, slug, val))
                     break
         if not nac:
             return None
@@ -608,6 +689,16 @@ def process_data(db_path: Path) -> dict:
         }
         for p, m, s, val in des:
             desglose[s][m][p_idx[p]] = round(val, 4)
+        # Contribuciones a la var 12m del total (vista apilada del frontend).
+        # All-or-nothing: solo se adjuntan si TODOS los slugs del desglose las
+        # tienen — una suma parcial de barras apiladas sería engañosa.
+        pesos, contrib = _laspeyres_contrib(idx_div, idx_tot, var12_tot)
+        if contrib and all(s in contrib for s in slugs):
+            for s in slugs:
+                desglose[s]['peso'] = round(pesos[s], 4)
+                desglose[s]['contrib'] = [
+                    round(contrib[s][p], 4) if p in contrib[s] else None
+                    for p in periodos]
         # KPIs precomputados: métricas del último periodo con var_12m no-null.
         ultimo_p = max((p for p, ind, _ in nac if ind == 'var_12m'),
                        default=None)
