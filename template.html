@@ -555,12 +555,12 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
   <div class="fb-navbar-left">
     <span class="fb-logo">FinanzasBo</span>
     <div class="fb-tabs">
-      <button class="fb-tab active" data-tab="dollar">D&oacute;lar</button>
+      <button class="fb-tab active" data-tab="noticias">Noticias</button>
       <button class="fb-tab" data-tab="macro">Macro</button>
+      <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
       <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
       <button class="fb-tab" data-tab="bbv">BBV</button>
       <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
-      <button class="fb-tab" data-tab="noticias">Noticias</button>
     </div>
   </div>
   <div class="fb-navbar-right">
@@ -571,7 +571,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
     </button>
   </div>
 </nav>
-<div id="tab-dolar">
+<div id="tab-dolar" style="display:none;">
 <!-- Sub-header -->
 <div class="fb-subheader">
   <div>
@@ -1077,7 +1077,7 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
   </div>
 </div><!-- /tab-macro -->
 
-<div id="tab-noticias" style="display:none;">
+<div id="tab-noticias">
   <div class="fb-subheader">
     <div>
       <h1>Noticias</h1>
@@ -2752,18 +2752,21 @@ function initHelpTooltips(){
 }
 
 // ═══ TAB SWITCHING + ROUTING ═══
-// Cada slug resuelve a {tab, subtab?}. La home (Dólar) es '/'. Macro tiene
-// subtabs deep-linkables vía slugs PLANOS (un solo nivel, sin parser nuevo):
-// /riesgo (preservado) y /inflacion; /macro resuelve al subtab default.
+// Cada slug resuelve a {tab, subtab?}. La home (Noticias) es '/'. Dólar tiene
+// su propio slug '/dolar'. '/noticias' es alias de entrada: resuelve a Noticias
+// pero la barra canonicaliza a '/' (marca alias:true → excluido de TAB_TO_SLUG).
+// Macro tiene subtabs deep-linkables vía slugs PLANOS (un solo nivel, sin parser
+// nuevo): /riesgo (preservado) y /inflacion; /macro resuelve al subtab default.
 var ROUTE_MAP = {
-  '/':          {tab:'dollar'},
+  '/':          {tab:'noticias'},
   '/macro':     {tab:'macro', subtab:'riesgo'},
   '/riesgo':    {tab:'macro', subtab:'riesgo'},
   '/inflacion': {tab:'macro', subtab:'inflacion'},
   '/dpf':       {tab:'dpf'},
   '/bbv':       {tab:'bbv'},
   '/guia':      {tab:'guide'},
-  '/noticias':  {tab:'noticias'}
+  '/dolar':     {tab:'dollar'},
+  '/noticias':  {tab:'noticias', alias:true}
 };
 // Registro tabId → id del contenedor DOM. Resuelve el mismatch dollar↔tab-dolar
 // y permite togglear los contenedores por loop (sin bloque hardcodeado por tab).
@@ -2802,7 +2805,9 @@ var TAB_TITLES = {
 var TAB_TO_SLUG = {};
 Object.keys(ROUTE_MAP).forEach(function(slug){
   var r = ROUTE_MAP[slug];
-  if(!r.subtab) TAB_TO_SLUG[r.tab] = slug;
+  // Los alias (ej. '/noticias') no entran al inverso: la barra usa el slug
+  // canónico del tab ('/' para Noticias, '/dolar' para Dólar), no el alias.
+  if(!r.subtab && !r.alias) TAB_TO_SLUG[r.tab] = slug;
 });
 
 var macroState = { current: null };
@@ -2848,6 +2853,10 @@ function activateTab(target, subtab){
   if(target==='bbv' && typeof window.renderBbv==='function'){window.renderBbv();}
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   if(target==='noticias' && typeof window.renderNoticias==='function'){window.renderNoticias();}
+  // Dólar ya no es landing: sus charts se renderizan eager (INIT IIFE) dentro de
+  // #tab-dolar oculto, donde Plotly los dimensiona a width 0. Al mostrar la tab,
+  // reescalar (mismo patrón que el resize de paneles, 2312/2605). Idempotente.
+  if(target==='dollar' && window.Plotly){document.querySelectorAll('#tab-dolar .js-plotly-plot').forEach(function(p){try{Plotly.Plots.resize(p);}catch(e){}});}
   // Macro delega en su subtab (que pone su propio título); el resto usa TAB_TITLES.
   if(target==='macro'){
     activateMacroSubtab(subtab);
@@ -2894,7 +2903,7 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
 
 // Back/forward del browser
 window.addEventListener('popstate', function(){
-  var r = ROUTE_MAP[window.location.pathname] || {tab:'dollar'};
+  var r = ROUTE_MAP[window.location.pathname] || {tab:'noticias'};
   activateTab(r.tab, r.subtab);
 });
 
@@ -2915,9 +2924,17 @@ window.addEventListener('popstate', function(){
   var initial;
   if(ROUTE_MAP[path]){
     initial = ROUTE_MAP[path];
+    // Alias de entrada (ej. '/noticias'): canonicalizar la barra al slug
+    // propio del tab ('/' para Noticias) sin recargar.
+    if(initial.alias){
+      var canon = TAB_TO_SLUG[initial.tab];
+      if(canon && window.location.pathname !== canon){
+        history.replaceState(null, '', canon);
+      }
+    }
   } else {
     history.replaceState(null, '', '/');
-    initial = {tab:'dollar'};
+    initial = {tab:'noticias'};
   }
   function runInitial(){ activateTab(initial.tab, initial.subtab); }
   if(document.readyState==='loading'){
@@ -4814,7 +4831,11 @@ window.addEventListener('popstate', function(){
     var nav=document.querySelector('.fb-navbar');
     var sub=document.querySelector('#tab-dolar .fb-subheader');
     document.documentElement.style.setProperty('--nav-h',(nav?nav.offsetHeight:0)+'px');
-    document.documentElement.style.setProperty('--sub-h',(sub?sub.offsetHeight:0)+'px');
+    // El sub-header vive dentro de #tab-dolar, que ya no es el landing: si Dólar
+    // no es la tab visible, offsetHeight es 0. No pisar --sub-h con 0 (colapsaría
+    // el offset de los sticky #kpis / TOC de Guía); conservar el default de :root.
+    var subH = sub ? sub.offsetHeight : 0;
+    if(subH > 0) document.documentElement.style.setProperty('--sub-h', subH+'px');
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',measure);}else{measure();}
   window.addEventListener('resize',measure);
