@@ -2047,7 +2047,22 @@ function renderTimeSeries(view){
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
   rSpreadEvo(c,v); rMerchants(); rOutliers(); rFlow(c);
 }
+// Flags de carga lazy de la tab Dólar (misma idea que ntBuilt/renderBbv).
+// dollarBuilt: mientras sea false, replotAllCharts es no-op → applyTheme (toggle de
+//   tema, global) puede correr desde otra tab sin tocar charts aún inexistentes.
+// dollarThemeDirty: un toggle de tema con Dólar YA construido pero OCULTO difiere el
+//   repaint (Plotly mediría width 0); se aplica al volver a la tab, ya visible.
+let dollarBuilt = false;
+let dollarThemeDirty = false;
 function replotAllCharts(){
+  if(!dollarBuilt) return;
+  // No repintar con la tab oculta: Plotly (su responsive sólo escucha resize de
+  // window, no cambios de display) mediría width 0 y dejaría los charts deformados
+  // sin recuperación al mostrarlos. Mismo guard de visibilidad que los charts de
+  // Macro (offsetParent, 3905/4016/4487): diferir y marcar pendiente para el activate.
+  const host=document.getElementById('tab-dolar');
+  if(host && host.offsetParent===null){ dollarThemeDirty=true; return; }
+  dollarThemeDirty=false;
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
   rVwap(c,v); rSpread(c,v); rDepth(c,v); rRatio(c,v); rConc(c,v);
@@ -2055,6 +2070,22 @@ function replotAllCharts(){
   rSpreadEvo(c,v); rOrderBook(c); rActivityHm(c);
   updateKpis();
 }
+// Render lazy de la tab Dólar (misma convención que renderBbv/renderGuide/renderNoticias).
+// Se invoca en cada activate de Dólar con #tab-dolar ya visible (loop de activateTab):
+//  - primer activate → construye y pinta (Plotly dimensiona bien; sin resize manual).
+//  - activates siguientes → no-op, salvo que un toggle de tema con la tab oculta haya
+//    dejado un repaint pendiente (dollarThemeDirty), que se aplica ahora ya visible.
+window.renderDollar = function(){
+  if(!dollarBuilt){
+    dollarBuilt = true;
+    // replotAllCharts pinta los 14 charts + KPIs en el view activo (currentView,
+    // default 'snapshot'; el toggle #viewToggle puede cambiarlo) con activeRange/
+    // tema ya restaurados en el INIT eager.
+    replotAllCharts();
+    return;
+  }
+  if(dollarThemeDirty) replotAllCharts();
+};
 
 // ═══ STATIC CONTENT ═══
 {
@@ -2703,6 +2734,8 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // Layout bloqueado: orden y visibilidad fijos en HTML, sin restaurar desde localStorage.
   // Filtro de lado: ahora es per-panel, default 'both' al cargar (sin persistencia).
 
+  // Restauración del rango (estado global, SIN repintar): deja activeRange listo
+  // para cuando window.renderDollar pinte los charts en el primer activate de Dólar.
   activeRange = rangeFromState(dateRangeState);
 
   let saved=localStorage.getItem('dashboard-active-theme');
@@ -2710,11 +2743,10 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   if(saved==='ink'){saved='slate';localStorage.setItem('dashboard-active-theme','slate')}
   if(saved&&THEMES[saved])applyTheme(saved);
   else applyTheme('paper');
-  // Sincronizar UI del selector con el rango restaurado y disparar render
-  // inicial completo. applyDateRange llama a replotAllCharts internamente.
-  applyDateRange(dateRangeState, false);
-  // Vista fija en 'snapshot' (selector de vista eliminado en PR consolidado).
-  renderTimeSeries('snapshot');
+  // Charts de Dólar NO se pintan acá: la tab es lazy (window.renderDollar, gated por
+  // dollarBuilt). El applyTheme de arriba ya fijó tema/CSS vars globales; su
+  // replotAllCharts es no-op mientras Dólar no esté construido. El primer pintado
+  // ocurre en el primer activate de la tab, con #tab-dolar ya visible.
   initHelpTooltips();
 })();
 
@@ -2853,10 +2885,9 @@ function activateTab(target, subtab){
   if(target==='bbv' && typeof window.renderBbv==='function'){window.renderBbv();}
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   if(target==='noticias' && typeof window.renderNoticias==='function'){window.renderNoticias();}
-  // Dólar ya no es landing: sus charts se renderizan eager (INIT IIFE) dentro de
-  // #tab-dolar oculto, donde Plotly los dimensiona a width 0. Al mostrar la tab,
-  // reescalar (mismo patrón que el resize de paneles, 2312/2605). Idempotente.
-  if(target==='dollar' && window.Plotly){document.querySelectorAll('#tab-dolar .js-plotly-plot').forEach(function(p){try{Plotly.Plots.resize(p);}catch(e){}});}
+  // Dólar es lazy como el resto: render idempotente en el primer activate, con
+  // #tab-dolar ya visible (loop de arriba) → Plotly dimensiona bien sin resize manual.
+  if(target==='dollar' && typeof window.renderDollar==='function'){window.renderDollar();}
   // Macro delega en su subtab (que pone su propio título); el resto usa TAB_TITLES.
   if(target==='macro'){
     activateMacroSubtab(subtab);
