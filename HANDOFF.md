@@ -300,19 +300,21 @@ dentro de Macro):
 
 ### Routing por paths (SPA + 404 trick)
 
-URLs limpias por tab via HTML5 History API. Estado post-PR #47 (navbar
-reordenada + subnav Macro) y post tab Noticias:
+URLs limpias por tab via HTML5 History API. Estado post navbar reordenada
+(Noticias · Macro · Dólar · DPF · BBV · Guía) con **Noticias como landing en
+`/`** y Dólar migrado a slug propio `/dolar`:
 
 | Slug | Resuelve a | Título |
 |---|---|---|
-| `/` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
+| `/` | tab `noticias` (landing) | FinanzasBo — Noticias |
 | `/macro` | tab `macro`, subtab default (`riesgo`) | FinanzasBo — Riesgo País EMBI |
 | `/riesgo` | tab `macro`, subtab `riesgo` | FinanzasBo — Riesgo País EMBI |
 | `/inflacion` | tab `macro`, subtab `inflacion` (IPC/IPP INE) | FinanzasBo — Inflación |
 | `/dpf` | tab `dpf` | FinanzasBo — Rendimientos DPF |
 | `/bbv` | tab `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
 | `/guia` | tab `guide` | FinanzasBo — Guía del dashboard |
-| `/noticias` | tab `noticias` | FinanzasBo — Noticias |
+| `/dolar` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
+| `/noticias` | alias → tab `noticias`; la barra canonicaliza a `/` (entry `alias:true`, excluido de `TAB_TO_SLUG`) | FinanzasBo — Noticias |
 
 El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
 `// ═══ TAB SWITCHING + ROUTING ═══`); cada entrada resuelve a
@@ -336,7 +338,7 @@ y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 (ver § Frontend tab "Noticias" abajo).
 
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
-+ activa Dólar.
++ activa Noticias (landing).
 
 **Frontend tab "Noticias"** (en `template.html`):
 - Variante D ("Terminal · tabla densa") del mockup de Claude Design
