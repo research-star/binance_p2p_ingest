@@ -4628,7 +4628,7 @@ window.addEventListener('popstate', function(){
   function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
   function npTitle(url,text){ return npLink(url, ntEsc(text)); }
-  function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span><span class="np-sep">·</span>'+npImpact(n.impact)+'</div>'; }
+  function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'; }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
 
   // ── Regiones ──
@@ -4660,15 +4660,15 @@ window.addEventListener('popstate', function(){
     const pool=ntPool();
     if(!pool.length) return '<section class="np-top"><div class="np-empty">No hay notas para esta selección.</div></section>';
     const lead=pool[0], secs=pool.slice(1,3);
-    let L='<article class="np-lead"><div class="np-lead-kicker"><span class="np-kicker">'+ntEsc(ntCatName(lead.category))+'</span>'+npImpact(lead.impact)+'</div>'
+    let L='<article class="np-lead">'
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
-      +'<figure class="np-figure"><div class="np-imgph"><span class="np-imglabel">'+ntEsc(ntCatName(lead.category))+'</span></div></figure>'
+      +'<figure class="np-figure"><div class="np-imgph"></div></figure>'
       +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
     let S='<div class="np-secs">';
     for(let i=0;i<secs.length;i++){ const s=secs[i];
-      S+='<article class="np-sec"><div class="np-sec-kicker"><span class="np-kicker">'+ntEsc(ntCatName(s.category))+'</span></div>'
+      S+='<article class="np-sec">'
         +(i===0
-          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"><span class="np-imglabel">'+ntEsc(ntCatName(s.category))+'</span></div></div>'
+          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"></div></div>'
           : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
         +'</article>';
     }
@@ -4679,12 +4679,12 @@ window.addEventListener('popstate', function(){
     const pool=ntPool(), river=pool.slice(3), total=pool.length;
     let grid='';
     for(let i=0;i<river.length;i++){ const n=river[i];
-      grid+='<article class="np-card"><div class="np-imgph np-card-img"><span class="np-imglabel">'+ntEsc(ntCatName(n.category))+'</span></div>'
-        +'<div class="np-card-body"><div class="np-card-kicker">'+ntEsc(ntCatName(n.category))+'</div>'
+      grid+='<article class="np-card"><div class="np-imgph np-card-img"></div>'
+        +'<div class="np-card-body">'
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
-        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span><span class="np-sep">·</span>'+npImpact(n.impact)+'</div></div></article>';
+        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div></div></article>';
     }
-    const sub=(npState.cat==='all'?'Selección automática por relevancia':ntCatName(npState.cat))+' · '+total+' '+(total===1?'nota':'notas');
+    const sub='Selección automática por relevancia · '+total+' '+(total===1?'nota':'notas');
     const body=river.length?'<div class="np-river-cards">'+grid+'</div>':'<div class="np-empty">Sin más notas en esta selección.</div>';
     return '<section class="np-river-sec"><div class="np-section-head"><h2>Río de titulares</h2><span class="meta">'+ntEsc(sub)+'</span></div>'+body+'</section>';
   }
@@ -4719,21 +4719,13 @@ window.addEventListener('popstate', function(){
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
-    return '<div class="np-page">'+npTopline()+npMarkets()+npChips()
+    return '<div class="np-page">'+npTopline()+npMarkets()
       +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
       +npLatam()+npFooter()+'</div>';
   }
   function npRerender(){ const host=document.getElementById('tab-noticias'); if(host) host.innerHTML=npBuildHTML(); }
   function renderNoticiasPortada(){
     npRerender();
-    const host=document.getElementById('tab-noticias');
-    if(host && !host.__npBound){
-      host.__npBound=true;
-      host.addEventListener('click', function(e){
-        const chip=e.target.closest('.np-chip');
-        if(chip){ npState.cat=chip.dataset.cat; npRerender(); }
-      });
-    }
   }
   // Lazy render (patrón renderBbv/renderGuide): se construye al activar la tab.
   let ntBuilt=false;
