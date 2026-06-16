@@ -16,5 +16,5 @@
 --   dashboard.py. Lee: dashboard.py (filtro del feed de noticias).
 
 CREATE TABLE IF NOT EXISTS noticias_hidden (
-    id  TEXT PRIMARY KEY   -- = noticias.id (MD5 del url normalizado, 16 hex)
+    id  TEXT NOT NULL PRIMARY KEY   -- = noticias.id (MD5 del url normalizado, 16 hex)
 );

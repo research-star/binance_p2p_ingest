@@ -741,7 +741,7 @@ def process_data(db_path: Path) -> dict:
         # mergear a main no crea la tabla allá. Sin esto, el filtro de abajo tiraría
         # "no such table", el except la tragaría y la tab Noticias se BLANQUEARÍA en el
         # primer publish. Con la tabla vacía el filtro es no-op → build idéntico a hoy.
-        conn.execute("CREATE TABLE IF NOT EXISTS noticias_hidden (id TEXT PRIMARY KEY)")
+        conn.execute("CREATE TABLE IF NOT EXISTS noticias_hidden (id TEXT NOT NULL PRIMARY KEY)")
         # `WHERE id IS NOT NULL` en el subquery: SQLite permite NULL en un TEXT PK, y
         # un solo NULL en el subquery volvería el NOT IN falso para TODA fila (footgun
         # del NOT IN), blanqueando el feed — justo lo que esta capa evita.
