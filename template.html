@@ -543,6 +543,14 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
 .np-section-head .meta{font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.04em}
 @media(max-width:980px){.np-main{grid-template-columns:1fr;gap:26px}.np-body{padding:18px 16px 6px}}
+/* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
+.np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
+.np-topline-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;letter-spacing:.02em}
+.np-date{text-transform:capitalize;font-weight:500;color:var(--text-secondary)}
+.np-upd{display:flex;align-items:center;gap:7px;letter-spacing:.04em}
+.np-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent)}
+.np-sample{font-family:var(--font-body);font-size:9.5px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--down);border:1px dashed var(--down);border-radius:var(--radius-pill);padding:1px 8px}
+@media(max-width:980px){.np-topline{padding:8px 16px}}
 </style></head>
 <body>
 
@@ -4866,7 +4874,16 @@ window.addEventListener('popstate', function(){
     return '<div class="np-dateline">'+npSrc(src,catVar)+'<span class="np-sep">·</span><span class="np-time">'+time+'</span><span class="np-sep">·</span>'+npImpact(impact)+'</div>';
   }
   // Builders por región (se rellenan región a región en 2a):
-  function npTopline(){ return ''; }
+  function npTopline(){
+    return '<div class="np-topline">'
+      +'<span class="np-kicker">FinanzasBo · Noticias</span>'
+      +'<span class="np-topline-meta">'
+        +'<span class="np-date">lunes 15 de junio de 2026 · La Paz, Bolivia</span>'
+        +'<span class="np-upd"><span class="np-live"></span>Actualizado 09:09</span>'
+        +'<span class="np-sample">contenido de muestra</span>'
+      +'</span>'
+    +'</div>';
+  }
   function npMarkets(){ return ''; }
   function npTop(){ return ''; }
   function npRiver(){ return ''; }
