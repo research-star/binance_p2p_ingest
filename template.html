@@ -588,6 +588,18 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .np-sec-row .np-sec-main{flex:1;min-width:0}
 .np-sec-row .np-imgph{width:108px;flex:none;aspect-ratio:1/1;align-self:flex-start;margin-top:2px}
 @media(max-width:980px){.np-top{grid-template-columns:1fr;border-bottom:0;padding-bottom:18px;margin-bottom:0}.np-lead{padding-right:0;border-right:0}.np-secs{padding-left:0;margin-top:20px;border-top:2px solid var(--text-primary);padding-top:14px}}
+/* — 4 · río de tarjetas — */
+.np-river-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 26px}
+.np-card{display:flex;flex-direction:column;min-width:0}
+.np-card .np-card-img{aspect-ratio:16/10;border-radius:var(--radius-xs);margin:0}
+.np-card-body{padding-top:13px;display:flex;flex-direction:column}
+.np-card-kicker{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-accent);margin-bottom:8px}
+.np-card-title{font-family:var(--font-display);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.02em;text-wrap:pretty}
+.np-card-title:hover{color:var(--text-secondary);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.np-card-meta{display:flex;align-items:center;gap:9px;margin-top:10px;font-family:var(--font-body);font-size:10.5px;color:var(--text-muted);flex-wrap:wrap}
+.np-card-meta .np-src{font-size:10.5px}
+@media(max-width:980px){.np-river-cards{grid-template-columns:1fr 1fr;gap:18px 14px}}
+@media(max-width:560px){.np-river-cards{grid-template-columns:1fr}}
 </style></head>
 <body>
 
@@ -4956,7 +4968,25 @@ window.addEventListener('popstate', function(){
       +npDateline('Brújula Digital','06:55','medio','--cat-politica')+'</article>';
     return '<section class="np-top">'+lead+'<div class="np-secs">'+sec1+sec2+'</div></section>';
   }
-  function npRiver(){ return ''; }
+  function npRiver(){
+    var cards=[
+      {cat:'Economía',catVar:'--cat-economia',title:'El Banco Central reporta una caída en las reservas internacionales netas',src:'El Deber',time:'09:10',impact:'medio',ph:'Economía'},
+      {cat:'Hidrocarburos',catVar:'--cat-hidrocarburos',title:'Las filas por combustible se extienden en Santa Cruz y Cochabamba',src:'Unitel',time:'08:55',impact:'alto',ph:'Hidrocarburos'},
+      {cat:'Agro',catVar:'--cat-agro',title:'Los exportadores de soya piden liberar el saldo y advierten por los cupos',src:'El Día',time:'08:20',impact:'medio',ph:'Agro'},
+      {cat:'Minería',catVar:'--cat-mineria',title:'El litio avanza: YLB firma un nuevo acuerdo de industrialización',src:'Los Tiempos',time:'07:48',impact:'medio',ph:'Minería'},
+      {cat:'Economía',catVar:'--cat-economia',title:'La inflación acumulada del año supera las proyecciones oficiales',src:'Brújula Digital',time:'07:15',impact:'bajo',ph:'Economía'},
+      {cat:'Política',catVar:'--cat-politica',title:'Diálogo entre el Gobierno y los transportistas por el precio del pasaje',src:'Erbol',time:'06:40',impact:'bajo',ph:'Política'}
+    ];
+    var grid='';
+    for(var i=0;i<cards.length;i++){var c=cards[i];
+      grid+='<article class="np-card"><div class="np-imgph np-card-img"><span class="np-imglabel">'+c.ph+'</span></div>'
+        +'<div class="np-card-body"><div class="np-card-kicker">'+c.cat+'</div>'
+        +'<h3 class="np-card-title">'+c.title+'</h3>'
+        +'<div class="np-card-meta">'+npSrc(c.src,c.catVar)+'<span class="np-sep">·</span><span class="np-time">'+c.time+'</span><span class="np-sep">·</span>'+npImpact(c.impact)+'</div>'
+        +'</div></article>';
+    }
+    return '<section class="np-river-sec"><div class="np-section-head"><h2>Río de titulares</h2><span class="meta">Selección automática por relevancia · contenido de muestra</span></div><div class="np-river-cards">'+grid+'</div></section>';
+  }
   function npRail(){ return ''; }
   function npLatam(){ return ''; }
   function npFooter(){ return ''; }
