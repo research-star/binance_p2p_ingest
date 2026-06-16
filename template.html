@@ -629,6 +629,23 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .np-latam-time{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:8px;letter-spacing:.02em}
 @media(max-width:980px){.np-latam{padding:18px 16px}.np-latam-grid{grid-template-columns:1fr 1fr}.np-latam-card{padding:14px 0;border-left:0;border-top:1px solid var(--border-color)}.np-latam-card:first-child{padding-top:0;border-top:0}}
 @media(max-width:560px){.np-latam-grid{grid-template-columns:1fr}}
+/* — 7 · footer — */
+.np-footer{padding:26px 36px 34px;border-top:2px solid var(--text-primary)}
+.np-foot-sources{margin-bottom:18px}
+.np-foot-lab{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:11px}
+.np-foot-portals{display:flex;flex-wrap:wrap;gap:7px 16px;align-items:center}
+.np-foot-portal{font-family:var(--font-display);font-weight:500;font-size:14px;color:var(--text-secondary);letter-spacing:.01em}
+.np-foot-portal.linea{color:var(--blue-accent);font-weight:600}
+.np-foot-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+.np-method{font-family:var(--font-body);font-size:11px;line-height:1.65;color:var(--text-muted)}
+.np-method b{color:var(--text-secondary);font-weight:600}
+.np-method .np-disc{margin-top:10px;font-style:italic;color:var(--text-soft);font-size:10.5px}
+.np-foot-tabs{font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
+.np-foot-tabs .lab{font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-primary);display:block;margin-bottom:11px;font-size:10px}
+.np-foot-tabs a{display:block;color:var(--text-secondary);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--border-color);font-size:12.5px;font-weight:500;cursor:pointer}
+.np-foot-tabs a:hover{color:var(--blue-accent)}
+.np-foot-copy{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:22px;letter-spacing:.03em;text-align:center}
+@media(max-width:980px){.np-footer{padding:22px 16px 28px}.np-foot-grid{grid-template-columns:1fr;gap:24px}}
 </style></head>
 <body>
 
@@ -5044,7 +5061,19 @@ window.addEventListener('popstate', function(){
     }
     return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea · contenido de muestra</span></div><div class="np-latam-grid">'+grid+'</div></section>';
   }
-  function npFooter(){ return ''; }
+  function npFooter(){
+    var portals=['El Deber','Los Tiempos','La Razón','Brújula Digital','Erbol','Eju!','El Día','Correo del Sur','Unitel','Noticias Fides','Urgente.bo','Opinión','Bloomberg Línea'];
+    var pl='';
+    for(var i=0;i<portals.length;i++){var linea=portals[i]==='Bloomberg Línea';pl+='<span class="np-foot-portal'+(linea?' linea':'')+'">'+portals[i]+'</span>';}
+    return '<footer class="np-footer">'
+      +'<div class="np-foot-sources"><div class="np-foot-lab">Fuentes monitoreadas</div><div class="np-foot-portals">'+pl+'</div></div>'
+      +'<div class="np-foot-grid">'
+        +'<div class="np-method"><b>Metodología.</b> Las notas bolivianas se agregan automáticamente desde 13 portales y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.<div class="np-disc">Contenido de ejemplo, ilustrativo (FASE 2a). FinanzasBo agrega y enlaza a las fuentes originales; los derechos pertenecen a cada medio. Indicadores con fines informativos, no constituyen asesoría financiera.</div></div>'
+        +'<div class="np-foot-tabs"><span class="lab">Explorar el panel</span><a>Dólar paralelo</a><a>Macroeconomía</a><a>Bolsa BBV</a><a>Rendimientos DPF</a></div>'
+      +'</div>'
+      +'<div class="np-foot-copy">© 2026 FinanzasBo · Inteligencia económica de Bolivia · La Paz</div>'
+    +'</footer>';
+  }
   function renderNoticiasPortada(){
     var html='<div class="np-page">'
       +npTopline()
