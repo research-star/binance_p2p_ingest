@@ -44,6 +44,8 @@ __UMAMI_SCRIPT__
   --text-3xl:22px;
   --text-4xl:26px;
   --text-5xl:28px;
+  --lead-size:46px;
+  --river-gap:14px;
   --radius-xs:3px;
   --radius-sm:4px;
   --radius-md:6px;
@@ -504,6 +506,43 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .nt-empty{padding:48px 20px;text-align:center;color:var(--text-soft);font-size:var(--text-md);font-style:italic}
 .nt-section-foot{padding:12px 20px;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);text-align:center;border-top:1px solid var(--border-color)}
 @media(max-width:900px){.nt-filterbar{gap:14px;padding:12px 14px}}
+
+/* ════════════════════════════════════════════════════════════════
+   Noticias — Portada editorial (FASE 2). Reconstrucción vanilla del
+   mockup FT (design-system/_unzipped) sobre tokens SEMÁNTICOS del repo,
+   para que el dark salga gratis. Clases .np-* aisladas de la Variante D
+   (.nt-*, se retira en 2b). 2a = estructura estática, contenido muestra.
+   ════════════════════════════════════════════════════════════════ */
+.np-page{font-family:var(--font-display);color:var(--text-primary);background:var(--bg-primary)}
+.np-body{padding:24px 36px 8px}
+.np-main{display:grid;grid-template-columns:1fr 312px;gap:34px;align-items:start}
+/* — átomos tipográficos — */
+.np-kicker{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-accent)}
+/* — dateline: fuente · hora · impacto — */
+.np-dateline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
+.np-src{font-family:var(--font-body);font-weight:600;color:var(--text-secondary);letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.np-src .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--nt-c,var(--blue-accent));flex-shrink:0}
+.np-sep{color:var(--line-strong)}
+.np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
+/* — impacto: 3 barras + texto — */
+.np-impact{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase}
+.np-impact .bars{display:inline-flex;gap:2px}
+.np-impact .bars i{width:3px;height:10px;background:currentColor;opacity:.25;border-radius:1px}
+.np-impact .bars i.on{opacity:1}
+.np-impact.alto{color:var(--impact-alto)}
+.np-impact.medio{color:var(--impact-medio)}
+.np-impact.bajo{color:var(--impact-bajo)}
+/* — placeholder de imagen (.ft-imgph portado: gradiente navy + glifo cámara) — */
+.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(27,54,93,.92),rgba(44,74,107,.62) 46%,rgba(110,165,217,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+.np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
+.np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
+.np-imgph .np-imglabel{position:relative;z-index:1;font-family:var(--font-body);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);background:var(--bg-secondary);padding:4px 9px;margin:10px;border-radius:var(--radius-xs);opacity:.94}
+.np-imgph.sm{aspect-ratio:1/1}
+/* — section head (regla 2px ink, theme-aware) — */
+.np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
+.np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
+.np-section-head .meta{font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.04em}
+@media(max-width:980px){.np-main{grid-template-columns:1fr;gap:26px}.np-body{padding:18px 16px 6px}}
 </style></head>
 <body>
 
@@ -1134,8 +1173,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#1e4d7a','chart-debt-em2022':'#5589c0','chart-debt-em2026':'#d97706','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#5a8cc4','chart-debt-em2022':'#9cc3e8','chart-debt-em2026':'#f59e0b','chart-band-low':'rgba(79,176,122,0.08)','chart-band-mid':'rgba(245,158,11,0.07)','chart-band-high':'rgba(224,122,110,0.09)','chart-band-label-low':'rgba(79,176,122,0.65)','chart-band-label-mid':'rgba(245,158,11,0.65)','chart-band-label-high':'rgba(224,122,110,0.70)'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','line-strong':'rgba(44,74,107,0.24)','up':'#7d9a86','down':'#b08a82','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#1e4d7a','chart-debt-em2022':'#5589c0','chart-debt-em2026':'#d97706','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','line-strong':'rgba(255,255,255,0.20)','up':'#93b3a0','down':'#c9a098','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#5a8cc4','chart-debt-em2022':'#9cc3e8','chart-debt-em2026':'#f59e0b','chart-band-low':'rgba(79,176,122,0.08)','chart-band-mid':'rgba(245,158,11,0.07)','chart-band-high':'rgba(224,122,110,0.09)','chart-band-label-low':'rgba(79,176,122,0.65)','chart-band-label-mid':'rgba(245,158,11,0.65)','chart-band-label-high':'rgba(224,122,110,0.70)'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -4810,12 +4849,51 @@ window.addEventListener('popstate', function(){
     });
   }
 
+  // ═══ FASE 2a · Portada editorial (estática, contenido de MUESTRA) ═══
+  // Reemplaza el render de la Variante D en #tab-noticias. ntBuild/
+  // ntRenderAll/ntRenderTable quedan DEFINIDAS e intactas (sin invocar);
+  // su retiro y el data-binding real son 2b.
+  function npImpact(level){
+    var n=level==='alto'?3:level==='medio'?2:1, bars='';
+    for(var i=0;i<3;i++) bars+='<i class="'+(i<n?'on':'')+'"></i>';
+    var lbl=level==='alto'?'Alto':level==='medio'?'Medio':'Bajo';
+    return '<span class="np-impact '+level+'"><span class="bars">'+bars+'</span>'+lbl+'</span>';
+  }
+  function npSrc(name,catVar){
+    return '<span class="np-src"'+(catVar?' style="--nt-c:var('+catVar+')"':'')+'><span class="dot"></span>'+name+'</span>';
+  }
+  function npDateline(src,time,impact,catVar){
+    return '<div class="np-dateline">'+npSrc(src,catVar)+'<span class="np-sep">·</span><span class="np-time">'+time+'</span><span class="np-sep">·</span>'+npImpact(impact)+'</div>';
+  }
+  // Builders por región (se rellenan región a región en 2a):
+  function npTopline(){ return ''; }
+  function npMarkets(){ return ''; }
+  function npTop(){ return ''; }
+  function npRiver(){ return ''; }
+  function npRail(){ return ''; }
+  function npLatam(){ return ''; }
+  function npFooter(){ return ''; }
+  function renderNoticiasPortada(){
+    var html='<div class="np-page">'
+      +npTopline()
+      +npMarkets()
+      +'<div class="np-body">'
+        +npTop()
+        +'<div class="np-main">'+npRiver()+npRail()+'</div>'
+      +'</div>'
+      +npLatam()
+      +npFooter()
+    +'</div>';
+    var host=document.getElementById('tab-noticias');
+    if(host) host.innerHTML=html;
+  }
+
   // Lazy render (patrón renderBbv/renderGuide): se construye al activar la tab.
   window.renderNoticias = function(){
     if(ntBuilt) return;
     ntBuilt=true;
-    ntBuild();
-    ntRenderAll();
+    // FASE 2a: portada editorial estática (bypass temporal de la tabla densa).
+    renderNoticiasPortada();
   };
 })();
 
