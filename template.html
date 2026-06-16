@@ -264,7 +264,7 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-icon-btn:hover{background:var(--bg-tertiary);color:var(--text-primary)}
 /* ── Sub-header ── */
 .fb-subheader{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 12px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:var(--nav-h);z-index:51}
-.fb-subheader h1{font-size:var(--text-4xl);font-weight:700;color:var(--text-primary);letter-spacing:-.02em}
+.fb-subheader h1{font-family:var(--font-display);font-size:var(--text-4xl);font-weight:700;color:var(--text-primary);letter-spacing:-.02em}
 .fb-subtitle{font-size:var(--text-md);color:var(--text-muted);margin-top:2px}
 .fb-subheader-stats{display:flex;gap:20px;align-items:center}
 .fb-stat{text-align:right}
@@ -302,13 +302,27 @@ body.theme-dark .fb-tab.active{background:rgba(110,163,217,.12);color:var(--blue
 .fb-mono{font-family:var(--font-mono)}
 .fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
-.fb-macro-subnav{display:flex;align-items:baseline;gap:0;margin:0;padding:10px 18px 12px;position:sticky;top:var(--nav-h);z-index:51;background:var(--bg-secondary);border-bottom:1px solid var(--border-color)}
-.fb-macro-tab{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:600;line-height:1;color:var(--text-soft);background:none;border:none;padding:0;cursor:pointer;transition:color .15s}
+.fb-macro-subnav{display:flex;align-items:baseline;gap:0;margin:0;padding:6px 18px 0;position:sticky;top:var(--nav-h);z-index:51;background:var(--bg-secondary);border-bottom:2px solid var(--text-primary)}
+.fb-macro-tab{font-family:var(--font-display);font-size:24px;font-weight:500;line-height:1.1;color:var(--text-soft);background:none;border:none;padding:2px 2px 12px;cursor:pointer;transition:color .15s}
 .fb-macro-tab:hover{color:var(--text-secondary)}
-.fb-macro-tab.active{color:var(--text-primary);font-weight:700}
-.fb-macro-tab:not(:last-child)::after{content:"|";margin:0 16px;color:var(--text-soft);font-weight:300}
+.fb-macro-tab.active{color:var(--text-primary);font-weight:600}
+.fb-macro-tab:not(:last-child)::after{content:"|";margin:0 16px;color:var(--text-soft);font-weight:300;font-size:.78em}
+/* ── FASE 3 · Macro editorial (referencia a-macro.html) ──────────────
+   Overrides scopeados a #tab-macro: tratamiento generoso editorial para
+   armonizar con Noticias. Los tabs densos (Dólar/DPF/BBV/Guía) NO heredan
+   este sizing — conservan su densidad. El radio sharp (2px) sí es global. */
 /* En Macro el subheader no compite con el subnav sticky ni deja doble línea. */
-#tab-macro .fb-subheader{position:static;border-bottom:none}
+#tab-macro .fb-subheader{position:static;border-bottom:none;padding:22px 18px 14px}
+#tab-macro .fb-subheader h1{font-size:44px;font-weight:500;line-height:1}
+#tab-macro .fb-subtitle{margin-top:8px}
+#tab-macro .fb-kpi-value{font-size:33px}
+#tab-macro .fb-kpi-card{padding:16px 20px}
+#tab-macro .fb-chart-card{padding:20px 22px}
+#tab-macro .fb-chart-head{margin-bottom:16px;border-bottom:1px solid var(--border-color);padding-bottom:13px}
+#tab-macro .fb-chart-title{font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:-.01em}
+#tab-macro .fb-chart-sub{margin-top:6px;line-height:1.45}
+/* El headline editorial 44px clipea en teléfonos <~380px; clamp sin perder presencia. */
+@media(max-width:600px){#tab-macro .fb-subheader h1{font-size:32px}}
 .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
 .fb-stog{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
 .fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid rgba(44,74,107,.30);background:transparent;flex-shrink:0;transition:all .15s}
