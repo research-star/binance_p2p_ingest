@@ -568,6 +568,26 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .np-arrow.down{color:var(--down)}
 .np-arrow.flat{color:var(--text-soft)}
 @media(max-width:980px){.np-markets{display:flex;overflow-x:auto;scrollbar-width:none}.np-markets::-webkit-scrollbar{display:none}.np-markets-lab{display:none}.np-ind{flex:0 0 auto;min-width:128px}}
+/* — 3 · lead + 2 secundarias — */
+.np-top{display:grid;grid-template-columns:1.62fr 1fr;gap:0;border-bottom:2px solid var(--text-primary);padding-bottom:26px;margin-bottom:24px}
+.np-lead{padding-right:30px;border-right:1px solid var(--border-color)}
+.np-lead-kicker{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.np-lead-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:var(--lead-size);line-height:1.04;letter-spacing:-.03em;margin:0;cursor:pointer;text-wrap:balance}
+.np-lead-title:hover{color:var(--blue-accent)}
+.np-figure{margin:18px 0 0;position:relative}
+.np-figcap{font-family:var(--font-body);font-size:10.5px;color:var(--text-soft);margin-top:6px;line-height:1.4}
+.np-lead-stand{font-family:var(--font-display);font-size:18px;line-height:1.5;color:var(--text-secondary);margin-top:15px;text-wrap:pretty;max-width:42em}
+.np-secs{padding-left:30px;display:flex;flex-direction:column}
+.np-sec{padding:16px 0;border-top:1px solid var(--border-color)}
+.np-sec:first-child{padding-top:0;border-top:0}
+.np-sec-kicker{margin-bottom:8px}
+.np-sec-title{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.16;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.01em;text-wrap:balance}
+.np-sec-title:hover{color:var(--blue-accent)}
+.np-sec-stand{font-family:var(--font-display);font-size:14.5px;line-height:1.45;color:var(--text-muted);margin-top:7px;text-wrap:pretty}
+.np-sec-row{display:flex;gap:14px;align-items:flex-start}
+.np-sec-row .np-sec-main{flex:1;min-width:0}
+.np-sec-row .np-imgph{width:108px;flex:none;aspect-ratio:1/1;align-self:flex-start;margin-top:2px}
+@media(max-width:980px){.np-top{grid-template-columns:1fr;border-bottom:0;padding-bottom:18px;margin-bottom:0}.np-lead{padding-right:0;border-right:0}.np-secs{padding-left:0;margin-top:20px;border-top:2px solid var(--text-primary);padding-top:14px}}
 </style></head>
 <body>
 
@@ -4917,7 +4937,25 @@ window.addEventListener('popstate', function(){
     }
     return '<div class="np-markets"><div class="np-markets-lab"><span class="np-ml-kick">Mercados</span><span class="np-ml-title">El día<br>en cifras</span></div>'+cells+'</div>';
   }
-  function npTop(){ return ''; }
+  function npTop(){
+    var lead='<article class="np-lead">'
+      +'<div class="np-lead-kicker"><span class="np-kicker">Mercado cambiario</span>'+npImpact('alto')+'</div>'
+      +'<h1 class="np-lead-title">El dólar paralelo toca Bs 11,30 y la brecha con el oficial supera el 62%</h1>'
+      +'<figure class="np-figure"><div class="np-imgph"><span class="np-imglabel">Mercado cambiario · La Paz</span></div><figcaption class="np-figcap">Operadores del mercado P2P siguen la cotización del paralelo. Imagen de referencia.</figcaption></figure>'
+      +'<p class="np-lead-stand">La cotización en plataformas P2P se despegó del tipo de cambio oficial mientras el BCB mantiene la paridad fija. Los operadores reportan menor oferta de divisas en la jornada.</p>'
+      +npDateline('El Deber','08:42','alto','--cat-economia')
+    +'</article>';
+    var sec1='<article class="np-sec"><div class="np-sec-kicker"><span class="np-kicker">Hidrocarburos</span></div>'
+      +'<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">YPFB anuncia un plan para asegurar la provisión de diésel en el segundo semestre</h2>'
+      +'<p class="np-sec-stand">La estatal prioriza la importación ante la caída de la producción local.</p>'
+      +npDateline('Los Tiempos','07:30','medio','--cat-hidrocarburos')+'</div>'
+      +'<div class="np-imgph sm"><span class="np-imglabel">Energía</span></div></div></article>';
+    var sec2='<article class="np-sec"><div class="np-sec-kicker"><span class="np-kicker">Política</span></div>'
+      +'<h2 class="np-sec-title">La Asamblea debate el crédito externo por USD 1.800 millones</h2>'
+      +'<p class="np-sec-stand">El financiamiento sigue trabado por falta de consenso entre bancadas.</p>'
+      +npDateline('Brújula Digital','06:55','medio','--cat-politica')+'</article>';
+    return '<section class="np-top">'+lead+'<div class="np-secs">'+sec1+sec2+'</div></section>';
+  }
   function npRiver(){ return ''; }
   function npRail(){ return ''; }
   function npLatam(){ return ''; }
