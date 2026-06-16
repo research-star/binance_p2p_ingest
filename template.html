@@ -613,6 +613,22 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 .np-rank .rk-title:hover{color:var(--blue-accent)}
 .np-rank .rk-meta{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:5px;letter-spacing:.02em}
 @media(max-width:980px){.np-rail::before{display:none}}
+/* — 6 · banda Latam / Internacional — */
+.np-latam{margin:30px 0 8px;padding:22px 36px;background:var(--bg-secondary);border-top:2px solid var(--text-primary);border-bottom:1px solid var(--border-color)}
+.np-latam-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.np-latam-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--text-primary);margin:0;letter-spacing:-.01em}
+.np-latam-head .by{font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.04em;display:inline-flex;align-items:center;gap:6px}
+.np-latam-head .by .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--blue-accent)}
+.np-latam-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+.np-latam-card{padding:0 18px;border-left:1px solid var(--border-color)}
+.np-latam-card:first-child{padding-left:0;border-left:0}
+.np-latam-flag{font-family:var(--font-body);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-accent);margin-bottom:8px}
+.np-latam-title{font-family:var(--font-display);font-weight:600;font-size:16px;line-height:1.24;color:var(--text-primary);margin:0;cursor:pointer;text-wrap:pretty}
+.np-latam-title:hover{color:var(--blue-accent)}
+.np-latam-stand{font-family:var(--font-display);font-size:12.5px;line-height:1.4;color:var(--text-muted);margin-top:8px;text-wrap:pretty}
+.np-latam-time{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:8px;letter-spacing:.02em}
+@media(max-width:980px){.np-latam{padding:18px 16px}.np-latam-grid{grid-template-columns:1fr 1fr}.np-latam-card{padding:14px 0;border-left:0;border-top:1px solid var(--border-color)}.np-latam-card:first-child{padding-top:0;border-top:0}}
+@media(max-width:560px){.np-latam-grid{grid-template-columns:1fr}}
 </style></head>
 <body>
 
@@ -5014,7 +5030,20 @@ window.addEventListener('popstate', function(){
     }
     return '<aside class="np-rail"><div class="np-railcard"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
   }
-  function npLatam(){ return ''; }
+  function npLatam(){
+    var cards=[
+      {ctry:'Argentina',t:'El BCRA recorta la tasa de referencia tras la desaceleración de la inflación',stand:'El mercado descuenta nuevos ajustes en el trimestre.',time:'07:20'},
+      {ctry:'Brasil',t:'El real se fortalece frente al dólar por el flujo de capitales',stand:'La balanza comercial sostiene la moneda.',time:'06:50'},
+      {ctry:'Chile',t:'El cobre repunta y mejora las cuentas fiscales del país',stand:'La minería lidera la recuperación.',time:'06:30'},
+      {ctry:'Colombia',t:'El banco central mantiene la tasa por la presión cambiaria',stand:'La inflación sigue por encima de la meta.',time:'06:10'},
+      {ctry:'México',t:'Las remesas marcan un nuevo récord en el primer semestre',stand:'El consumo interno se apoya en el flujo externo.',time:'05:55'}
+    ];
+    var grid='';
+    for(var i=0;i<cards.length;i++){var c=cards[i];
+      grid+='<article class="np-latam-card"><div class="np-latam-flag">'+c.ctry+'</div><h3 class="np-latam-title">'+c.t+'</h3><p class="np-latam-stand">'+c.stand+'</p><div class="np-latam-time">'+c.time+'</div></article>';
+    }
+    return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea · contenido de muestra</span></div><div class="np-latam-grid">'+grid+'</div></section>';
+  }
   function npFooter(){ return ''; }
   function renderNoticiasPortada(){
     var html='<div class="np-page">'
