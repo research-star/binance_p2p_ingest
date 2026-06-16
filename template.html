@@ -44,6 +44,8 @@ __UMAMI_SCRIPT__
   --text-3xl:22px;
   --text-4xl:26px;
   --text-5xl:28px;
+  --lead-size:46px;
+  --river-gap:14px;
   --radius-xs:3px;
   --radius-sm:4px;
   --radius-md:6px;
@@ -418,92 +420,162 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 #guide-issuers td.code{width:64px}
 #guide-issuers td.nm{width:auto}
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
-/* ── Noticias tab (variante D "Terminal") ──────────────────────────
-   Filtros por categoría + slider 30 días + tabla densa con detalle
-   expandible. Estructura con vars semánticas; colores por categoría /
-   fuente / impacto via tokens --cat-* / --src-* / --impact-* que viven
-   en THEMES.paper/.slate (applyTheme los escribe en documentElement,
-   igual que el resto de vars semánticas — el CSS los lee con var()).
-   El color puntual de cada tag llega por la custom prop --nt-c seteada
-   inline desde el JS (mismo patrón que --fb-trace-color en .fb-stog). */
-.nt-badge-demo{display:inline-flex;align-items:center;padding:2px 9px;border-radius:var(--radius-pill);font-size:var(--text-2xs);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--orange);background:var(--orange-muted);border:1px dashed var(--orange);vertical-align:3px;margin-left:10px}
-/* Badge "ejemplo" scopeado a la agenda: vive dentro del label del KPI "Próximo hecho" */
-.fb-kpi-label .nt-badge-demo{vertical-align:baseline;margin-left:6px;padding:1px 7px}
-.nt-detail-meta a{color:var(--blue-accent);text-decoration:none;border-bottom:1px dotted var(--blue-accent)}
-.nt-detail-meta a:hover{opacity:.8}
-.fb-kpi-value .unit{font-size:.5em;font-weight:500;color:var(--text-muted);letter-spacing:.04em;margin-left:3px}
-/* filter bar — misma gramática que .fb-dpf-filters / .fb-bbv-filters */
-.nt-filterbar{display:flex;align-items:center;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
-.nt-fcol{display:flex;flex-direction:column;gap:6px}
-.nt-filterbar-right{margin-left:auto;display:flex;align-items:center}
-/* chips de categoría: extienden .fb-pill con dot de color + conteo */
-.nt-chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
-.nt-chip .pdot{width:8px;height:8px;border-radius:var(--radius-pill);flex-shrink:0;background:var(--nt-c,var(--text-muted))}
-.nt-chip.active .pdot{box-shadow:0 0 0 1.5px rgba(255,255,255,.5)}
-.nt-chip .pcount{font-family:var(--font-mono);font-size:var(--text-2xs);opacity:.7}
-/* action buttons (leído / guardar / detalle) */
-.nt-act{display:inline-flex;align-items:center;justify-content:center;gap:5px;height:26px;padding:0 9px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-family:var(--font-display);font-size:var(--text-xs);font-weight:500;transition:all .15s}
-.nt-act:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.nt-act.on{color:var(--blue-accent);border-color:var(--blue-accent);background:rgba(44,74,107,.06)}
-body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
-.nt-act.icon{width:26px;padding:0}
-.nt-act svg{width:13px;height:13px;flex-shrink:0}
-.nt-act:disabled{opacity:.35;cursor:default}
-.nt-act:disabled:hover{background:transparent;color:var(--text-muted)}
-.nt-chevron{transition:transform .15s}
-.nt-chevron.open{transform:rotate(180deg)}
-/* tags: fuente (dot + nombre), categoría (pill tenue), topic (chip mono) */
-.nt-src{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-display);font-size:var(--text-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--nt-c,var(--text-muted));white-space:nowrap}
-.nt-src .sdot{width:7px;height:7px;border-radius:var(--radius-pill);background:var(--nt-c,var(--text-muted));flex-shrink:0}
-.nt-cat{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:var(--radius-pill);font-family:var(--font-display);font-size:var(--text-2xs);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--nt-c,var(--text-muted));background:color-mix(in srgb,var(--nt-c,#888) 13%,transparent);white-space:nowrap}
-.nt-cat .cdot{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--nt-c,var(--text-muted));flex-shrink:0}
-.nt-topic{display:inline-flex;align-items:center;padding:1px 8px;border-radius:var(--radius-xs);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:500;letter-spacing:.02em;color:var(--text-muted);background:var(--bg-tertiary);text-transform:uppercase}
-/* indicador de impacto: 3 barras + texto */
-.nt-impact{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-display);font-size:var(--text-2xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
-.nt-impact .ibar{display:inline-flex;gap:2px}
-.nt-impact .ibar i{width:4px;height:11px;border-radius:1px;background:currentColor;opacity:.22}
-.nt-impact .ibar i.on{opacity:1}
-.nt-impact.alto{color:var(--impact-alto)}
-.nt-impact.medio{color:var(--impact-medio)}
-.nt-impact.bajo{color:var(--impact-bajo)}
-/* slider de los últimos 30 días */
-.nt-daystrip{display:flex;align-items:center;gap:18px;padding:12px 20px 10px}
-.nt-daystrip .fb-flab{flex:none}
-.nt-slider{position:relative;flex:1;padding:30px 0 18px}
-.nt-track{position:absolute;left:0;right:0;top:35px;height:6px;border-radius:var(--radius-pill);background:var(--bg-tertiary);pointer-events:none}
-.nt-mark{position:absolute;top:50%;transform:translate(-50%,-50%);width:5px;height:5px;border-radius:50%;background:var(--blue-accent)}
-.nt-mark.today{width:7px;height:7px;background:var(--bg-secondary);border:2px solid var(--blue-accent)}
-.nt-range{-webkit-appearance:none;appearance:none;position:relative;z-index:2;display:block;width:100%;height:16px;margin:0;background:transparent;outline:none;cursor:pointer}
-.nt-range::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue-accent);border:2.5px solid var(--bg-secondary);box-shadow:var(--shadow-sm);cursor:grab}
-.nt-range:active::-webkit-slider-thumb{cursor:grabbing}
-.nt-range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--blue-accent);border:2.5px solid var(--bg-secondary);box-shadow:var(--shadow-sm);cursor:grab}
-.nt-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--green-muted)}
-.nt-bubble{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:var(--bg-secondary);background:var(--blue-accent);padding:3px 9px;border-radius:var(--radius-sm);pointer-events:none}
-.nt-bubble::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--blue-accent)}
-.nt-bubble .bcount{font-weight:400;opacity:.75}
-.nt-scale{display:flex;justify-content:space-between;margin-top:12px;font-family:var(--font-mono);font-size:var(--text-2xs);text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft)}
-/* tabla densa: scroll interno con thead sticky y scrollbar siempre visible */
-.nt-scroll{max-height:520px;overflow-y:scroll;scrollbar-width:thin;scrollbar-color:var(--text-soft) var(--bg-primary)}
-.nt-scroll::-webkit-scrollbar{width:11px}
-.nt-scroll::-webkit-scrollbar-track{background:var(--bg-primary);border-left:1px solid var(--border-color)}
-.nt-scroll::-webkit-scrollbar-thumb{background:var(--text-soft);border-radius:var(--radius-pill);border:2px solid var(--bg-primary)}
-.nt-scroll::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
-.nt-scroll .fb-data-table thead th{position:sticky;top:0;background:var(--bg-secondary);z-index:2;box-shadow:0 1px 0 var(--border-color)}
-.nt-table tr.nt-row{cursor:pointer}
-.nt-table tr.nt-row.is-read{opacity:.6}
-.nt-table td.nt-fecha{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--text-secondary);white-space:nowrap}
-.nt-table td.nt-hora{font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--text-muted)}
-.nt-table td.nt-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary)}
-.nt-table td.nt-cats .nt-catwrap{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.nt-table td.nt-actions{text-align:right}
-.nt-table td.nt-actions .nt-actwrap{display:inline-flex;gap:5px}
-.nt-table tr.nt-detail-row>td{background:var(--bg-primary)}
-.nt-detail{padding:4px 2px;font-size:var(--text-md);color:var(--text-secondary);line-height:1.6;max-width:880px}
-.nt-detail-meta{display:flex;gap:18px;margin-top:10px;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);flex-wrap:wrap}
-.nt-detail-meta b{color:var(--text-secondary);font-weight:600}
-.nt-empty{padding:48px 20px;text-align:center;color:var(--text-soft);font-size:var(--text-md);font-style:italic}
-.nt-section-foot{padding:12px 20px;font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);text-align:center;border-top:1px solid var(--border-color)}
-@media(max-width:900px){.nt-filterbar{gap:14px;padding:12px 14px}}
+
+/* ════════════════════════════════════════════════════════════════
+   Noticias — Portada editorial (FASE 2). Reconstrucción vanilla del
+   mockup FT (design-system/_unzipped) sobre tokens SEMÁNTICOS del repo,
+   para que el dark salga gratis. Clases .np-* aisladas de la Variante D
+   (.nt-*, se retira en 2b). 2a = estructura estática, contenido muestra.
+   ════════════════════════════════════════════════════════════════ */
+.np-page{font-family:var(--font-display);color:var(--text-primary);background:var(--bg-primary)}
+.np-body{padding:24px 36px 8px}
+.np-main{display:grid;grid-template-columns:1fr 312px;gap:34px;align-items:start}
+/* — átomos tipográficos — */
+.np-kicker{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-accent)}
+/* — dateline: fuente · hora · impacto — */
+.np-dateline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
+.np-src{font-family:var(--font-body);font-weight:600;color:var(--text-secondary);letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.np-src .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--nt-c,var(--blue-accent));flex-shrink:0}
+.np-sep{color:var(--line-strong)}
+.np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
+/* — impacto: 3 barras + texto — */
+.np-impact{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase}
+.np-impact .bars{display:inline-flex;gap:2px}
+.np-impact .bars i{width:3px;height:10px;background:currentColor;opacity:.25;border-radius:1px}
+.np-impact .bars i.on{opacity:1}
+.np-impact.alto{color:var(--impact-alto)}
+.np-impact.medio{color:var(--impact-medio)}
+.np-impact.bajo{color:var(--impact-bajo)}
+/* — placeholder de imagen (.ft-imgph portado: gradiente navy + glifo cámara) — */
+.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(27,54,93,.92),rgba(44,74,107,.62) 46%,rgba(110,165,217,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+.np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
+.np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
+.np-imgph .np-imglabel{position:relative;z-index:1;font-family:var(--font-body);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);background:var(--bg-secondary);padding:4px 9px;margin:10px;border-radius:var(--radius-xs);opacity:.94}
+.np-imgph.sm{aspect-ratio:1/1}
+/* — section head (regla 2px ink, theme-aware) — */
+.np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
+.np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
+.np-section-head .meta{font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.04em}
+@media(max-width:980px){.np-main{grid-template-columns:1fr;gap:26px}.np-body{padding:18px 16px 6px}}
+/* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
+.np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
+.np-topline-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;letter-spacing:.02em}
+.np-date{text-transform:capitalize;font-weight:500;color:var(--text-secondary)}
+.np-upd{display:flex;align-items:center;gap:7px;letter-spacing:.04em}
+.np-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent)}
+@media(max-width:980px){.np-topline{padding:8px 16px}}
+/* — 2 · markets strip "El día en cifras" (5 indicadores) — */
+.np-markets{display:grid;grid-template-columns:auto repeat(5,1fr);align-items:stretch;border-top:1px solid var(--border-color);border-bottom:2px solid var(--text-primary);background:var(--bg-primary)}
+.np-markets-lab{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;padding:0 22px;max-width:200px;border-right:1px solid var(--border-color)}
+.np-ml-kick{font-family:var(--font-body);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-accent);white-space:nowrap}
+.np-ml-title{font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.06;letter-spacing:-.02em;color:var(--text-primary);white-space:nowrap}
+.np-ind{padding:11px 16px;border-right:1px solid var(--border-color);display:flex;flex-direction:column;gap:3px}
+.np-ind:last-child{border-right:0}
+.np-ind-lab{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-muted)}
+.np-ind-row{display:flex;align-items:baseline;gap:6px}
+.np-ind-val{font-family:var(--font-body);font-size:21px;font-weight:600;color:var(--text-primary);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1}
+.np-ind-unit{font-family:var(--font-body);font-size:10px;font-weight:500;color:var(--text-soft);text-transform:uppercase;letter-spacing:.04em}
+.np-ind-sub{display:flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
+.np-arrow{font-family:var(--font-body);font-size:12px;font-weight:700;line-height:1}
+.np-arrow.up{color:var(--up)}
+.np-arrow.down{color:var(--down)}
+.np-arrow.flat{color:var(--text-soft)}
+@media(max-width:980px){.np-markets{display:flex;overflow-x:auto;scrollbar-width:none}.np-markets::-webkit-scrollbar{display:none}.np-markets-lab{display:none}.np-ind{flex:0 0 auto;min-width:128px}}
+/* — 3 · lead + 2 secundarias — */
+.np-top{display:grid;grid-template-columns:1.62fr 1fr;gap:0;border-bottom:2px solid var(--text-primary);padding-bottom:26px;margin-bottom:24px}
+.np-lead{padding-right:30px;border-right:1px solid var(--border-color)}
+.np-lead-kicker{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.np-lead-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:var(--lead-size);line-height:1.04;letter-spacing:-.03em;margin:0;cursor:pointer;text-wrap:balance}
+.np-lead-title:hover{color:var(--blue-accent)}
+.np-figure{margin:18px 0 0;position:relative}
+.np-figcap{font-family:var(--font-body);font-size:10.5px;color:var(--text-soft);margin-top:6px;line-height:1.4}
+.np-lead-stand{font-family:var(--font-display);font-size:18px;line-height:1.5;color:var(--text-secondary);margin-top:15px;text-wrap:pretty;max-width:42em}
+.np-secs{padding-left:30px;display:flex;flex-direction:column}
+.np-sec{padding:16px 0;border-top:1px solid var(--border-color)}
+.np-sec:first-child{padding-top:0;border-top:0}
+.np-sec-kicker{margin-bottom:8px}
+.np-sec-title{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.16;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.01em;text-wrap:balance}
+.np-sec-title:hover{color:var(--blue-accent)}
+.np-sec-stand{font-family:var(--font-display);font-size:14.5px;line-height:1.45;color:var(--text-muted);margin-top:7px;text-wrap:pretty}
+.np-sec-row{display:flex;gap:14px;align-items:flex-start}
+.np-sec-row .np-sec-main{flex:1;min-width:0}
+.np-sec-row .np-imgph{width:108px;flex:none;aspect-ratio:1/1;align-self:flex-start;margin-top:2px}
+@media(max-width:980px){.np-top{grid-template-columns:1fr;border-bottom:0;padding-bottom:18px;margin-bottom:0}.np-lead{padding-right:0;border-right:0}.np-secs{padding-left:0;margin-top:20px;border-top:2px solid var(--text-primary);padding-top:14px}}
+/* — 4 · río de tarjetas — */
+.np-river-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 26px}
+.np-card{display:flex;flex-direction:column;min-width:0}
+.np-card .np-card-img{aspect-ratio:16/10;border-radius:var(--radius-xs);margin:0}
+.np-card-body{padding-top:13px;display:flex;flex-direction:column}
+.np-card-kicker{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue-accent);margin-bottom:8px}
+.np-card-title{font-family:var(--font-display);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.02em;text-wrap:pretty}
+.np-card-title:hover{color:var(--text-secondary);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.np-card-meta{display:flex;align-items:center;gap:9px;margin-top:10px;font-family:var(--font-body);font-size:10.5px;color:var(--text-muted);flex-wrap:wrap}
+.np-card-meta .np-src{font-size:10.5px}
+@media(max-width:980px){.np-river-cards{grid-template-columns:1fr 1fr;gap:18px 14px}}
+@media(max-width:560px){.np-river-cards{grid-template-columns:1fr}}
+/* — 5 · right rail · "Lo más relevante" — */
+.np-rail{display:flex;flex-direction:column;gap:24px;position:relative}
+.np-rail::before{content:'';position:absolute;left:-17px;top:4px;bottom:4px;width:1px;background:var(--border-color)}
+.np-railcard h3{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-primary);margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--text-primary);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.np-railcard h3 .sub{font-weight:500;letter-spacing:.04em;text-transform:none;color:var(--text-soft);font-size:10.5px}
+.np-rank{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--border-color)}
+.np-rank:last-child{border-bottom:0}
+.np-rank .num{font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1;color:var(--blue-accent);width:24px;flex:none;text-align:center}
+.np-rank .rk-main{flex:1;min-width:0}
+.np-rank .rk-title{font-family:var(--font-display);font-weight:500;font-size:14.5px;line-height:1.28;color:var(--text-primary);cursor:pointer;text-wrap:pretty}
+.np-rank .rk-title:hover{color:var(--blue-accent)}
+.np-rank .rk-meta{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:5px;letter-spacing:.02em}
+@media(max-width:980px){.np-rail::before{display:none}}
+/* — 6 · banda Latam / Internacional — */
+.np-latam{margin:30px 0 8px;padding:22px 36px;background:var(--bg-secondary);border-top:2px solid var(--text-primary);border-bottom:1px solid var(--border-color)}
+.np-latam-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.np-latam-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--text-primary);margin:0;letter-spacing:-.01em}
+.np-latam-head .by{font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.04em;display:inline-flex;align-items:center;gap:6px}
+.np-latam-head .by .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--blue-accent)}
+.np-latam-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+.np-latam-card{padding:0 18px;border-left:1px solid var(--border-color)}
+.np-latam-card:first-child{padding-left:0;border-left:0}
+.np-latam-flag{font-family:var(--font-body);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-accent);margin-bottom:8px}
+.np-latam-title{font-family:var(--font-display);font-weight:600;font-size:16px;line-height:1.24;color:var(--text-primary);margin:0;cursor:pointer;text-wrap:pretty}
+.np-latam-title:hover{color:var(--blue-accent)}
+.np-latam-stand{font-family:var(--font-display);font-size:12.5px;line-height:1.4;color:var(--text-muted);margin-top:8px;text-wrap:pretty}
+.np-latam-time{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:8px;letter-spacing:.02em}
+@media(max-width:980px){.np-latam{padding:18px 16px}.np-latam-grid{grid-template-columns:1fr 1fr}.np-latam-card{padding:14px 0;border-left:0;border-top:1px solid var(--border-color)}.np-latam-card:first-child{padding-top:0;border-top:0}}
+@media(max-width:560px){.np-latam-grid{grid-template-columns:1fr}}
+/* — 7 · footer — */
+.np-footer{padding:26px 36px 34px;border-top:2px solid var(--text-primary)}
+.np-foot-sources{margin-bottom:18px}
+.np-foot-lab{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:11px}
+.np-foot-portals{display:flex;flex-wrap:wrap;gap:7px 16px;align-items:center}
+.np-foot-portal{font-family:var(--font-display);font-weight:500;font-size:14px;color:var(--text-secondary);letter-spacing:.01em}
+.np-foot-portal.linea{color:var(--blue-accent);font-weight:600}
+.np-foot-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
+.np-method{font-family:var(--font-body);font-size:11px;line-height:1.65;color:var(--text-muted)}
+.np-method b{color:var(--text-secondary);font-weight:600}
+.np-method .np-disc{margin-top:10px;font-style:italic;color:var(--text-soft);font-size:10.5px}
+.np-foot-tabs{font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
+.np-foot-tabs .lab{font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-primary);display:block;margin-bottom:11px;font-size:10px}
+.np-foot-tabs a{display:block;color:var(--text-secondary);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--border-color);font-size:12.5px;font-weight:500;cursor:pointer}
+.np-foot-tabs a:hover{color:var(--blue-accent)}
+.np-foot-copy{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:22px;letter-spacing:.03em;text-align:center}
+@media(max-width:980px){.np-footer{padding:22px 16px 28px}.np-foot-grid{grid-template-columns:1fr;gap:24px}}
+/* — 2b · chips de categoría + dek (summary) + links + estado vacío — */
+.np-chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:11px 36px;border-bottom:1px solid var(--border-color)}
+.np-chips-lab{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft);margin-right:4px}
+.np-chip{font-family:var(--font-body);font-size:12px;font-weight:500;color:var(--text-secondary);background:transparent;border:1px solid var(--line-strong);border-radius:var(--radius-pill);padding:4px 12px;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:all .15s}
+.np-chip:hover{background:var(--bg-tertiary)}
+.np-chip.on{background:var(--text-primary);color:var(--bg-secondary);border-color:var(--text-primary)}
+.np-chip .pdot{width:8px;height:8px;border-radius:var(--radius-pill);background:var(--nt-c,var(--text-muted));flex-shrink:0}
+.np-chip.on .pdot{box-shadow:0 0 0 1.5px var(--bg-secondary)}
+.np-chip .pcount{font-family:var(--font-mono);font-size:9.5px;opacity:.7}
+.np-titlelink{color:inherit;text-decoration:none}
+.np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-lead-stand{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.np-sec-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
+@media(max-width:980px){.np-chips{padding:10px 16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.np-chips::-webkit-scrollbar{display:none}}
 </style></head>
 <body>
 
@@ -1040,64 +1112,6 @@ body.theme-dark .nt-act.on{background:rgba(110,163,217,.12)}
 </div><!-- /tab-macro -->
 
 <div id="tab-noticias">
-  <div class="fb-subheader">
-    <div>
-      <h1>Noticias</h1>
-      <div class="fb-subtitle">Hechos relevantes de la prensa boliviana y de Bloomberg L&iacute;nea Latinoam&eacute;rica &middot; Actualizado <span id="ntUpdateStamp">&mdash;</span></div>
-    </div>
-    <div class="fb-subheader-stats">
-      <div class="fb-stat"><span class="fb-stat-label">Visitas hoy</span><span class="fb-stat-value">__VISITS_TODAY__</span></div>
-      <div class="fb-stat"><span class="fb-stat-label">Visitas mes</span><span class="fb-stat-value">__VISITS_MONTH__</span></div>
-    </div>
-  </div>
-  <div id="ntKpis"></div>
-  <div class="content">
-    <div class="nt-filterbar">
-      <div class="nt-fcol">
-        <span class="fb-flab">Categor&iacute;a</span>
-        <div class="fb-pills" id="ntCatChips"></div>
-      </div>
-      <div class="nt-filterbar-right">
-        <button type="button" class="nt-act" id="ntSavedToggle"></button>
-      </div>
-    </div>
-    <div class="section" style="margin-bottom:14px">
-      <div class="nt-daystrip">
-        <span class="fb-flab">&Uacute;ltimos 30 d&iacute;as</span>
-        <button type="button" class="nt-act icon" id="ntDayPrev" title="D&iacute;a anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-        <div class="nt-slider">
-          <div class="nt-bubble" id="ntBubble"></div>
-          <div class="nt-track" id="ntTrack"></div>
-          <input class="nt-range" id="ntRange" type="range" min="0" max="29" step="1" value="29" aria-label="Navegar por d&iacute;a">
-          <div class="nt-scale"><span id="ntScaleFrom">&mdash;</span><span id="ntScaleTo">&mdash;</span></div>
-        </div>
-        <button type="button" class="nt-act icon" id="ntDayNext" title="D&iacute;a siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
-        <button type="button" class="fb-pill active" id="ntAllDays" style="flex:none">Todos los d&iacute;as</button>
-      </div>
-    </div>
-    <div class="section">
-      <div class="section-header">
-        <div>
-          <h2>Tablero de hechos &middot; vista terminal</h2>
-          <p id="ntTableSub">&mdash;</p>
-        </div>
-      </div>
-      <div class="nt-scroll">
-        <table class="fb-data-table nt-table">
-          <thead><tr>
-            <th style="width:96px">Fecha</th>
-            <th style="width:90px">Fuente</th>
-            <th>Titular</th>
-            <th style="width:170px">Categor&iacute;a</th>
-            <th style="width:96px">Impacto</th>
-            <th style="width:120px;text-align:right">Acci&oacute;n</th>
-          </tr></thead>
-          <tbody id="ntTbody"></tbody>
-        </table>
-      </div>
-      <div class="nt-section-foot">Fuentes: 13 portales de prensa boliviana (selecci&oacute;n autom&aacute;tica diaria por relevancia, top 10) + Bloomberg L&iacute;nea Latinoam&eacute;rica (hasta 5/d&iacute;a, selecci&oacute;n editorial del medio) &middot; res&uacute;menes propios, el detalle enlaza al art&iacute;culo original</div>
-    </div>
-  </div>
 </div><!-- /tab-noticias -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
@@ -1134,8 +1148,8 @@ let last = null;
 
 // ═══ THEMES ═══
 const THEMES = {
-  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#1e4d7a','chart-debt-em2022':'#5589c0','chart-debt-em2026':'#d97706','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#5a8cc4','chart-debt-em2022':'#9cc3e8','chart-debt-em2026':'#f59e0b','chart-band-low':'rgba(79,176,122,0.08)','chart-band-mid':'rgba(245,158,11,0.07)','chart-band-high':'rgba(224,122,110,0.09)','chart-band-label-low':'rgba(79,176,122,0.65)','chart-band-label-mid':'rgba(245,158,11,0.65)','chart-band-label-high':'rgba(224,122,110,0.70)'}
+  paper:{'bg-primary':'#f5f7fa','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.10)','line-strong':'rgba(44,74,107,0.24)','up':'#7d9a86','down':'#b08a82','text-primary':'#2c4a6b','text-secondary':'#2c4a6b','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#d97706','chart-color-latino':'#6b7280','chart-color-global':'#9ca3af','chart-color-argentina':'#74acdf','chart-color-brasil':'#009c3b','chart-color-chile':'#d52b1e','chart-color-colombia':'#003893','chart-color-ecuador':'#ffcc00','chart-color-mexico':'#006847','chart-color-peru':'#c8102e','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#1e4d7a','chart-dpf-microfinanzas':'#5589c0','chart-dpf-bancos-pyme':'#7ba3c4','chart-dpf-ent-vivienda':'#9ec0d8','chart-dpf-cooperativas':'#a8c8e0','chart-dpf-ifd':'#8c8c8c','chart-marker-outline':'rgba(255,255,255,0.6)','cat-economia':'#2c4a6b','cat-hidrocarburos':'#b3473b','cat-agro':'#2c6e49','cat-mineria':'#8a6d3b','cat-latam':'#5b6ba8','cat-politica':'#6b7d92','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','impact-alto':'#2c4a6b','impact-medio':'#5589c0','impact-bajo':'#8c9aab','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#1e4d7a','chart-debt-em2022':'#5589c0','chart-debt-em2026':'#d97706','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','line-strong':'rgba(255,255,255,0.20)','up':'#93b3a0','down':'#c9a098','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#f59e0b','chart-color-latino':'#9ca3af','chart-color-global':'#cbd5e1','chart-color-argentina':'#9cc7ea','chart-color-brasil':'#2ebe5e','chart-color-chile':'#e64539','chart-color-colombia':'#4f7ac7','chart-color-ecuador':'#ffdb4d','chart-color-mexico':'#2e9266','chart-color-peru':'#e8425a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#5a8cc4','chart-dpf-microfinanzas':'#7ba3d4','chart-dpf-bancos-pyme':'#9cc3e8','chart-dpf-ent-vivienda':'#b8d4ec','chart-dpf-cooperativas':'#d4e4f5','chart-dpf-ifd':'#8a96aa','chart-marker-outline':'rgba(18,34,55,0.6)','cat-economia':'#6ea3d9','cat-hidrocarburos':'#e07a6e','cat-agro':'#4fb07a','cat-mineria':'#c79a5a','cat-latam':'#8b9bd6','cat-politica':'#8a96aa','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','impact-alto':'#9cc3e8','impact-medio':'#6ea3d9','impact-bajo':'#8c9aab','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#5a8cc4','chart-debt-em2022':'#9cc3e8','chart-debt-em2026':'#f59e0b','chart-band-low':'rgba(79,176,122,0.08)','chart-band-mid':'rgba(245,158,11,0.07)','chart-band-high':'rgba(224,122,110,0.09)','chart-band-label-low':'rgba(79,176,122,0.65)','chart-band-label-mid':'rgba(245,158,11,0.65)','chart-band-label-high':'rgba(224,122,110,0.70)'}
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -4479,11 +4493,14 @@ window.addEventListener('popstate', function(){
 // date/time por carril (hora Bolivia): corrida del scraper para los
 // portales bolivianos, pubDate REAL para latam. La UI muestra solo la
 // fecha; time persiste y ordena (date+time desc).
-// La AGENDA (NOTICIAS_EVENTS_BASE) sigue siendo placeholder — badge
-// "ejemplo" scopeado al KPI "Próximo hecho".
+
+// ═══ NOTICIAS · Portada editorial (FASE 2) ═══════════════════════════
+// Render real desde DATA.noticias con jerarquía editorial (regla frontend),
+// MarketsStrip desde DATA, banda Latam por carril y chips de categoría.
+// La Variante D (tabla densa) fue retirada en 2b. Estado en memoria;
+// read/saved diferido. Esquema por nota documentado arriba.
 (function(){
-  // ── Catálogos (los 13 portales de noticias_ingest/scraper.py FUENTES;
-  //    las keys son los slugs de noticias_ingest/transform.py PORTAL_SLUGS) ──
+  // ── Catálogos (slugs de noticias_ingest/transform.py) ──
   const NOTICIAS_PORTALS = {
     eldeber:    { id:'eldeber',    name:'El Deber',       full:'El Deber · Santa Cruz',     color:'var(--src-eldeber)' },
     correosur:  { id:'correosur',  name:'Correo del Sur', full:'Correo del Sur · Sucre',    color:'var(--src-correosur)' },
@@ -4509,314 +4526,197 @@ window.addEventListener('popstate', function(){
     politica:      { id:'politica',      name:'Política',      color:'var(--cat-politica)' }
   };
   const NOTICIAS_CAT_ORDER = ['economia','hidrocarburos','agro','mineria','latam','politica'];
+  const NT_PAISES = { argentina:'Argentina', brasil:'Brasil', chile:'Chile', colombia:'Colombia', mexico:'México', peru:'Perú', uruguay:'Uruguay', paraguay:'Paraguay', ecuador:'Ecuador', bolivia:'Bolivia', venezuela:'Venezuela', panama:'Panamá' };
 
-  // ── "Hoy" y helpers de fecha ──
-  function ntParseD(d){ const p=d.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+  // ── "Hoy" + helpers de fecha / escape ──
+  function ntParseD(d){ const p=String(d).split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
   function ntISO(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
-  function ntAddDays(iso,delta){ const p=iso.split('-').map(Number); return ntISO(new Date(p[0],p[1]-1,p[2]+delta)); }
-  // "Hoy" del DATO: generated_at (UTC) convertido a hora Bolivia (UTC-4 fijo,
-  // sin DST). Determinista entre visitantes — un visitante en otra timezone ve
-  // la misma ventana de 30 días que uno en La Paz. Fallback: reloj del cliente.
-  const NT_TODAY = (function(){
-    try{
-      const g = Date.parse(meta.generated_at);
-      if(!isNaN(g)) return new Date(g - 4*3600000).toISOString().slice(0,10);
-    }catch(e){}
-    return ntISO(new Date());
-  })();
-  // Ancla y rebase SOLO para la agenda placeholder (NOTICIAS_EVENTS_BASE):
-  // sin esto sus fechas fijas de junio 2026 envejecen y el KPI "Próximo
-  // hecho" mostraría días negativos. Muere cuando la agenda sea real.
-  const NT_ANCHOR = '2026-06-03';
-  const NT_DELTA = Math.round((ntParseD(NT_TODAY)-ntParseD(NT_ANCHOR))/86400000);
-
-  // ── Agenda: próximos hechos — PLACEHOLDER (datos de ejemplo, badge en el
-  //    KPI "Próximo hecho"). inDays se computa en runtime, no se hardcodea. ──
-  const NOTICIAS_EVENTS_BASE = [
-    { id:'e1', category:'economia',      date:'2026-06-08', title:'INE publica el IPC de mayo (dato definitivo)' },
-    { id:'e2', category:'hidrocarburos', date:'2026-06-10', title:'YPFB presenta su informe de producción y subvención' },
-    { id:'e3', category:'agro',          date:'2026-06-12', title:'Cierre de la campaña de verano de soya en Santa Cruz' },
-    { id:'e4', category:'politica',      date:'2026-06-15', title:'La Asamblea trata el crédito externo por USD 1.800 M' },
-    { id:'e5', category:'latam',         date:'2026-06-18', title:'Reunión del Mercosur: comercio en monedas locales' }
-  ];
-
-  // ── Feed real: DATA.noticias (últimos 30 días; la ventana la garantiza la
-  //    query de dashboard.py). Default graceful estilo EMBI: sin clave o
-  //    tabla vacía → tab con estado vacío sano, no rompe. ──
-  const NOTICIAS_NEWS = (typeof DATA==='object' && Array.isArray(DATA.noticias)) ? DATA.noticias : [];
-  // Agenda placeholder rebasada a "hoy" para que no envejezca.
-  const NOTICIAS_EVENTS = NOTICIAS_EVENTS_BASE.map(e=>{
-    const date = ntAddDays(e.date, NT_DELTA);
-    return Object.assign({}, e, { date, inDays: Math.round((ntParseD(date)-ntParseD(NT_TODAY))/86400000) });
-  });
-
-  // ── Formato de fechas ──
-  const NT_MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const NT_TODAY = (function(){ try{ const g=Date.parse(meta.generated_at); if(!isNaN(g)) return new Date(g-4*3600000).toISOString().slice(0,10); }catch(e){} return ntISO(new Date()); })();
   const NT_DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  function ntFmtDay(d){ const dt=ntParseD(d); return String(dt.getDate()).padStart(2,'0')+' '+NT_MESES[dt.getMonth()]; }
-  function ntFmtDayLong(d){ const dt=ntParseD(d); return NT_DIAS[dt.getDay()]+' '+dt.getDate()+' '+NT_MESES[dt.getMonth()]; }
-  function ntEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  const NT_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const NT_MES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  function ntFechaLarga(d){ const dt=ntParseD(d); return NT_DIAS[dt.getDay()]+' '+dt.getDate()+' de '+NT_MESES[dt.getMonth()]+' de '+dt.getFullYear(); }
+  function ntFechaCorta(d){ const dt=ntParseD(d); return dt.getDate()+' '+NT_MES_CORTO[dt.getMonth()]; }
+  function ntEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // ── Derivados del dataset completo (los conteos de chips y burbuja NO
-  //    cambian con los filtros, por spec) ──
-  const NT_DAYS = Array.from({length:30},(_,i)=>ntAddDays(NT_TODAY,i-29)); // [0]=hace 29 días … [29]=hoy
-  const ntCountByDay = {}; NOTICIAS_NEWS.forEach(n=>{ ntCountByDay[n.date]=(ntCountByDay[n.date]||0)+1; });
-  const ntCatCounts = {}; NOTICIAS_CAT_ORDER.forEach(k=>ntCatCounts[k]=0);
-  NOTICIAS_NEWS.forEach(n=>{ if(n.category in ntCatCounts) ntCatCounts[n.category]++; });
+  // ── Feed real (graceful vacío estilo EMBI: sin DATA.noticias → portada vacía sana) ──
+  const NOTICIAS_NEWS = (typeof DATA==='object' && Array.isArray(DATA.noticias)) ? DATA.noticias : [];
 
-  // ── Estado (en memoria, sin persistencia — fiel al mockup) ──
-  const ntState = {
-    cats: new Set(NOTICIAS_CAT_ORDER),
-    onlySaved: false,
-    read: new Set(),
-    saved: new Set(),
-    expanded: null,
-    day: null
-  };
+  // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
+  const NT_RANK = { alto:3, medio:2, bajo:1 };
+  function ntCmp(a,b){ const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
+  function ntBolivia(){ return NOTICIAS_NEWS.filter(function(n){ return n.category!=='latam'; }); }
+  function ntLatam(){ return NOTICIAS_NEWS.filter(function(n){ return n.category==='latam'; }).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
+  function ntCatCount(c){ return NOTICIAS_NEWS.filter(function(n){ return n.category===c; }).length; }
+  function ntCatsConData(){ return NOTICIAS_CAT_ORDER.filter(function(id){ return ntCatCount(id)>0; }); }
+  function ntCatName(c){ const x=NOTICIAS_CATEGORIES[c]; return x?x.name:c; }
+  function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
 
-  // ── Iconos ──
-  function ntKpiIcon(path){ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+path+'</svg>'; }
-  const NT_KICON = {
-    hoy: ntKpiIcon('<path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'),
-    medios: ntKpiIcon('<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8z"/>'),
-    evento: ntKpiIcon('<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>'),
-    impacto: ntKpiIcon('<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'),
-    guardadas: ntKpiIcon('<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>')
-  };
-  const NT_ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  function ntIconBookmark(filled){ return '<svg viewBox="0 0 24 24" fill="'+(filled?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>'; }
-  function ntIconChevron(open){ return '<svg class="nt-chevron'+(open?' open':'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'; }
+  // Estado de filtro (memoria; read/saved diferido).
+  const npState = { cat:'all' };
+  // Pool de lead+secs+río: 'all' → carril Bolivia; cat → esa categoría.
+  function ntPool(){
+    const pool = (npState.cat==='all') ? ntBolivia() : NOTICIAS_NEWS.filter(function(n){ return n.category===npState.cat; });
+    return pool.slice().sort(ntCmp);
+  }
+  // Rail "Lo más relevante": blend alto-primero + medio reciente (ntCmp ya lo hace).
+  function ntRelevantes(n){ return ntBolivia().slice().sort(ntCmp).slice(0,n); }
+  // País de la nota latam, best-effort desde el path del link → fallback "Latam".
+  function ntLatamFlag(n){ try{ const m=String(n.url||'').match(/latinoamerica\/([a-z_-]+)\//i); if(m){ const k=m[1].toLowerCase().replace(/-/g,'_'); if(NT_PAISES[k]) return NT_PAISES[k]; } }catch(e){} return 'Latam'; }
+
+  // ── Formato numérico (es-BO: coma decimal, punto miles) ──
+  function npNum(v){ return typeof v==='number' && isFinite(v); }
+  function npFmt(v,frac){ return new Intl.NumberFormat('es-BO',{minimumFractionDigits:frac,maximumFractionDigits:frac}).format(v); }
+  function npLastNum(a){ if(!a) return null; for(let i=a.length-1;i>=0;i--) if(npNum(a[i])) return a[i]; return null; }
+  function npPrevNum(a){ if(!a) return null; let s=0; for(let i=a.length-1;i>=0;i--){ if(npNum(a[i])){ if(++s===2) return a[i]; } } return null; }
+  function npDir(d){ return (!npNum(d)||d===0)?'flat':(d>0?'up':'down'); }
+  function npDeltaTxt(d,unit,frac){ if(!npNum(d)) return 's/d'; const s=d>0?'+':d<0?'−':''; return s+npFmt(Math.abs(d),frac)+unit; }
+  function npInflVar12(fam){
+    const inf=(typeof DATA!=='undefined')&&DATA.inflacion; if(!inf) return null;
+    const u=inf.ultimo&&inf.ultimo[fam]; if(!u||!npNum(u.var_12m)) return null;
+    let delta=null; const f=inf[fam];
+    if(f&&f.general&&f.general.var_12m){ const last=npLastNum(f.general.var_12m), prev=npPrevNum(f.general.var_12m); if(npNum(last)&&npNum(prev)) delta=last-prev; }
+    return { val:u.var_12m, delta:delta };
+  }
+  function npMarketsData(){
+    const tm=(typeof DATA!=='undefined'&&DATA.ts_metrics)||{};
+    const vb=npLastNum(tm.vb10), vs=npLastNum(tm.vs10);
+    const p2p=(npNum(vb)&&npNum(vs))?(vb+vs)/2:(npNum(vb)?vb:(npNum(vs)?vs:null));
+    const bcb=(typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null;
+    let primaSub='s/d', primaDir='flat';
+    if(npNum(p2p)&&npNum(bcb)&&bcb>0){ primaSub='prima +'+npFmt((p2p/bcb-1)*100,0)+'%'; primaDir='up'; }
+    let embi=null, embiD=null;
+    const es=(typeof DATA!=='undefined')&&DATA.embi_data&&DATA.embi_data.series&&DATA.embi_data.series.bolivia;
+    if(es){ embi=npLastNum(es); const pv=npPrevNum(es); if(npNum(embi)&&npNum(pv)) embiD=embi-pv; }
+    const ipc=npInflVar12('ipc'), ipp=npInflVar12('ipp');
+    return [
+      { lab:'Dólar P2P',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
+      { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:'flat',                sub:'sin cambios' },
+      { lab:'Riesgo país', val:npNum(embi)?npFmt(embi,0):'—',unit:'pb',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,' pb',0):'EMBI Bolivia' },
+      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' },
+      { lab:'IPP interan.',val:ipp?npFmt(ipp.val,1):'—',     unit:'%',      dir:npDir(ipp&&ipp.delta), sub:ipp?npDeltaTxt(ipp.delta,' pp',1):'s/d' }
+    ];
+  }
 
   // ── Átomos de markup ──
-  function ntSrcTag(id){
-    // Fallback defensivo: un slug fuera del catálogo no debe tirar la tabla.
-    const s = NOTICIAS_PORTALS[id] || { name:id, color:'var(--text-muted)' };
-    return '<span class="nt-src" style="--nt-c:'+s.color+'"><span class="sdot"></span>'+ntEsc(s.name)+'</span>';
+  function npImpact(level){
+    const n=NT_RANK[level]||1; let bars=''; for(let i=0;i<3;i++) bars+='<i class="'+(i<n?'on':'')+'"></i>';
+    const lbl=level==='alto'?'Alto':level==='medio'?'Medio':'Bajo';
+    return '<span class="np-impact '+ntEsc(level)+'"><span class="bars">'+bars+'</span>'+lbl+'</span>';
   }
-  function ntCatTag(id){
-    const c = NOTICIAS_CATEGORIES[id]; if(!c) return '';
-    return '<span class="nt-cat" style="--nt-c:'+c.color+'"><span class="cdot"></span>'+ntEsc(c.name)+'</span>';
-  }
-  function ntImpact(level){
-    const n = level==='alto'?3:level==='medio'?2:1;
-    let bars=''; for(let i=0;i<3;i++) bars+='<i class="'+(i<n?'on':'')+'"></i>';
-    return '<span class="nt-impact '+ntEsc(level)+'"><span class="ibar">'+bars+'</span>'+ntEsc(level)+'</span>';
-  }
+  function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
+  function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
+  function npTitle(url,text){ return npLink(url, ntEsc(text)); }
+  function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span><span class="np-sep">·</span>'+npImpact(n.impact)+'</div>'; }
+  function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
 
-  // ── Filtro intersectado (categoría ∩ guardadas ∩ día), orden fijo desc ──
-  function ntVisible(){
-    return NOTICIAS_NEWS
-      .filter(n=>ntState.cats.has(n.category))
-      .filter(n=>!ntState.onlySaved || ntState.saved.has(n.id))
-      .filter(n=>!ntState.day || n.date===ntState.day)
-      .slice()
-      .sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));
+  // ── Regiones ──
+  function npTopline(){
+    const hoy=ntBolivia().filter(function(n){ return n.date===NT_TODAY; });
+    const last=hoy.length?hoy.map(function(n){ return n.time; }).sort().pop():null;
+    return '<div class="np-topline"><span class="np-kicker">FinanzasBo · Noticias</span>'
+      +'<span class="np-topline-meta"><span class="np-date">'+ntEsc(ntFechaLarga(NT_TODAY))+' · Santa Cruz, Bolivia</span>'
+      +(last?'<span class="np-upd"><span class="np-live"></span>Actualizado '+ntEsc(last)+'</span>':'')+'</span></div>';
   }
-
-  // ── Renders ──
-  function ntRenderKpis(){
-    const el=document.getElementById('ntKpis'); if(!el) return;
-    const hoy=NOTICIAS_NEWS.filter(n=>n.date===NT_TODAY);
-    const lastTime=hoy.length ? hoy.map(n=>n.time).sort().pop() : null;
-    const alto=NOTICIAS_NEWS.filter(n=>n.impact==='alto').length;
-    const ev=NOTICIAS_EVENTS[0];
-    el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid fb-kpi-grid--5">'
-      + kpi('Noticias hoy', String(hoy.length), lastTime?('actualizado '+ntEsc(lastTime)):'sin notas hoy', NT_KICON.hoy, null)
-      + kpi('Portales', String(NOTICIAS_PORTAL_ORDER.length), 'medios monitoreados', NT_KICON.medios, null)
-      + kpi('Impacto alto', String(alto), 'marcadas como relevantes', NT_KICON.impacto, null)
-      + kpi('Próximo hecho <span class="nt-badge-demo">ejemplo</span>', '+'+ev.inDays+'<span class="unit">d</span>', NOTICIAS_CATEGORIES[ev.category].name+' · '+ntFmtDay(ev.date), NT_KICON.evento, null)
-      + kpi('Guardadas', String(ntState.saved.size), 'en esta sesión', NT_KICON.guardadas, null)
-      + '</div></div>';
-  }
-
-  // Auto-hide: una categoría sin notas en la ventana de 30 días no muestra
-  // chip (p.ej. latam los días sin publicaciones del feed). "Todas" se
-  // evalúa sobre las VISIBLES para que el estado sea alcanzable por chips.
-  function ntCatsVisibles(){ return NOTICIAS_CAT_ORDER.filter(id=>ntCatCounts[id]>0); }
-  function ntAllCatsOn(){ return ntCatsVisibles().every(id=>ntState.cats.has(id)); }
-
-  function ntRenderChips(){
-    const el=document.getElementById('ntCatChips'); if(!el) return;
-    const allOn = ntAllCatsOn();
-    el.innerHTML =
-      '<button type="button" class="fb-pill nt-chip'+(allOn?' active':'')+'" data-cat="all">Todas</button>'
-      + ntCatsVisibles().map(id=>{
-          const c=NOTICIAS_CATEGORIES[id], on=ntState.cats.has(id);
-          return '<button type="button" class="fb-pill nt-chip'+(on?' active':'')+'" data-cat="'+id+'" style="--nt-c:'+c.color+'">'
-            + '<span class="pdot"></span>'+ntEsc(c.name)
-            + '<span class="pcount">'+ntCatCounts[id]+'</span></button>';
-        }).join('');
-  }
-
-  function ntRenderSavedToggle(){
-    const el=document.getElementById('ntSavedToggle'); if(!el) return;
-    el.classList.toggle('on', ntState.onlySaved);
-    el.innerHTML = ntIconBookmark(ntState.onlySaved)+'Solo guardadas';
-    el.title = ntState.onlySaved ? 'Mostrar todas las notas' : 'Mostrar solo guardadas';
-  }
-
-  function ntRenderSlider(){
-    const idx = ntState.day ? NT_DAYS.indexOf(ntState.day) : 29;
-    const p = idx/29;
-    const range=document.getElementById('ntRange');
-    if(range && Number(range.value)!==idx) range.value=String(idx);
-    const bubble=document.getElementById('ntBubble');
-    if(bubble){
-      if(ntState.day){
-        const c=ntCountByDay[ntState.day]||0;
-        bubble.innerHTML = ntEsc(ntFmtDayLong(ntState.day))+' <span class="bcount">· '+c+' '+(c===1?'nota':'notas')+'</span>';
-      } else {
-        bubble.innerHTML = 'últimos 30 días <span class="bcount">· '+NOTICIAS_NEWS.length+' notas</span>';
-      }
-      // Clamp en los extremos para que la burbuja no desborde el carril.
-      const halfW = ntState.day ? 64 : 92;
-      bubble.style.left = 'clamp('+halfW+'px, calc((100% - 16px) * '+p+' + 8px), calc(100% - '+halfW+'px))';
+  function npMarkets(){
+    const inds=npMarketsData(), glyph={up:'▲',down:'▼',flat:'■'}; let cells='';
+    for(let i=0;i<inds.length;i++){ const d=inds[i];
+      cells+='<div class="np-ind"><span class="np-ind-lab">'+ntEsc(d.lab)+'</span>'
+        +'<div class="np-ind-row"><span class="np-ind-val">'+ntEsc(d.val)+'</span>'+(d.unit?'<span class="np-ind-unit">'+ntEsc(d.unit)+'</span>':'')+'</div>'
+        +'<span class="np-ind-sub"><span class="np-arrow '+d.dir+'">'+glyph[d.dir]+'</span>'+ntEsc(d.sub)+'</span></div>';
     }
-    const prev=document.getElementById('ntDayPrev'), next=document.getElementById('ntDayNext');
-    if(prev) prev.disabled = (idx===0);
-    if(next) next.disabled = (idx===29);
-    const allBtn=document.getElementById('ntAllDays');
-    if(allBtn) allBtn.classList.toggle('active', ntState.day===null);
+    return '<div class="np-markets"><div class="np-markets-lab"><span class="np-ml-kick">Mercados</span><span class="np-ml-title">El día<br>en cifras</span></div>'+cells+'</div>';
   }
-
-  function ntRenderTable(){
-    const tbody=document.getElementById('ntTbody'); if(!tbody) return;
-    const visible=ntVisible();
-    const sub=document.getElementById('ntTableSub');
-    if(sub) sub.innerHTML = 'Densa, ordenada por fecha · clic en una fila para ver el detalle · '
-      + (ntState.day ? ntEsc(ntFmtDayLong(ntState.day)) : 'últimos 30 días')
-      + ' · ' + visible.length + ' ' + (visible.length===1?'nota':'notas');
-    if(!visible.length){
-      tbody.innerHTML = '<tr><td colspan="6"><div class="nt-empty">No hay notas '
-        + (ntState.day ? 'para el '+ntEsc(ntFmtDayLong(ntState.day)) : 'para los filtros seleccionados')
-        + '.</div></td></tr>';
-      return;
+  function npChips(){
+    const cats=ntCatsConData();
+    let h='<div class="np-chips"><span class="np-chips-lab">Categorías</span><button type="button" class="np-chip'+(npState.cat==='all'?' on':'')+'" data-cat="all">Todas</button>';
+    for(let i=0;i<cats.length;i++){ const id=cats[i];
+      h+='<button type="button" class="np-chip'+(npState.cat===id?' on':'')+'" data-cat="'+id+'" style="--nt-c:var(--cat-'+id+')"><span class="pdot"></span>'+ntEsc(ntCatName(id))+'<span class="pcount">'+ntCatCount(id)+'</span></button>';
     }
-    tbody.innerHTML = visible.map(n=>{
-      const isRead=ntState.read.has(n.id), isSaved=ntState.saved.has(n.id), isOpen=ntState.expanded===n.id;
-      const topic = n.topics && n.topics.length ? '<span class="nt-topic">'+ntEsc(n.topics[0])+'</span>' : '';
-      // Sin columna Hora: solo fecha visible. n.time sigue en la data (DB y
-      // sort por date+time) — latam trae hora real de publicación, Bolivia
-      // la de corrida.
-      let html = '<tr class="nt-row'+(isRead?' is-read':'')+'" data-id="'+ntEsc(n.id)+'">'
-        + '<td class="nt-fecha">'+ntFmtDay(n.date)+'</td>'
-        + '<td>'+ntSrcTag(n.source)+'</td>'
-        + '<td class="nt-title">'+ntEsc(n.title)+'</td>'
-        + '<td class="nt-cats"><div class="nt-catwrap">'+ntCatTag(n.category)+topic+'</div></td>'
-        + '<td>'+ntImpact(n.impact)+'</td>'
-        + '<td class="nt-actions"><div class="nt-actwrap">'
-        + '<button type="button" class="nt-act icon'+(isRead?' on':'')+'" data-act="read" title="'+(isRead?'Marcar como no leído':'Marcar como leído')+'">'+NT_ICON_CHECK+'</button>'
-        + '<button type="button" class="nt-act icon'+(isSaved?' on':'')+'" data-act="save" title="'+(isSaved?'Quitar de guardados':'Guardar')+'">'+ntIconBookmark(isSaved)+'</button>'
-        + '<button type="button" class="nt-act icon" data-act="toggle" title="'+(isOpen?'Cerrar detalle':'Ver detalle')+'">'+ntIconChevron(isOpen)+'</button>'
-        + '</div></td></tr>';
-      if(isOpen){
-        const portal = NOTICIAS_PORTALS[n.source] || { full:n.source };
-        html += '<tr class="nt-detail-row"><td colspan="6"><div class="nt-detail">'
-          + ntEsc(n.detail)
-          + '<div class="nt-detail-meta">'
-          + '<span>Fuente: <b>'+ntEsc(portal.full)+'</b></span>'
-          + '<span>Ref: <b>'+ntEsc(n.sourceNote)+'</b></span>'
-          + (n.url && /^https?:\/\//i.test(n.url) ? '<span><a href="'+ntEsc(n.url)+'" target="_blank" rel="noopener noreferrer">Ver nota original ↗</a></span>' : '')
-          + '</div></div></td></tr>';
-      }
-      return html;
-    }).join('');
+    return h+'</div>';
   }
-
-  function ntRenderAll(){
-    ntRenderKpis(); ntRenderChips(); ntRenderSavedToggle(); ntRenderSlider(); ntRenderTable();
-  }
-
-  // ── Mutadores ──
-  function ntToggleCat(id){
-    if(id==='all'){
-      if(ntAllCatsOn()) ntState.cats.clear();
-      else NOTICIAS_CAT_ORDER.forEach(k=>ntState.cats.add(k));
-    } else {
-      if(ntState.cats.has(id)) ntState.cats.delete(id); else ntState.cats.add(id);
+  function npTop(){
+    const pool=ntPool();
+    if(!pool.length) return '<section class="np-top"><div class="np-empty">No hay notas para esta selección.</div></section>';
+    const lead=pool[0], secs=pool.slice(1,3);
+    let L='<article class="np-lead"><div class="np-lead-kicker"><span class="np-kicker">'+ntEsc(ntCatName(lead.category))+'</span>'+npImpact(lead.impact)+'</div>'
+      +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
+      +'<figure class="np-figure"><div class="np-imgph"><span class="np-imglabel">'+ntEsc(ntCatName(lead.category))+'</span></div></figure>'
+      +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
+    let S='<div class="np-secs">';
+    for(let i=0;i<secs.length;i++){ const s=secs[i];
+      S+='<article class="np-sec"><div class="np-sec-kicker"><span class="np-kicker">'+ntEsc(ntCatName(s.category))+'</span></div>'
+        +(i===0
+          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"><span class="np-imglabel">'+ntEsc(ntCatName(s.category))+'</span></div></div>'
+          : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
+        +'</article>';
     }
-    ntRenderChips(); ntRenderTable();
+    S+='</div>';
+    return '<section class="np-top">'+L+S+'</section>';
   }
-  function ntSetDay(day){
-    ntState.day = day;
-    ntRenderSlider(); ntRenderTable();
-  }
-  function ntStepDay(d){
-    const from = ntState.day ? NT_DAYS.indexOf(ntState.day) : 29;
-    const next = Math.min(29, Math.max(0, from+d));
-    ntSetDay(NT_DAYS[next]);
-  }
-  function ntToggleExpand(id){
-    ntState.expanded = (ntState.expanded===id) ? null : id;
-    ntRenderTable();
-  }
-
-  // ── Build estático (marcas del carril, escala, stamp) + wiring ──
-  let ntBuilt=false;
-  function ntBuild(){
-    // Marcas decorativas: un punto por día con ≥1 nota; HOY siempre, en outline.
-    const track=document.getElementById('ntTrack');
-    if(track){
-      track.innerHTML = NT_DAYS.map((d,i)=>{
-        if(!((ntCountByDay[d]||0)>0 || d===NT_TODAY)) return '';
-        return '<span class="nt-mark'+(d===NT_TODAY?' today':'')+'" style="left:calc((100% - 16px) * '+(i/29)+' + 8px)" title="'+ntEsc(ntFmtDayLong(d))+'"></span>';
-      }).join('');
+  function npRiver(){
+    const pool=ntPool(), river=pool.slice(3), total=pool.length;
+    let grid='';
+    for(let i=0;i<river.length;i++){ const n=river[i];
+      grid+='<article class="np-card"><div class="np-imgph np-card-img"><span class="np-imglabel">'+ntEsc(ntCatName(n.category))+'</span></div>'
+        +'<div class="np-card-body"><div class="np-card-kicker">'+ntEsc(ntCatName(n.category))+'</div>'
+        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
+        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span><span class="np-sep">·</span>'+npImpact(n.impact)+'</div></div></article>';
     }
-    const sf=document.getElementById('ntScaleFrom'), st=document.getElementById('ntScaleTo');
-    if(sf) sf.textContent = ntFmtDay(NT_DAYS[0]);
-    if(st) st.textContent = 'hoy · '+ntFmtDay(NT_TODAY);
-    // Stamp del subheader: hora de la nota más reciente de hoy (feed real).
-    const stamp=document.getElementById('ntUpdateStamp');
-    if(stamp){
-      const hoy=NOTICIAS_NEWS.filter(n=>n.date===NT_TODAY);
-      const lastTime=hoy.length ? hoy.map(n=>n.time).sort().pop() : null;
-      stamp.textContent = ntFmtDay(NT_TODAY)+(lastTime?(', '+lastTime):'');
+    const sub=(npState.cat==='all'?'Selección automática por relevancia':ntCatName(npState.cat))+' · '+total+' '+(total===1?'nota':'notas');
+    const body=river.length?'<div class="np-river-cards">'+grid+'</div>':'<div class="np-empty">Sin más notas en esta selección.</div>';
+    return '<section class="np-river-sec"><div class="np-section-head"><h2>Río de titulares</h2><span class="meta">'+ntEsc(sub)+'</span></div>'+body+'</section>';
+  }
+  function npRail(){
+    const top=ntRelevantes(5); if(!top.length) return '<aside class="np-rail"></aside>';
+    let rows='';
+    for(let i=0;i<top.length;i++){ const n=top[i];
+      rows+='<div class="np-rank"><span class="num">'+(i+1)+'</span><div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
     }
-
-    document.getElementById('ntCatChips').addEventListener('click', e=>{
-      const btn=e.target.closest('.fb-pill'); if(!btn) return;
-      ntToggleCat(btn.dataset.cat);
-    });
-    document.getElementById('ntSavedToggle').addEventListener('click', ()=>{
-      ntState.onlySaved=!ntState.onlySaved;
-      ntRenderSavedToggle(); ntRenderTable();
-    });
-    document.getElementById('ntRange').addEventListener('input', e=>{
-      ntSetDay(NT_DAYS[Number(e.target.value)]);
-    });
-    document.getElementById('ntDayPrev').addEventListener('click', ()=>ntStepDay(-1));
-    document.getElementById('ntDayNext').addEventListener('click', ()=>ntStepDay(1));
-    document.getElementById('ntAllDays').addEventListener('click', ()=>ntSetDay(null));
-    document.getElementById('ntTbody').addEventListener('click', e=>{
-      const btn=e.target.closest('button[data-act]');
-      if(btn){
-        const row=btn.closest('tr.nt-row'); if(!row) return;
-        const id=row.dataset.id;
-        if(btn.dataset.act==='read'){
-          if(ntState.read.has(id)) ntState.read.delete(id); else ntState.read.add(id);
-          ntRenderTable();
-        } else if(btn.dataset.act==='save'){
-          if(ntState.saved.has(id)) ntState.saved.delete(id); else ntState.saved.add(id);
-          ntRenderTable(); ntRenderKpis(); // KPI "Guardadas" reactivo
-        } else {
-          ntToggleExpand(id);
-        }
-        return;
-      }
-      // La celda de acciones no expande (equivalente al stopPropagation del mockup).
-      if(e.target.closest('td.nt-actions')) return;
-      const row=e.target.closest('tr.nt-row');
-      if(row) ntToggleExpand(row.dataset.id);
-    });
+    return '<aside class="np-rail"><div class="np-railcard"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
+  }
+  function npLatam(){
+    const latam=ntLatam().slice(0,5); if(!latam.length) return '';
+    let grid='';
+    for(let i=0;i<latam.length;i++){ const n=latam[i];
+      grid+='<article class="np-latam-card"><div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
+        +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',n.summary)
+        +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
+    }
+    return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';
+  }
+  function npFooter(){
+    let pl='';
+    for(let i=0;i<NOTICIAS_PORTAL_ORDER.length;i++){ const id=NOTICIAS_PORTAL_ORDER[i], p=NOTICIAS_PORTALS[id], linea=(id==='bloomberg');
+      pl+='<span class="np-foot-portal'+(linea?' linea':'')+'">'+ntEsc(linea?'Bloomberg Línea':(p?p.name:id))+'</span>';
+    }
+    return '<footer class="np-footer"><div class="np-foot-sources"><div class="np-foot-lab">Fuentes monitoreadas</div><div class="np-foot-portals">'+pl+'</div></div>'
+      +'<div class="np-foot-grid"><div class="np-method"><b>Metodología.</b> Las notas bolivianas se agregan automáticamente desde 13 portales y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.<div class="np-disc">FinanzasBo agrega y enlaza a las fuentes originales; los derechos pertenecen a cada medio. Indicadores con fines informativos, no constituyen asesoría financiera.</div></div>'
+      +'<div class="np-foot-tabs"><span class="lab">Explorar el panel</span><a>Dólar paralelo</a><a>Macroeconomía</a><a>Bolsa BBV</a><a>Rendimientos DPF</a></div></div>'
+      +'<div class="np-foot-copy">© 2026 FinanzasBo · Inteligencia económica de Bolivia · Santa Cruz</div></footer>';
   }
 
+  // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
+  function npBuildHTML(){
+    return '<div class="np-page">'+npTopline()+npMarkets()+npChips()
+      +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
+      +npLatam()+npFooter()+'</div>';
+  }
+  function npRerender(){ const host=document.getElementById('tab-noticias'); if(host) host.innerHTML=npBuildHTML(); }
+  function renderNoticiasPortada(){
+    npRerender();
+    const host=document.getElementById('tab-noticias');
+    if(host && !host.__npBound){
+      host.__npBound=true;
+      host.addEventListener('click', function(e){
+        const chip=e.target.closest('.np-chip');
+        if(chip){ npState.cat=chip.dataset.cat; npRerender(); }
+      });
+    }
+  }
   // Lazy render (patrón renderBbv/renderGuide): se construye al activar la tab.
-  window.renderNoticias = function(){
-    if(ntBuilt) return;
-    ntBuilt=true;
-    ntBuild();
-    ntRenderAll();
-  };
+  let ntBuilt=false;
+  window.renderNoticias = function(){ if(ntBuilt) return; ntBuilt=true; renderNoticiasPortada(); };
 })();
 
 (function(){
