@@ -736,11 +736,21 @@ def process_data(db_path: Path) -> dict:
     # garantiza esta query. Schema por nota: HANDOFF.md § Frontend tab Noticias.
     noticias_data = []
     try:
+        # Mirror/cache de ids ocultos (fuente de verdad = KV Cloudflare). Self-create
+        # idempotente: la migración 0003 se aplica a mano en el VPS sin runner, así que
+        # mergear a main no crea la tabla allá. Sin esto, el filtro de abajo tiraría
+        # "no such table", el except la tragaría y la tab Noticias se BLANQUEARÍA en el
+        # primer publish. Con la tabla vacía el filtro es no-op → build idéntico a hoy.
+        conn.execute("CREATE TABLE IF NOT EXISTS noticias_hidden (id TEXT NOT NULL PRIMARY KEY)")
+        # `WHERE id IS NOT NULL` en el subquery: SQLite permite NULL en un TEXT PK, y
+        # un solo NULL en el subquery volvería el NOT IN falso para TODA fila (footgun
+        # del NOT IN), blanqueando el feed — justo lo que esta capa evita.
         noticias_rows = conn.execute(
             "SELECT id, date, time, source, category, title, summary, detail, "
             "       topics, impact, source_note, url "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
+            "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
             "ORDER BY date DESC, time DESC, puntaje DESC"
         ).fetchall()
         noticias_data = [{
@@ -751,7 +761,7 @@ def process_data(db_path: Path) -> dict:
             'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
         } for r in noticias_rows]
     except Exception:
-        pass  # Table doesn't exist yet — graceful degradation
+        pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation
 
     conn.close()
 
