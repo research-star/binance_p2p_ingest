@@ -580,6 +580,8 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 /* control por-nota: botón de ocultar anclado a la esquina del wrapper (solo en modo edición) */
 [data-note-id]{position:relative}
 .np-hide-btn{position:absolute;top:6px;right:6px;z-index:4;width:26px;height:26px;font-size:13px;line-height:1;background:var(--bg-secondary);box-shadow:var(--shadow-md)}
+/* rail: reserva ancho a la derecha en modo edición para que el ✕ no pise el título (el ✕ ocupa ~32px) */
+.np-rank[data-note-id]{padding-right:34px}
 /* panel de ocultas */
 .np-hidden-panel{flex-basis:100%;margin-top:2px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-secondary);box-shadow:var(--shadow-lg)}
 .np-hidden-panel h4{margin:0 0 10px;font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-primary)}
