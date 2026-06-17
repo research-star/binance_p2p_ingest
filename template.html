@@ -569,6 +569,29 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .np-sec-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
+/* — admin (PR-C2): gestión de ocultas. Markup presente SOLO con #admin + sesión Access; invisible para el resto — */
+.np-admin-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;padding:9px 36px;border-bottom:1px solid var(--border-color);background:var(--bg-tertiary);font-family:var(--font-body);font-size:12px;color:var(--text-secondary)}
+.np-admin-who{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--text-primary)}
+.np-admin-who .dot{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);flex-shrink:0}
+.np-admin-spacer{flex:1}
+.np-admin-note{flex-basis:100%;font-size:11.5px;line-height:1.45;padding:7px 11px;border-radius:var(--radius-sm)}
+.np-admin-note.info{background:color-mix(in srgb,var(--blue-accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--blue-accent) 30%,transparent);color:var(--text-secondary)}
+.np-admin-note.warn{background:color-mix(in srgb,var(--orange) 12%,transparent);border:1px solid color-mix(in srgb,var(--orange) 38%,transparent);color:var(--text-primary)}
+/* control por-nota: botón de ocultar anclado a la esquina del wrapper (solo en modo edición) */
+[data-note-id]{position:relative}
+.np-hide-btn{position:absolute;top:6px;right:6px;z-index:4;width:26px;height:26px;font-size:13px;line-height:1;background:var(--bg-secondary);box-shadow:var(--shadow-md)}
+/* rail: reserva ancho a la derecha en modo edición para que el ✕ no pise el título (el ✕ ocupa ~32px) */
+.np-rank[data-note-id]{padding-right:34px}
+/* panel de ocultas */
+.np-hidden-panel{flex-basis:100%;margin-top:2px;padding:12px 14px;border:1px solid var(--border-color);border-radius:var(--radius-md);background:var(--bg-secondary);box-shadow:var(--shadow-lg)}
+.np-hidden-panel h4{margin:0 0 10px;font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--text-primary)}
+.np-hidden-empty{font-style:italic;color:var(--text-soft);font-size:12px}
+.np-hidden-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--border-color)}
+.np-hidden-item:first-of-type{border-top:0}
+.np-hi-main{flex:1;min-width:0}
+.np-hi-title{font-family:var(--font-display);font-size:12.5px;color:var(--text-primary);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.np-hi-meta{font-family:var(--font-body);font-size:10.5px;color:var(--text-muted);margin-top:2px}
+.np-hi-id{font-family:var(--font-mono);font-size:10px}
 </style></head>
 <body>
 
@@ -4541,6 +4564,19 @@ window.addEventListener('popstate', function(){
   const NT_HIDDEN = new Set();
   function ntVisible(){ return NT_HIDDEN.size ? NOTICIAS_NEWS.filter(function(n){ return !NT_HIDDEN.has(n.id); }) : NOTICIAS_NEWS; }
 
+  // ── Admin UI (PR-C2): gestión inline de ocultas. Solo se activa con #admin en la
+  // URL + sesión de Access válida. Sin #admin, npAdmin.flag=false ⇒ npBuildHTML no
+  // emite NADA admin y no se dispara ninguna request (tab idéntica a hoy). Consume las
+  // 4 rutas auth del Worker (api.finanzasbo.com) con credentials:'include'; el id va en
+  // text/plain (CORS simple, sin preflight). NUNCA recomputa el hash: usa n.id tal cual.
+  const NT_API = 'https://api.finanzasbo.com';
+  const npAdmin = { flag:false, checked:false, isAdmin:false, email:null, editMode:false, hiddenItems:null, notice:null };
+  function npHasAdminFlag(){ try{ return (location.hash||'')==='#admin'; }catch(e){ return false; } }
+  function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
+  function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
+  function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
+  function npById(id){ for(let i=0;i<NOTICIAS_NEWS.length;i++) if(NOTICIAS_NEWS[i].id===id) return NOTICIAS_NEWS[i]; return null; }
+
   // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
   const NT_RANK = { alto:3, medio:2, bajo:1 };
   function ntCmp(a,b){ const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
@@ -4622,13 +4658,13 @@ window.addEventListener('popstate', function(){
     const pool=ntPool();
     if(!pool.length) return '<section class="np-top"><div class="np-empty">No hay notas para esta selección.</div></section>';
     const lead=pool[0], secs=pool.slice(1,3);
-    let L='<article class="np-lead">'
+    let L='<article class="np-lead"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure"><div class="np-imgph"></div></figure>'
       +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
     let S='<div class="np-secs">';
     for(let i=0;i<secs.length;i++){ const s=secs[i];
-      S+='<article class="np-sec">'
+      S+='<article class="np-sec"'+npNoteAttr(s)+'>'+npHideCtl(s)
         +(i===0
           ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"></div></div>'
           : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
@@ -4641,7 +4677,7 @@ window.addEventListener('popstate', function(){
     const pool=ntPool(), river=pool.slice(3), total=pool.length;
     let grid='';
     for(let i=0;i<river.length;i++){ const n=river[i];
-      grid+='<article class="np-card"><div class="np-imgph np-card-img"></div>'
+      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-imgph np-card-img"></div>'
         +'<div class="np-card-body">'
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div></div></article>';
@@ -4654,7 +4690,7 @@ window.addEventListener('popstate', function(){
     const top=ntRelevantes(5); if(!top.length) return '<aside class="np-rail"></aside>';
     let rows='';
     for(let i=0;i<top.length;i++){ const n=top[i];
-      rows+='<div class="np-rank"><span class="num">'+(i+1)+'</span><div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
+      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span><div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
     }
     return '<aside class="np-rail"><div class="np-railcard"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
   }
@@ -4662,7 +4698,7 @@ window.addEventListener('popstate', function(){
     const latam=ntLatam().slice(0,5); if(!latam.length) return '';
     let grid='';
     for(let i=0;i<latam.length;i++){ const n=latam[i];
-      grid+='<article class="np-latam-card"><div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
+      grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
         +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',n.summary)
         +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
     }
@@ -4679,9 +4715,47 @@ window.addEventListener('popstate', function(){
       +'<div class="np-foot-copy">© 2026 FinanzasBo · Inteligencia económica de Bolivia · Santa Cruz</div></footer>';
   }
 
+  // ── Admin bar + panel de ocultas (PR-C2; vacío salvo #admin) ──
+  function npShortAt(at){ try{ const d=Date.parse(at); if(!isNaN(d)) return ntFechaCorta(new Date(d-4*3600000).toISOString().slice(0,10)); }catch(e){} return String(at||'').slice(0,10); }
+  function npHiddenPanel(){
+    const items = npAdmin.hiddenItems;
+    let rows;
+    if(items===null){ rows='<div class="np-hidden-empty">Cargando notas ocultas…</div>'; }
+    else if(!items.length){ rows='<div class="np-hidden-empty">No hay notas ocultas.</div>'; }
+    else {
+      rows='';
+      for(let i=0;i<items.length;i++){ const it=items[i], n=npById(it.id);
+        // Cruce con DATA.noticias para el título; nota fuera del feed → degradar a id+fecha.
+        const title = n ? ntEsc(n.title) : '<span class="np-hi-id">'+ntEsc(it.id)+'</span> · fuera del feed actual';
+        const parts = [];
+        if(n){ parts.push(ntEsc(ntPortalName(n.source))); if(n.date) parts.push(ntEsc(ntFechaCorta(n.date))); }
+        if(it.at) parts.push('ocultada '+ntEsc(npShortAt(it.at)));
+        rows+='<div class="np-hidden-item"><div class="np-hi-main"><div class="np-hi-title">'+title+'</div>'
+          +'<div class="np-hi-meta">'+parts.join(' · ')+'</div></div>'
+          +'<button class="fpi-show" type="button" data-np-unhide="'+ntEsc(it.id)+'">Mostrar</button></div>';
+      }
+    }
+    return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
+  }
+  function npAdminBar(){
+    if(!npAdmin.flag) return '';  // sin #admin → markup idéntico a hoy
+    let inner;
+    if(!npAdmin.isAdmin){
+      inner='<span class="np-admin-who">Modo admin</span><span class="np-admin-spacer"></span>'
+        +'<button class="fpi-show" type="button" data-np-login>Iniciar sesión</button>';
+    }else{
+      inner='<span class="np-admin-who"><span class="dot"></span>'+ntEsc(npAdmin.email||'admin')+'</span>'
+        +'<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>'
+        +'<span class="np-admin-spacer"></span>';
+    }
+    const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
+    const panel = (npAdmin.isAdmin && npAdmin.editMode) ? npHiddenPanel() : '';
+    return '<div class="np-admin-bar">'+inner+note+panel+'</div>';
+  }
+
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
-    return '<div class="np-page">'+npTopline()+npMarkets()
+    return '<div class="np-page">'+npAdminBar()+npTopline()+npMarkets()
       +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
       +npLatam()+npFooter()+'</div>';
   }
@@ -4709,7 +4783,90 @@ window.addEventListener('popstate', function(){
         .catch(function(){});  // fail-open
     }catch(e){}
   }
-  window.renderNoticias = function(){ if(ntBuilt) return; ntBuilt=true; renderNoticiasPortada(); ntLoadHidden(); };
+
+  // ── Admin: red (rutas auth, credentials:'include') + interacción ──
+  // text/plain ⇒ request CORS "simple" (sin preflight). El id va crudo en el body.
+  function npPost(seg, id){
+    return fetch(NT_API+seg, { method:'POST', credentials:'include', cache:'no-store',
+      headers:{ 'Content-Type':'text/plain' }, body:id });
+  }
+  // Login: NAVEGA full-page al login de Access (no fetch); vuelve a la home con sesión.
+  function npLogin(){
+    try{
+      const ret = encodeURIComponent('https://finanzasbo.com/#admin');
+      location.href = 'https://finanzasbo.cloudflareaccess.com/cdn-cgi/access/login/api.finanzasbo.com?redirect_url='+ret;
+    }catch(e){}
+  }
+  // 401/403 mid-uso ⇒ sesión expirada: comunicar + re-login, sin romper en silencio.
+  function npAuthExpired(){
+    npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
+    npAdmin.notice={ kind:'warn', text:'Tu sesión expiró. Iniciá sesión de nuevo para seguir gestionando notas.' };
+    npRerender();
+  }
+  function npCheckMe(){
+    fetch(NT_API+'/v1/me', { credentials:'include', cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){ npAdmin.checked=true; if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; } if(ntBuilt) npRerender(); })
+      .catch(function(){ npAdmin.checked=true; if(ntBuilt) npRerender(); });
+  }
+  function npLoadAdminList(){
+    fetch(NT_API+'/v1/hidden/admin', { credentials:'include', cache:'no-store' })
+      .then(function(r){ if(r.status===401||r.status===403){ npAuthExpired(); return null; } return r.ok ? r.json() : null; })
+      .then(function(d){ if(d===null) return; npAdmin.hiddenItems=(d && Array.isArray(d.items))?d.items:[]; npRerender(); })
+      .catch(function(){ npAdmin.hiddenItems=[]; npAdmin.notice={kind:'warn',text:'No se pudo cargar la lista de ocultas.'}; npRerender(); });
+  }
+  function npToggleEdit(){
+    npAdmin.editMode=!npAdmin.editMode; npAdmin.notice=null;
+    if(npAdmin.editMode){ npAdmin.hiddenItems=null; npLoadAdminList(); }
+    npRerender();
+  }
+  function npHide(id){
+    if(!id) return;
+    npPost('/v1/hide', id).then(function(r){
+      if(r.status===401||r.status===403){ npAuthExpired(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo ocultar la nota (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      NT_HIDDEN.add(id);  // desaparece instant de los 4 carriles vía ntVisible()
+      npAdmin.notice={kind:'info',text:'Nota ocultada.'};
+      if(npAdmin.editMode){ npAdmin.hiddenItems=null; npLoadAdminList(); }
+      npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se ocultó.'}; npRerender(); });
+  }
+  function npUnhide(id){
+    if(!id) return;
+    npPost('/v1/unhide', id).then(function(r){
+      if(r.status===401||r.status===403){ npAuthExpired(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo mostrar la nota (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      NT_HIDDEN.delete(id);
+      if(npAdmin.hiddenItems) npAdmin.hiddenItems=npAdmin.hiddenItems.filter(function(it){ return it.id!==id; });
+      // Honesto: la versión publicada ya excluyó la nota; reaparece en el feed recién al próximo refresh.
+      npAdmin.notice={kind:'info',text:'Nota quitada de ocultas. Volverá a aparecer en el sitio en el próximo refresh (unos minutos): la versión publicada todavía la excluye.'};
+      npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se mostró.'}; npRerender(); });
+  }
+  // UN listener delegado en el host (sobrevive al innerHTML= de npRerender porque se
+  // ata al host, no a los nodos re-creados). Se liga una sola vez.
+  let npListenerBound=false;
+  function npBindHost(){
+    if(npListenerBound) return;
+    const host=document.getElementById('tab-noticias'); if(!host) return;
+    npListenerBound=true;
+    host.addEventListener('click', function(ev){
+      const t=ev.target; if(!t || !t.closest) return;
+      let el;
+      if((el=t.closest('[data-np-hide]'))){ ev.preventDefault(); npHide(el.getAttribute('data-np-hide')); return; }
+      if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
+      if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
+      if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
+    });
+  }
+  window.renderNoticias = function(){
+    if(ntBuilt) return; ntBuilt=true;
+    npAdmin.flag = npHasAdminFlag();
+    renderNoticiasPortada();
+    npBindHost();
+    ntLoadHidden();
+    if(npAdmin.flag) npCheckMe();  // solo con #admin: una request /v1/me, jamás sin flag
+  };
 })();
 
 (function(){
