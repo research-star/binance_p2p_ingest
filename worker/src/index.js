@@ -38,6 +38,25 @@ function allowedEmails(env) {
   );
 }
 
+// Allowlist anti open-redirect del bounce login/logout: el `return` SOLO puede
+// apuntar al origin exacto de la UI (mismo valor que PROD_ORIGIN en cors.js).
+// Cualquier otro host/scheme/puerto → default. Preserva el path dentro del origin.
+const RETURN_ORIGIN = "https://finanzasbo.com";
+function safeReturn(reqUrl) {
+  const raw = new URL(reqUrl).searchParams.get("return");
+  if (!raw) return RETURN_ORIGIN + "/";
+  try {
+    const u = new URL(raw);
+    return u.origin === RETURN_ORIGIN ? u.href : RETURN_ORIGIN + "/";
+  } catch {
+    return RETURN_ORIGIN + "/";
+  }
+}
+
+function redirect(location) {
+  return new Response(null, { status: 302, headers: { Location: location } });
+}
+
 // Gate doble. Devuelve { ok:true, email } o { ok:false, status, reason }.
 async function gate(req, env) {
   const { token } = getAccessToken(req);
@@ -69,6 +88,50 @@ export default {
     if (path === "/v1/hidden" && req.method === "GET") {
       const { ids, v } = await readIndex(env.HIDDEN_KV);
       return json({ ids, v }, 200, publicCors());
+    }
+
+    // ── GET /v1/login — bounce de login cross-domain ──
+    // La UI vive en finanzasbo.com; el Access app, en api.finanzasbo.com. Access
+    // NO permite redirect cross-domain tras login (rechaza un redirect_url a otro
+    // host con "Invalid redirect URL"; sólo acepta un path RELATIVO del propio app
+    // — verificado contra Access real). Por eso el retorno a la UI lo hace ESTE
+    // Worker, ya con sesión de Access:
+    //   - Con sesión de Access válida (cualquier email; la autorización admin la
+    //     decide /v1/me, no este bounce) → 302 al `return` allowlisteado.
+    //   - Sin sesión → 302 al login de Access (kid=AUD + redirect_url RELATIVO de
+    //     vuelta a /v1/login con el return). Tras el OTP, Access nos devuelve acá
+    //     ya autenticados y caemos en la rama de arriba. No depende de que Access
+    //     proteja /v1/login en el edge → no requiere tocar config de Access.
+    if (path === "/v1/login" && req.method === "GET") {
+      const dest = safeReturn(req.url);
+      const { token } = getAccessToken(req);
+      let authed = false;
+      if (token) {
+        const v = await verifyAccessJwt(token, {
+          aud: env.AUD,
+          teamDomain: env.ACCESS_TEAM_DOMAIN,
+        });
+        authed = v.ok;
+      }
+      if (authed) return redirect(dest);
+      const back = "/v1/login?return=" + encodeURIComponent(dest);
+      const loginUrl =
+        "https://" + env.ACCESS_TEAM_DOMAIN +
+        "/cdn-cgi/access/login/api.finanzasbo.com?kid=" + env.AUD +
+        "&redirect_url=" + encodeURIComponent(back);
+      return redirect(loginUrl);
+    }
+
+    // ── GET /v1/logout — bounce de logout ──
+    // Logout estándar de Access (team) que invalida la sesión; `returnTo` lleva de
+    // vuelta a la UI allowlisteada (sólo pasamos un destino ya validado por
+    // safeReturn — nunca un host arbitrario).
+    if (path === "/v1/logout" && req.method === "GET") {
+      const dest = safeReturn(req.url);
+      const logoutUrl =
+        "https://" + env.ACCESS_TEAM_DOMAIN +
+        "/cdn-cgi/access/logout?returnTo=" + encodeURIComponent(dest);
+      return redirect(logoutUrl);
     }
 
     // ── GET /v1/me — auth ──

@@ -223,3 +223,99 @@ describe("GET /v1/hidden/admin (auth) — metadata", () => {
     expect(typeof b.items[0].at).toBe("string");
   });
 });
+
+const enc = encodeURIComponent;
+
+describe("GET /v1/login (bounce cross-domain)", () => {
+  it("con sesión + return válido → 302 al return", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"), { token: await jwt() });
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("con sesión + return con path de finanzasbo.com → preserva el path", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/noticias"), { token: await jwt() });
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/noticias");
+  });
+
+  it("con sesión + return cross-origin (evil) → default finanzasbo.com (anti open-redirect)", async () => {
+    const r = await call("/v1/login?return=" + enc("https://evil.com/"), { token: await jwt() });
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("con sesión + return subdominio-trampa (finanzasbo.com.evil.com) → default", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com.evil.com/"), { token: await jwt() });
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("con sesión + return http (scheme equivocado) → default https finanzasbo.com", async () => {
+    const r = await call("/v1/login?return=" + enc("http://finanzasbo.com/"), { token: await jwt() });
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("con sesión sin return → default finanzasbo.com", async () => {
+    const r = await call("/v1/login", { token: await jwt() });
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("con sesión vía cookie CF_Authorization también bouncea", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"), { cookie: `CF_Authorization=${await jwt()}` });
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("email NO admin pero sesión Access válida → igual bouncea (admin lo decide /v1/me)", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"), { token: await jwt({ email: NOTADMIN }) });
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+  });
+
+  it("token inválido (firma forjada) → trata como sin sesión → 302 al login de Access", async () => {
+    const forged = await mintJwt(kpEvil.privateKey, { kid: "kid-1", aud: AUD, iss: ISS, email: ADMIN });
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"), { token: forged });
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toContain("/cdn-cgi/access/login/api.finanzasbo.com");
+  });
+
+  it("sin sesión → 302 al login de Access con kid=AUD y redirect_url RELATIVO de vuelta a /v1/login", async () => {
+    const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"));
+    expect(r.status).toBe(302);
+    const loc = new URL(r.headers.get("Location"));
+    expect(loc.origin + loc.pathname).toBe(`https://${TEAM}/cdn-cgi/access/login/api.finanzasbo.com`);
+    expect(loc.searchParams.get("kid")).toBe(AUD);
+    const rd = loc.searchParams.get("redirect_url"); // ya decodeado por URLSearchParams
+    expect(rd.startsWith("/v1/login")).toBe(true); // relativo (Access rechaza cross-domain/absoluto)
+    expect(rd).toBe("/v1/login?return=" + enc("https://finanzasbo.com/"));
+  });
+
+  it("sin sesión + return inválido → el redirect_url lleva el DEFAULT, nunca el evil", async () => {
+    const r = await call("/v1/login?return=" + enc("https://evil.com/"));
+    const rd = new URL(r.headers.get("Location")).searchParams.get("redirect_url");
+    expect(rd).toBe("/v1/login?return=" + enc("https://finanzasbo.com/"));
+    expect(rd).not.toContain("evil.com");
+  });
+});
+
+describe("GET /v1/logout (bounce)", () => {
+  it("→ 302 al logout de Access del team con returnTo allowlisteado", async () => {
+    const r = await call("/v1/logout?return=" + enc("https://finanzasbo.com/"));
+    expect(r.status).toBe(302);
+    const loc = new URL(r.headers.get("Location"));
+    expect(loc.origin + loc.pathname).toBe(`https://${TEAM}/cdn-cgi/access/logout`);
+    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+  });
+
+  it("return inválido → returnTo default finanzasbo.com (no evil)", async () => {
+    const r = await call("/v1/logout?return=" + enc("https://evil.com/"));
+    const loc = new URL(r.headers.get("Location"));
+    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+    expect(r.headers.get("Location")).not.toContain("evil.com");
+  });
+
+  it("sin return → returnTo default finanzasbo.com", async () => {
+    const r = await call("/v1/logout");
+    const loc = new URL(r.headers.get("Location"));
+    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+  });
+});
