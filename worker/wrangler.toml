@@ -1,0 +1,27 @@
+# Worker "ocultar noticias" — FinanzasBo.
+# CONSTRUCCIÓN/LOCAL: este toml corre con `wrangler dev` (Miniflare). El DEPLOY
+# y los recursos remotos NO son parte de este PR (los hace Diego en un brief
+# posterior, con su gate).
+
+name = "finanzasbo-api"           # PLACEHOLDER — debe matchear el Worker deployado vivo.
+                                  # FLAG: confirmar el name real en el brief de deploy.
+main = "src/index.js"
+compatibility_date = "2025-06-01"
+workers_dev = false
+
+# Custom domain (deploy). En `wrangler dev` local se ignora y sirve en localhost.
+routes = [{ pattern = "api.finanzasbo.com", custom_domain = true }]
+
+# KV: fuente de verdad de los ocultos. El namespace REMOTO no se crea en este PR.
+# `id` es un placeholder para que Miniflare (local) levante un store local; el id
+# real se setea en el brief de deploy (`wrangler kv namespace create`).
+[[kv_namespaces]]
+binding = "HIDDEN_KV"
+id = "PLACEHOLDER_LOCAL_ONLY_set_at_deploy"
+
+# Vars públicas (AUD y team son identificadores públicos, no secrets).
+[vars]
+AUD = "679296d30558e396a95df499a0674d2d6aabe52186ead3466139db83fe7bbd71"
+ACCESS_TEAM_DOMAIN = "finanzasbo.cloudflareaccess.com"
+# ALLOWED_EMAILS: NO se setea acá. Va como var/secret AL DEPLOY (los 7 admins).
+# Sin él, las rutas auth fallan cerrado (403) aun con JWT válido — fail-safe.
