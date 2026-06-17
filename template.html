@@ -4533,18 +4533,26 @@ window.addEventListener('popstate', function(){
   // ── Feed real (graceful vacío estilo EMBI: sin DATA.noticias → portada vacía sana) ──
   const NOTICIAS_NEWS = (typeof DATA==='object' && Array.isArray(DATA.noticias)) ? DATA.noticias : [];
 
+  // ── Ocultas (PR-C1): ids ocultos desde /v1/hidden (público). Vacío por default →
+  // el primer paint NO espera la red. El fetch (ver renderNoticias) lo puebla y
+  // re-renderiza. ntVisible() es el ÚNICO punto de filtrado: ntBolivia/ntLatam y por
+  // ende ntPool/ntRelevantes derivan de él, así un solo gate cubre los 4 carriles.
+  // Con el set vacío devuelve NOTICIAS_NEWS tal cual (cero overhead → regresión cero).
+  const NT_HIDDEN = new Set();
+  function ntVisible(){ return NT_HIDDEN.size ? NOTICIAS_NEWS.filter(function(n){ return !NT_HIDDEN.has(n.id); }) : NOTICIAS_NEWS; }
+
   // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
   const NT_RANK = { alto:3, medio:2, bajo:1 };
   function ntCmp(a,b){ const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
-  function ntBolivia(){ return NOTICIAS_NEWS.filter(function(n){ return n.category!=='latam'; }); }
-  function ntLatam(){ return NOTICIAS_NEWS.filter(function(n){ return n.category==='latam'; }).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
+  function ntBolivia(){ return ntVisible().filter(function(n){ return n.category!=='latam'; }); }
+  function ntLatam(){ return ntVisible().filter(function(n){ return n.category==='latam'; }).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
   function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
 
   // Estado de filtro (memoria; read/saved diferido).
   const npState = { cat:'all' };
   // Pool de lead+secs+río: 'all' → carril Bolivia; cat → esa categoría.
   function ntPool(){
-    const pool = (npState.cat==='all') ? ntBolivia() : NOTICIAS_NEWS.filter(function(n){ return n.category===npState.cat; });
+    const pool = (npState.cat==='all') ? ntBolivia() : ntVisible().filter(function(n){ return n.category===npState.cat; });
     return pool.slice().sort(ntCmp);
   }
   // Rail "Lo más relevante": blend alto-primero + medio reciente (ntCmp ya lo hace).
@@ -4683,7 +4691,25 @@ window.addEventListener('popstate', function(){
   }
   // Lazy render (patrón renderBbv/renderGuide): se construye al activar la tab.
   let ntBuilt=false;
-  window.renderNoticias = function(){ if(ntBuilt) return; ntBuilt=true; renderNoticiasPortada(); };
+  // Fetch fail-open de /v1/hidden (público, CORS *, SIN credenciales): NO bloquea el
+  // primer paint; al resolver puebla NT_HIDDEN y re-renderiza filtrado vía npRerender().
+  // Falla/timeout/shape inesperado → estado actual (todas visibles), sin error visible.
+  // Se dispara una sola vez (ntHiddenLoaded).
+  let ntHiddenLoaded=false;
+  function ntLoadHidden(){
+    if(ntHiddenLoaded) return; ntHiddenLoaded=true;
+    try{
+      fetch('https://api.finanzasbo.com/v1/hidden', { credentials:'omit', cache:'no-store' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if(!d || !Array.isArray(d.ids) || !d.ids.length) return;  // nada que ocultar
+          d.ids.forEach(function(id){ if(typeof id==='string' && id) NT_HIDDEN.add(id); });
+          if(NT_HIDDEN.size && ntBuilt) npRerender();  // re-dibuja filtrado
+        })
+        .catch(function(){});  // fail-open
+    }catch(e){}
+  }
+  window.renderNoticias = function(){ if(ntBuilt) return; ntBuilt=true; renderNoticiasPortada(); ntLoadHidden(); };
 })();
 
 (function(){
