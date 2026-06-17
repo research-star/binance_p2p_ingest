@@ -4569,7 +4569,7 @@ window.addEventListener('popstate', function(){
   // text/plain (CORS simple, sin preflight). NUNCA recomputa el hash: usa n.id tal cual.
   const NT_API = 'https://api.finanzasbo.com';
   const npAdmin = { flag:false, checked:false, isAdmin:false, email:null, editMode:false, hiddenItems:null, notice:null };
-  function npHasAdminFlag(){ try{ return (location.hash||'').toLowerCase().indexOf('admin')!==-1; }catch(e){ return false; } }
+  function npHasAdminFlag(){ try{ return (location.hash||'')==='#admin'; }catch(e){ return false; } }
   function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
   function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
   function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
