@@ -1,10 +1,8 @@
 # Worker "ocultar noticias" — FinanzasBo.
-# CONSTRUCCIÓN/LOCAL: este toml corre con `wrangler dev` (Miniflare). El DEPLOY
-# y los recursos remotos NO son parte de este PR (los hace Diego en un brief
-# posterior, con su gate).
+# `wrangler dev` corre local (Miniflare). El deploy lo hace `wrangler deploy`
+# sobre el Worker vivo `finanzasbo-spike` (mismo name → ACTUALIZA, no duplica).
 
-name = "finanzasbo-api"           # PLACEHOLDER — debe matchear el Worker deployado vivo.
-                                  # FLAG: confirmar el name real en el brief de deploy.
+name = "finanzasbo-spike"         # Worker vivo que sirve api.finanzasbo.com (confirmado vía API).
 main = "src/index.js"
 compatibility_date = "2025-06-01"
 workers_dev = false
@@ -12,12 +10,10 @@ workers_dev = false
 # Custom domain (deploy). En `wrangler dev` local se ignora y sirve en localhost.
 routes = [{ pattern = "api.finanzasbo.com", custom_domain = true }]
 
-# KV: fuente de verdad de los ocultos. El namespace REMOTO no se crea en este PR.
-# `id` es un placeholder para que Miniflare (local) levante un store local; el id
-# real se setea en el brief de deploy (`wrangler kv namespace create`).
+# KV: fuente de verdad de los ocultos. Namespace remoto creado en el deploy.
 [[kv_namespaces]]
 binding = "HIDDEN_KV"
-id = "PLACEHOLDER_LOCAL_ONLY_set_at_deploy"
+id = "1a1fbf7093c040f3b62857e6e3fdf0ff"
 
 # Vars públicas (AUD y team son identificadores públicos, no secrets).
 [vars]
