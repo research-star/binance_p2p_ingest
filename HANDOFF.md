@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-06-10.
+Última actualización: 2026-06-17.
 
 ---
 
@@ -34,6 +34,47 @@ de backups y, opcionalmente, dashboard local.
 cada push a `main`, **excepto** cuando el único cambio es
 `bcb_referencial.json` (esos los recoge el cron `*/12` en su ciclo normal,
 no fuerzan publish).
+
+### Cerrado desde el último refresh (2026-06-10 → 2026-06-17)
+
+**Rediseño editorial v2 (#58-#64) — CERRADO.** Reskin completo del dashboard
+sobre los design tokens del repo, dual-theme: #58 (reordenar tabs + Noticias
+landing + slug `/dolar`), #59 (tab Dólar a lazy-loading), Fase 1 fundación
+(tipografía + paper navy, #60), Fase 2 portada Noticias editorial FT (#61),
+Fase 3 reskin de tabs con componentes compartidos (#62), Fase 4 paleta
+editorial + EMBI híbrido + poda Noticias + cleanup (#63), y fondo de página
+paper → `#fafbfe` (#64). El estado de tabs/routing en §2 ya refleja esto.
+
+**Feature "ocultar noticias" (#65-#70) — COMPLETA y en producción.** Permite a
+un admin ocultar notas del feed. La **fuente de verdad de los ocultos es el KV
+de Cloudflare**, NO la DB (la tabla local es solo cache para el filtro de build):
+
+| Pieza | Dónde | Qué hace |
+|---|---|---|
+| Worker Cloudflare | `api.finanzasbo.com` (Worker `finanzasbo-spike`, dir `worker/`) | Rutas `GET /v1/hidden` (público `{ids,v}`), `GET /v1/me`, `GET /v1/hidden/admin`, `POST /v1/hide`, `POST /v1/unhide`. KV (1 key `index`) = verdad de los ocultos. (Name `finanzasbo-spike` es legacy engañoso — tech-debt P3, ver Notion.) |
+| Auth = Cloudflare Access | edge + gate JWT del Worker | Access (team `finanzasbo.cloudflareaccess.com`) protege en el **edge** `/v1/me` y `/v1/hide` (302 al login); `/v1/unhide` y `/v1/hidden/admin` dependen **solo del gate JWT del Worker** (401) — cobertura edge **asimétrica** (probe directo 2026-06-17). `ALLOWED_EMAILS` = 7 admins @ddrcapitalpartners.com (secret en el Worker, NO en el repo). |
+| Admin UI | `template.html`, tab Noticias, **gated tras `#admin`** | Sin `#admin` en la URL → markup idéntico a hoy, cero requests. Con `#admin`: barra admin con login / "Editar ocultas" + acciones inline por nota (PR-C2, #70). PR-C1 (#69) = filtro instant client-side de los ocultos. |
+| Tabla `noticias_hidden` | `p2p_normalized.db` (migración `0003_noticias_hidden.sql`) | Cache local de ids para el filtro de build; `dashboard.py` la self-crea idempotente y filtra `AND id NOT IN (...)` ([dashboard.py:744](dashboard.py#L744), [753](dashboard.py#L753)). Migraciones se aplican a mano en el VPS (sin runner). |
+| `publish_dashboard.py` | VPS (PR-B′, #68) | Antes de publicar hace `GET /v1/hidden` (UA propio — CF da 403 al UA default de urllib) y sincroniza la mirror `noticias_hidden` transaccionalmente, fail-toward-stale estricto ([publish_dashboard.py:53](scripts/publish_dashboard.py#L53), [215](scripts/publish_dashboard.py#L215)). |
+
+### Anatomía del header / top-UI (recon 2026-06-17, base para el rediseño del top)
+
+- **Header global = `<nav class="fb-navbar">`** ([template.html:604](template.html#L604)),
+  sticky `top:0; z-index:52`:
+  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs` con **6
+    tabs** (Noticias [landing/active] · Macro · Dólar · Rendimientos DPF · BBV · Guía).
+  - Derecha (`.fb-navbar-right`): `#langToggle` (botón "ES", hoy sin lógica de
+    idioma) + `#themeToggle` (SVG luna/sol).
+- **Sub-header por tab** (`.fb-subheader`, sticky `top:var(--nav-h); z-index:51`):
+  `h1` + stats de visitas. Cada tab tiene el suyo.
+- **Botón de login — NO está en el header.** Vive en la barra admin de la tab
+  Noticias (`npAdminBar()`, [template.html:4740](template.html#L4740)), generada
+  por JS y **solo presente con `#admin` en la URL**. Sin sesión muestra "Iniciar
+  sesión" (`data-np-login`) → `npLogin()` navega full-page al login de Cloudflare
+  Access. **Implicación para el top-UI: no hay un botón de login en el header que
+  "reubicar"** — sería colocación net-new, o promover la entrada admin gated.
+- CSS del header: `.fb-navbar` (~L252), `.fb-navbar-left/right` (~L253-254),
+  `.fb-logo` (~L255), `.fb-subheader` (~L266); offset sticky vía `--nav-h`.
 
 ---
 
@@ -590,6 +631,19 @@ las referencias existentes a §6–§8.
 
 ## 6. Pendientes abiertos
 
+- [ ] **Flip del repo a privado** — hoy `research-star/binance_p2p_ingest` es
+      **público** (verificado 2026-06-17). El flip a privado está pendiente y
+      requiere **GitHub Pro primero** (Pages sobre repo privado necesita plan
+      pago). Decisión/acción de Diego.
+- [ ] **Rediseño del top-UI / login** — próximo workstream. Reubicar o crear el
+      acceso de login, que hoy está gated tras `#admin` dentro de la tab Noticias
+      (ver §0 "Anatomía del header"). Brief por venir.
+- [ ] **Housekeeping git** — las ramas de la feature ocultar-noticias quedaron
+      **sin borrar** en `origin` tras merge: `feat/publish-consume-hidden` (#68),
+      `feat/noticias-filtro-client` (#69), `feat/noticias-admin-ui-pr-c2` (#70).
+      Además, cruft local en la laptop de Diego (working tree: `index.html`
+      modificado + untracked `design-system/`, `worker-spike/`,
+      `docs/clasificacion_nandina_granos.html`). Limpieza aparte.
 - [ ] **`HC_BCB` healthcheck** — crear UUID en healthchecks.io, agregar a
       `/opt/binance_p2p/.env` como `HC_BCB`, y appendear
       `&& curl -fsS --max-time 10 https://hc-ping.com/$HC_BCB > /dev/null`
