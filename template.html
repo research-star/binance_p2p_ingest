@@ -4744,11 +4744,17 @@ window.addEventListener('popstate', function(){
     return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
   }
   function npAdminBar(){
-    // SIEMPRE visible (PR-C3). Anónimo ⇒ login discreto alineado a la derecha;
-    // admin ⇒ email + editar + cerrar sesión.
+    // Admin logueado ⇒ email + editar + cerrar sesión.
     let inner;
     if(!npAdmin.isAdmin){
-      inner='<button class="np-admin-link" type="button" data-np-login>Iniciar sesión</button>';
+      // MITIGACIÓN INTERINA (revertir con PR-C4): el "Iniciar sesión" se oculta
+      // porque la URL hand-crafted de npLogin rompe contra Cloudflare Access
+      // ("Unable to find your Access application": falta el kid=AUD y Access
+      // prohíbe el redirect_url cross-domain a finanzasbo.com). El fix real es
+      // una ruta de bounce gated en el Worker (/v1/login → 302 a finanzasbo.com);
+      // cuando exista, restaurar el botón acá. npLogin/data-np-login quedan
+      // intactos a propósito para que el revert sea trivial.
+      inner='';
     }else{
       inner='<span class="np-admin-who"><span class="dot"></span>'+ntEsc(npAdmin.email||'admin')+'</span>'
         +'<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>'
@@ -4757,6 +4763,8 @@ window.addEventListener('popstate', function(){
     }
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
     const panel = (npAdmin.isAdmin && npAdmin.editMode) ? npHiddenPanel() : '';
+    // Anónimo sin nada que mostrar (mitigación) ⇒ sin barra (evita un strip vacío).
+    if(!inner && !note && !panel) return '';
     return '<div class="np-admin-bar'+(npAdmin.isAdmin?'':' anon')+'">'+inner+note+panel+'</div>';
   }
 
