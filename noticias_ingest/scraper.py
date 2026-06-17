@@ -652,11 +652,36 @@ def get_url(url: str, metodo: str = "requests", timeout: int = 10):
             return None
 
 
-def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL_CUERPO) -> str:
-    """Fallback chain: curl_cffi → trafilatura.fetch_url → cloudscraper.
-    Los 3 fallbacks comparten un budget total de `timeout` segundos."""
-    if not TIENE_TRAFILATURA:
+def _og_image(html: str, base_url: str) -> str:
+    """URL del og:image del <head> del HTML crudo. Fallbacks en orden:
+    og:image → og:image:secure_url → twitter:image (cada uno como `property`
+    o `name`, porque hay portales malformados). Resuelve relativas y
+    protocol-relative contra base_url → siempre absoluta o ''. '' si no hay
+    (p.ej. El Deber no baja HTML → '' → image_url NULL aguas abajo). Nunca
+    levanta: cualquier excepción de parseo cae a ''. Carril Bolivia, FASE 2a."""
+    if not html:
         return ""
+    try:
+        soup = BeautifulSoup(html, "html.parser")
+        for key in ("og:image", "og:image:secure_url", "twitter:image"):
+            tag = (soup.find("meta", attrs={"property": key})
+                   or soup.find("meta", attrs={"name": key}))
+            if tag and (tag.get("content") or "").strip():
+                return urljoin(base_url, tag["content"].strip())
+    except Exception:
+        return ""
+    return ""
+
+
+def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL_CUERPO) -> tuple[str, str]:
+    """Fallback chain: curl_cffi → trafilatura.fetch_url → cloudscraper.
+    Los 3 fallbacks comparten un budget total de `timeout` segundos.
+
+    Devuelve (cuerpo, image_url): el og:image se parsea del HTML CRUDO en el
+    branch que retorna cuerpo, ANTES de que trafilatura.extract descarte el
+    <head>. image_url='' si el portal no expone og:image o no bajó HTML."""
+    if not TIENE_TRAFILATURA:
+        return "", ""
 
     deadline = time.time() + timeout
 
@@ -666,11 +691,11 @@ def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL
         try:
             r = curl_requests.get(url, impersonate="chrome120", timeout=min(restante, 10))
             if r.status_code == 307:
-                return ""  # Sucuri WAF — nunca devuelve contenido útil
+                return "", ""  # Sucuri WAF — nunca devuelve contenido útil
             if r.status_code == 200:
                 txt = trafilatura.extract(r.text, include_comments=False, include_tables=False)
                 # Si curl_cffi obtuvo 200, no caer a fallbacks (evita redirect loops)
-                return (txt or "")[:10000]
+                return (txt or "")[:10000], _og_image(r.text, url)
         except Exception:
             pass
 
@@ -684,7 +709,7 @@ def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL
             if html:
                 txt = trafilatura.extract(html, include_comments=False, include_tables=False)
                 if txt and len(txt) > 100:
-                    return txt[:10000]
+                    return txt[:10000], _og_image(html, url)
         except Exception:
             pass
 
@@ -697,11 +722,11 @@ def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL
             if r.status_code == 200:
                 txt = trafilatura.extract(r.text, include_comments=False, include_tables=False)
                 if txt and len(txt) > 100:
-                    return txt[:10000]
+                    return txt[:10000], _og_image(r.text, url)
         except Exception:
             pass
 
-    return ""
+    return "", ""
 
 
 def limpiar_html(txt: str) -> str:
@@ -997,7 +1022,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
             return n
         fuente_src = next((f for f in FUENTES if f["portal"] == portal), {})
         t0 = time.time()
-        n["cuerpo"] = scrape_cuerpo(n["link"], metodo=fuente_src.get("metodo", "requests"))
+        n["cuerpo"], n["image_url"] = scrape_cuerpo(n["link"], metodo=fuente_src.get("metodo", "requests"))
         dt = time.time() - t0
         if not n["cuerpo"]:
             log.warning(f"  [SIN CUERPO] {n['link'][:80]} ({dt:.1f}s)")

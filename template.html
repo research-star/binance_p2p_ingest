@@ -457,6 +457,7 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph.sm{aspect-ratio:1/1}
+.np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
 /* — section head (regla 2px ink, theme-aware) — */
 .np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
 .np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
@@ -4636,6 +4637,16 @@ window.addEventListener('popstate', function(){
   function npTitle(url,text){ return npLink(url, ntEsc(text)); }
   function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'; }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
+  // Slot de imagen: si la nota trae imageUrl (og:image hotlinkeado, carril BO) →
+  // <img> que llena el .np-imgph; si no → placeholder actual (gradiente + ícono).
+  // onerror oculta el <img> roto y reaparece el placeholder (el hotlink puede morir
+  // en runtime). Latam no llama acá: su slot es la bandera emoji, no se toca.
+  function npImg(n,cls){
+    var ph='<div class="np-imgph'+(cls?' '+cls:'')+'">', u=n&&n.imageUrl;
+    return (u && /^https?:\/\//i.test(u))
+      ? ph+'<img src="'+ntEsc(u)+'" loading="lazy" alt="" onerror="this.style.display=\'none\'"></div>'
+      : ph+'</div>';
+  }
 
   // ── Regiones ──
   function npTopline(){
@@ -4660,13 +4671,13 @@ window.addEventListener('popstate', function(){
     const lead=pool[0], secs=pool.slice(1,3);
     let L='<article class="np-lead"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
-      +'<figure class="np-figure"><div class="np-imgph"></div></figure>'
+      +'<figure class="np-figure">'+npImg(lead,'')+'</figure>'
       +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
     let S='<div class="np-secs">';
     for(let i=0;i<secs.length;i++){ const s=secs[i];
       S+='<article class="np-sec"'+npNoteAttr(s)+'>'+npHideCtl(s)
         +(i===0
-          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"></div></div>'
+          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div>'+npImg(s,'sm')+'</div>'
           : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
         +'</article>';
     }
@@ -4677,7 +4688,7 @@ window.addEventListener('popstate', function(){
     const pool=ntPool(), river=pool.slice(3), total=pool.length;
     let grid='';
     for(let i=0;i<river.length;i++){ const n=river[i];
-      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-imgph np-card-img"></div>'
+      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div></div></article>';
