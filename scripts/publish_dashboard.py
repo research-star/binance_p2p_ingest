@@ -22,11 +22,13 @@ Mecánica:
 import contextlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import subprocess
 import sys
 import time
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -45,6 +47,15 @@ LAST_SIZE_STATE_PATH = Path("/var/log/binance_p2p/publish_dashboard.last_size")
 
 MIN_INDEX_SIZE_BYTES = 200_000
 SHRINK_RATIO_FLOOR = 0.20
+
+# Mirror de ocultos: el worker Cloudflare /v1/hidden es la fuente de verdad;
+# noticias_hidden (en la DB) es solo cache local para el filtro de dashboard.py.
+HIDDEN_API_URL = "https://api.finanzasbo.com/v1/hidden"
+HIDDEN_FETCH_TIMEOUT_S = 5  # corto: el publish no debe colgarse por el fetch
+# UA explícito: Cloudflare delante del worker devuelve 403 al UA default de
+# urllib ("Python-urllib/x.y"). Cualquier UA identificable pasa (200).
+HIDDEN_USER_AGENT = "finanzasbo-publish/1.0"
+_HEX16_RE = re.compile(r"^[0-9a-f]{16}$")
 
 GIT_USER_NAME = "binance VPS"
 GIT_USER_EMAIL = "vps@p2p-ingest-prod"
@@ -159,12 +170,15 @@ def db_metrics() -> tuple[int, int, str | None, str | None, str | None]:
 
 
 def read_last_state():
-    """Devuelve dict {size, n_snap, n_rows, embi_max, ipc_max, ipp_max} o None.
+    """Devuelve dict {size, n_snap, n_rows, embi_max, ipc_max, ipp_max,
+    hidden_v} o None.
 
-    Acepta también los formatos legacy v1 (int), v2 (sin embi_max) y v3 (sin
-    ipc_max/ipp_max). En esos casos los campos faltantes quedan en None, lo
-    cual fuerza un republish la primera vez que la tabla correspondiente se
-    popula.
+    Acepta también los formatos legacy v1 (int), v2 (sin embi_max), v3 (sin
+    ipc_max/ipp_max) y v4 (sin hidden_v). En esos casos los campos faltantes
+    quedan en None, lo cual fuerza un republish la primera vez que la fuente
+    correspondiente cambia. Para hidden_v: un fetch exitoso de /v1/hidden
+    devuelve un string (incluso "" para el set vacío), distinto de None → la
+    primera corrida tras este deploy republica una vez.
     """
     if not LAST_SIZE_STATE_PATH.exists():
         return None
@@ -175,21 +189,112 @@ def read_last_state():
             state.setdefault("embi_max", None)
             state.setdefault("ipc_max", None)
             state.setdefault("ipp_max", None)
+            state.setdefault("hidden_v", None)
             return state
         return {"size": int(raw), "n_snap": None, "n_rows": None,
-                "embi_max": None, "ipc_max": None, "ipp_max": None}
+                "embi_max": None, "ipc_max": None, "ipp_max": None,
+                "hidden_v": None}
     except (ValueError, OSError):
         return None
 
 
 def write_last_state(size: int, n_snap: int, n_rows: int, embi_max: str | None,
-                     ipc_max: str | None, ipp_max: str | None):
+                     ipc_max: str | None, ipp_max: str | None,
+                     hidden_v: str | None):
     state = {"size": size, "n_snap": n_snap, "n_rows": n_rows,
-             "embi_max": embi_max, "ipc_max": ipc_max, "ipp_max": ipp_max}
+             "embi_max": embi_max, "ipc_max": ipc_max, "ipp_max": ipp_max,
+             "hidden_v": hidden_v}
     try:
         LAST_SIZE_STATE_PATH.write_text(json.dumps(state))
     except OSError as e:
         emit(f"[publish] WARN no pude escribir state: {e}")
+
+
+# ── Mirror de ocultos (/v1/hidden → noticias_hidden) ─────────────────────────
+
+def fetch_hidden() -> "tuple[list[str], str] | None":
+    """GET /v1/hidden (worker Cloudflare) → (ids_16hex, v).
+
+    Devuelve None ante CUALQUIER anomalía (red, timeout, status != 200, JSON
+    inválido, shape inesperado). El caller trata None como fail-toward-stale:
+    preserva la mirror y reusa el hidden_v previo. Mismo espíritu que el
+    try/except del git pull de _run().
+
+    Filtra ids que no sean strings de 16 hex (defensa en profundidad): el
+    worker es la fuente de verdad y solo emite ids 16-hex, pero la mirror no
+    debe poblarse con basura aunque el contrato se rompa. `v` se devuelve tal
+    cual lo dio el worker (no se recomputa): es la fuente de verdad de la
+    versión del set.
+    """
+    try:
+        req = urllib.request.Request(
+            HIDDEN_API_URL,
+            headers={"Accept": "application/json",
+                     "User-Agent": HIDDEN_USER_AGENT})
+        with urllib.request.urlopen(req, timeout=HIDDEN_FETCH_TIMEOUT_S) as resp:
+            status = getattr(resp, "status", None) or resp.getcode()
+            if status != 200:
+                emit(f"[publish] mode=warn stage=fetch_hidden detail=status "
+                     f"status={status}")
+                return None
+            raw = resp.read()
+    except Exception as e:  # URLError, timeout socket, etc.
+        emit(f"[publish] mode=warn stage=fetch_hidden detail=net "
+             f"err={type(e).__name__}:{str(e)[:120]}")
+        return None
+
+    try:
+        payload = json.loads(raw)
+    except (ValueError, TypeError) as e:
+        emit(f"[publish] mode=warn stage=fetch_hidden detail=bad_json "
+             f"err={str(e)[:120]}")
+        return None
+
+    if not isinstance(payload, dict):
+        emit("[publish] mode=warn stage=fetch_hidden detail=shape root_not_object")
+        return None
+    ids = payload.get("ids")
+    v = payload.get("v")
+    if not isinstance(ids, list) or not isinstance(v, str):
+        emit("[publish] mode=warn stage=fetch_hidden detail=shape ids_or_v")
+        return None
+
+    valid = [x for x in ids if isinstance(x, str) and _HEX16_RE.match(x)]
+    skipped = len(ids) - len(valid)
+    if skipped:
+        emit(f"[publish] mode=warn stage=fetch_hidden detail=skipped_invalid "
+             f"n={skipped}")
+    return valid, v
+
+
+def sync_hidden_mirror(ids):
+    """Reemplaza el contenido de noticias_hidden por exactamente `ids`.
+
+    Transaccional: o queda el set nuevo completo, o la mirror no se toca
+    (ROLLBACK ante cualquier error — nunca a medias). Self-create idempotente
+    con el MISMO DDL que dashboard.py y la migración 0003: en el VPS no corre
+    runner de migraciones, así que esta función no puede asumir que la tabla
+    exista. Re-filtra a 16-hex (defensa en profundidad, aunque fetch_hidden ya
+    valida) — el PK NOT NULL es el último backstop contra ids nulos.
+    """
+    clean = [(x,) for x in ids if isinstance(x, str) and _HEX16_RE.match(x)]
+    conn = sqlite3.connect(str(DB_PATH), isolation_level=None)  # autocommit; tx manual
+    try:
+        conn.execute("CREATE TABLE IF NOT EXISTS noticias_hidden "
+                     "(id TEXT NOT NULL PRIMARY KEY)")
+        conn.execute("BEGIN")
+        conn.execute("DELETE FROM noticias_hidden")
+        conn.executemany(
+            "INSERT OR IGNORE INTO noticias_hidden(id) VALUES (?)", clean)
+        conn.execute("COMMIT")
+    except Exception:
+        try:
+            conn.execute("ROLLBACK")
+        except sqlite3.OperationalError:
+            pass
+        raise
+    finally:
+        conn.close()
 
 
 # ── Main flow ──────────────────────────────────────────────────────────────
@@ -218,22 +323,45 @@ def _run(t0: float) -> int:
              f"stderr={(e.stderr or '')[:200]}")
         # No fallamos: seguimos con el código local.
 
-    # Skip rápido si el dataset no avanzó (ahorra el gasto de dashboard.py)
     n_snap, n_rows, embi_max, ipc_max, ipp_max = db_metrics()
     last = read_last_state()
+
+    # Sync de la mirror de ocultos: DESPUÉS del git pull, ANTES del skip-fast,
+    # para que el skip-fast decida con hidden_v y la mirror ya actualizados.
+    # hidden_v entra a la cache key → un cambio en el set de ocultos fuerza
+    # republish aunque ads no avance. Fail-toward-stale ESTRICTO: si el fetch
+    # (o el sync) falla, NO se toca la mirror y hidden_v queda en el último
+    # valor conocido → skip-fast neutral (ni republish forzado ni blanqueo).
+    hidden_v = (last or {}).get("hidden_v")  # default: último conocido (stale-safe)
+    fetched = fetch_hidden()
+    if fetched is not None:
+        ids, v = fetched
+        try:
+            sync_hidden_mirror(ids)
+            hidden_v = v  # solo avanza si fetch Y sync salieron OK
+            emit(f"[publish] mode=ok stage=hidden_sync n_ids={len(ids)} "
+                 f"hidden_v={v or '∅'}")
+        except Exception as e:
+            emit(f"[publish] mode=warn stage=hidden_sync detail=mirror_preserved "
+                 f"err={type(e).__name__}:{str(e)[:120]}")
+    # (si fetched is None, fetch_hidden ya logueó; hidden_v queda en el previo)
+
+    # Skip rápido si el dataset no avanzó (ahorra el gasto de dashboard.py)
     if (last is not None
             and last.get("n_snap") == n_snap
             and last.get("n_rows") == n_rows
             and last.get("embi_max") == embi_max
             and last.get("ipc_max") == ipc_max
             and last.get("ipp_max") == ipp_max
+            and last.get("hidden_v") == hidden_v
             and last.get("size") is not None):
         # Refresh state mtime sin cambiar contenido (idempotente)
-        write_last_state(last["size"], n_snap, n_rows, embi_max, ipc_max, ipp_max)
+        write_last_state(last["size"], n_snap, n_rows, embi_max, ipc_max,
+                         ipp_max, hidden_v)
         total_s = time.time() - t0
         emit(f"[publish] mode=skip reason=dataset_unchanged "
              f"snapshots={n_snap} rows={n_rows} embi_max={embi_max} "
-             f"ipc_max={ipc_max} ipp_max={ipp_max} "
+             f"ipc_max={ipc_max} ipp_max={ipp_max} hidden_v={hidden_v or '∅'} "
              f"total_s={total_s:.2f}")
         return 0
 
@@ -282,7 +410,7 @@ def _run(t0: float) -> int:
 
     try:
         return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows,
-                                embi_max, ipc_max, ipp_max)
+                                embi_max, ipc_max, ipp_max, hidden_v)
     finally:
         cleanup_worktree(WORKTREE_PATH)
         if TMP_INDEX_PATH.exists():
@@ -291,7 +419,8 @@ def _run(t0: float) -> int:
 
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
                      n_snap: int, n_rows: int, embi_max: str | None,
-                     ipc_max: str | None, ipp_max: str | None) -> int:
+                     ipc_max: str | None, ipp_max: str | None,
+                     hidden_v: str | None) -> int:
     existing_index = WORKTREE_PATH / "index.html"
     shutil.copyfile(TMP_INDEX_PATH, existing_index)
 
@@ -330,12 +459,14 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
     except subprocess.CalledProcessError:
         commit_short = "?"
 
-    write_last_state(new_size, n_snap, n_rows, embi_max, ipc_max, ipp_max)
+    write_last_state(new_size, n_snap, n_rows, embi_max, ipc_max, ipp_max,
+                     hidden_v)
 
     total_s = time.time() - t0
     size_kb = new_size / 1024
     emit(f"[publish] mode=ok size={size_kb:.1f}KB "
-         f"snapshots={n_snap} rows={n_rows} commit={commit_short} "
+         f"snapshots={n_snap} rows={n_rows} hidden_v={hidden_v or '∅'} "
+         f"commit={commit_short} "
          f"gen_s={gen_s:.2f} push_s={push_s:.2f} total_s={total_s:.2f}")
     return 0
 
