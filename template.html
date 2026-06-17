@@ -569,8 +569,13 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .np-sec-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
-/* — admin (PR-C2): gestión de ocultas. Markup presente SOLO con #admin + sesión Access; invisible para el resto — */
+/* — sesión / gestión de ocultas (PR-C3): barra SIEMPRE visible en Noticias.
+   Logueada = bg-tertiary con email + acciones; anónima (.anon) = discreta,
+   sin fondo, login alineado a la derecha — */
 .np-admin-bar{display:flex;align-items:center;flex-wrap:wrap;gap:10px 12px;padding:9px 36px;border-bottom:1px solid var(--border-color);background:var(--bg-tertiary);font-family:var(--font-body);font-size:12px;color:var(--text-secondary)}
+.np-admin-bar.anon{background:transparent;border-bottom:none;padding:7px 36px;justify-content:flex-end}
+.np-admin-link{background:none;border:0;padding:0;font:inherit;color:var(--text-secondary);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.np-admin-link:hover{color:var(--text-primary)}
 .np-admin-who{display:inline-flex;align-items:center;gap:7px;font-weight:600;color:var(--text-primary)}
 .np-admin-who .dot{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);flex-shrink:0}
 .np-admin-spacer{flex:1}
@@ -4564,14 +4569,15 @@ window.addEventListener('popstate', function(){
   const NT_HIDDEN = new Set();
   function ntVisible(){ return NT_HIDDEN.size ? NOTICIAS_NEWS.filter(function(n){ return !NT_HIDDEN.has(n.id); }) : NOTICIAS_NEWS; }
 
-  // ── Admin UI (PR-C2): gestión inline de ocultas. Solo se activa con #admin en la
-  // URL + sesión de Access válida. Sin #admin, npAdmin.flag=false ⇒ npBuildHTML no
-  // emite NADA admin y no se dispara ninguna request (tab idéntica a hoy). Consume las
-  // 4 rutas auth del Worker (api.finanzasbo.com) con credentials:'include'; el id va en
-  // text/plain (CORS simple, sin preflight). NUNCA recomputa el hash: usa n.id tal cual.
+  // ── Sesión / gestión de ocultas (PR-C3): barra de sesión SIEMPRE visible en
+  // Noticias (sin gate #admin). El visitante anónimo ve un "Iniciar sesión"
+  // discreto y NO dispara ninguna request (el probe a /v1/me se gatea tras un
+  // hint en localStorage; ver npCheckMe/renderNoticias). El admin logueado ve su
+  // email + "Editar ocultas" + "Cerrar sesión". Consume las 4 rutas auth del
+  // Worker (api.finanzasbo.com) con credentials:'include'; el id va en text/plain
+  // (CORS simple, sin preflight). NUNCA recomputa el hash: usa n.id tal cual.
   const NT_API = 'https://api.finanzasbo.com';
-  const npAdmin = { flag:false, checked:false, isAdmin:false, email:null, editMode:false, hiddenItems:null, notice:null };
-  function npHasAdminFlag(){ try{ return (location.hash||'')==='#admin'; }catch(e){ return false; } }
+  const npAdmin = { checked:false, isAdmin:false, email:null, editMode:false, hiddenItems:null, notice:null };
   function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
   function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
   function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
@@ -4738,19 +4744,20 @@ window.addEventListener('popstate', function(){
     return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
   }
   function npAdminBar(){
-    if(!npAdmin.flag) return '';  // sin #admin → markup idéntico a hoy
+    // SIEMPRE visible (PR-C3). Anónimo ⇒ login discreto alineado a la derecha;
+    // admin ⇒ email + editar + cerrar sesión.
     let inner;
     if(!npAdmin.isAdmin){
-      inner='<span class="np-admin-who">Modo admin</span><span class="np-admin-spacer"></span>'
-        +'<button class="fpi-show" type="button" data-np-login>Iniciar sesión</button>';
+      inner='<button class="np-admin-link" type="button" data-np-login>Iniciar sesión</button>';
     }else{
       inner='<span class="np-admin-who"><span class="dot"></span>'+ntEsc(npAdmin.email||'admin')+'</span>'
         +'<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>'
+        +'<button class="np-admin-link" type="button" data-np-logout>Cerrar sesión</button>'
         +'<span class="np-admin-spacer"></span>';
     }
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
     const panel = (npAdmin.isAdmin && npAdmin.editMode) ? npHiddenPanel() : '';
-    return '<div class="np-admin-bar">'+inner+note+panel+'</div>';
+    return '<div class="np-admin-bar'+(npAdmin.isAdmin?'':' anon')+'">'+inner+note+panel+'</div>';
   }
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
@@ -4790,24 +4797,53 @@ window.addEventListener('popstate', function(){
     return fetch(NT_API+seg, { method:'POST', credentials:'include', cache:'no-store',
       headers:{ 'Content-Type':'text/plain' }, body:id });
   }
-  // Login: NAVEGA full-page al login de Access (no fetch); vuelve a la home con sesión.
+  // Hint NO sensible en localStorage: marca "hay (o hubo) intento de sesión" para
+  // decidir si probamos /v1/me. Se setea al iniciar login, se limpia al cerrar
+  // sesión o si el probe desmiente la sesión. NO es credencial — solo evita el
+  // probe (y su ruido) para el visitante anónimo que nunca logueó.
+  const NP_SESS_HINT = 'fb_admin_session';
+  function npSetHint(){ try{ localStorage.setItem(NP_SESS_HINT,'1'); }catch(e){} }
+  function npClearHint(){ try{ localStorage.removeItem(NP_SESS_HINT); }catch(e){} }
+  function npHasHint(){ try{ return localStorage.getItem(NP_SESS_HINT)==='1'; }catch(e){ return false; } }
+  // Login: setea el hint y NAVEGA full-page al login de Access (no fetch); vuelve
+  // a Noticias (/) con sesión, sin dejar #admin colgando.
   function npLogin(){
     try{
-      const ret = encodeURIComponent('https://finanzasbo.com/#admin');
+      npSetHint();
+      const ret = encodeURIComponent('https://finanzasbo.com/');
       location.href = 'https://finanzasbo.cloudflareaccess.com/cdn-cgi/access/login/api.finanzasbo.com?redirect_url='+ret;
+    }catch(e){}
+  }
+  // Logout: limpia el hint y NAVEGA full-page al logout de Access, que invalida la
+  // sesión CF_Authorization (cookie 100% de Access; el Worker solo la lee). Al
+  // volver a finanzasbo.com el estado es anónimo.
+  function npLogout(){
+    try{
+      npClearHint();
+      location.href = 'https://finanzasbo.cloudflareaccess.com/cdn-cgi/access/logout';
     }catch(e){}
   }
   // 401/403 mid-uso ⇒ sesión expirada: comunicar + re-login, sin romper en silencio.
   function npAuthExpired(){
     npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
+    npClearHint();  // sesión muerta = logout forzado: limpiar hint para no re-probar al próximo load
     npAdmin.notice={ kind:'warn', text:'Tu sesión expiró. Iniciá sesión de nuevo para seguir gestionando notas.' };
     npRerender();
   }
+  // Confirma sesión con GET /v1/me. redirect:'manual' ⇒ si Access intercepta en el
+  // edge (anónimo/expirado) responde un 302 que NO seguimos: llega como
+  // opaqueredirect (status 0) y NO ensucia la consola con un error CORS. Solo se
+  // llama si hay hint (ver renderNoticias): el anónimo puro nunca prueba.
   function npCheckMe(){
-    fetch(NT_API+'/v1/me', { credentials:'include', cache:'no-store' })
+    fetch(NT_API+'/v1/me', { credentials:'include', cache:'no-store', redirect:'manual' })
       .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(d){ npAdmin.checked=true; if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; } if(ntBuilt) npRerender(); })
-      .catch(function(){ npAdmin.checked=true; if(ntBuilt) npRerender(); });
+      .then(function(d){
+        npAdmin.checked=true;
+        if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; npSetHint(); }
+        else { npAdmin.isAdmin=false; npClearHint(); }  // 302/401: el hint mentía o la sesión cayó
+        if(ntBuilt) npRerender();
+      })
+      .catch(function(){ npAdmin.checked=true; npAdmin.isAdmin=false; if(ntBuilt) npRerender(); });  // red transitoria: NO limpiar hint, reintenta al próximo load
   }
   function npLoadAdminList(){
     fetch(NT_API+'/v1/hidden/admin', { credentials:'include', cache:'no-store' })
@@ -4857,15 +4893,15 @@ window.addEventListener('popstate', function(){
       if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
       if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
       if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
+      if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
     });
   }
   window.renderNoticias = function(){
     if(ntBuilt) return; ntBuilt=true;
-    npAdmin.flag = npHasAdminFlag();
     renderNoticiasPortada();
     npBindHost();
     ntLoadHidden();
-    if(npAdmin.flag) npCheckMe();  // solo con #admin: una request /v1/me, jamás sin flag
+    if(npHasHint()) npCheckMe();  // probe solo si hubo sesión antes; anónimo puro no prueba ni ensucia consola
   };
 })();
 
