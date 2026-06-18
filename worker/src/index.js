@@ -57,6 +57,45 @@ function redirect(location) {
   return new Response(null, { status: 302, headers: { Location: location } });
 }
 
+// Loop guard de /v1/login. Marker one-shot que adjuntamos al redirect_url que
+// mandamos a Access. Si volvemos del login con el marker puesto y TODAVÍA sin
+// sesión válida acá, cortamos con un error limpio en vez de re-botar a Access
+// (eso sería el ERR_TOO_MANY_REDIRECTS que reportó el smoke).
+const LOGIN_RETRY = "_cf_login_retry";
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Respuesta TERMINAL del loop guard: HTML estático sin auto-redirect → rompe el
+// loop de forma definitiva. 403 porque, post-login, seguimos sin sesión legible
+// acá (típicamente la cookie de Access no llega a /v1/login; ver root-cause). El
+// `dest` ya pasó por safeReturn (origin finanzasbo.com), pero igual lo escapamos
+// antes de meterlo en el HTML (defensa en profundidad anti-XSS).
+function loginLoopError(dest) {
+  const href = escapeHtml(dest);
+  const body =
+    '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    "<title>No pudimos iniciar sesión</title></head>" +
+    '<body style="font-family:system-ui,-apple-system,sans-serif;max-width:34rem;' +
+    'margin:4rem auto;padding:0 1.25rem;line-height:1.55;color:#1f2933">' +
+    '<h1 style="font-size:1.4rem">No pudimos completar el inicio de sesión</h1>' +
+    "<p>Tu sesión de Cloudflare Access no llegó a la app después del login. " +
+    "Suele ser un tema de configuración del Access, no de tu cuenta.</p>" +
+    '<p><a href="' + href + '">Volver a FinanzasBo</a> e intentá de nuevo. ' +
+    "Si el problema persiste, avisá al equipo.</p></body></html>";
+  return new Response(body, {
+    status: 403,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
 // Gate doble. Devuelve { ok:true, email } o { ok:false, status, reason }.
 async function gate(req, env) {
   const { token } = getAccessToken(req);
@@ -96,12 +135,19 @@ export default {
     // host con "Invalid redirect URL"; sólo acepta un path RELATIVO del propio app
     // — verificado contra Access real). Por eso el retorno a la UI lo hace ESTE
     // Worker, ya con sesión de Access:
-    //   - Con sesión de Access válida (cualquier email; la autorización admin la
-    //     decide /v1/me, no este bounce) → 302 al `return` allowlisteado.
+    //   - Con sesión de Access válida (header Cf-Access-Jwt-Assertion inyectado en
+    //     rutas protegidas, o cookie CF_Authorization como fallback; cualquier
+    //     email — la autorización admin la decide /v1/me, no este bounce) → 302 al
+    //     `return` allowlisteado.
     //   - Sin sesión → 302 al login de Access (kid=AUD + redirect_url RELATIVO de
-    //     vuelta a /v1/login con el return). Tras el OTP, Access nos devuelve acá
-    //     ya autenticados y caemos en la rama de arriba. No depende de que Access
-    //     proteja /v1/login en el edge → no requiere tocar config de Access.
+    //     vuelta a /v1/login con el return). Tras el OTP, Access nos devuelve acá.
+    // LOOP GUARD (no negociable): /v1/login NO es ruta protegida por Access → el
+    // edge no inyecta Cf-Access-Jwt-Assertion acá; sólo podemos leer la cookie
+    // CF_Authorization. Si tras el login esa cookie NO llega a /v1/login (ruta
+    // no-protegida — la causa raíz del loop reportado), volveríamos sin sesión
+    // legible y re-botaríamos a Access en bucle (ERR_TOO_MANY_REDIRECTS). El marker
+    // one-shot LOGIN_RETRY lo corta: al volver del login con el marker puesto y aún
+    // sin sesión válida, devolvemos un error limpio en vez de re-botar.
     if (path === "/v1/login" && req.method === "GET") {
       const dest = safeReturn(req.url);
       const { token } = getAccessToken(req);
@@ -113,8 +159,16 @@ export default {
         });
         authed = v.ok;
       }
+      // Sesión válida (header o cookie) → bounce, incluso con el marker puesto:
+      // el guard nunca bloquea un login que SÍ funcionó (evita falso negativo).
       if (authed) return redirect(dest);
-      const back = "/v1/login?return=" + encodeURIComponent(dest);
+      // Ya volvimos del login de Access (marker puesto) y seguimos sin sesión →
+      // NO re-botamos: error limpio. Peor caso = 403, nunca loop infinito.
+      if (new URL(req.url).searchParams.get(LOGIN_RETRY) === "1") {
+        return loginLoopError(dest);
+      }
+      const back =
+        "/v1/login?" + LOGIN_RETRY + "=1&return=" + encodeURIComponent(dest);
       const loginUrl =
         "https://" + env.ACCESS_TEAM_DOMAIN +
         "/cdn-cgi/access/login/api.finanzasbo.com?kid=" + env.AUD +

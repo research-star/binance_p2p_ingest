@@ -278,7 +278,7 @@ describe("GET /v1/login (bounce cross-domain)", () => {
     expect(r.headers.get("Location")).toContain("/cdn-cgi/access/login/api.finanzasbo.com");
   });
 
-  it("sin sesión → 302 al login de Access con kid=AUD y redirect_url RELATIVO de vuelta a /v1/login", async () => {
+  it("sin sesión → 302 al login de Access con kid=AUD y redirect_url RELATIVO (con marker del loop guard) de vuelta a /v1/login", async () => {
     const r = await call("/v1/login?return=" + enc("https://finanzasbo.com/"));
     expect(r.status).toBe(302);
     const loc = new URL(r.headers.get("Location"));
@@ -286,14 +286,62 @@ describe("GET /v1/login (bounce cross-domain)", () => {
     expect(loc.searchParams.get("kid")).toBe(AUD);
     const rd = loc.searchParams.get("redirect_url"); // ya decodeado por URLSearchParams
     expect(rd.startsWith("/v1/login")).toBe(true); // relativo (Access rechaza cross-domain/absoluto)
-    expect(rd).toBe("/v1/login?return=" + enc("https://finanzasbo.com/"));
+    // el marker one-shot del loop guard viaja en el redirect_url → al volver de
+    // Access lo vemos y, si seguimos sin sesión, cortamos (no re-botamos).
+    expect(rd).toBe("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"));
   });
 
   it("sin sesión + return inválido → el redirect_url lleva el DEFAULT, nunca el evil", async () => {
     const r = await call("/v1/login?return=" + enc("https://evil.com/"));
     const rd = new URL(r.headers.get("Location")).searchParams.get("redirect_url");
-    expect(rd).toBe("/v1/login?return=" + enc("https://finanzasbo.com/"));
+    expect(rd).toBe("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"));
     expect(rd).not.toContain("evil.com");
+  });
+
+  // ── LOOP GUARD ── (vuelta de Access con el marker _cf_login_retry puesto) ──
+  describe("loop guard (anti ERR_TOO_MANY_REDIRECTS)", () => {
+    it("vuelve de Access con marker y SIN sesión → 403 terminal, NO re-botea a Access", async () => {
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"));
+      expect(r.status).toBe(403);
+      expect(r.headers.get("Location")).toBeNull(); // no es redirect → loop cortado
+      const html = await r.text();
+      expect(html).toContain("No pudimos completar el inicio de sesión");
+      expect(html).toContain("https://finanzasbo.com/"); // link de retorno
+    });
+
+    it("marker + token inválido (firma forjada) → 403 terminal (tampoco re-loopea)", async () => {
+      const forged = await mintJwt(kpEvil.privateKey, { kid: "kid-1", aud: AUD, iss: ISS, email: ADMIN });
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"), { token: forged });
+      expect(r.status).toBe(403);
+      expect(r.headers.get("Location")).toBeNull();
+    });
+
+    it("marker + sesión VÁLIDA (header) → 302 al return (el guard no bloquea un login OK)", async () => {
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"), { token: await jwt() });
+      expect(r.status).toBe(302);
+      expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+    });
+
+    it("marker + sesión VÁLIDA (cookie CF_Authorization) → 302 al return", async () => {
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc("https://finanzasbo.com/"), { cookie: `CF_Authorization=${await jwt()}` });
+      expect(r.status).toBe(302);
+      expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
+    });
+
+    it("error del guard con return inválido → link de retorno cae al default (anti open-redirect)", async () => {
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc("https://evil.com/"));
+      expect(r.status).toBe(403);
+      const html = await r.text();
+      expect(html).toContain("https://finanzasbo.com/");
+      expect(html).not.toContain("evil.com");
+    });
+
+    it("el dest se escapa en el HTML (sin inyección aunque el path traiga < > \")", async () => {
+      const r = await call("/v1/login?_cf_login_retry=1&return=" + enc('https://finanzasbo.com/x"><script>alert(1)</script>'));
+      expect(r.status).toBe(403);
+      const html = await r.text();
+      expect(html).not.toContain("<script>alert(1)</script>");
+    });
   });
 });
 
