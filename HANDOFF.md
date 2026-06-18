@@ -51,11 +51,77 @@ de Cloudflare**, NO la DB (la tabla local es solo cache para el filtro de build)
 
 | Pieza | Dónde | Qué hace |
 |---|---|---|
-| Worker Cloudflare | `api.finanzasbo.com` (Worker `finanzasbo-spike`, dir `worker/`) | Rutas `GET /v1/hidden` (público `{ids,v}`), `GET /v1/me`, `GET /v1/hidden/admin`, `POST /v1/hide`, `POST /v1/unhide`. KV (1 key `index`) = verdad de los ocultos. (Name `finanzasbo-spike` es legacy engañoso — tech-debt P3, ver Notion.) |
-| Auth = Cloudflare Access | edge + gate JWT del Worker | Access (team `finanzasbo.cloudflareaccess.com`) protege en el **edge** `/v1/me` y `/v1/hide` (302 al login); `/v1/unhide` y `/v1/hidden/admin` dependen **solo del gate JWT del Worker** (401) — cobertura edge **asimétrica** (probe directo 2026-06-17). `ALLOWED_EMAILS` = 7 admins @ddrcapitalpartners.com (secret en el Worker, NO en el repo). |
+| Worker Cloudflare | `api.finanzasbo.com` (Worker `finanzasbo-spike`, dir `worker/`; **deploy `wrangler` manual**) | Rutas `GET /v1/hidden` (público `{ids,v}`), `GET /v1/me`, `GET /v1/hidden/admin`, `POST /v1/hide`, `POST /v1/unhide`, + bounces de auth `GET /v1/login` y `GET /v1/logout` (ver "Auth admin" abajo). KV (1 key `index`) = verdad de los ocultos. (Name `finanzasbo-spike` es legacy engañoso — tech-debt P3, ver Notion.) |
+| Auth = Cloudflare Access | edge + gate JWT del Worker | Access (team `finanzasbo.cloudflareaccess.com`) protege en el **edge** `/v1/me`, `/v1/hide` y `/v1/login` (302 al login); `/v1/unhide` y `/v1/hidden/admin` dependen **solo del gate JWT del Worker** (401) — cobertura edge **asimétrica**. `ALLOWED_EMAILS` = 7 admins @ddrcapitalpartners.com (secret en el Worker, NO en el repo). **Mapa de gating completo + flujos login/logout: subsección "Auth admin" abajo.** |
 | Admin UI | `template.html`, tab Noticias, **gated tras `#admin`** | Sin `#admin` en la URL → markup idéntico a hoy, cero requests. Con `#admin`: barra admin con login / "Editar ocultas" + acciones inline por nota (PR-C2, #70). PR-C1 (#69) = filtro instant client-side de los ocultos. |
 | Tabla `noticias_hidden` | `p2p_normalized.db` (migración `0003_noticias_hidden.sql`) | Cache local de ids para el filtro de build; `dashboard.py` la self-crea idempotente y filtra `AND id NOT IN (...)` ([dashboard.py:744](dashboard.py#L744), [753](dashboard.py#L753)). Migraciones se aplican a mano en el VPS (sin runner). |
 | `publish_dashboard.py` | VPS (PR-B′, #68) | Antes de publicar hace `GET /v1/hidden` (UA propio — CF da 403 al UA default de urllib) y sincroniza la mirror `noticias_hidden` transaccionalmente, fail-toward-stale estricto ([publish_dashboard.py:53](scripts/publish_dashboard.py#L53), [215](scripts/publish_dashboard.py#L215)). |
+
+### Auth admin — login/logout (saga login/logout, cerrada 2026-06-18)
+
+La autorización de la feature "ocultar noticias" vive en **dos capas**; la verdad
+de gating está en el **edge (Cloudflare Access)**, NO en el código del repo:
+
+- **Cloudflare Access (edge).** App del team `finanzasbo` (`finanzasbo.cloudflareaccess.com`),
+  policy "Allow 7 admins (OTP)", `AUD 679296d3…fe7bbd71`. Protege en el edge (sobre
+  `api.finanzasbo.com`): `/v1/me`, `/v1/hide`, `/v1/login`. La config del App vive
+  **solo en el dashboard CF** — no hay archivo en el repo.
+- **Worker `finanzasbo-spike`** (sirve `api.finanzasbo.com`; **deploy `wrangler` MANUAL**,
+  no GHA). `gate()` (JWT RS256) protege: `/v1/me`, `/v1/hide`, `/v1/unhide`,
+  `/v1/hidden/admin`. Los bounces NO llaman `gate()`: `/v1/login` (gateado en el edge),
+  `/v1/logout` (público).
+
+**Mapa de gating** (edge = Access; worker = `gate()` JWT):
+
+| Ruta | edge | worker |
+|---|---|---|
+| `/v1/me` | ✅ | ✅ (doble) |
+| `/v1/hide` | ✅ | ✅ (doble) |
+| `/v1/login` | ✅ | — (bounce) |
+| `/v1/unhide` | — | ✅ |
+| `/v1/hidden/admin` | — | ✅ |
+| `/v1/logout` | — | — (bounce público) |
+
+**Flujo login.** Click → **navegación** (`location.href`, nunca `fetch`) a
+`api.finanzasbo.com/v1/login?return=https://finanzasbo.com/` → el edge gatea → OTP →
+sesión → el Worker rebota (destino validado por `safeReturn`) a `finanzasbo.com`. Al
+volver, el hint `localStorage NP_SESS_HINT` dispara `npCheckMe` → `fetch` credentialed a
+`/v1/me` (cookie cross-subdominio) → `{admin:true}` → barra logueada.
+
+**Flujo logout (bounce de 2 pasos).** Click → navegación a
+`api.finanzasbo.com/v1/logout?return=https://finanzasbo.com/` → el Worker hace 302 al
+team-logout de Access con `returnTo=https://api.finanzasbo.com/v1/logout?done=1&return=<dest>`
+(returnTo a un **app-domain** → CF lo acepta) → Access borra la cookie y vuelve →
+`/v1/logout?done=1` → 302 a `safeReturn(return)` (default `finanzasbo.com`) → anónimo.
+
+**Invariantes (no romper):**
+- Las rutas gateadas (login) se pegan por **NAVEGACIÓN, nunca `fetch`** — un `fetch` muere
+  en CORS en el redirect de Access. El probe `/v1/me` SÍ es `fetch` (correcto: se chequea
+  con `redirect:'manual'`, fail-open).
+- `safeReturn` allowlist = **origin exacto `https://finanzasbo.com`**; aplicado en el bounce
+  de login y en **ambas piernas** del logout (sin open-redirect).
+- **Regla `returnTo` de Cloudflare**: el `returnTo` del logout solo acepta el authdomain del
+  team, sus subdominios, y hostnames que **son apps de Access** en la org. `finanzasbo.com`
+  NO es app → el `returnTo` se rutea por `api.finanzasbo.com` (que SÍ lo es). De ahí el
+  logout de 2 pasos.
+- La autorización real es **server-side** (edge + JWT del Worker). El "200 = admin" del
+  cliente es **cosmético**.
+
+**Saga (commits/PRs):** #72 (`6f2ce28`, barra de sesión) · #74 (mitigación botón oculto,
+luego revertida) · #75/C4a (`2d1ab2c`, bounce + `safeReturn`) · gate de Access en `/v1/login`
+(dashboard CF, **sin commit** — arregló el loop de redirects) · #76/C4b (`17ea633`, rewire
+frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de 2 pasos),
+**mergeado a main** (`596063c`). **Worker prod: version `b0ec816a`.**
+
+**Tech debt P3 (sobre main, no bloqueante):**
+- Código muerto en `/v1/login`: el self-drive (bounce manual a Access) + el loop guard
+  quedaron **redundantes** una vez que el edge gatea `/v1/login`; y el comentario
+  `"/v1/login no protegido"` ([worker/src/index.js:144-150](worker/src/index.js#L144)) es
+  **stale** (precede al gate del edge). Limpieza opcional.
+- Asimetría de edge-gating: `/v1/unhide` y `/v1/hidden/admin` solo por JWT del Worker (sin
+  edge) — ver mapa arriba.
+- Renombrar Worker `finanzasbo-spike` → nombre de prod (legacy engañoso).
+- La config del Access App vive en el dashboard CF, fuera del repo.
 
 ### Anatomía del header / top-UI (recon 2026-06-17, base para el rediseño del top)
 
@@ -70,8 +136,9 @@ de Cloudflare**, NO la DB (la tabla local es solo cache para el filtro de build)
 - **Botón de login — NO está en el header.** Vive en la barra admin de la tab
   Noticias (`npAdminBar()`, [template.html:4740](template.html#L4740)), generada
   por JS y **solo presente con `#admin` en la URL**. Sin sesión muestra "Iniciar
-  sesión" (`data-np-login`) → `npLogin()` navega full-page al login de Cloudflare
-  Access. **Implicación para el top-UI: no hay un botón de login en el header que
+  sesión" (`data-np-login`) → `npLogin()` navega full-page al **bounce `/v1/login`
+  del Worker** (que el edge gatea → login de Cloudflare Access; flujo completo en
+  §0 "Auth admin"). **Implicación para el top-UI: no hay un botón de login en el header que
   "reubicar"** — sería colocación net-new, o promover la entrada admin gated.
 - CSS del header: `.fb-navbar` (~L252), `.fb-navbar-left/right` (~L253-254),
   `.fb-logo` (~L255), `.fb-subheader` (~L266); offset sticky vía `--nav-h`.
@@ -407,6 +474,15 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   PK = hash del link/guid normalizado; DDL en
   `scripts/migrations/0002_noticias.sql`). `DATA.noticias` = últimos 30
   días (dashboard.py, patrón graceful dpf/embi).
+- **Imagen de la nota** (`image_url`, FASE 2a): columna `image_url` TEXT
+  nullable en `noticias` (migración `scripts/migrations/0004_noticias_image_url.sql`,
+  ADD COLUMN aditivo tras `0003`; distinta de `url`, que es el link al
+  artículo). Guarda el `og:image`, parseado del HTML crudo en la **fase
+  cuerpo del carril Bolivia** y entregado al frontend como **hotlink directo**
+  (sin re-host); el slot cae al placeholder `.np-imgph` cuando es NULL.
+  **El Deber queda NULL en prod** (su HTML no baja desde el VPS por bloqueo de
+  IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
+  la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
 - Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
   `noticias_ingest/transform.py`) y 6 categorías —
   `economia|hidrocarburos|agro|mineria|latam|politica` ("mundo" se
@@ -450,10 +526,11 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 - **Schema por nota** (contrato backend → frontend):
   `{id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title,
   summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote,
-  url}` (`url` se agregó para el link al artículo original; `summary`
-  hoy no se renderiza — se persiste para uso futuro). `detail` es un
-  extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio
-  público).
+  url, imageUrl}` (`url` se agregó para el link al artículo original;
+  `imageUrl` = `og:image` de la nota (hotlink, FASE 2a), `null` → el slot
+  cae al placeholder `.np-imgph`; `summary` hoy no se renderiza — se
+  persiste para uso futuro). `detail` es un extracto ≤400 chars del
+  cuerpo, nunca el artículo completo (sitio público).
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).

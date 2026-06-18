@@ -476,6 +476,7 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph.sm{aspect-ratio:1/1}
+.np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
 /* — section head (regla 2px ink, theme-aware) — */
 .np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
 .np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
@@ -4676,6 +4677,16 @@ window.addEventListener('popstate', function(){
   function npTitle(url,text){ return npLink(url, ntEsc(text)); }
   function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'; }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
+  // Slot de imagen: si la nota trae imageUrl (og:image hotlinkeado, carril BO) →
+  // <img> que llena el .np-imgph; si no → placeholder actual (gradiente + ícono).
+  // onerror oculta el <img> roto y reaparece el placeholder (el hotlink puede morir
+  // en runtime). Latam no llama acá: su slot es la bandera emoji, no se toca.
+  function npImg(n,cls){
+    var ph='<div class="np-imgph'+(cls?' '+cls:'')+'">', u=n&&n.imageUrl;
+    return (u && /^https?:\/\//i.test(u))
+      ? ph+'<img src="'+ntEsc(u)+'" loading="lazy" alt="" onerror="this.style.display=\'none\'"></div>'
+      : ph+'</div>';
+  }
 
   // ── Regiones ──
   function npMarkets(){
@@ -4693,13 +4704,13 @@ window.addEventListener('popstate', function(){
     const lead=pool[0], secs=pool.slice(1,3);
     let L='<article class="np-lead"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
-      +'<figure class="np-figure"><div class="np-imgph"></div></figure>'
+      +'<figure class="np-figure">'+npImg(lead,'')+'</figure>'
       +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
     let S='<div class="np-secs">';
     for(let i=0;i<secs.length;i++){ const s=secs[i];
       S+='<article class="np-sec"'+npNoteAttr(s)+'>'+npHideCtl(s)
         +(i===0
-          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div><div class="np-imgph sm"></div></div>'
+          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div>'+npImg(s,'sm')+'</div>'
           : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
         +'</article>';
     }
@@ -4710,7 +4721,7 @@ window.addEventListener('popstate', function(){
     const pool=ntPool(), river=pool.slice(3), total=pool.length;
     let grid='';
     for(let i=0;i<river.length;i++){ const n=river[i];
-      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-imgph np-card-img"></div>'
+      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div></div></article>';
@@ -4771,17 +4782,14 @@ window.addEventListener('popstate', function(){
     return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
   }
   function npAdminBar(){
-    // Admin logueado ⇒ email + editar + cerrar sesión.
+    // Barra SIEMPRE visible. Anónimo ⇒ login discreto; admin ⇒ email + editar +
+    // cerrar sesión.
     let inner;
     if(!npAdmin.isAdmin){
-      // MITIGACIÓN INTERINA (revertir con PR-C4): el "Iniciar sesión" se oculta
-      // porque la URL hand-crafted de npLogin rompe contra Cloudflare Access
-      // ("Unable to find your Access application": falta el kid=AUD y Access
-      // prohíbe el redirect_url cross-domain a finanzasbo.com). El fix real es
-      // una ruta de bounce gated en el Worker (/v1/login → 302 a finanzasbo.com);
-      // cuando exista, restaurar el botón acá. npLogin/data-np-login quedan
-      // intactos a propósito para que el revert sea trivial.
-      inner='';
+      // Botón restaurado (PR-C4b, revierte la mitigación #74): npLogin navega a la
+      // ruta de bounce del Worker (/v1/login), que maneja el handshake de Access y
+      // el retorno a finanzasbo.com — ya no rompe contra "Unable to find application".
+      inner='<button class="np-admin-link" type="button" data-np-login>Iniciar sesión</button>';
     }else{
       inner='<span class="np-admin-who"><span class="dot"></span>'+ntEsc(npAdmin.email||'admin')+'</span>'
         +'<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>'
@@ -4790,8 +4798,6 @@ window.addEventListener('popstate', function(){
     }
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
     const panel = (npAdmin.isAdmin && npAdmin.editMode) ? npHiddenPanel() : '';
-    // Anónimo sin nada que mostrar (mitigación) ⇒ sin barra (evita un strip vacío).
-    if(!inner && !note && !panel) return '';
     return '<div class="np-admin-bar'+(npAdmin.isAdmin?'':' anon')+'">'+inner+note+panel+'</div>';
   }
 
@@ -4840,22 +4846,24 @@ window.addEventListener('popstate', function(){
   function npSetHint(){ try{ localStorage.setItem(NP_SESS_HINT,'1'); }catch(e){} }
   function npClearHint(){ try{ localStorage.removeItem(NP_SESS_HINT); }catch(e){} }
   function npHasHint(){ try{ return localStorage.getItem(NP_SESS_HINT)==='1'; }catch(e){ return false; } }
-  // Login: setea el hint y NAVEGA full-page al login de Access (no fetch); vuelve
-  // a Noticias (/) con sesión, sin dejar #admin colgando.
+  // Login (PR-C4b): setea el hint y NAVEGA full-page a la ruta de bounce del
+  // Worker. /v1/login dispara el handshake de Access (sin sesión) y, ya
+  // autenticado, hace 302 de vuelta al `return` allowlisteado (finanzasbo.com).
+  // El frontend NO hand-craftea la URL de Access (no puede sintetizar el `meta`
+  // ni retornar cross-domain — lo resuelve el Worker).
   function npLogin(){
     try{
       npSetHint();
-      const ret = encodeURIComponent('https://finanzasbo.com/');
-      location.href = 'https://finanzasbo.cloudflareaccess.com/cdn-cgi/access/login/api.finanzasbo.com?redirect_url='+ret;
+      location.href = NT_API+'/v1/login?return='+encodeURIComponent('https://finanzasbo.com/');
     }catch(e){}
   }
-  // Logout: limpia el hint y NAVEGA full-page al logout de Access, que invalida la
-  // sesión CF_Authorization (cookie 100% de Access; el Worker solo la lee). Al
-  // volver a finanzasbo.com el estado es anónimo.
+  // Logout (PR-C4b): limpia el hint y NAVEGA full-page a la ruta de bounce del
+  // Worker. /v1/logout redirige al logout de Access del team (invalida la sesión
+  // CF_Authorization) con `returnTo` allowlisteado de vuelta a finanzasbo.com.
   function npLogout(){
     try{
       npClearHint();
-      location.href = 'https://finanzasbo.cloudflareaccess.com/cdn-cgi/access/logout';
+      location.href = NT_API+'/v1/logout?return='+encodeURIComponent('https://finanzasbo.com/');
     }catch(e){}
   }
   // 401/403 mid-uso ⇒ sesión expirada: comunicar + re-login, sin romper en silencio.
