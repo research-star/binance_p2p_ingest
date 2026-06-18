@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FinanzasBo — Noticias (Opción A · Editorial)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ft-style.css">
+<style>
+  html,body{margin:0;min-height:100%;background:#f5f4ed}
+  #root{min-height:100%}
+  /* en página real la portada ocupa todo el ancho (sin canvas) */
+  .ft-root{max-width:1280px;margin:0 auto;min-height:100vh;box-shadow:0 0 0 1px var(--ft-line)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+  // Navegación de la app unificada (Opción A · editorial)
+  window.FB_ACTIVE_TAB = 'Noticias';
+  window.FB_NAV = { Macro:'a-macro.html' };
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="news-data-2.js"></script>
+<script type="text/babel" data-presets="react" src="tweaks-panel.jsx"></script>
+<script type="text/babel" data-presets="react" src="ft-components.jsx"></script>
+<script type="text/babel" data-presets="react" src="ft-frontpage.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "palette": "Dashboard (B)",
+    "font": "Outfit"
+  }/*EDITMODE-END*/;
+
+  // "Dashboard (B)" = la paleta fría blanco/navy de la Opción B, sobre la MISMA
+  // tipografía/maquetación editorial. "Editorial" usa los defaults de ft-style.css.
+  const PALETTES_A = {
+    'Editorial': {},
+    'Dashboard (B)': {
+      '--ft-paper':'#f5f7fa','--ft-paper-2':'#ffffff',
+      '--ft-ink':'#2c4a6b','--ft-ink-2':'#2c4a6b',
+      '--ft-warm':'#6b7d92','--ft-warm-soft':'#8c9aab',
+      '--ft-accent':'#2c4a6b','--ft-accent-ink':'#2c4a6b',
+      '--ft-line':'rgba(44,74,107,.12)','--ft-line-strong':'rgba(44,74,107,.24)'
+    }
+  };
+  const BODY_BG = { 'Editorial':'#f5f4ed', 'Dashboard (B)':'#eef1f5' };
+
+  function App(){
+    const [t, setTweak] = window.useTweaks(TWEAK_DEFAULTS);
+    const pal = PALETTES_A[t.palette] || {};
+    const sans = t.font === 'Outfit';
+    React.useEffect(()=>{
+      document.body.style.background = BODY_BG[t.palette] || '#f5f4ed';
+      try{ localStorage.setItem('fb-a-palette', t.palette); }catch(e){}
+    }, [t.palette]);
+    React.useEffect(()=>{
+      try{ localStorage.setItem('fb-a-font', t.font); }catch(e){}
+    }, [t.font]);
+    return <React.Fragment>
+      <div className={`ft-root ${sans?'ft-font-sans':''}`} style={pal}><window.FrontPage mode="desktop" layout="cards" /></div>
+      <window.TweaksPanel title="Tweaks">
+        <window.TweakSection label="Paleta" />
+        <window.TweakRadio label="Colores" value={t.palette}
+          options={['Editorial','Dashboard (B)']}
+          onChange={(v)=>setTweak('palette', v)} />
+        <window.TweakSection label="Tipografía" />
+        <window.TweakRadio label="Titulares" value={t.font}
+          options={['Newsreader','Outfit']}
+          onChange={(v)=>setTweak('font', v)} />
+      </window.TweaksPanel>
+    </React.Fragment>;
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
