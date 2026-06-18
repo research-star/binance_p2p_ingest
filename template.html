@@ -4678,13 +4678,6 @@ window.addEventListener('popstate', function(){
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
 
   // ── Regiones ──
-  function npTopline(){
-    const hoy=ntBolivia().filter(function(n){ return n.date===NT_TODAY; });
-    const last=hoy.length?hoy.map(function(n){ return n.time; }).sort().pop():null;
-    return '<div class="np-topline"><span class="np-kicker">FinanzasBo · Noticias</span>'
-      +'<span class="np-topline-meta"><span class="np-date">'+ntEsc(ntFechaLarga(NT_TODAY))+' · Santa Cruz, Bolivia</span>'
-      +(last?'<span class="np-upd"><span class="np-live"></span>Actualizado '+ntEsc(last)+'</span>':'')+'</span></div>';
-  }
   function npMarkets(){
     const inds=npMarketsData(), glyph={up:'▲',down:'▼',flat:'■'}; let cells='';
     for(let i=0;i<inds.length;i++){ const d=inds[i];
@@ -4804,8 +4797,6 @@ window.addEventListener('popstate', function(){
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
-    // npTopline() se quitó (PR navbar v3): su dateline (fecha · lugar · Actualizado)
-    // ahora vive en la utility bar global del chrome, sin duplicar.
     return '<div class="np-page">'+npAdminBar()+npMarkets()
       +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
       +npLatam()+npFooter()+'</div>';
@@ -4961,7 +4952,7 @@ window.addEventListener('popstate', function(){
       var f=d.toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'America/La_Paz'}).replace(/,/g,'');
       f=f.charAt(0).toUpperCase()+f.slice(1);
       var h=d.toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
-      var de=document.getElementById('fbDate'); if(de) de.textContent=f+' · La Paz, Bolivia';
+      var de=document.getElementById('fbDate'); if(de) de.textContent=f+' · Santa Cruz, Bolivia';
       var ue=document.getElementById('fbUpd'); if(ue) ue.textContent=h;
     }catch(e){}
   }
