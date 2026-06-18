@@ -345,25 +345,47 @@ describe("GET /v1/login (bounce cross-domain)", () => {
   });
 });
 
-describe("GET /v1/logout (bounce)", () => {
-  it("→ 302 al logout de Access del team con returnTo allowlisteado", async () => {
+describe("GET /v1/logout (bounce cross-domain, dos pasos)", () => {
+  it("paso 1 → 302 al team-logout de Access con returnTo a api.finanzasbo.com (app domain, no a la UI directo)", async () => {
     const r = await call("/v1/logout?return=" + enc("https://finanzasbo.com/"));
     expect(r.status).toBe(302);
     const loc = new URL(r.headers.get("Location"));
     expect(loc.origin + loc.pathname).toBe(`https://${TEAM}/cdn-cgi/access/logout`);
-    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+    // returnTo a ESTE Worker (app domain) — Access lo acepta; NUNCA a finanzasbo.com directo.
+    const returnTo = new URL(loc.searchParams.get("returnTo"));
+    expect(returnTo.origin).toBe("https://api.finanzasbo.com");
+    expect(returnTo.pathname).toBe("/v1/logout");
+    expect(returnTo.searchParams.get("done")).toBe("1");
+    // el destino final viaja threadeado y allowlisteado.
+    expect(returnTo.searchParams.get("return")).toBe("https://finanzasbo.com/");
   });
 
-  it("return inválido → returnTo default finanzasbo.com (no evil)", async () => {
-    const r = await call("/v1/logout?return=" + enc("https://evil.com/"));
-    const loc = new URL(r.headers.get("Location"));
-    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+  it("paso 2 (done=1) → 302 final al return validado por safeReturn", async () => {
+    const r = await call("/v1/logout?done=1&return=" + enc("https://finanzasbo.com/noticias"));
+    expect(r.status).toBe(302);
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/noticias");
+  });
+
+  it("paso 2 con return inválido → 302 final default finanzasbo.com (no evil)", async () => {
+    const r = await call("/v1/logout?done=1&return=" + enc("https://evil.com/"));
+    expect(r.headers.get("Location")).toBe("https://finanzasbo.com/");
     expect(r.headers.get("Location")).not.toContain("evil.com");
   });
 
-  it("sin return → returnTo default finanzasbo.com", async () => {
+  it("paso 1 con return inválido → returnTo a api.finanzasbo.com con return default (no evil)", async () => {
+    const r = await call("/v1/logout?return=" + enc("https://evil.com/"));
+    const returnTo = new URL(new URL(r.headers.get("Location")).searchParams.get("returnTo"));
+    expect(returnTo.origin).toBe("https://api.finanzasbo.com");
+    expect(returnTo.searchParams.get("return")).toBe("https://finanzasbo.com/");
+    expect(r.headers.get("Location")).not.toContain("evil.com");
+  });
+
+  it("paso 1 sin return → returnTo a api.finanzasbo.com con return default finanzasbo.com", async () => {
     const r = await call("/v1/logout");
-    const loc = new URL(r.headers.get("Location"));
-    expect(loc.searchParams.get("returnTo")).toBe("https://finanzasbo.com/");
+    const returnTo = new URL(new URL(r.headers.get("Location")).searchParams.get("returnTo"));
+    expect(returnTo.origin).toBe("https://api.finanzasbo.com");
+    expect(returnTo.pathname).toBe("/v1/logout");
+    expect(returnTo.searchParams.get("done")).toBe("1");
+    expect(returnTo.searchParams.get("return")).toBe("https://finanzasbo.com/");
   });
 });

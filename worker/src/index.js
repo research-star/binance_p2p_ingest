@@ -63,6 +63,10 @@ function redirect(location) {
 // (eso sería el ERR_TOO_MANY_REDIRECTS que reportó el smoke).
 const LOGIN_RETRY = "_cf_login_retry";
 
+// Flag one-shot del bounce de logout: marca el segundo salto (post team-logout de
+// Access, cookie ya borrada) para hacer el 302 final a la UI en vez de re-botar.
+const LOGOUT_DONE = "done";
+
 function escapeHtml(s) {
   return String(s)
     .replace(/&/g, "&amp;")
@@ -176,15 +180,36 @@ export default {
       return redirect(loginUrl);
     }
 
-    // ── GET /v1/logout — bounce de logout ──
-    // Logout estándar de Access (team) que invalida la sesión; `returnTo` lleva de
-    // vuelta a la UI allowlisteada (sólo pasamos un destino ya validado por
-    // safeReturn — nunca un host arbitrario).
+    // ── GET /v1/logout — bounce de logout cross-domain (dos pasos) ──
+    // La UI vive en finanzasbo.com; el Access app, en api.finanzasbo.com. El
+    // `returnTo` del /cdn-cgi/access/logout SÓLO acepta el authdomain del team, sus
+    // subdominios, y hostnames que son apps de Access en la org (verificado).
+    // finanzasbo.com NO es app de Access → un returnTo directo a la UI lo rechaza
+    // con "Invalid redirect URL". api.finanzasbo.com SÍ es app → el retorno a la UI
+    // lo hace ESTE Worker, en dos saltos (mismo patrón que el bounce de login):
+    //   - Paso 1 (/v1/logout sin flag): 302 al team-logout de Access con
+    //     returnTo = URL ABSOLUTA en api.finanzasbo.com (este Worker), de vuelta a
+    //     /v1/logout?done=1, preservando el `return` final (URL-encoded). Access
+    //     acepta ese returnTo por ser app domain, borra la cookie y nos devuelve.
+    //   - Paso 2 (/v1/logout?done=1): ya sin sesión → 302 al destino final
+    //     validado por safeReturn (default https://finanzasbo.com/).
+    // /v1/logout NO está gateado por Access (alcanzable sin sesión).
     if (path === "/v1/logout" && req.method === "GET") {
-      const dest = safeReturn(req.url);
+      const reqUrl = new URL(req.url);
+      const dest = safeReturn(req.url); // destino final, allowlisteado a finanzasbo.com
+      // Paso 2: volvimos del team-logout (cookie borrada) → 302 final a la UI.
+      if (reqUrl.searchParams.get(LOGOUT_DONE) === "1") {
+        return redirect(dest);
+      }
+      // Paso 1: mandamos a Access a borrar la cookie. returnTo apunta a ESTE Worker
+      // (api.finanzasbo.com = app domain → Access lo acepta), threading el `return`
+      // final para resolverlo en el paso 2.
+      const back =
+        reqUrl.origin + "/v1/logout?" + LOGOUT_DONE + "=1&return=" +
+        encodeURIComponent(dest);
       const logoutUrl =
         "https://" + env.ACCESS_TEAM_DOMAIN +
-        "/cdn-cgi/access/logout?returnTo=" + encodeURIComponent(dest);
+        "/cdn-cgi/access/logout?returnTo=" + encodeURIComponent(back);
       return redirect(logoutUrl);
     }
 
