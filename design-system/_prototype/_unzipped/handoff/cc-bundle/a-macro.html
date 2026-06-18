@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FinanzasBo — Macroeconomía (Opción A · Editorial)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ft-style.css">
+<script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+<style>
+  html,body{margin:0;min-height:100%;background:#f5f4ed}
+  .ft-root{max-width:1280px;margin:0 auto;min-height:100vh;box-shadow:0 0 0 1px var(--ft-line)}
+
+  /* ── subheader editorial: título serif + stats ── */
+  .fb-subheader{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:24px 36px 14px}
+  .fb-subheader h1{font-family:var(--ft-headline);font-weight:500;font-size:44px;line-height:1;letter-spacing:-.02em;color:var(--ft-ink);margin:0}
+  .fb-subtitle{font-family:var(--ft-ui);font-size:12.5px;color:var(--ft-warm);margin-top:9px;letter-spacing:.01em}
+  .fb-subheader-stats{display:flex;gap:28px;padding-bottom:5px}
+  .fb-stat{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .fb-stat-label{font-family:var(--ft-ui);font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ft-warm-soft)}
+  .fb-stat-value{font-family:var(--ft-ui);font-size:14px;font-weight:600;color:var(--ft-ink-2);font-variant-numeric:tabular-nums}
+
+  /* ── sub-nav riesgo | inflación | pib (serif) ── */
+  .macro-subnav{display:flex;align-items:center;gap:8px;padding:2px 36px 0;border-bottom:2px solid var(--ft-ink)}
+  .macro-subtab{font-family:var(--ft-headline);font-size:24px;font-weight:500;color:var(--ft-warm-soft);background:none;border:none;cursor:pointer;padding:4px 6px 12px;letter-spacing:-.01em;line-height:1.1;white-space:nowrap;transition:color .15s}
+  .macro-subtab:first-child{padding-left:0}
+  .macro-subtab:hover{color:var(--ft-ink-2)}
+  .macro-subtab.active{color:var(--ft-ink);font-weight:600}
+  .macro-sep{color:var(--ft-line-strong);font-size:19px;font-weight:300;user-select:none;line-height:1;padding-bottom:8px}
+
+  .fb-content{padding:24px 36px 8px}
+
+  /* ── KPI cards editorial ── */
+  .macro-kpis .fb-kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--ft-line);border-radius:2px;overflow:hidden;background:var(--ft-paper);margin-bottom:22px}
+  .fb-kpi-card{padding:17px 22px;border-right:1px solid var(--ft-line)}
+  .fb-kpi-card:last-child{border-right:0}
+  .fb-kpi-head{margin-bottom:10px}
+  .fb-kpi-label{font-family:var(--ft-ui);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ft-warm)}
+  .fb-kpi-value{font-family:var(--ft-ui);font-size:33px;font-weight:600;color:var(--ft-ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1}
+  .fb-kpi-sub{margin-top:9px;font-family:var(--ft-ui);font-size:12px;font-weight:500}
+  .macro-kpi-delta{font-family:var(--ft-ui);font-variant-numeric:tabular-nums}
+
+  /* ── chart card editorial ── */
+  .fb-chart-card{background:var(--ft-paper);border:1px solid var(--ft-line);border-radius:2px;padding:20px 22px}
+  .fb-chart-head{margin-bottom:16px;border-bottom:1px solid var(--ft-line);padding-bottom:13px}
+  .fb-chart-title{font-family:var(--ft-headline);font-size:21px;font-weight:600;color:var(--ft-ink);letter-spacing:-.01em}
+  .fb-chart-sub{font-family:var(--ft-ui);font-size:12px;color:var(--ft-warm);margin-top:6px;line-height:1.45}
+  .fb-chart-source{font-family:var(--ft-ui);font-size:10.5px;color:var(--ft-warm-soft);text-align:right;padding:11px 2px 0;font-style:italic}
+
+  /* ── toggles de serie ── */
+  .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .fb-stog{display:flex;align-items:center;gap:8px;padding:5px 11px;border-radius:3px;border:1px solid var(--ft-line-strong);background:transparent;font-family:var(--ft-ui);font-size:12px;font-weight:500;color:var(--ft-warm);cursor:pointer;transition:all .15s;user-select:none}
+  .fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:2px;border:1.5px solid var(--ft-line-strong);background:transparent;flex-shrink:0;transition:all .15s}
+  .fb-stog-check svg{width:9px;height:9px;opacity:0}
+  .fb-stog-line{display:inline-block;width:14px;height:0;border-top:2.5px solid currentColor;flex-shrink:0}
+  .fb-stog.active{border-color:var(--ft-ink-2);color:var(--ft-ink)}
+  .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,var(--ft-ink));border-color:var(--fb-trace-color,var(--ft-ink))}
+  .fb-stog.active .fb-stog-check svg{opacity:1}
+  .fb-stog.inactive{opacity:.65}
+  .fb-stog:hover{background:var(--ft-paper-2)}
+
+  /* ── rango (chips segmentados) ── */
+  .fb-view-toggle{display:inline-flex;gap:1px;margin-bottom:16px;border:1px solid var(--ft-line-strong);border-radius:3px;overflow:hidden}
+  .ds-chip{font-family:var(--ft-ui);font-size:11px;font-weight:600;letter-spacing:.02em;padding:5px 13px;border:0;background:transparent;color:var(--ft-warm);cursor:pointer;transition:all .12s}
+  .ds-chip.active{background:var(--ft-ink);color:var(--ft-paper)}
+  .ds-chip:hover:not(.active){background:var(--ft-paper-2);color:var(--ft-ink)}
+
+  /* ── footer editorial ── */
+  .fb-footer{padding:18px 36px;border-top:2px solid var(--ft-ink);margin-top:26px;font-family:var(--ft-ui);font-size:11px;color:var(--ft-warm-soft);letter-spacing:.01em}
+  .fb-footer strong{color:var(--ft-ink-2)}
+</style>
+</head>
+<body>
+<div class="ft-root">
+
+  <!-- Chrome editorial -->
+  <div class="ft-utility">
+    <span class="ft-date">lunes 15 de junio de 2026 · La Paz, Bolivia</span>
+    <span class="ft-upd"><span class="ft-live"></span><span class="lbl">Actualizado</span> 07:45</span>
+    <span class="ft-langtoggle"><button class="on">ES</button><button>EN</button></span>
+  </div>
+  <header class="ft-masthead">
+    <div class="ft-nameplate">Finanzas<b>Bo</b></div>
+    <div class="ft-tagline">Inteligencia económica de Bolivia</div>
+    <div class="ft-masthead-rules"><div class="r1"></div><div class="r2"></div></div>
+  </header>
+  <nav class="ft-nav">
+    <div class="ft-nav-tabs">
+      <button class="ft-nav-tab" onclick="location.href='a-noticias.html'">Noticias</button>
+      <button class="ft-nav-tab active">Macro</button>
+      <button class="ft-nav-tab">Dólar</button>
+      <button class="ft-nav-tab">Rendimientos DPF</button>
+      <button class="ft-nav-tab">BBV</button>
+      <button class="ft-nav-tab">Guía</button>
+    </div>
+    <div class="ft-nav-ctrls">
+      <div class="ft-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg><span>Buscar…</span></div>
+      <button class="ft-iconbtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>Guardadas</button>
+    </div>
+  </nav>
+
+  <script>
+    /* Continuidad de paleta: si en Noticias (A) se eligió "Dashboard (B)", aplicarla acá. */
+    (function(){
+      var P={ 'Dashboard (B)':{
+        '--ft-paper':'#f5f7fa','--ft-paper-2':'#ffffff','--ft-ink':'#2c4a6b','--ft-ink-2':'#2c4a6b',
+        '--ft-warm':'#6b7d92','--ft-warm-soft':'#8c9aab','--ft-accent':'#2c4a6b','--ft-accent-ink':'#2c4a6b',
+        '--ft-line':'rgba(44,74,107,.12)','--ft-line-strong':'rgba(44,74,107,.24)' } };
+      var sel='Editorial'; try{ sel=localStorage.getItem('fb-a-palette')||'Editorial'; }catch(e){}
+      var vars=P[sel]; if(vars){ var r=document.querySelector('.ft-root'); if(r){ for(var k in vars) r.style.setProperty(k,vars[k]); } document.body.style.background='#eef1f5'; }
+      var fnt='Newsreader'; try{ fnt=localStorage.getItem('fb-a-font')||'Newsreader'; }catch(e){}
+      if(fnt==='Outfit'){ var rr=document.querySelector('.ft-root'); if(rr) rr.classList.add('ft-font-sans'); }
+    })();
+  </script>
+
+  <!-- Macroeconomía tab -->
+  <div id="tab-macro" data-screen-label="Macroeconomía">
+    <div class="fb-subheader">
+      <div>
+        <h1>Macroeconomía</h1>
+        <div class="fb-subtitle" id="macroSubtitle">—</div>
+      </div>
+      <div class="fb-subheader-stats">
+        <div class="fb-stat">
+          <span class="fb-stat-label">Frecuencia</span>
+          <span class="fb-stat-value" id="macroFreq">—</span>
+        </div>
+        <div class="fb-stat">
+          <span class="fb-stat-label">Actualizado</span>
+          <span class="fb-stat-value" id="macroDate">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-tabs separados por "|" -->
+    <div class="macro-subnav" id="macroSubnav">
+      <button class="macro-subtab active" data-sub="riesgo" type="button">Riesgo país</button>
+      <span class="macro-sep">|</span>
+      <button class="macro-subtab" data-sub="inflacion" type="button">Inflación</button>
+      <span class="macro-sep">|</span>
+      <button class="macro-subtab" data-sub="pib" type="button">PIB</button>
+    </div>
+
+    <div class="fb-content">
+      <div class="macro-kpis" id="macroKpis"></div>
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title" id="chartTitle">—</div>
+          <div class="fb-chart-sub" id="chartSub">—</div>
+        </div>
+        <div class="fb-series-toggles" id="macroToggles"></div>
+        <div class="fb-view-toggle" id="macroRange"></div>
+        <div id="macroChart" style="height:460px;"></div>
+        <div class="fb-chart-source" id="chartSource">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fb-footer">
+    <strong>FinanzasBo</strong> · Datos macroeconómicos de Bolivia · vista de diseño (datos sintéticos para prototipo)
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+//  Datos sintéticos (prototipo de diseño)
+//  Series históricas mensuales / trimestrales con trayectorias
+//  plausibles para Bolivia. NO son datos oficiales.
+// ════════════════════════════════════════════════════════════════
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+var MONTHS_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+function fmtMonthYear(d){return MONTHS_ES[d.getMonth()]+' '+d.getFullYear();}
+function fmtQuarter(d){return 'T'+(Math.floor(d.getMonth()/3)+1)+' '+d.getFullYear();}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+// rango de fechas mensuales: Ene 2018 → Jun 2026
+function monthlyDates(){
+  var out=[];
+  for(var y=2018;y<=2026;y++){
+    var mEnd = (y===2026)?5:11; // 2026 hasta Junio (idx 5)
+    for(var m=0;m<=mEnd;m++) out.push(new Date(y,m,1));
+  }
+  return out;
+}
+// trimestrales: T1 2018 → T2 2026 (fecha = mes final del trimestre)
+function quarterlyDates(){
+  var out=[];
+  for(var y=2018;y<=2026;y++){
+    var qEnd = (y===2026)?1:3; // 2026 hasta T2
+    for(var q=0;q<=qEnd;q++) out.push(new Date(y,q*3+2,1));
+  }
+  return out;
+}
+
+// interpolación lineal entre anclas anuales (claves pueden ser fraccionarias)
+function annual(anchors, d){
+  var y = d.getFullYear() + d.getMonth()/12;
+  var keys = Object.keys(anchors).map(Number).sort(function(a,b){return a-b;});
+  if(y<=keys[0]) return anchors[keys[0]];
+  if(y>=keys[keys.length-1]) return anchors[keys[keys.length-1]];
+  var lo=keys[0], hi=keys[keys.length-1];
+  for(var i=0;i<keys.length-1;i++){ if(y>=keys[i] && y<=keys[i+1]){lo=keys[i];hi=keys[i+1];break;} }
+  var t=(y-lo)/(hi-lo||1);
+  return anchors[lo] + (anchors[hi]-anchors[lo])*t;
+}
+function genSeries(anchors, dates, rng, noise, decimals){
+  return dates.map(function(d){
+    var v = annual(anchors,d) + (rng()-0.5)*2*noise;
+    var p = Math.pow(10,decimals);
+    return Math.round(v*p)/p;
+  });
+}
+
+var MD = monthlyDates();
+var QD = quarterlyDates();
+var R = mulberry32(20260603);
+
+// ── RIESGO PAÍS (EMBI, bps, mensual) ──
+var riesgoSeries = {
+  bolivia:  genSeries({2018:255,2019:320,2020:680,2021:560,2022:780,2023:1550,2024:2050,2025:2180,2026:1880}, MD, R, 60, 0),
+  latino:   genSeries({2018:410,2019:430,2020:640,2021:470,2022:520,2023:500,2024:470,2025:455,2026:448}, MD, R, 22, 0),
+  global:   genSeries({2018:350,2019:360,2020:520,2021:390,2022:440,2023:430,2024:400,2025:388,2026:382}, MD, R, 18, 0),
+  argentina:genSeries({2018:620,2019:1750,2020:2550,2021:1650,2022:1950,2023:2400,2024:1450,2025:880,2026:720}, MD, R, 80, 0),
+  brasil:   genSeries({2018:260,2019:280,2020:380,2021:300,2022:330,2023:310,2024:265,2025:252,2026:248}, MD, R, 16, 0),
+  chile:    genSeries({2018:130,2019:150,2020:210,2021:160,2022:180,2023:165,2024:142,2025:135,2026:132}, MD, R, 12, 0),
+  colombia: genSeries({2018:195,2019:215,2020:360,2021:300,2022:390,2023:345,2024:295,2025:272,2026:262}, MD, R, 16, 0),
+  mexico:   genSeries({2018:300,2019:330,2020:510,2021:380,2022:410,2023:385,2024:345,2025:330,2026:322}, MD, R, 16, 0),
+  peru:     genSeries({2018:125,2019:140,2020:240,2021:175,2022:215,2023:195,2024:165,2025:152,2026:147}, MD, R, 11, 0),
+  ecuador:  genSeries({2018:610,2019:680,2020:1520,2021:820,2022:1200,2023:1820,2024:1320,2025:1120,2026:1050}, MD, R, 70, 0)
+};
+
+// ── PIB (variación interanual %, trimestral) ──
+var pibSeries = {
+  total:        genSeries({2018:4.2,2019:2.2,2020.4:-12.5,2021:6.1,2022:3.5,2023:3.0,2024:2.2,2025:1.5,2026:1.3}, QD, R, 0.6, 1),
+  agro:         genSeries({2018:3.4,2019:2.8,2020.4:-1.5,2021:3.0,2022:3.2,2023:2.6,2024:2.0,2025:1.8,2026:1.7}, QD, R, 0.7, 1),
+  hidrocarburos:genSeries({2018:2.0,2019:-1.0,2020.4:-15.0,2021:1.5,2022:-2.0,2023:-3.5,2024:-6.5,2025:-7.8,2026:-6.0}, QD, R, 1.2, 1),
+  mineria:      genSeries({2018:1.5,2019:-2.5,2020.4:-10.0,2021:9.0,2022:-1.5,2023:2.0,2024:-3.0,2025:0.5,2026:1.0}, QD, R, 2.2, 1),
+  industria:    genSeries({2018:4.5,2019:3.0,2020.4:-11.0,2021:6.5,2022:3.8,2023:3.2,2024:2.4,2025:1.6,2026:1.4}, QD, R, 0.8, 1),
+  construccion: genSeries({2018:3.5,2019:1.5,2020.4:-22.0,2021:9.5,2022:4.0,2023:2.5,2024:0.5,2025:-1.0,2026:0.2}, QD, R, 1.6, 1),
+  servicios:    genSeries({2018:4.4,2019:3.4,2020.4:-13.5,2021:5.5,2022:4.2,2023:3.6,2024:3.0,2025:2.4,2026:2.0}, QD, R, 0.6, 1)
+};
+
+// ── INFLACIÓN (variación interanual del IPC %, mensual) ──
+var inflSeries = {
+  general:  genSeries({2018:2.3,2019:1.5,2020:1.0,2021:0.9,2022:1.6,2023:2.4,2024:6.5,2025:16.0,2026:20.5}, MD, R, 0.4, 1),
+  alimentos:genSeries({2018:2.5,2019:1.8,2020:1.5,2021:1.4,2022:2.8,2023:3.8,2024:9.5,2025:24.0,2026:29.0}, MD, R, 0.7, 1),
+  transporte:genSeries({2018:2.0,2019:1.2,2020:0.5,2021:1.0,2022:1.4,2023:2.0,2024:5.5,2025:18.0,2026:23.0}, MD, R, 0.6, 1),
+  vivienda: genSeries({2018:1.8,2019:1.4,2020:1.0,2021:0.7,2022:1.1,2023:1.8,2024:4.0,2025:9.5,2026:12.5}, MD, R, 0.4, 1),
+  educacion:genSeries({2018:3.2,2019:2.6,2020:1.8,2021:1.0,2022:1.5,2023:2.0,2024:3.0,2025:5.0,2026:6.5}, MD, R, 0.3, 1),
+  salud:    genSeries({2018:2.4,2019:1.9,2020:1.5,2021:1.2,2022:1.7,2023:2.3,2024:3.8,2025:7.5,2026:10.0}, MD, R, 0.4, 1)
+};
+
+// ════════════════════════════════════════════════════════════════
+//  Configuración de los 3 datasets
+// ════════════════════════════════════════════════════════════════
+var PALETTES = {
+  riesgo:{
+    paper:{bolivia:'#1B365D',latino:'#9a917f',global:'#c2baa9',argentina:'#6e8faf',brasil:'#7d9a86',chile:'#b08a82',colombia:'#54708f',mexico:'#6e8f7e',peru:'#a8857e',ecuador:'#b8a36a'},
+    slate:{bolivia:'#f59e0b',latino:'#9ca3af',global:'#cbd5e1',argentina:'#9cc7ea',brasil:'#2ebe5e',chile:'#e64539',colombia:'#4f7ac7',mexico:'#2e9266',peru:'#e8425a',ecuador:'#ffdb4d'}
+  },
+  pib:{
+    paper:{total:'#1B365D',agro:'#54708f',hidrocarburos:'#2c4a6b',mineria:'#6e8faf',industria:'#9ab0c4',construccion:'#bcae9c',servicios:'#9a917f'},
+    slate:{total:'#f59e0b',agro:'#5a8cc4',hidrocarburos:'#9cc3e8',mineria:'#7ba3d4',industria:'#b8d4ec',construccion:'#d4e4f5',servicios:'#8a96aa'}
+  },
+  inflacion:{
+    paper:{general:'#1B365D',alimentos:'#2c4a6b',transporte:'#54708f',vivienda:'#6e8faf',educacion:'#9ab0c4',salud:'#9a917f'},
+    slate:{general:'#f59e0b',alimentos:'#5a8cc4',transporte:'#9cc3e8',vivienda:'#7ba3d4',educacion:'#b8d4ec',salud:'#8a96aa'}
+  }
+};
+
+function lastNonNull(arr){for(var i=arr.length-1;i>=0;i--) if(arr[i]!=null) return {idx:i,val:arr[i]}; return null;}
+function deltaSteps(arr,n){var l=lastNonNull(arr); if(!l) return null; var i=l.idx-n; if(i<0||arr[i]==null) return null; return l.val-arr[i];}
+
+var DATASETS = {
+  riesgo:{
+    key:'riesgo', freq:'Mensual', dates:MD, dateFmt:fmtMonthYear,
+    subtitle:'EMBI Global Diversified · spreads soberanos en puntos básicos (bps) · Fuente: BCRD.',
+    chartTitle:'Spread soberano por país',
+    chartSub:'Pasá el mouse sobre el gráfico para ver todas las series activas en esa fecha. Series en bps.',
+    source:'Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices',
+    series:riesgoSeries,
+    order:['bolivia','latino','global','argentina','brasil','chile','colombia','mexico','peru','ecuador'],
+    defaultActive:['bolivia','latino','global'],
+    protagonist:'bolivia',
+    labels:{bolivia:'Bolivia',latino:'LATINO',global:'Global',argentina:'Argentina',brasil:'Brasil',chile:'Chile',colombia:'Colombia',mexico:'México',peru:'Perú',ecuador:'Ecuador'},
+    decimals:0, suffix:' bps', yfmt:',d', zeroline:false,
+    kpis:function(s){
+      var b=lastNonNull(s.bolivia), l=lastNonNull(s.latino);
+      var b1=deltaSteps(s.bolivia,1), b12=deltaSteps(s.bolivia,12);
+      return [
+        {label:'Bolivia', value:fmtVal(b?b.val:null,0,' bps'), delta:b1, deltaSuffix:' bps (1m)'},
+        {label:'Bolivia · Δ 12 meses', value:fmtDelta(b12,0,' bps'), deltaPlain:true, deltaVal:b12},
+        {label:'LATINO', value:fmtVal(l?l.val:null,0,' bps'), delta:deltaSteps(s.latino,1), deltaSuffix:' bps (1m)'}
+      ];
+    }
+  },
+  pib:{
+    key:'pib', freq:'Trimestral', dates:QD, dateFmt:fmtQuarter,
+    subtitle:'Variación interanual del PIB real, desagregada por actividad económica · Fuente: INE.',
+    chartTitle:'Crecimiento del PIB por actividad económica',
+    chartSub:'Variación interanual (%) del PIB real. Pasá el mouse para comparar todas las actividades activas en ese trimestre.',
+    source:'Fuente: Instituto Nacional de Estadística (INE) · Cuentas nacionales trimestrales',
+    series:pibSeries,
+    order:['total','agro','hidrocarburos','mineria','industria','construccion','servicios'],
+    defaultActive:['total','hidrocarburos','servicios'],
+    protagonist:'total',
+    labels:{total:'PIB Total',agro:'Agropecuario',hidrocarburos:'Hidrocarburos',mineria:'Minería',industria:'Industria manuf.',construccion:'Construcción',servicios:'Servicios'},
+    decimals:1, suffix:'%', yfmt:'.1f', zeroline:true,
+    kpis:function(s){
+      var t=lastNonNull(s.total), h=lastNonNull(s.hidrocarburos), sv=lastNonNull(s.servicios);
+      return [
+        {label:'PIB Total', value:fmtVal(t?t.val:null,1,'%'), delta:deltaSteps(s.total,1), deltaSuffix:' pp (1T)', invert:true},
+        {label:'Hidrocarburos', value:fmtVal(h?h.val:null,1,'%'), delta:deltaSteps(s.hidrocarburos,1), deltaSuffix:' pp (1T)', invert:true},
+        {label:'Servicios', value:fmtVal(sv?sv.val:null,1,'%'), delta:deltaSteps(s.servicios,1), deltaSuffix:' pp (1T)', invert:true}
+      ];
+    }
+  },
+  inflacion:{
+    key:'inflacion', freq:'Mensual', dates:MD, dateFmt:fmtMonthYear,
+    subtitle:'Variación interanual del IPC, desagregada por división de gasto · Fuente: INE.',
+    chartTitle:'Inflación por división de gasto',
+    chartSub:'Variación interanual (%) del Índice de Precios al Consumidor. Pasá el mouse para ver todas las divisiones activas en ese mes.',
+    source:'Fuente: Instituto Nacional de Estadística (INE) · Índice de Precios al Consumidor',
+    series:inflSeries,
+    order:['general','alimentos','transporte','vivienda','educacion','salud'],
+    defaultActive:['general','alimentos','transporte'],
+    protagonist:'general',
+    labels:{general:'IPC General',alimentos:'Alimentos y bebidas',transporte:'Transporte',vivienda:'Vivienda y servicios',educacion:'Educación',salud:'Salud'},
+    decimals:1, suffix:'%', yfmt:'.1f', zeroline:true,
+    kpis:function(s){
+      var g=lastNonNull(s.general), a=lastNonNull(s.alimentos), tr=lastNonNull(s.transporte);
+      return [
+        {label:'IPC General · 12m', value:fmtVal(g?g.val:null,1,'%'), delta:deltaSteps(s.general,1), deltaSuffix:' pp (1m)'},
+        {label:'Alimentos y bebidas', value:fmtVal(a?a.val:null,1,'%'), delta:deltaSteps(s.alimentos,1), deltaSuffix:' pp (1m)'},
+        {label:'Transporte', value:fmtVal(tr?tr.val:null,1,'%'), delta:deltaSteps(s.transporte,1), deltaSuffix:' pp (1m)'}
+      ];
+    }
+  }
+};
+
+// ── formateadores ──
+function fmtVal(v,dec,suf){ if(v==null) return '—'; return Number(v).toLocaleString('es',{minimumFractionDigits:dec,maximumFractionDigits:dec})+suf; }
+function fmtDelta(d,dec,suf){ if(d==null) return '—'; return (d>=0?'+':'')+Number(d).toLocaleString('es',{minimumFractionDigits:dec,maximumFractionDigits:dec})+suf; }
+function arrow(d){ if(d==null||d===0) return ''; return d>0?'▲':'▼'; }
+// para riesgo/inflación: subir = malo (naranja); para PIB (invert): subir = bueno (verde-azul)
+function deltaColor(d,invert){
+  if(d==null||d===0) return '#8c8475';
+  var bad = invert ? (d<0) : (d>0);
+  return bad ? '#b08a82' : '#7d9a86';
+}
+
+// ════════════════════════════════════════════════════════════════
+//  Motor de gráfico (Plotly) — desagregado, con toggles + rangos
+// ════════════════════════════════════════════════════════════════
+var RANGES = {'1A':12,'3A':36,'5A':60,'Máx':Infinity};
+var DEFAULT_RANGE = '5A';
+
+function cssVar(name, fallback){ var v=getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v||fallback; }
+function isDark(){ return document.body.classList.contains('theme-dark'); }
+function palette(key){ return PALETTES[key][isDark()?'slate':'paper']; }
+
+var Macro = (function(){
+  var state = { ds:'riesgo', range:DEFAULT_RANGE, active:new Set() };
+  var elKpis, elToggles, elRange, elChart, elTitle, elSub, elSource, elSubtitle, elFreq, elDate;
+
+  function ds(){ return DATASETS[state.ds]; }
+
+  function sliceIdx(){
+    var d = ds().dates;
+    var n = RANGES[state.range];
+    if(n===Infinity) return 0;
+    var last = d[d.length-1];
+    var cut = new Date(last.getFullYear(), last.getMonth()-n, 1);
+    for(var i=0;i<d.length;i++){ if(d[i]>=cut) return i; }
+    return 0;
+  }
+
+  function xLabels(start){ return ds().dates.slice(start).map(ds().dateFmt); }
+
+  function buildTraces(){
+    var d=ds(), start=sliceIdx(), pal=palette(d.key);
+    return d.order.map(function(k){
+      var prot = k===d.protagonist;
+      return {
+        type:'scatter', mode:'lines', name:d.labels[k],
+        x:xLabels(start), y:d.series[k].slice(start),
+        line:{color:pal[k], width:prot?3:1.5, shape:'spline', smoothing:0.6},
+        opacity:prot?1:0.9,
+        visible:state.active.has(k),
+        connectgaps:true,
+        hovertemplate:d.labels[k]+': %{y:'+(d.decimals?'.1f':'.0f')+'}'+(d.suffix==='%'?'%':' bps')+'<extra></extra>'
+      };
+    });
+  }
+
+  function layout(){
+    var d=ds();
+    var grid='rgba(27,54,93,.08)';
+    var font='#6b6253';
+    var spike='rgba(27,54,93,.30)';
+    var tipBg='#f5f4ed', tipFg='#1B365D', tipBd='rgba(27,54,93,.22)';
+    return {
+      autosize:true, margin:{l:62,r:16,t:10,b:40},
+      xaxis:{showgrid:false, tickangle:0, nticks:9, showspikes:true, spikemode:'across', spikethickness:1, spikedash:'dot', spikecolor:spike, showline:false, zeroline:false},
+      yaxis:{ticksuffix:d.suffix, tickformat:d.yfmt, showgrid:true, gridcolor:grid, zeroline:d.zeroline, zerolinecolor:'rgba(27,54,93,.34)', zerolinewidth:1.4},
+      hovermode:'x unified',
+      hoverlabel:{bgcolor:tipBg, bordercolor:tipBd, font:{family:"'Inter', system-ui, sans-serif", size:11, color:tipFg}},
+      showlegend:false, paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
+      font:{family:"'Inter', system-ui, sans-serif", size:11, color:font}
+    };
+  }
+
+  function plot(){ if(!elChart||typeof Plotly==='undefined') return; Plotly.newPlot(elChart, buildTraces(), layout(), {displayModeBar:false, responsive:true}); }
+  function applyVisibility(){ if(!elChart||!elChart.data) return; Plotly.restyle(elChart, {visible: ds().order.map(function(k){return state.active.has(k);})}); }
+
+  function renderToggles(){
+    var d=ds(), pal=palette(d.key);
+    elToggles.innerHTML = d.order.map(function(k){
+      var on=state.active.has(k);
+      return '<button type="button" class="fb-stog '+(on?'active':'inactive')+'" data-k="'+k+'" style="--fb-trace-color:'+pal[k]+'">'
+        +'<span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>'
+        +'<span class="fb-stog-line" style="color:'+pal[k]+'"></span>'
+        +'<span class="fb-stog-label">'+d.labels[k]+'</span>'
+        +'</button>';
+    }).join('');
+  }
+
+  function renderRange(){
+    elRange.innerHTML = Object.keys(RANGES).map(function(k){
+      return '<button type="button" class="ds-chip '+(state.range===k?'active':'')+'" data-range="'+k+'">'+k+'</button>';
+    }).join('');
+  }
+
+  function renderKpis(){
+    var d=ds(), cards=d.kpis(d.series);
+    elKpis.innerHTML = '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+cards.map(function(c){
+      var sub;
+      if(c.deltaPlain){ sub = '<span class="macro-kpi-delta" style="color:'+deltaColor(c.deltaVal,c.invert)+'">'+(arrow(c.deltaVal)+' '+c.value).trim()+'</span>'; }
+      else { sub = '<span class="macro-kpi-delta" style="color:'+deltaColor(c.delta,c.invert)+'">'+(arrow(c.delta)+' '+fmtDelta(c.delta, d.decimals, c.deltaSuffix||'')).trim()+'</span>'; }
+      var val = c.deltaPlain ? fmtDelta(c.deltaVal, d.decimals, '') : c.value;
+      return '<div class="fb-kpi-card"><div class="fb-kpi-head"><div class="fb-kpi-label">'+c.label+'</div></div>'
+        + '<div class="fb-kpi-value">'+val+'</div>'
+        + '<div class="fb-kpi-sub">'+sub+'</div></div>';
+    }).join('')+'</div></div>';
+  }
+
+  function renderHeader(){
+    var d=ds();
+    elSubtitle.textContent = d.subtitle;
+    elTitle.textContent = d.chartTitle;
+    elSub.textContent = d.chartSub;
+    elSource.textContent = d.source;
+    elFreq.textContent = d.freq;
+    var last = d.dates[d.dates.length-1];
+    elDate.textContent = d.dateFmt(last);
+  }
+
+  function switchTo(key){
+    state.ds = key;
+    state.active = new Set(ds().defaultActive);
+    renderHeader(); renderKpis(); renderToggles(); renderRange(); plot();
+    document.querySelectorAll('.macro-subtab').forEach(function(b){ b.classList.toggle('active', b.dataset.sub===key); });
+  }
+
+  function init(){
+    elKpis=document.getElementById('macroKpis'); elToggles=document.getElementById('macroToggles');
+    elRange=document.getElementById('macroRange'); elChart=document.getElementById('macroChart');
+    elTitle=document.getElementById('chartTitle'); elSub=document.getElementById('chartSub');
+    elSource=document.getElementById('chartSource'); elSubtitle=document.getElementById('macroSubtitle');
+    elFreq=document.getElementById('macroFreq'); elDate=document.getElementById('macroDate');
+
+    document.getElementById('macroSubnav').addEventListener('click', function(e){
+      var b=e.target.closest('.macro-subtab'); if(!b||b.classList.contains('active')) return;
+      switchTo(b.dataset.sub);
+    });
+    elToggles.addEventListener('click', function(e){
+      var b=e.target.closest('.fb-stog'); if(!b) return;
+      var k=b.dataset.k;
+      if(state.active.has(k)){ state.active.delete(k); b.classList.remove('active'); b.classList.add('inactive'); }
+      else { state.active.add(k); b.classList.remove('inactive'); b.classList.add('active'); }
+      applyVisibility();
+    });
+    elRange.addEventListener('click', function(e){
+      var b=e.target.closest('[data-range]'); if(!b||b.classList.contains('active')) return;
+      elRange.querySelectorAll('.ds-chip').forEach(function(x){x.classList.remove('active');});
+      b.classList.add('active'); state.range=b.dataset.range; plot();
+    });
+
+    switchTo('riesgo');
+  }
+
+  return { init:init, replot:plot, refreshToggles:renderToggles };
+})();
+
+document.addEventListener('DOMContentLoaded', function(){ Macro.init(); });
+if(document.readyState!=='loading'){ Macro.init(); }
+</script>
+</body>
+</html>
