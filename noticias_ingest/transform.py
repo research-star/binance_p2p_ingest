@@ -130,6 +130,9 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "impact": impact_de_puntaje(cand["puntaje"]),
         "sourceNote": f"{portal} · {dominio}",
         "url": cand["link"],
+        # og:image hotlinkeable de la nota (carril BO, FASE 2a); None si el portal
+        # no lo expone o no bajó HTML (El Deber). NULL en la columna image_url.
+        "image_url": cand.get("image_url") or None,
         # Campos de auditoría (van a la DB, no al payload del frontend)
         "portal": portal,
         "tema": tema,

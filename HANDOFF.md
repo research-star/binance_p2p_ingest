@@ -474,6 +474,15 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   PK = hash del link/guid normalizado; DDL en
   `scripts/migrations/0002_noticias.sql`). `DATA.noticias` = últimos 30
   días (dashboard.py, patrón graceful dpf/embi).
+- **Imagen de la nota** (`image_url`, FASE 2a): columna `image_url` TEXT
+  nullable en `noticias` (migración `scripts/migrations/0004_noticias_image_url.sql`,
+  ADD COLUMN aditivo tras `0003`; distinta de `url`, que es el link al
+  artículo). Guarda el `og:image`, parseado del HTML crudo en la **fase
+  cuerpo del carril Bolivia** y entregado al frontend como **hotlink directo**
+  (sin re-host); el slot cae al placeholder `.np-imgph` cuando es NULL.
+  **El Deber queda NULL en prod** (su HTML no baja desde el VPS por bloqueo de
+  IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
+  la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
 - Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
   `noticias_ingest/transform.py`) y 6 categorías —
   `economia|hidrocarburos|agro|mineria|latam|politica` ("mundo" se
@@ -517,10 +526,11 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 - **Schema por nota** (contrato backend → frontend):
   `{id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title,
   summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote,
-  url}` (`url` se agregó para el link al artículo original; `summary`
-  hoy no se renderiza — se persiste para uso futuro). `detail` es un
-  extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio
-  público).
+  url, imageUrl}` (`url` se agregó para el link al artículo original;
+  `imageUrl` = `og:image` de la nota (hotlink, FASE 2a), `null` → el slot
+  cae al placeholder `.np-imgph`; `summary` hoy no se renderiza — se
+  persiste para uso futuro). `detail` es un extracto ≤400 chars del
+  cuerpo, nunca el artículo completo (sitio público).
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).

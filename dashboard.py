@@ -742,12 +742,24 @@ def process_data(db_path: Path) -> dict:
         # "no such table", el except la tragaría y la tab Noticias se BLANQUEARÍA en el
         # primer publish. Con la tabla vacía el filtro es no-op → build idéntico a hoy.
         conn.execute("CREATE TABLE IF NOT EXISTS noticias_hidden (id TEXT NOT NULL PRIMARY KEY)")
+        # Self-migrate idempotente de image_url (FASE 2a). SQLite no tiene ADD COLUMN
+        # IF NOT EXISTS, así que re-aplicar tira "duplicate column name" — inocuo, se
+        # traga acá adentro (NO en el except de afuera, que blanquearía el feed). Igual
+        # que el self-create de arriba, desacopla el build de cuándo se aplica 0004 a
+        # mano en el VPS: sin esto, el SELECT de abajo tiraría "no such column", el
+        # except lo tragaría y la tab Noticias se BLANQUEARÍA en el primer publish tras
+        # el merge. Tabla inexistente (DB fresca) → "no such table" → al except de afuera
+        # (degradación a feed vacío, igual que hoy).
+        try:
+            conn.execute("ALTER TABLE noticias ADD COLUMN image_url TEXT")
+        except Exception:
+            pass  # columna ya existe (idempotente)
         # `WHERE id IS NOT NULL` en el subquery: SQLite permite NULL en un TEXT PK, y
         # un solo NULL en el subquery volvería el NOT IN falso para TODA fila (footgun
         # del NOT IN), blanqueando el feed — justo lo que esta capa evita.
         noticias_rows = conn.execute(
             "SELECT id, date, time, source, category, title, summary, detail, "
-            "       topics, impact, source_note, url "
+            "       topics, impact, source_note, url, image_url "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
             "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
@@ -759,6 +771,7 @@ def process_data(db_path: Path) -> dict:
             'title': r['title'], 'summary': r['summary'], 'detail': r['detail'],
             'topics': json.loads(r['topics'] or '[]'),
             'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
+            'imageUrl': r['image_url'],
         } for r in noticias_rows]
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation

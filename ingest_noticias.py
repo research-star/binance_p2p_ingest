@@ -110,7 +110,8 @@ CREATE TABLE IF NOT EXISTS noticias (
     puntaje         REAL NOT NULL,
     score_crudo     REAL,
     score_ajustado  REAL,
-    created_at_utc  TEXT NOT NULL
+    created_at_utc  TEXT NOT NULL,
+    image_url       TEXT                -- og:image hotlinkeable (carril BO, FASE 2a); NULL si no hay / El Deber / latam. Última col = espejo del ALTER de 0004.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
@@ -150,13 +151,13 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
             """INSERT OR IGNORE INTO noticias
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
-                score_crudo, score_ajustado, created_at_utc)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                score_crudo, score_ajustado, created_at_utc, image_url)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
              n["puntaje"], n["score_crudo"], n["score_ajustado"],
-             n["created_at_utc"]))
+             n["created_at_utc"], n.get("image_url")))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
