@@ -38,6 +38,68 @@ function allowedEmails(env) {
   );
 }
 
+// Allowlist anti open-redirect del bounce login/logout: el `return` SOLO puede
+// apuntar al origin exacto de la UI (mismo valor que PROD_ORIGIN en cors.js).
+// Cualquier otro host/scheme/puerto → default. Preserva el path dentro del origin.
+const RETURN_ORIGIN = "https://finanzasbo.com";
+function safeReturn(reqUrl) {
+  const raw = new URL(reqUrl).searchParams.get("return");
+  if (!raw) return RETURN_ORIGIN + "/";
+  try {
+    const u = new URL(raw);
+    return u.origin === RETURN_ORIGIN ? u.href : RETURN_ORIGIN + "/";
+  } catch {
+    return RETURN_ORIGIN + "/";
+  }
+}
+
+function redirect(location) {
+  return new Response(null, { status: 302, headers: { Location: location } });
+}
+
+// Loop guard de /v1/login. Marker one-shot que adjuntamos al redirect_url que
+// mandamos a Access. Si volvemos del login con el marker puesto y TODAVÍA sin
+// sesión válida acá, cortamos con un error limpio en vez de re-botar a Access
+// (eso sería el ERR_TOO_MANY_REDIRECTS que reportó el smoke).
+const LOGIN_RETRY = "_cf_login_retry";
+
+// Flag one-shot del bounce de logout: marca el segundo salto (post team-logout de
+// Access, cookie ya borrada) para hacer el 302 final a la UI en vez de re-botar.
+const LOGOUT_DONE = "done";
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Respuesta TERMINAL del loop guard: HTML estático sin auto-redirect → rompe el
+// loop de forma definitiva. 403 porque, post-login, seguimos sin sesión legible
+// acá (típicamente la cookie de Access no llega a /v1/login; ver root-cause). El
+// `dest` ya pasó por safeReturn (origin finanzasbo.com), pero igual lo escapamos
+// antes de meterlo en el HTML (defensa en profundidad anti-XSS).
+function loginLoopError(dest) {
+  const href = escapeHtml(dest);
+  const body =
+    '<!doctype html><html lang="es"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    "<title>No pudimos iniciar sesión</title></head>" +
+    '<body style="font-family:system-ui,-apple-system,sans-serif;max-width:34rem;' +
+    'margin:4rem auto;padding:0 1.25rem;line-height:1.55;color:#1f2933">' +
+    '<h1 style="font-size:1.4rem">No pudimos completar el inicio de sesión</h1>' +
+    "<p>Tu sesión de Cloudflare Access no llegó a la app después del login. " +
+    "Suele ser un tema de configuración del Access, no de tu cuenta.</p>" +
+    '<p><a href="' + href + '">Volver a FinanzasBo</a> e intentá de nuevo. ' +
+    "Si el problema persiste, avisá al equipo.</p></body></html>";
+  return new Response(body, {
+    status: 403,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
+
 // Gate doble. Devuelve { ok:true, email } o { ok:false, status, reason }.
 async function gate(req, env) {
   const { token } = getAccessToken(req);
@@ -69,6 +131,86 @@ export default {
     if (path === "/v1/hidden" && req.method === "GET") {
       const { ids, v } = await readIndex(env.HIDDEN_KV);
       return json({ ids, v }, 200, publicCors());
+    }
+
+    // ── GET /v1/login — bounce de login cross-domain ──
+    // La UI vive en finanzasbo.com; el Access app, en api.finanzasbo.com. Access
+    // NO permite redirect cross-domain tras login (rechaza un redirect_url a otro
+    // host con "Invalid redirect URL"; sólo acepta un path RELATIVO del propio app
+    // — verificado contra Access real). Por eso el retorno a la UI lo hace ESTE
+    // Worker, ya con sesión de Access:
+    //   - Con sesión de Access válida (header Cf-Access-Jwt-Assertion inyectado en
+    //     rutas protegidas, o cookie CF_Authorization como fallback; cualquier
+    //     email — la autorización admin la decide /v1/me, no este bounce) → 302 al
+    //     `return` allowlisteado.
+    //   - Sin sesión → 302 al login de Access (kid=AUD + redirect_url RELATIVO de
+    //     vuelta a /v1/login con el return). Tras el OTP, Access nos devuelve acá.
+    // LOOP GUARD (no negociable): /v1/login NO es ruta protegida por Access → el
+    // edge no inyecta Cf-Access-Jwt-Assertion acá; sólo podemos leer la cookie
+    // CF_Authorization. Si tras el login esa cookie NO llega a /v1/login (ruta
+    // no-protegida — la causa raíz del loop reportado), volveríamos sin sesión
+    // legible y re-botaríamos a Access en bucle (ERR_TOO_MANY_REDIRECTS). El marker
+    // one-shot LOGIN_RETRY lo corta: al volver del login con el marker puesto y aún
+    // sin sesión válida, devolvemos un error limpio en vez de re-botar.
+    if (path === "/v1/login" && req.method === "GET") {
+      const dest = safeReturn(req.url);
+      const { token } = getAccessToken(req);
+      let authed = false;
+      if (token) {
+        const v = await verifyAccessJwt(token, {
+          aud: env.AUD,
+          teamDomain: env.ACCESS_TEAM_DOMAIN,
+        });
+        authed = v.ok;
+      }
+      // Sesión válida (header o cookie) → bounce, incluso con el marker puesto:
+      // el guard nunca bloquea un login que SÍ funcionó (evita falso negativo).
+      if (authed) return redirect(dest);
+      // Ya volvimos del login de Access (marker puesto) y seguimos sin sesión →
+      // NO re-botamos: error limpio. Peor caso = 403, nunca loop infinito.
+      if (new URL(req.url).searchParams.get(LOGIN_RETRY) === "1") {
+        return loginLoopError(dest);
+      }
+      const back =
+        "/v1/login?" + LOGIN_RETRY + "=1&return=" + encodeURIComponent(dest);
+      const loginUrl =
+        "https://" + env.ACCESS_TEAM_DOMAIN +
+        "/cdn-cgi/access/login/api.finanzasbo.com?kid=" + env.AUD +
+        "&redirect_url=" + encodeURIComponent(back);
+      return redirect(loginUrl);
+    }
+
+    // ── GET /v1/logout — bounce de logout cross-domain (dos pasos) ──
+    // La UI vive en finanzasbo.com; el Access app, en api.finanzasbo.com. El
+    // `returnTo` del /cdn-cgi/access/logout SÓLO acepta el authdomain del team, sus
+    // subdominios, y hostnames que son apps de Access en la org (verificado).
+    // finanzasbo.com NO es app de Access → un returnTo directo a la UI lo rechaza
+    // con "Invalid redirect URL". api.finanzasbo.com SÍ es app → el retorno a la UI
+    // lo hace ESTE Worker, en dos saltos (mismo patrón que el bounce de login):
+    //   - Paso 1 (/v1/logout sin flag): 302 al team-logout de Access con
+    //     returnTo = URL ABSOLUTA en api.finanzasbo.com (este Worker), de vuelta a
+    //     /v1/logout?done=1, preservando el `return` final (URL-encoded). Access
+    //     acepta ese returnTo por ser app domain, borra la cookie y nos devuelve.
+    //   - Paso 2 (/v1/logout?done=1): ya sin sesión → 302 al destino final
+    //     validado por safeReturn (default https://finanzasbo.com/).
+    // /v1/logout NO está gateado por Access (alcanzable sin sesión).
+    if (path === "/v1/logout" && req.method === "GET") {
+      const reqUrl = new URL(req.url);
+      const dest = safeReturn(req.url); // destino final, allowlisteado a finanzasbo.com
+      // Paso 2: volvimos del team-logout (cookie borrada) → 302 final a la UI.
+      if (reqUrl.searchParams.get(LOGOUT_DONE) === "1") {
+        return redirect(dest);
+      }
+      // Paso 1: mandamos a Access a borrar la cookie. returnTo apunta a ESTE Worker
+      // (api.finanzasbo.com = app domain → Access lo acepta), threading el `return`
+      // final para resolverlo en el paso 2.
+      const back =
+        reqUrl.origin + "/v1/logout?" + LOGOUT_DONE + "=1&return=" +
+        encodeURIComponent(dest);
+      const logoutUrl =
+        "https://" + env.ACCESS_TEAM_DOMAIN +
+        "/cdn-cgi/access/logout?returnTo=" + encodeURIComponent(back);
+      return redirect(logoutUrl);
     }
 
     // ── GET /v1/me — auth ──
