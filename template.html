@@ -633,10 +633,6 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
       <span class="fb-util-upd"><span class="fb-live"></span>Actualizado <span id="fbUpd">&mdash;</span></span>
       <span class="fb-util-sep">&middot;</span>
       <button class="fb-util-lang" id="langToggle" title="Idioma" aria-label="Cambiar idioma">ES</button>
-      <button class="fb-icon-btn" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">
-        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-      </button>
     </div>
   </div>
   <div class="fb-masthead">
@@ -1269,17 +1265,13 @@ function isLightTheme(id){return LIGHT_THEMES.includes(id)}
 function resolveTheme(id){return THEMES[id]?{...THEMES[id]}:{...THEMES.paper}}
 
 // ═══ THEME ENGINE ═══
-function applyTheme(id){
-  currentTheme=id; activeThemeValues=resolveTheme(id);
+function applyTheme(){
+  // Modo oscuro eliminado: tema único claro (paper) forzado. applyTheme
+  // ignora cualquier argumento y siempre aplica paper. No persiste preferencia
+  // ni togglea body.theme-dark (slate/body.theme-dark{} quedan inertes).
+  currentTheme='paper'; activeThemeValues=resolveTheme('paper');
   const root=document.documentElement;
   for(const[k,v]of Object.entries(activeThemeValues))root.style.setProperty('--'+k,v);
-  localStorage.setItem('dashboard-active-theme',id);
-  const isDark=!isLightTheme(id);
-  document.body.classList.toggle('theme-dark',isDark);
-  const moonEl=document.querySelector('#themeToggle .icon-moon');
-  const sunEl=document.querySelector('#themeToggle .icon-sun');
-  if(moonEl) moonEl.style.display=isDark?'none':'';
-  if(sunEl)  sunEl.style.display=isDark?'':'none';
   replotAllCharts();
 }
 
@@ -2186,11 +2178,7 @@ const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',mon
 document.getElementById('footer').innerHTML='\u00daltima actualizaci\u00f3n: '+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
-// Theme toggle (moon/sun button in navbar)
-{
-  const btn=document.getElementById('themeToggle');
-  if(btn) btn.addEventListener('click',()=>applyTheme(currentTheme==='slate'?'paper':'slate'));
-}
+// Theme toggle eliminado: modo oscuro removido, tema único claro forzado.
 // Language toggle (visual only — no real translation)
 {
   const btn=document.getElementById('langToggle');
@@ -2776,11 +2764,10 @@ document.querySelectorAll('.panel-grid .section').forEach(panel=>{
   // para cuando window.renderDollar pinte los charts en el primer activate de Dólar.
   activeRange = rangeFromState(dateRangeState);
 
-  let saved=localStorage.getItem('dashboard-active-theme');
-  // Migración: tema 'ink' (Negro) eliminado, mapear a 'slate' (Oscuro).
-  if(saved==='ink'){saved='slate';localStorage.setItem('dashboard-active-theme','slate')}
-  if(saved&&THEMES[saved])applyTheme(saved);
-  else applyTheme('paper');
+  // Modo oscuro eliminado: tema único claro forzado. No se lee ni escribe
+  // preferencia de tema persistida (las claves 'dashboard-active-theme' viejas
+  // quedan ignoradas).
+  applyTheme();
   // Charts de Dólar NO se pintan acá: la tab es lazy (window.renderDollar, gated por
   // dollarBuilt). El applyTheme de arriba ya fijó tema/CSS vars globales; su
   // replotAllCharts es no-op mientras Dólar no esté construido. El primer pintado
