@@ -14,23 +14,22 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#2c4a6b">
+<meta name="theme-color" content="#FBEDE3">
 <title>P2P USDT/BOB — Dashboard</title>
 <!-- Umami analytics (only emitted if UMAMI_WEBSITE_ID present at build time) -->
 __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Outfit:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#fafbfe;--bg-secondary:#ffffff;--bg-tertiary:#dde8ef;--border-color:rgba(44,74,107,0.12);--text-primary:#2c4a6b;--text-secondary:#6b7d92;--text-muted:#6b7d92;--text-soft:#8c9aab;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
+:root{--bg-primary:#FBEDE3;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
 /* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
    Tooltips Plotly: --tooltip-bg lo escribe applyTheme() sobre
-   documentElement (paper #dde8ef, slate #1c2632) porque cssVar() lee
-   de documentElement y un override en body.theme-dark{} no llegaría
-   al JS. El default abajo (var(--bg-tertiary)) es solo fallback. */
+   documentElement (tema único claro) porque cssVar() lee de
+   documentElement. El default abajo (var(--bg-tertiary)) es solo fallback. */
 :root{
-  --font-display:'Outfit',system-ui,sans-serif;
+  --font-display:'Newsreader',Georgia,'Times New Roman',serif;
   --font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   --font-mono:'IBM Plex Mono',monospace;
   --text-2xs:9.5px;
@@ -134,10 +133,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .merchants-table td.nick{font-family:var(--font-display);color:var(--text-primary);font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis}
 .view-hint{padding:36px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-base);font-style:italic}
 .pill{display:inline-block;padding:1px 8px;border-radius:var(--radius-xl);font-size:var(--text-2xs);font-weight:600;letter-spacing:.04em;text-transform:lowercase;font-family:var(--font-display);font-variant-numeric:normal}
-.pill-yellow{background:rgba(168,200,224,.25);color:#5589c0}
-.pill-red{background:rgba(44,74,107,.18);color:#2c4a6b}
-body.theme-dark .pill-yellow{background:rgba(110,163,217,.18);color:#a8c8e0}
-body.theme-dark .pill-red{background:rgba(90,140,196,.25);color:#5a8cc4}
+.pill-yellow{background:#F5E5C9;color:#7E4F08}
+.pill-red{background:#F2DAD2;color:#8A2D20}
 .snap-stamp{font-size:var(--text-sm);color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
 .outliers-scroll{max-height:420px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--radius-sm)}
 .outliers-scroll thead th{position:sticky;top:0;background:var(--bg-secondary);z-index:2}
@@ -245,13 +242,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
 
 /* ── Error banner ── */
-.error-banner{position:sticky;top:0;z-index:2000;background:#2c4a6b;color:#fff;padding:10px 16px;font-family:var(--font-display);font-size:var(--text-base);font-weight:500;text-align:center;display:none}
+.error-banner{position:sticky;top:0;z-index:2000;background:var(--blue-accent);color:#fff;padding:10px 16px;font-family:var(--font-display);font-size:var(--text-base);font-weight:500;text-align:center;display:none}
 .error-banner.show{display:block}
 .error-banner .eb-retry{margin-left:8px;font-size:var(--text-sm);opacity:.85}
 /* ── Chrome editorial (utility + masthead scrollean · nav sticky) ──
-   navbar v3: utility bar (dateline + ES/EN + tema) → masthead (nameplate +
-   tagline) → fila de tabs + buscador (deshabilitado). Solo la fila de tabs
-   es sticky; utility+masthead scrollean. Tokens fríos; adapta a slate solo. */
+   utility bar (dateline + ES/EN) → masthead (solo nameplate, centrado,
+   serif) → fila de tabs + buscador (deshabilitado). Solo la fila de tabs
+   es sticky; utility+masthead scrollean. Tokens cálidos (tema único claro). */
 .fb-chrome{background:var(--bg-secondary)}
 .fb-utility{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
 .fb-utility-right{display:flex;align-items:center;gap:12px}
@@ -261,10 +258,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-util-sep{color:var(--text-soft)}
 .fb-util-lang{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:2px 4px;transition:color .15s}
 .fb-util-lang:hover{color:var(--text-primary)}
-.fb-masthead{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding:14px 36px;border-bottom:2px solid var(--text-primary)}
-.fb-nameplate{font-family:var(--font-display);font-size:clamp(36px,5.6vw,64px);font-weight:500;line-height:.92;letter-spacing:-.02em;color:var(--text-primary)}
+.fb-masthead{display:flex;justify-content:center;padding:20px 36px;border-bottom:2px solid var(--text-primary)}
+.fb-nameplate{font-family:var(--font-display);font-size:clamp(40px,6vw,72px);font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--text-primary);text-align:center}
 .fb-np-bo{font-weight:600}
-.fb-tagline{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text-muted);letter-spacing:.01em}
 /* ── Navbar (fila de tabs + buscador) · sticky ── */
 .fb-navbar{display:flex;align-items:stretch;justify-content:space-between;gap:16px;padding:0 36px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
 .fb-tabs{display:flex;gap:0;align-items:stretch}
@@ -319,7 +315,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 }
 @media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
 .fb-mono{font-family:var(--font-mono)}
-.fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
+.fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#9E927C);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
 .fb-macro-subnav{display:flex;align-items:baseline;gap:0;margin:0;padding:6px 18px 0;position:sticky;top:var(--nav-h);z-index:51;background:var(--bg-secondary);border-bottom:2px solid var(--text-primary)}
 .fb-macro-tab{font-family:var(--font-display);font-size:24px;font-weight:500;line-height:1.1;color:var(--text-soft);background:none;border:none;padding:2px 2px 12px;cursor:pointer;transition:color .15s}
@@ -344,38 +340,24 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 @media(max-width:600px){#tab-macro .fb-subheader h1{font-size:32px}}
 .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
 .fb-stog{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
-.fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid rgba(44,74,107,.30);background:transparent;flex-shrink:0;transition:all .15s}
+.fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid var(--line-strong);background:transparent;flex-shrink:0;transition:all .15s}
 .fb-stog-check svg{width:10px;height:10px;opacity:0}
 .fb-stog-line{display:inline-block;width:14px;height:0;border-top:2px solid currentColor;flex-shrink:0}
 .fb-stog-line.dashed{border-top-style:dashed}
-.fb-stog.active{background:var(--bg-secondary);border-color:rgba(44,74,107,.30);color:var(--text-primary)}
+.fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
-.fb-stog.inactive{background:rgba(44,74,107,.04);border-color:rgba(44,74,107,.10);color:#9aa6b5}
-.fb-stog.inactive .fb-stog-check{border-color:rgba(154,166,181,.40);background:transparent}
-body.theme-dark .fb-stog{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:#8a96aa}
-body.theme-dark .fb-stog-check{border-color:rgba(255,255,255,.20)}
-body.theme-dark .fb-stog.active{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18);color:#e6ebf2}
-body.theme-dark .fb-stog.inactive{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);color:#6b7d92}
+.fb-stog.inactive{background:rgba(92,74,56,.05);border-color:rgba(33,30,27,.10);color:#8E836F}
+.fb-stog.inactive .fb-stog-check{border-color:rgba(33,30,27,.20);background:transparent}
 
 /* ── Riesgo País chart tokens ────────────────────────────────────────
    --chart-grid, --chart-axis-text, --chart-spike, y los 10 --chart-color-*
    son consumidos por el JS del tab EMBI via cssVar() (que lee de
-   documentElement). Por eso viven en THEMES.paper/.slate (applyTheme los
-   escribe sobre documentElement); un override en body.theme-dark{} no
-   alcanzaría a cssVar(). Para retocar valores, editar THEMES en el JS.
+   documentElement). Por eso viven en THEMES.paper (applyTheme los
+   escribe sobre documentElement). Para retocar valores, editar THEMES en el JS.
    Paleta por bandera nacional: Bolivia ámbar (protagónica), Colombia
    azul (no amarillo), México verde oscuro (no rojo) — evita choques
    con Bolivia/Ecuador/Chile. */
-body.theme-dark{
-  /* Sombras dark: misma geometría que light, alpha más alto para que
-     se vean sobre el fondo slate (sin overrides resolverían al valor
-     light rgba(0,0,0,.06-.24) y quedaban invisibles). */
-  --shadow-sm:0 2px 8px rgba(0,0,0,.35);
-  --shadow-md:0 6px 20px rgba(0,0,0,.45);
-  --shadow-lg:0 8px 24px rgba(0,0,0,.50);
-  --shadow-xl:0 10px 32px rgba(0,0,0,.55);
-}
 /* ── DPF Tab ── */
 .fb-dpf-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
 .fb-dpf-fcol{display:flex;flex-direction:column;gap:6px}
@@ -383,7 +365,7 @@ body.theme-dark{
 .fb-pills{display:flex;gap:4px;flex-wrap:wrap}
 .fb-pill{padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:transparent;font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;font-weight:500;font-family:inherit;transition:all .15s}
 .fb-pill:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.fb-pill.active{background:#2c4a6b;color:#fff;border-color:#2c4a6b}
+.fb-pill.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 .fb-chart-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:16px 20px}
 .fb-chart-card--elevated{box-shadow:var(--shadow-md)}
 .fb-chart-head{margin-bottom:12px}
@@ -395,8 +377,7 @@ body.theme-dark{
 .fb-data-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
 .fb-data-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
 .fb-data-table th[data-sort-key]:hover{color:var(--text-primary)}
-.fb-data-table tr:hover{background:rgba(44,74,107,.04)}
-body.theme-dark .fb-data-table tr:hover{background:rgba(255,255,255,.04)}
+.fb-data-table tr:hover{background:rgba(92,74,56,.06)}
 .fb-data-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
 .fb-data-table th.num,.fb-data-table td.num{text-align:right;font-family:var(--font-mono)}
 .fb-data-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
@@ -407,9 +388,8 @@ body.theme-dark .fb-data-table tr:hover{background:rgba(255,255,255,.04)}
 .fb-data-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
 .fb-data-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
 .fb-data-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
-.fb-dpf-bar-bg{background:rgba(44,74,107,.08);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
+.fb-dpf-bar-bg{background:rgba(92,74,56,.10);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
 .fb-dpf-bar{height:8px;background:#1e4d7a;border-radius:var(--radius-sm)}
-body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 @media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
 /* ── BBV table & filters ── */
 .fb-bbv-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
@@ -472,12 +452,12 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
 .np-sep{color:var(--line-strong)}
 .np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
 /* — placeholder de imagen (.ft-imgph portado: gradiente navy + glifo cámara) — */
-.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(27,54,93,.92),rgba(44,74,107,.62) 46%,rgba(110,165,217,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(33,30,27,.88),rgba(107,98,86,.58) 46%,rgba(165,112,103,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph.sm{aspect-ratio:1/1}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
-/* — section head (regla 2px ink, theme-aware) — */
+/* — section head (regla 2px tinta) — */
 .np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
 .np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
 .np-section-head .meta{font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.04em}
@@ -637,12 +617,11 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
   </div>
   <div class="fb-masthead">
     <span class="fb-nameplate">Finanzas<span class="fb-np-bo">Bo</span></span>
-    <span class="fb-tagline">Inteligencia econ&oacute;mica de Bolivia</span>
   </div>
 </header>
 <nav class="fb-navbar">
   <div class="fb-tabs">
-    <button class="fb-tab active" data-tab="noticias">Noticias</button>
+    <button class="fb-tab active" data-tab="noticias">Inicio</button>
     <button class="fb-tab" data-tab="macro">Macro</button>
     <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
     <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
@@ -962,7 +941,7 @@ body.theme-dark .fb-dpf-bar-bg{background:rgba(255,255,255,.06)}
         <p>Datos: BBV resumen diario (PDF) + BBV instrumentos negociados (web).</p>
       </details>
       <details>
-        <summary><strong>Noticias</strong></summary>
+        <summary><strong>Inicio</strong></summary>
         <p>Selecci&oacute;n autom&aacute;tica diaria de hechos relevantes de 13 portales de prensa boliviana (El Deber, Correo del Sur, Unitel, La Raz&oacute;n, Bloomberg L&iacute;nea, Eju!, El D&iacute;a, Br&uacute;jula Digital, Noticias Fides, Erbol, Urgente.bo, Opini&oacute;n, Los Tiempos), puntuados por relevancia econ&oacute;mica y clasificados por categor&iacute;a e impacto (top 10 del d&iacute;a). La categor&iacute;a <strong>Latam</strong> suma hasta 5 notas/d&iacute;a de la secci&oacute;n Latinoam&eacute;rica de Bloomberg L&iacute;nea (selecci&oacute;n editorial del medio, sin puntaje propio, impacto medio fijo, con fecha real de publicaci&oacute;n). Filtros por categor&iacute;a y guardadas, navegaci&oacute;n por d&iacute;a de los &uacute;ltimos 30, y detalle expandible por fila con enlace al art&iacute;culo original.</p>
         <p>El KPI &ldquo;Pr&oacute;ximo hecho&rdquo; (agenda) todav&iacute;a muestra <em>datos de ejemplo</em>.</p>
       </details>
@@ -1200,23 +1179,20 @@ let last = null;
 // ═══ THEMES ═══
 // FASE 4 · Paleta editorial de charts de comparación (TUNEABLE por Diego):
 //   --chart-color-*  EMBI híbrido — tonos de país apagados (OKLCH, muted),
-//                    10 series distinguibles (min ΔE OKLab .12 paper / .12 slate).
+//                    10 series distinguibles (min ΔE OKLab .12).
 //   --chart-dpf-* / --chart-debt-*  paleta editorial unificada "A".
 //   Inflación (--chart-ipc-* / --chart-ipp-*) NO migrada a propósito: 12/6
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#fafbfe','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.12)','line-strong':'rgba(44,74,107,0.24)','up':'#7d9a86','down':'#b08a82','text-primary':'#2c4a6b','text-secondary':'#6b7d92','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#c7860a','chart-color-latino':'#7d8185','chart-color-global':'#adb1b6','chart-color-argentina':'#4696d3','chart-color-brasil':'#489450','chart-color-chile':'#c35141','chart-color-colombia':'#384e8f','chart-color-ecuador':'#c9c66a','chart-color-mexico':'#066e70','chart-color-peru':'#932c50','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#284d83','chart-debt-em2022':'#327a41','chart-debt-em2026':'#a14b46','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
-  slate:{'bg-primary':'#0a1424','bg-secondary':'#122237','bg-tertiary':'rgba(110,163,217,0.15)','tooltip-bg':'#1c2632','border-color':'rgba(255,255,255,0.10)','line-strong':'rgba(255,255,255,0.20)','up':'#93b3a0','down':'#c9a098','text-primary':'#e6ebf2','text-secondary':'#e6ebf2','text-muted':'#8a96aa','text-soft':'#8a96aa','green':'#5a8cc4','green-muted':'rgba(90,140,196,0.12)','orange':'#8a9caf','orange-muted':'rgba(138,156,175,0.12)','blue-accent':'#6ea3d9','kpi-value-size':'28px','color-buy':'#5a8cc4','color-sell':'#8a9caf','color-bcb-oficial':'#8a96aa','color-bcb-ref-compra':'#6ea3d9','color-bcb-ref-venta':'#6ea3d9','color-neutral':'#6ea3d9','color-accent-warm':'#a8c8e0','chart-grid':'rgba(255,255,255,0.08)','chart-axis-text':'#a8b4c0','chart-spike':'rgba(255,255,255,0.25)','chart-color-bolivia':'#fbb551','chart-color-latino':'#a7abb0','chart-color-global':'#cdd1d6','chart-color-argentina':'#77c2fe','chart-color-brasil':'#80cd86','chart-color-chile':'#f07968','chart-color-colombia':'#6985d5','chart-color-ecuador':'#dae892','chart-color-mexico':'#11a6a9','chart-color-peru':'#c9567a','chart-heatmap-0':'#1c3050','chart-heatmap-25':'#2f4a78','chart-heatmap-50':'#4a7fb5','chart-heatmap-75':'#8fb8e0','chart-heatmap-100':'#e0ecf5','chart-heatmap-text-high':'#162844','chart-heatmap-text-low':'#ffffff','chart-spread-line':'#6ea3d9','chart-dpf-bancos-multiples':'#6b94cf','chart-dpf-microfinanzas':'#70b87b','chart-dpf-bancos-pyme':'#e48780','chart-dpf-ent-vivienda':'#c69f47','chart-dpf-cooperativas':'#28bac1','chart-dpf-ifd':'#cd8ac7','chart-marker-outline':'rgba(18,34,55,0.6)','src-eldeber':'#2a9d59','src-correosur':'#ff8a00','src-unitel':'#e35b5d','src-larazon':'#de5e6d','src-bloomberg':'#36bf58','src-eju':'#00a03d','src-eldia':'#498bdf','src-brujula':'#6f80f0','src-fides':'#328ddd','src-erbol':'#ff3368','src-urgente':'#f24b53','src-opinion':'#128bea','src-lostiempos':'#b58010','chart-ipc-general':'#f59e0b','chart-ipp-general':'#5a8cc4','chart-infl-total':'#cbd5e1','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#4fb07a','chart-ipc-bebidas_alcoholicas_y_tabaco':'#c4708f','chart-ipc-prendas_de_vestir_y_calzado':'#9f97d4','chart-ipc-vivienda_y_servicios_basicos':'#5a8cc4','chart-ipc-muebles_bienes_y_servicios_domesticos':'#c79a5a','chart-ipc-salud':'#e07a6e','chart-ipc-transporte':'#fb7c4d','chart-ipc-comunicaciones':'#4cc9e0','chart-ipc-recreacion_y_cultura':'#9bbf3b','chart-ipc-educacion':'#a78bfa','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#d4a72c','chart-ipc-bienes_y_servicios_diversos':'#8a96aa','chart-ipp-agricolas':'#4fb07a','chart-ipp-pecuaria':'#e07a6e','chart-ipp-pesca':'#4cc9e0','chart-ipp-otros_minerales_y_gas_natural':'#c79a5a','chart-ipp-industria_manufacturera':'#fb7c4d','chart-ipp-servicios':'#9f97d4','chart-debt-em2017':'#6b94cf','chart-debt-em2022':'#70b87b','chart-debt-em2026':'#e48780','chart-band-low':'rgba(79,176,122,0.08)','chart-band-mid':'rgba(245,158,11,0.07)','chart-band-high':'rgba(224,122,110,0.09)','chart-band-label-low':'rgba(79,176,122,0.65)','chart-band-label-mid':'rgba(245,158,11,0.65)','chart-band-label-high':'rgba(224,122,110,0.70)'}
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#c7860a','chart-color-latino':'#7d8185','chart-color-global':'#adb1b6','chart-color-argentina':'#4696d3','chart-color-brasil':'#489450','chart-color-chile':'#c35141','chart-color-colombia':'#384e8f','chart-color-ecuador':'#c9c66a','chart-color-mexico':'#066e70','chart-color-peru':'#932c50','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#284d83','chart-debt-em2022':'#327a41','chart-debt-em2026':'#a14b46','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
   'color-bcb-oficial':'text-muted','color-bcb-ref-compra':'blue-accent','color-bcb-ref-venta':'blue-accent',
   'color-neutral':'blue-accent','color-accent-warm':'orange'
 };
-const LIGHT_THEMES = ['paper'];
-
-let currentTheme='paper', currentView='snapshot', activeThemeValues={...THEMES.paper};
+let currentView='snapshot', activeThemeValues={...THEMES.paper};
 
 // ═══ UTILS ═══
 const NF_INT = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
@@ -1260,16 +1236,13 @@ function aggregateOutliers(merchantVwap, side, refVwap10){
 }
 function hexToRgba(h,a){h=(h||'').trim();if(h.startsWith('rgba')||h.startsWith('rgb'))return h;if(!h.startsWith('#')||h.length<7)return h;return'rgba('+parseInt(h.slice(1,3),16)+','+parseInt(h.slice(3,5),16)+','+parseInt(h.slice(5,7),16)+','+a+')'}
 function hexLuminance(h){h=(h||'').trim();if(!h.startsWith('#')||h.length<7)return 0;const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return(0.299*r+0.587*g+0.114*b)/255}
-function isLightTheme(id){return LIGHT_THEMES.includes(id)}
-
 function resolveTheme(id){return THEMES[id]?{...THEMES[id]}:{...THEMES.paper}}
 
 // ═══ THEME ENGINE ═══
 function applyTheme(){
   // Modo oscuro eliminado: tema único claro (paper) forzado. applyTheme
-  // ignora cualquier argumento y siempre aplica paper. No persiste preferencia
-  // ni togglea body.theme-dark (slate/body.theme-dark{} quedan inertes).
-  currentTheme='paper'; activeThemeValues=resolveTheme('paper');
+  // ignora cualquier argumento y siempre aplica paper. No persiste preferencia.
+  activeThemeValues=resolveTheme('paper');
   const root=document.documentElement;
   for(const[k,v]of Object.entries(activeThemeValues))root.style.setProperty('--'+k,v);
   replotAllCharts();
@@ -2855,7 +2828,7 @@ var TAB_TITLES = {
   'dpf':      'FinanzasBo — Rendimientos DPF',
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',
-  'noticias': 'FinanzasBo — Noticias'
+  'noticias': 'FinanzasBo — Inicio'
 };
 // Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
 // slug del subtab activo, no un slug de tab.
@@ -3836,8 +3809,8 @@ window.addEventListener('popstate', function(){
     var fontc  = cssVar('--chart-axis-text', '#576471');
     var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
     var tipBg  = cssVar('--tooltip-bg', '#fff');
-    var tipBd  = cssVar('--tooltip-border', 'rgba(44,74,107,.18)');
-    var tipFg  = cssVar('--tooltip-text', '#2c4a6b');
+    var tipBd  = cssVar('--tooltip-border', 'rgba(33,30,27,.18)');
+    var tipFg  = cssVar('--tooltip-text', '#211E1B');
     var bands  = buildBands();
     return {
       autosize: true,
@@ -4026,8 +3999,8 @@ window.addEventListener('popstate', function(){
       yaxis:{tickformat:',d', showgrid:true, gridcolor:gridc, zeroline:false,
              rangemode:'tozero', title:{text:'USD MM', font:{size:10, color:fontc}}},
       hovermode:'x unified',
-      hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(44,74,107,.18)'),
-                  font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#2c4a6b')}},
+      hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(33,30,27,.18)'),
+                  font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#211E1B')}},
       showlegend:true,
       legend:{orientation:'h', x:0, y:-0.1, yanchor:'top', font:{size:10}},
       paper_bgcolor:'rgba(0,0,0,0)',
@@ -4040,7 +4013,7 @@ window.addEventListener('popstate', function(){
       annotations: DEBT_SCHEDULE.years.map(function(yr, i){
         return {x:i, y:DEBT_SCHEDULE.totals[i], text:'<b>'+fmtInt(DEBT_SCHEDULE.totals[i])+'</b>',
                 showarrow:false, yshift:12,
-                font:{size:11, color:cssVar('--text-primary','#2c4a6b')}};
+                font:{size:11, color:cssVar('--text-primary','#211E1B')}};
       })
     };
     Plotly.newPlot(el, traces, L, {displayModeBar:false, responsive:true});
@@ -4169,8 +4142,8 @@ window.addEventListener('popstate', function(){
     var fontc  = cssVar('--chart-axis-text', '#576471');
     var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
     var tipBg  = cssVar('--tooltip-bg', '#fff');
-    var tipBd  = cssVar('--tooltip-border', 'rgba(44,74,107,.18)');
-    var tipFg  = cssVar('--tooltip-text', '#2c4a6b');
+    var tipBd  = cssVar('--tooltip-border', 'rgba(33,30,27,.18)');
+    var tipFg  = cssVar('--tooltip-text', '#211E1B');
     return {
       autosize: true,
       margin: {l: 56, r: 16, t: 12, b: 36},
@@ -4259,12 +4232,12 @@ window.addEventListener('popstate', function(){
     if(peakIdx!=null) L.annotations.push({
       x:per[peakIdx], y:serie[peakIdx], text:'<b>'+fmtPct(serie[peakIdx],1)+'</b>',
       showarrow:false, yshift:14,
-      font:{size:12, color:cssVar('--text-primary','#2c4a6b')}
+      font:{size:12, color:cssVar('--text-primary','#211E1B')}
     });
     if(last && last.idx!==peakIdx) L.annotations.push({
       x:per[last.idx], y:last.val, text:'<b>'+fmtPct(last.val,1)+'</b>',
       showarrow:false, xanchor:'left', xshift:10,
-      font:{size:12, color:cssVar('--text-primary','#2c4a6b')},
+      font:{size:12, color:cssVar('--text-primary','#211E1B')},
       bgcolor:cssVar('--tooltip-bg','#fff'), borderpad:3
     });
     Plotly.newPlot(el, traces, L, PLOTLY_CFG);
