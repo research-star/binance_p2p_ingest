@@ -281,9 +281,31 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-ticker-item.is-good .tk-move{color:var(--tk-pos)}
 .fb-ticker-item.is-flat .tk-move{color:var(--tk-neutral)}
 @media(max-width:980px){.fb-ticker-tag{display:none}.fb-ticker-track{flex:1 1 100%}.fb-ticker-item{padding:8px 16px}.fb-ticker-item:first-child{padding-left:16px}}
-.fb-masthead{display:flex;justify-content:center;padding:20px 36px;border-bottom:2px solid var(--text-primary)}
-.fb-nameplate{font-family:var(--font-display);font-size:clamp(40px,6vw,72px);font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--text-primary);text-align:center}
+/* ── Masthead 3 zonas: login (izq) · nameplate (centro óptico) · búsqueda (der) ──
+   grid 1fr·auto·1fr ⇒ el nombre queda centrado respecto a la página aunque los
+   rieles laterales tengan ancho distinto. La sesión (login/email/logout) la pinta
+   fbRenderSession() en #fbMastheadSession. */
+.fb-masthead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:18px 36px;border-bottom:2px solid var(--text-primary);background:var(--bg-secondary)}
+.fb-masthead-left{display:flex;align-items:center;justify-self:start;min-width:0}
+.fb-login{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.02em;color:var(--text-secondary);background:none;border:none;border-bottom:1px solid transparent;padding:2px 0;cursor:pointer;transition:color .15s,border-color .15s}
+.fb-login:hover{color:var(--text-primary);border-bottom-color:var(--line-strong)}
+.fb-login:focus-visible{outline:2px solid var(--blue-accent);outline-offset:3px}
+.fb-login svg{width:14px;height:14px;opacity:.7;flex-shrink:0}
+.fb-session{display:inline-flex;align-items:baseline;gap:8px;min-width:0;font-family:var(--font-body);font-size:12.5px;color:var(--text-muted)}
+.fb-session .fb-session-mail{color:var(--text-secondary);font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fb-session .fb-session-sep{color:var(--text-soft)}
+.fb-logout{font-family:var(--font-body);font-size:12.5px;font-weight:600;color:var(--blue-accent);background:none;border:none;border-bottom:1px solid transparent;padding:0;cursor:pointer;transition:border-color .15s;white-space:nowrap}
+.fb-logout:hover{border-bottom-color:var(--blue-accent)}
+.fb-logout:focus-visible{outline:2px solid var(--blue-accent);outline-offset:2px}
+.fb-nameplate{font-family:var(--font-display);font-size:clamp(40px,6vw,72px);font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--text-primary);text-align:center;justify-self:center;white-space:nowrap}
 .fb-np-bo{font-weight:600}
+.fb-masthead-right{display:flex;align-items:center;justify-self:end;min-width:0}
+.fb-mh-search{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;max-width:240px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-muted);cursor:not-allowed;opacity:.85}
+.fb-mh-search svg{width:13px;height:13px;flex-shrink:0;opacity:.7}
+.fb-mh-search input{border:none;background:none;outline:none;font-family:var(--font-body);font-size:11.5px;color:inherit;width:150px;cursor:not-allowed}
+.fb-mh-search input::placeholder{color:var(--text-muted)}
+@media(max-width:980px){.fb-masthead{grid-template-columns:1fr;grid-template-areas:"left" "name";row-gap:6px;padding:12px 16px 14px}.fb-masthead-left{grid-area:left;justify-self:start}.fb-nameplate{grid-area:name;justify-self:center;white-space:normal}.fb-masthead-right{display:none}.fb-login,.fb-session{font-size:12px}.fb-session .fb-session-mail{max-width:150px}}
+@media(max-width:420px){.fb-nameplate{font-size:clamp(34px,11vw,44px)}.fb-session .fb-session-mail{max-width:110px}}
 /* ── Navbar (fila de tabs + buscador) · sticky ── */
 .fb-navbar{display:flex;align-items:stretch;justify-content:space-between;gap:16px;padding:0 36px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
 .fb-tabs{display:flex;gap:0;align-items:stretch}
@@ -630,7 +652,19 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="fb-ticker-track" id="fbTickerTrack" role="list"></div>
   </section>
   <div class="fb-masthead">
+    <div class="fb-masthead-left" id="fbMastheadSession">
+      <button class="fb-login" type="button" data-np-login>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        Iniciar sesi&oacute;n
+      </button>
+    </div>
     <span class="fb-nameplate">Finanzas<span class="fb-np-bo">Bo</span></span>
+    <div class="fb-masthead-right">
+      <span class="fb-mh-search" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" disabled placeholder="Buscar &mdash; pr&oacute;ximamente" aria-label="Buscar (pr&oacute;ximamente)">
+      </span>
+    </div>
   </div>
 </header>
 <nav class="fb-navbar">
@@ -641,12 +675,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
     <button class="fb-tab" data-tab="bbv">BBV</button>
     <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
-  </div>
-  <div class="fb-nav-search">
-    <span class="fb-search" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="search" disabled placeholder="Buscar &mdash; pr&oacute;ximamente" aria-label="Buscar (pr&oacute;ximamente)">
-    </span>
   </div>
 </nav>
 <div id="tab-dolar" style="display:none;">
@@ -4747,23 +4775,14 @@ window.addEventListener('popstate', function(){
     return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
   }
   function npAdminBar(){
-    // Barra SIEMPRE visible. Anónimo ⇒ login discreto; admin ⇒ email + editar +
-    // cerrar sesión.
-    let inner;
-    if(!npAdmin.isAdmin){
-      // Botón restaurado (PR-C4b, revierte la mitigación #74): npLogin navega a la
-      // ruta de bounce del Worker (/v1/login), que maneja el handshake de Access y
-      // el retorno a finanzasbo.com — ya no rompe contra "Unable to find application".
-      inner='<button class="np-admin-link" type="button" data-np-login>Iniciar sesión</button>';
-    }else{
-      inner='<span class="np-admin-who"><span class="dot"></span>'+ntEsc(npAdmin.email||'admin')+'</span>'
-        +'<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>'
-        +'<button class="np-admin-link" type="button" data-np-logout>Cerrar sesión</button>'
-        +'<span class="np-admin-spacer"></span>';
-    }
+    // La SESIÓN (login / email / cerrar sesión) vive ahora en el masthead global
+    // (fbRenderSession). Acá quedan SOLO los controles de edición de ocultas (admin)
+    // + el aviso de estado. Anónimo ⇒ nada (salvo un aviso pendiente, ej. sesión expirada).
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
-    const panel = (npAdmin.isAdmin && npAdmin.editMode) ? npHiddenPanel() : '';
-    return '<div class="np-admin-bar'+(npAdmin.isAdmin?'':' anon')+'">'+inner+note+panel+'</div>';
+    if(!npAdmin.isAdmin){ return note ? '<div class="np-admin-bar anon">'+note+'</div>' : ''; }
+    const editBtn='<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>';
+    const panel = npAdmin.editMode ? npHiddenPanel() : '';
+    return '<div class="np-admin-bar">'+editBtn+note+panel+'</div>';
   }
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
@@ -4836,7 +4855,7 @@ window.addEventListener('popstate', function(){
     npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
     npClearHint();  // sesión muerta = logout forzado: limpiar hint para no re-probar al próximo load
     npAdmin.notice={ kind:'warn', text:'Tu sesión expiró. Iniciá sesión de nuevo para seguir gestionando notas.' };
-    npRerender();
+    fbRenderSession(); npRerender();
   }
   // Confirma sesión con GET /v1/me. redirect:'manual' ⇒ si Access intercepta en el
   // edge (anónimo/expirado) responde un 302 que NO seguimos: llega como
@@ -4849,9 +4868,9 @@ window.addEventListener('popstate', function(){
         npAdmin.checked=true;
         if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; npSetHint(); }
         else { npAdmin.isAdmin=false; npClearHint(); }  // 302/401: el hint mentía o la sesión cayó
-        if(ntBuilt) npRerender();
+        fbRenderSession(); if(ntBuilt) npRerender();
       })
-      .catch(function(){ npAdmin.checked=true; npAdmin.isAdmin=false; if(ntBuilt) npRerender(); });  // red transitoria: NO limpiar hint, reintenta al próximo load
+      .catch(function(){ npAdmin.checked=true; npAdmin.isAdmin=false; fbRenderSession(); if(ntBuilt) npRerender(); });  // red transitoria: NO limpiar hint, reintenta al próximo load
   }
   function npLoadAdminList(){
     fetch(NT_API+'/v1/hidden/admin', { credentials:'include', cache:'no-store' })
@@ -4900,8 +4919,6 @@ window.addEventListener('popstate', function(){
       if((el=t.closest('[data-np-hide]'))){ ev.preventDefault(); npHide(el.getAttribute('data-np-hide')); return; }
       if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
       if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
-      if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
-      if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
     });
   }
   window.renderNoticias = function(){
@@ -4909,7 +4926,8 @@ window.addEventListener('popstate', function(){
     renderNoticiasPortada();
     npBindHost();
     ntLoadHidden();
-    if(npHasHint()) npCheckMe();  // probe solo si hubo sesión antes; anónimo puro no prueba ni ensucia consola
+    // El probe de sesión (npCheckMe) corre en fbChromeInit (global), no acá: el
+    // masthead refleja la sesión en cualquier tab, no solo en Inicio.
   };
 
   // ── Chrome global: franja de tickers (área 1; reusa npMarketsData de la portada) ──
@@ -4929,7 +4947,24 @@ window.addEventListener('popstate', function(){
     }
     track.innerHTML=html;
   }
-  function fbChromeInit(){ fbRenderTicker(); }
+  // ── Sesión en el masthead global (área 2; login reubicado desde la portada) ──
+  var FB_LOGIN_BTN='<button class="fb-login" type="button" data-np-login><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Iniciar sesión</button>';
+  function fbRenderSession(){
+    var slot=document.getElementById('fbMastheadSession'); if(!slot) return;
+    if(npAdmin.isAdmin){
+      slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>Cerrar sesión</button></span>';
+    }else{
+      slot.innerHTML=FB_LOGIN_BTN;
+    }
+  }
+  // Login/logout viven en el masthead (fuera de #tab-noticias) → listener a nivel
+  // document. npLogin/npLogout intactos (navegan a /v1/login | /v1/logout del Worker).
+  document.addEventListener('click', function(ev){
+    var t=ev.target; if(!t||!t.closest) return;
+    if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
+    if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
+  });
+  function fbChromeInit(){ fbRenderTicker(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
 
