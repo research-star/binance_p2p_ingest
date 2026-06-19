@@ -458,14 +458,23 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   corrida diaria de `ingest_noticias.py` (un cron, un HC; fail-safe por
   carril — si uno falla el otro corre, y cualquier carril en error
   pingea fail):
-  - **Bolivia**: scrape de 13 portales → scoring TF-IDF 0-10 (fail-closed
-    sin modelo) → corte editorial `puntaje >= 6.7` → dedupe fuzzy
-    inter-día (7 días, umbral 0.70) → top-10/día.
+  - **Bolivia**: scrape de 13 portales → scoring TF-IDF 0-10 de RELEVANCIA
+    (fail-closed sin modelo) → corte editorial `puntaje >= 6.7` → dedupe fuzzy
+    inter-día (7 días, umbral 0.70) → top configurable (default **14/día**,
+    `config.NOTICIAS_TOP_BOLIVIA`; FASE 3, antes 10). El **TEMA es independiente
+    de la relevancia**: lo asigna el motor contextual `_tema`/`_TEMA_SPEC` de
+    `scraper.py` (word-boundary + strong/weak/context/exclude, FASE 3) y devuelve
+    tema + **confianza** (`tema_hits`); `detectar_entidades` taguea entidades
+    canónicas (BCB, YPFB, YLB, FMI…). La caché de URLs vistas la escribe el
+    caller (`lane_bolivia` → `scraper.marcar_urls_vistas`): marca insertadas +
+    no-calificadas + dedupe-losers, así una calificada que pierde el budget sigue
+    reconsiderable (fix de yield, FASE 3).
   - **Latam** (desde `feat/noticias-latam`): sección Latinoamérica de
     Bloomberg Línea vía RSS outboundfeeds (`noticias_ingest/latam.py`),
     SIN scoring — el criterio editorial de Bloomberg es el filtro
-    (decisión de Diego). pubDate últimas 24 h, orden desc, cupo 5/día
-    con presupuesto INDEPENDIENTE del top-10. `impact='medio'` fijo,
+    (decisión de Diego). pubDate últimas 24 h, orden desc, cupo configurable
+    (default **8/día**, `config.NOTICIAS_TOP_LATAM`; FASE 3, antes 5)
+    con presupuesto INDEPENDIENTE del carril Bolivia. `impact='medio'` fijo,
     `puntaje=0.0` como sentinela "sin scoring" en la DB. El feed de
     sección es flaky (a veces 500/vacío, y cuando responde mezcla otras
     secciones): SIEMPRE se filtra por path `/latinoamerica/` del link,
@@ -484,15 +493,17 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
   la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
 - Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
-  `noticias_ingest/transform.py`) y 6 categorías —
-  `economia|hidrocarburos|agro|mineria|latam|politica` ("mundo" se
-  renombró a "latam" en `feat/noticias-latam`; la alimenta solo el
-  carril Bloomberg). Mapeo 11 temas de boletines → categorías en
-  `transform.TEMA_CATEGORIA`. `impact` por bandas de puntaje:
-  ≥8 alto · 7–7.99 medio · resto bajo (carril Bolivia). Los chips de
-  categoría tienen **auto-hide**: sin notas en la ventana de 30 días no
-  se muestran. `ntSrcTag` tiene fallback defensivo para slugs fuera del
-  catálogo.
+  `noticias_ingest/transform.py`). **`category` colapsada (FASE 3) a 2 cubos —
+  `{economia, politica}`** (`transform.TEMA_CATEGORIA`: Bloqueos/Conflictos y
+  Elecciones/Política económica → `politica`, el resto → `economia`). Los cubos
+  finos viejos (hidrocarburos/agro/mineria/latam) ya NO se emiten: el detalle de
+  tema vive en `tema`/`tema_hits`/`topics`, y el **carril** (Bolivia/Latam) en su
+  columna dedicada `carril` ('bolivia'|'latam'), NO en `category` (las notas
+  latam pasan a `category='economia'` + `carril='latam'`). El frontend parte los
+  carriles por `carril` (`ntBolivia`/`ntLatam`), no por category (que no alimenta
+  chips/colores/routing — recon FASE 3). `impact` por bandas de puntaje:
+  ≥8 alto · 7–7.99 medio · resto bajo (carril Bolivia). `ntSrcTag` tiene
+  fallback defensivo para slugs fuera del catálogo.
 - **Colores de marca por portal** (`feat/noticias-latam`): los tokens
   `--src-*` de ambos THEMES son el color de marca real de cada medio
   (investigado de logos/CSS oficiales), ajustado SOLO en luminosidad
@@ -524,13 +535,16 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   tabla no usa `.fb-rank-table` ni `data-sort-key` justamente para no
   heredar el sort genérico ni chocar con el sort propio de BBV).
 - **Schema por nota** (contrato backend → frontend):
-  `{id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title,
-  summary, detail, topics:[..], impact:'alto|medio|bajo', sourceNote,
-  url, imageUrl}` (`url` se agregó para el link al artículo original;
-  `imageUrl` = `og:image` de la nota (hotlink, FASE 2a), `null` → el slot
-  cae al placeholder `.np-imgph`; `summary` hoy no se renderiza — se
-  persiste para uso futuro). `detail` es un extracto ≤400 chars del
-  cuerpo, nunca el artículo completo (sitio público).
+  `{id, source, category, carril:'bolivia'|'latam', date:'YYYY-MM-DD',
+  time:'HH:MM', title, summary, detail, topics:[..], tema,
+  temaConfianza, entidades:[..], impact:'alto|medio|bajo', sourceNote,
+  url, imageUrl}` (`url` = link al artículo original; `imageUrl` =
+  `og:image` hotlink (FASE 2a), `null` → placeholder `.np-imgph`;
+  `carril`/`tema`/`temaConfianza` (=`tema_hits`)/`entidades` agregados en
+  FASE 3 — `carril` parte los carriles; `tema`/`temaConfianza`/`entidades`
+  alimentan el matching de galería futuro (gate sugerido: imagen específica
+  si `temaConfianza >= 10`); `summary` hoy no se renderiza). `detail` es un
+  extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio público).
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).

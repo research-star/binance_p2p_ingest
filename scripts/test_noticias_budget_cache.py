@@ -45,45 +45,53 @@ def run():
     scraper.get_modelo = lambda: SimpleNamespace(disponible=True, motivo_rechazo="")
     scraper.CACHE_DB_PATH = cache_path  # marcar_urls_vistas lee el global en runtime
 
-    INSERTADA = "https://eldeber.com.bo/economia/nota-top_1781800000"
-    PERDIO_BUDGET = "https://eldeber.com.bo/economia/nota-segunda_1781800001"
-    NO_CALIFICO = "https://eldeber.com.bo/economia/nota-baja_1781800002"
+    INSERTADA1 = "https://eldeber.com.bo/economia/nota-top_1781800000"
+    DEDUPE_LOSER = "https://eldeber.com.bo/economia/nota-dup_1781800001"
+    INSERTADA2 = "https://eldeber.com.bo/economia/nota-tercera_1781800002"
+    PERDIO_BUDGET = "https://eldeber.com.bo/economia/nota-cuarta_1781800003"
+    NO_CALIFICO = "https://eldeber.com.bo/economia/nota-baja_1781800004"
+    DUP_TITLE = "Exportaciones de soya crecen 12% segun el IBCE"
     candidatos = [
-        _cand(INSERTADA, "Reservas internacionales del BCB suben tras nuevo crédito", 8.0),
-        _cand(PERDIO_BUDGET, "Exportaciones de soya crecen 12% segun el IBCE", 7.0),
-        _cand(NO_CALIFICO, "Nota economica de bajo puntaje sobre tramites", 4.0),
+        _cand(INSERTADA1, "Reservas internacionales del BCB suben tras nuevo credito", 8.0),
+        _cand(DEDUPE_LOSER, DUP_TITLE, 7.9),     # gemelo de una ya publicada (previos)
+        _cand(INSERTADA2, "El FMI proyecta el deficit fiscal de Bolivia en 2026", 7.5),
+        _cand(PERDIO_BUDGET, "Bolivia coloca bonos soberanos en el mercado de capitales", 7.0),
+        _cand(NO_CALIFICO, "Nota economica de bajo puntaje sobre tramites varios", 4.0),
     ]
     scraper.correr_scraper = lambda *a, **k: (candidatos, [], ["El Deber"], [])
-    scraper.FUENTES = scraper.FUENTES  # intacto
 
     conn = sqlite3.connect(str(db_path))
     ingest_noticias.init_schema(conn)
 
     ahora = datetime.now(timezone.utc)
     fecha_bo = ahora.astimezone(timezone(timedelta(hours=-4))).strftime("%Y-%m-%d")
-    # top=1 → solo entra la de mayor puntaje (8.0); la de 7.0 califica pero pierde budget.
-    args = SimpleNamespace(umbral=6.7, top=1, top_latam=8, dry_run=False)
+    # top=2 → entran 8.0 y 7.5; la 7.9 se va por dedupe (dup de previos); la 7.0
+    # califica pero pierde budget; la 4.0 no califica.
+    args = SimpleNamespace(umbral=6.7, top=2, top_latam=8, dry_run=False)
 
-    res = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[])
+    res = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[DUP_TITLE])
     conn.close()
 
     # ── Asserts ──
     errores = []
     if res["estado"] != "ok":
         errores.append(f"lane estado={res['estado']} detalle={res.get('detalle')}")
-    if res["insertadas"] != 1:
-        errores.append(f"insertadas={res['insertadas']} (esperado 1)")
-    if res["sobre_umbral"] != 2:
-        errores.append(f"sobre_umbral={res['sobre_umbral']} (esperado 2)")
+    if res["insertadas"] != 2:
+        errores.append(f"insertadas={res['insertadas']} (esperado 2)")
+    if res["sobre_umbral"] != 4:
+        errores.append(f"sobre_umbral={res['sobre_umbral']} (esperado 4)")
+    if res["dedupe"] != 1:
+        errores.append(f"dedupe={res['dedupe']} (esperado 1)")
 
     cache = sqlite3.connect(str(cache_path))
     vistas = {r[0] for r in cache.execute("SELECT url FROM urls_vistas").fetchall()}
     cache.close()
 
-    if INSERTADA not in vistas:
-        errores.append("la INSERTADA deberia estar marcada como vista")
-    if NO_CALIFICO not in vistas:
-        errores.append("la NO_CALIFICO (< umbral) deberia estar marcada como vista")
+    for url, etiq in ((INSERTADA1, "INSERTADA1"), (INSERTADA2, "INSERTADA2"),
+                      (NO_CALIFICO, "NO_CALIFICO (< umbral)"),
+                      (DEDUPE_LOSER, "DEDUPE_LOSER (gemelo, no insertable)")):
+        if url not in vistas:
+            errores.append(f"la {etiq} deberia estar marcada como vista")
     if PERDIO_BUDGET in vistas:
         errores.append("BUG: la calificada que perdio budget quedo marcada → "
                        "no seria reconsiderable (esto es justo lo que el fix evita)")
@@ -93,8 +101,8 @@ def run():
         for e in errores:
             print("  -", e)
         return 1
-    print("OK test_noticias_budget_cache: insertada+no_calificada marcadas; "
-          "calificada-no-insertada SIN marcar (reconsiderable).")
+    print("OK test_noticias_budget_cache: insertadas + no-calificada + dedupe-loser marcadas; "
+          "budget-loser SIN marcar (reconsiderable).")
     return 0
 
 

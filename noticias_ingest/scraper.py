@@ -396,7 +396,8 @@ FUENTES = [
 
 
 # ---------------------------------------------------------------------------
-# KEYWORDS (fallback si no hay modelo; KEYWORDS además clasifica el tema)
+# KEYWORDS (solo conteo de relevancia del fallback sin modelo — MUERTO en prod por
+# fail-closed; el TEMA lo clasifica _tema/_TEMA_SPEC, no estas listas)
 # ---------------------------------------------------------------------------
 KEYWORDS = {
     "Combustibles / YPFB": [
@@ -534,7 +535,9 @@ _TEMA_SPEC = {
                     "valorado en", "inversion de mas de", "donacion de", "financiamiento de",
                     "prestamo de", "credito de", "por un monto de", "presupuesto de",
                     "ambientes del bcb", "instalaciones del bcb", "sede del bcb", "predios del bcb",
-                    "auditorio del bcb", "en el bcb", "oficinas del bcb"],
+                    "auditorio del bcb", "oficinas del bcb"],
+                    # (quitado "en el bcb": vetaba strongs reales — "tipo de cambio en el BCB",
+                    #  "reservas internacionales en el BCB"; los locativos de edificio ya cubren el evento)
     },
     "Litio / Minería": {
         "strong": ["litio", "ylb", "comibol", "salar de uyuni", "carbonato de litio",
@@ -561,7 +564,8 @@ _TEMA_SPEC = {
     "Deuda / Finanzas": {
         "strong": ["deuda externa", "deuda interna", "deuda publica", "deuda soberana",
                    "servicio de la deuda", "servicio de deuda", "calificacion crediticia",
-                   "deficit fiscal", "fitch", "moody", "standard and poor", "fmi", "banco mundial",
+                   "deficit fiscal", "fitch", "moody", "standard and poor", "standard & poor",
+                   "s&p", "fmi", "banco mundial",
                    "bono soberano", "bonos soberanos", "prestamo del fmi", "prestamo del bid",
                    "prestamo de la caf", "desembolso del bid", "desembolso de la caf",
                    "sistema financiero", "banca boliviana"],
@@ -572,9 +576,12 @@ _TEMA_SPEC = {
                     "multilateral", "banca", "mercado de capitales", "bonos del tesoro"],
         "exclude": ["deuda social", "deuda pendiente", "deuda historica", "deuda educativa",
                     "deuda moral", "deuda de genero", "deuda ambiental", "deuda de gratitud",
-                    "deuda con la", "deuda con vos", "deuda con uno", "tienen una deuda con",
-                    "saldar la deuda con", "saldar una deuda", "credito a la educacion",
-                    "productores de cine"],
+                    # metáforas concretas (no el genérico "deuda con la", que vetaba deuda real:
+                    # "deuda con la CAF/banca multilateral/China")
+                    "deuda con la sociedad", "deuda con la patria", "deuda con la historia",
+                    "deuda con el pueblo", "deuda con la naturaleza",
+                    "deuda con vos", "deuda con uno", "tienen una deuda con",
+                    "saldar una deuda", "credito a la educacion", "productores de cine"],
     },
     "Inflación / Precios": {
         "strong": ["inflacion", "canasta basica", "costo de vida", "indice de precios",
@@ -689,7 +696,7 @@ _ENTIDAD_SPEC = {
     "TED": ["ted", "tribunal electoral departamental"],
     "Fitch": ["fitch", "fitch ratings"],
     "Moody's": ["moody", "moodys"],
-    "S&P": ["standard and poor", "standard & poors"],
+    "S&P": ["standard and poor", "standard & poor", "standard & poors", "s&p"],
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 

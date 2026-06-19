@@ -254,11 +254,13 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             print(f"[noticias] bolivia: ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
 
         finales = []
+        dedupe_losers = []
         for n in seleccion:
             if len(finales) >= budget:
-                break
+                break  # budget-loser: queda SIN marcar (reconsiderable, yield real)
             if es_repetida(n["title"], previos):
                 res["dedupe"] += 1
+                dedupe_losers.append(n)  # gemelo de una nota ya publicada (no insertable ~7d)
                 continue
             finales.append(n)
             previos.append(n["title"])
@@ -269,15 +271,20 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
         else:
             res["insertadas"] = insertar_notas(conn, finales)
-            # Fix de cacheo (FASE 3): marcar como vistas SOLO las insertadas
-            # (`finales`) + las que NO calificaron (puntaje < umbral). Una nota
-            # calificada (>= umbral) que NO se insertó —perdió el budget o el
-            # dedupe— queda SIN marcar, así sigue reconsiderable en corridas
-            # posteriores (mismo día con budget rolling, y días siguientes).
-            # Antes correr_scraper marcaba TODO lo evaluado → las que perdían el
-            # top-N se descartaban para siempre (bug de yield).
+            # Fix de cacheo (FASE 3): marcar como vistas lo que NO debe reconsiderarse:
+            #  - insertadas (`finales`)
+            #  - no-calificadas (puntaje < umbral): deterministas, no van a calificar
+            #  - dedupe-losers: gemelos de una nota YA publicada; pierden el mismo
+            #    dedupe de título mientras su par viva en titulos_recientes (~7d), así
+            #    que NO son insertables — marcarlos evita re-scrapear su cuerpo cada
+            #    corrida (clave con cadencia diurna cada 3h).
+            # El budget-loser (calificado, perdió el cupo) queda SIN marcar: SÍ es
+            # reconsiderable en una corrida posterior (budget rolling / día siguiente).
+            # Antes correr_scraper marcaba TODO lo evaluado → las que perdían el top-N
+            # se descartaban para siempre (bug de yield).
             vistas = [(n["url"], n["portal"]) for n in finales]
             vistas += [(n["url"], n["portal"]) for n in notas if n["puntaje"] < args.umbral]
+            vistas += [(n["url"], n["portal"]) for n in dedupe_losers]
             scraper.marcar_urls_vistas(vistas)
     except Exception:
         conn.rollback()  # aislamiento por carril: no dejar inserts a medias

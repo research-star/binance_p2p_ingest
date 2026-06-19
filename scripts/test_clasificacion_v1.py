@@ -71,6 +71,12 @@ BATERIA = [
     ("Senasag certifica frigorificos para exportar carne bovina a China", "Agropecuario / Soya", ["SENASAG"], "must"),
     ("Comibol reactiva la mina de estano de Huanuni tras inversion estatal", "Litio / Minería", ["COMIBOL"], "must"),
     ("El IBCE reporta caida de exportaciones no tradicionales en el primer trimestre", "Exportaciones / Comercio", ["IBCE"], "must"),
+    # ── fixes del review adversarial ──
+    ("El tipo de cambio en el BCB se mantiene estable pese a las reservas internacionales", "Tipo de cambio / Dólar", ["BCB"], "must"),
+    ("Standard & Poor's rebaja la calificacion crediticia de Bolivia por el deficit fiscal", "Deuda / Finanzas", ["S&P"], "must"),
+    ("S&P Global advierte sobre la deuda soberana boliviana", "Deuda / Finanzas", ["S&P"], "must"),
+    ("Bolivia honra su deuda con la banca multilateral y evita el default", "Deuda / Finanzas", [], "must"),
+    ("El Gobierno reconoce su deuda con la sociedad y promete saldarla", G, ["Gobierno"], "must"),
     # ── soft: límites conocidos (upstream KEYWORDS_EXCLUIR) o decisiones flageadas ──
     ("Lula y Sheinbaum debaten sobre litio en cumbre de la CELAC", G, [], "soft"),
     ("Capturan a banda que asaltaba surtidores en El Alto", G, [], "soft"),
