@@ -522,6 +522,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.5;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
+/* — galería temática (v1): microtag "ilustrativa" sutil sobre el asset (z sobre .np-imgph>img) — */
+.np-gal-tag{position:absolute;right:8px;top:8px;z-index:2;font-family:var(--font-body);font-size:10px;font-weight:500;line-height:1;letter-spacing:.04em;color:#fff;background:rgba(20,22,28,.55);padding:3px 8px;border-radius:var(--radius-pill);pointer-events:none;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 @media(max-width:980px){.np-front,.np-front.three{grid-template-columns:1fr;border-bottom:0}.np-hero{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-hero-latam{padding:16px;border-right:0;border-bottom:0}.np-front.three .np-lead-title{font-size:var(--lead-size);min-height:0}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
 /* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
 .np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
@@ -4738,16 +4740,41 @@ window.addEventListener('popstate', function(){
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
   function npTitle(url,text){ return npLink(url, ntEsc(text)); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
-  // Slot de imagen: si la nota trae imageUrl (og:image hotlinkeado, carril BO) →
-  // <img> que llena el .np-imgph; si no → placeholder actual (gradiente + ícono).
-  // onerror oculta el <img> roto y reaparece el placeholder (el hotlink puede morir
-  // en runtime). Latam no llama acá: su slot es la bandera emoji, no se toca.
+  // Slot de imagen — cascada: og:image (hotlink, carril BO) → GALERÍA temática
+  // (match por `tema`, gallerySlug precomputado en dashboard.py) → placeholder CSS.
+  // Si el og:image muere en runtime, onerror swappea a galería (window.npImgFail),
+  // NO al placeholder. Sin gallerySlug → '' → reaparece el placeholder (gradiente+ícono).
+  // La destacada internacional (carril latam) SÍ entra acá → slug 'internacional',
+  // por eso deja de ser placeholder. Las tarjetas del feed Latam NO (usan bandera emoji).
   function npImg(n,cls){
-    var ph='<div class="np-imgph'+(cls?' '+cls:'')+'">', u=n&&n.imageUrl;
-    return (u && /^https?:\/\//i.test(u))
-      ? ph+'<img src="'+ntEsc(u)+'" loading="lazy" alt="" onerror="this.style.display=\'none\'"></div>'
-      : ph+'</div>';
+    var ph='<div class="np-imgph'+(cls?' '+cls:'')+'">', u=n&&n.imageUrl,
+        s=(n&&n.gallerySlug)||''; if(!/^[a-z0-9-]*$/.test(s)) s='';
+    if(u && /^https?:\/\//i.test(u))
+      return ph+'<img src="'+ntEsc(u)+'" loading="lazy" alt="" onerror="npImgFail(this,\''+s+'\')"></div>';
+    return ph+npGallery(n)+'</div>';
   }
+  // Galería temática (v1): <img> del asset /gal-<slug>.webp + microtag "ilustrativa".
+  // Sin slug (o slug no-canónico) → '' → el .np-imgph cae a su placeholder CSS.
+  // .webp interinos (color+label); Diego swapea fotos reales con el mismo naming.
+  function npGallery(n){
+    var s=n&&n.gallerySlug;
+    if(!s || !/^[a-z0-9-]+$/.test(s)) return '';
+    // Microtag "ilustrativa": SOLO admin (mismo gate que npHideCtl → npAdmin.isAdmin,
+    // confirmado vía /v1/me). El público NUNCA emite el <span> → 0 flash: el render
+    // inicial corre isAdmin=false y el tag solo aparece tras npRerender() post-/v1/me,
+    // que únicamente se dispara si hay hint de sesión (el anónimo puro ni prueba).
+    var tag = npAdmin.isAdmin ? '<span class="np-gal-tag">ilustrativa</span>' : '';
+    return '<img class="np-gal-img" src="/gal-'+s+'.webp" loading="lazy" alt="" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.remove()">'
+      +tag;
+  }
+  // Fallo del hotlink og:image en runtime → swap a galería (no a placeholder): borra
+  // el <img> roto e inyecta la galería en el mismo .np-imgph. Expuesta en window
+  // porque el onerror inline corre fuera del scope de este IIFE (cierra sobre npGallery).
+  window.npImgFail=function(img,slug){
+    var ph=img&&img.parentNode; if(!ph) return;
+    ph.removeChild(img);
+    ph.insertAdjacentHTML('beforeend', npGallery({gallerySlug:slug}));
+  };
 
   // ── Regiones ──
   function npKick(n){ const c=ntCatName(n.category); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
