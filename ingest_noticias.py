@@ -53,15 +53,15 @@ except ImportError:
 
 import requests
 
-from config import NORMALIZED_DB
+from config import NORMALIZED_DB, NOTICIAS_TOP_BOLIVIA, NOTICIAS_TOP_LATAM
 from noticias_ingest import latam, scraper
 from noticias_ingest.transform import build_nota, build_nota_latam
 
 # ── Constantes ────────────────────────────────────────────────────────────
 
 UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
-TOP_N = 10             # tope diario carril Bolivia
-LATAM_TOP_N = 5        # tope diario carril latam (presupuesto independiente)
+TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
+LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
 UMBRAL_DEDUP_DB = 0.70
 
@@ -241,6 +241,16 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
         else:
             res["insertadas"] = insertar_notas(conn, finales)
+            # Fix de cacheo (FASE 3): marcar como vistas SOLO las insertadas
+            # (`finales`) + las que NO calificaron (puntaje < umbral). Una nota
+            # calificada (>= umbral) que NO se insertó —perdió el budget o el
+            # dedupe— queda SIN marcar, así sigue reconsiderable en corridas
+            # posteriores (mismo día con budget rolling, y días siguientes).
+            # Antes correr_scraper marcaba TODO lo evaluado → las que perdían el
+            # top-N se descartaban para siempre (bug de yield).
+            vistas = [(n["url"], n["portal"]) for n in finales]
+            vistas += [(n["url"], n["portal"]) for n in notas if n["puntaje"] < args.umbral]
+            scraper.marcar_urls_vistas(vistas)
     except Exception:
         conn.rollback()  # aislamiento por carril: no dejar inserts a medias
         tb = traceback.format_exc()

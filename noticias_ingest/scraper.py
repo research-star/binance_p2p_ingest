@@ -236,6 +236,24 @@ class CacheURLs:
         self.conn.close()
 
 
+def marcar_urls_vistas(urls_portales, cache_db_path: Path = None):
+    """Marca (url, portal) como vistas en la caché TTL. La invoca el CALLER
+    (ingest_noticias) DESPUÉS de decidir el budget: marca solo las insertadas +
+    las que no calificaron, de modo que una nota calificada-no-insertada (perdió
+    el top-N o el dedupe) siga reconsiderable en corridas posteriores. Antes
+    correr_scraper marcaba TODO lo evaluado (bug: las que perdían el top-N
+    quedaban vistas y nunca se reconsideraban). `cache_db_path=None` lee el módulo
+    global en tiempo de llamada (testeable vía monkeypatch de CACHE_DB_PATH)."""
+    if not urls_portales:
+        return
+    cache = CacheURLs(cache_db_path or CACHE_DB_PATH, CACHE_DIAS)
+    try:
+        for url, portal in urls_portales:
+            cache.marcar(url, portal)
+    finally:
+        cache.close()
+
+
 # ---------------------------------------------------------------------------
 # FUENTES
 # ---------------------------------------------------------------------------
@@ -1033,8 +1051,11 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
         for future in as_completed(futures):
             future.result()
 
-    for n in deduplicadas:
-        cache.marcar(n["link"], n["portal"])
+    # NO se marca acá: el marcado lo hace el caller (ingest_noticias) vía
+    # marcar_urls_vistas(), que solo marca insertadas + no-calificadas. Marcar
+    # TODO lo evaluado acá era el bug de yield (las que perdían el top-N
+    # quedaban vistas y no se reconsideraban). La caché se usó arriba SOLO para
+    # leer (ya_vista) y saltar el re-scrapeo de cuerpos de URLs ya marcadas.
     cache.close()
 
     log.info(f"  {len(deduplicadas)} candidatos únicos "
