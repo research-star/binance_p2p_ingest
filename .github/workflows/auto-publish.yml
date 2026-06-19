@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'bcb_referencial.json'
+  workflow_dispatch:   # disparo manual: botón "Run workflow" en la UI o `gh workflow run auto-publish.yml`
 
 concurrency:
   group: publish-dashboard
