@@ -494,7 +494,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-body{padding:24px 36px 8px}
 /* — primera plana: hero (≈62%) | ranking 372px, a la misma altura (spec §5) — */
 .np-front{display:grid;grid-template-columns:1fr 372px;gap:0;align-items:start;border-bottom:2px solid var(--text-primary)}
+.np-front.three{grid-template-columns:1fr 1fr 372px}  /* local · destacada Latam · ranking */
 .np-hero{padding:4px 32px 26px 0;min-width:0;border-right:1px solid var(--border-color)}
+.np-hero-latam{padding-left:32px}  /* columna del medio: gutter de ambos lados */
+.np-front.three .np-lead-title{font-size:31px;line-height:1.08}
+.np-front.three .np-hero-img{height:clamp(170px,17vw,240px)}
 /* — átomos tipográficos — */
 .np-kicker{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--up)}
 /* — fila de fuente: 1 punto por portal · nombre · hora — */
@@ -507,7 +511,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.5;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
-@media(max-width:980px){.np-front{grid-template-columns:1fr;border-bottom:0}.np-hero{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
+@media(max-width:980px){.np-front,.np-front.three{grid-template-columns:1fr;border-bottom:0}.np-hero,.np-hero-latam{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-front.three .np-lead-title{font-size:var(--lead-size)}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
 /* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
 .np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
 .np-topline-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;letter-spacing:.02em}
@@ -538,7 +542,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-day{display:flex;flex:none;flex-direction:column;align-items:center;gap:2px;padding:5px 11px;border:1px solid var(--border-color);margin-right:-1px;background:var(--bg-secondary);cursor:pointer;transition:background .15s;font-family:var(--font-body)}
 .np-day:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
 .np-day:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-right:0}
-.np-day:hover:not(.on){background:var(--bg-tertiary)}
+.np-day:hover:not(.on):not(.empty){background:var(--bg-tertiary)}
+.np-day.empty{opacity:.34;cursor:not-allowed}
+.np-day.empty .np-day-wd,.np-day.empty .np-day-dn{color:var(--text-soft)}
 .np-day.on{background:var(--text-primary);border-color:var(--text-primary);position:relative;z-index:1}
 .np-day-wd{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
 .np-day-dn{font-family:var(--font-mono);font-size:13px;font-weight:600;line-height:1;color:var(--text-primary);font-variant-numeric:tabular-nums}
@@ -4735,16 +4741,25 @@ window.addEventListener('popstate', function(){
   // ── Regiones ──
   function npKick(n){ const c=ntCatName(n.category); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
 
-  // Hero: nota líder del día por-defecto (kicker + titular + imagen 16:10 + fila de fuente).
-  function npHero(){
-    const lead=ntDayNotes(ntDefaultDay())[0];
-    if(!lead) return '<article class="np-hero"><div class="np-empty">No hay portada disponible.</div></article>';
-    return '<article class="np-hero"'+npNoteAttr(lead)+'>'+npHideCtl(lead)+npKick(lead)
+  // Cuerpo del hero (kicker + titular + imagen 16:10 con caption + fila de fuente).
+  function npHeroBody(lead, kick){
+    return npHideCtl(lead)+(kick||npKick(lead))
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
-      +'</article>';
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>';
+  }
+  // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
+  function npHero(){
+    const lead=ntDayNotes(ntDefaultDay())[0];
+    if(!lead) return '<article class="np-hero"><div class="np-empty">No hay portada disponible.</div></article>';
+    return '<article class="np-hero"'+npNoteAttr(lead)+'>'+npHeroBody(lead)+'</article>';
+  }
+  // Destacada internacional: mejor nota del carril Latam (Bloomberg), al medio de la primera plana.
+  function ntLatamLead(){ return ntLatam().slice().sort(ntCmp)[0] || null; }
+  function npHeroLatam(){
+    const lead=ntLatamLead(); if(!lead) return '';
+    return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHeroBody(lead,'<div class="np-kicker">Internacional</div>')+'</article>';
   }
 
   // Ranking "Lo más relevante hoy" (fijo a ntDefaultDay()); excluye el lead (va en el hero).
@@ -4795,16 +4810,19 @@ window.addEventListener('popstate', function(){
     const offs=npDateWindow(active); let h='';
     for(let i=0;i<offs.length;i++){ const off=offs[i], dt=ntParseD(ntDateAt(off));
       const dw = off===0 ? 'HOY' : NT_WD[dt.getDay()];
-      h+='<button class="np-day'+(off===active?' on':'')+'" type="button" data-np-day="'+off+'" aria-pressed="'+(off===active)+'">'
+      const empty = !ntDayNotes(off).length;  // día sin notas → chip gris, no clickeable
+      h+='<button class="np-day'+(off===active?' on':'')+(empty?' empty':'')+'" type="button" data-np-day="'+off+'"'+(empty?' disabled':'')+' aria-pressed="'+(off===active)+'">'
         +'<span class="np-day-wd">'+dw+'</span><span class="np-day-dn">'+String(dt.getDate()).padStart(2,'0')+'</span></button>';
     }
     return h;
   }
+  // Día más cercano CON notas en una dirección (older=pasado, newer=hacia hoy); -1 si no hay.
+  function npDayInDir(from,dir){ const step=dir==='older'?1:-1; for(let d=from+step; d>=0&&d<=NT_LIMIT; d+=step){ if(ntDayNotes(d).length) return d; } return -1; }
   function npDateStrip(off){
     return '<div class="np-datectl" role="group" aria-label="Navegar por fecha">'
-      +'<button class="np-dc-arrow" type="button" data-np-nav="older"'+(off>=NT_LIMIT?' disabled':'')+' aria-label="Día anterior">&lsaquo;</button>'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="older"'+(npDayInDir(off,'older')<0?' disabled':'')+' aria-label="Día anterior">&lsaquo;</button>'
       +'<div class="np-dc-days">'+npDateChips(off)+'</div>'
-      +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(off<=0?' disabled':'')+' aria-label="Día siguiente">&rsaquo;</button>'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(npDayInDir(off,'newer')<0?' disabled':'')+' aria-label="Día siguiente">&rsaquo;</button>'
       +'</div>';
   }
   // ¿Quedan días más viejos con notas dentro del límite (para "Mostrar más")?
@@ -4814,7 +4832,7 @@ window.addEventListener('popstate', function(){
   }
   // ── Navegación temporal (reescriben npState y re-renderean; ranking/hero intactos) ──
   function npGoDay(off){ if(isNaN(off)||off<0||off>NT_LIMIT||off===npState.day) return; npState.day=off; npState.extra=0; npRerender(); }
-  function npNav(dir){ let d=npState.day+(dir==='older'?1:-1); if(d<0)d=0; if(d>NT_LIMIT)d=NT_LIMIT; if(d===npState.day) return; npState.day=d; npState.extra=0; npRerender(); }
+  function npNav(dir){ const d=npDayInDir(npState.day,dir); if(d<0) return; npState.day=d; npState.extra=0; npRerender(); }  // salta días vacíos
   // "Mostrar más": avanza al SIGUIENTE día con notas (apila continuo, sin separador; no cambia el header).
   function npMore(){ for(let o=npState.day+npState.extra+1;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length){ npState.extra=o-npState.day; npRerender(); return; } } }
   function npFeed(){
@@ -4825,7 +4843,8 @@ window.addEventListener('popstate', function(){
     return '<section class="np-feed">'+npFeedHead(off)+body+npMoreBtn(off)+'</section>';
   }
   function npLatam(){
-    const latam=ntLatam().slice(0,5); if(!latam.length) return '';
+    const fid=(ntLatamLead()||{}).id;  // la destacada ya va en la primera plana → no duplicar
+    const latam=ntLatam().filter(function(n){ return n.id!==fid; }).slice(0,5); if(!latam.length) return '';
     let grid='';
     for(let i=0;i<latam.length;i++){ const n=latam[i];
       grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
@@ -4880,8 +4899,11 @@ window.addEventListener('popstate', function(){
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
+    const front = ntLatamLead()
+      ? '<div class="np-front three">'+npHero()+npHeroLatam()+npRail()+'</div>'   // local · destacada Latam · ranking
+      : '<div class="np-front">'+npHero()+npRail()+'</div>';
     return '<div class="np-page">'+npAdminBar()
-      +'<div class="np-body"><div class="np-front">'+npHero()+npRail()+'</div>'+npFeed()+'</div>'
+      +'<div class="np-body">'+front+npFeed()+'</div>'
       +npLatam()+npFooter()+'</div>';
   }
   function npRerender(){ const host=document.getElementById('tab-noticias'); if(host) host.innerHTML=npBuildHTML(); }
