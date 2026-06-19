@@ -4759,8 +4759,13 @@ window.addEventListener('popstate', function(){
   function npGallery(n){
     var s=n&&n.gallerySlug;
     if(!s || !/^[a-z0-9-]+$/.test(s)) return '';
+    // Microtag "ilustrativa": SOLO admin (mismo gate que npHideCtl → npAdmin.isAdmin,
+    // confirmado vía /v1/me). El público NUNCA emite el <span> → 0 flash: el render
+    // inicial corre isAdmin=false y el tag solo aparece tras npRerender() post-/v1/me,
+    // que únicamente se dispara si hay hint de sesión (el anónimo puro ni prueba).
+    var tag = npAdmin.isAdmin ? '<span class="np-gal-tag">ilustrativa</span>' : '';
     return '<img class="np-gal-img" src="/gal-'+s+'.webp" loading="lazy" alt="" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.remove()">'
-      +'<span class="np-gal-tag">ilustrativa</span>';
+      +tag;
   }
   // Fallo del hotlink og:image en runtime → swap a galería (no a placeholder): borra
   // el <img> roto e inyecta la galería en el mismo .np-imgph. Expuesta en window
