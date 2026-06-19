@@ -667,12 +667,16 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 </header>
 <nav class="fb-navbar">
   <div class="fb-tabs">
+    <!-- Nav momentánea reducida a 3 tabs (chore/nav-3-tabs): orden Inicio · Dólar · Macro.
+         DPF/BBV/Guía OCULTAS con `hidden` (nav-only): el botón sigue en el DOM y cableado,
+         sus rutas/paneles intactos (accesibles por URL directa). REVERTIR = quitar los
+         `hidden` y reponer el orden original (Inicio · Macro · Dólar · DPF · BBV · Guía). -->
     <button class="fb-tab active" data-tab="noticias">Inicio</button>
-    <button class="fb-tab" data-tab="macro">Macro</button>
     <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
-    <button class="fb-tab" data-tab="dpf">Rendimientos DPF</button>
-    <button class="fb-tab" data-tab="bbv">BBV</button>
-    <button class="fb-tab" data-tab="guide">Gu&iacute;a</button>
+    <button class="fb-tab" data-tab="macro">Macro</button>
+    <button class="fb-tab" data-tab="dpf" hidden>Rendimientos DPF</button>
+    <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
+    <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>
   </div>
 </nav>
 <div id="tab-dolar" style="display:none;">
