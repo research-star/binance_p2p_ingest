@@ -25,7 +25,7 @@ __UMAMI_SCRIPT__
   /* Noticias portada (spec cálido): superficies + acentos + colores por fuente.
      --bg-primary unificado al tono del chrome (#F7E4D7=--hero del spec); cards/tablas
      siguen en --bg-secondary. --up/--down antes referenciados sin definir (live-dots). */
-  --canvas:#E8E1D6;--paper:#FBEDE3;--up:#B5503F;--down:#5C7D52;--flat:#9E927C;
+  --canvas:#E8E1D6;--paper:#FBEDE3;--np-accent:#B5503F;--up:#B5503F;--down:#5C7D52;--flat:#9E927C;
   --src-eldeber:#1E6B8C;--src-correosur:#7A5EA8;--src-unitel:#B5503F;--src-larazon:#2C4A6B;--src-brujula:#2F7D6B;--src-fides:#9A6B2F;--src-eldia:#8A5A3C;--src-bloomberg:#C47E2A;
   --src-eju:#3F8C7A;--src-erbol:#A14A6B;--src-urgente:#6B5E9A;--src-opinion:#7A7A3C;--src-lostiempos:#4A5E8C;
   --nav-h:50px;--sub-h:76px}
@@ -490,14 +490,25 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    para que el dark salga gratis. Clases .np-* aisladas de la Variante D
    (.nt-*, se retira en 2b). 2a = estructura estática, contenido muestra.
    ════════════════════════════════════════════════════════════════ */
-.np-page{font-family:var(--font-display);color:var(--text-primary);background:var(--bg-primary)}
+/* El tema de gráficos pisa --up en :root (verde de mercados) en runtime; dentro de la
+   portada re-scopeamos --up al acento cálido del spec (--np-accent). El chrome (.fb-live)
+   vive fuera de .np-page → su "live dot" conserva el verde del tema. */
+.np-page{font-family:var(--font-display);color:var(--text-primary);background:var(--bg-primary);--up:var(--np-accent)}
 .np-body{padding:24px 36px 8px}
 /* — primera plana: hero (≈62%) | ranking 372px, a la misma altura (spec §5) — */
 .np-front{display:grid;grid-template-columns:1fr 372px;gap:0;align-items:start;border-bottom:2px solid var(--text-primary)}
 .np-front.three{grid-template-columns:1fr 1fr 372px}  /* local · destacada Latam · ranking */
 .np-hero{padding:4px 32px 26px 0;min-width:0;border-right:1px solid var(--border-color)}
-.np-hero-latam{padding-left:32px}  /* columna del medio: gutter de ambos lados */
-.np-front.three .np-lead-title{font-size:31px;line-height:1.08}
+/* Destacada internacional (medio): panel oscuro como "El día en cifras" (#2A251F),
+   letras claras, alineada a la izquierda, sin franja, y alineada en Y con el hero local. */
+.np-hero-latam{padding:4px 22px 22px;border-right:0;background:#2A251F;border-radius:var(--radius-sm)}
+.np-hero-latam .np-kicker{color:#E5A89D}
+.np-hero-latam .np-lead-title{color:#F3E4D6}
+.np-hero-latam .np-lead-title:hover{color:#FFFFFF}
+.np-hero-latam .np-src{color:#EFE6DB}
+.np-hero-latam .np-hero-foot,.np-hero-latam .np-sep,.np-hero-latam .np-time{color:#B8A993}
+/* 3 líneas reservadas en ambos heroes del 3-col → imagen/título alineados en Y entre local y destacada */
+.np-front.three .np-lead-title{font-size:31px;line-height:1.12;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:3.36em}
 .np-front.three .np-hero-img{height:clamp(170px,17vw,240px)}
 /* — átomos tipográficos — */
 .np-kicker{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--up)}
@@ -511,7 +522,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.5;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
-@media(max-width:980px){.np-front,.np-front.three{grid-template-columns:1fr;border-bottom:0}.np-hero,.np-hero-latam{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-front.three .np-lead-title{font-size:var(--lead-size)}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
+@media(max-width:980px){.np-front,.np-front.three{grid-template-columns:1fr;border-bottom:0}.np-hero{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-hero-latam{padding:16px;border-right:0;border-bottom:0}.np-front.three .np-lead-title{font-size:var(--lead-size);min-height:0}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
 /* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
 .np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
 .np-topline-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;letter-spacing:.02em}
@@ -4755,11 +4766,19 @@ window.addEventListener('popstate', function(){
     if(!lead) return '<article class="np-hero"><div class="np-empty">No hay portada disponible.</div></article>';
     return '<article class="np-hero"'+npNoteAttr(lead)+'>'+npHeroBody(lead)+'</article>';
   }
-  // Destacada internacional: mejor nota del carril Latam (Bloomberg), al medio de la primera plana.
+  // Destacada internacional: mejor nota del carril Latam (Bloomberg), al medio de la
+  // primera plana, con el tratamiento "Destacada" del spec §6 (caja + franja de acento
+  // izquierda + eyebrow ◆ Destacada + kicker y titular centrados).
   function ntLatamLead(){ return ntLatam().slice().sort(ntCmp)[0] || null; }
   function npHeroLatam(){
     const lead=ntLatamLead(); if(!lead) return '';
-    return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHeroBody(lead,'<div class="np-kicker">Internacional</div>')+'</article>';
+    return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
+      +'<div class="np-kicker">'+ntEsc(ntCatName(lead.category)||'Internacional')+'</div>'
+      +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
+      +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
+        +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'</article>';
   }
 
   // Ranking "Lo más relevante hoy" (fijo a ntDefaultDay()); excluye el lead (va en el hero).
