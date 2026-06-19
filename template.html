@@ -14,14 +14,14 @@
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
-<meta name="theme-color" content="#2c4a6b">
+<meta name="theme-color" content="#FBEDE3">
 <title>P2P USDT/BOB — Dashboard</title>
 <!-- Umami analytics (only emitted if UMAMI_WEBSITE_ID present at build time) -->
 __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#fafbfe;--bg-secondary:#ffffff;--bg-tertiary:#dde8ef;--border-color:rgba(44,74,107,0.12);--text-primary:#2c4a6b;--text-secondary:#6b7d92;--text-muted:#6b7d92;--text-soft:#8c9aab;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
+:root{--bg-primary:#FBEDE3;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
 /* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
@@ -133,8 +133,8 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .merchants-table td.nick{font-family:var(--font-display);color:var(--text-primary);font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis}
 .view-hint{padding:36px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-base);font-style:italic}
 .pill{display:inline-block;padding:1px 8px;border-radius:var(--radius-xl);font-size:var(--text-2xs);font-weight:600;letter-spacing:.04em;text-transform:lowercase;font-family:var(--font-display);font-variant-numeric:normal}
-.pill-yellow{background:rgba(168,200,224,.25);color:#5589c0}
-.pill-red{background:rgba(44,74,107,.18);color:#2c4a6b}
+.pill-yellow{background:#F5E5C9;color:#7E4F08}
+.pill-red{background:#F2DAD2;color:#8A2D20}
 .snap-stamp{font-size:var(--text-sm);color:var(--text-muted);margin-top:6px;font-style:normal;font-weight:400}
 .outliers-scroll{max-height:420px;overflow-y:auto;border:1px solid var(--border-color);border-radius:var(--radius-sm)}
 .outliers-scroll thead th{position:sticky;top:0;background:var(--bg-secondary);z-index:2}
@@ -242,7 +242,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
 
 /* ── Error banner ── */
-.error-banner{position:sticky;top:0;z-index:2000;background:#2c4a6b;color:#fff;padding:10px 16px;font-family:var(--font-display);font-size:var(--text-base);font-weight:500;text-align:center;display:none}
+.error-banner{position:sticky;top:0;z-index:2000;background:var(--blue-accent);color:#fff;padding:10px 16px;font-family:var(--font-display);font-size:var(--text-base);font-weight:500;text-align:center;display:none}
 .error-banner.show{display:block}
 .error-banner .eb-retry{margin-left:8px;font-size:var(--text-sm);opacity:.85}
 /* ── Chrome editorial (utility + masthead scrollean · nav sticky) ──
@@ -316,7 +316,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 }
 @media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
 .fb-mono{font-family:var(--font-mono)}
-.fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#8c9aab);text-align:right;padding:6px 4px 0;font-style:italic}
+.fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#9E927C);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
 .fb-macro-subnav{display:flex;align-items:baseline;gap:0;margin:0;padding:6px 18px 0;position:sticky;top:var(--nav-h);z-index:51;background:var(--bg-secondary);border-bottom:2px solid var(--text-primary)}
 .fb-macro-tab{font-family:var(--font-display);font-size:24px;font-weight:500;line-height:1.1;color:var(--text-soft);background:none;border:none;padding:2px 2px 12px;cursor:pointer;transition:color .15s}
@@ -341,14 +341,14 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 @media(max-width:600px){#tab-macro .fb-subheader h1{font-size:32px}}
 .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
 .fb-stog{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
-.fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid rgba(44,74,107,.30);background:transparent;flex-shrink:0;transition:all .15s}
+.fb-stog-check{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:var(--radius-xs);border:1.5px solid var(--line-strong);background:transparent;flex-shrink:0;transition:all .15s}
 .fb-stog-check svg{width:10px;height:10px;opacity:0}
 .fb-stog-line{display:inline-block;width:14px;height:0;border-top:2px solid currentColor;flex-shrink:0}
 .fb-stog-line.dashed{border-top-style:dashed}
-.fb-stog.active{background:var(--bg-secondary);border-color:rgba(44,74,107,.30);color:var(--text-primary)}
+.fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
-.fb-stog.inactive{background:rgba(44,74,107,.04);border-color:rgba(44,74,107,.10);color:#9aa6b5}
+.fb-stog.inactive{background:rgba(92,74,56,.05);border-color:rgba(33,30,27,.10);color:#8E836F}
 .fb-stog.inactive .fb-stog-check{border-color:rgba(154,166,181,.40);background:transparent}
 
 /* ── Riesgo País chart tokens ────────────────────────────────────────
@@ -366,7 +366,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-pills{display:flex;gap:4px;flex-wrap:wrap}
 .fb-pill{padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:transparent;font-size:var(--text-sm);color:var(--text-secondary);cursor:pointer;font-weight:500;font-family:inherit;transition:all .15s}
 .fb-pill:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.fb-pill.active{background:#2c4a6b;color:#fff;border-color:#2c4a6b}
+.fb-pill.active{background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
 .fb-chart-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:16px 20px}
 .fb-chart-card--elevated{box-shadow:var(--shadow-md)}
 .fb-chart-head{margin-bottom:12px}
@@ -378,7 +378,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-data-table th{font-size:var(--text-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:.10em;font-weight:500}
 .fb-data-table th[data-sort-key]{cursor:pointer;user-select:none;transition:color .12s}
 .fb-data-table th[data-sort-key]:hover{color:var(--text-primary)}
-.fb-data-table tr:hover{background:rgba(44,74,107,.04)}
+.fb-data-table tr:hover{background:rgba(92,74,56,.06)}
 .fb-data-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
 .fb-data-table th.num,.fb-data-table td.num{text-align:right;font-family:var(--font-mono)}
 .fb-data-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
@@ -389,7 +389,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-data-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
 .fb-data-table td.bond-code{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-secondary);letter-spacing:.02em}
 .fb-data-table td.has-help{cursor:help;border-bottom:1px dotted var(--text-muted)}
-.fb-dpf-bar-bg{background:rgba(44,74,107,.08);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
+.fb-dpf-bar-bg{background:rgba(92,74,56,.10);border-radius:var(--radius-sm);overflow:hidden;height:8px;min-width:60px}
 .fb-dpf-bar{height:8px;background:#1e4d7a;border-radius:var(--radius-sm)}
 @media(max-width:900px){.fb-dpf-filters{gap:14px;padding:12px 14px}}
 /* ── BBV table & filters ── */
@@ -453,7 +453,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-sep{color:var(--line-strong)}
 .np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
 /* — placeholder de imagen (.ft-imgph portado: gradiente navy + glifo cámara) — */
-.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(27,54,93,.92),rgba(44,74,107,.62) 46%,rgba(110,165,217,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(33,30,27,.88),rgba(107,98,86,.58) 46%,rgba(165,112,103,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
 .np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph.sm{aspect-ratio:1/1}
@@ -1187,7 +1187,7 @@ let last = null;
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#fafbfe','bg-secondary':'#ffffff','bg-tertiary':'#dde8ef','tooltip-bg':'#dde8ef','border-color':'rgba(44,74,107,0.12)','line-strong':'rgba(44,74,107,0.24)','up':'#7d9a86','down':'#b08a82','text-primary':'#2c4a6b','text-secondary':'#6b7d92','text-muted':'#6b7d92','text-soft':'#8c9aab','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#c7860a','chart-color-latino':'#7d8185','chart-color-global':'#adb1b6','chart-color-argentina':'#4696d3','chart-color-brasil':'#489450','chart-color-chile':'#c35141','chart-color-colombia':'#384e8f','chart-color-ecuador':'#c9c66a','chart-color-mexico':'#066e70','chart-color-peru':'#932c50','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#284d83','chart-debt-em2022':'#327a41','chart-debt-em2026':'#a14b46','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#1e4d7a','color-sell':'#6b7d92','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#5589c0','color-bcb-ref-venta':'#5589c0','color-neutral':'#5589c0','color-accent-warm':'#5589c0','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#c7860a','chart-color-latino':'#7d8185','chart-color-global':'#adb1b6','chart-color-argentina':'#4696d3','chart-color-brasil':'#489450','chart-color-chile':'#c35141','chart-color-colombia':'#384e8f','chart-color-ecuador':'#c9c66a','chart-color-mexico':'#066e70','chart-color-peru':'#932c50','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#284d83','chart-debt-em2022':'#327a41','chart-debt-em2026':'#a14b46','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -3811,8 +3811,8 @@ window.addEventListener('popstate', function(){
     var fontc  = cssVar('--chart-axis-text', '#576471');
     var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
     var tipBg  = cssVar('--tooltip-bg', '#fff');
-    var tipBd  = cssVar('--tooltip-border', 'rgba(44,74,107,.18)');
-    var tipFg  = cssVar('--tooltip-text', '#2c4a6b');
+    var tipBd  = cssVar('--tooltip-border', 'rgba(33,30,27,.18)');
+    var tipFg  = cssVar('--tooltip-text', '#211E1B');
     var bands  = buildBands();
     return {
       autosize: true,
@@ -4001,8 +4001,8 @@ window.addEventListener('popstate', function(){
       yaxis:{tickformat:',d', showgrid:true, gridcolor:gridc, zeroline:false,
              rangemode:'tozero', title:{text:'USD MM', font:{size:10, color:fontc}}},
       hovermode:'x unified',
-      hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(44,74,107,.18)'),
-                  font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#2c4a6b')}},
+      hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(33,30,27,.18)'),
+                  font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#211E1B')}},
       showlegend:true,
       legend:{orientation:'h', x:0, y:-0.1, yanchor:'top', font:{size:10}},
       paper_bgcolor:'rgba(0,0,0,0)',
@@ -4015,7 +4015,7 @@ window.addEventListener('popstate', function(){
       annotations: DEBT_SCHEDULE.years.map(function(yr, i){
         return {x:i, y:DEBT_SCHEDULE.totals[i], text:'<b>'+fmtInt(DEBT_SCHEDULE.totals[i])+'</b>',
                 showarrow:false, yshift:12,
-                font:{size:11, color:cssVar('--text-primary','#2c4a6b')}};
+                font:{size:11, color:cssVar('--text-primary','#211E1B')}};
       })
     };
     Plotly.newPlot(el, traces, L, {displayModeBar:false, responsive:true});
@@ -4144,8 +4144,8 @@ window.addEventListener('popstate', function(){
     var fontc  = cssVar('--chart-axis-text', '#576471');
     var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
     var tipBg  = cssVar('--tooltip-bg', '#fff');
-    var tipBd  = cssVar('--tooltip-border', 'rgba(44,74,107,.18)');
-    var tipFg  = cssVar('--tooltip-text', '#2c4a6b');
+    var tipBd  = cssVar('--tooltip-border', 'rgba(33,30,27,.18)');
+    var tipFg  = cssVar('--tooltip-text', '#211E1B');
     return {
       autosize: true,
       margin: {l: 56, r: 16, t: 12, b: 36},
@@ -4234,12 +4234,12 @@ window.addEventListener('popstate', function(){
     if(peakIdx!=null) L.annotations.push({
       x:per[peakIdx], y:serie[peakIdx], text:'<b>'+fmtPct(serie[peakIdx],1)+'</b>',
       showarrow:false, yshift:14,
-      font:{size:12, color:cssVar('--text-primary','#2c4a6b')}
+      font:{size:12, color:cssVar('--text-primary','#211E1B')}
     });
     if(last && last.idx!==peakIdx) L.annotations.push({
       x:per[last.idx], y:last.val, text:'<b>'+fmtPct(last.val,1)+'</b>',
       showarrow:false, xanchor:'left', xshift:10,
-      font:{size:12, color:cssVar('--text-primary','#2c4a6b')},
+      font:{size:12, color:cssVar('--text-primary','#211E1B')},
       bgcolor:cssVar('--tooltip-bg','#fff'), borderpad:3
     });
     Plotly.newPlot(el, traces, L, PLOTLY_CFG);
