@@ -21,7 +21,14 @@ __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Outfit:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#FBEDE3;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
+:root{--bg-primary:#F7E4D7;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;
+  /* Noticias portada (spec cálido): superficies + acentos + colores por fuente.
+     --bg-primary unificado al tono del chrome (#F7E4D7=--hero del spec); cards/tablas
+     siguen en --bg-secondary. --up/--down antes referenciados sin definir (live-dots). */
+  --canvas:#E8E1D6;--paper:#FBEDE3;--up:#B5503F;--down:#5C7D52;--flat:#9E927C;
+  --src-eldeber:#1E6B8C;--src-correosur:#7A5EA8;--src-unitel:#B5503F;--src-larazon:#2C4A6B;--src-brujula:#2F7D6B;--src-fides:#9A6B2F;--src-eldia:#8A5A3C;--src-bloomberg:#C47E2A;
+  --src-eju:#3F8C7A;--src-erbol:#A14A6B;--src-urgente:#6B5E9A;--src-opinion:#7A7A3C;--src-lostiempos:#4A5E8C;
+  --nav-h:50px;--sub-h:76px}
 /* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
@@ -43,7 +50,7 @@ __UMAMI_SCRIPT__
   --text-3xl:22px;
   --text-4xl:26px;
   --text-5xl:28px;
-  --lead-size:46px;
+  --lead-size:39px;        /* titular hero portada Noticias (spec §2) */
   --river-gap:14px;
   --radius-xs:3px;
   --radius-sm:4px;
@@ -62,6 +69,7 @@ __UMAMI_SCRIPT__
 }
 *,*::before,*::after{transition:background-color .3s,color .3s,border-color .3s}
 *{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--canvas)}
 body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);min-height:100vh}
 
 /* ── Logo ── */
@@ -249,7 +257,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    utility bar (dateline + ES/EN) → masthead (solo nameplate, centrado,
    serif) → fila de tabs + buscador (deshabilitado). Solo la fila de tabs
    es sticky; utility+masthead scrollean. Tokens cálidos (tema único claro). */
-.fb-chrome{background:var(--bg-secondary)}
+.fb-chrome{background:var(--bg-primary)}
 .fb-utility{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
 .fb-utility-right{display:flex;align-items:center;gap:12px}
 .fb-util-date{color:var(--text-secondary);letter-spacing:.02em;font-variant-numeric:tabular-nums}
@@ -285,7 +293,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    grid 1fr·auto·1fr ⇒ el nombre queda centrado respecto a la página aunque los
    rieles laterales tengan ancho distinto. La sesión (login/email/logout) la pinta
    fbRenderSession() en #fbMastheadSession. */
-.fb-masthead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:18px 36px;border-bottom:2px solid var(--text-primary);background:var(--bg-secondary)}
+.fb-masthead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:18px 36px;border-bottom:2px solid var(--text-primary);background:var(--bg-primary)}
 .fb-masthead-left{justify-self:start;min-width:0}
 /* Acciones (login + buscar) apiladas a la derecha del todo, MISMO formato
    [ícono]+texto, alineadas a la izquierda entre sí ⇒ íconos e inicio de texto
@@ -309,7 +317,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 @media(max-width:980px){.fb-masthead{grid-template-columns:1fr;grid-template-areas:"actions" "name";row-gap:8px;padding:12px 16px 14px}.fb-masthead-left{display:none}.fb-masthead-actions{grid-area:actions;justify-self:end}.fb-nameplate{grid-area:name;justify-self:center;white-space:normal}.fb-login,.fb-search-link,.fb-session{font-size:12px}.fb-session .fb-session-mail{max-width:150px}}
 @media(max-width:420px){.fb-nameplate{font-size:clamp(34px,11vw,44px)}.fb-session .fb-session-mail{max-width:110px}}
 /* ── Navbar (fila de tabs + buscador) · sticky ── */
-.fb-navbar{display:flex;align-items:stretch;justify-content:space-between;gap:16px;padding:0 36px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
+.fb-navbar{display:flex;align-items:stretch;justify-content:space-between;gap:16px;padding:0 36px;background:var(--bg-primary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
 .fb-tabs{display:flex;gap:0;align-items:stretch}
 .fb-tab{font-family:var(--font-body);font-size:13px;font-weight:500;padding:11px 14px;border:none;border-bottom:2px solid transparent;border-radius:0;cursor:pointer;background:transparent;color:var(--text-muted);transition:color .15s,border-color .15s;margin-bottom:-1px;white-space:nowrap}
 .fb-tab.active{color:var(--text-primary);font-weight:700;border-bottom-color:var(--text-primary)}
@@ -484,26 +492,22 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    ════════════════════════════════════════════════════════════════ */
 .np-page{font-family:var(--font-display);color:var(--text-primary);background:var(--bg-primary)}
 .np-body{padding:24px 36px 8px}
-.np-main{display:grid;grid-template-columns:1fr 312px;gap:34px;align-items:start}
+/* — primera plana: hero (≈62%) | ranking 372px, a la misma altura (spec §5) — */
+.np-front{display:grid;grid-template-columns:1fr 372px;gap:0;align-items:start;border-bottom:2px solid var(--text-primary)}
+.np-hero{padding:4px 32px 26px 0;min-width:0;border-right:1px solid var(--border-color)}
 /* — átomos tipográficos — */
-.np-kicker{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-accent)}
-/* — dateline: fuente · hora · impacto — */
-.np-dateline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
+.np-kicker{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--up)}
+/* — fila de fuente: 1 punto por portal · nombre · hora — */
 .np-src{font-family:var(--font-body);font-weight:600;color:var(--text-secondary);letter-spacing:.02em;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
-.np-src .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--nt-c,var(--blue-accent));flex-shrink:0}
+.np-src .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--nt-c,var(--text-muted));flex-shrink:0}
 .np-sep{color:var(--line-strong)}
 .np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
-/* — placeholder de imagen (.ft-imgph portado: gradiente navy + glifo cámara) — */
-.np-imgph{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--radius-xs);background:linear-gradient(150deg,rgba(33,30,27,.88),rgba(107,98,86,.58) 46%,rgba(165,112,103,.42));border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
+/* — placeholder de imagen: degradé cálido neutro + glifo cámara (spec §6) — */
+.np-imgph{position:relative;width:100%;aspect-ratio:16/10;border-radius:var(--radius-xs);background:linear-gradient(135deg,#CDBFAE,#A99A86 55%,#8F8170);border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
 .np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
-.np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.32;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
-.np-imgph.sm{aspect-ratio:1/1}
+.np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.5;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
-/* — section head (regla 2px tinta) — */
-.np-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:2px solid var(--text-primary);padding-bottom:8px;margin-bottom:16px}
-.np-section-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;letter-spacing:-.01em;color:var(--text-primary);margin:0}
-.np-section-head .meta{font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-soft);letter-spacing:.04em}
-@media(max-width:980px){.np-main{grid-template-columns:1fr;gap:26px}.np-body{padding:18px 16px 6px}}
+@media(max-width:980px){.np-front{grid-template-columns:1fr;border-bottom:0}.np-hero{padding:0 0 18px;border-right:0;border-bottom:2px solid var(--text-primary)}.np-rail{padding:18px 0 0}.np-body{padding:18px 16px 6px}}
 /* — 1 · topline (dateline/kicker fina; reemplaza utility+masthead) — */
 .np-topline{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:10px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
 .np-topline-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;letter-spacing:.02em}
@@ -512,60 +516,83 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent)}
 @media(max-width:980px){.np-topline{padding:8px 16px}}
 /* — 2 · (franja "El día en cifras" reubicada al ticker global .fb-ticker arriba del masthead) — */
-/* — 3 · lead + 2 secundarias — */
-.np-top{display:grid;grid-template-columns:1.62fr 1fr;gap:0;border-bottom:2px solid var(--text-primary);padding-bottom:26px;margin-bottom:24px}
-.np-lead{padding-right:30px;border-right:1px solid var(--border-color)}
-.np-lead-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:var(--lead-size);line-height:1.04;letter-spacing:-.03em;margin:0;cursor:pointer;text-wrap:balance}
-.np-lead-title:hover{color:var(--blue-accent)}
-.np-figure{margin:18px 0 0;position:relative}
-.np-figcap{font-family:var(--font-body);font-size:10.5px;color:var(--text-soft);margin-top:6px;line-height:1.4}
-.np-lead-stand{font-family:var(--font-display);font-size:18px;line-height:1.5;color:var(--text-secondary);margin-top:15px;text-wrap:pretty;max-width:42em}
-.np-secs{padding-left:30px;display:flex;flex-direction:column}
-.np-sec{padding:16px 0;border-top:1px solid var(--border-color)}
-.np-sec:first-child{padding-top:0;border-top:0}
-.np-sec-title{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.16;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.01em;text-wrap:balance}
-.np-sec-title:hover{color:var(--blue-accent)}
-.np-sec-stand{font-family:var(--font-display);font-size:14.5px;line-height:1.45;color:var(--text-muted);margin-top:7px;text-wrap:pretty}
-.np-sec-row{display:flex;gap:14px;align-items:flex-start}
-.np-sec-row .np-sec-main{flex:1;min-width:0}
-.np-sec-row .np-imgph{width:108px;flex:none;aspect-ratio:1/1;align-self:flex-start;margin-top:2px}
-@media(max-width:980px){.np-top{grid-template-columns:1fr;border-bottom:0;padding-bottom:18px;margin-bottom:0}.np-lead{padding-right:0;border-right:0}.np-secs{padding-left:0;margin-top:20px;border-top:2px solid var(--text-primary);padding-top:14px}}
-/* — 4 · río de tarjetas — */
-.np-river-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 26px}
-.np-card{display:flex;flex-direction:column;min-width:0}
+/* — 3 · hero (single lead): kicker + titular 39px + imagen 16:10 (caption sobre degradé) + fila de fuente — */
+.np-lead-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:var(--lead-size);line-height:1.06;letter-spacing:-.01em;margin:10px 0 0;cursor:pointer;text-wrap:balance}
+.np-lead-title:hover{color:var(--up)}
+.np-figure{margin:16px 0 0;position:relative}
+.np-imgph.np-hero-img{aspect-ratio:auto;height:clamp(240px,30vw,360px)}
+.np-hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:20px 16px 13px;background:linear-gradient(transparent,rgba(20,16,12,.62));color:#F3E4D6;font-family:var(--font-body);font-size:12.5px;line-height:1.45;text-wrap:pretty}
+.np-hero-foot{display:flex;align-items:center;gap:10px;margin-top:14px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
+/* — 4 · feed: encabezado dinámico (§4) + control de fecha (§5) + grilla 3×N sin caja (hairlines) — */
+.np-feed{padding:0 0 8px}
+.np-feed-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;border-bottom:2px solid var(--text-primary);padding:20px 0 11px;margin-bottom:0}
+.np-feed-headmain{min-width:0}
+.np-feed-title{font-family:var(--font-display);font-weight:600;font-size:27px;line-height:1.1;letter-spacing:-.01em;color:var(--text-primary);margin:0}
+.np-feed-sub{font-family:var(--font-body);font-size:11.5px;font-weight:500;color:var(--text-soft);letter-spacing:.02em;margin:4px 0 0}
+/* — control de fecha (dateline editorial: chips mono, sin date-picker) — */
+.np-datectl{display:flex;align-items:stretch;gap:6px;flex:none}
+.np-dc-arrow{display:inline-flex;align-items:center;justify-content:center;width:30px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);font-size:17px;line-height:1;cursor:pointer;border-radius:var(--radius-sm);font-family:var(--font-body);transition:border-color .15s,color .15s}
+.np-dc-arrow:hover:not(:disabled){border-color:var(--line-strong);color:var(--text-primary)}
+.np-dc-arrow:disabled{opacity:.32;cursor:not-allowed}
+.np-dc-days{display:flex;gap:0}
+.np-day{display:flex;flex:none;flex-direction:column;align-items:center;gap:2px;padding:5px 11px;border:1px solid var(--border-color);margin-right:-1px;background:var(--bg-secondary);cursor:pointer;transition:background .15s;font-family:var(--font-body)}
+.np-day:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+.np-day:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-right:0}
+.np-day:hover:not(.on){background:var(--bg-tertiary)}
+.np-day.on{background:var(--text-primary);border-color:var(--text-primary);position:relative;z-index:1}
+.np-day-wd{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
+.np-day-dn{font-family:var(--font-mono);font-size:13px;font-weight:600;line-height:1;color:var(--text-primary);font-variant-numeric:tabular-nums}
+.np-day.on .np-day-wd,.np-day.on .np-day-dn{color:var(--paper)}
+/* — "Mostrar más ↓" — */
+.np-more{display:flex;justify-content:center;padding:24px 0 4px}
+.np-more-btn{font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.04em;color:var(--text-secondary);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:9px 22px;cursor:pointer;transition:border-color .15s,color .15s}
+.np-more-btn:hover:not(:disabled){border-color:var(--line-strong);color:var(--text-primary)}
+.np-more-btn:disabled{opacity:.4;cursor:not-allowed}
+.np-more-m{display:none}
+/* — mobile (§7): tira de días deslizable + "Mostrar día anterior →" — */
+@media(max-width:640px){
+  .np-feed-head{align-items:stretch;gap:12px}
+  .np-datectl{flex:1 1 100%;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .np-datectl::-webkit-scrollbar{display:none}
+  .np-more-d{display:none}
+  .np-more-m{display:inline}
+}
+.np-feed-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+.np-feed-grid .np-card{padding:20px 22px;border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)}
+.np-feed-grid .np-card:nth-child(3n){border-right:0;padding-right:0}
+.np-feed-grid .np-card:nth-child(3n+1){padding-left:0}
+.np-card{display:flex;flex-direction:column;min-width:0;height:100%}
 .np-card .np-card-img{aspect-ratio:16/10;border-radius:var(--radius-xs);margin:0}
-.np-card-body{padding-top:13px;display:flex;flex-direction:column}
-.np-card-title{font-family:var(--font-display);font-weight:600;font-size:18.5px;line-height:1.2;color:var(--text-primary);margin:0;cursor:pointer;letter-spacing:-.02em;text-wrap:pretty}
-.np-card-title:hover{color:var(--text-secondary);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.np-card-meta{display:flex;align-items:center;gap:9px;margin-top:10px;font-family:var(--font-body);font-size:10.5px;color:var(--text-muted);flex-wrap:wrap}
+.np-card-body{padding-top:13px;display:flex;flex-direction:column;flex:1}
+.np-card-title{font-family:var(--font-display);font-weight:600;font-size:18px;line-height:1.16;color:var(--text-primary);margin:6px 0 0;cursor:pointer;letter-spacing:-.01em;text-wrap:pretty}
+.np-card-title:hover{color:var(--up);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.np-card-meta{display:flex;align-items:center;gap:9px;margin-top:auto;padding-top:11px;font-family:var(--font-body);font-size:10.5px;color:var(--text-muted);flex-wrap:wrap}
 .np-card-meta .np-src{font-size:10.5px}
-@media(max-width:980px){.np-river-cards{grid-template-columns:1fr 1fr;gap:18px 14px}}
-@media(max-width:560px){.np-river-cards{grid-template-columns:1fr}}
-/* — 5 · right rail · "Lo más relevante" — */
-.np-rail{display:flex;flex-direction:column;gap:24px;position:relative}
-.np-rail::before{content:'';position:absolute;left:-17px;top:4px;bottom:4px;width:1px;background:var(--border-color)}
+@media(max-width:980px){.np-feed-grid{grid-template-columns:1fr 1fr;gap:22px 18px}.np-feed-grid .np-card,.np-feed-grid .np-card:nth-child(3n),.np-feed-grid .np-card:nth-child(3n+1){padding:0;border-right:0;border-bottom:0}}
+@media(max-width:560px){.np-feed-grid{grid-template-columns:1fr}}
+/* — 5 · ranking · "Lo más relevante hoy" (columna derecha de la primera plana) — */
+.np-rail{padding:4px 0 6px 32px;min-width:0}
 .np-railcard h3{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--text-primary);margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--text-primary);display:flex;align-items:center;justify-content:space-between;gap:8px}
 .np-railcard h3 .sub{font-weight:500;letter-spacing:.04em;text-transform:none;color:var(--text-soft);font-size:10.5px}
 .np-rank{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--border-color)}
 .np-rank:last-child{border-bottom:0}
-.np-rank .num{font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1;color:var(--blue-accent);width:24px;flex:none;text-align:center}
+.np-rank .num{font-family:var(--font-display);font-weight:600;font-size:24px;line-height:1;color:var(--text-soft);width:24px;flex:none;text-align:center}
 .np-rank .rk-main{flex:1;min-width:0}
 .np-rank .rk-title{font-family:var(--font-display);font-weight:500;font-size:14.5px;line-height:1.28;color:var(--text-primary);cursor:pointer;text-wrap:pretty}
-.np-rank .rk-title:hover{color:var(--blue-accent)}
+.np-rank .rk-title:hover{color:var(--up)}
 .np-rank .rk-meta{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:5px;letter-spacing:.02em}
-@media(max-width:980px){.np-rail::before{display:none}}
 /* — 6 · banda Latam / Internacional — */
 .np-latam{margin:30px 0 8px;padding:22px 36px;background:var(--bg-secondary);border-top:2px solid var(--text-primary);border-bottom:1px solid var(--border-color)}
 .np-latam-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
 .np-latam-head h2{font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--text-primary);margin:0;letter-spacing:-.01em}
 .np-latam-head .by{font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.04em;display:inline-flex;align-items:center;gap:6px}
-.np-latam-head .by .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--blue-accent)}
+.np-latam-head .by .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--up)}
 .np-latam-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
 .np-latam-card{padding:0 18px;border-left:1px solid var(--border-color)}
 .np-latam-card:first-child{padding-left:0;border-left:0}
-.np-latam-flag{font-family:var(--font-body);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-accent);margin-bottom:8px}
+.np-latam-flag{font-family:var(--font-body);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--up);margin-bottom:8px}
 .np-latam-title{font-family:var(--font-display);font-weight:600;font-size:16px;line-height:1.24;color:var(--text-primary);margin:0;cursor:pointer;text-wrap:pretty}
-.np-latam-title:hover{color:var(--blue-accent)}
+.np-latam-title:hover{color:var(--up)}
 .np-latam-stand{font-family:var(--font-display);font-size:12.5px;line-height:1.4;color:var(--text-muted);margin-top:8px;text-wrap:pretty}
 .np-latam-time{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:8px;letter-spacing:.02em}
 @media(max-width:980px){.np-latam{padding:18px 16px}.np-latam-grid{grid-template-columns:1fr 1fr}.np-latam-card{padding:14px 0;border-left:0;border-top:1px solid var(--border-color)}.np-latam-card:first-child{padding-top:0;border-top:0}}
@@ -576,7 +603,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-foot-lab{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:11px}
 .np-foot-portals{display:flex;flex-wrap:wrap;gap:7px 16px;align-items:center}
 .np-foot-portal{font-family:var(--font-display);font-weight:500;font-size:14px;color:var(--text-secondary);letter-spacing:.01em}
-.np-foot-portal.linea{color:var(--blue-accent);font-weight:600}
+.np-foot-portal.linea{color:var(--up);font-weight:600}
 .np-foot-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
 .np-method{font-family:var(--font-body);font-size:11px;line-height:1.65;color:var(--text-muted)}
 .np-method b{color:var(--text-secondary);font-weight:600}
@@ -584,15 +611,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-foot-tabs{font-family:var(--font-body);font-size:11px;color:var(--text-muted)}
 .np-foot-tabs .lab{font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-primary);display:block;margin-bottom:11px;font-size:10px}
 .np-foot-tabs a{display:block;color:var(--text-secondary);text-decoration:none;padding:4px 0;border-bottom:1px solid var(--border-color);font-size:12.5px;font-weight:500;cursor:pointer}
-.np-foot-tabs a:hover{color:var(--blue-accent)}
+.np-foot-tabs a:hover{color:var(--up)}
 .np-foot-copy{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:22px;letter-spacing:.03em;text-align:center}
 @media(max-width:980px){.np-footer{padding:22px 16px 28px}.np-foot-grid{grid-template-columns:1fr;gap:24px}}
 /* — 2b · dek (summary) + links + estado vacío — */
 .np-titlelink{color:inherit;text-decoration:none}
 .np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.np-lead-stand{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.np-sec-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
 /* — sesión / gestión de ocultas (PR-C3): barra SIEMPRE visible en Noticias.
@@ -606,7 +631,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-admin-who .dot{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);flex-shrink:0}
 .np-admin-spacer{flex:1}
 .np-admin-note{flex-basis:100%;font-size:11.5px;line-height:1.45;padding:7px 11px;border-radius:var(--radius-sm)}
-.np-admin-note.info{background:color-mix(in srgb,var(--blue-accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--blue-accent) 30%,transparent);color:var(--text-secondary)}
+.np-admin-note.info{background:color-mix(in srgb,var(--up) 9%,transparent);border:1px solid color-mix(in srgb,var(--up) 30%,transparent);color:var(--text-secondary)}
 .np-admin-note.warn{background:color-mix(in srgb,var(--orange) 12%,transparent);border:1px solid color-mix(in srgb,var(--orange) 38%,transparent);color:var(--text-primary)}
 /* control por-nota: botón de ocultar anclado a la esquina del wrapper (solo en modo edición) */
 [data-note-id]{position:relative}
@@ -4593,6 +4618,7 @@ window.addEventListener('popstate', function(){
   const NT_DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   const NT_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const NT_MES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const NT_WD = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];  // weekday corto para chips del control de fecha
   function ntFechaLarga(d){ const dt=ntParseD(d); return NT_DIAS[dt.getDay()]+' '+dt.getDate()+' de '+NT_MESES[dt.getMonth()]+' de '+dt.getFullYear(); }
   function ntFechaCorta(d){ const dt=ntParseD(d); return dt.getDate()+' '+NT_MES_CORTO[dt.getMonth()]; }
   function ntEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -4603,7 +4629,7 @@ window.addEventListener('popstate', function(){
   // ── Ocultas (PR-C1): ids ocultos desde /v1/hidden (público). Vacío por default →
   // el primer paint NO espera la red. El fetch (ver renderNoticias) lo puebla y
   // re-renderiza. ntVisible() es el ÚNICO punto de filtrado: ntBolivia/ntLatam y por
-  // ende ntPool/ntRelevantes derivan de él, así un solo gate cubre los 4 carriles.
+  // ende ntDayNotes/hero/ranking/feed derivan de él, así un solo gate cubre los carriles.
   // Con el set vacío devuelve NOTICIAS_NEWS tal cual (cero overhead → regresión cero).
   const NT_HIDDEN = new Set();
   function ntVisible(){ return NT_HIDDEN.size ? NOTICIAS_NEWS.filter(function(n){ return !NT_HIDDEN.has(n.id); }) : NOTICIAS_NEWS; }
@@ -4633,16 +4659,26 @@ window.addEventListener('popstate', function(){
   function ntBolivia(){ return ntVisible().filter(function(n){ return !ntEsLatam(n); }); }
   function ntLatam(){ return ntVisible().filter(ntEsLatam).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
   function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
+  // Categoría → nombre display (kicker). Fallback: capitaliza el slug crudo.
+  const NT_CAT_NAMES = { economia:'Economía', politica:'Política', hidrocarburos:'Hidrocarburos', agro:'Agro', mineria:'Minería', mundo:'Mundo', internacional:'Internacional', latam:'Internacional' };
+  function ntCatName(c){ return c ? (NT_CAT_NAMES[c] || (c.charAt(0).toUpperCase()+c.slice(1))) : ''; }
 
-  // Estado de filtro (memoria; read/saved diferido).
-  const npState = { cat:'all' };
-  // Pool de lead+secs+río: 'all' → carril Bolivia; cat → esa categoría.
-  function ntPool(){
-    const pool = (npState.cat==='all') ? ntBolivia() : ntVisible().filter(function(n){ return n.category===npState.cat; });
-    return pool.slice().sort(ntCmp);
-  }
-  // Rail "Lo más relevante": blend alto-primero + medio reciente (ntCmp ya lo hace).
-  function ntRelevantes(n){ return ntBolivia().slice().sort(ntCmp).slice(0,n); }
+  // ── Navegación temporal (frontend; el payload ya trae hasta 30 días con fecha) ──
+  const NT_LIMIT = 29;  // archivo: 30 días (offsets 0..29 desde NT_TODAY)
+  // offset 0 = NT_TODAY; ntDateAt(off) = ISO de hoy menos `off` días.
+  function ntDateAt(off){ const dt=ntParseD(NT_TODAY); dt.setDate(dt.getDate()-off); return ntISO(dt); }
+  // Notas Bolivia de un día (offset), ordenadas por jerarquía editorial.
+  function ntDayNotes(off){ const d=ntDateAt(off); return ntBolivia().filter(function(n){ return n.date===d; }).sort(ntCmp); }
+  // "Hoy" efectivo: el día más reciente CON notas (normalmente 0). Evita portada en
+  // blanco si el primer scrape del día aún no corrió (huecos visibles, no rellenados).
+  function ntDefaultDay(){ for(let o=0;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length) return o; } return 0; }
+  // Notas del feed de un día: en el día por-defecto excluye el lead (va en el hero);
+  // en días de archivo, todas.
+  function npFeedNotes(off){ const d=ntDayNotes(off); return (off===ntDefaultDay()) ? d.slice(1) : d; }
+
+  // Estado de portada (memoria). day = offset activo del FEED; el ranking/hero quedan
+  // FIJOS a ntDefaultDay(). extra = días anteriores apilados por "Mostrar más".
+  const npState = { day:ntDefaultDay(), extra:0 };
   // País de la nota latam, best-effort desde el path del link → fallback "Latam".
   function ntLatamFlag(n){ try{ const m=String(n.url||'').match(/latinoamerica\/([a-z_-]+)\//i); if(m){ const k=m[1].toLowerCase().replace(/-/g,'_'); if(NT_PAISES[k]) return NT_PAISES[k]; } }catch(e){} return 'Latam'; }
 
@@ -4684,7 +4720,6 @@ window.addEventListener('popstate', function(){
   function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
   function npTitle(url,text){ return npLink(url, ntEsc(text)); }
-  function npDateline(n){ return '<div class="np-dateline">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'; }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
   // Slot de imagen: si la nota trae imageUrl (og:image hotlinkeado, carril BO) →
   // <img> que llena el .np-imgph; si no → placeholder actual (gradiente + ícono).
@@ -4698,45 +4733,96 @@ window.addEventListener('popstate', function(){
   }
 
   // ── Regiones ──
-  function npTop(){
-    const pool=ntPool();
-    if(!pool.length) return '<section class="np-top"><div class="np-empty">No hay notas para esta selección.</div></section>';
-    const lead=pool[0], secs=pool.slice(1,3);
-    let L='<article class="np-lead"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
+  function npKick(n){ const c=ntCatName(n.category); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
+
+  // Hero: nota líder del día por-defecto (kicker + titular + imagen 16:10 + fila de fuente).
+  function npHero(){
+    const lead=ntDayNotes(ntDefaultDay())[0];
+    if(!lead) return '<article class="np-hero"><div class="np-empty">No hay portada disponible.</div></article>';
+    return '<article class="np-hero"'+npNoteAttr(lead)+'>'+npHideCtl(lead)+npKick(lead)
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
-      +'<figure class="np-figure">'+npImg(lead,'')+'</figure>'
-      +npStand('np-lead-stand',lead.summary)+npDateline(lead)+'</article>';
-    let S='<div class="np-secs">';
-    for(let i=0;i<secs.length;i++){ const s=secs[i];
-      S+='<article class="np-sec"'+npNoteAttr(s)+'>'+npHideCtl(s)
-        +(i===0
-          ? '<div class="np-sec-row"><div class="np-sec-main"><h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s)+'</div>'+npImg(s,'sm')+'</div>'
-          : '<h2 class="np-sec-title">'+npTitle(s.url,s.title)+'</h2>'+npStand('np-sec-stand',s.summary)+npDateline(s))
-        +'</article>';
-    }
-    S+='</div>';
-    return '<section class="np-top">'+L+S+'</section>';
+      +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
+        +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'</article>';
   }
-  function npRiver(){
-    const pool=ntPool(), river=pool.slice(3), total=pool.length;
-    let grid='';
-    for(let i=0;i<river.length;i++){ const n=river[i];
-      grid+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
-        +'<div class="np-card-body">'
-        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
-        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div></div></article>';
-    }
-    const sub='Selección automática por relevancia · '+total+' '+(total===1?'nota':'notas');
-    const body=river.length?'<div class="np-river-cards">'+grid+'</div>':'<div class="np-empty">Sin más notas en esta selección.</div>';
-    return '<section class="np-river-sec"><div class="np-section-head"><h2>Río de titulares</h2><span class="meta">'+ntEsc(sub)+'</span></div>'+body+'</section>';
-  }
+
+  // Ranking "Lo más relevante hoy" (fijo a ntDefaultDay()); excluye el lead (va en el hero).
   function npRail(){
-    const top=ntRelevantes(5); if(!top.length) return '<aside class="np-rail"></aside>';
+    const day=ntDayNotes(ntDefaultDay()), top=day.slice(1,6);
+    if(!top.length) return '<aside class="np-rail"></aside>';
     let rows='';
     for(let i=0;i<top.length;i++){ const n=top[i];
       rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span><div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
     }
     return '<aside class="np-rail"><div class="np-railcard"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
+  }
+
+  // Tarjeta del feed (16:10 · sin caja · kicker · titular · bajada · fila de fuente al fondo).
+  function npCards(notes){
+    let g='';
+    for(let i=0;i<notes.length;i++){ const n=notes[i];
+      g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
+        +'<div class="np-card-body">'+npKick(n)
+        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
+        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
+        +'</div></article>';
+    }
+    return '<div class="np-feed-grid">'+g+'</div>';
+  }
+
+  // Encabezado dinámico del feed (§4). El control de fecha (§5) lo monta C3 (npDateStrip).
+  function ntFechaSlash(off){ const dt=ntParseD(ntDateAt(off)); const p=function(x){return String(x).padStart(2,'0');}; return p(dt.getDate())+'/'+p(dt.getMonth()+1)+'/'+String(dt.getFullYear()).slice(2); }
+  function npFeedHead(off){
+    const total=ntBolivia().length, shown=ntDayNotes(off).length;
+    let title, sub;
+    if(off===0){ title='Las noticias de hoy'; sub='Selección editorial del día · '+shown+' de '+total+' notas'; }
+    else { const f=ntFechaSlash(off); title='Las noticias del '+f; sub='Archivo · '+f; }
+    return '<div class="np-feed-head"><div class="np-feed-headmain"><h2 class="np-feed-title">'+ntEsc(title)+'</h2>'
+      +'<p class="np-feed-sub">'+ntEsc(sub)+'</p></div>'+npDateStrip(off)+'</div>';
+  }
+  // Control de fecha (§5): tira de 7 chips (HOY a la derecha) + flechas ‹ ›.
+  // Ventana: HOY anclado a la derecha cuando el día activo es reciente; si es más
+  // viejo que la ventana, desliza para que el día activo quede a la derecha.
+  function npDateWindow(active){
+    let winNew = (active<=6) ? 0 : active;
+    winNew = Math.min(winNew, NT_LIMIT-6);  // tope archivo: winNew+6 <= 29
+    const offs=[];
+    for(let i=6;i>=0;i--) offs.push(winNew+i);  // izquierda(viejo) → derecha(nuevo)
+    return offs;
+  }
+  function npDateChips(active){
+    const offs=npDateWindow(active); let h='';
+    for(let i=0;i<offs.length;i++){ const off=offs[i], dt=ntParseD(ntDateAt(off));
+      const dw = off===0 ? 'HOY' : NT_WD[dt.getDay()];
+      h+='<button class="np-day'+(off===active?' on':'')+'" type="button" data-np-day="'+off+'" aria-pressed="'+(off===active)+'">'
+        +'<span class="np-day-wd">'+dw+'</span><span class="np-day-dn">'+String(dt.getDate()).padStart(2,'0')+'</span></button>';
+    }
+    return h;
+  }
+  function npDateStrip(off){
+    return '<div class="np-datectl" role="group" aria-label="Navegar por fecha">'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="older"'+(off>=NT_LIMIT?' disabled':'')+' aria-label="Día anterior">&lsaquo;</button>'
+      +'<div class="np-dc-days">'+npDateChips(off)+'</div>'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(off<=0?' disabled':'')+' aria-label="Día siguiente">&rsaquo;</button>'
+      +'</div>';
+  }
+  // ¿Quedan días más viejos con notas dentro del límite (para "Mostrar más")?
+  function npHasMore(off){ for(let o=off+npState.extra+1;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length) return true; } return false; }
+  function npMoreBtn(off){
+    return '<div class="np-more"><button class="np-more-btn" type="button" data-np-more'+(npHasMore(off)?'':' disabled')+'><span class="np-more-d">Mostrar m&aacute;s &darr;</span><span class="np-more-m">Mostrar d&iacute;a anterior &rarr;</span></button></div>';
+  }
+  // ── Navegación temporal (reescriben npState y re-renderean; ranking/hero intactos) ──
+  function npGoDay(off){ if(isNaN(off)||off<0||off>NT_LIMIT||off===npState.day) return; npState.day=off; npState.extra=0; npRerender(); }
+  function npNav(dir){ let d=npState.day+(dir==='older'?1:-1); if(d<0)d=0; if(d>NT_LIMIT)d=NT_LIMIT; if(d===npState.day) return; npState.day=d; npState.extra=0; npRerender(); }
+  // "Mostrar más": avanza al SIGUIENTE día con notas (apila continuo, sin separador; no cambia el header).
+  function npMore(){ for(let o=npState.day+npState.extra+1;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length){ npState.extra=o-npState.day; npRerender(); return; } } }
+  function npFeed(){
+    const off=npState.day;
+    let notes=npFeedNotes(off);
+    for(let e=1;e<=npState.extra;e++){ notes=notes.concat(ntDayNotes(off+e)); }  // "Mostrar más": apila días previos (continuo, sin separador)
+    const body=notes.length?npCards(notes):'<div class="np-empty">No hay notas para esta fecha.</div>';
+    return '<section class="np-feed">'+npFeedHead(off)+body+npMoreBtn(off)+'</section>';
   }
   function npLatam(){
     const latam=ntLatam().slice(0,5); if(!latam.length) return '';
@@ -4795,7 +4881,7 @@ window.addEventListener('popstate', function(){
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
     return '<div class="np-page">'+npAdminBar()
-      +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
+      +'<div class="np-body"><div class="np-front">'+npHero()+npRail()+'</div>'+npFeed()+'</div>'
       +npLatam()+npFooter()+'</div>';
   }
   function npRerender(){ const host=document.getElementById('tab-noticias'); if(host) host.innerHTML=npBuildHTML(); }
@@ -4923,6 +5009,9 @@ window.addEventListener('popstate', function(){
     host.addEventListener('click', function(ev){
       const t=ev.target; if(!t || !t.closest) return;
       let el;
+      if((el=t.closest('[data-np-day]'))){ ev.preventDefault(); npGoDay(parseInt(el.getAttribute('data-np-day'),10)); return; }
+      if((el=t.closest('[data-np-nav]'))){ ev.preventDefault(); npNav(el.getAttribute('data-np-nav')); return; }
+      if(t.closest('[data-np-more]')){ ev.preventDefault(); npMore(); return; }
       if((el=t.closest('[data-np-hide]'))){ ev.preventDefault(); npHide(el.getAttribute('data-np-hide')); return; }
       if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
       if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
