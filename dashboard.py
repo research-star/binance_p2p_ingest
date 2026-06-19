@@ -78,6 +78,52 @@ INE_IPP_GRUPOS = {
 }
 
 
+# ── Galería de imágenes temáticas (v1) ──────────────────────────────────────
+# Matching por `tema` de la clasificación v1 (#86; taxonomía canónica en
+# noticias_ingest/scraper.py:512-645). Cascada del slot de imagen del front
+# (template.html npImg): og:image → GALERÍA → placeholder. Acá precomputamos el
+# slug por nota; el front solo arma /gal-<slug>.webp (assets PLANOS en static/,
+# servidos en raíz — publish_dashboard.py copia static/ sin recursar subdirs).
+#
+# Cascada (decisiones cerradas del ticket galería):
+#   1. carril == 'latam'                       → 'internacional' (destacada deja de ser placeholder)
+#   2. tema fino (≠ '' y ≠ 'General', mapeado) → slug fijo del tema
+#   3. category genérica                       → 'economia' | 'politica'
+#   4. sin señal                               → None (front cae al placeholder CSS)
+# NO usa temaConfianza (NULL en histórico → mataría cobertura) ni entidades (v2).
+#
+# SLUGS FIJOS, no kebab del tema: 14 nombres cortos estables contra los que se
+# curan las fotos reales en paralelo (swap-in drop-in, mismo naming). Mapa
+# explícito tema canónico → slug; un tema sin entrada cae a la genérica por
+# category — nunca sirve un /gal-*.webp inexistente.
+GALLERY_TEMA_SLUGS = {
+    'Combustibles / YPFB':             'combustibles',
+    'Tipo de cambio / Dólar':          'tipo-cambio',
+    'Litio / Minería':                 'litio',
+    'Agropecuario / Soya':             'agro',
+    'Deuda / Finanzas':                'deuda',
+    'Inflación / Precios':             'inflacion',
+    'Exportaciones / Comercio':        'exportaciones',
+    'Inversión / Infraestructura':     'inversion',
+    'Elecciones / Política económica': 'elecciones',
+    'Bloqueos / Conflictos':           'bloqueos',
+    'EMAPA / Alimentos':               'alimentos',
+}
+
+
+def gallery_slug(tema, category, carril):
+    """Slug de galería de una nota (None → placeholder). Ver cascada arriba."""
+    if carril == 'latam':
+        return 'internacional'
+    if tema and tema != 'General':
+        slug = GALLERY_TEMA_SLUGS.get(tema)
+        if slug:
+            return slug
+    if category in ('economia', 'politica'):
+        return category
+    return None
+
+
 def _laspeyres_contrib(idx_div: dict, idx_tot: dict, var12_tot: dict):
     """Recupera las ponderaciones fijas del índice total (Laspeyres base 2016)
     a partir de los índices de división que ya ingerimos, y deriva la
@@ -786,6 +832,9 @@ def process_data(db_path: Path) -> dict:
             'tema': r['tema'],                  # tema fino (clasificación v1) — para matching de galería
             'temaConfianza': r['tema_hits'],    # confianza del tema (gate sugerido >=10)
             'entidades': json.loads(r['entidades'] or '[]'),
+            # Slug de galería temática precomputado (cascada tema→category→latam);
+            # el front arma /gal-<slug>.webp. None → placeholder CSS. Ver gallery_slug().
+            'gallerySlug': gallery_slug(r['tema'], r['category'], r['carril']),
         } for r in noticias_rows]
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation
