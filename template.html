@@ -246,9 +246,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .error-banner.show{display:block}
 .error-banner .eb-retry{margin-left:8px;font-size:var(--text-sm);opacity:.85}
 /* ── Chrome editorial (utility + masthead scrollean · nav sticky) ──
-   navbar v3: utility bar (dateline + ES/EN + tema) → masthead (nameplate +
-   tagline) → fila de tabs + buscador (deshabilitado). Solo la fila de tabs
-   es sticky; utility+masthead scrollean. Tokens fríos; adapta a slate solo. */
+   utility bar (dateline + ES/EN) → masthead (solo nameplate, centrado,
+   serif) → fila de tabs + buscador (deshabilitado). Solo la fila de tabs
+   es sticky; utility+masthead scrollean. Tokens cálidos (tema único claro). */
 .fb-chrome{background:var(--bg-secondary)}
 .fb-utility{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
 .fb-utility-right{display:flex;align-items:center;gap:12px}
@@ -258,10 +258,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-util-sep{color:var(--text-soft)}
 .fb-util-lang{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:2px 4px;transition:color .15s}
 .fb-util-lang:hover{color:var(--text-primary)}
-.fb-masthead{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding:14px 36px;border-bottom:2px solid var(--text-primary)}
-.fb-nameplate{font-family:var(--font-display);font-size:clamp(36px,5.6vw,64px);font-weight:500;line-height:.92;letter-spacing:-.02em;color:var(--text-primary)}
+.fb-masthead{display:flex;justify-content:center;padding:20px 36px;border-bottom:2px solid var(--text-primary)}
+.fb-nameplate{font-family:var(--font-display);font-size:clamp(40px,6vw,72px);font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--text-primary);text-align:center}
 .fb-np-bo{font-weight:600}
-.fb-tagline{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--text-muted);letter-spacing:.01em}
 /* ── Navbar (fila de tabs + buscador) · sticky ── */
 .fb-navbar{display:flex;align-items:stretch;justify-content:space-between;gap:16px;padding:0 36px;background:var(--bg-secondary);border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:52}
 .fb-tabs{display:flex;gap:0;align-items:stretch}
@@ -618,7 +617,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   </div>
   <div class="fb-masthead">
     <span class="fb-nameplate">Finanzas<span class="fb-np-bo">Bo</span></span>
-    <span class="fb-tagline">Inteligencia econ&oacute;mica de Bolivia</span>
   </div>
 </header>
 <nav class="fb-navbar">
