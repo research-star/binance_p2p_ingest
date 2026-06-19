@@ -21,7 +21,7 @@ __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Outfit:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#FBEDE3;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
+:root{--bg-primary:#FBEDE3;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;--nav-h:50px;--sub-h:76px}
 /* ── Design tokens ─────────────────────────────────────────────────
    Tipografías, escala de tamaños, radios, sombras y tooltip vars
    compartidos. Componentes consumen estos vars en lugar de literales.
@@ -348,7 +348,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
 .fb-stog.inactive{background:rgba(92,74,56,.05);border-color:rgba(33,30,27,.10);color:#8E836F}
-.fb-stog.inactive .fb-stog-check{border-color:rgba(154,166,181,.40);background:transparent}
+.fb-stog.inactive .fb-stog-check{border-color:rgba(33,30,27,.20);background:transparent}
 
 /* ── Riesgo País chart tokens ────────────────────────────────────────
    --chart-grid, --chart-axis-text, --chart-spike, y los 10 --chart-color-*
