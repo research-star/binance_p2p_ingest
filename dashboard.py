@@ -754,10 +754,10 @@ def process_data(db_path: Path) -> dict:
             conn.execute("ALTER TABLE noticias ADD COLUMN image_url TEXT")
         except Exception:
             pass  # columna ya existe (idempotente)
-        # Self-migrate de columnas FASE 3 (carril = carril del feed). Mismo patrón:
-        # cada ALTER en su try para no abortar las siguientes. carril nullable → el
-        # SELECT lo COALESCE con la category vieja para filas legacy.
-        for _col, _decl in (("carril", "TEXT"),):
+        # Self-migrate de columnas FASE 3 (carril, tema_hits, entidades). Mismo
+        # patrón: cada ALTER en su try para no abortar las siguientes. Nullables →
+        # el SELECT/payload tolera NULL (COALESCE carril; entidades || '[]').
+        for _col, _decl in (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT")):
             try:
                 conn.execute(f"ALTER TABLE noticias ADD COLUMN {_col} {_decl}")
             except Exception:
@@ -768,7 +768,8 @@ def process_data(db_path: Path) -> dict:
         noticias_rows = conn.execute(
             "SELECT id, date, time, source, category, title, summary, detail, "
             "       topics, impact, source_note, url, image_url, "
-            "       COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) AS carril "
+            "       COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) AS carril, "
+            "       tema, tema_hits, entidades "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
             "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
@@ -782,6 +783,9 @@ def process_data(db_path: Path) -> dict:
             'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
             'imageUrl': r['image_url'],
             'carril': r['carril'],   # 'bolivia'|'latam': el frontend parte los carriles por acá
+            'tema': r['tema'],                  # tema fino (clasificación v1) — para matching de galería
+            'temaConfianza': r['tema_hits'],    # confianza del tema (gate sugerido >=10)
+            'entidades': json.loads(r['entidades'] or '[]'),
         } for r in noticias_rows]
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation

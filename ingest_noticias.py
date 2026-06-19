@@ -119,7 +119,9 @@ CREATE TABLE IF NOT EXISTS noticias (
     score_ajustado  REAL,
     created_at_utc  TEXT NOT NULL,
     image_url       TEXT,               -- og:image hotlinkeable (carril BO, FASE 2a); NULL si no hay / El Deber / latam (col del ALTER de 0004).
-    carril          TEXT                -- 'bolivia'|'latam': carril del feed (antes implícito en category=='latam'). Col del ALTER de 0005.
+    carril          TEXT,               -- 'bolivia'|'latam': carril del feed (antes implícito en category=='latam'). Col del ALTER de 0005.
+    tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
+    entidades       TEXT                -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
@@ -127,7 +129,7 @@ CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 # Columnas añadidas por ALTER (0005): no las crea CREATE TABLE IF NOT EXISTS sobre
 # una tabla preexistente. (col, decl) — el self-migrate de init_schema las agrega
 # idempotente; tema/puntaje ya existen de 0002.
-_COLS_V1 = (("carril", "TEXT"),)
+_COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"))
 
 
 def init_schema(conn: sqlite3.Connection):
@@ -173,13 +175,15 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
             """INSERT OR IGNORE INTO noticias
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
-                score_crudo, score_ajustado, created_at_utc, image_url, carril)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                score_crudo, score_ajustado, created_at_utc, image_url, carril,
+                tema_hits, entidades)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
              n["puntaje"], n["score_crudo"], n["score_ajustado"],
-             n["created_at_utc"], n.get("image_url"), n.get("carril")))
+             n["created_at_utc"], n.get("image_url"), n.get("carril"),
+             n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False)))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas

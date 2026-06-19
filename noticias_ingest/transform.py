@@ -142,6 +142,10 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         # Campos de auditoría (van a la DB, no al payload del frontend)
         "portal": portal,
         "tema": tema,
+        # Confianza del tema (clasificación v1) + entidades; al payload para el
+        # matching de galería futuro (gate sugerido: imagen específica si confianza>=10).
+        "tema_hits": cand.get("tema_hits"),
+        "entidades": cand.get("entidades") or [],
         "puntaje": cand["puntaje"],
         "score_crudo": cand.get("score_crudo"),
         "score_ajustado": cand.get("score_ajustado"),
@@ -193,6 +197,10 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "url": link,
         "portal": "Bloomberg Línea",
         "tema": "",
+        # Latam no clasifica tema (sin scoring) ni se usa para galería (slot=bandera):
+        # confianza 0 y entidades vacías, consistente con puntaje=0.0 sentinela.
+        "tema_hits": 0,
+        "entidades": [],
         "puntaje": 0.0,
         "score_crudo": None,
         "score_ajustado": None,

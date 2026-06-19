@@ -473,43 +473,284 @@ PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}
 # ---------------------------------------------------------------------------
 # SCORING
 # ---------------------------------------------------------------------------
+# ── Clasificación de tema v1 (FASE 3) — reglas contextuales word-boundary ──
+# Reemplaza el conteo por substring del _tema viejo (`kw in texto`), que disparaba
+# falsos positivos (recon: "deuda" metafórica → Deuda, "millones de dólares" →
+# Dólar, "BCB" como lugar → Dólar). La nota YA pasó el corte de relevancia (modelo
+# binario) + exclusiones (KEYWORDS_EXCLUIR); acá solo se elige el TEMA entre temas.
+# Diseño: workflow de 3 enfoques + síntesis (ver PR). category vive en
+# transform.TEMA_CATEGORIA (única fuente del mapa tema→category), no acá.
+
+# Plegado de acentos (str.translate, stdlib): "dólar"→"dolar", una sola grafía por
+# patrón. Todo el matching corre sobre texto plegado+lower+whitespace-colapsado.
+_ACENTOS = str.maketrans("áàäéèëíìïóòöúùüñ", "aaaeeeiiiooouuun")
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"\s+", " ", (s or "").lower().translate(_ACENTOS)).strip()
+
+
+def _wb(term: str):
+    """Compila un trigger a patrón word-boundary vía lookaround sobre [0-9a-z]
+    (el texto ya viene plegado a ASCII+lower). Evita 'ine' en 'define', 'oro' en
+    'tesoro', 'cao' en 'caos'. Frases multipalabra: el lookaround rodea la frase.
+    Para strong/weak/entidades (matching EXACTO; los plurales se listan aparte)."""
+    return re.compile(r"(?<![0-9a-z])" + re.escape(_norm(term)) + r"(?![0-9a-z])")
+
+
+def _pfx(term: str):
+    """Patrón PREFIJO (leading boundary, SIN trailing): para los stems de contexto
+    ('productor'→productores, 'ganader'→ganadería, 'cambiari'→cambiaria,
+    'financ'→financiero). El contexto solo GATEA los weak (no suma score), así que
+    su mayor permisividad es acotada. El leading boundary evita 'via' en 'lluvia'."""
+    return re.compile(r"(?<![0-9a-z])" + re.escape(_norm(term)))
+
+
+# Reglas por tema: strong (inequívoco, 1 basta) · weak (ambiguo, solo cuenta con
+# contexto) · context (gatea los weak) · exclude (frase que VETA el tema; substring).
+_TEMA_SPEC = {
+    "Combustibles / YPFB": {
+        "strong": ["ypfb", "diesel", "gasolina", "carburante", "surtidor", "gnv", "glp",
+                   "hidrocarburo", "refineria", "gasolina plus", "medinacelli", "gasolinera",
+                   "octanaje", "ducto", "desabastecimiento de combustible", "desabastecimiento de carburante"],
+        "weak": ["combustible", "abastecimiento", "desabastecimiento", "petroleo", "cisterna",
+                 "subvencion", "fila", "cola", "surtidores"],
+        "context": ["combustible", "carburante", "gasolina", "diesel", "surtidor", "ypfb", "gnv",
+                    "glp", "hidrocarburo", "fila", "cisterna", "subvencion", "litro"],
+        "exclude": ["abastecimiento de agua", "abastecimiento de alimentos",
+                    "desabastecimiento de alimentos", "desabastecimiento de medicamentos"],
+    },
+    "Tipo de cambio / Dólar": {
+        "strong": ["tipo de cambio", "reservas internacionales", "dolar paralelo", "dolar referencial",
+                   "dolar oficial", "mercado paralelo", "cotizacion del dolar", "brecha cambiaria",
+                   "devaluacion", "casa de cambio", "casas de cambio", "asoban"],
+        "weak": ["dolar", "dolares", "bcb", "banco central", "divisa", "divisas", "itf", "paralelo",
+                 "euro", "tarjeta de credito", "tarjeta de debito"],
+        "context": ["tipo de cambio", "cotizacion", "paralelo", "oficial", "reservas", "cambiari",
+                    "devaluacion", "mercado negro", "brecha", "divisa", "casa de cambio", "apreciaci",
+                    "deprecia", "blue", "bob", "boliviano"],
+        "exclude": ["millones de dolares", "mil millones de dolares", "millon de dolares",
+                    "de dolares en remesas", "de dolares en inversion", "de dolares en donacion",
+                    "valorado en", "inversion de mas de", "donacion de", "financiamiento de",
+                    "prestamo de", "credito de", "por un monto de", "presupuesto de",
+                    "ambientes del bcb", "instalaciones del bcb", "sede del bcb", "predios del bcb",
+                    "auditorio del bcb", "en el bcb", "oficinas del bcb"],
+    },
+    "Litio / Minería": {
+        "strong": ["litio", "ylb", "comibol", "salar de uyuni", "carbonato de litio",
+                   "yacimientos de litio", "cobalto", "cooperativa minera", "explotacion minera", "mineria"],
+        "weak": ["minero", "yacimiento", "zinc", "plata", "oro", "salar", "estano", "mina"],
+        "context": ["mina", "minero", "mineria", "extraccion", "explotacion", "yacimiento", "litio",
+                    "ylb", "comibol", "cooperativa", "onza", "tonelada", "reserva de mineral",
+                    "exportacion de mineral", "cotizacion"],
+        "exclude": ["medalla de oro", "oro olimpico", "edad de oro", "bodas de oro", "regla de oro",
+                    "plan de oro", "oro negro", "gallina de los huevos", "plata para", "sin un peso",
+                    "reglas de oro"],
+    },
+    "Agropecuario / Soya": {
+        "strong": ["soya", "soja", "agroindustria", "agropecuaria", "anapo", "senasag", "agropecruz",
+                   "carne bovina", "ganaderia", "zafra", "frigorifico", "biodiesel de soya",
+                   "oleaginosa", "sorgo"],
+        "weak": ["agro", "productores", "maiz", "trigo", "cosecha", "siembra", "bovino", "cao",
+                 "cana", "arroz"],
+        "context": ["soya", "soja", "cosecha", "siembra", "cultivo", "productor", "agro", "ganader",
+                    "bovino", "exportacion", "hectarea", "campo", "rural", "agropecuari", "grano", "sequia"],
+        "exclude": ["productores de cine", "productores musicales", "productores de television",
+                    "cosecha de votos", "trigo limpio", "cao de "],
+    },
+    "Deuda / Finanzas": {
+        "strong": ["deuda externa", "deuda interna", "deuda publica", "deuda soberana",
+                   "servicio de la deuda", "servicio de deuda", "calificacion crediticia",
+                   "deficit fiscal", "fitch", "moody", "standard and poor", "fmi", "banco mundial",
+                   "bono soberano", "bonos soberanos", "prestamo del fmi", "prestamo del bid",
+                   "prestamo de la caf", "desembolso del bid", "desembolso de la caf",
+                   "sistema financiero", "banca boliviana"],
+        "weak": ["deuda", "credito", "creditos", "bono", "bonos", "prestamo", "prestamos",
+                 "impuesto", "impuestos", "bid", "caf"],
+        "context": ["fiscal", "externa", "interna", "publica", "soberan", "financ", "crediticia",
+                    "desembolso", "millones", "intereses", "acreedor", "amortizacion", "calificacion",
+                    "multilateral", "banca", "mercado de capitales", "bonos del tesoro"],
+        "exclude": ["deuda social", "deuda pendiente", "deuda historica", "deuda educativa",
+                    "deuda moral", "deuda de genero", "deuda ambiental", "deuda de gratitud",
+                    "deuda con la", "deuda con vos", "deuda con uno", "tienen una deuda con",
+                    "saldar la deuda con", "saldar una deuda", "credito a la educacion",
+                    "productores de cine"],
+    },
+    "Inflación / Precios": {
+        "strong": ["inflacion", "canasta basica", "costo de vida", "indice de precios",
+                   "encarecimiento", "carestia"],
+        "weak": ["ipc", "precios", "ine", "alza de precios", "sube el precio"],
+        "context": ["precio", "inflacion", "costo", "canasta", "encarec", "ipc", "ine", "consumidor",
+                    "alza de precios", "sube el precio", "carestia", "mercado", "alimento"],
+        "exclude": ["a cualquier precio", "sin precio", "precio justo electoral", "precio de la gloria"],
+    },
+    "Exportaciones / Comercio": {
+        "strong": ["balanza comercial", "ibce", "cainco", "exportaciones bolivianas",
+                   "importaciones bolivianas", "aduana nacional", "superavit comercial",
+                   "deficit comercial", "comercio exterior"],
+        "weak": ["exportacion", "exportaciones", "importacion", "importaciones", "aduana", "arancel",
+                 "contrabando"],
+        "context": ["exporta", "importa", "comercio", "balanza", "arancel", "aduana", "mercado externo",
+                    "fob", "superavit", "deficit comercial", "contenedor", "frontera"],
+        "exclude": ["comercio sexual", "comercio de personas", "aduana del cielo"],
+    },
+    "Inversión / Infraestructura": {
+        "strong": ["obra publica", "licitacion", "contratacion directa", "ds 5600", "doble via",
+                   "megaproyecto", "infraestructura vial", "inversion publica",
+                   "inversion extranjera directa", "construccion de la carretera"],
+        "weak": ["inversion", "carretera", "obra", "proyecto", "construccion", "puente", "contrato"],
+        "context": ["construccion", "obra", "proyecto", "carretera", "puente", "millones", "financiar",
+                    "ejecuta", "infraestructura", "planta", "tramo", "licitacion", "via", "megaproyecto"],
+        "exclude": ["inversion de tiempo", "inversion emocional", "inversion de roles",
+                    "inversion social", "invierte en ti"],
+    },
+    "Elecciones / Política económica": {
+        "strong": ["segunda vuelta", "balotaje", "ministro de economia", "ministerio de economia",
+                   "mefp", "rodrigo paz", "candidato presidencial", "binomio presidencial",
+                   "papeleta electoral", "comicios", "elecciones generales"],
+        "weak": ["tse", "ted", "candidato", "campana", "voto", "binomio", "papeleta"],
+        "context": ["eleccion", "voto", "comicios", "candidat", "balotaje", "segunda vuelta", "binomio",
+                    "tribunal electoral", "campana electoral", "urnas", "electoral"],
+        "exclude": ["elecciones en peru", "elecciones en argentina", "elecciones en chile",
+                    "eleccion del papa", "campana de vacunacion", "campana de salud",
+                    "campana de limpieza", "balotaje deportivo", "segunda vuelta del partido"],
+    },
+    "Bloqueos / Conflictos": {
+        "strong": ["bloqueo", "bloqueos", "paro indefinido", "corte de ruta", "corte de rutas",
+                   "cierre de rutas", "corte de carretera", "puntos de bloqueo", "punto de bloqueo",
+                   "paro civico", "huelga de hambre", "avasallamiento"],
+        "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia"],
+        "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
+                    "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino"],
+        "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
+                    "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
+                    "marcha de la noticia"],
+    },
+    "EMAPA / Alimentos": {
+        "strong": ["emapa", "seguridad alimentaria", "soberania alimentaria", "ley 157",
+                   "subvencion de alimentos", "subsidio alimentario"],
+        "weak": ["alimentos", "abastecimiento de alimentos", "desabastecimiento de alimentos", "pan",
+                 "azucar", "arroz", "aceite", "harina"],
+        "context": ["emapa", "alimento", "subvencion", "subsidio", "arroz", "azucar", "harina", "pan",
+                    "aceite", "seguridad alimentaria", "abastecimiento", "escasez"],
+        "exclude": ["alimentos para el alma", "alimentos chatarra"],
+    },
+}
+
+# Tie-break determinista ante empate de score (1º mayor strong_hits, 2º este orden).
+# Temas-evento y de vocabulario concreto primero; Deuda y Dólar al fondo (los grandes
+# generadores de falso positivo por "deuda"/"dolar"). Hace el resultado independiente
+# del orden del dict y de la redacción del portal.
+_PRIORIDAD = ["Bloqueos / Conflictos", "Combustibles / YPFB", "Litio / Minería",
+              "Agropecuario / Soya", "EMAPA / Alimentos", "Elecciones / Política económica",
+              "Inflación / Precios", "Exportaciones / Comercio", "Inversión / Infraestructura",
+              "Deuda / Finanzas", "Tipo de cambio / Dólar"]
+_PRIORIDAD_IDX = {t: i for i, t in enumerate(_PRIORIDAD)}
+
+# Compilación una sola vez al cargar el módulo (no por nota).
+_TEMA_RULES = {
+    tema: {
+        "strong": [_wb(t) for t in spec["strong"]],
+        "weak": [_wb(t) for t in spec["weak"]],
+        "context": [_pfx(t) for t in spec["context"]],   # prefijo: stems gatean weaks
+        "exclude": [_norm(p) for p in spec["exclude"]],  # frases inequívocas: substring
+    }
+    for tema, spec in _TEMA_SPEC.items()
+}
+
+# Entidades (independiente del tema): canonical → patrones de alias. Se reportan
+# SIEMPRE, aunque el tema sea General — BCB/Gobierno/MEFP son entidad válida sin
+# disparar tema (resuelve "BCB como lugar" del recon).
+_ENTIDAD_SPEC = {
+    "BCB": ["bcb", "banco central de bolivia", "banco central"],
+    "YPFB": ["ypfb", "yacimientos petroliferos fiscales bolivianos"],
+    "ANH": ["anh", "agencia nacional de hidrocarburos"],
+    "YLB": ["ylb", "yacimientos de litio bolivianos"],
+    "COMIBOL": ["comibol", "corporacion minera de bolivia"],
+    "FMI": ["fmi", "fondo monetario internacional"],
+    "Banco Mundial": ["banco mundial", "bird"],
+    "BID": ["bid", "banco interamericano de desarrollo"],
+    "CAF": ["caf", "banco de desarrollo de america latina"],
+    "Gobierno": ["gobierno", "poder ejecutivo", "ejecutivo nacional", "casa grande", "palacio quemado"],
+    "ASFI": ["asfi", "autoridad de supervision del sistema financiero"],
+    "ASOBAN": ["asoban", "asociacion de bancos privados"],
+    "INE": ["ine", "instituto nacional de estadistica"],
+    "Aduana": ["aduana", "aduana nacional"],
+    "IBCE": ["ibce", "instituto boliviano de comercio exterior"],
+    "CAINCO": ["cainco", "camara de industria comercio servicios y turismo"],
+    "SENASAG": ["senasag"],
+    "ANAPO": ["anapo", "asociacion de productores de oleaginosas"],
+    "CAO": ["cao", "camara agropecuaria del oriente"],
+    "EMAPA": ["emapa", "empresa de apoyo a la produccion de alimentos"],
+    "COB": ["cob", "central obrera boliviana"],
+    "MEFP": ["mefp", "ministerio de economia", "ministerio de economia y finanzas publicas",
+             "ministro de economia"],
+    "TSE": ["tse", "tribunal supremo electoral"],
+    "TED": ["ted", "tribunal electoral departamental"],
+    "Fitch": ["fitch", "fitch ratings"],
+    "Moody's": ["moody", "moodys"],
+    "S&P": ["standard and poor", "standard & poors"],
+}
+_ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
+
+
+def detectar_entidades(titulo: str, descripcion: str = "") -> list:
+    """Entidades canónicas presentes (word-boundary, independiente del tema)."""
+    texto = _norm(titulo + " . " + descripcion)
+    return sorted(canon for canon, pats in _ENTIDADES.items()
+                  if any(p.search(texto) for p in pats))
+
+
+def _tema(titulo: str, descripcion: str = "") -> tuple:
+    """Devuelve (tema, confianza). confianza = strong*10 + weak-con-contexto del
+    tema ganador (0 si General). Determinista e independiente del orden del dict.
+    Gate aguas-abajo sugerido: imagen específica solo si confianza >= 10 (≥1 strong)."""
+    texto = _norm(titulo + " . " + descripcion)
+    mejor = None  # (score, strong, -prioridad_idx, tema)
+    for tema, rule in _TEMA_RULES.items():
+        if any(ph in texto for ph in rule["exclude"]):
+            continue
+        strong = sum(1 for p in rule["strong"] if p.search(texto))
+        tiene_ctx = any(p.search(texto) for p in rule["context"])
+        weak = sum(1 for p in rule["weak"] if p.search(texto)) if tiene_ctx else 0
+        score = strong * 10 + weak
+        if score <= 0:
+            continue
+        cand = (score, strong, -_PRIORIDAD_IDX[tema], tema)
+        if mejor is None or cand > mejor:
+            mejor = cand
+    if mejor is None:
+        return "General", 0
+    return mejor[3], mejor[0]
+
+
 def score_keywords(titulo: str, descripcion: str, portal: str) -> tuple:
-    """Fallback: devuelve (puntaje_int, tema_str)."""
+    """FALLBACK sin modelo TF-IDF — MUERTO en prod (ingest es fail-closed y aborta
+    el carril Bolivia sin modelo). Se conserva por el port de boletines. Relevancia
+    por conteo de KEYWORDS (legacy); el TEMA y la confianza salen de _tema.
+    Devuelve (puntaje_int, tema, confianza)."""
     texto = (titulo + " " + descripcion).lower()
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
-            return 0, ""
+            return 0, "", 0
     if portal in PORTALES_EXIGEN_BOLIVIA:
         if not any(t in texto for t in TERMINOS_BOLIVIA):
-            return 0, ""
+            return 0, "", 0
+    tema, conf = _tema(titulo, descripcion)
     for kw in KEYWORDS_FORZADO:
         if kw in texto:
-            return 10, _tema(texto)
-    mejor = 0
-    mejor_t = "General"
-    for tema, kws in KEYWORDS.items():
-        m = sum(1 for kw in kws if kw in texto)
-        if m > mejor:
-            mejor = m
-            mejor_t = tema
-    return mejor, mejor_t
-
-
-def _tema(texto: str) -> str:
-    mejor = 0
-    mejor_t = "General"
-    for tema, kws in KEYWORDS.items():
-        m = sum(1 for kw in kws if kw in texto)
-        if m > mejor:
-            mejor = m
-            mejor_t = tema
-    return mejor_t
+            return 10, tema, conf
+    mejor = max((sum(1 for kw in kws if kw in texto) for kws in KEYWORDS.values()), default=0)
+    return mejor, tema, conf
 
 
 def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     """
-    Devuelve (puntaje, tema, score_crudo, score_ajustado, ajuste_aplicado, descartado_por).
-    - puntaje: float 0-10 (1 decimal). 0 = descartar.
+    Devuelve (puntaje, tema, tema_hits, entidades, score_crudo, score_ajustado,
+              ajuste_aplicado, descartado_por).
+    - puntaje: float 0-10 (1 decimal) de RELEVANCIA (modelo TF-IDF). 0 = descartar.
+    - tema_hits: int de CONFIANZA del tema (strong*10 + weak-con-contexto; ≠ puntaje).
+    - entidades: list[str] de entidades canónicas detectadas (independiente del tema).
     - score_crudo / score_ajustado: floats 0-1 (None si no hubo modelo).
     - ajuste_aplicado: string descriptivo ("—" si no hubo).
     - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral".
@@ -518,10 +759,10 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     texto = (titulo + " " + descripcion).lower()
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
-            return 0, "", None, None, "—", "keyword_excluida"
+            return 0, "", 0, [], None, None, "—", "keyword_excluida"
     if portal in PORTALES_EXIGEN_BOLIVIA:
         if not any(t in texto for t in TERMINOS_BOLIVIA):
-            return 0, "", None, None, "—", "falta_bolivia"
+            return 0, "", 0, [], None, None, "—", "falta_bolivia"
 
     # Intentar modelo TF-IDF
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
@@ -531,13 +772,16 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
         ajuste = detectar_ajuste(titulo, descripcion, portal)
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
-            return 0, "", round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
-        return (round(prob_ajustado * 10, 1), _tema(texto),
+            return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
+        tema, tema_hits = _tema(titulo, descripcion)
+        entidades = detectar_entidades(titulo, descripcion)
+        return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 
-    # Fallback keywords
-    puntaje, tema = score_keywords(titulo, descripcion, portal)
-    return puntaje, tema, None, None, "—", ""
+    # Fallback keywords (path muerto en prod por fail-closed)
+    puntaje, tema, tema_hits = score_keywords(titulo, descripcion, portal)
+    entidades = detectar_entidades(titulo, descripcion)
+    return puntaje, tema, tema_hits, entidades, None, None, "—", ""
 
 
 # ---------------------------------------------------------------------------
@@ -975,7 +1219,8 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
             for item in items_raw:
                 if cache.ya_vista(item["link"]):
                     continue
-                puntaje, tema, sc_crudo, sc_ajustado, ajuste, descartado_por = evaluar(
+                (puntaje, tema, tema_hits, entidades, sc_crudo, sc_ajustado,
+                 ajuste, descartado_por) = evaluar(
                     item["titulo"], item["descripcion"], portal)
                 if puntaje == 0:
                     if descartado_por:
@@ -988,7 +1233,8 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                         })
                     continue
                 todas.append({
-                    "puntaje": puntaje, "tema": tema, "portal": portal,
+                    "puntaje": puntaje, "tema": tema, "tema_hits": tema_hits,
+                    "entidades": entidades, "portal": portal,
                     "titulo": item["titulo"], "descripcion": item["descripcion"],
                     "link": item["link"], "cuerpo": "",
                     "portales_lista": [{"nombre": portal, "url": item["link"]}],
