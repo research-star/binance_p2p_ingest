@@ -258,6 +258,29 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-util-sep{color:var(--text-soft)}
 .fb-util-lang{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:2px 4px;transition:color .15s}
 .fb-util-lang:hover{color:var(--text-primary)}
+/* ── Ticker "movimientos" (barra oscura cálida, full-width) · entre utility y masthead ──
+   Semántica de color INVERTIDA: la flecha muestra la dirección real (▲/▼/■); el COLOR
+   codifica bueno/malo (subir=malo=rojo, bajar=bueno=verde) salvo BCB oficial (neutro).
+   Tokens --tk-* locales (no contaminan el :root claro). NO sticky: scrollea con utility/
+   masthead (solo .fb-navbar es sticky). Lo inyecta fbRenderTicker() desde npMarketsData. */
+.fb-ticker{--tk-bg:#2A251F;--tk-text:#EFE6DB;--tk-label:#B8A993;--tk-pos:#A7C9AB;--tk-neg:#E5A89D;--tk-neutral:#C9BBA9;--tk-rule:rgba(239,230,219,.14);display:flex;align-items:stretch;width:100%;background:var(--tk-bg);color:var(--tk-text);font-family:var(--font-body);border-bottom:1px solid rgba(33,30,27,.5)}
+.fb-ticker-tag{display:flex;flex-direction:column;justify-content:center;flex:0 0 auto;padding:8px 18px 8px 36px;border-right:1px solid var(--tk-rule)}
+.fb-ticker-tag .tk-kicker{font-family:var(--font-display);font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--tk-text);line-height:1.05;white-space:nowrap}
+.fb-ticker-tag .tk-sub{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.18em;color:var(--tk-label);margin-top:3px;white-space:nowrap}
+.fb-ticker-track{display:flex;align-items:stretch;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.fb-ticker-track::-webkit-scrollbar{display:none}
+@media(min-width:981px){.fb-ticker-track{overflow-x:visible}.fb-ticker-item{flex:1 1 0}}
+.fb-ticker-item{display:flex;align-items:baseline;gap:8px;flex:0 0 auto;padding:9px 20px;border-right:1px solid var(--tk-rule);white-space:nowrap;scroll-snap-align:start}
+.fb-ticker-item:last-child{border-right:none}
+.fb-ticker-item .tk-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tk-label)}
+.fb-ticker-item .tk-value{font-family:var(--font-mono);font-size:16px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums;color:var(--tk-text)}
+.fb-ticker-item .tk-unit{font-family:var(--font-mono);font-size:10.5px;font-weight:500;letter-spacing:.02em;color:var(--tk-label);margin-left:-3px}
+.fb-ticker-item .tk-move{display:inline-flex;align-items:baseline;gap:5px;margin-left:auto;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.fb-ticker-item .tk-arrow{font-size:10px;line-height:1;transform:translateY(-.5px)}
+.fb-ticker-item.is-bad .tk-move{color:var(--tk-neg)}
+.fb-ticker-item.is-good .tk-move{color:var(--tk-pos)}
+.fb-ticker-item.is-flat .tk-move{color:var(--tk-neutral)}
+@media(max-width:980px){.fb-ticker-tag{display:none}.fb-ticker-track{flex:1 1 100%}.fb-ticker-item{padding:8px 16px}.fb-ticker-item:first-child{padding-left:16px}}
 .fb-masthead{display:flex;justify-content:center;padding:20px 36px;border-bottom:2px solid var(--text-primary)}
 .fb-nameplate{font-family:var(--font-display);font-size:clamp(40px,6vw,72px);font-weight:500;line-height:1;letter-spacing:-.01em;color:var(--text-primary);text-align:center}
 .fb-np-bo{font-weight:600}
@@ -469,23 +492,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-upd{display:flex;align-items:center;gap:7px;letter-spacing:.04em}
 .np-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent)}
 @media(max-width:980px){.np-topline{padding:8px 16px}}
-/* — 2 · markets strip "El día en cifras" (5 indicadores) — */
-.np-markets{display:grid;grid-template-columns:auto repeat(5,1fr);align-items:stretch;border-top:1px solid var(--border-color);border-bottom:2px solid var(--text-primary);background:var(--bg-primary);position:sticky;top:var(--nav-h);z-index:49}
-.np-markets-lab{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:5px;padding:0 22px;max-width:200px;border-right:1px solid var(--border-color)}
-.np-ml-kick{font-family:var(--font-body);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--blue-accent);white-space:nowrap}
-.np-ml-title{font-family:var(--font-display);font-size:19px;font-weight:600;line-height:1.06;letter-spacing:-.02em;color:var(--text-primary);white-space:nowrap}
-.np-ind{padding:11px 16px;border-right:1px solid var(--border-color);display:flex;flex-direction:column;gap:3px}
-.np-ind:last-child{border-right:0}
-.np-ind-lab{font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--text-muted)}
-.np-ind-row{display:flex;align-items:baseline;gap:6px}
-.np-ind-val{font-family:var(--font-body);font-size:21px;font-weight:600;color:var(--text-primary);font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1}
-.np-ind-unit{font-family:var(--font-body);font-size:10px;font-weight:500;color:var(--text-soft);text-transform:uppercase;letter-spacing:.04em}
-.np-ind-sub{display:flex;align-items:center;gap:5px;font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
-.np-arrow{font-family:var(--font-body);font-size:12px;font-weight:700;line-height:1}
-.np-arrow.up{color:var(--up)}
-.np-arrow.down{color:var(--down)}
-.np-arrow.flat{color:var(--text-soft)}
-@media(max-width:980px){.np-markets{display:flex;overflow-x:auto;scrollbar-width:none}.np-markets::-webkit-scrollbar{display:none}.np-markets-lab{display:none}.np-ind{flex:0 0 auto;min-width:128px}}
+/* — 2 · (franja "El día en cifras" reubicada al ticker global .fb-ticker arriba del masthead) — */
 /* — 3 · lead + 2 secundarias — */
 .np-top{display:grid;grid-template-columns:1.62fr 1fr;gap:0;border-bottom:2px solid var(--text-primary);padding-bottom:26px;margin-bottom:24px}
 .np-lead{padding-right:30px;border-right:1px solid var(--border-color)}
@@ -615,6 +622,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <button class="fb-util-lang" id="langToggle" title="Idioma" aria-label="Cambiar idioma">ES</button>
     </div>
   </div>
+  <section class="fb-ticker" id="fbTicker" aria-label="Indicadores del d&iacute;a">
+    <div class="fb-ticker-tag" aria-hidden="true">
+      <span class="tk-kicker">El d&iacute;a en cifras</span>
+      <span class="tk-sub">Mercados</span>
+    </div>
+    <div class="fb-ticker-track" id="fbTickerTrack" role="list"></div>
+  </section>
   <div class="fb-masthead">
     <span class="fb-nameplate">Finanzas<span class="fb-np-bo">Bo</span></span>
   </div>
@@ -4649,15 +4663,6 @@ window.addEventListener('popstate', function(){
   }
 
   // ── Regiones ──
-  function npMarkets(){
-    const inds=npMarketsData(), glyph={up:'▲',down:'▼',flat:'■'}; let cells='';
-    for(let i=0;i<inds.length;i++){ const d=inds[i];
-      cells+='<div class="np-ind"><span class="np-ind-lab">'+ntEsc(d.lab)+'</span>'
-        +'<div class="np-ind-row"><span class="np-ind-val">'+ntEsc(d.val)+'</span>'+(d.unit?'<span class="np-ind-unit">'+ntEsc(d.unit)+'</span>':'')+'</div>'
-        +'<span class="np-ind-sub"><span class="np-arrow '+d.dir+'">'+glyph[d.dir]+'</span>'+ntEsc(d.sub)+'</span></div>';
-    }
-    return '<div class="np-markets"><div class="np-markets-lab"><span class="np-ml-kick">Mercados</span><span class="np-ml-title">El día<br>en cifras</span></div>'+cells+'</div>';
-  }
   function npTop(){
     const pool=ntPool();
     if(!pool.length) return '<section class="np-top"><div class="np-empty">No hay notas para esta selección.</div></section>';
@@ -4763,7 +4768,7 @@ window.addEventListener('popstate', function(){
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
-    return '<div class="np-page">'+npAdminBar()+npMarkets()
+    return '<div class="np-page">'+npAdminBar()
       +'<div class="np-body">'+npTop()+'<div class="np-main">'+npRiver()+npRail()+'</div></div>'
       +npLatam()+npFooter()+'</div>';
   }
@@ -4906,6 +4911,26 @@ window.addEventListener('popstate', function(){
     ntLoadHidden();
     if(npHasHint()) npCheckMe();  // probe solo si hubo sesión antes; anónimo puro no prueba ni ensucia consola
   };
+
+  // ── Chrome global: franja de tickers (área 1; reusa npMarketsData de la portada) ──
+  // Semántica INVERTIDA uniforme: los indicadores listados son "más alto = peor"
+  // (dólar/riesgo/IPC/IPP) y BCB es flat por dato → npTone(dir) aplica a todos:
+  // up→bad(rojo), down→good(verde), flat→neutro. La flecha conserva la dirección real.
+  function npTone(dir){ return dir==='up'?'bad':(dir==='down'?'good':'flat'); }
+  function fbRenderTicker(){
+    var track=document.getElementById('fbTickerTrack'); if(!track) return;
+    var inds=npMarketsData(), glyph={up:'▲',down:'▼',flat:'■'}, html='';
+    for(var i=0;i<inds.length;i++){ var d=inds[i];
+      html+='<div class="fb-ticker-item is-'+npTone(d.dir)+'" role="listitem">'
+        +'<span class="tk-label">'+ntEsc(d.lab)+'</span>'
+        +'<span class="tk-value">'+ntEsc(d.val)+'</span>'+(d.unit?'<span class="tk-unit">'+ntEsc(d.unit)+'</span>':'')
+        +'<span class="tk-move"><span class="tk-arrow" aria-hidden="true">'+glyph[d.dir]+'</span><span class="tk-delta">'+ntEsc(d.sub)+'</span></span>'
+        +'</div>';
+    }
+    track.innerHTML=html;
+  }
+  function fbChromeInit(){ fbRenderTicker(); }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
 
 (function(){
