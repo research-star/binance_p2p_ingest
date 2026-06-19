@@ -53,17 +53,24 @@ except ImportError:
 
 import requests
 
-from config import NORMALIZED_DB
+from config import NORMALIZED_DB, NOTICIAS_TOP_BOLIVIA, NOTICIAS_TOP_LATAM
 from noticias_ingest import latam, scraper
 from noticias_ingest.transform import build_nota, build_nota_latam
 
 # ── Constantes ────────────────────────────────────────────────────────────
 
 UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
-TOP_N = 10             # tope diario carril Bolivia
-LATAM_TOP_N = 5        # tope diario carril latam (presupuesto independiente)
+TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
+LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
 UMBRAL_DEDUP_DB = 0.70
+
+# Expresión SQL del carril, robusta a filas legacy (col `carril` aún NULL antes de
+# aplicar 0005 / backfill): usa la columna nueva con fallback a la category vieja
+# ('latam' legacy). Las filas de HOY siempre traen carril (código nuevo), así que
+# el fallback solo afecta a filas viejas — fuera de la ventana de los budgets.
+CARRIL_SQL = ("COALESCE(carril, CASE WHEN category = 'latam' "
+              "THEN 'latam' ELSE 'bolivia' END)")
 
 HC_NOTICIAS = os.environ.get("HC_NOTICIAS", "").strip()
 
@@ -97,7 +104,7 @@ CREATE TABLE IF NOT EXISTS noticias (
     date            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4): corrida (BO) / pubDate (latam)
     time            TEXT NOT NULL,      -- HH:MM (Bolivia UTC-4): corrida (BO) / pubDate (latam)
     source          TEXT NOT NULL,      -- slug del portal (key de NOTICIAS_PORTALS)
-    category        TEXT NOT NULL,      -- economia|hidrocarburos|agro|mineria|latam|politica
+    category        TEXT NOT NULL,      -- economia|politica (colapsada FASE 3; el carril Latam va en la col carril)
     title           TEXT NOT NULL,
     summary         TEXT NOT NULL DEFAULT '',
     detail          TEXT NOT NULL DEFAULT '',
@@ -111,14 +118,31 @@ CREATE TABLE IF NOT EXISTS noticias (
     score_crudo     REAL,
     score_ajustado  REAL,
     created_at_utc  TEXT NOT NULL,
-    image_url       TEXT                -- og:image hotlinkeable (carril BO, FASE 2a); NULL si no hay / El Deber / latam. Última col = espejo del ALTER de 0004.
+    image_url       TEXT,               -- og:image hotlinkeable (carril BO, FASE 2a); NULL si no hay / El Deber / latam (col del ALTER de 0004).
+    carril          TEXT,               -- 'bolivia'|'latam': carril del feed (antes implícito en category=='latam'). Col del ALTER de 0005.
+    tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
+    entidades       TEXT                -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
 
+# Columnas añadidas por ALTER (0005): no las crea CREATE TABLE IF NOT EXISTS sobre
+# una tabla preexistente. (col, decl) — el self-migrate de init_schema las agrega
+# idempotente; tema/puntaje ya existen de 0002.
+_COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"))
+
 
 def init_schema(conn: sqlite3.Connection):
     conn.executescript(DDL)
+    # Self-migrate idempotente de columnas nuevas sobre DB con la tabla vieja:
+    # SQLite no tiene ADD COLUMN IF NOT EXISTS → se traga el "duplicate column"
+    # por columna. Desacopla el INSERT de cuándo se aplica 0005 a mano en el VPS
+    # (mismo patrón que el self-migrate de image_url en dashboard.py).
+    for col, decl in _COLS_V1:
+        try:
+            conn.execute(f"ALTER TABLE noticias ADD COLUMN {col} {decl}")
+        except sqlite3.OperationalError:
+            pass  # columna ya existe (idempotente)
     conn.commit()
 
 
@@ -151,13 +175,15 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
             """INSERT OR IGNORE INTO noticias
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
-                score_crudo, score_ajustado, created_at_utc, image_url)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                score_crudo, score_ajustado, created_at_utc, image_url, carril,
+                tema_hits, entidades)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
              n["puntaje"], n["score_crudo"], n["score_ajustado"],
-             n["created_at_utc"], n.get("image_url")))
+             n["created_at_utc"], n.get("image_url"), n.get("carril"),
+             n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False)))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
@@ -217,20 +243,24 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         res["sobre_umbral"] = len(seleccion)
 
         # Presupuesto diario: descuenta lo ya insertado hoy en ESTE carril
-        # (excluye latam: presupuestos independientes).
+        # (excluye latam: presupuestos independientes). El carril ya no se deriva
+        # de category (colapsada) sino de la col `carril` (CARRIL_SQL = robusto a
+        # legacy). Budget rolling: las corridas del día llenan hasta el cupo.
         ya_hoy = conn.execute(
-            "SELECT COUNT(*) FROM noticias WHERE date = ? AND category != 'latam'",
+            f"SELECT COUNT(*) FROM noticias WHERE date = ? AND {CARRIL_SQL} != 'latam'",
             (fecha_bo,)).fetchone()[0]
         budget = max(0, args.top - ya_hoy)
         if ya_hoy:
             print(f"[noticias] bolivia: ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
 
         finales = []
+        dedupe_losers = []
         for n in seleccion:
             if len(finales) >= budget:
-                break
+                break  # budget-loser: queda SIN marcar (reconsiderable, yield real)
             if es_repetida(n["title"], previos):
                 res["dedupe"] += 1
+                dedupe_losers.append(n)  # gemelo de una nota ya publicada (no insertable ~7d)
                 continue
             finales.append(n)
             previos.append(n["title"])
@@ -241,6 +271,21 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
         else:
             res["insertadas"] = insertar_notas(conn, finales)
+            # Fix de cacheo (FASE 3): marcar como vistas lo que NO debe reconsiderarse:
+            #  - insertadas (`finales`)
+            #  - no-calificadas (puntaje < umbral): deterministas, no van a calificar
+            #  - dedupe-losers: gemelos de una nota YA publicada; pierden el mismo
+            #    dedupe de título mientras su par viva en titulos_recientes (~7d), así
+            #    que NO son insertables — marcarlos evita re-scrapear su cuerpo cada
+            #    corrida (clave con cadencia diurna cada 3h).
+            # El budget-loser (calificado, perdió el cupo) queda SIN marcar: SÍ es
+            # reconsiderable en una corrida posterior (budget rolling / día siguiente).
+            # Antes correr_scraper marcaba TODO lo evaluado → las que perdían el top-N
+            # se descartaban para siempre (bug de yield).
+            vistas = [(n["url"], n["portal"]) for n in finales]
+            vistas += [(n["url"], n["portal"]) for n in notas if n["puntaje"] < args.umbral]
+            vistas += [(n["url"], n["portal"]) for n in dedupe_losers]
+            scraper.marcar_urls_vistas(vistas)
     except Exception:
         conn.rollback()  # aislamiento por carril: no dejar inserts a medias
         tb = traceback.format_exc()
@@ -278,7 +323,7 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         # created_at_utc: el `date` de estas filas es el pubDate, que puede
         # caer en ayer — el cupo es de inserción diaria, no de fecha visible.
         ya_hoy = conn.execute(
-            "SELECT COUNT(*) FROM noticias WHERE category = 'latam' "
+            f"SELECT COUNT(*) FROM noticias WHERE {CARRIL_SQL} = 'latam' "
             "AND date(created_at_utc, '-4 hours') = ?",
             (fecha_bo,)).fetchone()[0]
         budget = max(0, args.top_latam - ya_hoy)

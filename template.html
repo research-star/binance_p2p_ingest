@@ -4621,8 +4621,13 @@ window.addEventListener('popstate', function(){
   // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
   const NT_RANK = { alto:3, medio:2, bajo:1 };
   function ntCmp(a,b){ const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
-  function ntBolivia(){ return ntVisible().filter(function(n){ return n.category!=='latam'; }); }
-  function ntLatam(){ return ntVisible().filter(function(n){ return n.category==='latam'; }).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
+  // Carril del feed: campo dedicado `carril` (FASE 3, reemplaza el split por
+  // category==='latam' que se rompía al colapsar category a {economia,politica}).
+  // Fallback defensivo a la category vieja por si llega una nota sin carril
+  // (payload viejo en caché durante el deploy).
+  function ntEsLatam(n){ return !!(n && (n.carril==='latam' || (!n.carril && n.category==='latam'))); }
+  function ntBolivia(){ return ntVisible().filter(function(n){ return !ntEsLatam(n); }); }
+  function ntLatam(){ return ntVisible().filter(ntEsLatam).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
   function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
 
   // Estado de filtro (memoria; read/saved diferido).

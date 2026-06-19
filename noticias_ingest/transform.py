@@ -39,21 +39,26 @@ PORTAL_SLUGS = {
     "Los Tiempos": "lostiempos",
 }
 
-# 11 temas de boletines (+ fallback "General") → categorías del frontend.
-# "latam" no es target de ningún tema: la alimenta exclusivamente el carril
-# RSS de Bloomberg Línea (build_nota_latam), sin scoring.
+# 11 temas (+ fallback "General") → category COLAPSADA a 2 cubos (FASE 3,
+# Capa 2): {economia, politica}. Antes había 6 cubos (hidrocarburos/agro/
+# mineria/latam/economia/politica), pero el frontend no usa category para
+# chips/colores/routing (recon FASE 3) — solo partía el carril Latam vía
+# category=='latam', cosa que ahora hace el campo dedicado `carril`. El tema
+# fino (oro, dólar, YPFB…) y la confianza viven en `tema`/`tema_hits`/`topics`,
+# no en category. "latam" YA NO es un valor de category: el carril Latam se
+# marca con carril='latam' (build_nota_latam) y su category es 'economia'.
 TEMA_CATEGORIA = {
-    "Combustibles / YPFB": "hidrocarburos",
+    "Combustibles / YPFB": "economia",
     "Tipo de cambio / Dólar": "economia",
-    "Litio / Minería": "mineria",
-    "Agropecuario / Soya": "agro",
+    "Litio / Minería": "economia",
+    "Agropecuario / Soya": "economia",
     "Deuda / Finanzas": "economia",
     "Inflación / Precios": "economia",
     "Exportaciones / Comercio": "economia",
     "Inversión / Infraestructura": "economia",
     "Elecciones / Política económica": "politica",
     "Bloqueos / Conflictos": "politica",
-    "EMAPA / Alimentos": "agro",
+    "EMAPA / Alimentos": "economia",
     "General": "economia",
 }
 
@@ -123,6 +128,7 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "time": ahora_bo.strftime("%H:%M"),
         "source": PORTAL_SLUGS.get(portal, _slugify(portal)),
         "category": categoria_de_tema(tema),
+        "carril": "bolivia",   # carril del feed (frontend parte Bolivia/Latam por acá, no por category)
         "title": cand["titulo"].strip(),
         "summary": summary,
         "detail": detail,
@@ -136,6 +142,10 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         # Campos de auditoría (van a la DB, no al payload del frontend)
         "portal": portal,
         "tema": tema,
+        # Confianza del tema (clasificación v1) + entidades; al payload para el
+        # matching de galería futuro (gate sugerido: imagen específica si confianza>=10).
+        "tema_hits": cand.get("tema_hits"),
+        "entidades": cand.get("entidades") or [],
         "puntaje": cand["puntaje"],
         "score_crudo": cand.get("score_crudo"),
         "score_ajustado": cand.get("score_ajustado"),
@@ -176,7 +186,8 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "date": pub_bo.strftime("%Y-%m-%d"),
         "time": pub_bo.strftime("%H:%M"),
         "source": "bloomberg",
-        "category": "latam",
+        "category": "economia",   # category colapsada {economia,politica}; el carril va aparte
+        "carril": "latam",        # discriminador del carril Latam (antes era category=='latam')
         "title": (getattr(entry, "title", "") or "").strip(),
         "summary": _truncar(descripcion, SUMMARY_MAX),
         "detail": _truncar(contenido, DETAIL_MAX) if contenido else descripcion,
@@ -186,6 +197,10 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "url": link,
         "portal": "Bloomberg Línea",
         "tema": "",
+        # Latam no clasifica tema (sin scoring) ni se usa para galería (slot=bandera):
+        # confianza 0 y entidades vacías, consistente con puntaje=0.0 sentinela.
+        "tema_hits": 0,
+        "entidades": [],
         "puntaje": 0.0,
         "score_crudo": None,
         "score_ajustado": None,

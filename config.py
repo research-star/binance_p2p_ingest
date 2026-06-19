@@ -35,6 +35,14 @@ INGEST_INTERVAL_S = 600  # 10 min
 # ── Watchdog ────────────────────────────────────────────────────────────────
 WATCHDOG_STALE_MIN = 15
 
+# ── Noticias ingest (tab Noticias) ──────────────────────────────────────────
+# Cupos diarios por carril (presupuestos INDEPENDIENTES; budget rolling: las
+# corridas del día llenan hasta el cupo, no la primera se queda con todo).
+# También overridables por CLI (--top / --top-latam). Subidos de 10/5 → 14/8
+# en FASE 3 para más cobertura con la cadencia diurna cada 3h.
+NOTICIAS_TOP_BOLIVIA = 14
+NOTICIAS_TOP_LATAM = 8
+
 # ── INE Bolivia ingest ──────────────────────────────────────────────────────
 # Audit folder en VPS prod; en laptop dev OSError → degradación elegante.
 INE_AUDIT_DIR = Path("/opt/binance_p2p/ine_audit")
