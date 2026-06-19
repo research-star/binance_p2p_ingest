@@ -754,12 +754,21 @@ def process_data(db_path: Path) -> dict:
             conn.execute("ALTER TABLE noticias ADD COLUMN image_url TEXT")
         except Exception:
             pass  # columna ya existe (idempotente)
+        # Self-migrate de columnas FASE 3 (carril = carril del feed). Mismo patrón:
+        # cada ALTER en su try para no abortar las siguientes. carril nullable → el
+        # SELECT lo COALESCE con la category vieja para filas legacy.
+        for _col, _decl in (("carril", "TEXT"),):
+            try:
+                conn.execute(f"ALTER TABLE noticias ADD COLUMN {_col} {_decl}")
+            except Exception:
+                pass
         # `WHERE id IS NOT NULL` en el subquery: SQLite permite NULL en un TEXT PK, y
         # un solo NULL en el subquery volvería el NOT IN falso para TODA fila (footgun
         # del NOT IN), blanqueando el feed — justo lo que esta capa evita.
         noticias_rows = conn.execute(
             "SELECT id, date, time, source, category, title, summary, detail, "
-            "       topics, impact, source_note, url, image_url "
+            "       topics, impact, source_note, url, image_url, "
+            "       COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) AS carril "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
             "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
@@ -772,6 +781,7 @@ def process_data(db_path: Path) -> dict:
             'topics': json.loads(r['topics'] or '[]'),
             'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
             'imageUrl': r['image_url'],
+            'carril': r['carril'],   # 'bolivia'|'latam': el frontend parte los carriles por acá
         } for r in noticias_rows]
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation

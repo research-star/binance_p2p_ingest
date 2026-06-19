@@ -61,9 +61,13 @@ def backfill(db_path: Path, window_days: int, dry_run: bool) -> None:
 
     # Ventana del feed: igual que el SELECT de dashboard.py (date('now','-4h','-29d')).
     offset = f"-{window_days - 1} days"
+    # Carril BO: category se colapsó a {economia,politica} (FASE 3), así que el
+    # carril Latam ya no es category=='latam' sino la col `carril` (con fallback a
+    # la category vieja para filas legacy sin carril poblado).
     rows = conn.execute(
         "SELECT id, url, portal FROM noticias "
-        "WHERE image_url IS NULL AND category != 'latam' "
+        "WHERE image_url IS NULL "
+        "  AND COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) != 'latam' "
         "  AND date >= date('now', '-4 hours', ?) "
         "ORDER BY date DESC",
         (offset,),
