@@ -1,0 +1,55 @@
+name: ABC transitabilidad — recon
+
+# Recon temporal: los runners de GitHub tienen internet abierto (a diferencia
+# del sandbox de Claude Code), así que bajamos los endpoints de la API de la ABC
+# y los commiteamos a abc_recon/ para inspeccionar su estructura. Se limpia luego.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/abc-recon.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch ABC endpoints
+        run: |
+          set -u
+          mkdir -p abc_recon
+          base="https://transitabilidad.abc.gob.bo"
+          ua="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+          : > abc_recon/_manifest.txt
+          fetch () {
+            url="$1"; out="$2"
+            code=$(curl -sS -A "$ua" -H 'Accept: application/json, */*' \
+                   -H "Referer: $base/mapa" --max-time 90 \
+                   -w '%{http_code}' -o "abc_recon/$out" "$url" || echo "000")
+            bytes=$(wc -c < "abc_recon/$out" 2>/dev/null || echo 0)
+            printf '%-44s HTTP %s  %s bytes\n' "$url" "$code" "$bytes" >> abc_recon/_manifest.txt
+          }
+          fetch "$base/api/v1/events"                       events.json
+          fetch "$base/api/v1/data"                         data.json
+          fetch "$base/api/v1/retenes"                      retenes.json
+          fetch "$base/api/v1/serviceStations"              serviceStations.json
+          fetch "$base/shapes/rvf-2026.geojson"             rvf-2026.geojson
+          fetch "$base/shapes/BoliviaDepartmentLimits.json" BoliviaDepartmentLimits.json
+          echo "===== MANIFEST ====="; cat abc_recon/_manifest.txt
+          for f in events data retenes serviceStations; do
+            echo "===== HEAD abc_recon/$f.json (primeros 1500 chars) ====="
+            head -c 1500 "abc_recon/$f.json" 2>/dev/null; echo
+          done
+
+      - name: Commit recon snapshot
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add abc_recon
+          git commit -m "chore(abc): recon snapshot de endpoints de transitabilidad [skip ci]" \
+            || { echo "nada que commitear"; exit 0; }
+          git push origin HEAD:${GITHUB_REF_NAME}
