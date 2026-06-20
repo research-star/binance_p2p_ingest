@@ -28,6 +28,19 @@ UA = "FinanzasBo/1.0 (+https://finanzasbo.com)"
 SOURCE_REPO = "https://github.com/mauforonda/transitabilidad-bolivia"
 TZ = timezone(timedelta(hours=-4))  # GMT-04:00, como la fuente
 
+# Intensidad de bloqueos por punto. La ABC emite un id NUEVO por cada reporte, así
+# que un mismo tramo bloqueado por semanas aparece como muchos ids efímeros (días
+# por id ~1-2). Para una intensidad con sentido agrupamos por COORDENADA (no por
+# id) y contamos los días distintos con ≥1 bloqueo abierto desde INTENSIDAD_DESDE
+# (inclusive: los ya abiertos antes cuentan desde esa fecha). Alimenta la opacidad
+# del mapa como proxy de la densidad que se ve en QGIS.
+INTENSIDAD_DESDE = "2026-05-01"  # ancla fija (episodio actual); cambiar por ventana móvil si se quiere
+COORD_DECIMALS = 3               # ~110 m: define "mismo punto"
+
+# Polígonos de departamentos (exportados de QGIS, gadm41, simplificados). Sirven
+# para asignar cada bloqueo a su depto vía point-in-polygon (ranking por depto).
+DEPTOS_FILE = Path(__file__).parent / "static" / "bolivia_departamentos.json"
+
 
 def _get(url, timeout=60):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
@@ -51,6 +64,69 @@ def fetch():
             continue
     tiempo = json.loads(_get(f"{BASE}/conflictos_tiempo.json"))
     return activos, coords, tiempo
+
+
+def build_intensidad(coords, tiempo):
+    """Días distintos con bloqueo abierto por coordenada, desde INTENSIDAD_DESDE."""
+    buckets = {}  # (lat_r, lon_r) -> set(días)
+    for entry in tiempo:
+        day = (entry.get("time") or "")[:10]
+        if not day or day < INTENSIDAD_DESDE:
+            continue
+        for cid in (entry.get("open") or []):
+            c = coords.get(str(cid))
+            if not c:
+                continue
+            key = (round(c[0], COORD_DECIMALS), round(c[1], COORD_DECIMALS))
+            buckets.setdefault(key, set()).add(day)
+    puntos = [{"lat": k[0], "lon": k[1], "dias": len(v)} for k, v in buckets.items()]
+    # Menor intensidad primero: se dibuja debajo, los hotspots quedan arriba.
+    puntos.sort(key=lambda p: p["dias"])
+    return {
+        "desde": INTENSIDAD_DESDE,
+        "max_dias": max((p["dias"] for p in puntos), default=0),
+        "puntos": puntos,
+    }
+
+
+def _load_deptos():
+    try:
+        return json.loads(DEPTOS_FILE.read_text(encoding="utf-8")).get("departamentos", [])
+    except Exception:
+        return []
+
+
+def _in_ring(lon, lat, ring):
+    """Ray casting: ¿(lon,lat) dentro del anillo?"""
+    inside = False
+    n = len(ring)
+    j = n - 1
+    for i in range(n):
+        xi, yi = ring[i]
+        xj, yj = ring[j]
+        if ((yi > lat) != (yj > lat)) and (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi):
+            inside = not inside
+        j = i
+    return inside
+
+
+def _dept_of(lon, lat, deptos):
+    for d in deptos:
+        if any(_in_ring(lon, lat, r) for r in d.get("polygons") or []):
+            return d.get("name")
+    return None
+
+
+def por_departamento(puntos, deptos):
+    """Ranking [{dep, n}] desc: cuántos puntos caen en cada departamento."""
+    if not deptos:
+        return []
+    counts = {}
+    for p in puntos:
+        dn = _dept_of(p["lon"], p["lat"], deptos)
+        if dn:
+            counts[dn] = counts.get(dn, 0) + 1
+    return [{"dep": k, "n": v} for k, v in sorted(counts.items(), key=lambda kv: -kv[1])]
 
 
 def build(activos, coords, tiempo):
@@ -80,6 +156,9 @@ def build(activos, coords, tiempo):
     # fuente (clima/obras: sin coordenadas en los derivados).
     conflicto = len(activos_pts)
     no_conflicto = int(activos.get("no_conflicto", 0) or 0)
+    deptos = _load_deptos()
+    intensidad = build_intensidad(coords, tiempo)
+    intensidad["por_departamento"] = por_departamento(intensidad["puntos"], deptos)
     now = datetime.now(TZ)
     return {
         "updated_at": now.isoformat(timespec="seconds"),
@@ -92,7 +171,9 @@ def build(activos, coords, tiempo):
             "total": conflicto + no_conflicto,
         },
         "activos": activos_pts,          # puntos de bloqueo por conflicto social, ahora
+        "activos_por_departamento": por_departamento(activos_pts, deptos),  # ranking activos
         "serie_diaria": serie,           # bloqueos por conflicto abiertos por día (histórico)
+        "intensidad": intensidad,        # días bloqueado por punto desde INTENSIDAD_DESDE + ranking depto
     }
 
 
@@ -106,10 +187,13 @@ def main():
         json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
+    top = data["intensidad"]["por_departamento"][:3]
     print(
         f"OK -> {OUT.name} | activos={len(data['activos'])} | "
-        f"serie={len(data['serie_diaria'])} pts | resumen={data['resumen']} | "
-        f"ultima_lectura={data['ultima_lectura']}"
+        f"serie={len(data['serie_diaria'])} pts | "
+        f"intensidad={len(data['intensidad']['puntos'])} pts (max {data['intensidad']['max_dias']}d) | "
+        f"deptos_top={[(d['dep'], d['n']) for d in top]} | "
+        f"resumen={data['resumen']} | ultima_lectura={data['ultima_lectura']}"
     )
 
 
