@@ -3,8 +3,9 @@
 
 Reproducible y sin deps: `python scripts/test_gallery_keyword.py` (exit 0 = OK, 1 = falla).
 Cubre los 5 casos del brief: (i) prioridad ante co-ocurrencia, (ii) límite de palabra,
-(iii) multipalabra, (iv) fallback a tema sin keyword, (v) latam→internacional;
-más una guarda de que ningún slug fuera de las 14 imágenes se emita.
+(iii) multipalabra, (iv) fallback a tema sin keyword, (v) latam→internacional; las
+entidades con foto dedicada (fmi/banco-central/gobierno); más dos guardas: ningún slug
+fuera de las 17 imágenes, y que cada gal-<slug>.webp exista en static/.
 """
 import os
 import sys
@@ -50,7 +51,7 @@ check("'disparo'/'reparo' NO disparan bloqueos; 'surtidor' -> combustibles",
 
 print("== (iii) MULTIPALABRA (frase con límite de palabra) ==")
 check("'tipo de cambio paralelo' -> tipo-cambio", v2("Sube el tipo de cambio paralelo", tema='', category=None), "tipo-cambio")
-check("'reservas internacionales' -> inversion", v2("Caen las reservas internacionales del BCB", tema='', category=None), "inversion")
+check("'reservas internacionales' -> inversion", v2("Caen las reservas internacionales del pais", tema='', category=None), "inversion")  # sin 'bcb': ahora 'bcb' es entidad banco-central
 check("'cambio climatico' NO matchea la frase 'tipo de cambio' (fallback)",
       v2("El cambio climatico afecta", tema='', category=None), None)
 
@@ -64,17 +65,31 @@ print("== (v) LATAM -> 'internacional' (el pass keyword NO aplica) ==")
 check("latam con keyword 'eleccion' igual -> internacional", v2("Eleccion en la region", tema='', category=None, carril='latam'), "internacional")
 check("latam neutro -> internacional", v2("Mercados globales", carril='latam'), "internacional")
 
-print("== (vi) ENTIDAD gana a TEMA GENERAL (banda de entidades, proxy provisional) ==")
-check("'banco central' + 'pib' -> inversion (ENT #4) no economia (#16)", v2("El banco central revisa el pib", tema='', category=None), "inversion")
-check("'fmi' + 'gobierno' -> deuda (ENT #3) no politica (#17)", v2("El gobierno negocia con el fmi", tema='', category=None), "deuda")
-check("'banco mundial' -> deuda (ENT #5 multilaterales)", v2("Desembolso del banco mundial", tema='', category=None), "deuda")
-check("'asfi' -> inversion (ENT #6 proxy flojo)", v2("La ASFI regula la banca", tema='', category=None), "inversion")
+print("== (vi) ENTIDAD gana a TEMA GENERAL (fmi/banco-central con FOTO DEDICADA) ==")
+check("'banco central' + 'pib' -> banco-central (ENT) no economia", v2("El banco central revisa el pib", tema='', category=None), "banco-central")
+check("'fmi' + 'gobierno' -> fmi (ENT, gana a la entidad gobierno y a politica)", v2("El gobierno negocia con el fmi", tema='', category=None), "fmi")
+check("'banco mundial' -> deuda (ENT multilaterales, proxy provisional)", v2("Desembolso del banco mundial", tema='', category=None), "deuda")
+check("'asfi' -> inversion (ENT proxy flojo)", v2("La ASFI regula la banca", tema='', category=None), "inversion")
 
 print("== (vii) ENTIDAD: límite de palabra + multipalabra ==")
-check("'fmi' standalone -> deuda", v2("acuerdo con el fmi", tema='', category=None), "deuda")
+check("'fmi' standalone -> fmi", v2("acuerdo con el fmi", tema='', category=None), "fmi")
 check("'fmi' NO matchea dentro de otra palabra", bool(_gal_wb('fmi').search(_gal_norm('confmiado xfmi'))), False)
-check("'banco central' como FRASE -> inversion", v2("decision del banco central boliviano", tema='', category=None), "inversion")
+check("'banco central' como FRASE -> banco-central", v2("decision del banco central boliviano", tema='', category=None), "banco-central")
 check("'banco' suelto (sin central/mundial) NO dispara entidad -> None", v2("el banco privado presta", tema='', category=None), None)
+
+print("== (vii.b) ENTIDAD gobierno: foto dedicada, SOBRE las generales y BAJO los temas concretos ==")
+check("'gobierno' standalone -> gobierno (ya no politica)", v2("El gobierno anuncia medidas", tema='', category=None), "gobierno")
+check("'ministerio' -> gobierno", v2("El ministerio confirma el plan", tema='', category=None), "gobierno")
+check("'ministro' -> gobierno (antes politica)", v2("Habla el ministro del area", tema='', category=None), "gobierno")
+check("'plaza murillo' (frase) -> gobierno", v2("Concentracion en plaza murillo", tema='', category=None), "gobierno")
+check("'asamblea legislativa' (frase) -> gobierno", v2("Sesion en la asamblea legislativa", tema='', category=None), "gobierno")
+check("'casa grande del pueblo' (frase) -> gobierno", v2("Acto en la casa grande del pueblo", tema='', category=None), "gobierno")
+# gobierno NO override un tema concreto de arriba:
+check("'gobierno' + 'diesel' -> combustibles (tema concreto gana a gobierno)", v2("El gobierno sube el diesel", tema='', category=None), "combustibles")
+check("'gobierno' + 'litio' -> litio (tema concreto gana a gobierno)", v2("El gobierno y el litio del salar", tema='', category=None), "litio")
+# 'ley'/'decreto'/'asamblea' suelta NO migran a la sede: siguen en la regla politica general:
+check("'decreto' suelto -> politica (regla general intacta)", v2("Nuevo decreto presidencial", tema='', category=None), "politica")
+check("'ley' suelta -> politica (regla general intacta)", v2("Aprueban la ley de la republica", tema='', category=None), "politica")
 
 print("== (viii) REGRESIÓN: sin keyword de entidad, orden de temas = v1 ==")
 check("bloqueo + inflacion -> bloqueos (= v1)", v2("Bloqueo de rutas dispara la inflacion"), "bloqueos")
@@ -88,18 +103,24 @@ check("'marcha' fuera: 'la marcha de la economia' YA NO -> bloqueos", v2("La bue
 check("'divisas' movido: 'mercado de divisas' -> tipo-cambio (no exportaciones)", v2("El mercado de divisas se tensa", tema='', category=None), "tipo-cambio")
 check("'divisa' singular sigue -> tipo-cambio", v2("compra de divisa extranjera", tema='', category=None), "tipo-cambio")
 
-print("== GUARDA: ningún slug fuera de las 14 imágenes ==")
+print("== GUARDA: ningún slug fuera de las 17 imágenes ==")
 emitidos = set()
-for t in ['eleccion', 'bloqueo', 'fmi', 'banco central', 'banco mundial', 'asfi', 'ypfb', 'litio',
-          'deuda', 'exportacion', 'inflacion', 'alimento', 'agro', 'reservas internacionales',
-          'dolar', 'pib', 'gobierno']:
+for t in ['eleccion', 'bloqueo', 'fmi', 'banco central', 'banco mundial', 'asfi', 'gobierno',
+          'ministerio', 'plaza murillo', 'ypfb', 'litio', 'deuda', 'exportacion', 'inflacion',
+          'alimento', 'agro', 'reservas internacionales', 'dolar', 'pib']:
     s = v2(t, tema='', category=None)
     if s:
         emitidos.add(s)
 emitidos |= {v2("x", carril='latam'), v2("x", tema='General', category='economia'), v2("x", tema='General', category='politica')}
 leak = emitidos - VALID_GALLERY_SLUGS
-check("slugs emitidos <= VALID_GALLERY_SLUGS (14, subset)", leak, set())
+check("slugs emitidos <= VALID_GALLERY_SLUGS (17, subset)", leak, set())
 print(f"          emitidos: {sorted(emitidos)}")
+
+print("== GUARDA FAIL-FAST: cada slug emisible tiene su gal-<slug>.webp en static/ ==")
+STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static')
+faltan = sorted(s for s in VALID_GALLERY_SLUGS
+                if not os.path.isfile(os.path.join(STATIC_DIR, f'gal-{s}.webp')))
+check("todos los VALID_GALLERY_SLUGS tienen archivo (incl. fmi/banco-central/gobierno)", faltan, [])
 
 print(f"\nRESULTADO: {PASS} OK, {FAIL} FALLA")
 sys.exit(1 if FAIL else 0)

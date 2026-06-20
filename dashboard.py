@@ -156,14 +156,16 @@ def _gal_wb(term):
 # las re-normaliza igual. Plurales se listan aparte (límite de palabra: 'eleccion' NO
 # matchea 'elecciones'). Frases multipalabra ('banco central') matchean como frase.
 #
-# Reglas [ENT] = ENTIDAD con PROXY provisional: el slug apunta a una imagen existente
-# que NO es propia de la entidad; al crear su imagen dedicada, cambiar SOLO el slug, NO
-# la posición. Candidatas dedicadas PRIORITARIAS: banco-central y fmi (ver reporte del PR).
+# Reglas [ENT] = ENTIDAD nombrada con prioridad propia. fmi y banco-central (banda de
+# arriba) y gobierno (más abajo, sobre las generales) ya tienen IMAGEN DEDICADA
+# (gal-fmi / gal-banco-central / gal-gobierno, este PR). Las [ENT] aún marcadas PROXY
+# (multilaterales, asfi) apuntan a una imagen prestada hasta tener la suya: al crear su
+# dedicada, cambiar SOLO el slug, NO la posición.
 GALLERY_KEYWORD_PRIORITY = [
     (['eleccion', 'elecciones', 'electoral', 'comicios', 'votacion', 'candidato', 'tse'], 'elecciones'),
     (['bloqueo', 'paro', 'conflicto', 'protesta', 'movilizacion'], 'bloqueos'),  # 'marcha' quitado (polisémico: 'marcha de la economia'/'marcha atras')
-    (['fmi', 'fondo monetario'], 'deuda'),               # [ENT] fmi → proxy provisional 'deuda'
-    (['banco central', 'bcb'], 'inversion'),             # [ENT] banco-central → proxy 'inversion' (PROXY FLOJO)
+    (['fmi', 'fondo monetario'], 'fmi'),                 # [ENT] fmi → imagen dedicada (sede del FMI; dominio público)
+    (['banco central', 'bcb'], 'banco-central'),         # [ENT] banco-central → imagen dedicada (edificio BCB, La Paz; CC)
     (['banco mundial', 'bid', 'caf'], 'deuda'),          # [ENT] multilaterales → proxy provisional 'deuda'
     (['asfi'], 'inversion'),                             # [ENT] asfi → proxy 'inversion' (PROXY FLOJO)
     (['combustible', 'combustibles', 'diesel', 'gasolina', 'ypfb', 'surtidor', 'carburante'], 'combustibles'),
@@ -175,14 +177,22 @@ GALLERY_KEYWORD_PRIORITY = [
     (['agro', 'soya', 'agropecuario', 'cosecha'], 'agro'),
     (['inversion', 'credito', 'reservas internacionales', 'rin'], 'inversion'),
     (['dolar', 'tipo de cambio', 'paralelo', 'divisa', 'divisas', 'usdt', 'cotizacion'], 'tipo-cambio'),  # 'divisa(s)' unificado acá
+    # [ENT] gobierno: entidad SOBRE las generales (economia/politica) pero DEBAJO de los temas
+    # concretos de arriba → un tópico nombrado (diesel, litio, soya…) sigue ganando a 'gobierno'.
+    # Mantiene 'ley'/'decreto'/'asamblea' suelta en la regla politica de abajo (no migran a la sede).
+    (['gobierno', 'ministerio', 'ministro', 'casa grande del pueblo', 'asamblea legislativa', 'plaza murillo'], 'gobierno'),  # [ENT] gobierno → imagen dedicada (sede de gobierno; CC)
     (['pib', 'crecimiento', 'fiscal', 'deficit', 'subvencion'], 'economia'),
     (['gobierno', 'ministro', 'asamblea', 'ley', 'decreto'], 'politica'),
 ]
 
-# Universo de slugs emisibles = las 14 imágenes existentes. Ninguna regla puede emitir
-# un slug fuera de acá (guarda fail-fast: rompe al cargar, no en runtime silencioso).
-# Las reglas [ENT] proxyean a slugs existentes → NO introducen slugs nuevos.
-VALID_GALLERY_SLUGS = frozenset(GALLERY_TEMA_SLUGS.values()) | {'economia', 'politica', 'internacional'}
+# Universo de slugs emisibles = las 17 imágenes existentes (14 base + fmi / banco-central /
+# gobierno, entidades con foto dedicada de este PR). Ninguna regla puede emitir un slug
+# fuera de acá (guarda fail-fast: rompe al cargar, no en runtime silencioso). Las [ENT] de
+# multilaterales y asfi siguen proxyeando a slugs base → no introducen slugs nuevos.
+VALID_GALLERY_SLUGS = frozenset(GALLERY_TEMA_SLUGS.values()) | {
+    'economia', 'politica', 'internacional',   # genéricas por category / carril latam
+    'fmi', 'banco-central', 'gobierno',         # entidades con imagen dedicada (este PR)
+}
 assert all(slug in VALID_GALLERY_SLUGS for _, slug in GALLERY_KEYWORD_PRIORITY), \
     "GALLERY_KEYWORD_PRIORITY emite un slug sin imagen en static/gal-<slug>.webp"
 

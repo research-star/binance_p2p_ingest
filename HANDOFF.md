@@ -546,7 +546,10 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 - **Galería de imágenes (v1 — #90, EN PROD)**: cada nota trae `gallerySlug`
   precomputado → el front (`npImg`) arma `static/gal-<slug>.webp` en la cascada
   **og:image → galería → placeholder `.np-imgph`** (`gallerySlug=null` → placeholder).
-  14 imágenes reales (fotos stock Pexels, `GALLERY-CREDITS.md`); microtag
+  17 imágenes reales: 14 de stock Pexels (sin atribución) + 3 **entidades dedicadas** de
+  Wikimedia Commons (`fmi` dominio público, `banco-central` CC0, `gobierno` CC-BY-SA **con
+  crédito**) — fuentes/licencias en `GALLERY-CREDITS.md`; los créditos CC se publican en
+  `/creditos-imagenes.html` (`static/`, link en el footer de Inicio). microtag
   "ilustrativa" **solo-admin** (`npAdmin.isAdmin`). **Motor de selección v1.1**
   (`dashboard.py` `gallery_slug_v2`): **PASS de PRIORIDAD POR KEYWORD** sobre
   `title`+`summary`+`detail` normalizado (tabla `GALLERY_KEYWORD_PRIORITY`,
@@ -554,8 +557,10 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   el tópico de mayor prioridad; sin match → **fallback** al lookup por `tema`
   (`gallery_slug`/`GALLERY_TEMA_SLUGS`); `carril='latam'` → `internacional`. **NO usa
   `temaConfianza`** (NULL en histórico → mataría cobertura) ni `entidades` (v2).
-  Solo emite slugs de las 14 imágenes existentes (guarda `VALID_GALLERY_SLUGS`,
-  fail-fast). Tests: `scripts/test_gallery_keyword.py`.
+  Solo emite slugs de las 17 imágenes existentes (guarda `VALID_GALLERY_SLUGS` al cargar +
+  guarda de existencia de archivo en el test, fail-fast). Reglas `[ENT]` (entidad nombrada):
+  `fmi`/`banco-central` con foto propia, `gobierno` sobre las generales y bajo los temas
+  concretos; `multilaterales`/`asfi` aún proxy. Tests: `scripts/test_gallery_keyword.py`.
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).
