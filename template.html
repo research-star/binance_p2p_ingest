@@ -404,7 +404,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .infl-cell-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:2px}
 .infl-cell-title{font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .infl-cell-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px;white-space:nowrap}
-.infl-cell-chart{height:104px}
+.infl-cell-chart{height:150px}
 @media(max-width:900px){.infl-matrix{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.infl-matrix{grid-template-columns:1fr}}
 .fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
@@ -4159,7 +4159,8 @@ window.addEventListener('popstate', function(){
       return '<div class="infl-cell"><div class="infl-cell-top"><span class="infl-cell-title" title="'+_divs[s].label+'">'+_divs[s].label+'</span><span class="infl-cell-val" id="inflval_'+s+'"></span></div><div class="infl-cell-chart" id="inflcell_'+s+'"></div></div>';
     }).join('');
     var allv=[]; _slugs.forEach(function(s){(_divs[s].var_12m||[]).forEach(function(v){if(v!=null)allv.push(v);});});
-    var ymin=allv.length?Math.min.apply(null,allv):0, ymax=allv.length?Math.max.apply(null,allv):1, pad=((ymax-ymin)*0.14)||1;
+    var ymin=allv.length?Math.min.apply(null,allv):0, ymax=allv.length?Math.max.apply(null,allv):1;
+    var yTop=(ymax<=40)?40:Math.min(50,ymax*1.03), yBot=Math.min(0,ymin)-2;
     var cfg={displayModeBar:false,responsive:true,scrollZoom:false};
     _cells=[];
     _slugs.forEach(function(s){
@@ -4168,8 +4169,8 @@ window.addEventListener('popstate', function(){
         line:{color:SLATE,width:1.4},fill:'tozeroy',fillcolor:hexToRgba(SLATE,.07),hoverinfo:'none'}],
         {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:32,r:8,t:6,b:8},
          xaxis:{type:'date',showgrid:false,showticklabels:false,fixedrange:true,showspikes:false},
-         yaxis:{range:[ymin-pad,ymax+pad],zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.3),tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
-         hovermode:'x',showlegend:false,height:104}, cfg);
+         yaxis:{range:[yBot,yTop],zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.3),tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
+         hovermode:'x',showlegend:false,height:150}, cfg);
       _cells.push(el);
     });
     // Cursor sincronizado: línea vertical (shape) a la misma fecha en las 12 celdas
