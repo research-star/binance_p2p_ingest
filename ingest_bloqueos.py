@@ -28,6 +28,15 @@ UA = "FinanzasBo/1.0 (+https://finanzasbo.com)"
 SOURCE_REPO = "https://github.com/mauforonda/transitabilidad-bolivia"
 TZ = timezone(timedelta(hours=-4))  # GMT-04:00, como la fuente
 
+# Intensidad de bloqueos por punto. La ABC emite un id NUEVO por cada reporte, así
+# que un mismo tramo bloqueado por semanas aparece como muchos ids efímeros (días
+# por id ~1-2). Para una intensidad con sentido agrupamos por COORDENADA (no por
+# id) y contamos los días distintos con ≥1 bloqueo abierto desde INTENSIDAD_DESDE
+# (inclusive: los ya abiertos antes cuentan desde esa fecha). Alimenta la opacidad
+# del mapa como proxy de la densidad que se ve en QGIS.
+INTENSIDAD_DESDE = "2026-05-01"  # ancla fija (episodio actual); cambiar por ventana móvil si se quiere
+COORD_DECIMALS = 3               # ~110 m: define "mismo punto"
+
 
 def _get(url, timeout=60):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
@@ -51,6 +60,29 @@ def fetch():
             continue
     tiempo = json.loads(_get(f"{BASE}/conflictos_tiempo.json"))
     return activos, coords, tiempo
+
+
+def build_intensidad(coords, tiempo):
+    """Días distintos con bloqueo abierto por coordenada, desde INTENSIDAD_DESDE."""
+    buckets = {}  # (lat_r, lon_r) -> set(días)
+    for entry in tiempo:
+        day = (entry.get("time") or "")[:10]
+        if not day or day < INTENSIDAD_DESDE:
+            continue
+        for cid in (entry.get("open") or []):
+            c = coords.get(str(cid))
+            if not c:
+                continue
+            key = (round(c[0], COORD_DECIMALS), round(c[1], COORD_DECIMALS))
+            buckets.setdefault(key, set()).add(day)
+    puntos = [{"lat": k[0], "lon": k[1], "dias": len(v)} for k, v in buckets.items()]
+    # Menor intensidad primero: se dibuja debajo, los hotspots quedan arriba.
+    puntos.sort(key=lambda p: p["dias"])
+    return {
+        "desde": INTENSIDAD_DESDE,
+        "max_dias": max((p["dias"] for p in puntos), default=0),
+        "puntos": puntos,
+    }
 
 
 def build(activos, coords, tiempo):
@@ -93,6 +125,7 @@ def build(activos, coords, tiempo):
         },
         "activos": activos_pts,          # puntos de bloqueo por conflicto social, ahora
         "serie_diaria": serie,           # bloqueos por conflicto abiertos por día (histórico)
+        "intensidad": build_intensidad(coords, tiempo),  # días bloqueado por punto desde INTENSIDAD_DESDE (mapa)
     }
 
 
@@ -108,8 +141,9 @@ def main():
     )
     print(
         f"OK -> {OUT.name} | activos={len(data['activos'])} | "
-        f"serie={len(data['serie_diaria'])} pts | resumen={data['resumen']} | "
-        f"ultima_lectura={data['ultima_lectura']}"
+        f"serie={len(data['serie_diaria'])} pts | "
+        f"intensidad={len(data['intensidad']['puntos'])} pts (max {data['intensidad']['max_dias']}d) | "
+        f"resumen={data['resumen']} | ultima_lectura={data['ultima_lectura']}"
     )
 
 

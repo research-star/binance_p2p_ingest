@@ -1248,8 +1248,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="content">
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Bloqueos por conflicto social &mdash; ubicaci&oacute;n actual</div>
-          <div class="fb-chart-sub">Puntos de bloqueo por conflicto social activos en la &uacute;ltima lectura disponible.</div>
+          <div class="fb-chart-title">Intensidad de bloqueos por conflicto social</div>
+          <div class="fb-chart-sub">Cada punto es un tramo de carretera; la opacidad refleja los d&iacute;as bloqueado desde el 1 de mayo de 2026.</div>
         </div>
         <div id="bloqueosMap" style="height:500px;"></div>
         <div class="fb-chart-source">Datos: ABC (transitabilidad.abc.gob.bo) &middot; v&iacute;a dataset abierto de <a href="https://github.com/mauforonda/transitabilidad-bolivia" target="_blank" rel="noopener">@mauforonda</a></div>
@@ -2735,8 +2735,9 @@ window.renderBloqueos = function(){
   var c = getC();
   var alertColor = '#b3473b';
   var resumen = B.resumen || {conflicto:0, no_conflicto:0, total:0};
-  var activos = B.activos || [];
   var serie = B.serie_diaria || [];
+  var intens = B.intensidad || null;
+  var ptos = (intens && intens.puntos) ? intens.puntos : [];
   if(elDate){
     var ul = B.ultima_lectura || B.updated_at;
     elDate.textContent = ul
@@ -2762,12 +2763,20 @@ window.renderBloqueos = function(){
         traces.push({type:'scattergeo', mode:'lines', lon:geo.deptos.lon, lat:geo.deptos.lat,
           line:{color:'#a9a9a9', width:0.9}, hoverinfo:'skip', showlegend:false});
       }
-      // Bloqueos activos en rojo.
+      // Intensidad por punto: rojo con opacidad ~ días bloqueado (escala log, mín→máx),
+      // proxy de la densidad del mapa QGIS. Sin borde, como el estilo de la capa.
+      var maxd = (intens && intens.max_dias) ? intens.max_dias : 1;
+      var lmax = Math.log(maxd + 1) || 1;
       traces.push({type:'scattergeo', mode:'markers',
-        lat: activos.map(function(p){return p.lat;}),
-        lon: activos.map(function(p){return p.lon;}),
-        marker:{size:8, color:alertColor, opacity:0.9, line:{width:0.5, color:'#ffffff'}},
-        hovertemplate:'Bloqueo<br>%{lat:.4f}, %{lon:.4f}<extra></extra>'});
+        lat: ptos.map(function(p){return p.lat;}),
+        lon: ptos.map(function(p){return p.lon;}),
+        marker:{size:6, line:{width:0},
+          color: ptos.map(function(p){
+            var a = 0.12 + 0.78 * (Math.log(p.dias + 1) / lmax);
+            return 'rgba(192,0,0,' + a.toFixed(3) + ')';
+          })},
+        customdata: ptos.map(function(p){return p.dias;}),
+        hovertemplate:'%{customdata} días bloqueado desde el 1 may<br>%{lat:.3f}, %{lon:.3f}<extra></extra>'});
       Plotly.react(elMap, traces, {
         paper_bgcolor:'rgba(0,0,0,0)',
         font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
@@ -2782,9 +2791,9 @@ window.renderBloqueos = function(){
         height:560
       }, PC);
     };
-    if(!activos.length){
+    if(!ptos.length){
       _purgeAndClear(elMap);
-      elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">No hay bloqueos por conflicto activos en la última lectura.</div>';
+      elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">Sin datos de intensidad de bloqueos disponibles.</div>';
     } else if(_bloqueosGeo){
       drawMapa(_bloqueosGeo);
     } else {
