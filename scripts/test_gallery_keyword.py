@@ -81,6 +81,13 @@ check("bloqueo + inflacion -> bloqueos (= v1)", v2("Bloqueo de rutas dispara la 
 check("ypfb + gobierno -> combustibles (= v1)", v2("El gobierno y YPFB sobre el diesel"), "combustibles")
 check("deuda externa sin entidad -> deuda (regla general; 'fmi' ya no vive acá)", v2("Sube la deuda externa", tema='', category=None), "deuda")
 
+print("== (ix) FIXES DE TABLA APROBADOS (post-review) ==")
+check("plural 'combustibles' ahora matchea -> combustibles", v2("Escasez de combustibles en el pais", tema='', category=None), "combustibles")
+check("'marcha' fuera de bloqueos: 'marcha atras al diesel' -> combustibles", v2("Dan marcha atras al alza del diesel", tema='', category=None), "combustibles")
+check("'marcha' fuera: 'la marcha de la economia' YA NO -> bloqueos", v2("La buena marcha de la economia", tema='', category=None) != "bloqueos", True)
+check("'divisas' movido: 'mercado de divisas' -> tipo-cambio (no exportaciones)", v2("El mercado de divisas se tensa", tema='', category=None), "tipo-cambio")
+check("'divisa' singular sigue -> tipo-cambio", v2("compra de divisa extranjera", tema='', category=None), "tipo-cambio")
+
 print("== GUARDA: ningún slug fuera de las 14 imágenes ==")
 emitidos = set()
 for t in ['eleccion', 'bloqueo', 'fmi', 'banco central', 'banco mundial', 'asfi', 'ypfb', 'litio',

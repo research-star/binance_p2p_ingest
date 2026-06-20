@@ -161,20 +161,20 @@ def _gal_wb(term):
 # la posición. Candidatas dedicadas PRIORITARIAS: banco-central y fmi (ver reporte del PR).
 GALLERY_KEYWORD_PRIORITY = [
     (['eleccion', 'elecciones', 'electoral', 'comicios', 'votacion', 'candidato', 'tse'], 'elecciones'),
-    (['bloqueo', 'paro', 'conflicto', 'marcha', 'protesta', 'movilizacion'], 'bloqueos'),
+    (['bloqueo', 'paro', 'conflicto', 'protesta', 'movilizacion'], 'bloqueos'),  # 'marcha' quitado (polisémico: 'marcha de la economia'/'marcha atras')
     (['fmi', 'fondo monetario'], 'deuda'),               # [ENT] fmi → proxy provisional 'deuda'
     (['banco central', 'bcb'], 'inversion'),             # [ENT] banco-central → proxy 'inversion' (PROXY FLOJO)
     (['banco mundial', 'bid', 'caf'], 'deuda'),          # [ENT] multilaterales → proxy provisional 'deuda'
     (['asfi'], 'inversion'),                             # [ENT] asfi → proxy 'inversion' (PROXY FLOJO)
-    (['combustible', 'diesel', 'gasolina', 'ypfb', 'surtidor', 'carburante'], 'combustibles'),
+    (['combustible', 'combustibles', 'diesel', 'gasolina', 'ypfb', 'surtidor', 'carburante'], 'combustibles'),
     (['litio', 'ylb', 'salar'], 'litio'),
     (['deuda', 'bonos', 'eurobono', 'calificadora', 'default', 'financiamiento'], 'deuda'),
-    (['exportacion', 'exportaciones', 'exportador', 'divisas', 'gas natural'], 'exportaciones'),
+    (['exportacion', 'exportaciones', 'exportador', 'gas natural'], 'exportaciones'),  # 'divisas' movido a tipo-cambio (concepto cambiario)
     (['inflacion', 'ipc', 'precios', 'carestia'], 'inflacion'),
     (['alimento', 'alimentos', 'canasta', 'abastecimiento', 'harina', 'azucar', 'aceite'], 'alimentos'),
     (['agro', 'soya', 'agropecuario', 'cosecha'], 'agro'),
     (['inversion', 'credito', 'reservas internacionales', 'rin'], 'inversion'),
-    (['dolar', 'tipo de cambio', 'paralelo', 'divisa', 'usdt', 'cotizacion'], 'tipo-cambio'),
+    (['dolar', 'tipo de cambio', 'paralelo', 'divisa', 'divisas', 'usdt', 'cotizacion'], 'tipo-cambio'),  # 'divisa(s)' unificado acá
     (['pib', 'crecimiento', 'fiscal', 'deficit', 'subvencion'], 'economia'),
     (['gobierno', 'ministro', 'asamblea', 'ley', 'decreto'], 'politica'),
 ]
