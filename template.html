@@ -2754,6 +2754,12 @@ window.renderBloqueos = function(){
   if(elMap){
     var drawMapa = function(geo){
       var traces = [];
+      // Territorio boliviano: relleno apenas más oscuro + borde nacional claro,
+      // para diferenciarlo del fondo y ver dónde termina el mapa (geometría built-in).
+      traces.push({type:'choropleth', locationmode:'country names', locations:['Bolivia'],
+        z:[0], showscale:false, hoverinfo:'skip',
+        colorscale:[[0, hexToRgba(c.textPrimary,0.06)],[1, hexToRgba(c.textPrimary,0.06)]],
+        marker:{line:{color: hexToRgba(c.textPrimary,0.55), width:1.3}}});
       // Base: Red Vial Fundamental (gris claro) + límites departamentales (gris).
       if(geo && geo.roads){
         traces.push({type:'scattergeo', mode:'lines', lon:geo.roads.lon, lat:geo.roads.lat,
@@ -2785,8 +2791,8 @@ window.renderBloqueos = function(){
           resolution:50, projection:{type:'mercator'},
           showland:false, showcountries:false, showcoastlines:false,
           showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
-          lonaxis:{range:[-70,-57], showgrid:false},
-          lataxis:{range:[-23.2,-9.5], showgrid:false}
+          lonaxis:{range:[-70.5,-56.5], showgrid:false},
+          lataxis:{range:[-24,-9], showgrid:false}
         },
         height:560
       }, PC);
