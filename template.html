@@ -398,6 +398,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-stog-line{display:inline-block;width:14px;height:0;border-top:2px solid currentColor;flex-shrink:0}
 .fb-stog-line.dashed{border-top-style:dashed}
 .fb-stog-band{display:inline-block;width:14px;height:10px;border-radius:2px;background:currentColor;opacity:.32;flex-shrink:0}
+.fb-tab-controls{margin:4px 0 16px}
 .fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
@@ -745,11 +746,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
 <div class="content">
 
+  <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div>
+
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog active" data-trace="venta" style="--fb-trace-color:#6b7d92"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#6b7d92"></span><span class="fb-stog-label">Venta</span></button><button type="button" class="fb-stog active" data-trace="banda" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-band" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p><div class="panel-side-toggle" data-panel="depth" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog inactive" data-trace="banda" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-band" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="orderbook" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad del libro de &oacute;rdenes</h2><p>Cantidad acumulada (USDT) por nivel de precio. &Uacute;ltima snapshot.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOrderBook"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volumen hist&oacute;rico de compra y venta de d&oacute;lares</h2><p>USDT disponible en anuncios activos por lado, en USD millones.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -1336,8 +1338,8 @@ function applyTheme(){
 // ═══ PLOTLY ═══
 // ═══ SIDE FILTER STATE (per panel) ═══
 const panelSideFilter = {
-  vwap:'both', depth:'both', offer_range:'both',
-  orderbook:'both'
+  vwap:'both', offer_range:'both',
+  volumen:'both'
 };
 function panelShowBuy(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='buy'}
 function panelShowSell(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='sell'}
@@ -1669,14 +1671,13 @@ function xaxisForView(base, v){
   return cfg;
 }
 
-// VWAP series toggle state (default: Compra, Venta y banda BCB Ref visibles)
-const vwapToggle={compra:true,venta:true,banda:true};
+// VWAP series toggle state (default: solo Compra; banda BCB Ref desactivada)
+const vwapToggle={compra:true,banda:false};
 function applyVwapToggle(){
   const el=document.getElementById('chartVwap');
   if(!el||!el.data) return;
   const keyFor=function(tr){
     if(tr.name==='Compra') return 'compra';
-    if(tr.name==='Venta')  return 'venta';
     if(tr.name&&tr.name.indexOf('BCB')===0) return 'banda';
     return null;
   };
@@ -1719,18 +1720,19 @@ function rVwap(c,v){
     }
   }
   traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
-  traces.push({_side:'sell',x:x,y:v.vs10,name:'Venta', line:{color:c.sell,width:2},mode:'lines+markers',marker:{size:2,color:c.sell}});
   const filtered=filterDirectionalTraces(traces, 'vwap');
   Plotly.react('chartVwap',filtered,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
-function rDepth(c,v){
+function rVolume(c,v){
   const L=BL(c),x=v.x;
+  // Volumen = USDT disponible en anuncios activos por lado (USDT ~ USD), escala en millones.
+  const toM=arr=>(arr||[]).map(d=>d==null?null:d/1e6);
   const traces=filterDirectionalTraces([
-    {_side:'buy', x:x,y:v.buy_depth, name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
-    {_side:'sell',x:x,y:v.sell_depth,name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
-  ], 'depth');
-  Plotly.react('chartDepth',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USDT',font:{size:10,color:c.textMuted}},tickformat:',.0f',automargin:true},shapes:gapShapes(c),height:chartHeight('chartDepth')},PC);
+    {_side:'buy', x:x,y:toM(v.buy_depth), name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
+    {_side:'sell',x:x,y:toM(v.sell_depth),name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
+  ], 'volumen');
+  Plotly.react('chartVolume',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USD (millones)',font:{size:10,color:c.textMuted}},tickformat:',.1f',rangemode:'tozero',automargin:true},shapes:gapShapes(c),height:chartHeight('chartVolume')},PC);
 }
 function rOutliers(){
   const ml=DATA.merchants_last||null;
@@ -1897,27 +1899,6 @@ function rHeatmap(c){
 }
 
 // ═══ NEW CHART: Order Book Depth (H) ═══
-function rOrderBook(c){
-  var ob=DATA.order_book;
-  var el=document.getElementById('chartOrderBook');
-  if(!ob||(!ob.buy.length&&!ob.sell.length)){if(el)el.innerHTML='<div class="view-hint">Sin datos</div>';return}
-  var buyLevels=ob.buy.slice().sort(function(a,b){return b.p-a.p});
-  var buyX=[],buyY=[],buyAcc=0;
-  buyLevels.forEach(function(l){buyAcc+=l.a;buyX.push(l.p);buyY.push(buyAcc)});
-  var sellLevels=ob.sell.slice().sort(function(a,b){return a.p-b.p});
-  var sellX=[],sellY=[],sellAcc=0;
-  sellLevels.forEach(function(l){sellAcc+=l.a;sellX.push(l.p);sellY.push(sellAcc)});
-  var L=BL(c);
-  Plotly.react('chartOrderBook',[
-    {x:buyX,y:buyY,type:'scatter',mode:'lines',line:{shape:'hv',color:c.buy,width:2},fill:'tozeroy',fillcolor:hexToRgba(c.buy,.15),name:'Compra',hovertemplate:'Precio: %{x:.2f} BOB<br>Acumulado: %{y:,.0f} USDT<extra></extra>'},
-    {x:sellX,y:sellY,type:'scatter',mode:'lines',line:{shape:'hv',color:c.sell,width:2},fill:'tozeroy',fillcolor:hexToRgba(c.sell,.15),name:'Venta',hovertemplate:'Precio: %{x:.2f} BOB<br>Acumulado: %{y:,.0f} USDT<extra></extra>'}
-  ],{...L,
-    xaxis:{...L.xaxis,title:{text:'Precio (BOB/USDT)',font:{size:10,color:c.textMuted}},tickformat:'.2f',tickangle:0},
-    yaxis:{...L.yaxis,title:{text:'USDT acumulado',font:{size:10,color:c.textMuted}},tickformat:',.0f'},
-    showlegend:true,height:chartHeight('chartOrderBook')
-  },PC);
-}
-
 // ═══ NEW CHART: Activity Heatmap by hour-day (I) ═══
 function rActivityHm(c){
   var el=document.getElementById('chartActivityHm');
@@ -1955,7 +1936,7 @@ function renderTimeSeries(view){
   currentView=view;
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, view);
-  rVwap(c,v); rDepth(c,v); rOutliers(); rFlow(c);
+  rVwap(c,v); rVolume(c,v); rOutliers(); rFlow(c);
 }
 // Flags de carga lazy de la tab Dólar (misma idea que ntBuilt/renderBbv).
 // dollarBuilt: mientras sea false, replotAllCharts es no-op → applyTheme (toggle de
@@ -1975,9 +1956,9 @@ function replotAllCharts(){
   dollarThemeDirty=false;
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
-  rVwap(c,v); rDepth(c,v);
+  rVwap(c,v); rVolume(c,v);
   rOutliers(); rFlow(c); rOffer(c); rHeatmap(c);
-  rOrderBook(c); rActivityHm(c);
+  rActivityHm(c);
   updateKpis();
 }
 // Render lazy de la tab Dólar (misma convención que renderBbv/renderGuide/renderNoticias).
@@ -2137,8 +2118,7 @@ document.querySelectorAll('.panel-side-toggle input[type="checkbox"]').forEach(i
 const DEFAULT_LAYOUT = [
   {id:'vwap',full:true},
   {id:'offer_range',full:true},
-  {id:'orderbook',full:true},
-  {id:'depth',full:false}
+  {id:'volumen',full:true}
 ];
 
 function loadLayout(){
@@ -2177,7 +2157,7 @@ function resizePanelCharts(panel){
   },50)});
 }
 // \u2550\u2550\u2550 PANEL VISIBILITY (Ocultar / FAB M\u00e1s gr\u00e1ficas) \u2550\u2550\u2550
-const HIDDEN_BY_DEFAULT = ['depth'];
+const HIDDEN_BY_DEFAULT = [];
 let panelVisibility = {};
 
 function loadVisibility(){
@@ -2325,9 +2305,8 @@ function closeFabPopup(returnFocus){
 // \u2550\u2550\u2550 PANEL DOWNLOADS (PNG / CSV) \u2550\u2550\u2550
 // Mapas de tipo de panel.
 const PANEL_CHART_DIV = {
-  vwap:'chartVwap', depth:'chartDepth',
-  orderbook:'chartOrderBook',
-  offer_range:'chartOffer'
+  vwap:'chartVwap', offer_range:'chartOffer',
+  volumen:'chartVolume'
 };
 const PANEL_TABLE_ROOT = {};
 
