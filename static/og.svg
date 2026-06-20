@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <rect width="1200" height="630" fill="#2c4a6b"/>
-  <rect x="100" y="315" width="48" height="120" rx="6" fill="#a8c8e0"/>
-  <rect x="168" y="275" width="48" height="160" rx="6" fill="#a8c8e0"/>
-  <rect x="236" y="235" width="48" height="200" rx="6" fill="#a8c8e0"/>
-  <text x="380" y="295" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="100" font-weight="700" fill="#f5f7fa">FinanzasBo</text>
-  <text x="380" y="350" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="32" fill="#a8c8e0">Mercado P2P USDT/BOB en Bolivia</text>
-  <text x="380" y="392" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="#dde8ef">Binance · BCB · Datos en tiempo real</text>
-  <text x="1100" y="580" text-anchor="end" font-family="ui-monospace, monospace" font-size="24" fill="#dde8ef">finanzasbo.com</text>
+  <rect width="1200" height="630" fill="#F7E4D7"/>
+  <rect x="100" y="315" width="48" height="120" rx="6" fill="#211E1B"/>
+  <rect x="168" y="275" width="48" height="160" rx="6" fill="#211E1B"/>
+  <rect x="236" y="235" width="48" height="200" rx="6" fill="#211E1B"/>
+  <text x="380" y="295" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="100" font-weight="700" fill="#211E1B">FinanzasBo</text>
+  <text x="380" y="350" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="32" fill="#211E1B">Inteligencia económica de Bolivia</text>
+  <text x="380" y="392" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" fill="#6B6256">Noticias económicas · Datos macro · Análisis financiero</text>
+  <text x="1100" y="580" text-anchor="end" font-family="ui-monospace, monospace" font-size="24" fill="#6B6256">finanzasbo.com</text>
 </svg>
