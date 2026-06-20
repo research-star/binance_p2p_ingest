@@ -1197,6 +1197,14 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="content">
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
+          <div class="fb-chart-title">Inflaci&oacute;n interanual</div>
+          <div class="fb-chart-sub" id="inflInterSub">Variaci&oacute;n del IPC general a 12 meses (respecto al mismo mes del a&ntilde;o anterior).</div>
+        </div>
+        <div id="inflInteranualChart" style="height:360px;"></div>
+        <div class="fb-chart-source">Fuente: Instituto Nacional de Estad&iacute;stica &middot; IPC general &middot; base 2016=100</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
+        <div class="fb-chart-head">
           <div class="fb-chart-title">Inflaci&oacute;n mensual</div>
           <div class="fb-chart-sub">Variaci&oacute;n del IPC mes a mes. Barras hacia abajo = meses con deflaci&oacute;n.</div>
         </div>
@@ -4061,6 +4069,31 @@ window.addEventListener('popstate', function(){
       +kpi('Acumulada en el año',fmtPct(ULT.var_acumulada),'IPC &middot; desde enero',null,null)
       +'</div></div>';
   }
+  function plotInteranual(){
+    var el=document.getElementById('inflInteranualChart'); if(!el||!IPC) return;
+    var c=getC(), L=BL(c);
+    var x=IPC.periodos.map(function(p){return p+'-01';}), y=IPC.general.var_12m, ln=lastNonNull(y);
+    var sub=document.getElementById('inflInterSub');
+    if(sub && ULT && ULT.periodo){
+      var prev=(parseInt(ULT.periodo.slice(0,4),10)-1)+'-'+ULT.periodo.slice(5,7);
+      sub.textContent='Variación del IPC general respecto al mismo mes del año anterior ('+periodoLabel(ULT.periodo)+' vs '+periodoLabel(prev)+').';
+    }
+    var traces=[{type:'scatter',mode:'lines',x:x,y:y,
+      line:{color:WARM_DARK,width:2.6}, fill:'tozeroy', fillcolor:hexToRgba(WARM_MID,.10),
+      hovertemplate:'%{x|%b %Y}<br>%{y:.2f}% interanual<extra></extra>'}];
+    var anns=[];
+    if(ln.i>=0){
+      traces.push({type:'scatter',mode:'markers',x:[x[ln.i]],y:[ln.v],
+        marker:{color:WARM_DARK,size:8,line:{color:'#fff',width:1.5}}, hoverinfo:'skip', showlegend:false});
+      anns.push({x:x[ln.i],y:ln.v,xref:'x',yref:'y',text:'<b>'+fmtPct(ln.v)+'</b>',
+        showarrow:false,xanchor:'right',yanchor:'bottom',xshift:-8,yshift:6,
+        font:{family:'Outfit',size:16,color:WARM_DARK}});
+    }
+    Plotly.react(el,traces,{...L,
+      xaxis:{...L.xaxis,type:'date',nticks:11,tickangle:0},
+      yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
+      annotations:anns, margin:{l:48,r:18,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
+  }
   function plotMensual(){
     var el=document.getElementById('inflMensualChart'); if(!el||!IPC) return;
     var c=getC(), L=BL(c);
@@ -4189,7 +4222,7 @@ window.addEventListener('popstate', function(){
     if(!hasIpc){ if(empty) empty.style.display=''; return; }
     if(empty) empty.style.display='none';
     var dd=document.getElementById('inflDate'); if(dd) dd.textContent=(ULT&&ULT.periodo)?periodoLabel(ULT.periodo):'—';
-    renderKpis(); plotMensual(); plotAcum(); plotMatrix(); plotRanking();
+    renderKpis(); plotInteranual(); plotMensual(); plotAcum(); plotMatrix(); plotRanking();
   };
 })();
 
