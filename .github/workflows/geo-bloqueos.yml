@@ -1,0 +1,43 @@
+name: Geometría RVF Bolivia (one-shot)
+
+# Genera static/bolivia_red_vial.json (Red Vial Fundamental + límites
+# departamentales, simplificados) para el mapa de la subsección Bloqueos.
+# La geometría es estática; corre a demanda. El runner tiene internet abierto
+# para alcanzar la ABC (las rutas /shapes/ NO tienen captcha).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g mapshaper
+      - name: Fetch + simplify + flatten
+        run: |
+          set -e
+          UA="Mozilla/5.0 (X11; Linux x86_64; rv:151.0) Gecko/20100101 Firefox/151.0"
+          B="https://transitabilidad.abc.gob.bo"
+          curl -fsS -A "$UA" -H "Referer: $B/mapa" --max-time 150 "$B/shapes/rvf-2026.geojson" -o /tmp/rvf.geojson
+          curl -fsS -A "$UA" -H "Referer: $B/mapa" --max-time 150 "$B/shapes/BoliviaDepartmentLimits.json" -o /tmp/dep.geojson
+          echo "=== RAW ==="; ls -la /tmp/rvf.geojson /tmp/dep.geojson
+          mapshaper /tmp/rvf.geojson -simplify 8% keep-shapes -o precision=0.001 /tmp/rvf_s.geojson
+          mapshaper /tmp/dep.geojson -simplify 15% keep-shapes -o precision=0.001 /tmp/dep_s.geojson
+          echo "=== SIMPLIFIED ==="; ls -la /tmp/rvf_s.geojson /tmp/dep_s.geojson
+          python3 scripts/flatten_geo.py /tmp/rvf_s.geojson /tmp/dep_s.geojson static/bolivia_red_vial.json
+          echo "=== COMPACT ==="; ls -la static/bolivia_red_vial.json
+          gzip -c static/bolivia_red_vial.json | wc -c | awk '{print "gzipped bytes:", $1}'
+      - name: Commit geometría
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/bolivia_red_vial.json
+          if git diff --cached --quiet; then echo "sin cambios"; exit 0; fi
+          git commit -m "chore(geo): RVF + límites departamentales simplificados [skip ci]"
+          git push origin HEAD:${GITHUB_REF_NAME}
