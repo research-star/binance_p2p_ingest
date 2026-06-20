@@ -399,6 +399,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-stog-line.dashed{border-top-style:dashed}
 .fb-stog-band{display:inline-block;width:14px;height:10px;border-radius:2px;background:currentColor;opacity:.32;flex-shrink:0}
 .fb-tab-controls{margin:4px 0 16px}
+.infl-matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}
+.infl-cell{border:1px solid var(--border-color);border-radius:var(--radius-md);padding:6px 9px 2px;background:var(--bg-secondary)}
+.infl-cell-title{font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.infl-cell-chart{height:96px}
+@media(max-width:900px){.infl-matrix{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.infl-matrix{grid-template-columns:1fr}}
 .fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
@@ -1182,48 +1188,46 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       </div>
     </div>
   </div>
-  <!-- Sub-panel: Inflación (IPC/IPP del INE). Render lazy: window.renderInflacion,
-       colgado del hook render de MACRO_SUBTABS (mismo patrón que Riesgo País). -->
+  <!-- Sub-panel: Inflación (IPC del INE). Solo IPC (el IPP se ignora). Render lazy:
+       window.renderInflacion, colgado del hook de MACRO_SUBTABS. -->
   <div id="subtab-inflacion" style="display:none;">
     <div id="inflKpis"></div>
     <div class="content">
-      <div class="fb-chart-card fb-chart-card--elevated" id="inflGeneralCard">
+      <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Inflaci&oacute;n al consumidor: qu&eacute; la explica</div>
-          <div class="fb-chart-sub" id="inflGeneralSub">&mdash;</div>
+          <div class="fb-chart-title">Inflaci&oacute;n mensual</div>
+          <div class="fb-chart-sub">Variaci&oacute;n del IPC mes a mes. Barras hacia abajo = meses con deflaci&oacute;n.</div>
         </div>
-        <div class="fb-view-toggle" id="inflGeneralChips" style="margin-bottom:12px"></div>
-        <div id="inflGeneralChart" style="height:420px;"></div>
+        <div id="inflMensualChart" style="height:340px;"></div>
         <div class="fb-chart-source">Fuente: Instituto Nacional de Estad&iacute;stica &middot; base 2016=100</div>
       </div>
-      <!-- Toolbar del desglose: vista (Ranking/Series) + métrica (12m/mensual),
-           aplican a las dos cards de abajo (IPC y IPP). -->
-      <div class="fb-chart-card" id="inflControls" style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center;padding:12px 20px;">
-        <div><span class="fb-kpi-label" style="margin-right:8px">Vista</span><span class="fb-view-toggle" id="inflViewChips" style="margin-top:0"></span></div>
-        <div><span class="fb-kpi-label" style="margin-right:8px">M&eacute;trica</span><span class="fb-view-toggle" id="inflMetricChips" style="margin-top:0"></span></div>
-      </div>
-      <div class="fb-chart-card" id="inflIpcCard" style="margin-top:16px;">
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">IPC por divisi&oacute;n COICOP</div>
-          <div class="fb-chart-sub" id="inflIpcSub">&mdash;</div>
+          <div class="fb-chart-title">Inflaci&oacute;n acumulada por a&ntilde;o</div>
+          <div class="fb-chart-sub">Cada l&iacute;nea es un a&ntilde;o; el eje horizontal son los meses. La l&iacute;nea oscura es el a&ntilde;o en curso.</div>
         </div>
-        <div class="fb-series-toggles" id="inflIpcToggles" style="margin-bottom:10px"></div>
-        <div id="inflIpcChart" style="height:460px;"></div>
+        <div id="inflAcumChart" style="height:380px;"></div>
+        <div class="fb-chart-source">Fuente: INE &middot; IPC acumulado desde enero de cada a&ntilde;o</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">Inflaci&oacute;n interanual por rubro</div>
+          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses de cada divisi&oacute;n COICOP. Pas&aacute; el mouse: el cursor se mueve en todos los rubros a la vez.</div>
+        </div>
+        <div id="inflMatrix" class="infl-matrix"></div>
         <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP &middot; base 2016=100</div>
       </div>
-      <div class="fb-chart-card" id="inflIppCard" style="margin-top:16px;">
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">IPP por grandes grupos de actividad</div>
-          <div class="fb-chart-sub" id="inflIppSub">&mdash;</div>
+          <div class="fb-chart-title">Qu&eacute; rubros est&aacute;n m&aacute;s caros hoy</div>
+          <div class="fb-chart-sub">Inflaci&oacute;n interanual por divisi&oacute;n, &uacute;ltimo dato disponible.</div>
         </div>
-        <div class="fb-series-toggles" id="inflIppToggles" style="margin-bottom:10px"></div>
-        <div id="inflIppChart" style="height:400px;"></div>
-        <div class="fb-chart-source">Fuente: INE &middot; IPP por grandes grupos &middot; base 2016=100</div>
+        <div id="inflRankingChart" style="height:420px;"></div>
+        <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP</div>
       </div>
-      <!-- Fallback de degradación: visible solo si DATA.inflacion llega sin IPC ni IPP. -->
       <div class="fb-chart-card" id="inflEmpty" style="display:none;text-align:center;padding:48px;">
         <h2 style="margin:0 0 8px">Inflaci&oacute;n</h2>
-        <p class="fb-subtitle" style="margin:0">A&uacute;n no hay datos del INE disponibles. Las series IPC/IPP aparecen autom&aacute;ticamente con el pr&oacute;ximo release.</p>
+        <p class="fb-subtitle" style="margin:0">A&uacute;n no hay datos del INE disponibles. Las series del IPC aparecen autom&aacute;ticamente con el pr&oacute;ximo release.</p>
       </div>
     </div>
   </div>
@@ -2809,7 +2813,7 @@ var MACRO_SUBTABS = [
       if(typeof window.renderDeudaSoberana==='function') window.renderDeudaSoberana();
     } },
   { id:'inflacion', slug:'/inflacion', title:'FinanzasBo — Inflación',
-    subtitle:'Precios al consumidor (IPC) y al productor (IPP) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
+    subtitle:'Inflación al consumidor (IPC) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
     render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } },
   { id:'bloqueos', slug:'/bloqueos', title:'FinanzasBo — Bloqueos en Bolivia',
     subtitle:'Bloqueos de carreteras por conflictos sociales &middot; Fuente: ABC vía @mauforonda &middot; Datos al <span id="bloqueosDate">&mdash;</span>',
@@ -4027,474 +4031,128 @@ window.addEventListener('popstate', function(){
   };
 })();
 
-// ═══ INFLACIÓN SUBTAB (IPC / IPP del INE) ═══
-// DATA.inflacion: dashboard.py pivotea ine_ipc/ine_ipp a shape columnar estilo
-// EMBI — {ipc:{periodos:[...], general:{var_12m,var_mensual,var_acumulada},
-// divisiones:{slug:{label,var_12m,var_mensual,peso?,contrib?}}},
-// ipp:{..., grupos:{...}},
-// ultimo:{ipc:{periodo,var_12m,var_mensual,var_acumulada}, ipp:{...}}}.
-// `contrib` (contribución de la división a la var 12m del total, en pts) y
-// `peso` son derivados fail-closed en dashboard.py (_laspeyres_contrib): si
-// las guardas no validan, las keys NO vienen y el hero degrada a la vista de
-// líneas. ipc/ipp llegan null si su tabla no existe o está vacía →
-// degradación elegante (card de fallback, sin crash).
+// ═══ INFLACIÓN SUBTAB (IPC del INE) ═══
+// Solo IPC (el IPP se ignora). DATA.inflacion.ipc = {periodos:['YYYY-MM',...],
+// general:{var_12m[],var_mensual[],var_acumulada[]}, divisiones:{slug:{label,
+// var_12m[],var_mensual[]}}}. 4 vistas con paleta cálida cohesiva:
+//  1) mensual (barras) · 2) acumulada por año (líneas, eje=meses) ·
+//  3) matriz interanual por rubro (12 mini-charts, cursor sincronizado) ·
+//  4) ranking interanual actual (barras horizontales).
 (function(){
-  var INF = (typeof DATA==='object' && DATA.inflacion)
-    ? DATA.inflacion
-    : {ipc:null, ipp:null, ultimo:{ipc:null, ipp:null}};
-  var ULT = INF.ultimo || {ipc:null, ipp:null};
-
-  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  function periodoLargo(p){
-    if(!p) return '—';
-    return MESES[parseInt(p.slice(5,7),10)-1]+' '+p.slice(0,4);
-  }
-  function fmtPct(v,dec){
-    if(v==null) return '—';
-    var d=(dec==null)?2:dec;
-    return (v>0?'+':'')+v.toFixed(d)+'%';
-  }
-  function lastNonNull(arr){
-    if(!arr) return null;
-    for(var i=arr.length-1;i>=0;i--) if(arr[i]!=null) return {idx:i,val:arr[i]};
-    return null;
-  }
-  function deltaPts(arr){
-    // Δ en puntos porcentuales: último no-null menos el no-null anterior.
-    var l=lastNonNull(arr);
-    if(!l) return null;
-    for(var j=l.idx-1;j>=0;j--) if(arr[j]!=null) return l.val-arr[j];
-    return null;
-  }
-  function deltaColor(d){
-    if(d==null) return 'var(--text-muted)';
-    // Aceleración de la inflación = orange; desaceleración = green.
-    return d>0 ? 'var(--orange)' : (d<0 ? 'var(--green)' : 'var(--text-muted)');
-  }
-  function arrow(d){ return (d==null||d===0)?'':(d>0?'▲':'▼'); }
-  function fmtDeltaPts(d){
-    if(d==null) return '';
-    return (d>0?'+':'')+d.toFixed(2)+' pts';
-  }
-
-  // Descriptor por familia: dimsKey difiere (divisiones/grupos) pero el shape
-  // interno es idéntico, así que todo el render es genérico sobre esta lista.
-  var FAMILIES = [
-    {key:'ipc', label:'IPC', data:INF.ipc,
-     dims:(INF.ipc&&INF.ipc.divisiones)||{},
-     chartId:'inflIpcChart', togglesId:'inflIpcToggles', subId:'inflIpcSub',
-     cardId:'inflIpcCard', tokenPrefix:'--chart-ipc-',
-     totalLabel:'IPC general',
-     defaultActive:['total','transporte','alimentos_y_bebidas_no_alcoholicas']},
-    {key:'ipp', label:'IPP', data:INF.ipp,
-     dims:(INF.ipp&&INF.ipp.grupos)||{},
-     chartId:'inflIppChart', togglesId:'inflIppToggles', subId:'inflIppSub',
-     cardId:'inflIppCard', tokenPrefix:'--chart-ipp-',
-     totalLabel:'IPP general',
-     defaultActive:['total','pecuaria','industria_manufacturera']}
-  ];
-  function hasData(f){ return !!(f.data && f.data.periodos && f.data.periodos.length); }
-
-  // Vistas del desglose (elegidas en el gate del PR: Ranking + Series).
-  var VIEWS = [
-    {id:'A', label:'Ranking'},
-    {id:'B', label:'Series'}
-  ];
-  var METRICS = [
-    {id:'var_12m', label:'12 meses'},
-    {id:'var_mensual', label:'Mensual'}
-  ];
-  var METRIC_DESC = {var_12m:'variación % a 12 meses', var_mensual:'variación % mensual'};
-  // Vistas del chart hero: contribuciones apiladas (default) ↔ líneas IPC/IPP.
-  var GENERAL_VIEWS = [
-    {id:'contrib', label:'Contribuciones'},
-    {id:'lineas', label:'Líneas'}
-  ];
-
-  var state = {view:'A', metric:'var_12m', general:'contrib', active:{}};
-  FAMILIES.forEach(function(f){
-    var avail = Object.keys(f.dims);
-    state.active[f.key] = new Set(f.defaultActive.filter(function(s){
-      return s==='total' || avail.indexOf(s)>=0;
-    }));
-  });
-  var rendered = false;
-
-  // Para Plotly se resuelve el hex (cssVar); para DOM se referencia la CSS var
-  // en vivo (se actualiza sola con el tema, mismo patrón que Riesgo País).
-  function dimColor(f, slug){
-    if(slug==='total') return cssVar('--chart-infl-total', '#444');
-    return cssVar(f.tokenPrefix+slug, '#888');
-  }
-  function dimVarRef(f, slug){
-    return slug==='total' ? 'var(--chart-infl-total)' : 'var('+f.tokenPrefix+slug+')';
-  }
-
-  function baseLayout(){
-    var gridc  = cssVar('--chart-grid', 'rgba(120,120,120,.10)');
-    var fontc  = cssVar('--chart-axis-text', '#576471');
-    var spikec = cssVar('--chart-spike', 'rgba(44,74,107,.25)');
-    var tipBg  = cssVar('--tooltip-bg', '#fff');
-    var tipBd  = cssVar('--tooltip-border', 'rgba(33,30,27,.18)');
-    var tipFg  = cssVar('--tooltip-text', '#211E1B');
-    return {
-      autosize: true,
-      margin: {l: 56, r: 16, t: 12, b: 36},
-      xaxis: {
-        type: 'date', showgrid: false, nticks: 8, tickangle: 0,
-        showspikes: true, spikemode: 'across', spikethickness: 1,
-        spikedash: 'dot', spikecolor: spikec, showline: false, zeroline: false
-      },
-      yaxis: {
-        ticksuffix: '%', tickformat: '.1f', showgrid: true,
-        gridcolor: gridc, zeroline: true, zerolinecolor: gridc
-      },
-      hovermode: 'x unified',
-      hoverlabel: {
-        bgcolor: tipBg, bordercolor: tipBd,
-        font: {family: "'IBM Plex Mono', monospace", size: 11, color: tipFg}
-      },
-      showlegend: false,
-      paper_bgcolor: 'rgba(0,0,0,0)',
-      plot_bgcolor: 'rgba(0,0,0,0)',
-      font: {family: "'Outfit', system-ui, sans-serif", size: 11, color: fontc}
-    };
-  }
-  var PLOTLY_CFG = {displayModeBar:false, responsive:true};
-
-  // ── Chart hero: contribuciones apiladas (default) ↔ líneas IPC vs IPP ──
-  // La vista de contribuciones requiere que el payload traiga `contrib` en
-  // TODAS las divisiones (all-or-nothing del backend); si no, se fuerza la
-  // vista de líneas y los chips se ocultan.
-  function contribOk(){
-    var f = FAMILIES[0]; // IPC
-    if(!hasData(f)) return false;
-    var slugs = Object.keys(f.dims);
-    return slugs.length > 0 && slugs.every(function(s){
-      return Array.isArray(f.dims[s].contrib);
-    });
-  }
-  var GENERAL_SUBS = {
-    contrib: 'Contribución de cada división COICOP a la inflación interanual, en puntos. Las barras suman la línea del IPC total.',
-    lineas: 'IPC e IPP, variación % a 12 meses. El IPP suele anticipar los giros del IPC con 1-3 meses de rezago.'
-  };
-  function plotGeneral(){
-    var el = document.getElementById('inflGeneralChart');
-    if(!el || typeof Plotly==='undefined') return;
-    var canContrib = contribOk();
-    var chips = document.getElementById('inflGeneralChips');
-    if(chips) chips.style.display = canContrib ? '' : 'none';
-    var mode = (state.general==='contrib' && canContrib) ? 'contrib' : 'lineas';
-    var sub = document.getElementById('inflGeneralSub');
-    if(sub) sub.textContent = GENERAL_SUBS[mode];
-    if(mode==='contrib') plotGeneralContrib(el);
-    else plotGeneralLineas(el);
-  }
-  function plotGeneralContrib(el){
-    var f = FAMILIES[0]; // IPC
-    var per = f.data.periodos;
-    var traces = Object.keys(f.dims).map(function(s){
-      var d = f.dims[s];
-      return {
-        type:'bar', name:d.label, x:per, y:d.contrib,
-        marker:{color:dimColor(f,s), line:{width:0}},
-        hovertemplate:d.label+': %{y:.2f} pts<extra></extra>'
-      };
-    });
-    var serie = f.data.general.var_12m;
-    traces.push({
-      type:'scatter', mode:'lines', name:'IPC (total)',
-      x:per, y:serie,
-      line:{color:cssVar('--chart-infl-total'), width:2.6},
-      connectgaps:false, legendrank:1,
-      hovertemplate:'IPC total: %{y:.2f}%<extra></extra>'
-    });
-    var L = baseLayout();
-    L.barmode = 'relative';   // apila positivos arriba y negativos bajo cero
-    L.bargap = 0.15;
-    L.xaxis.tickformat = "%b '%y";
-    L.xaxis.nticks = 10;
-    L.showlegend = true;
-    L.legend = {orientation:'v', x:1.01, y:1, font:{size:10}};
-    L.margin = {l:56, r:8, t:24, b:36};
-    // Anotaciones estilo "key contributions": pico del ciclo + último dato.
-    var peakIdx = null;
-    serie.forEach(function(v,i){ if(v!=null && (peakIdx==null || v>serie[peakIdx])) peakIdx = i; });
-    var last = lastNonNull(serie);
-    L.annotations = [];
-    if(peakIdx!=null) L.annotations.push({
-      x:per[peakIdx], y:serie[peakIdx], text:'<b>'+fmtPct(serie[peakIdx],1)+'</b>',
-      showarrow:false, yshift:14,
-      font:{size:12, color:cssVar('--text-primary','#211E1B')}
-    });
-    if(last && last.idx!==peakIdx) L.annotations.push({
-      x:per[last.idx], y:last.val, text:'<b>'+fmtPct(last.val,1)+'</b>',
-      showarrow:false, xanchor:'left', xshift:10,
-      font:{size:12, color:cssVar('--text-primary','#211E1B')},
-      bgcolor:cssVar('--tooltip-bg','#fff'), borderpad:3
-    });
-    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
-  }
-  function plotGeneralLineas(el){
-    var traces = [];
-    FAMILIES.forEach(function(f){
-      if(!hasData(f)) return;
-      var isIpc = f.key==='ipc';
-      traces.push({
-        type:'scatter', mode:'lines', name:f.label,
-        x:f.data.periodos, y:f.data.general.var_12m,
-        line:{color:cssVar(isIpc?'--chart-ipc-general':'--chart-ipp-general'), width:isIpc?2.8:1.8},
-        connectgaps:false,
-        hovertemplate:f.label+': %{y:.2f}%<extra></extra>'
-      });
-    });
-    var L = baseLayout();
-    L.xaxis.tickformat = "%b '%y";
-    L.xaxis.nticks = 10;
-    L.showlegend = true;
-    L.legend = {orientation:'h', x:0, y:1.08, font:{size:11}};
-    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
-  }
-
-  // ── Vista A: bar ranking horizontal del último período ──
-  function plotRanking(f, el){
-    var m = state.metric;
-    var items = [];
-    var tot = lastNonNull(f.data.general[m]);
-    if(tot) items.push({slug:'total', label:f.totalLabel, val:tot.val});
-    Object.keys(f.dims).forEach(function(s){
-      var l = lastNonNull(f.dims[s][m]);
-      if(l) items.push({slug:s, label:f.dims[s].label, val:l.val});
-    });
-    // Ascendente: Plotly pinta categorías de abajo hacia arriba → mayor arriba.
-    items.sort(function(a,b){return a.val-b.val;});
-    var L = baseLayout();
-    L.hovermode = 'closest';
-    L.margin = {l:10, r:64, t:8, b:32};
-    L.xaxis = {ticksuffix:'%', tickformat:'.0f', showgrid:true,
-               gridcolor:L.yaxis.gridcolor, zeroline:true,
-               zerolinecolor:cssVar('--chart-axis-text','#576471'),
-               showline:false};
-    L.yaxis = {type:'category', automargin:true, showgrid:false, zeroline:false};
-    Plotly.newPlot(el, [{
-      type:'bar', orientation:'h',
-      x:items.map(function(it){return it.val;}),
-      y:items.map(function(it){return it.slug==='total' ? '<b>'+it.label+'</b>' : it.label;}),
-      marker:{color:items.map(function(it){return dimColor(f, it.slug);})},
-      text:items.map(function(it){return fmtPct(it.val,1);}),
-      textposition:'outside', cliponaxis:false,
-      textfont:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--chart-axis-text','#576471')},
-      hovertemplate:'%{y}: %{x:.2f}%<extra></extra>'
-    }], L, PLOTLY_CFG);
-  }
-
-  // ── Vista B: multi-línea con leyenda interactiva (patrón EMBI) ──
-  function seriesOrder(f){ return ['total'].concat(Object.keys(f.dims)); }
-  function plotSeries(f, el){
-    var m = state.metric;
-    var traces = seriesOrder(f).map(function(s){
-      var isTot = s==='total';
-      var label = isTot ? f.totalLabel : f.dims[s].label;
-      return {
-        type:'scatter', mode:'lines', name:label,
-        x:f.data.periodos, y:isTot ? f.data.general[m] : f.dims[s][m],
-        line:{color:dimColor(f,s), width:isTot?2.6:1.5, dash:isTot?'dash':'solid'},
-        visible:state.active[f.key].has(s),
-        connectgaps:false,
-        hovertemplate:label+': %{y:.2f}%<extra></extra>'
-      };
-    });
-    var L = baseLayout();
-    L.xaxis.tickformat = "%b '%y";
-    Plotly.newPlot(el, traces, L, PLOTLY_CFG);
-  }
-  function applySeriesVisibility(f){
-    if(state.view!=='B') return;
-    var el = document.getElementById(f.chartId);
-    if(!el || !el.data) return;
-    Plotly.restyle(el, {visible: seriesOrder(f).map(function(s){return state.active[f.key].has(s);})});
-  }
-
-  function familySub(f){
-    var m = METRIC_DESC[state.metric];
-    var u = ULT[f.key];
-    var lastP = u ? periodoLargo(u.periodo) : '—';
-    if(state.view==='A') return 'Ranking del último mes ('+lastP+') · '+m;
-    return 'Series mensuales · '+m+' · activá series desde la leyenda';
-  }
-
-  function plotDesglose(f){
-    if(!hasData(f)) return;
-    var el = document.getElementById(f.chartId);
-    if(!el || typeof Plotly==='undefined') return;
-    var sub = document.getElementById(f.subId);
-    if(sub) sub.textContent = familySub(f);
-    var tog = document.getElementById(f.togglesId);
-    if(tog) tog.style.display = (state.view==='B') ? '' : 'none';
-    if(state.view==='A') plotRanking(f, el);
-    else plotSeries(f, el);
-  }
-  function plotAll(){
-    plotGeneral();
-    FAMILIES.forEach(plotDesglose);
-  }
+  var IPC = (typeof DATA==='object' && DATA.inflacion && DATA.inflacion.ipc) ? DATA.inflacion.ipc : null;
+  var ULT = (DATA.inflacion && DATA.inflacion.ultimo && DATA.inflacion.ultimo.ipc) || null;
+  var MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var WARM_DARK='#7a2e1e', WARM_MID='#b3473b', WARM_LITE='#e6bfa6', SLATE='#2c4a6b', COOL='#6b7d92';
+  function hex2rgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+  function rgb2hex(a){return '#'+a.map(function(x){var s=Math.round(x).toString(16);return s.length<2?'0'+s:s;}).join('');}
+  function mix(h1,h2,t){var a=hex2rgb(h1),b=hex2rgb(h2);return rgb2hex([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]);}
+  function fmtPct(v){return (v==null||isNaN(v))?'—':((v>=0?'+':'')+v.toFixed(2)+'%');}
+  function lastNonNull(arr){arr=arr||[];for(var i=arr.length-1;i>=0;i--){if(arr[i]!=null)return {i:i,v:arr[i]};}return {i:-1,v:null};}
+  function periodoLabel(p){if(!p)return '—';var m=parseInt(p.slice(5,7),10);return (MES[m-1]||'')+' '+p.slice(0,4);}
 
   function renderKpis(){
-    var el = document.getElementById('inflKpis');
-    if(!el) return;
-    var ipc = ULT.ipc, ipp = ULT.ipp;
-    var dIpc = INF.ipc ? deltaPts(INF.ipc.general.var_12m) : null;
-    var dIpp = INF.ipp ? deltaPts(INF.ipp.general.var_12m) : null;
-    function card(label, value, sub, subColor){
-      return '<div class="fb-kpi-card">'
-        + '<div class="fb-kpi-head"><div class="fb-kpi-label">'+label+'</div></div>'
-        + '<div class="fb-kpi-value">'+value+'</div>'
-        + '<div class="fb-kpi-sub" style="color:'+(subColor||'var(--text-muted)')+'">'+sub+'</div>'
-        + '</div>';
-    }
-    el.innerHTML = '<div class="fb-kpi-wrap"><div class="fb-kpi-grid" style="grid-template-columns:repeat(4,1fr)">'
-      + card('IPC interanual',
-          ipc ? fmtPct(ipc.var_12m) : '—',
-          ipc ? (arrow(dIpc)+' '+fmtDeltaPts(dIpc)+' vs mes anterior · '+periodoLargo(ipc.periodo)).trim() : 'sin datos',
-          deltaColor(dIpc))
-      + card('IPC mensual',
-          ipc ? fmtPct(ipc.var_mensual) : '—',
-          ipc ? ('vs mes anterior · '+periodoLargo(ipc.periodo)) : 'sin datos',
-          null)
-      + card('IPC acumulada',
-          ipc ? fmtPct(ipc.var_acumulada) : '—',
-          ipc ? ('año corrido a '+periodoLargo(ipc.periodo)) : 'sin datos',
-          null)
-      + card('IPP interanual',
-          ipp ? fmtPct(ipp.var_12m) : '—',
-          ipp ? (arrow(dIpp)+' '+fmtDeltaPts(dIpp)+' vs mes anterior · '+periodoLargo(ipp.periodo)).trim() : 'sin datos',
-          deltaColor(dIpp))
-      + '</div></div>';
+    var el=document.getElementById('inflKpis'); if(!el) return;
+    if(!ULT){el.innerHTML='';return;}
+    el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'
+      +kpi('Inflación interanual',fmtPct(ULT.var_12m),'IPC &middot; últimos 12 meses',null,null)
+      +kpi('Inflación mensual',fmtPct(ULT.var_mensual),'IPC &middot; último mes',null,null)
+      +kpi('Acumulada en el año',fmtPct(ULT.var_acumulada),'IPC &middot; desde enero',null,null)
+      +'</div></div>';
   }
-
-  // Chips: vista del hero (contribuciones/líneas) + vista y métrica del desglose.
-  function renderControlChips(){
-    var gc = document.getElementById('inflGeneralChips');
-    if(gc) gc.innerHTML = GENERAL_VIEWS.map(function(o){
-      return '<button type="button" class="ds-chip '+(state.general===o.id?'active':'')+'" data-gview="'+o.id+'">'+o.label+'</button>';
-    }).join('');
-    var vc = document.getElementById('inflViewChips');
-    if(vc) vc.innerHTML = VIEWS.map(function(o){
-      return '<button type="button" class="ds-chip '+(state.view===o.id?'active':'')+'" data-view="'+o.id+'">'+o.label+'</button>';
-    }).join('');
-    var mc = document.getElementById('inflMetricChips');
-    if(mc) mc.innerHTML = METRICS.map(function(o){
-      return '<button type="button" class="ds-chip '+(state.metric===o.id?'active':'')+'" data-metric="'+o.id+'">'+o.label+'</button>';
-    }).join('');
+  function plotMensual(){
+    var el=document.getElementById('inflMensualChart'); if(!el||!IPC) return;
+    var c=getC(), L=BL(c);
+    var x=IPC.periodos.map(function(p){return p+'-01';});
+    var cols=IPC.general.var_mensual.map(function(v){return (v!=null&&v<0)?COOL:WARM_MID;});
+    Plotly.react(el,[{type:'bar',x:x,y:IPC.general.var_mensual,marker:{color:cols},
+      hovertemplate:'%{x|%b %Y}<br>%{y:.2f}% mensual<extra></extra>'}],
+      {...L, xaxis:{...L.xaxis,type:'date',tickformat:'%Y',nticks:11,tickangle:0},
+       yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45),zerolinewidth:1},
+       margin:{l:48,r:14,t:12,b:34}, showlegend:false, hovermode:'x', height:340}, PC);
   }
-
-  function renderToggles(f){
-    var el = document.getElementById(f.togglesId);
-    if(!el || !hasData(f)) return;
-    el.innerHTML = seriesOrder(f).map(function(s){
-      var isTot = s==='total';
-      var active = state.active[f.key].has(s);
-      var color = dimVarRef(f, s);
-      return '<button type="button" class="fb-stog '+(active?'active':'inactive')+'" '
-        +'data-fam="'+f.key+'" data-slug="'+s+'" style="--fb-trace-color:'+color+'">'
-        +'<span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
-        +'<span class="fb-stog-line '+(isTot?'dashed':'solid')+'" style="color:'+color+'"></span>'
-        +'<span class="fb-stog-label">'+(isTot?f.totalLabel:f.dims[s].label)+'</span>'
-        +'</button>';
-    }).join('');
+  function plotAcum(){
+    var el=document.getElementById('inflAcumChart'); if(!el||!IPC) return;
+    var c=getC(), L=BL(c), byYear={};
+    IPC.periodos.forEach(function(p,i){
+      var yr=p.slice(0,4), m=parseInt(p.slice(5,7),10);
+      if(!byYear[yr]) byYear[yr]=[null,null,null,null,null,null,null,null,null,null,null,null];
+      byYear[yr][m-1]=IPC.general.var_acumulada[i];
+    });
+    var years=Object.keys(byYear).sort();
+    var traces=years.map(function(yr,k){
+      var t=years.length>1?k/(years.length-1):1, isLast=(k===years.length-1);
+      return {type:'scatter',mode:isLast?'lines+markers':'lines',name:yr,x:MES,y:byYear[yr],
+        line:{color:isLast?WARM_DARK:mix(WARM_LITE,WARM_MID,t),width:isLast?2.8:1.3},
+        marker:{size:isLast?5:0,color:WARM_DARK}, opacity:isLast?1:0.75, connectgaps:false,
+        hovertemplate:yr+' &middot; %{x}<br>%{y:.2f}% acumulado<extra></extra>'};
+    });
+    Plotly.react(el,traces,{...L,
+      xaxis:{...L.xaxis,type:'category',tickangle:0,fixedrange:true},
+      yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
+      margin:{l:48,r:14,t:12,b:28}, showlegend:true,
+      legend:{orientation:'h',y:1.04,yanchor:'bottom',x:0,xanchor:'left',font:{size:10,family:'Outfit',color:c.fontcolor}},
+      hovermode:'x unified', height:380}, PC);
   }
-
-  function attachHandlers(){
-    var gc = document.getElementById('inflGeneralChips');
-    if(gc) gc.addEventListener('click', function(e){
-      var btn = e.target.closest('[data-gview]');
-      if(!btn || btn.classList.contains('active')) return;
-      state.general = btn.dataset.gview;
-      gc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
-      btn.classList.add('active');
-      plotGeneral();
+  var _cells=[];
+  function plotMatrix(){
+    var host=document.getElementById('inflMatrix'); if(!host||!IPC) return;
+    var c=getC(), divs=IPC.divisiones||{}, slugs=Object.keys(divs);
+    var xs=IPC.periodos.map(function(p){return p+'-01';});
+    host.innerHTML=slugs.map(function(s){
+      return '<div class="infl-cell"><div class="infl-cell-title" title="'+divs[s].label+'">'+divs[s].label+'</div><div class="infl-cell-chart" id="inflcell_'+s+'"></div></div>';
+    }).join('');
+    var allv=[]; slugs.forEach(function(s){(divs[s].var_12m||[]).forEach(function(v){if(v!=null)allv.push(v);});});
+    var ymin=allv.length?Math.min.apply(null,allv):0, ymax=allv.length?Math.max.apply(null,allv):1, pad=((ymax-ymin)*0.12)||1;
+    var cfg={displayModeBar:false,responsive:true,scrollZoom:false};
+    _cells=[];
+    slugs.forEach(function(s){
+      var el=document.getElementById('inflcell_'+s);
+      Plotly.react(el,[{type:'scatter',mode:'lines',x:xs,y:divs[s].var_12m,
+        line:{color:SLATE,width:1.4},fill:'tozeroy',fillcolor:hexToRgba(SLATE,.07),
+        hovertemplate:'%{y:.1f}%<extra></extra>'}],
+        {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:30,r:6,t:4,b:14},
+         xaxis:{type:'date',showgrid:false,showticklabels:false,fixedrange:true,showspikes:true,spikemode:'across',spikethickness:1,spikecolor:hexToRgba(c.textMuted,.55),spikedash:'solid'},
+         yaxis:{range:[ymin-pad,ymax+pad],zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.3),tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
+         hovermode:'x',showlegend:false,height:96}, cfg);
+      _cells.push(el);
     });
-    var vc = document.getElementById('inflViewChips');
-    if(vc) vc.addEventListener('click', function(e){
-      var btn = e.target.closest('[data-view]');
-      if(!btn || btn.classList.contains('active')) return;
-      state.view = btn.dataset.view;
-      vc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
-      btn.classList.add('active');
-      FAMILIES.forEach(plotDesglose);
-    });
-    var mc = document.getElementById('inflMetricChips');
-    if(mc) mc.addEventListener('click', function(e){
-      var btn = e.target.closest('[data-metric]');
-      if(!btn || btn.classList.contains('active')) return;
-      state.metric = btn.dataset.metric;
-      mc.querySelectorAll('.ds-chip').forEach(function(b){b.classList.remove('active');});
-      btn.classList.add('active');
-      FAMILIES.forEach(plotDesglose);
-    });
-    FAMILIES.forEach(function(f){
-      var tog = document.getElementById(f.togglesId);
-      if(!tog) return;
-      tog.addEventListener('click', function(e){
-        var btn = e.target.closest('.fb-stog');
-        if(!btn) return;
-        var s = btn.dataset.slug;
-        var set = state.active[f.key];
-        if(set.has(s)){
-          set.delete(s);
-          btn.classList.remove('active'); btn.classList.add('inactive');
-        } else {
-          set.add(s);
-          btn.classList.remove('inactive'); btn.classList.add('active');
-        }
-        applySeriesVisibility(f);
+    var sync=false;
+    _cells.forEach(function(gd){
+      gd.on('plotly_hover',function(ev){
+        if(sync||!ev.points||!ev.points.length) return; sync=true;
+        var pn=ev.points[0].pointNumber;
+        _cells.forEach(function(o){ if(o!==gd){ try{Plotly.Fx.hover(o,[{curveNumber:0,pointNumber:pn}]);}catch(e){} } });
+        sync=false;
+      });
+      gd.on('plotly_unhover',function(){
+        if(sync) return; sync=true;
+        _cells.forEach(function(o){ try{Plotly.Fx.unhover(o);}catch(e){} });
+        sync=false;
       });
     });
   }
-
+  function plotRanking(){
+    var el=document.getElementById('inflRankingChart'); if(!el||!IPC) return;
+    var c=getC(), L=BL(c), divs=IPC.divisiones||{};
+    var rows=Object.keys(divs).map(function(s){var ln=lastNonNull(divs[s].var_12m);return {label:divs[s].label,v:ln.v};})
+      .filter(function(r){return r.v!=null;}).sort(function(a,b){return a.v-b.v;});
+    var vmax=Math.max.apply(null,rows.map(function(r){return Math.abs(r.v);}))||1;
+    var cols=rows.map(function(r){return r.v<0?COOL:mix(WARM_LITE,WARM_DARK,Math.min(1,Math.abs(r.v)/vmax));});
+    Plotly.react(el,[{type:'bar',orientation:'h',
+      y:rows.map(function(r){return r.label;}),x:rows.map(function(r){return r.v;}),
+      marker:{color:cols},text:rows.map(function(r){return fmtPct(r.v);}),textposition:'auto',
+      cliponaxis:false, hovertemplate:'%{y}<br>%{x:.2f}% interanual<extra></extra>'}],
+      {...L, xaxis:{...L.xaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
+       yaxis:{...L.yaxis,automargin:true,tickfont:{family:'Outfit',size:11,color:c.textMuted}},
+       margin:{l:8,r:14,t:12,b:32}, showlegend:false, height:420}, PC);
+  }
   window.renderInflacion = function(){
-    var hasIpc = hasData(FAMILIES[0]), hasIpp = hasData(FAMILIES[1]);
-    var elDate = document.getElementById('inflDate');
-    if(elDate){
-      var parts = [];
-      if(ULT.ipc) parts.push(periodoLargo(ULT.ipc.periodo)+' (IPC)');
-      if(ULT.ipp) parts.push(periodoLargo(ULT.ipp.periodo)+' (IPP)');
-      elDate.textContent = parts.length ? parts.join(' · ') : '—';
-    }
-    var empty = document.getElementById('inflEmpty');
-    var kpis = document.getElementById('inflKpis');
-    var controls = document.getElementById('inflControls');
-    var gen = document.getElementById('inflGeneralCard');
-    if(!hasIpc && !hasIpp){
-      // Degradación: tablas INE ausentes/vacías → fallback único, sin crash.
-      if(empty) empty.style.display = '';
-      if(kpis) kpis.style.display = 'none';
-      if(controls) controls.style.display = 'none';
-      if(gen) gen.style.display = 'none';
-      FAMILIES.forEach(function(f){
-        var card = document.getElementById(f.cardId);
-        if(card) card.style.display = 'none';
-      });
-      return;
-    }
-    FAMILIES.forEach(function(f){
-      var card = document.getElementById(f.cardId);
-      if(card) card.style.display = hasData(f) ? '' : 'none';
-    });
-    renderKpis();
-    if(!rendered){
-      renderControlChips();
-      FAMILIES.forEach(renderToggles);
-      attachHandlers();
-      // Re-plot al cambiar tema, sólo si el subtab está visible (offsetParent
-      // null cuando cualquier ancestro está display:none) — patrón Riesgo País.
-      new MutationObserver(function(){
-        var el = document.getElementById('inflGeneralChart');
-        if(el && el.offsetParent !== null) plotAll();
-      }).observe(document.body, {attributes:true, attributeFilter:['class']});
-      rendered = true;
-    }
-    plotAll();
+    var hasIpc = !!(IPC && IPC.periodos && IPC.periodos.length);
+    var empty=document.getElementById('inflEmpty');
+    if(!hasIpc){ if(empty) empty.style.display=''; return; }
+    if(empty) empty.style.display='none';
+    var dd=document.getElementById('inflDate'); if(dd) dd.textContent=(ULT&&ULT.periodo)?periodoLabel(ULT.periodo):'—';
+    renderKpis(); plotMensual(); plotAcum(); plotMatrix(); plotRanking();
   };
 })();
 
