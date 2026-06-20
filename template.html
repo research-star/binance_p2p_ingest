@@ -2703,9 +2703,11 @@ var TAB_PANELS = {
 // Lista GENÉRICA de subtabs de Macro. Reactivar un subtab pausado (ej. PIB) =
 // agregar un entry acá + su <div id="subtab-ID"> + su chip; cero refactor.
 // El primero de la lista es el default al entrar a Macro / resolver bare /macro.
-// Bloqueos Bolivia (subtab de Macro): KPIs + mapa de puntos activos (scattermapbox
-// sin token) + serie histórica diaria. Datos en DATA.bloqueos (bloqueos.json,
-// ingest_bloqueos.py). Fuente: ABC vía dataset abierto de @mauforonda.
+// Bloqueos Bolivia (subtab de Macro): KPIs + mapa vectorial (Red Vial Fundamental
+// + límites departamentales en gris, bloqueos activos en rojo) + serie histórica.
+// Datos dinámicos en DATA.bloqueos (bloqueos.json, ingest_bloqueos.py); geometría
+// base lazy desde /bolivia_red_vial.json (static/). Fuente: ABC vía @mauforonda.
+var _bloqueosGeo = null;
 window.renderBloqueos = function(){
   var B = (typeof DATA==='object' && DATA.bloqueos) ? DATA.bloqueos : null;
   var elDate  = document.getElementById('bloqueosDate');
@@ -2735,24 +2737,48 @@ window.renderBloqueos = function(){
       + '</div></div>';
   }
   if(elMap){
+    var drawMapa = function(geo){
+      var traces = [];
+      // Base: Red Vial Fundamental (gris claro) + límites departamentales (gris).
+      if(geo && geo.roads){
+        traces.push({type:'scattergeo', mode:'lines', lon:geo.roads.lon, lat:geo.roads.lat,
+          line:{color:'#d4d4d4', width:0.6}, hoverinfo:'skip', showlegend:false});
+      }
+      if(geo && geo.deptos){
+        traces.push({type:'scattergeo', mode:'lines', lon:geo.deptos.lon, lat:geo.deptos.lat,
+          line:{color:'#a9a9a9', width:0.9}, hoverinfo:'skip', showlegend:false});
+      }
+      // Bloqueos activos en rojo.
+      traces.push({type:'scattergeo', mode:'markers',
+        lat: activos.map(function(p){return p.lat;}),
+        lon: activos.map(function(p){return p.lon;}),
+        marker:{size:8, color:alertColor, opacity:0.9, line:{width:0.5, color:'#ffffff'}},
+        hovertemplate:'Bloqueo<br>%{lat:.4f}, %{lon:.4f}<extra></extra>'});
+      Plotly.react(elMap, traces, {
+        paper_bgcolor:'rgba(0,0,0,0)',
+        font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
+        margin:{l:0, r:0, t:0, b:0}, showlegend:false,
+        geo:{
+          resolution:50, projection:{type:'mercator'},
+          showland:false, showcountries:false, showcoastlines:false,
+          showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
+          lonaxis:{range:[-70,-57], showgrid:false},
+          lataxis:{range:[-23.2,-9.5], showgrid:false}
+        },
+        height:560
+      }, PC);
+    };
     if(!activos.length){
       _purgeAndClear(elMap);
       elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">No hay bloqueos por conflicto activos en la última lectura.</div>';
+    } else if(_bloqueosGeo){
+      drawMapa(_bloqueosGeo);
     } else {
-      Plotly.react(elMap, [{
-        type:'scattermapbox', mode:'markers',
-        lat: activos.map(function(p){return p.lat;}),
-        lon: activos.map(function(p){return p.lon;}),
-        marker:{size:11, color:alertColor, opacity:0.85},
-        hovertemplate:'Bloqueo<br>%{lat:.4f}, %{lon:.4f}<extra></extra>'
-      }], {
-        // carto-positron: basemap claro y limpio, sin token de Mapbox.
-        mapbox:{ style:'carto-positron', center:{lat:-16.9, lon:-64.8}, zoom:4.3 },
-        margin:{l:0, r:0, t:0, b:0},
-        paper_bgcolor:'rgba(0,0,0,0)',
-        font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
-        height:500
-      }, PC);
+      elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">Cargando mapa&hellip;</div>';
+      fetch('/bolivia_red_vial.json').then(function(r){ return r.ok ? r.json() : null; }).then(function(g){
+        _bloqueosGeo = g || {};
+        drawMapa(_bloqueosGeo);
+      }).catch(function(){ _bloqueosGeo = {}; drawMapa(_bloqueosGeo); });
     }
   }
   if(elTrend){

@@ -6,9 +6,6 @@ name: Geometría RVF Bolivia (one-shot)
 # para alcanzar la ABC (las rutas /shapes/ NO tienen captcha).
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/geo-bloqueos.yml'
 
 permissions:
   contents: write
