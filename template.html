@@ -2703,7 +2703,7 @@ var TAB_PANELS = {
 // Lista GENÉRICA de subtabs de Macro. Reactivar un subtab pausado (ej. PIB) =
 // agregar un entry acá + su <div id="subtab-ID"> + su chip; cero refactor.
 // El primero de la lista es el default al entrar a Macro / resolver bare /macro.
-// Bloqueos Bolivia (subtab de Macro): KPIs + mapa de puntos activos (scattergeo,
+// Bloqueos Bolivia (subtab de Macro): KPIs + mapa de puntos activos (scattermapbox
 // sin token) + serie histórica diaria. Datos en DATA.bloqueos (bloqueos.json,
 // ingest_bloqueos.py). Fuente: ABC vía dataset abierto de @mauforonda.
 window.renderBloqueos = function(){
@@ -2740,23 +2740,17 @@ window.renderBloqueos = function(){
       elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">No hay bloqueos por conflicto activos en la última lectura.</div>';
     } else {
       Plotly.react(elMap, [{
-        type:'scattergeo', mode:'markers',
+        type:'scattermapbox', mode:'markers',
         lat: activos.map(function(p){return p.lat;}),
         lon: activos.map(function(p){return p.lon;}),
-        marker:{size:9, color:alertColor, opacity:0.82, line:{width:0.6, color:'#ffffff'}},
-        hovertemplate:'Bloqueo<br>lat %{lat:.4f} · lon %{lon:.4f}<extra></extra>'
+        marker:{size:11, color:alertColor, opacity:0.85},
+        hovertemplate:'Bloqueo<br>%{lat:.4f}, %{lon:.4f}<extra></extra>'
       }], {
+        // carto-positron: basemap claro y limpio, sin token de Mapbox.
+        mapbox:{ style:'carto-positron', center:{lat:-16.9, lon:-64.8}, zoom:4.3 },
+        margin:{l:0, r:0, t:0, b:0},
         paper_bgcolor:'rgba(0,0,0,0)',
         font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
-        margin:{l:0, r:0, t:0, b:0},
-        geo:{
-          scope:'south america', resolution:50,
-          showland:true, landcolor:c.bgTertiary,
-          showcountries:true, countrycolor:hexToRgba(c.textMuted,.45), countrywidth:0.8,
-          showframe:false, bgcolor:'rgba(0,0,0,0)',
-          lonaxis:{range:[-70,-57]}, lataxis:{range:[-23.5,-9]},
-          center:{lat:-16.5, lon:-64.5}
-        },
         height:500
       }, PC);
     }
