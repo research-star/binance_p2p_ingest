@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""ingest_bloqueos.py — Bloqueos de carreteras en Bolivia (subsección Macro).
+
+Fuente: dataset abierto de Mauricio Foronda
+(github.com/mauforonda/transitabilidad-bolivia), que archiva el registro de
+incidentes de la ABC (transitabilidad.abc.gob.bo) cada 2 h. NO re-scrapeamos la
+ABC (su API está detrás de captcha): consumimos los archivos derivados que él
+publica, con atribución:
+
+  - activos_ahora.json         -> conteo activo {conflicto, no_conflicto}
+  - conflictos_coordenadas.csv -> id,latitud,longitud de puntos de conflicto
+  - conflictos_tiempo.json     -> [{time, open:[ids]}] cada 6 h (serie histórica)
+
+Produce bloqueos.json (raíz del repo) que dashboard.py inyecta al template.
+Solo stdlib.
+"""
+import csv
+import io
+import json
+import sys
+import urllib.request
+from datetime import datetime, timezone, timedelta
+from pathlib import Path
+
+BASE = "https://raw.githubusercontent.com/mauforonda/transitabilidad-bolivia/master"
+OUT = Path(__file__).parent / "bloqueos.json"
+UA = "FinanzasBo/1.0 (+https://finanzasbo.com)"
+SOURCE_REPO = "https://github.com/mauforonda/transitabilidad-bolivia"
+TZ = timezone(timedelta(hours=-4))  # GMT-04:00, como la fuente
+
+
+def _get(url, timeout=60):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read()
+
+
+def fetch():
+    activos = json.loads(_get(f"{BASE}/activos_ahora.json"))
+    coords = {}
+    reader = csv.DictReader(
+        io.StringIO(_get(f"{BASE}/conflictos_coordenadas.csv").decode("utf-8"))
+    )
+    for row in reader:
+        try:
+            coords[row["id"]] = (
+                round(float(row["latitud"]), 5),
+                round(float(row["longitud"]), 5),
+            )
+        except (ValueError, KeyError, TypeError):
+            continue
+    tiempo = json.loads(_get(f"{BASE}/conflictos_tiempo.json"))
+    return activos, coords, tiempo
+
+
+def build(activos, coords, tiempo):
+    # Serie diaria: # de conflictos abiertos por día (última lectura del día gana;
+    # las entries vienen en orden cronológico).
+    daily = {}
+    for entry in tiempo:
+        day = (entry.get("time") or "")[:10]
+        if not day:
+            continue
+        daily[day] = len(entry.get("open") or [])
+    serie = [{"fecha": d, "abiertos": n} for d, n in sorted(daily.items())]
+
+    # Activos ahora: ids abiertos en la última lectura -> coordenadas.
+    activos_pts = []
+    ultima_lectura = None
+    if tiempo:
+        last = tiempo[-1]
+        ultima_lectura = last.get("time")
+        for cid in (last.get("open") or []):
+            c = coords.get(str(cid))
+            if c:
+                activos_pts.append({"lat": c[0], "lon": c[1]})
+
+    # conflicto = puntos abiertos en la última lectura del timeline (coincide con
+    # el mapa y el último punto de la serie). no_conflicto viene del conteo de la
+    # fuente (clima/obras: sin coordenadas en los derivados).
+    conflicto = len(activos_pts)
+    no_conflicto = int(activos.get("no_conflicto", 0) or 0)
+    now = datetime.now(TZ)
+    return {
+        "updated_at": now.isoformat(timespec="seconds"),
+        "fuente": SOURCE_REPO,
+        "credito": "Datos: ABC (transitabilidad.abc.gob.bo) vía dataset abierto de @mauforonda",
+        "ultima_lectura": ultima_lectura,
+        "resumen": {
+            "conflicto": conflicto,
+            "no_conflicto": no_conflicto,
+            "total": conflicto + no_conflicto,
+        },
+        "activos": activos_pts,          # puntos de bloqueo por conflicto social, ahora
+        "serie_diaria": serie,           # bloqueos por conflicto abiertos por día (histórico)
+    }
+
+
+def main():
+    try:
+        activos, coords, tiempo = fetch()
+        data = build(activos, coords, tiempo)
+    except Exception as exc:  # noqa: BLE001 — fail-closed, no escribimos parcial
+        sys.exit(f"ingest_bloqueos: error: {exc}")
+    OUT.write_text(
+        json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        f"OK -> {OUT.name} | activos={len(data['activos'])} | "
+        f"serie={len(data['serie_diaria'])} pts | resumen={data['resumen']} | "
+        f"ultima_lectura={data['ultima_lectura']}"
+    )
+
+
+if __name__ == "__main__":
+    main()

@@ -316,6 +316,19 @@ def load_bcb_ref(first_date: str | None = None) -> dict:
         pass
     return out
 
+
+def load_bloqueos():
+    """Lee bloqueos.json (generado por ingest_bloqueos.py desde el dataset abierto
+    de @mauforonda, que archiva el registro de incidentes de la ABC). Devuelve el
+    dict o None si no existe / falla (fail-soft, igual que load_bcb_ref)."""
+    try:
+        f = Path(__file__).parent / 'bloqueos.json'
+        if f.exists():
+            return json.loads(f.read_text(encoding='utf-8'))
+    except Exception:
+        pass
+    return None
+
 # ── Cálculo de VWAP ────────────────────────────────────────────────────────
 
 def vwap_by_depth(prices_and_sizes, pct):
@@ -946,6 +959,7 @@ def process_data(db_path: Path) -> dict:
         'embi_data': embi_data,
         'inflacion': inflacion_data,
         'noticias': noticias_data,
+        'bloqueos': load_bloqueos(),
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),
