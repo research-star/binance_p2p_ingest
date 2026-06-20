@@ -4184,7 +4184,7 @@ window.addEventListener('popstate', function(){
       var col=isLast?WARM_DARK:mix(WARM_LITE,WARM_MID,t); colorOf[yr]=col;
       return {type:'scatter',mode:isLast?'lines+markers':'lines',name:yr,x:MES,y:byYear[yr],
         line:{color:col,width:isLast?2.8:1.3}, marker:{size:isLast?5:0,color:WARM_DARK},
-        opacity:isLast?1:0.8, connectgaps:false, hovertemplate:'%{y:.2f}% acum.<extra></extra>'};
+        opacity:isLast?1:0.8, connectgaps:false, hovertemplate:'<b>'+yr+'</b>  %{y:.2f}% acum.<extra></extra>'};
     });
     // Etiquetas directas al final de cada línea (reemplazan la leyenda); descolisión
     // vertical por grupo de mes + líder que apunta al punto real cuando se desplaza.
