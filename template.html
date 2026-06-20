@@ -24,7 +24,7 @@ __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Outfit:wght@400&display=swap" rel="stylesheet">
 <style>
-:root{--bg-primary:#F7E4D7;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#1e4d7a;--color-sell:#6b7d92;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#5589c0;--color-bcb-ref-venta:#5589c0;--color-neutral:#5589c0;--color-accent-warm:#5589c0;
+:root{--bg-primary:#F7E4D7;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;--border-color:rgba(33,30,27,0.12);--line-strong:rgba(33,30,27,0.24);--text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;--green:#1e4d7a;--green-muted:rgba(30,77,122,.10);--orange:#6b7d92;--orange-muted:rgba(107,125,146,.10);--blue-accent:#2c4a6b;--kpi-value-size:var(--text-5xl);--color-buy:#0F5499;--color-sell:#990F3D;--color-bcb-oficial:#8c8c8c;--color-bcb-ref-compra:#0D7680;--color-bcb-ref-venta:#0D7680;--color-neutral:#0D7680;--color-accent-warm:#FF8833;
   /* Noticias portada (spec cálido): superficies + acentos + colores por fuente.
      --bg-primary unificado al tono del chrome (#F7E4D7=--hero del spec); cards/tablas
      siguen en --bg-secondary. --up/--down antes referenciados sin definir (live-dots). */
@@ -1721,7 +1721,7 @@ function gapShapes(c){
 }
 function hoverFmtForView(){return currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'}
 function xaxisForView(base, v){
-  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView()};
+  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView(),showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4};
   // range explícito del rango activo: fuerza al eje a redibujarse con cada
   // cambio de selector y evita que Plotly conserve autorange/rangeslider
   // del render anterior. Padding de medio día en daily/hourly para que los
@@ -1793,8 +1793,8 @@ function rVolume(c,v){
   // Volumen = USDT disponible en anuncios activos por lado (USDT ~ USD), escala en millones.
   const toM=arr=>(arr||[]).map(d=>d==null?null:d/1e6);
   const traces=filterDirectionalTraces([
-    {_side:'buy', x:x,y:toM(v.buy_depth), name:'Compra',fill:'tozeroy',fillcolor:c.greenMuted, line:{color:c.buy,width:1.5}},
-    {_side:'sell',x:x,y:toM(v.sell_depth),name:'Venta', fill:'tozeroy',fillcolor:c.orangeMuted,line:{color:c.sell,width:1.5}}
+    {_side:'buy', x:x,y:toM(v.buy_depth), name:'Compra',fill:'tozeroy',fillcolor:hexToRgba(c.buy,.10), line:{color:c.buy,width:1.5}},
+    {_side:'sell',x:x,y:toM(v.sell_depth),name:'Venta', fill:'tozeroy',fillcolor:hexToRgba(c.sell,.10),line:{color:c.sell,width:1.5}}
   ], 'volumen');
   Plotly.react('chartVolume',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USD (millones)',font:{size:10,color:c.textMuted}},tickformat:',.1f',rangemode:'tozero',automargin:true},shapes:gapShapes(c),height:chartHeight('chartVolume')},PC);
 }
@@ -1924,7 +1924,7 @@ function rOffer(c){
     barmode:'overlay',
     showlegend:true,
     legend:{orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:{size:11,family:'Outfit',color:c.fontcolor}},
-    xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30},
+    xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30, showline:true, linecolor:'rgba(33,30,27,.5)', linewidth:1, ticks:'outside', tickcolor:'rgba(33,30,27,.5)', ticklen:4},
     yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted},standoff:12}, tickformat:',.0f', rangemode:'tozero', automargin:true},
     yaxis2:{overlaying:'y', side:'right', showgrid:false, fixedrange:true,
       tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
