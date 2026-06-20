@@ -400,9 +400,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-stog-band{display:inline-block;width:14px;height:10px;border-radius:2px;background:currentColor;opacity:.32;flex-shrink:0}
 .fb-tab-controls{margin:4px 0 16px}
 .infl-matrix{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 14px}
-.infl-cell{border:1px solid var(--border-color);border-radius:var(--radius-md);padding:6px 9px 2px;background:var(--bg-secondary)}
-.infl-cell-title{font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.infl-cell-chart{height:96px}
+.infl-cell{border:1px solid var(--border-color);border-radius:var(--radius-md);padding:7px 10px 4px;background:var(--bg-secondary)}
+.infl-cell-top{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:2px}
+.infl-cell-title{font-size:var(--text-2xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.infl-cell-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px;white-space:nowrap}
+.infl-cell-chart{height:104px}
 @media(max-width:900px){.infl-matrix{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.infl-matrix{grid-template-columns:1fr}}
 .fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
@@ -1212,7 +1214,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
           <div class="fb-chart-title">Inflaci&oacute;n interanual por rubro</div>
-          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses de cada divisi&oacute;n COICOP. Pas&aacute; el mouse: el cursor se mueve en todos los rubros a la vez.</div>
+          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses por divisi&oacute;n COICOP. Pas&aacute; el mouse para inspeccionar un mes en todos los rubros a la vez &middot; <span id="inflMatrixCursor" style="color:#7a2e1e;font-weight:700">&uacute;ltimo dato</span></div>
         </div>
         <div id="inflMatrix" class="infl-matrix"></div>
         <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP &middot; base 2016=100</div>
@@ -1220,7 +1222,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
           <div class="fb-chart-title">Qu&eacute; rubros est&aacute;n m&aacute;s caros hoy</div>
-          <div class="fb-chart-sub">Inflaci&oacute;n interanual por divisi&oacute;n, &uacute;ltimo dato disponible.</div>
+          <div class="fb-chart-sub" id="inflRankingSub">Inflaci&oacute;n interanual por divisi&oacute;n, &uacute;ltimo dato disponible.</div>
         </div>
         <div id="inflRankingChart" style="height:420px;"></div>
         <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP</div>
@@ -4070,6 +4072,7 @@ window.addEventListener('popstate', function(){
        yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45),zerolinewidth:1},
        margin:{l:48,r:14,t:12,b:34}, showlegend:false, hovermode:'x', height:340}, PC);
   }
+  function fmtBar(v){ return (v==null||isNaN(v))?'—' : (v<0 ? '('+Math.abs(v).toFixed(1)+'%)' : v.toFixed(1)+'%'); }
   function plotAcum(){
     var el=document.getElementById('inflAcumChart'); if(!el||!IPC) return;
     var c=getC(), L=BL(c), byYear={};
@@ -4078,58 +4081,86 @@ window.addEventListener('popstate', function(){
       if(!byYear[yr]) byYear[yr]=[null,null,null,null,null,null,null,null,null,null,null,null];
       byYear[yr][m-1]=IPC.general.var_acumulada[i];
     });
-    var years=Object.keys(byYear).sort();
+    var years=Object.keys(byYear).sort(), colorOf={};
     var traces=years.map(function(yr,k){
       var t=years.length>1?k/(years.length-1):1, isLast=(k===years.length-1);
+      var col=isLast?WARM_DARK:mix(WARM_LITE,WARM_MID,t); colorOf[yr]=col;
       return {type:'scatter',mode:isLast?'lines+markers':'lines',name:yr,x:MES,y:byYear[yr],
-        line:{color:isLast?WARM_DARK:mix(WARM_LITE,WARM_MID,t),width:isLast?2.8:1.3},
-        marker:{size:isLast?5:0,color:WARM_DARK}, opacity:isLast?1:0.75, connectgaps:false,
-        hovertemplate:yr+' &middot; %{x}<br>%{y:.2f}% acumulado<extra></extra>'};
+        line:{color:col,width:isLast?2.8:1.3}, marker:{size:isLast?5:0,color:WARM_DARK},
+        opacity:isLast?1:0.8, connectgaps:false, hovertemplate:'%{y:.2f}% acum.<extra></extra>'};
+    });
+    // Etiquetas directas al final de cada línea (reemplazan la leyenda); descolisión
+    // vertical por grupo de mes + líder que apunta al punto real cuando se desplaza.
+    var labs=years.map(function(yr,k){
+      var y=byYear[yr], li=-1, m; for(m=11;m>=0;m--){ if(y[m]!=null){li=m;break;} }
+      return {yr:yr, idx:li, y:(li>=0?y[li]:null), isLast:(k===years.length-1)};
+    }).filter(function(e){return e.idx>=0 && e.y!=null;});
+    var lo=Infinity, hi=-Infinity; labs.forEach(function(e){ if(e.y<lo)lo=e.y; if(e.y>hi)hi=e.y; });
+    var gap=((hi-lo)||1)*0.05, groups={};
+    labs.forEach(function(e){ (groups[e.idx]=groups[e.idx]||[]).push(e); });
+    Object.keys(groups).forEach(function(k){
+      var g=groups[k].sort(function(a,b){return a.y-b.y;}); g[0].ly=g[0].y;
+      for(var i=1;i<g.length;i++){ g[i].ly=Math.max(g[i].y, g[i-1].ly+gap); }
+    });
+    var anns=labs.map(function(e){
+      return {x:e.idx, y:e.y, ax:e.idx, ay:e.ly, axref:'x', ayref:'y', xref:'x', yref:'y',
+        text:e.yr, showarrow:true, arrowhead:0, arrowwidth:0.8, arrowcolor:hexToRgba(c.textMuted,.4),
+        xshift:8, xanchor:'left', yanchor:'middle', font:{family:'Outfit', size:e.isLast?12.5:10, color:colorOf[e.yr]}};
     });
     Plotly.react(el,traces,{...L,
-      xaxis:{...L.xaxis,type:'category',tickangle:0,fixedrange:true},
+      xaxis:{...L.xaxis,type:'category',tickangle:0,fixedrange:true,range:[-0.4,12.9]},
       yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
-      margin:{l:48,r:14,t:12,b:28}, showlegend:true,
-      legend:{orientation:'h',y:1.04,yanchor:'bottom',x:0,xanchor:'left',font:{size:10,family:'Outfit',color:c.fontcolor}},
+      annotations:anns, margin:{l:48,r:34,t:12,b:28}, showlegend:false,
       hovermode:'x unified', height:380}, PC);
   }
-  var _cells=[];
+  var _cells=[], _slugs=[], _divs=null, _xs=[];
+  function setBadge(s,v){
+    var b=document.getElementById('inflval_'+s); if(!b) return;
+    b.textContent=fmtBar(v); b.style.color=(v==null)?'var(--text-muted)':(v<0?COOL:WARM_MID);
+  }
   function plotMatrix(){
     var host=document.getElementById('inflMatrix'); if(!host||!IPC) return;
-    var c=getC(), divs=IPC.divisiones||{}, slugs=Object.keys(divs);
-    var xs=IPC.periodos.map(function(p){return p+'-01';});
-    host.innerHTML=slugs.map(function(s){
-      return '<div class="infl-cell"><div class="infl-cell-title" title="'+divs[s].label+'">'+divs[s].label+'</div><div class="infl-cell-chart" id="inflcell_'+s+'"></div></div>';
+    var c=getC(); _divs=IPC.divisiones||{}; _slugs=Object.keys(_divs);
+    _xs=IPC.periodos.map(function(p){return p+'-01';});
+    host.innerHTML=_slugs.map(function(s){
+      return '<div class="infl-cell"><div class="infl-cell-top"><span class="infl-cell-title" title="'+_divs[s].label+'">'+_divs[s].label+'</span><span class="infl-cell-val" id="inflval_'+s+'"></span></div><div class="infl-cell-chart" id="inflcell_'+s+'"></div></div>';
     }).join('');
-    var allv=[]; slugs.forEach(function(s){(divs[s].var_12m||[]).forEach(function(v){if(v!=null)allv.push(v);});});
-    var ymin=allv.length?Math.min.apply(null,allv):0, ymax=allv.length?Math.max.apply(null,allv):1, pad=((ymax-ymin)*0.12)||1;
+    var allv=[]; _slugs.forEach(function(s){(_divs[s].var_12m||[]).forEach(function(v){if(v!=null)allv.push(v);});});
+    var ymin=allv.length?Math.min.apply(null,allv):0, ymax=allv.length?Math.max.apply(null,allv):1, pad=((ymax-ymin)*0.14)||1;
     var cfg={displayModeBar:false,responsive:true,scrollZoom:false};
     _cells=[];
-    slugs.forEach(function(s){
+    _slugs.forEach(function(s){
       var el=document.getElementById('inflcell_'+s);
-      Plotly.react(el,[{type:'scatter',mode:'lines',x:xs,y:divs[s].var_12m,
-        line:{color:SLATE,width:1.4},fill:'tozeroy',fillcolor:hexToRgba(SLATE,.07),
-        hovertemplate:'%{y:.1f}%<extra></extra>'}],
-        {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:30,r:6,t:4,b:14},
-         xaxis:{type:'date',showgrid:false,showticklabels:false,fixedrange:true,showspikes:true,spikemode:'across',spikethickness:1,spikecolor:hexToRgba(c.textMuted,.55),spikedash:'solid'},
+      Plotly.react(el,[{type:'scatter',mode:'lines',x:_xs,y:_divs[s].var_12m,
+        line:{color:SLATE,width:1.4},fill:'tozeroy',fillcolor:hexToRgba(SLATE,.07),hoverinfo:'none'}],
+        {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:32,r:8,t:6,b:8},
+         xaxis:{type:'date',showgrid:false,showticklabels:false,fixedrange:true,showspikes:false},
          yaxis:{range:[ymin-pad,ymax+pad],zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.3),tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
-         hovermode:'x',showlegend:false,height:96}, cfg);
+         hovermode:'x',showlegend:false,height:104}, cfg);
       _cells.push(el);
     });
-    var sync=false;
+    // Cursor sincronizado: línea vertical (shape) a la misma fecha en las 12 celdas
+    // + valor del mes en el header de cada una. Sin tooltips de Plotly (no se recortan).
+    var cur=document.getElementById('inflMatrixCursor'), lastPn=-1;
+    function cursorLine(x){return {type:'line',x0:x,x1:x,xref:'x',yref:'paper',y0:0,y1:1,line:{color:hexToRgba(c.textMuted,.55),width:1}};}
+    function moveTo(pn){
+      if(pn===lastPn||pn==null) return; lastPn=pn;
+      var x=_xs[pn];
+      _cells.forEach(function(cell){ Plotly.relayout(cell,{shapes:[cursorLine(x)]}); });
+      _slugs.forEach(function(s){ setBadge(s,_divs[s].var_12m[pn]); });
+      if(cur) cur.textContent=periodoLabel(IPC.periodos[pn]);
+    }
+    function clearAll(){
+      lastPn=-1;
+      _cells.forEach(function(cell){ Plotly.relayout(cell,{shapes:[]}); });
+      _slugs.forEach(function(s){ setBadge(s,lastNonNull(_divs[s].var_12m).v); });
+      if(cur) cur.textContent='último dato';
+    }
     _cells.forEach(function(gd){
-      gd.on('plotly_hover',function(ev){
-        if(sync||!ev.points||!ev.points.length) return; sync=true;
-        var pn=ev.points[0].pointNumber;
-        _cells.forEach(function(o){ if(o!==gd){ try{Plotly.Fx.hover(o,[{curveNumber:0,pointNumber:pn}]);}catch(e){} } });
-        sync=false;
-      });
-      gd.on('plotly_unhover',function(){
-        if(sync) return; sync=true;
-        _cells.forEach(function(o){ try{Plotly.Fx.unhover(o);}catch(e){} });
-        sync=false;
-      });
+      gd.on('plotly_hover',function(ev){ if(ev.points&&ev.points.length) moveTo(ev.points[0].pointNumber); });
+      gd.on('plotly_unhover', clearAll);
     });
+    clearAll();
   }
   function plotRanking(){
     var el=document.getElementById('inflRankingChart'); if(!el||!IPC) return;
@@ -4138,10 +4169,16 @@ window.addEventListener('popstate', function(){
       .filter(function(r){return r.v!=null;}).sort(function(a,b){return a.v-b.v;});
     var vmax=Math.max.apply(null,rows.map(function(r){return Math.abs(r.v);}))||1;
     var cols=rows.map(function(r){return r.v<0?COOL:mix(WARM_LITE,WARM_DARK,Math.min(1,Math.abs(r.v)/vmax));});
+    var sub=document.getElementById('inflRankingSub');
+    if(sub && ULT && ULT.periodo){
+      var prev=(parseInt(ULT.periodo.slice(0,4),10)-1)+'-'+ULT.periodo.slice(5,7);
+      sub.textContent='Inflación interanual (variación a 12 meses) al cierre de '+periodoLabel(ULT.periodo)+', comparada contra '+periodoLabel(prev)+'. Negativos entre paréntesis.';
+    }
     Plotly.react(el,[{type:'bar',orientation:'h',
       y:rows.map(function(r){return r.label;}),x:rows.map(function(r){return r.v;}),
-      marker:{color:cols},text:rows.map(function(r){return fmtPct(r.v);}),textposition:'auto',
-      cliponaxis:false, hovertemplate:'%{y}<br>%{x:.2f}% interanual<extra></extra>'}],
+      marker:{color:cols}, text:rows.map(function(r){return fmtBar(r.v);}), textposition:'auto',
+      cliponaxis:false, customdata:rows.map(function(r){return fmtBar(r.v);}),
+      hovertemplate:'%{y}<br>%{customdata} interanual<extra></extra>'}],
       {...L, xaxis:{...L.xaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
        yaxis:{...L.yaxis,automargin:true,tickfont:{family:'Outfit',size:11,color:c.textMuted}},
        margin:{l:8,r:14,t:12,b:32}, showlegend:false, height:420}, PC);
