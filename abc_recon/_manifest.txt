@@ -1,6 +1,0 @@
-https://transitabilidad.abc.gob.bo/api/v1/events HTTP 403  121 bytes
-https://transitabilidad.abc.gob.bo/api/v1/data HTTP 403  121 bytes
-https://transitabilidad.abc.gob.bo/api/v1/retenes HTTP 403  121 bytes
-https://transitabilidad.abc.gob.bo/api/v1/serviceStations HTTP 403  121 bytes
-https://transitabilidad.abc.gob.bo/shapes/rvf-2026.geojson HTTP 200  15698819 bytes
-https://transitabilidad.abc.gob.bo/shapes/BoliviaDepartmentLimits.json HTTP 200  309629 bytes
