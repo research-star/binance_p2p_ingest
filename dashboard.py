@@ -14,6 +14,7 @@ Produce un .html autocontenido que se abre en cualquier navegador.
 import argparse
 import json
 import os
+import re
 import sqlite3
 import sys
 from collections import defaultdict
@@ -112,7 +113,8 @@ GALLERY_TEMA_SLUGS = {
 
 
 def gallery_slug(tema, category, carril):
-    """Slug de galería de una nota (None → placeholder). Ver cascada arriba."""
+    """Slug de galería por `tema` exacto (FALLBACK del motor v1.1; None → placeholder).
+    Cascada: latam→internacional · tema mapeado→slug · category→economia/politica · else None."""
     if carril == 'latam':
         return 'internacional'
     if tema and tema != 'General':
@@ -122,6 +124,84 @@ def gallery_slug(tema, category, carril):
     if category in ('economia', 'politica'):
         return category
     return None
+
+
+# ── Galería v1.1: PASS de prioridad por keyword (PRIMARIO) ───────────────────
+# Antepone un escaneo del TEXTO de la nota (title+summary+detail) al lookup por
+# `tema`. Cuando co-ocurren varios tópicos, gana el de mayor prioridad (orden de
+# la tabla). Sin match → delega a gallery_slug(tema,...) (FALLBACK, arriba).
+#
+# Normalización: ESPEJO de noticias_ingest/scraper.py:487-499 (_ACENTOS/_norm/_wb).
+# NO se importa scraper: arrastra feedparser/requests/bs4 a nivel módulo y dashboard.py
+# se mantiene STDLIB-ONLY (path de publish liviano). Réplica byte-equivalente; si
+# scraper._norm cambia, sincronizar acá (es un fold de acentos estable). Word-boundary
+# vía lookaround sobre [0-9a-z] → 'oro' NO matchea ahorro/tesoro; frases multipalabra
+# ('tipo de cambio') matchean como frase. Nada de substring crudo.
+_GAL_ACENTOS = str.maketrans("áàäéèëíìïóòöúùüñ", "aaaeeeiiiooouuun")
+
+
+def _gal_norm(s):
+    return re.sub(r"\s+", " ", (s or "").lower().translate(_GAL_ACENTOS)).strip()
+
+
+def _gal_wb(term):
+    return re.compile(r"(?<![0-9a-z])" + re.escape(_gal_norm(term)) + r"(?![0-9a-z])")
+
+
+# TABLA DE PRIORIDAD: LISTA ORDENADA de reglas (keywords, slug). Orden = prioridad
+# (1ª regla con match gana ante co-ocurrencia). Un MISMO slug PUEDE repetirse en varias
+# reglas — así una ENTIDAD nombrada tiene prioridad propia compartiendo imagen con un
+# tema general. Editable por criterio humano (orden/keywords/proxies). Targets = SOLO
+# las 14 imágenes existentes (guarda abajo). Keywords ya plegadas (sin acentos); _gal_wb
+# las re-normaliza igual. Plurales se listan aparte (límite de palabra: 'eleccion' NO
+# matchea 'elecciones'). Frases multipalabra ('banco central') matchean como frase.
+#
+# Reglas [ENT] = ENTIDAD con PROXY provisional: el slug apunta a una imagen existente
+# que NO es propia de la entidad; al crear su imagen dedicada, cambiar SOLO el slug, NO
+# la posición. Candidatas dedicadas PRIORITARIAS: banco-central y fmi (ver reporte del PR).
+GALLERY_KEYWORD_PRIORITY = [
+    (['eleccion', 'elecciones', 'electoral', 'comicios', 'votacion', 'candidato', 'tse'], 'elecciones'),
+    (['bloqueo', 'paro', 'conflicto', 'marcha', 'protesta', 'movilizacion'], 'bloqueos'),
+    (['fmi', 'fondo monetario'], 'deuda'),               # [ENT] fmi → proxy provisional 'deuda'
+    (['banco central', 'bcb'], 'inversion'),             # [ENT] banco-central → proxy 'inversion' (PROXY FLOJO)
+    (['banco mundial', 'bid', 'caf'], 'deuda'),          # [ENT] multilaterales → proxy provisional 'deuda'
+    (['asfi'], 'inversion'),                             # [ENT] asfi → proxy 'inversion' (PROXY FLOJO)
+    (['combustible', 'diesel', 'gasolina', 'ypfb', 'surtidor', 'carburante'], 'combustibles'),
+    (['litio', 'ylb', 'salar'], 'litio'),
+    (['deuda', 'bonos', 'eurobono', 'calificadora', 'default', 'financiamiento'], 'deuda'),
+    (['exportacion', 'exportaciones', 'exportador', 'divisas', 'gas natural'], 'exportaciones'),
+    (['inflacion', 'ipc', 'precios', 'carestia'], 'inflacion'),
+    (['alimento', 'alimentos', 'canasta', 'abastecimiento', 'harina', 'azucar', 'aceite'], 'alimentos'),
+    (['agro', 'soya', 'agropecuario', 'cosecha'], 'agro'),
+    (['inversion', 'credito', 'reservas internacionales', 'rin'], 'inversion'),
+    (['dolar', 'tipo de cambio', 'paralelo', 'divisa', 'usdt', 'cotizacion'], 'tipo-cambio'),
+    (['pib', 'crecimiento', 'fiscal', 'deficit', 'subvencion'], 'economia'),
+    (['gobierno', 'ministro', 'asamblea', 'ley', 'decreto'], 'politica'),
+]
+
+# Universo de slugs emisibles = las 14 imágenes existentes. Ninguna regla puede emitir
+# un slug fuera de acá (guarda fail-fast: rompe al cargar, no en runtime silencioso).
+# Las reglas [ENT] proxyean a slugs existentes → NO introducen slugs nuevos.
+VALID_GALLERY_SLUGS = frozenset(GALLERY_TEMA_SLUGS.values()) | {'economia', 'politica', 'internacional'}
+assert all(slug in VALID_GALLERY_SLUGS for _, slug in GALLERY_KEYWORD_PRIORITY), \
+    "GALLERY_KEYWORD_PRIORITY emite un slug sin imagen en static/gal-<slug>.webp"
+
+# Compilación una sola vez al cargar el módulo (no por nota): (patrones, slug).
+_GALLERY_KW_COMPILED = [([_gal_wb(k) for k in kws], slug) for kws, slug in GALLERY_KEYWORD_PRIORITY]
+
+
+def gallery_slug_v2(title, summary, detail, tema, category, carril):
+    """Selección de slug v1.1. carril latam → 'internacional'. Si no, escanea
+    title+summary+detail normalizado y recorre GALLERY_KEYWORD_PRIORITY en orden;
+    la 1ª regla con match por límite de palabra gana (su slug). Sin match → fallback
+    a gallery_slug(tema,...). Solo emite slugs de VALID_GALLERY_SLUGS."""
+    if carril == 'latam':
+        return 'internacional'
+    texto = _gal_norm(' '.join(p for p in (title, summary, detail) if p))
+    for pats, slug in _GALLERY_KW_COMPILED:
+        if any(p.search(texto) for p in pats):
+            return slug
+    return gallery_slug(tema, category, carril)
 
 
 def _laspeyres_contrib(idx_div: dict, idx_tot: dict, var12_tot: dict):
@@ -832,9 +912,11 @@ def process_data(db_path: Path) -> dict:
             'tema': r['tema'],                  # tema fino (clasificación v1) — para matching de galería
             'temaConfianza': r['tema_hits'],    # confianza del tema (gate sugerido >=10)
             'entidades': json.loads(r['entidades'] or '[]'),
-            # Slug de galería temática precomputado (cascada tema→category→latam);
-            # el front arma /gal-<slug>.webp. None → placeholder CSS. Ver gallery_slug().
-            'gallerySlug': gallery_slug(r['tema'], r['category'], r['carril']),
+            # Slug de galería precomputado: motor v1.1 (keyword-priority PRIMARIO sobre
+            # title+summary+detail; fallback al lookup por tema). El front arma
+            # /gal-<slug>.webp; None → placeholder CSS. Ver gallery_slug_v2().
+            'gallerySlug': gallery_slug_v2(r['title'], r['summary'], r['detail'],
+                                           r['tema'], r['category'], r['carril']),
         } for r in noticias_rows]
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation

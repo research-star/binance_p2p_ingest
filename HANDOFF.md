@@ -538,13 +538,24 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   `{id, source, category, carril:'bolivia'|'latam', date:'YYYY-MM-DD',
   time:'HH:MM', title, summary, detail, topics:[..], tema,
   temaConfianza, entidades:[..], impact:'alto|medio|bajo', sourceNote,
-  url, imageUrl}` (`url` = link al artículo original; `imageUrl` =
+  url, imageUrl, gallerySlug}` (`url` = link al artículo original; `imageUrl` =
   `og:image` hotlink (FASE 2a), `null` → placeholder `.np-imgph`;
   `carril`/`tema`/`temaConfianza` (=`tema_hits`)/`entidades` agregados en
-  FASE 3 — `carril` parte los carriles; `tema`/`temaConfianza`/`entidades`
-  alimentan el matching de galería futuro (gate sugerido: imagen específica
-  si `temaConfianza >= 10`); `summary` hoy no se renderiza). `detail` es un
+  FASE 3 — `carril` parte los carriles; `summary` hoy no se renderiza). `detail` es un
   extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio público).
+- **Galería de imágenes (v1 — #90, EN PROD)**: cada nota trae `gallerySlug`
+  precomputado → el front (`npImg`) arma `static/gal-<slug>.webp` en la cascada
+  **og:image → galería → placeholder `.np-imgph`** (`gallerySlug=null` → placeholder).
+  14 imágenes reales (fotos stock Pexels, `GALLERY-CREDITS.md`); microtag
+  "ilustrativa" **solo-admin** (`npAdmin.isAdmin`). **Motor de selección v1.1**
+  (`dashboard.py` `gallery_slug_v2`): **PASS de PRIORIDAD POR KEYWORD** sobre
+  `title`+`summary`+`detail` normalizado (tabla `GALLERY_KEYWORD_PRIORITY`,
+  orden = prioridad, límite de palabra + multipalabra) — ante co-ocurrencia gana
+  el tópico de mayor prioridad; sin match → **fallback** al lookup por `tema`
+  (`gallery_slug`/`GALLERY_TEMA_SLUGS`); `carril='latam'` → `internacional`. **NO usa
+  `temaConfianza`** (NULL en histórico → mataría cobertura) ni `entidades` (v2).
+  Solo emite slugs de las 14 imágenes existentes (guarda `VALID_GALLERY_SLUGS`,
+  fail-fast). Tests: `scripts/test_gallery_keyword.py`.
 - Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
   `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
   que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).
