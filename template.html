@@ -4108,7 +4108,7 @@ window.addEventListener('popstate', function(){
 // ═══ INFLACIÓN SUBTAB (IPC del INE) ═══
 // Solo IPC (el IPP se ignora). DATA.inflacion.ipc = {periodos:['YYYY-MM',...],
 // general:{var_12m[],var_mensual[],var_acumulada[]}, divisiones:{slug:{label,
-// var_12m[],var_mensual[]}}}. 4 vistas con paleta cálida cohesiva:
+// var_12m[],var_mensual[]}}}. 5 vistas, paleta estilo Financial Times (claret/oxford):
 //  1) mensual (barras) · 2) acumulada por año (líneas, eje=meses) ·
 //  3) matriz interanual por rubro (12 mini-charts, cursor sincronizado) ·
 //  4) ranking interanual actual (barras horizontales).
@@ -4116,13 +4116,18 @@ window.addEventListener('popstate', function(){
   var IPC = (typeof DATA==='object' && DATA.inflacion && DATA.inflacion.ipc) ? DATA.inflacion.ipc : null;
   var ULT = (DATA.inflacion && DATA.inflacion.ultimo && DATA.inflacion.ultimo.ipc) || null;
   var MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  var WARM_DARK='#7a2e1e', WARM_MID='#b3473b', WARM_LITE='#e6bfa6', SLATE='#2c4a6b', COOL='#6b7d92';
+  var WARM_DARK='#990F3D', WARM_MID='#BE314F', WARM_LITE='#E6B9C2', SLATE='#0F5499', COOL='#0D7680';  // paleta FT: claret (inflación) · oxford (rubros) · teal (deflación)
   function hex2rgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
   function rgb2hex(a){return '#'+a.map(function(x){var s=Math.round(x).toString(16);return s.length<2?'0'+s:s;}).join('');}
   function mix(h1,h2,t){var a=hex2rgb(h1),b=hex2rgb(h2);return rgb2hex([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]);}
   function fmtPct(v){return (v==null||isNaN(v))?'—':((v>=0?'+':'')+v.toFixed(2)+'%');}
   function lastNonNull(arr){arr=arr||[];for(var i=arr.length-1;i>=0;i--){if(arr[i]!=null)return {i:i,v:arr[i]};}return {i:-1,v:null};}
   function periodoLabel(p){if(!p)return '—';var m=parseInt(p.slice(5,7),10);return (MES[m-1]||'')+' '+p.slice(0,4);}
+  // Ejes estilo Financial Times: sin caja, solo gridlines horizontales finas,
+  // línea base del eje X sólida, sin eje Y, línea del cero marcada.
+  var FT_GRID=hexToRgba('#3d352e',.10), FT_AXIS=hexToRgba('#3d352e',.75), FT_ZERO=hexToRgba('#3d352e',.45);
+  function ftx(L,ex){return Object.assign({},L.xaxis,{showgrid:false,showline:true,linecolor:FT_AXIS,linewidth:1,ticks:'outside',tickcolor:FT_AXIS,ticklen:4,zeroline:false},ex||{});}
+  function fty(L,ex){return Object.assign({},L.yaxis,{showgrid:true,gridcolor:FT_GRID,gridwidth:1,showline:false,ticks:'',zeroline:true,zerolinecolor:FT_ZERO,zerolinewidth:1.2},ex||{});}
 
   function renderKpis(){
     var el=document.getElementById('inflKpis'); if(!el) return;
@@ -4154,8 +4159,8 @@ window.addEventListener('popstate', function(){
         font:{family:'Outfit',size:16,color:WARM_DARK}});
     }
     Plotly.react(el,traces,{...L,
-      xaxis:{...L.xaxis,type:'date',nticks:11,tickangle:0},
-      yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
+      xaxis:ftx(L,{type:'date',nticks:11,tickangle:0}),
+      yaxis:fty(L,{ticksuffix:'%'}),
       annotations:anns, margin:{l:48,r:18,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
   }
   function plotMensual(){
@@ -4165,8 +4170,8 @@ window.addEventListener('popstate', function(){
     var cols=IPC.general.var_mensual.map(function(v){return (v!=null&&v<0)?COOL:WARM_MID;});
     Plotly.react(el,[{type:'bar',x:x,y:IPC.general.var_mensual,marker:{color:cols},
       hovertemplate:'%{x|%b %Y}<br>%{y:.2f}% mensual<extra></extra>'}],
-      {...L, xaxis:{...L.xaxis,type:'date',tickformat:'%Y',nticks:11,tickangle:0},
-       yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45),zerolinewidth:1},
+      {...L, xaxis:ftx(L,{type:'date',tickformat:'%Y',nticks:11,tickangle:0}),
+       yaxis:fty(L,{ticksuffix:'%'}),
        margin:{l:48,r:14,t:12,b:34}, showlegend:false, hovermode:'x', height:340}, PC);
   }
   function fmtBar(v){ return (v==null||isNaN(v))?'—' : (v<0 ? '('+Math.abs(v).toFixed(1)+'%)' : v.toFixed(1)+'%'); }
@@ -4205,8 +4210,8 @@ window.addEventListener('popstate', function(){
         xshift:8, xanchor:'left', yanchor:'middle', font:{family:'Outfit', size:e.isLast?12.5:10, color:colorOf[e.yr]}};
     });
     Plotly.react(el,traces,{...L,
-      xaxis:{...L.xaxis,type:'category',tickangle:0,fixedrange:true,range:[-0.4,12.9]},
-      yaxis:{...L.yaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
+      xaxis:ftx(L,{type:'category',tickangle:0,fixedrange:true,range:[-0.4,12.9]}),
+      yaxis:fty(L,{ticksuffix:'%'}),
       annotations:anns, margin:{l:48,r:34,t:12,b:28}, showlegend:false,
       hovermode:'x unified', height:380}, PC);
   }
@@ -4233,14 +4238,14 @@ window.addEventListener('popstate', function(){
         line:{color:SLATE,width:1.4},fill:'tozeroy',fillcolor:hexToRgba(SLATE,.07),hoverinfo:'none'}],
         {paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:32,r:8,t:6,b:8},
          xaxis:{type:'date',showgrid:false,showticklabels:false,fixedrange:true,showspikes:false},
-         yaxis:{range:[yBot,yTop],zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.3),tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
+         yaxis:{range:[yBot,yTop],zeroline:true,zerolinecolor:FT_ZERO,zerolinewidth:1,showgrid:false,tickfont:{family:'IBM Plex Mono,monospace',size:8,color:c.textMuted},ticksuffix:'%',nticks:3,fixedrange:true},
          hovermode:'x',showlegend:false,height:150}, cfg);
       _cells.push(el);
     });
     // Cursor sincronizado: línea vertical (shape) a la misma fecha en las 12 celdas
     // + valor del mes en el header de cada una. Sin tooltips de Plotly (no se recortan).
     var cur=document.getElementById('inflMatrixCursor'), lastPn=-1;
-    function cursorLine(x){return {type:'line',x0:x,x1:x,xref:'x',yref:'paper',y0:0,y1:1,line:{color:hexToRgba(c.textMuted,.55),width:1}};}
+    function cursorLine(x){return {type:'line',x0:x,x1:x,xref:'x',yref:'paper',y0:0,y1:1,line:{color:FT_AXIS,width:1}};}
     function moveTo(pn){
       if(pn===lastPn||pn==null) return; lastPn=pn;
       var x=_xs[pn];
@@ -4277,8 +4282,8 @@ window.addEventListener('popstate', function(){
       marker:{color:cols}, text:rows.map(function(r){return fmtBar(r.v);}), textposition:'auto',
       cliponaxis:false, customdata:rows.map(function(r){return fmtBar(r.v);}),
       hovertemplate:'%{y}<br>%{customdata} interanual<extra></extra>'}],
-      {...L, xaxis:{...L.xaxis,ticksuffix:'%',zeroline:true,zerolinecolor:hexToRgba(c.textMuted,.45)},
-       yaxis:{...L.yaxis,automargin:true,tickfont:{family:'Outfit',size:11,color:c.textMuted}},
+      {...L, xaxis:Object.assign({},L.xaxis,{ticksuffix:'%',showgrid:true,gridcolor:FT_GRID,gridwidth:1,showline:false,ticks:'',zeroline:true,zerolinecolor:FT_ZERO,zerolinewidth:1.2}),
+       yaxis:Object.assign({},L.yaxis,{automargin:true,showgrid:false,showline:false,zeroline:false,ticks:'',tickfont:{family:'Outfit',size:11,color:c.textMuted}}),
        margin:{l:8,r:14,t:12,b:32}, showlegend:false, height:420}, PC);
   }
   window.renderInflacion = function(){
