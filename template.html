@@ -2847,12 +2847,13 @@ window.renderBloqueos = function(){
       : 'Intensidad: la opacidad refleja los días bloqueado desde el 1 de mayo de 2026.';
     if(elSide) renderSide(view);
     if(!elMap) return;
-    if(_bloqueosGeo){ drawMapa(_bloqueosGeo, view); }
-    else {
-      elMap.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">Cargando mapa&hellip;</div>';
+    // Render inmediato (Bolivia + puntos); la red vial/deptos se agregan al llegar
+    // el geojson. Sin placeholder "Cargando" — el mapa nunca queda con texto suelto.
+    drawMapa(_bloqueosGeo, view);
+    if(_bloqueosGeo === null){
       fetch('/bolivia_red_vial.json').then(function(r){ return r.ok ? r.json() : null; }).then(function(g){
         _bloqueosGeo = g || {}; drawMapa(_bloqueosGeo, view);
-      }).catch(function(){ _bloqueosGeo = {}; drawMapa(_bloqueosGeo, view); });
+      }).catch(function(){ _bloqueosGeo = {}; });
     }
   }
   if(togI) togI.onclick = function(){ setView('intensidad'); };
