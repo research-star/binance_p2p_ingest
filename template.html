@@ -397,6 +397,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-stog-check svg{width:10px;height:10px;opacity:0}
 .fb-stog-line{display:inline-block;width:14px;height:0;border-top:2px solid currentColor;flex-shrink:0}
 .fb-stog-line.dashed{border-top-style:dashed}
+.fb-stog-band{display:inline-block;width:14px;height:10px;border-radius:2px;background:currentColor;opacity:.32;flex-shrink:0}
 .fb-stog.active{background:var(--bg-secondary);border-color:var(--line-strong);color:var(--text-primary)}
 .fb-stog.active .fb-stog-check{background:var(--fb-trace-color,#1e4d7a);border-color:var(--fb-trace-color,#1e4d7a)}
 .fb-stog.active .fb-stog-check svg{opacity:1}
@@ -745,7 +746,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <div class="content">
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio VWAP por nivel de profundidad</h2><p>Bandas: deterioro a mayor profundidad (5%&rarr;50%). En la leyenda: BCB 6.96 (oficial) y BCB Ref Compra/Venta (referencial BCB). <strong>Franjas grises = per&iacute;odos sin captura de datos.</strong></p><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra VWAP 10%</span></button><button type="button" class="fb-stog active" data-trace="venta" style="--fb-trace-color:#6b7d92"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#6b7d92"></span><span class="fb-stog-label">Venta VWAP 10%</span></button><button type="button" class="fb-stog active" data-trace="bcb-compra" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Compra</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-venta" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref Venta</span></button><button type="button" class="fb-stog inactive" data-trace="bcb-oficial" style="--fb-trace-color:#8c8c8c"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#8c8c8c"></span><span class="fb-stog-label">BCB Oficial</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#1e4d7a"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#1e4d7a"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog active" data-trace="venta" style="--fb-trace-color:#6b7d92"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#6b7d92"></span><span class="fb-stog-label">Venta</span></button><button type="button" class="fb-stog active" data-trace="banda" style="--fb-trace-color:#5589c0"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-band" style="color:#5589c0"></span><span class="fb-stog-label">BCB Ref</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section" data-panel="depth" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad por lado</h2><p>USDT totales en anuncios activos.</p><div class="panel-side-toggle" data-panel="depth" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartDepth"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="orderbook" draggable="true"><div class="section-header"><div class="sh-left"><h2>Profundidad del libro de &oacute;rdenes</h2><p>Cantidad acumulada (USDT) por nivel de precio. &Uacute;ltima snapshot.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOrderBook"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
@@ -1668,30 +1669,20 @@ function xaxisForView(base, v){
   return cfg;
 }
 
-// VWAP series toggle state (default: only Compra visible)
-const vwapToggle={compra:true,venta:true,'bcb-compra':true,'bcb-venta':false,'bcb-oficial':false};
+// VWAP series toggle state (default: Compra, Venta y banda BCB Ref visibles)
+const vwapToggle={compra:true,venta:true,banda:true};
 function applyVwapToggle(){
   const el=document.getElementById('chartVwap');
   if(!el||!el.data) return;
-  // Map each trace to a toggle key based on name and position.
-  // Band traces (no name, hoverinfo:'skip') belong to buy (first group) or sell (second group).
-  let buyMainIdx=-1, sellMainIdx=-1;
-  const keys=el.data.map(function(tr,i){
-    if(tr.name==='Compra VWAP 10%'){buyMainIdx=i;return 'compra';}
-    if(tr.name==='Venta VWAP 10%'){sellMainIdx=i;return 'venta';}
-    if(tr.name&&tr.name.indexOf('BCB Ref Compra')===0) return 'bcb-compra';
-    if(tr.name&&tr.name.indexOf('BCB Ref Venta')===0) return 'bcb-venta';
-    if(tr.name&&tr.name.indexOf('BCB ')===0) return 'bcb-oficial';
+  const keyFor=function(tr){
+    if(tr.name==='Compra') return 'compra';
+    if(tr.name==='Venta')  return 'venta';
+    if(tr.name&&tr.name.indexOf('BCB')===0) return 'banda';
     return null;
-  });
-  // Assign band traces: traces before buyMainIdx with no key → compra; before sellMainIdx → venta
-  keys.forEach(function(_,i){
-    if(keys[i]!==null) return;
-    if(buyMainIdx>0&&i<buyMainIdx) keys[i]='compra';
-    else if(sellMainIdx>0&&i>buyMainIdx&&i<sellMainIdx) keys[i]='venta';
-  });
+  };
   const updates={};
-  keys.forEach(function(k,i){
+  el.data.forEach(function(tr,i){
+    const k=keyFor(tr);
     if(!k) return;
     if(!updates[k]) updates[k]={vis:vwapToggle[k]?true:'legendonly',idx:[]};
     updates[k].idx.push(i);
@@ -1700,57 +1691,37 @@ function applyVwapToggle(){
     Plotly.restyle(el,{visible:u.vis},u.idx);
   });
 }
-
 function rVwap(c,v){
   const L=BL(c), x=v.x;
-  // Construye TODAS las trazas con metadato _side; el helper compartido
-  // filterDirectionalTraces aplica el sideFilter actual.
-  const allTraces=[
-    {_side:'buy', x:x,y:v.vb50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {_side:'buy', x:x,y:v.vb25,fill:'tonexty',fillcolor:c.greenMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {_side:'buy', x:x,y:v.vb5, fill:'tonexty',fillcolor:c.greenMuted,line:{color:hexToRgba(c.buy,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {_side:'buy', x:x,y:v.vb10,name:'Compra VWAP 10%',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}},
-    {_side:'sell',x:x,y:v.vs50,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {_side:'sell',x:x,y:v.vs25,fill:'tonexty',fillcolor:c.orangeMuted,line:{color:'transparent',width:0},showlegend:false,hoverinfo:'skip'},
-    {_side:'sell',x:x,y:v.vs5, fill:'tonexty',fillcolor:c.orangeMuted,line:{color:hexToRgba(c.sell,.3),width:.5,dash:'dot'},showlegend:false,hoverinfo:'skip'},
-    {_side:'sell',x:x,y:v.vs10,name:'Venta VWAP 10%',line:{color:c.sell,width:2},mode:'lines+markers',marker:{size:2,color:c.sell}},
-    // BCB oficial: dash. Ref Compra: dot. Ref Venta: dot (colores distintos).
-    {x:x,y:x.map(()=>meta.bcb_rate),name:'BCB '+meta.bcb_rate,line:{color:c.bcbOficial,width:1,dash:'dash'},visible:'legendonly'}
-  ];
-  const traces=filterDirectionalTraces(allTraces, 'vwap');
+  const traces=[];
+  // Banda BCB Ref: sombra pintada entre la ref Compra y la ref Venta, detras de
+  // las lineas P2P. Sin lineas de borde (solo el relleno). Toggle 'banda'.
   if(meta.bcb_ref_history&&meta.bcb_ref_history.length){
-    // Filtrar el histórico BCB al rango visible. Si no hay puntos dentro,
-    // usamos el último BCB <= xMax como referencia constante a través del
-    // rango (línea horizontal informativa). Sin esto, al contraer el
-    // selector las líneas BCB quedaban con su rango histórico fijo y no
-    // se reactualizaban con el chart.
     const hist=meta.bcb_ref_history;
-    const xMin=x.length?x[0].getTime():null, xMax=x.length?x[x.length-1].getTime():null;
-    // Filtro por fecha-string (YYYY-MM-DD) para no excluir el BCB del primer
-    // día, cuya entry parsea a medianoche local pero v.x[0] en daily/hourly
-    // es el último snapshot del día (~20h después).
+    const xMax=x.length?x[x.length-1].getTime():null;
     const xMinDate = x.length ? x[0].toISOString().slice(0,10) : null;
     const xMaxDate = x.length ? x[x.length-1].toISOString().slice(0,10) : null;
     const histWithT=hist.map(e=>({...e, t:new Date(e.fecha+'T00:00:00').getTime()}));
     let inRange = (xMinDate!=null && xMaxDate!=null) ? histWithT.filter(e=>e.fecha>=xMinDate && e.fecha<=xMaxDate) : [];
+    let bx=null, compraY=null, ventaY=null, step=false;
     if(!inRange.length && xMax!=null){
-      // Tomar el último BCB anterior al rango como referencia constante.
       const prev = histWithT.filter(e=>e.t<=xMax).pop();
-      if(prev){
-        traces.push({x:x,y:x.map(()=>prev.compra),name:'BCB Ref Compra '+prev.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
-        traces.push({x:x,y:x.map(()=>prev.venta), name:'BCB Ref Venta '+prev.venta, line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
-      }
+      if(prev){ bx=x; compraY=x.map(()=>prev.compra); ventaY=x.map(()=>prev.venta); }
     }else if(inRange.length===1){
-      const e=inRange[0];
-      traces.push({x:x,y:x.map(()=>e.compra),name:'BCB Ref Compra '+e.compra,line:{color:c.bcbRefCompra,width:1.4,dash:'dot'}});
-      traces.push({x:x,y:x.map(()=>e.venta), name:'BCB Ref Venta '+e.venta, line:{color:c.bcbRefVenta,width:1.4,dash:'dot'}});
+      const e=inRange[0]; bx=x; compraY=x.map(()=>e.compra); ventaY=x.map(()=>e.venta);
     }else if(inRange.length>1){
-      const hx=inRange.map(e=>new Date(e.t));
-      traces.push({x:hx,y:inRange.map(e=>e.compra),name:'BCB Ref Compra',line:{color:c.bcbRefCompra,width:1.4,dash:'dot',shape:'hv'},mode:'lines+markers',marker:{size:5,color:c.bcbRefCompra},connectgaps:false});
-      traces.push({x:hx,y:inRange.map(e=>e.venta), name:'BCB Ref Venta', line:{color:c.bcbRefVenta,width:1.4,dash:'dot',shape:'hv'},mode:'lines+markers',marker:{size:5,color:c.bcbRefVenta},connectgaps:false});
+      bx=inRange.map(e=>new Date(e.t)); compraY=inRange.map(e=>e.compra); ventaY=inRange.map(e=>e.venta); step=true;
+    }
+    if(bx){
+      const lineCfg = step ? {color:'transparent',width:0,shape:'hv'} : {color:'transparent',width:0};
+      traces.push({x:bx,y:ventaY, name:'BCB Ref base',mode:'lines',line:lineCfg,hoverinfo:'skip',showlegend:false,connectgaps:false});
+      traces.push({x:bx,y:compraY,name:'BCB Ref',mode:'lines',line:lineCfg,fill:'tonexty',fillcolor:hexToRgba(c.bcbRefCompra,.18),hoverinfo:'skip',showlegend:false,connectgaps:false});
     }
   }
-  Plotly.react('chartVwap',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
+  traces.push({_side:'sell',x:x,y:v.vs10,name:'Venta', line:{color:c.sell,width:2},mode:'lines+markers',marker:{size:2,color:c.sell}});
+  const filtered=filterDirectionalTraces(traces, 'vwap');
+  Plotly.react('chartVwap',filtered,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f'},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
 function rDepth(c,v){
