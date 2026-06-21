@@ -463,10 +463,25 @@ KEYWORDS_EXCLUIR = [
     # Farándula/entretenimiento reforzado (calibración 2026-06-21)
     "reina de belleza", "certamen de belleza", "miss bolivia",
     # Contenido patrocinado / publicidad (excluir por marcadores de texto; la
-    # exclusión por sección/URL se aplica aparte, en la ingesta).
+    # exclusión por sección/URL se aplica aparte, vía es_url_patrocinada).
     "contenido de marca", "contenido patrocinado", "espacio publicitario",
     "espacio de marca", "publirreportaje", "branded content",
 ]
+
+# Rutas/secciones de contenido patrocinado a excluir por URL (decisión "ambas",
+# calibración 2026-06-21: marcadores de texto arriba + sección/URL acá). Se aplica
+# en la ingesta sobre c["link"] (evaluar() no recibe la URL).
+SECCIONES_PATROCINADAS = (
+    "/publicidad", "/publirreportaje", "/publireportaje", "/publinota",
+    "/contenido-de-marca", "/contenido-patrocinado", "/patrocinado",
+    "/branded", "/brand-studio", "/marcas/", "/espacio-publicitario",
+)
+
+
+def es_url_patrocinada(url: str) -> bool:
+    """True si la URL cae en una sección de contenido patrocinado/publicidad."""
+    u = (url or "").lower()
+    return any(p in u for p in SECCIONES_PATROCINADAS)
 
 TERMINOS_BOLIVIA = [
     "bolivia", "bolivian", "boliviano", "boliviana",

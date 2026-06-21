@@ -235,9 +235,11 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             print(f"[noticias] WARN portales_fail: {', '.join(fail)}", file=sys.stderr)
 
         # El href del frontend solo admite http/https: un portal comprometido
-        # no debe poder colar un scheme ejecutable (javascript:/data:).
+        # no debe poder colar un scheme ejecutable (javascript:/data:). Y se
+        # excluye el contenido patrocinado por sección/URL (calibración 2026-06-21).
         candidatos = [c for c in candidatos
-                      if urlparse(c["link"]).scheme in ("http", "https")]
+                      if urlparse(c["link"]).scheme in ("http", "https")
+                      and not scraper.es_url_patrocinada(c["link"])]
         res["candidatos"] = len(candidatos)
 
         notas = [build_nota(c, ahora_utc) for c in candidatos]

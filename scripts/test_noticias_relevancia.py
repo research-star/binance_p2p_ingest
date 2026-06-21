@@ -98,6 +98,15 @@ def run() -> int:
     if deg2[7] != "falta_bolivia":
         errores.append(f"degradado: extranjero debería seguir cortado por geo-gate | {deg2}")
 
+    # 8. Patrocinado por sección/URL (decisión "ambas"): la URL en /publicidad o
+    #    /contenido-de-marca se excluye; una nota normal de /economia no.
+    if not scraper.es_url_patrocinada("https://eldeber.com.bo/marcas/nota-de-marca_123"):
+        errores.append("es_url_patrocinada: /marcas/ debería excluirse")
+    if not scraper.es_url_patrocinada("https://x.bo/publicidad/algo"):
+        errores.append("es_url_patrocinada: /publicidad debería excluirse")
+    if scraper.es_url_patrocinada("https://eldeber.com.bo/economia/nota_123"):
+        errores.append("es_url_patrocinada: /economia NO debería excluirse")
+
     if errores:
         print("FAIL test_noticias_relevancia:")
         for e in errores:
