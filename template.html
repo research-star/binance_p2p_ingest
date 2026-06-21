@@ -4502,18 +4502,37 @@ window.addEventListener('popstate', function(){
     'brujula digital','brujula','unitel','eju!','eju','erbol','urgente.bo','urgente',
     'opinion','agencia de noticias fides','anf agencia de noticias fides bolivia',
     'noticias fides','anf','bloomberg linea','bloomberg'];
+  function ntFold(s){ return String(s||'').toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u'); }
   function ntCleanTitle(t){
     if(!t) return t; var s=String(t).trim();
     var m=s.match(/^(.*\S)\s+[-—|]\s+([^-—|]{1,60})$/);
-    if(m){
-      var tail=m[2].trim().toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
-        .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u');
-      if(NT_SRC_SUFFIXES.indexOf(tail)!==-1) return m[1].trim();
-    }
+    if(m && NT_SRC_SUFFIXES.indexOf(ntFold(m[2].trim()))!==-1) return m[1].trim();
     return s;
+  }
+  // Saca el nombre del medio del FINAL de un texto (con o sin separador): el RSS de
+  // Google News suele dejar la bajada como "…titular Correo del Sur". Solo recorta colas
+  // reconocidas (lista cerrada).
+  function ntStripFuente(s){
+    if(!s) return ''; var t=String(s).trim(), low=ntFold(t);
+    for(var i=0;i<NT_SRC_SUFFIXES.length;i++){ var suf=NT_SRC_SUFFIXES[i];
+      if(low.length>suf.length+1 && low.slice(-suf.length)===suf){
+        var head=t.slice(0,t.length-suf.length).replace(/[\s·\-—|:,]+$/,'').trim();
+        if(head) return head;
+      }
+    }
+    return t;
+  }
+  // Bajada (dek): saca el medio y la SUPRIME si queda vacía o solo repite el titular
+  // (calibración 2026-06-21: la desc de Google News = título + medio, no aporta nada).
+  function ntCleanDek(summary, title){
+    var s=ntStripFuente(summary); if(!s) return '';
+    var norm=function(x){ return ntFold(x).replace(/[.…\s]+$/,'').trim(); };
+    return norm(s)===norm(ntCleanTitle(title||'')) ? '' : s;
   }
   function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
+  // Caption del hero, ya limpia (medio + dedupe contra el titular).
+  function npCap(n){ var d=ntCleanDek(n.summary, n.title); return d?'<figcaption class="np-hero-cap">'+ntEsc(d)+'</figcaption>':''; }
   // "También en": otros medios que cubrieron el MISMO evento (calibración 2026-06-21).
   // La representante (por tier de fuente) es la nota mostrada; acá van las demás con link.
   function npTambienEn(n){
@@ -4569,7 +4588,7 @@ window.addEventListener('popstate', function(){
     return npHideCtl(lead)+(kick||npKick(lead))
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
-        +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
+        +npCap(lead)+'</figure>'
       +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
       +npTambienEn(lead);
   }
@@ -4589,7 +4608,7 @@ window.addEventListener('popstate', function(){
       +'<div class="np-kicker">Internacional</div>'
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
-        +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
+        +npCap(lead)+'</figure>'
       +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
       +'</article>';
   }
@@ -4611,7 +4630,7 @@ window.addEventListener('popstate', function(){
     for(let i=0;i<notes.length;i++){ const n=notes[i];
       g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'+npKick(n)
-        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
+        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',ntCleanDek(n.summary,n.title))
         +npTambienEn(n)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
         +'</div></article>';
@@ -4681,7 +4700,7 @@ window.addEventListener('popstate', function(){
     let grid='';
     for(let i=0;i<latam.length;i++){ const n=latam[i];
       grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
-        +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',n.summary)
+        +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntCleanDek(n.summary,n.title))
         +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
     }
     return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';
