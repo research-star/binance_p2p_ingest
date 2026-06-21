@@ -55,7 +55,7 @@ except ImportError:
 import requests
 
 from config import NORMALIZED_DB, NOTICIAS_TOP_BOLIVIA, NOTICIAS_TOP_LATAM
-from noticias_ingest import latam, scraper
+from noticias_ingest import latam, resumen_ia, scraper
 from noticias_ingest.transform import build_nota, build_nota_latam
 
 # ── Constantes ────────────────────────────────────────────────────────────
@@ -277,6 +277,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 print(f"[noticias] dry-run bolivia: {n['puntaje']:.1f} "
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
         else:
+            n_resumen = resumen_ia.aplicar(finales)
+            if n_resumen:
+                print(f"[noticias] bolivia: resumen_ia aplicado a {n_resumen}/{len(finales)}")
             res["insertadas"] = insertar_notas(conn, finales)
             # Fix de cacheo (FASE 3): marcar como vistas lo que NO debe reconsiderarse:
             #  - insertadas (`finales`)
@@ -352,6 +355,9 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 print(f"[noticias] dry-run latam: {n['date']} {n['time']} "
                       f"{n['title'][:70]}")
         else:
+            n_resumen = resumen_ia.aplicar(finales)
+            if n_resumen:
+                print(f"[noticias] latam: resumen_ia aplicado a {n_resumen}/{len(finales)}")
             res["insertadas"] = insertar_notas(conn, finales)
     except Exception:
         conn.rollback()  # aislamiento por carril: no dejar inserts a medias
