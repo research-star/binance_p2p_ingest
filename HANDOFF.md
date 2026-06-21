@@ -458,10 +458,14 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   corrida diaria de `ingest_noticias.py` (un cron, un HC; fail-safe por
   carril — si uno falla el otro corre, y cualquier carril en error
   pingea fail):
-  - **Bolivia**: scrape de 13 portales → scoring TF-IDF 0-10 de RELEVANCIA
-    (fail-closed sin modelo) → corte editorial `puntaje >= 6.7` → dedupe fuzzy
-    inter-día (7 días, umbral 0.70) → top configurable (default **14/día**,
-    `config.NOTICIAS_TOP_BOLIVIA`; FASE 3, antes 10). El **TEMA es independiente
+  - **Bolivia**: scrape de 13 portales → geo-gate universal (ancla Bolivia) →
+    scoring TF-IDF 0-10 de RELEVANCIA (**modo DEGRADADO por keywords si falta el
+    modelo**, calibración 2026-06-21; antes fail-closed) → corte editorial
+    `puntaje >= 6.7` → **agrupación por evento + tier de fuente** ("También en…",
+    col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día (7 días, umbral
+    0.70) → top configurable (default **14/día**, `config.NOTICIAS_TOP_BOLIVIA`;
+    FASE 3, antes 10). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
+    `ANTHROPIC_API_KEY`; sin key → extracto, como hoy). El **TEMA es independiente
     de la relevancia**: lo asigna el motor contextual `_tema`/`_TEMA_SPEC` de
     `scraper.py` (word-boundary + strong/weak/context/exclude, FASE 3) y devuelve
     tema + **confianza** (`tema_hits`); `detectar_entidades` taguea entidades
@@ -493,17 +497,18 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
   la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
 - Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
-  `noticias_ingest/transform.py`). **`category` colapsada (FASE 3) a 2 cubos —
-  `{economia, politica}`** (`transform.TEMA_CATEGORIA`: Bloqueos/Conflictos y
-  Elecciones/Política económica → `politica`, el resto → `economia`). Los cubos
-  finos viejos (hidrocarburos/agro/mineria/latam) ya NO se emiten: el detalle de
-  tema vive en `tema`/`tema_hits`/`topics`, y el **carril** (Bolivia/Latam) en su
-  columna dedicada `carril` ('bolivia'|'latam'), NO en `category` (las notas
-  latam pasan a `category='economia'` + `carril='latam'`). El frontend parte los
-  carriles por `carril` (`ntBolivia`/`ntLatam`), no por category (que no alimenta
-  chips/colores/routing — recon FASE 3). `impact` por bandas de puntaje:
-  ≥8 alto · 7–7.99 medio · resto bajo (carril Bolivia). `ntSrcTag` tiene
-  fallback defensivo para slugs fuera del catálogo.
+  `noticias_ingest/transform.py`). **`category` editorial de 5 cubos —
+  `{economia, finanzas, politica, internacional, otros}`** (calibración 2026-06-21,
+  antes 2; `transform.TEMA_CATEGORIA`): Tipo de cambio/Dólar y Deuda/Finanzas →
+  `finanzas`; Bloqueos/Conflictos y Elecciones/Política económica → `politica`;
+  `General` → `otros` (relleno, NO se descarta — matar General tiraba ~60-70% de
+  noticia relevante mal rotulada); carril Latam → `internacional`. El frontend
+  **ordena `otros` como relleno** (después de los carriles de negocios) y **poda el
+  sufijo del medio** del título. El detalle de tema vive en `tema`/`tema_hits`/
+  `topics`; el **carril** (Bolivia/Latam) en su columna dedicada `carril`, NO en
+  `category`. El frontend parte los carriles por `carril` (`ntBolivia`/`ntLatam`).
+  `impact` por bandas de puntaje: ≥8 alto · 7–7.99 medio · resto bajo (carril
+  Bolivia). `ntSrcTag` tiene fallback defensivo para slugs fuera del catálogo.
 - **Colores de marca por portal** (`feat/noticias-latam`): los tokens
   `--src-*` de ambos THEMES son el color de marca real de cada medio
   (investigado de logos/CSS oficiales), ajustado SOLO en luminosidad
@@ -637,7 +642,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
-- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. El fail-closed sin modelo TF-IDF aplica solo al carril Bolivia (latam corre igual). UUID en `.env` (activo desde 2026-06-11). Cadencia diaria → period 24h sugerido.
+- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia diaria → period 24h sugerido.
 
 **SSH desde laptop:**
 ```bash
