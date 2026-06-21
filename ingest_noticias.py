@@ -5,9 +5,10 @@ ingest_noticias.py — Pipeline diario de la tab Noticias. Dos carriles:
 BOLIVIA: scrape 13 portales (noticias_ingest/scraper.py, port de boletines)
 → score TF-IDF → filtro editorial puntaje >= 6.7 → dedupe inter-día fuzzy
 → presupuesto top-10/día → INSERT idempotente.
-Fail-closed en scoring: sin modelo TF-IDF el carril NO corre (el corte 6.7
-está calibrado para la escala TF-IDF; el fallback keywords la rompería en
-silencio).
+Resiliencia en scoring: con modelo TF-IDF, score normal. Sin modelo, modo
+DEGRADADO por keywords (NO fail-closed): solo pasan las notas con keyword
+forzada institucional (puntaje=10 > corte 6.7) — feed reducido pero curado y
+anclado en Bolivia. El ping reporta scoring=keywords (no es silencioso).
 
 LATAM: sección Latinoamérica de Bloomberg Línea vía RSS
 (noticias_ingest/latam.py) — SIN scoring, su criterio editorial es el
@@ -212,14 +213,18 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
     res = {"estado": "ok", "insertadas": 0, "candidatos": 0,
            "sobre_umbral": 0, "dedupe": 0, "detalle": "", "scoring": "desconocido"}
     try:
-        # Fail-closed: sin modelo TF-IDF este carril no corre.
+        # Resiliencia: modo DEGRADADO por keywords si el modelo TF-IDF no carga
+        # (calibración 2026-06-21: antes era fail-closed y el carril Bolivia no
+        # corría → feed en blanco). En degradado, evaluar() cae a score_keywords:
+        # solo pasan las notas con KEYWORDS_FORZADO (institucional: YPFB/BCB/dólar/…)
+        # porque su puntaje=10 supera el corte editorial; las de conteo (0-3) no.
+        # Feed reducido pero curado y ANCLADO en Bolivia (el geo-gate universal de
+        # evaluar() corre igual). NO es silencioso: el ping reporta scoring=keywords.
         modelo = scraper.get_modelo()
         res["scoring"] = "tfidf" if modelo.disponible else "keywords"
         if not modelo.disponible:
-            res["estado"] = "error"
-            res["detalle"] = (f"modelo_no_disponible (fail-closed): "
-                              f"{modelo.motivo_rechazo or 'pkl ausente o ilegible'}")
-            return res
+            print(f"[noticias] WARN modelo_degradado: usando keywords — "
+                  f"{modelo.motivo_rechazo or 'pkl ausente o ilegible'}", file=sys.stderr)
 
         candidatos, descartados, ok, fail = scraper.correr_scraper()
         if not ok:

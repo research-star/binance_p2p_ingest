@@ -83,6 +83,21 @@ def run() -> int:
     if c["tema"] != "Bloqueos / Conflictos":
         errores.append(f"estado de excepción debería ser 'Bloqueos / Conflictos' | {c}")
 
+    # 7. Resiliencia / modo degradado (calibración 2026-06-21): sin modelo (puntaje
+    #    -1) evaluar() cae a score_keywords. Una keyword forzada institucional (YPFB)
+    #    puntúa 10 (> corte 6.7) y entra; el geo-gate universal sigue cortando lo
+    #    extranjero ANTES del fallback.
+    class _ModeloCaido:
+        disponible = False
+        def puntaje(self, t, d): return -1.0
+    scraper.get_modelo = lambda: _ModeloCaido()
+    deg = scraper.evaluar("YPFB anuncia millonaria inversión en nuevos pozos de gas", "", "El Deber")
+    if deg[0] < 6.7:
+        errores.append(f"degradado: YPFB (keyword forzada) debería puntuar >=6.7, dio {deg[0]} | {deg}")
+    deg2 = scraper.evaluar("Hombre arrojó a un niño al foso de los cocodrilos en Reino Unido", "", "El Deber")
+    if deg2[7] != "falta_bolivia":
+        errores.append(f"degradado: extranjero debería seguir cortado por geo-gate | {deg2}")
+
     if errores:
         print("FAIL test_noticias_relevancia:")
         for e in errores:
