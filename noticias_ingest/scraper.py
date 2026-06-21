@@ -392,6 +392,87 @@ FUENTES = [
         "scrape_selector": "h2 a, h3 a, .field-title a",
         "solo_bolivia": False, "metodo": "requests",
     },
+
+    # ── Fuentes nuevas (calibración 2026-06-21) ──────────────────────────────
+    # PENDIENTE VALIDAR EN VPS: agregadas vía Google News site-search (mismo patrón
+    # que El Deber/Correo/Fides — no requiere recon del HTML de cada sitio, que no
+    # se puede hacer desde el entorno de build por la política de red). Google News
+    # puede no indexar bien los .gob.bo/.org.bo institucionales → Diego corre un
+    # dry-run (`python ingest_noticias.py --dry-run`) y poda las que no rindan. El
+    # scraper aísla fallos por portal (lista `fail`), así que una fuente muerta NO
+    # rompe la corrida. Los slugs ya están en SOURCE_TIER (oficiales/gremios = T1).
+    # Para fuentes con scraping directo de su sala de prensa (más fiable que GN),
+    # hace falta recon por-sitio con red — follow-up del VPS.
+    #
+    # Periódicos:
+    {
+        "portal": "La Patria",
+        "rss": ["https://news.google.com/rss/search?q=site:lapatriaenlinea.com+economia+OR+Bolivia&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "El Mundo",
+        "rss": ["https://news.google.com/rss/search?q=site:elmundo.com.bo+economia+OR+Bolivia&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    # Oficiales (T1):
+    {
+        "portal": "BCB",
+        "rss": ["https://news.google.com/rss/search?q=site:bcb.gob.bo&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "INE",
+        "rss": ["https://news.google.com/rss/search?q=site:ine.gob.bo&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "MEFP",
+        "rss": ["https://news.google.com/rss/search?q=site:economiayfinanzas.gob.bo&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "ASFI",
+        "rss": ["https://news.google.com/rss/search?q=site:asfi.gob.bo&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "Aduana",
+        "rss": ["https://news.google.com/rss/search?q=site:aduana.gob.bo&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    # Gremios (T1):
+    {
+        "portal": "CAINCO",
+        "rss": ["https://news.google.com/rss/search?q=site:cainco.org.bo+OR+CAINCO+Bolivia&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "IBCE",
+        "rss": ["https://news.google.com/rss/search?q=site:ibce.org.bo+OR+IBCE+Bolivia&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "CEPB",
+        "rss": ["https://news.google.com/rss/search?q=site:cepb.org.bo+OR+CEPB+Bolivia&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
+    {
+        "portal": "CNI",
+        "rss": ["https://news.google.com/rss/search?q=site:cni.org.bo+OR+%22C%C3%A1mara+Nacional+de+Industrias%22&hl=es-419&gl=BO&ceid=BO:es"],
+        "scrape_urls": [], "scrape_selector": "",
+        "solo_bolivia": False, "metodo": "requests",
+    },
 ]
 
 

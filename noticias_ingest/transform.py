@@ -37,6 +37,18 @@ PORTAL_SLUGS = {
     "Urgente.bo": "urgente",
     "Opinión": "opinion",
     "Los Tiempos": "lostiempos",
+    # Fuentes nuevas (calibración 2026-06-21; pendiente validar yield en VPS).
+    "La Patria": "lapatria",
+    "El Mundo": "elmundo",
+    "BCB": "bcb",
+    "INE": "ine",
+    "MEFP": "mefp",
+    "ASFI": "asfi",
+    "Aduana": "aduana",
+    "CAINCO": "cainco",
+    "IBCE": "ibce",
+    "CEPB": "cepb",
+    "CNI": "cni",
 }
 
 # 11 temas (+ fallback "General") → category editorial de 5 cubos:
