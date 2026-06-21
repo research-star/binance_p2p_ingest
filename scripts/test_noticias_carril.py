@@ -3,8 +3,8 @@
 test_noticias_carril.py — Test del carril flag + category colapsada (FASE 3 Capa 2).
 
 Verifica:
-  - build_nota (carril='bolivia') y build_nota_latam (carril='latam', category='economia').
-  - category solo toma {economia, politica} en todos los temas + General.
+  - build_nota (carril='bolivia') y build_nota_latam (carril='latam', category='internacional').
+  - category ∈ {economia, finanzas, politica, internacional, otros}; General → 'otros'.
   - INSERT + SELECT con COALESCE(carril, ...) round-trip correcto.
   - Compatibilidad legacy: fila con carril NULL + category='latam' → COALESCE='latam'
     (así el bloque Latam del frontend no se rompe en filas viejas).
@@ -34,12 +34,17 @@ CARRIL_SQL = "COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'b
 def run():
     errores = []
 
-    # 1. category colapsada: todos los valores ∈ {economia, politica}.
+    # 1. category editorial: todos los valores ∈ {economia, finanzas, politica,
+    #    internacional, otros} (5 cubos honestos). 'General' → 'otros' (relleno),
+    #    NO se descarta ni se disfraza de economía.
+    CATS = {"economia", "finanzas", "politica", "internacional", "otros"}
     vals = set(TEMA_CATEGORIA.values())
-    if not vals <= {"economia", "politica"}:
-        errores.append(f"TEMA_CATEGORIA tiene valores fuera de {{economia,politica}}: {vals}")
-    if transform.categoria_de_tema("tema inexistente") not in ("economia", "politica"):
-        errores.append("default de categoria_de_tema fuera de {economia,politica}")
+    if not vals <= CATS:
+        errores.append(f"TEMA_CATEGORIA tiene valores fuera de {CATS}: {vals}")
+    if TEMA_CATEGORIA.get("General") != "otros":
+        errores.append(f"General debería mapear a 'otros', no {TEMA_CATEGORIA.get('General')!r}")
+    if transform.categoria_de_tema("tema inexistente") != "otros":
+        errores.append("default de categoria_de_tema debería ser 'otros'")
 
     ahora = datetime.now(timezone.utc)
 
@@ -61,8 +66,8 @@ def run():
     nlt = build_nota_latam(ahora, entry, ahora)
     if nlt.get("carril") != "latam":
         errores.append(f"build_nota_latam carril={nlt.get('carril')!r} (esperado 'latam')")
-    if nlt["category"] != "economia":
-        errores.append(f"build_nota_latam category={nlt['category']!r} (esperado 'economia', no 'latam')")
+    if nlt["category"] != "internacional":
+        errores.append(f"build_nota_latam category={nlt['category']!r} (esperado 'internacional')")
 
     # 4. INSERT + SELECT round-trip (incluye fila legacy con carril NULL).
     tmp = Path(tempfile.mkdtemp(prefix="fb_carril_test_"))
@@ -91,7 +96,8 @@ def run():
         for e in errores:
             print("  -", e)
         return 1
-    print("OK test_noticias_carril: carril BO/latam + category∈{economia,politica} + legacy COALESCE='latam'.")
+    print("OK test_noticias_carril: carril BO/latam + category∈{economia,finanzas,politica,"
+          "internacional,otros} (General→otros, latam→internacional) + legacy COALESCE='latam'.")
     return 0
 
 

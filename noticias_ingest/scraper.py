@@ -460,15 +460,38 @@ KEYWORDS_EXCLUIR = [
     "nasa ", "artemis", "astronaut",
     "sheinbaum", "elecciones en perú",
     "alerta epidemiológica", "viruela símica", "maltrato infantil",
+    # Farándula/entretenimiento reforzado (calibración 2026-06-21)
+    "reina de belleza", "certamen de belleza", "miss bolivia",
+    # Contenido patrocinado / publicidad (excluir por marcadores de texto; la
+    # exclusión por sección/URL se aplica aparte, vía es_url_patrocinada).
+    "contenido de marca", "contenido patrocinado", "espacio publicitario",
+    "espacio de marca", "publirreportaje", "branded content",
 ]
+
+# Rutas/secciones de contenido patrocinado a excluir por URL (decisión "ambas",
+# calibración 2026-06-21: marcadores de texto arriba + sección/URL acá). Se aplica
+# en la ingesta sobre c["link"] (evaluar() no recibe la URL).
+SECCIONES_PATROCINADAS = (
+    "/publicidad", "/publirreportaje", "/publireportaje", "/publinota",
+    "/contenido-de-marca", "/contenido-patrocinado", "/patrocinado",
+    "/branded", "/brand-studio", "/marcas/", "/espacio-publicitario",
+)
+
+
+def es_url_patrocinada(url: str) -> bool:
+    """True si la URL cae en una sección de contenido patrocinado/publicidad."""
+    u = (url or "").lower()
+    return any(p in u for p in SECCIONES_PATROCINADAS)
 
 TERMINOS_BOLIVIA = [
     "bolivia", "bolivian", "boliviano", "boliviana",
     "santa cruz", "la paz", "cochabamba", "sucre", "oruro", "potosí",
     "beni", "pando", "tarija", "el alto", "samaipata",
+    "uyuni", "yacuiba", "quillacollo", "riberalta", "tupiza", "camiri",
+    "llallagua", "villazón", "estado boliviano", "gobierno boliviano",
     "ypfb", "bcb", "mefp", "ofep", "central obrera", "ley 1720",
 ]
-PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}
+PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}  # legacy: el carril vivo (evaluar) exige Bolivia a TODOS los portales; esto solo afecta el fallback keywords (muerto en prod)
 
 
 # ---------------------------------------------------------------------------
@@ -625,10 +648,17 @@ _TEMA_SPEC = {
     "Bloqueos / Conflictos": {
         "strong": ["bloqueo", "bloqueos", "paro indefinido", "corte de ruta", "corte de rutas",
                    "cierre de rutas", "corte de carretera", "puntos de bloqueo", "punto de bloqueo",
-                   "paro civico", "huelga de hambre", "avasallamiento"],
-        "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia"],
+                   "paro civico", "huelga de hambre", "avasallamiento",
+                   # Vocabulario de crisis política (calibración 2026-06-21): la cobertura
+                   # de la crisis cae en Política, no en Otros/General.
+                   "estado de excepcion", "estado de sitio", "toque de queda",
+                   "comite multisectorial", "pacificacion del pais"],
+        "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia",
+                 "choferes", "transportistas", "bloqueadores", "pacificacion"],
         "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
-                    "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino"],
+                    "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino",
+                    "estado de excepcion", "central obrera", "pacificacion", "chofer",
+                    "multisectorial", "decreto supremo"],
         "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
                     "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
                     "marcha de la noticia"],
@@ -700,6 +730,22 @@ _ENTIDAD_SPEC = {
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 
+# Entidades cuya sola presencia ancla la nota en Bolivia (geo-gate universal).
+# Excluye organismos internacionales (FMI, BM, BID, CAF, calificadoras): por sí
+# solos no implican relevancia boliviana.
+ENTIDADES_BOLIVIANAS = {
+    "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "Gobierno", "ASFI", "ASOBAN", "INE",
+    "Aduana", "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "COB", "MEFP",
+    "TSE", "TED",
+}
+# Entidades que dan evidencia económica suficiente para CONSERVAR una nota "General"
+# (sin tema). Excluye las puramente políticas/electorales (Gobierno, TSE, TED, COB).
+ENTIDADES_ECONOMICAS = {
+    "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "ASFI", "ASOBAN", "INE", "Aduana",
+    "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "MEFP",
+    "FMI", "Banco Mundial", "BID", "CAF", "Fitch", "Moody's", "S&P",
+}
+
 
 def detectar_entidades(titulo: str, descripcion: str = "") -> list:
     """Entidades canónicas presentes (word-boundary, independiente del tema)."""
@@ -767,9 +813,14 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
             return 0, "", 0, [], None, None, "—", "keyword_excluida"
-    if portal in PORTALES_EXIGEN_BOLIVIA:
-        if not any(t in texto for t in TERMINOS_BOLIVIA):
-            return 0, "", 0, [], None, None, "—", "falta_bolivia"
+    # Geo-gate UNIVERSAL (antes solo PORTALES_EXIGEN_BOLIVIA): toda nota debe anclar
+    # en Bolivia — por término geográfico/adjetivo o por entidad boliviana detectada.
+    # Corta el ruido extranjero (sucesos/policiales de otros países) en TODOS los
+    # portales, no solo en tres.
+    entidades = detectar_entidades(titulo, descripcion)
+    if not (any(t in texto for t in TERMINOS_BOLIVIA)
+            or any(e in ENTIDADES_BOLIVIANAS for e in entidades)):
+        return 0, "", 0, [], None, None, "—", "falta_bolivia"
 
     # Intentar modelo TF-IDF
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
@@ -781,7 +832,12 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
         tema, tema_hits = _tema(titulo, descripcion)
-        entidades = detectar_entidades(titulo, descripcion)
+        # NO se descarta "General": una nota boliviana relevante sin tema de negocios
+        # entra como categoría 'otros' (relleno por relevancia, ver transform.py), NO se
+        # disfraza de ECONOMÍA ni se tira. Calibración 2026-06-21 contra las 96 notas
+        # publicadas: descartar por "General sin entidad económica" tiraba ~60-70% de
+        # noticia relevante mal rotulada (crisis de bloqueos/estado de excepción). El
+        # geo-gate + KEYWORDS_EXCLUIR + umbral del modelo siguen filtrando el ruido real.
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 

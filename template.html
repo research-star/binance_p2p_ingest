@@ -674,6 +674,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-titlelink{color:inherit;text-decoration:none}
 .np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-tambien{font-family:var(--font-body);font-size:10.5px;line-height:1.4;color:var(--text-muted);margin-top:7px}
+.np-tambien a{color:var(--text-muted);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.np-tambien a:hover{color:var(--up)}
 .np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
 /* — sesión / gestión de ocultas (PR-C3): barra SIEMPRE visible en Noticias.
@@ -4387,7 +4390,11 @@ window.addEventListener('popstate', function(){
 
   // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
   const NT_RANK = { alto:3, medio:2, bajo:1 };
-  function ntCmp(a,b){ const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
+  // 'otros' = nota boliviana relevante SIN tema de negocios → es RELLENO: ordena
+  // siempre DESPUÉS de los carriles de negocios (economía/finanzas/política), así
+  // solo aparece cuando faltan noticias de negocios. Calibración 2026-06-21.
+  function ntEsOtros(n){ return !!(n && n.category==='otros'); }
+  function ntCmp(a,b){ const ao=ntEsOtros(a)?1:0, bo=ntEsOtros(b)?1:0; if(ao!==bo) return ao-bo; const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
   // Carril del feed: campo dedicado `carril` (FASE 3, reemplaza el split por
   // category==='latam' que se rompía al colapsar category a {economia,politica}).
   // Fallback defensivo a la category vieja por si llega una nota sin carril
@@ -4397,7 +4404,7 @@ window.addEventListener('popstate', function(){
   function ntLatam(){ return ntVisible().filter(ntEsLatam).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
   function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
   // Categoría → nombre display (kicker). Fallback: capitaliza el slug crudo.
-  const NT_CAT_NAMES = { economia:'Economía', politica:'Política', hidrocarburos:'Hidrocarburos', agro:'Agro', mineria:'Minería', mundo:'Mundo', internacional:'Internacional', latam:'Internacional' };
+  const NT_CAT_NAMES = { economia:'Economía', finanzas:'Finanzas', politica:'Política', internacional:'Internacional', otros:'Otros', hidrocarburos:'Hidrocarburos', agro:'Agro', mineria:'Minería', mundo:'Mundo', latam:'Internacional' };
   function ntCatName(c){ return c ? (NT_CAT_NAMES[c] || (c.charAt(0).toUpperCase()+c.slice(1))) : ''; }
 
   // ── Navegación temporal (frontend; el payload ya trae hasta 30 días con fecha) ──
@@ -4456,8 +4463,37 @@ window.addEventListener('popstate', function(){
   // ── Átomos de markup ──
   function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
-  function npTitle(url,text){ return npLink(url, ntEsc(text)); }
+  // Poda del sufijo del medio en el título (" - El Deber", " | Correo del Sur", …).
+  // Solo corta colas RECONOCIDAS como nombre de medio (lista cerrada) → nunca toca el
+  // contenido real del titular ni los guiones internos (ej. "Bolivia–Perú: …", que usa
+  // en-dash sin espacios). Calibración 2026-06-21: títulos limpios.
+  const NT_SRC_SUFFIXES = ['el deber','correo del sur','los tiempos','la razon','el dia',
+    'brujula digital','brujula','unitel','eju!','eju','erbol','urgente.bo','urgente',
+    'opinion','agencia de noticias fides','anf agencia de noticias fides bolivia',
+    'noticias fides','anf','bloomberg linea','bloomberg'];
+  function ntCleanTitle(t){
+    if(!t) return t; var s=String(t).trim();
+    var m=s.match(/^(.*\S)\s+[-—|]\s+([^-—|]{1,60})$/);
+    if(m){
+      var tail=m[2].trim().toLowerCase().replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
+        .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u');
+      if(NT_SRC_SUFFIXES.indexOf(tail)!==-1) return m[1].trim();
+    }
+    return s;
+  }
+  function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
+  // "También en": otros medios que cubrieron el MISMO evento (calibración 2026-06-21).
+  // La representante (por tier de fuente) es la nota mostrada; acá van las demás con link.
+  function npTambienEn(n){
+    var t=n&&n.tambienEn; if(!t||!t.length) return '';
+    var parts=[];
+    for(var i=0;i<t.length&&i<4;i++){ var s=t[i]||{}, nm=ntEsc(ntPortalName(s.source));
+      parts.push((s.url&&/^https?:\/\//i.test(s.url))
+        ? '<a href="'+ntEsc(s.url)+'" target="_blank" rel="noopener noreferrer">'+nm+'</a>' : nm);
+    }
+    return '<p class="np-tambien">También en: '+parts.join(', ')+'</p>';
+  }
   // Slot de imagen — cascada: og:image (hotlink, carril BO) → GALERÍA temática
   // (match por `tema`, gallerySlug precomputado en dashboard.py) → placeholder CSS.
   // Si el og:image muere en runtime, onerror swappea a galería (window.npImgFail),
@@ -4503,7 +4539,8 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>';
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +npTambienEn(lead);
   }
   // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
   function npHero(){
@@ -4518,7 +4555,7 @@ window.addEventListener('popstate', function(){
   function npHeroLatam(){
     const lead=ntLatamLead(); if(!lead) return '';
     return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
-      +'<div class="np-kicker">'+ntEsc(ntCatName(lead.category)||'Internacional')+'</div>'
+      +'<div class="np-kicker">Internacional</div>'
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
@@ -4544,6 +4581,7 @@ window.addEventListener('popstate', function(){
       g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'+npKick(n)
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
+        +npTambienEn(n)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
         +'</div></article>';
     }
