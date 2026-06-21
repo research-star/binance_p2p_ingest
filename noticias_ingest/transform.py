@@ -37,6 +37,18 @@ PORTAL_SLUGS = {
     "Urgente.bo": "urgente",
     "Opinión": "opinion",
     "Los Tiempos": "lostiempos",
+    # Fuentes nuevas (calibración 2026-06-21; pendiente validar yield en VPS).
+    "La Patria": "lapatria",
+    "El Mundo": "elmundo",
+    "BCB": "bcb",
+    "INE": "ine",
+    "MEFP": "mefp",
+    "ASFI": "asfi",
+    "Aduana": "aduana",
+    "CAINCO": "cainco",
+    "IBCE": "ibce",
+    "CEPB": "cepb",
+    "CNI": "cni",
 }
 
 # 11 temas (+ fallback "General") → category editorial de 5 cubos:
@@ -94,6 +106,56 @@ def _truncar(texto: str, maximo: int) -> str:
     return texto[:corte].rstrip(" ,;:.") + "…"
 
 
+# Abreviaturas (es-BO) que llevan punto pero NO terminan oración — evitan cortar
+# en "EE.UU.", "$us.", "Dr.", "art.", etc. al armar el resumen extractivo.
+_ABREV = {
+    "ee", "uu", "art", "núm", "num", "no", "nro", "etc", "dr", "dra", "sr", "sra",
+    "srta", "lic", "ing", "arq", "av", "ud", "uds", "pág", "pag", "vol", "cap",
+    "us", "bs", "aprox", "máx", "mín", "gral", "tel", "ref", "depto", "ej",
+}
+# Candidato a fin de oración: signo . ! ? + espacio + arranque de oración nueva
+# (mayúscula/acento, dígito, o apertura de comillas/interrogación/exclamación).
+_FIN_ORACION = re.compile(r'([.!?])\s+(?=[«"“¿¡A-ZÁÉÍÓÚÑ0-9])')
+
+
+def _oraciones(texto: str) -> list:
+    """Parte texto en oraciones (heurística stdlib). Tolera abreviaturas e
+    iniciales comunes es-BO; no es perfecta, pero no corta en 'EE.UU.'/'$us.'."""
+    texto = (texto or "").strip()
+    if not texto:
+        return []
+    out, ini = [], 0
+    for m in _FIN_ORACION.finditer(texto):
+        izq = texto[ini:m.start()].strip()
+        ult = re.split(r"[\s(]+", izq)[-1].lower().rstrip(".") if izq else ""
+        # punto tras abreviatura o inicial de ≤2 letras → no es fin de oración
+        if m.group(1) == "." and (ult in _ABREV or (len(ult) <= 2 and ult.isalpha())):
+            continue
+        out.append(texto[ini:m.start() + 1].strip())
+        ini = m.end()
+    resto = texto[ini:].strip()
+    if resto:
+        out.append(resto)
+    return [o for o in out if o]
+
+
+def _resumen_extractivo(texto: str, maximo: int = SUMMARY_MAX) -> str:
+    """Resumen = 1-2 oraciones completas que entren en `maximo` chars (mejora
+    estética sobre el corte duro a 200; sin IA, calibración 2026-06-21). Si el
+    texto ya entra, se devuelve tal cual; si ni la primera oración entra, cae a
+    _truncar (corte por palabra + elipsis)."""
+    texto = (texto or "").strip()
+    if not texto or len(texto) <= maximo:
+        return texto
+    acc = ""
+    for o in _oraciones(texto)[:2]:  # como mucho 2 oraciones
+        cand = (acc + " " + o).strip() if acc else o
+        if len(cand) > maximo:
+            break
+        acc = cand
+    return acc if acc else _truncar(texto, maximo)
+
+
 def impact_de_puntaje(puntaje: float) -> str:
     """Bandas cerradas por el brief: >=8 alto · 7-7.99 medio · resto bajo.
     (El piso efectivo es 6.7: el corte de selección de ingest_noticias.py.)"""
@@ -125,7 +187,7 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
     descripcion = (cand.get("descripcion") or "").strip()
     cuerpo = (cand.get("cuerpo") or "").strip()
 
-    summary = _truncar(descripcion, SUMMARY_MAX) if descripcion else _truncar(cuerpo, SUMMARY_MAX)
+    summary = _resumen_extractivo(descripcion or cuerpo, SUMMARY_MAX)
     detail = _truncar(cuerpo, DETAIL_MAX) if cuerpo else descripcion
     dominio = urlparse(cand["link"]).netloc.replace("www.", "")
 
@@ -196,7 +258,7 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "category": "internacional",   # carril Latam → category 'internacional'; el carril va aparte
         "carril": "latam",        # discriminador del carril Latam (antes era category=='latam')
         "title": (getattr(entry, "title", "") or "").strip(),
-        "summary": _truncar(descripcion, SUMMARY_MAX),
+        "summary": _resumen_extractivo(descripcion, SUMMARY_MAX),
         "detail": _truncar(contenido, DETAIL_MAX) if contenido else descripcion,
         "topics": [],
         "impact": "medio",

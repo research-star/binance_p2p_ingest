@@ -4346,9 +4346,21 @@ window.addEventListener('popstate', function(){
     erbol:      { id:'erbol',      name:'Erbol',          full:'Erbol · La Paz',            color:'var(--src-erbol)' },
     urgente:    { id:'urgente',    name:'Urgente.bo',     full:'Urgente.bo · La Paz',       color:'var(--src-urgente)' },
     opinion:    { id:'opinion',    name:'Opinión',        full:'Opinión · Cochabamba',      color:'var(--src-opinion)' },
-    lostiempos: { id:'lostiempos', name:'Los Tiempos',    full:'Los Tiempos · Cochabamba',  color:'var(--src-lostiempos)' }
+    lostiempos: { id:'lostiempos', name:'Los Tiempos',    full:'Los Tiempos · Cochabamba',  color:'var(--src-lostiempos)' },
+    // Fuentes nuevas (calibración 2026-06-21; sin token --src-* propio → caen al muted).
+    lapatria: { id:'lapatria', name:'La Patria', full:'La Patria · Oruro',              color:'var(--src-lapatria, var(--text-muted))' },
+    elmundo:  { id:'elmundo',  name:'El Mundo',  full:'El Mundo · Santa Cruz',          color:'var(--src-elmundo, var(--text-muted))' },
+    bcb:      { id:'bcb',      name:'BCB',       full:'Banco Central de Bolivia',       color:'var(--src-bcb, var(--text-muted))' },
+    ine:      { id:'ine',      name:'INE',       full:'Inst. Nacional de Estadística',  color:'var(--src-ine, var(--text-muted))' },
+    mefp:     { id:'mefp',     name:'MEFP',      full:'Min. de Economía y Finanzas',    color:'var(--src-mefp, var(--text-muted))' },
+    asfi:     { id:'asfi',     name:'ASFI',      full:'ASFI · supervisión financiera',  color:'var(--src-asfi, var(--text-muted))' },
+    aduana:   { id:'aduana',   name:'Aduana',    full:'Aduana Nacional',                color:'var(--src-aduana, var(--text-muted))' },
+    cainco:   { id:'cainco',   name:'CAINCO',    full:'CAINCO · Santa Cruz',            color:'var(--src-cainco, var(--text-muted))' },
+    ibce:     { id:'ibce',     name:'IBCE',      full:'IBCE · comercio exterior',       color:'var(--src-ibce, var(--text-muted))' },
+    cepb:     { id:'cepb',     name:'CEPB',      full:'CEPB · empresarios privados',    color:'var(--src-cepb, var(--text-muted))' },
+    cni:      { id:'cni',      name:'CNI',       full:'Cámara Nacional de Industrias',  color:'var(--src-cni, var(--text-muted))' }
   };
-  const NOTICIAS_PORTAL_ORDER = ['eldeber','correosur','unitel','larazon','bloomberg','eju','eldia','brujula','fides','erbol','urgente','opinion','lostiempos'];
+  const NOTICIAS_PORTAL_ORDER = ['eldeber','correosur','unitel','larazon','bloomberg','eju','eldia','brujula','fides','erbol','urgente','opinion','lostiempos','lapatria','elmundo','bcb','ine','mefp','asfi','aduana','cainco','ibce','cepb','cni'];
   const NT_PAISES = { argentina:'Argentina', brasil:'Brasil', chile:'Chile', colombia:'Colombia', mexico:'México', peru:'Perú', uruguay:'Uruguay', paraguay:'Paraguay', ecuador:'Ecuador', bolivia:'Bolivia', venezuela:'Venezuela', panama:'Panamá' };
 
   // ── "Hoy" + helpers de fecha / escape ──
@@ -4393,7 +4405,7 @@ window.addEventListener('popstate', function(){
   // 'otros' = nota boliviana relevante SIN tema de negocios → es RELLENO: ordena
   // siempre DESPUÉS de los carriles de negocios (economía/finanzas/política), así
   // solo aparece cuando faltan noticias de negocios. Calibración 2026-06-21.
-  function ntEsOtros(n){ return !!(n && n.category==='otros'); }
+  function ntEsOtros(n){ return ntCategoria(n)==='otros'; }
   function ntCmp(a,b){ const ao=ntEsOtros(a)?1:0, bo=ntEsOtros(b)?1:0; if(ao!==bo) return ao-bo; const r=(NT_RANK[b.impact]||0)-(NT_RANK[a.impact]||0); return r!==0?r:String(b.date+b.time).localeCompare(String(a.date+a.time)); }
   // Carril del feed: campo dedicado `carril` (FASE 3, reemplaza el split por
   // category==='latam' que se rompía al colapsar category a {economia,politica}).
@@ -4406,6 +4418,25 @@ window.addEventListener('popstate', function(){
   // Categoría → nombre display (kicker). Fallback: capitaliza el slug crudo.
   const NT_CAT_NAMES = { economia:'Economía', finanzas:'Finanzas', politica:'Política', internacional:'Internacional', otros:'Otros', hidrocarburos:'Hidrocarburos', agro:'Agro', mineria:'Minería', mundo:'Mundo', latam:'Internacional' };
   function ntCatName(c){ return c ? (NT_CAT_NAMES[c] || (c.charAt(0).toUpperCase()+c.slice(1))) : ''; }
+  // Categoría editorial DERIVADA del `tema` (no del campo `category` guardado): así las
+  // notas viejas, rotuladas antes de la calibración 2026-06-21, muestran el rótulo HONESTO
+  // sin re-ingestar (la del "Estado de excepción" deja de salir ECONOMÍA). Espejo de
+  // transform.TEMA_CATEGORIA + fallback por keywords para tema 'General': crisis/política → Política, resto → Otros.
+  const NT_TEMA_CAT = { 'Combustibles / YPFB':'economia','Tipo de cambio / Dólar':'finanzas','Litio / Minería':'economia',
+    'Agropecuario / Soya':'economia','Deuda / Finanzas':'finanzas','Inflación / Precios':'economia',
+    'Exportaciones / Comercio':'economia','Inversión / Infraestructura':'economia','EMAPA / Alimentos':'economia',
+    'Elecciones / Política económica':'politica','Bloqueos / Conflictos':'politica' };
+  const NT_RE_POLITICA = /estado de excepci|toque de queda|estado de sitio|bloqueo|\bparo\b|conflicto|comit[eé] multisectorial|pacificaci|central obrera|\bcob\b|gabinete|asamblea legislativa|decreto supremo|\bchofer|transportist|movilizaci|\beleccion/i;
+  function ntCategoria(n){
+    if(!n) return '';
+    if(ntEsLatam(n)) return 'internacional';
+    var t=n.tema||'';
+    if(NT_TEMA_CAT[t]) return NT_TEMA_CAT[t];
+    // tema General/desconocido → fallback retroactivo por keywords (espejo del refuerzo de scraper.py)
+    var txt=((n.title||'')+' '+(n.summary||'')).toLowerCase();
+    if(NT_RE_POLITICA.test(txt)) return 'politica';
+    return 'otros';  // tema General sin señal política → relleno (regla acordada: General → Otros)
+  }
 
   // ── Navegación temporal (frontend; el payload ya trae hasta 30 días con fecha) ──
   const NT_LIMIT = 29;  // archivo: 30 días (offsets 0..29 desde NT_TODAY)
@@ -4531,7 +4562,7 @@ window.addEventListener('popstate', function(){
   };
 
   // ── Regiones ──
-  function npKick(n){ const c=ntCatName(n.category); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
+  function npKick(n){ const c=ntCatName(ntCategoria(n)); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
 
   // Cuerpo del hero (kicker + titular + imagen 16:10 con caption + fila de fuente).
   function npHeroBody(lead, kick){
