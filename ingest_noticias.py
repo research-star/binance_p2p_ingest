@@ -65,6 +65,11 @@ TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
 LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
 UMBRAL_DEDUP_DB = 0.70
+# Agrupación por EVENTO dentro de una corrida ("También en…"): título muy similar,
+# o moderadamente similar + entidades compartidas. Conservador (calibración
+# 2026-06-21): preferimos NO fusionar de más (un falso merge esconde una nota).
+UMBRAL_EVENTO_TIT = 0.70   # solo por título (igual al dedupe inter-día)
+UMBRAL_EVENTO_ENT = 0.50   # título moderado, exige ≥1 entidad compartida
 
 # Expresión SQL del carril, robusta a filas legacy (col `carril` aún NULL antes de
 # aplicar 0005 / backfill): usa la columna nueva con fallback a la category vieja
@@ -122,7 +127,8 @@ CREATE TABLE IF NOT EXISTS noticias (
     image_url       TEXT,               -- og:image hotlinkeable (carril BO, FASE 2a); NULL si no hay / El Deber / latam (col del ALTER de 0004).
     carril          TEXT,               -- 'bolivia'|'latam': carril del feed (antes implícito en category=='latam'). Col del ALTER de 0005.
     tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
-    entidades       TEXT                -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
+    entidades       TEXT,               -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
+    tambien_en      TEXT                -- JSON [{source,portal,url}] del mismo evento en otros medios (calibración 2026-06-21).
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
@@ -130,7 +136,8 @@ CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 # Columnas añadidas por ALTER (0005): no las crea CREATE TABLE IF NOT EXISTS sobre
 # una tabla preexistente. (col, decl) — el self-migrate de init_schema las agrega
 # idempotente; tema/puntaje ya existen de 0002.
-_COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"))
+_COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
+            ("tambien_en", "TEXT"))  # tambien_en: calibración 2026-06-21 ("También en…")
 
 
 def init_schema(conn: sqlite3.Connection):
@@ -167,6 +174,72 @@ def es_repetida(titulo: str, titulos_previos: list) -> bool:
     return False
 
 
+# ── Agrupación por evento + tier de fuente ("También en…") ──────────────────
+
+# Tier de autoridad para elegir la REPRESENTANTE de un grupo del mismo evento
+# (calibración 2026-06-21: oficiales/gremios = T1). Los slugs oficiales/gremios
+# todavía NO se ingieren (ver "fuentes nuevas"); quedan listados para cuando se
+# sumen. Default = T3. Es solo desempate de representante: NO altera el ranking
+# por relevancia (los grupos se ordenan por su puntaje máximo).
+SOURCE_TIER = {
+    # T1 — fuentes primarias: oficiales + gremios (forward-looking).
+    "bcb": 1, "ine": 1, "mefp": 1, "aduana": 1, "ypfb": 1,
+    "cainco": 1, "ibce": 1, "cepb": 1, "cni": 1, "cao": 1, "anapo": 1,
+    # T2 — periódicos grandes / agencia premium.
+    "bloomberg": 2, "eldeber": 2, "lostiempos": 2, "larazon": 2,
+    "eldia": 2, "correosur": 2, "brujula": 2,
+    # T3 (default) — resto: unitel, eju, fides, erbol, urgente, opinion.
+}
+
+
+def source_tier(slug: str) -> int:
+    return SOURCE_TIER.get(slug, 3)
+
+
+def _mismo_evento(a: dict, b: dict) -> bool:
+    """¿a y b cubren el mismo evento? Título muy similar, o moderadamente similar
+    + al menos una entidad canónica compartida."""
+    sim = scraper.similitud(scraper._titulo_limpio(a["title"]),
+                            scraper._titulo_limpio(b["title"]))
+    if sim >= UMBRAL_EVENTO_TIT:
+        return True
+    if sim >= UMBRAL_EVENTO_ENT:
+        return bool(set(a.get("entidades") or []) & set(b.get("entidades") or []))
+    return False
+
+
+def agrupar_eventos(notas: list) -> list:
+    """Colapsa notas del MISMO evento (misma corrida) a UNA representante que lleva
+    `tambien_en` = [{source, portal, url}] de las demás. La representante es la de
+    MENOR tier (desempate: mayor puntaje). Los grupos se devuelven ordenados por su
+    puntaje MÁXIMO (relevancia del evento), no por el de la representante. NO hace
+    dedupe inter-día (eso sigue en es_repetida). Asume `notas` pre-ordenadas por
+    puntaje desc (así grp[0], usado para el match, es la de mayor puntaje del grupo)."""
+    grupos = []  # list[list[nota]]
+    for n in notas:
+        g = next((grp for grp in grupos if _mismo_evento(n, grp[0])), None)
+        if g is None:
+            grupos.append([n])
+        else:
+            g.append(n)
+    reps = []
+    for g in grupos:
+        gmax = max(x["puntaje"] for x in g)
+        g.sort(key=lambda x: (source_tier(x["source"]), -x["puntaje"]))
+        rep = g[0]
+        vistos, te = {rep["source"]}, []
+        for o in g[1:]:
+            if o["source"] in vistos:
+                continue
+            vistos.add(o["source"])
+            te.append({"source": o["source"], "portal": o["portal"], "url": o["url"]})
+        if te:
+            rep["tambien_en"] = te
+        reps.append((gmax, rep))
+    reps.sort(key=lambda x: -x[0])
+    return [r for _, r in reps]
+
+
 # ── Inserción común ───────────────────────────────────────────────────────
 
 def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
@@ -177,14 +250,15 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
                 score_crudo, score_ajustado, created_at_utc, image_url, carril,
-                tema_hits, entidades)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                tema_hits, entidades, tambien_en)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
              n["puntaje"], n["score_crudo"], n["score_ajustado"],
              n["created_at_utc"], n.get("image_url"), n.get("carril"),
-             n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False)))
+             n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False),
+             json.dumps(n.get("tambien_en") or [], ensure_ascii=False)))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
@@ -248,6 +322,12 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
         seleccion.sort(key=lambda n: -n["puntaje"])
         res["sobre_umbral"] = len(seleccion)
+        # Agrupa por evento ("También en…"): colapsa la misma noticia cubierta por
+        # varios medios a UNA representante (tier de fuente manda) que lleva las
+        # otras fuentes en tambien_en. Antes del presupuesto → menos casi-duplicados
+        # en el feed. Calibración 2026-06-21.
+        seleccion = agrupar_eventos(seleccion)
+        res["eventos"] = len(seleccion)
 
         # Presupuesto diario: descuenta lo ya insertado hoy en ESTE carril
         # (excluye latam: presupuestos independientes). El carril ya no se deriva

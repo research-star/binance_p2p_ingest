@@ -674,6 +674,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-titlelink{color:inherit;text-decoration:none}
 .np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-tambien{font-family:var(--font-body);font-size:10.5px;line-height:1.4;color:var(--text-muted);margin-top:7px}
+.np-tambien a{color:var(--text-muted);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+.np-tambien a:hover{color:var(--up)}
 .np-latam-stand{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .np-empty{padding:30px 8px;text-align:center;color:var(--text-soft);font-family:var(--font-body);font-size:13px;font-style:italic}
 /* — sesión / gestión de ocultas (PR-C3): barra SIEMPRE visible en Noticias.
@@ -4480,6 +4483,17 @@ window.addEventListener('popstate', function(){
   }
   function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
+  // "También en": otros medios que cubrieron el MISMO evento (calibración 2026-06-21).
+  // La representante (por tier de fuente) es la nota mostrada; acá van las demás con link.
+  function npTambienEn(n){
+    var t=n&&n.tambienEn; if(!t||!t.length) return '';
+    var parts=[];
+    for(var i=0;i<t.length&&i<4;i++){ var s=t[i]||{}, nm=ntEsc(ntPortalName(s.source));
+      parts.push((s.url&&/^https?:\/\//i.test(s.url))
+        ? '<a href="'+ntEsc(s.url)+'" target="_blank" rel="noopener noreferrer">'+nm+'</a>' : nm);
+    }
+    return '<p class="np-tambien">También en: '+parts.join(', ')+'</p>';
+  }
   // Slot de imagen — cascada: og:image (hotlink, carril BO) → GALERÍA temática
   // (match por `tema`, gallerySlug precomputado en dashboard.py) → placeholder CSS.
   // Si el og:image muere en runtime, onerror swappea a galería (window.npImgFail),
@@ -4525,7 +4539,8 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +(lead.summary?'<figcaption class="np-hero-cap">'+ntEsc(lead.summary)+'</figcaption>':'')+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>';
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +npTambienEn(lead);
   }
   // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
   function npHero(){
@@ -4566,6 +4581,7 @@ window.addEventListener('popstate', function(){
       g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'+npKick(n)
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',n.summary)
+        +npTambienEn(n)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
         +'</div></article>';
     }
