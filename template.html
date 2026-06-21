@@ -2787,18 +2787,21 @@ window.renderBloqueos = function(){
   }
   // Traza de puntos según vista: intensidad (opacidad log por días) o activos (rojo sólido).
   function markersTrace(view){
+    // Etiqueta = nombre del tramo (sección); fallback a coordenadas si faltara.
+    function lab(p){ return p.sec || (p.lat.toFixed(3)+', '+p.lon.toFixed(3)); }
     if(view==='activos'){
       return {type:'scattergeo', mode:'markers',
         lat: ptosAct.map(function(p){return p.lat;}), lon: ptosAct.map(function(p){return p.lon;}),
         marker:{size:7, color:'rgb(192,0,0)', opacity:0.85, line:{width:0.5, color:'#ffffff'}},
-        hovertemplate:'Bloqueo activo<br>%{lat:.3f}, %{lon:.3f}<extra></extra>'};
+        customdata: ptosAct.map(lab),
+        hovertemplate:'<b>%{customdata}</b><br>Bloqueo activo<extra></extra>'};
     }
     return {type:'scattergeo', mode:'markers',
       lat: ptosInt.map(function(p){return p.lat;}), lon: ptosInt.map(function(p){return p.lon;}),
       marker:{size:6, line:{width:0},
         color: ptosInt.map(function(p){ var a=0.12+0.78*(Math.log(p.dias+1)/lmax); return 'rgba(192,0,0,'+a.toFixed(3)+')'; })},
-      customdata: ptosInt.map(function(p){return p.dias;}),
-      hovertemplate:'%{customdata} días bloqueado desde el 1 may<br>%{lat:.3f}, %{lon:.3f}<extra></extra>'};
+      customdata: ptosInt.map(function(p){return [lab(p), p.dias];}),
+      hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[1]} días bloqueado desde el 1 may<extra></extra>'};
   }
   function drawMapa(geo, view){
     var traces = [];
