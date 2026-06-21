@@ -39,27 +39,34 @@ PORTAL_SLUGS = {
     "Los Tiempos": "lostiempos",
 }
 
-# 11 temas (+ fallback "General") → category COLAPSADA a 2 cubos (FASE 3,
-# Capa 2): {economia, politica}. Antes había 6 cubos (hidrocarburos/agro/
-# mineria/latam/economia/politica), pero el frontend no usa category para
-# chips/colores/routing (recon FASE 3) — solo partía el carril Latam vía
-# category=='latam', cosa que ahora hace el campo dedicado `carril`. El tema
-# fino (oro, dólar, YPFB…) y la confianza viven en `tema`/`tema_hits`/`topics`,
-# no en category. "latam" YA NO es un valor de category: el carril Latam se
-# marca con carril='latam' (build_nota_latam) y su category es 'economia'.
+# 11 temas (+ fallback "General") → category editorial de 5 cubos:
+# {economia, finanzas, politica, internacional, otros}.
+#   · Economía  = economía real/productiva (energía, agro, minería, comercio,
+#                 infraestructura, alimentos, precios).
+#   · Finanzas  = dólar/tipo de cambio, banca, deuda, riesgo país.
+#   · Política  = electoral + conflicto social/bloqueos (afecta la actividad).
+#   · Internacional = carril Latam (lo marca el campo `carril`, no este mapa).
+#   · Otros     = nota boliviana relevante SIN tema de negocios (diplomacia,
+#                 seguridad, etc.). NO se descarta: entra como relleno por
+#                 relevancia cuando faltan noticias de negocios. Es el destino
+#                 de "General" (calibración 2026-06-21: matar General tiraba
+#                 ~60-70% de noticia relevante mal rotulada — ver evaluar()).
+# El tema fino (oro, dólar, YPFB…) y la confianza viven en `tema`/`tema_hits`/
+# `topics`, no en category. El carril Latam se marca con carril='latam'
+# (build_nota_latam) y su category es 'internacional'.
 TEMA_CATEGORIA = {
     "Combustibles / YPFB": "economia",
-    "Tipo de cambio / Dólar": "economia",
+    "Tipo de cambio / Dólar": "finanzas",
     "Litio / Minería": "economia",
     "Agropecuario / Soya": "economia",
-    "Deuda / Finanzas": "economia",
+    "Deuda / Finanzas": "finanzas",
     "Inflación / Precios": "economia",
     "Exportaciones / Comercio": "economia",
     "Inversión / Infraestructura": "economia",
     "Elecciones / Política económica": "politica",
     "Bloqueos / Conflictos": "politica",
     "EMAPA / Alimentos": "economia",
-    "General": "economia",
+    "General": "otros",
 }
 
 SUMMARY_MAX = 200
@@ -98,7 +105,7 @@ def impact_de_puntaje(puntaje: float) -> str:
 
 
 def categoria_de_tema(tema: str) -> str:
-    return TEMA_CATEGORIA.get(tema, "economia")
+    return TEMA_CATEGORIA.get(tema, "otros")
 
 
 def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
@@ -186,7 +193,7 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "date": pub_bo.strftime("%Y-%m-%d"),
         "time": pub_bo.strftime("%H:%M"),
         "source": "bloomberg",
-        "category": "economia",   # category colapsada {economia,politica}; el carril va aparte
+        "category": "internacional",   # carril Latam → category 'internacional'; el carril va aparte
         "carril": "latam",        # discriminador del carril Latam (antes era category=='latam')
         "title": (getattr(entry, "title", "") or "").strip(),
         "summary": _truncar(descripcion, SUMMARY_MAX),

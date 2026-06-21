@@ -460,6 +460,12 @@ KEYWORDS_EXCLUIR = [
     "nasa ", "artemis", "astronaut",
     "sheinbaum", "elecciones en perú",
     "alerta epidemiológica", "viruela símica", "maltrato infantil",
+    # Farándula/entretenimiento reforzado (calibración 2026-06-21)
+    "reina de belleza", "certamen de belleza", "miss bolivia",
+    # Contenido patrocinado / publicidad (excluir por marcadores de texto; la
+    # exclusión por sección/URL se aplica aparte, en la ingesta).
+    "contenido de marca", "contenido patrocinado", "espacio publicitario",
+    "espacio de marca", "publirreportaje", "branded content",
 ]
 
 TERMINOS_BOLIVIA = [
@@ -627,10 +633,17 @@ _TEMA_SPEC = {
     "Bloqueos / Conflictos": {
         "strong": ["bloqueo", "bloqueos", "paro indefinido", "corte de ruta", "corte de rutas",
                    "cierre de rutas", "corte de carretera", "puntos de bloqueo", "punto de bloqueo",
-                   "paro civico", "huelga de hambre", "avasallamiento"],
-        "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia"],
+                   "paro civico", "huelga de hambre", "avasallamiento",
+                   # Vocabulario de crisis política (calibración 2026-06-21): la cobertura
+                   # de la crisis cae en Política, no en Otros/General.
+                   "estado de excepcion", "estado de sitio", "toque de queda",
+                   "comite multisectorial", "pacificacion del pais"],
+        "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia",
+                 "choferes", "transportistas", "bloqueadores", "pacificacion"],
         "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
-                    "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino"],
+                    "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino",
+                    "estado de excepcion", "central obrera", "pacificacion", "chofer",
+                    "multisectorial", "decreto supremo"],
         "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
                     "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
                     "marcha de la noticia"],
@@ -778,7 +791,7 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     - entidades: list[str] de entidades canónicas detectadas (independiente del tema).
     - score_crudo / score_ajustado: floats 0-1 (None si no hubo modelo).
     - ajuste_aplicado: string descriptivo ("—" si no hubo).
-    - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral", "general_sin_clasificar".
+    - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral".
     """
     # Siempre aplicar exclusiones básicas primero
     texto = (titulo + " " + descripcion).lower()
@@ -804,12 +817,12 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
         tema, tema_hits = _tema(titulo, descripcion)
-        # Matar el fallback "General→economía": una nota sin tema real solo entra si
-        # trae evidencia económica (entidad económica). Si no clasifica y no hay señal
-        # económica, se descarta — no se disfraza de ECONOMÍA.
-        if tema == "General" and not any(e in ENTIDADES_ECONOMICAS for e in entidades):
-            return (0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4),
-                    ajuste, "general_sin_clasificar")
+        # NO se descarta "General": una nota boliviana relevante sin tema de negocios
+        # entra como categoría 'otros' (relleno por relevancia, ver transform.py), NO se
+        # disfraza de ECONOMÍA ni se tira. Calibración 2026-06-21 contra las 96 notas
+        # publicadas: descartar por "General sin entidad económica" tiraba ~60-70% de
+        # noticia relevante mal rotulada (crisis de bloqueos/estado de excepción). El
+        # geo-gate + KEYWORDS_EXCLUIR + umbral del modelo siguen filtrando el ruido real.
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 
