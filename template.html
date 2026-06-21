@@ -114,9 +114,9 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 /* — Mobiliario editorial estilo Financial Times (scoped: Dólar + Inflación):
    títulos serif con la rayita negra arriba (sello FT) + fuente abajo-izquierda — */
 #tab-dolar .section-header .sh-left>h2::before,
-#subtab-inflacion .fb-chart-title::before{content:'';display:block;width:32px;height:3px;background:var(--text-primary);margin-bottom:9px;border-radius:1px}
-#subtab-inflacion .fb-chart-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;letter-spacing:-.005em}
-#tab-dolar .fb-chart-source,#subtab-inflacion .fb-chart-source{text-align:left;font-style:normal;color:var(--text-muted)}
+#subtab-inflacion .fb-chart-title::before,#subtab-riesgo .fb-chart-title::before{content:'';display:block;width:32px;height:3px;background:var(--text-primary);margin-bottom:9px;border-radius:1px}
+#subtab-inflacion .fb-chart-title,#subtab-riesgo .fb-chart-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;letter-spacing:-.005em}
+#tab-dolar .fb-chart-source,#subtab-inflacion .fb-chart-source,#subtab-riesgo .fb-chart-source{text-align:left;font-style:normal;color:var(--text-muted)}
 .section-body{padding:16px 20px 20px}
 
 /* ── Rank tables (entity lists with sortable headers) ──
@@ -1342,7 +1342,7 @@ let last = null;
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-neutral':'#0D7680','color-accent-warm':'#FF8833','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#c7860a','chart-color-latino':'#7d8185','chart-color-global':'#adb1b6','chart-color-argentina':'#4696d3','chart-color-brasil':'#489450','chart-color-chile':'#c35141','chart-color-colombia':'#384e8f','chart-color-ecuador':'#c9c66a','chart-color-mexico':'#066e70','chart-color-peru':'#932c50','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#284d83','chart-debt-em2022':'#327a41','chart-debt-em2026':'#a14b46','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-neutral':'#0D7680','color-accent-warm':'#FF8833','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -3907,7 +3907,12 @@ window.addEventListener('popstate', function(){
         spikethickness: 1,
         spikedash: 'dot',
         spikecolor: spikec,
-        showline: false,
+        showline: true,
+        linecolor: 'rgba(33,30,27,.5)',
+        linewidth: 1,
+        ticks: 'outside',
+        tickcolor: 'rgba(33,30,27,.5)',
+        ticklen: 4,
         zeroline: false
       },
       yaxis: {
@@ -4075,7 +4080,7 @@ window.addEventListener('popstate', function(){
       barmode:'stack',
       bargap:0.35,
       margin:{l:56, r:16, t:8, b:64},
-      xaxis:{type:'category', showgrid:false, tickangle:0, showline:false, zeroline:false},
+      xaxis:{type:'category', showgrid:false, tickangle:0, showline:true, linecolor:'rgba(33,30,27,.5)', linewidth:1, ticks:'outside', tickcolor:'rgba(33,30,27,.5)', ticklen:4, zeroline:false},
       yaxis:{tickformat:',d', showgrid:true, gridcolor:gridc, zeroline:false,
              rangemode:'tozero', title:{text:'USD MM', font:{size:10, color:fontc}}},
       hovermode:'x unified',
