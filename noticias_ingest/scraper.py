@@ -466,9 +466,11 @@ TERMINOS_BOLIVIA = [
     "bolivia", "bolivian", "boliviano", "boliviana",
     "santa cruz", "la paz", "cochabamba", "sucre", "oruro", "potosí",
     "beni", "pando", "tarija", "el alto", "samaipata",
+    "uyuni", "yacuiba", "quillacollo", "riberalta", "tupiza", "camiri",
+    "llallagua", "villazón", "estado boliviano", "gobierno boliviano",
     "ypfb", "bcb", "mefp", "ofep", "central obrera", "ley 1720",
 ]
-PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}
+PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}  # legacy: el carril vivo (evaluar) exige Bolivia a TODOS los portales; esto solo afecta el fallback keywords (muerto en prod)
 
 
 # ---------------------------------------------------------------------------
@@ -700,6 +702,22 @@ _ENTIDAD_SPEC = {
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 
+# Entidades cuya sola presencia ancla la nota en Bolivia (geo-gate universal).
+# Excluye organismos internacionales (FMI, BM, BID, CAF, calificadoras): por sí
+# solos no implican relevancia boliviana.
+ENTIDADES_BOLIVIANAS = {
+    "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "Gobierno", "ASFI", "ASOBAN", "INE",
+    "Aduana", "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "COB", "MEFP",
+    "TSE", "TED",
+}
+# Entidades que dan evidencia económica suficiente para CONSERVAR una nota "General"
+# (sin tema). Excluye las puramente políticas/electorales (Gobierno, TSE, TED, COB).
+ENTIDADES_ECONOMICAS = {
+    "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "ASFI", "ASOBAN", "INE", "Aduana",
+    "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "MEFP",
+    "FMI", "Banco Mundial", "BID", "CAF", "Fitch", "Moody's", "S&P",
+}
+
 
 def detectar_entidades(titulo: str, descripcion: str = "") -> list:
     """Entidades canónicas presentes (word-boundary, independiente del tema)."""
@@ -760,16 +778,21 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     - entidades: list[str] de entidades canónicas detectadas (independiente del tema).
     - score_crudo / score_ajustado: floats 0-1 (None si no hubo modelo).
     - ajuste_aplicado: string descriptivo ("—" si no hubo).
-    - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral".
+    - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral", "general_sin_clasificar".
     """
     # Siempre aplicar exclusiones básicas primero
     texto = (titulo + " " + descripcion).lower()
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
             return 0, "", 0, [], None, None, "—", "keyword_excluida"
-    if portal in PORTALES_EXIGEN_BOLIVIA:
-        if not any(t in texto for t in TERMINOS_BOLIVIA):
-            return 0, "", 0, [], None, None, "—", "falta_bolivia"
+    # Geo-gate UNIVERSAL (antes solo PORTALES_EXIGEN_BOLIVIA): toda nota debe anclar
+    # en Bolivia — por término geográfico/adjetivo o por entidad boliviana detectada.
+    # Corta el ruido extranjero (sucesos/policiales de otros países) en TODOS los
+    # portales, no solo en tres.
+    entidades = detectar_entidades(titulo, descripcion)
+    if not (any(t in texto for t in TERMINOS_BOLIVIA)
+            or any(e in ENTIDADES_BOLIVIANAS for e in entidades)):
+        return 0, "", 0, [], None, None, "—", "falta_bolivia"
 
     # Intentar modelo TF-IDF
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
@@ -781,7 +804,12 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
         tema, tema_hits = _tema(titulo, descripcion)
-        entidades = detectar_entidades(titulo, descripcion)
+        # Matar el fallback "General→economía": una nota sin tema real solo entra si
+        # trae evidencia económica (entidad económica). Si no clasifica y no hay señal
+        # económica, se descarta — no se disfraza de ECONOMÍA.
+        if tema == "General" and not any(e in ENTIDADES_ECONOMICAS for e in entidades):
+            return (0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4),
+                    ajuste, "general_sin_clasificar")
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 
