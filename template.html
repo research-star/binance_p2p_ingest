@@ -111,6 +111,12 @@ body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--fo
 .section-header{padding:16px 20px 12px;border-bottom:1px solid var(--border-color)}
 .section-header h2{font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;letter-spacing:-.005em;color:var(--text-primary)}
 .section-header p{font-size:var(--text-base);font-weight:400;color:var(--text-muted);margin-top:3px;line-height:1.4}
+/* — Mobiliario editorial estilo Financial Times (scoped: Dólar + Inflación):
+   títulos serif con la rayita negra arriba (sello FT) + fuente abajo-izquierda — */
+#tab-dolar .section-header .sh-left>h2::before,
+#subtab-inflacion .fb-chart-title::before{content:'';display:block;width:32px;height:3px;background:var(--text-primary);margin-bottom:9px;border-radius:1px}
+#subtab-inflacion .fb-chart-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;letter-spacing:-.005em}
+#tab-dolar .fb-chart-source,#subtab-inflacion .fb-chart-source{text-align:left;font-style:normal;color:var(--text-muted)}
 .section-body{padding:16px 20px 20px}
 
 /* ── Rank tables (entity lists with sortable headers) ──
