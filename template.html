@@ -4490,8 +4490,11 @@ window.addEventListener('popstate', function(){
   }
   function npMarketsData(){
     const tm=(typeof DATA!=='undefined'&&DATA.ts_metrics)||{};
-    const vb=npLastNum(tm.vb10), vs=npLastNum(tm.vs10);
-    const p2p=(npNum(vb)&&npNum(vs))?(vb+vs)/2:(npNum(vb)?vb:(npNum(vs)?vs:null));
+    // Ticker muestra la serie "compra" (vb10 = "USDT Compra" del tab Dólar / dashboard.py:513),
+    // NO el promedio (decisión cerrada). null-guard: si compra falta → '—' (no se sustituye por
+    // venta: "huecos visibles, no rellenados").
+    const vb=npLastNum(tm.vb10);
+    const p2p=npNum(vb)?vb:null;
     const bcb=(typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null;
     let primaSub='s/d', primaDir='flat';
     if(npNum(p2p)&&npNum(bcb)&&bcb>0){ primaSub='prima +'+npFmt((p2p/bcb-1)*100,0)+'%'; primaDir='up'; }
