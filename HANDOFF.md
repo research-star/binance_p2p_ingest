@@ -642,7 +642,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
-- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia ~14×/día (horario 07:07–20:07 BO desde 2026-06-23) → period 1-2h (configurado en Healthchecks 2026-06-23).
+- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia ~14×/día (horario 07:07–20:07 BO desde 2026-06-23). Monitoreo en **modo Cron** (cron expression `7 0,11-23 * * *`, timezone **UTC**, grace time **2h**). **NO usar modo Simple/period**: el cron tiene gap nocturno (~11h sin corridas, 20:07→07:07 BO) que un period fijo interpretaría como caída y dispararía falsa alarma cada noche.
 
 **SSH desde laptop:**
 ```bash
