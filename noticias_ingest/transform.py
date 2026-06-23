@@ -196,7 +196,11 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "date": ahora_bo.strftime("%Y-%m-%d"),
         "time": ahora_bo.strftime("%H:%M"),
         "source": PORTAL_SLUGS.get(portal, _slugify(portal)),
-        "category": categoria_de_tema(tema),
+        # Opinión (WS4 funnel-v2) tiene categoría propia en el data layer; si no, la
+        # category sale del tema. (El frontend hoy deriva el rótulo del `tema`, no de
+        # este campo: 'opinion' viaja a la DB/payload pero es inerte en la UI hasta el
+        # ticket visual — verificado SAFE, no rompe ni esconde nada.)
+        "category": "opinion" if cand.get("es_opinion") else categoria_de_tema(tema),
         "carril": "bolivia",   # carril del feed (frontend parte Bolivia/Latam por acá, no por category)
         "title": cand["titulo"].strip(),
         "summary": summary,

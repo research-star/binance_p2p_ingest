@@ -570,6 +570,34 @@ def es_url_patrocinada(url: str) -> bool:
     u = (url or "").lower()
     return any(p in u for p in SECCIONES_PATROCINADAS)
 
+
+# Opinión / columna / editorial (WS4 funnel-v2): NO se mata. El data layer le pone
+# category='opinion' (categoría propia) y el ajuste editorial la penaliza ×0.7. Se
+# detecta por sección de URL o por marcador en el título.
+OPINION_URL_SECCIONES = (
+    "/opinion/", "/opiniones/", "/opinion-y-analisis/",
+    "/columna/", "/columnas/", "/columnistas/",
+    "/editorial/", "/editoriales/",
+)
+_RE_OPINION_TIT = re.compile(
+    r"\|\s*opini[oó]n\s*\|"            # ...| OPINIÓN |... (byline-marker pipe)
+    r"|^\s*opini[oó]n\s*[:|\-–]"       # OPINIÓN: / OPINIÓN - al inicio
+    r"|^\s*columna\s*[:|\-–]"          # COLUMNA: al inicio
+    r"|^\s*editorial\s*[:|\-–]",       # EDITORIAL: al inicio
+    re.IGNORECASE,
+)
+
+
+def es_opinion(titulo: str, url: str = "") -> bool:
+    """True si la nota es opinión/columna/editorial (sección de URL o marcador de
+    título). Conservador: solo marcadores inequívocos — NO infiere opinión por
+    byline de nombre suelto (demasiado falso-positivo sobre nota dura)."""
+    u = (url or "").lower()
+    if any(s in u for s in OPINION_URL_SECCIONES):
+        return True
+    return bool(_RE_OPINION_TIT.search(titulo or ""))
+
+
 TERMINOS_BOLIVIA = [
     "bolivia", "bolivian", "boliviano", "boliviana",
     "santa cruz", "la paz", "cochabamba", "sucre", "oruro", "potosí",
@@ -917,7 +945,7 @@ def score_keywords(titulo: str, descripcion: str, portal: str) -> tuple:
     return mejor, tema, conf
 
 
-def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
+def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False) -> tuple:
     """
     Devuelve (puntaje, tema, tema_hits, entidades, score_crudo, score_ajustado,
               ajuste_aplicado, descartado_por).
@@ -954,8 +982,8 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
     if prob_crudo >= 0:
         # Ajustar score con reglas editoriales
-        prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal)
-        ajuste = detectar_ajuste(titulo, descripcion, portal)
+        prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal, es_opinion)
+        ajuste = detectar_ajuste(titulo, descripcion, portal, es_opinion)
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
@@ -1009,7 +1037,8 @@ _RE_FX = re.compile(
 _BONUS_PORTAL = {"El Deber": 1.15, "Correo del Sur": 1.10, "La Razón": 1.10}
 
 
-def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "") -> float:
+def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "",
+                  es_opinion: bool = False) -> float:
     """Ajusta el score del modelo con reglas editoriales."""
     texto = (titulo + " " + descripcion).lower()
     tit = titulo.lower()
@@ -1030,6 +1059,12 @@ def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "")
     if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
         return score * 0.5
 
+    # Penalización opinión (x0.7, WS4 funnel-v2): columna/editorial NO se mata
+    # (lleva category='opinion' propia en transform), pero se penaliza y NO recibe
+    # los bonos de portal/FX/instituciones (early-return antes de la bonificación).
+    if es_opinion:
+        return score * 0.7
+
     # Bonificación instituciones (x1.3, max 1.0)
     menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
     if len(menciones) >= 2:
@@ -1047,7 +1082,8 @@ def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "")
     return score
 
 
-def detectar_ajuste(titulo: str, descripcion: str, portal: str) -> str:
+def detectar_ajuste(titulo: str, descripcion: str, portal: str,
+                    es_opinion: bool = False) -> str:
     """Devuelve string descriptivo de qué reglas de ajustar_score se dispararon."""
     texto = (titulo + " " + descripcion).lower()
     tit = titulo.lower()
@@ -1063,6 +1099,8 @@ def detectar_ajuste(titulo: str, descripcion: str, portal: str) -> str:
         return "×0.5 marihuana"
     if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
         return "×0.5 intl sin Bolivia"
+    if es_opinion:
+        return "×0.7 opinión"
     partes = []
     menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
     if len(menciones) >= 2:
@@ -1406,9 +1444,13 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
             for item in items_raw:
                 if cache.ya_vista(item["link"]):
                     continue
+                # Opinión/columna/editorial (WS4): se detecta acá porque la URL
+                # (item["link"]) vive en el loop, no en evaluar(). Penaliza ×0.7 el
+                # score y marca la nota para category='opinion' en transform.build_nota.
+                es_op = es_opinion(item["titulo"], item["link"])
                 (puntaje, tema, tema_hits, entidades, sc_crudo, sc_ajustado,
                  ajuste, descartado_por) = evaluar(
-                    item["titulo"], item["descripcion"], portal)
+                    item["titulo"], item["descripcion"], portal, es_opinion=es_op)
                 if puntaje == 0:
                     if descartado_por:
                         descartados.append({
@@ -1426,7 +1468,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                     "link": item["link"], "cuerpo": "",
                     "portales_lista": [{"nombre": portal, "url": item["link"]}],
                     "score_crudo": sc_crudo, "score_ajustado": sc_ajustado,
-                    "ajuste_aplicado": ajuste,
+                    "ajuste_aplicado": ajuste, "es_opinion": es_op,
                 })
                 encontrados += 1
 
