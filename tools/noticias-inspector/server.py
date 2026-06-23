@@ -37,12 +37,7 @@ _JOB_ID = "noticias-hourly"
 
 
 def _do_run(mode: str):
-    with _lock:
-        if _state["running"]:
-            return
-        _state.update(running=True, last_error=None,
-                      last_started=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                      last_mode=mode)
+    # `running` was already claimed atomically by _spawn() under _lock; just execute + release.
     try:
         core.run(mode=mode)
     except Exception:  # noqa: BLE001
@@ -52,8 +47,15 @@ def _do_run(mode: str):
 
 
 def _spawn(mode: str) -> bool:
-    if _state["running"]:
-        return False
+    # Single guard point: atomic test-and-set of `running` UNDER the lock, so two
+    # near-simultaneous /api/run-now (or a cron tick racing a manual run) can't both start a
+    # run. The loser is rejected cleanly — no thread spawned.
+    with _lock:
+        if _state["running"]:
+            return False
+        _state.update(running=True, last_error=None,
+                      last_started=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                      last_mode=mode)
     threading.Thread(target=_do_run, args=(mode,), daemon=True).start()
     return True
 
