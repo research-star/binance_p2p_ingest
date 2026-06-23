@@ -571,6 +571,11 @@ TERMINOS_BOLIVIA = [
     "uyuni", "yacuiba", "quillacollo", "riberalta", "tupiza", "camiri",
     "llallagua", "villazón", "estado boliviano", "gobierno boliviano",
     "ypfb", "bcb", "mefp", "ofep", "central obrera", "ley 1720",
+    # Gentilicios departamentales (WS2 funnel-v2). STEMS largos y no-ambiguos →
+    # substring seguro (ningún término-host común los contiene). Los tokens cortos
+    # o ambiguos (Bs, SIN, ABC, fisco) NO van acá: ver _ENTIDAD_SPEC (word-boundary).
+    "paceñ", "cruceñ", "cochabambin", "orureñ", "potosin", "tarijeñ",
+    "alteñ", "chuquisaqueñ", "beniano", "pandino",
 ]
 PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}  # legacy: el carril vivo (evaluar) exige Bolivia a TODOS los portales; esto solo afecta el fallback keywords (muerto en prod)
 
@@ -808,6 +813,19 @@ _ENTIDAD_SPEC = {
     "Fitch": ["fitch", "fitch ratings"],
     "Moody's": ["moody", "moodys"],
     "S&P": ["standard and poor", "standard & poor", "standard & poors", "s&p"],
+    # ── Ancla BO ampliada (WS2 funnel-v2) ──
+    # Instituciones/figuras/moneda que anclan la nota en Bolivia aunque NO nombre el
+    # país. TODO token corto o ambiguo entra SOLO por acá (word-boundary vía _wb),
+    # NUNCA por TERMINOS_BOLIVIA (substring crudo), para no matchear "sin"→preposición,
+    # "abc"→alfabeto/diario, "bs"→texto random. Por eso SIN/ABC se anclan por su nombre
+    # completo (no por la sigla pelada), y "bs"/"fisco" van con boundary estricto.
+    "Senasir": ["senasir"],
+    "Gestora": ["gestora publica", "gestora publica de la seguridad social"],
+    "ABC": ["administradora boliviana de carreteras"],
+    "SIN": ["servicio de impuestos nacionales", "impuestos nacionales"],
+    "Fisco": ["fisco"],
+    "Bs": ["bs"],
+    "Figuras BO": ["rodrigo paz", "doria medina", "edman lara", "edmand lara", "evo morales"],
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 
@@ -818,6 +836,8 @@ ENTIDADES_BOLIVIANAS = {
     "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "Gobierno", "ASFI", "ASOBAN", "INE",
     "Aduana", "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "COB", "MEFP",
     "TSE", "TED",
+    # Ancla BO ampliada (WS2 funnel-v2): instituciones/figuras/moneda word-boundary.
+    "Senasir", "Gestora", "ABC", "SIN", "Fisco", "Bs", "Figuras BO",
 }
 # Entidades que dan evidencia económica suficiente para CONSERVAR una nota "General"
 # (sin tema). Excluye las puramente políticas/electorales (Gobierno, TSE, TED, COB).
