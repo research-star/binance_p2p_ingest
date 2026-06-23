@@ -314,6 +314,7 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         # El href del frontend solo admite http/https: un portal comprometido
         # no debe poder colar un scheme ejecutable (javascript:/data:). Y se
         # excluye el contenido patrocinado por sección/URL (calibración 2026-06-21).
+        n_pre_filtro = len(candidatos)  # WS6: para contar el drop scheme/patrocinado del embudo
         candidatos = [c for c in candidatos
                       if urlparse(c["link"]).scheme in ("http", "https")
                       and not scraper.es_url_patrocinada(c["link"])]
@@ -392,15 +393,25 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             if r in kill:
                 kill[r] += 1
         sf = scraper.LAST_FUNNEL
+        evaluados = sf.get("evaluados", 0)
+        sobreviven = sf.get("sobreviven", 0)
+        # En modo degradado (keywords) evaluar() puede tirar items con descartado_por=""
+        # (no entran a `descartados`), así que el desglose de los 3 kills no reconcilia
+        # con evaluados−sobreviven. Este bucket lo cierra para que el embudo siempre sume
+        # (en modo tfidf da 0). Y `scheme_patrocinado` cuenta el drop del filtro de :317.
+        kill_sin_razon = max(0, evaluados - sobreviven
+                             - kill["keyword_excluida"] - kill["falta_bolivia"] - kill["umbral"])
         res["funnel"] = {
             "entran": sf.get("entran", 0),
             "cache_skip": sf.get("cache_skip", 0),
-            "evaluados": sf.get("evaluados", 0),
+            "evaluados": evaluados,
             "kill_keyword_excluida": kill["keyword_excluida"],
             "kill_falta_bolivia": kill["falta_bolivia"],
             "kill_umbral_modelo": kill["umbral"],
-            "sobreviven": sf.get("sobreviven", 0),
+            "kill_sin_razon": kill_sin_razon,
+            "sobreviven": sobreviven,
             "unicos": sf.get("unicos", 0),
+            "scheme_patrocinado": max(0, n_pre_filtro - res["candidatos"]),
             "candidatos": res["candidatos"],
             "sobre_umbral": res["sobre_umbral"],
             "eventos": res.get("eventos", 0),
