@@ -4453,13 +4453,24 @@ window.addEventListener('popstate', function(){
   // "Hoy" efectivo: el día más reciente CON notas (normalmente 0). Evita portada en
   // blanco si el primer scrape del día aún no corrió (huecos visibles, no rellenados).
   function ntDefaultDay(){ for(let o=0;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length) return o; } return 0; }
-  // Notas del feed de un día: en el día por-defecto excluye el lead (va en el hero);
-  // en días de archivo, todas.
-  function npFeedNotes(off){ const d=ntDayNotes(off); return (off===ntDefaultDay()) ? d.slice(1) : d; }
+  // Tamaño de página del grid: el feed se pagina SIEMPRE de a 6 (2 filas de 3) →
+  // sin celdas huérfanas mientras el pool alcance.
+  const NP_PAGE = 6;
+  // Lead del hero (FIJO al día por-defecto) — se excluye del pool del grid para no duplicarlo.
+  function npLeadId(){ const d=ntDayNotes(ntDefaultDay()); return d.length ? d[0].id : null; }
+  // Pool plano del feed: lista continua cross-día desde el día activo (npState.day) hacia
+  // atrás hasta NT_LIMIT, concatenando cada día YA filtrado por ntVisible y ordenado por
+  // ntCmp (vía ntDayNotes), menos el lead del hero. Se paginá de a NP_PAGE. Ocultar una
+  // nota la saca del pool → la siguiente sube al slice (el conteo no encoge).
+  function npPool(){
+    const lead=npLeadId(); let pool=[];
+    for(let o=npState.day;o<=NT_LIMIT;o++) pool=pool.concat(ntDayNotes(o));
+    return lead!=null ? pool.filter(function(n){ return n.id!==lead; }) : pool;
+  }
 
   // Estado de portada (memoria). day = offset activo del FEED; el ranking/hero quedan
-  // FIJOS a ntDefaultDay(). extra = días anteriores apilados por "Mostrar más".
-  const npState = { day:ntDefaultDay(), extra:0 };
+  // FIJOS a ntDefaultDay(). page = páginas de NP_PAGE reveladas por "Mostrar más".
+  const npState = { day:ntDefaultDay(), page:1 };
   // País de la nota latam, best-effort desde el path del link → fallback "Latam".
   function ntLatamFlag(n){ try{ const m=String(n.url||'').match(/latinoamerica\/([a-z_-]+)\//i); if(m){ const k=m[1].toLowerCase().replace(/-/g,'_'); if(NT_PAISES[k]) return NT_PAISES[k]; } }catch(e){} return 'Latam'; }
 
@@ -4656,11 +4667,12 @@ window.addEventListener('popstate', function(){
 
   // Encabezado dinámico del feed (§4). El control de fecha (§5) lo monta C3 (npDateStrip).
   function ntFechaSlash(off){ const dt=ntParseD(ntDateAt(off)); const p=function(x){return String(x).padStart(2,'0');}; return p(dt.getDate())+'/'+p(dt.getMonth()+1)+'/'+String(dt.getFullYear()).slice(2); }
-  function npFeedHead(off){
-    const total=ntBolivia().length, shown=ntDayNotes(off).length;
+  // shown = notas en el slice actual; total = tamaño del pool visible (cross-día desde
+  // el día activo). El contador refleja lo realmente mostrado sobre el pool paginable.
+  function npFeedHead(off, shown, total){
     let title, sub;
-    if(off===0){ title='Las noticias de hoy'; sub='Selección editorial del día · '+shown+' de '+total+' notas'; }
-    else { const f=ntFechaSlash(off); title='Las noticias del '+f; sub='Archivo · '+f; }
+    if(off===0){ title='Las noticias de hoy'; sub='Selección editorial · '+shown+' de '+total+' notas'; }
+    else { const f=ntFechaSlash(off); title='Las noticias del '+f; sub='Archivo · '+f+' · '+shown+' de '+total+' notas'; }
     return '<div class="np-feed-head"><div class="np-feed-headmain"><h2 class="np-feed-title">'+ntEsc(title)+'</h2>'
       +'<p class="np-feed-sub">'+ntEsc(sub)+'</p></div>'+npDateStrip(off)+'</div>';
   }
@@ -4693,22 +4705,21 @@ window.addEventListener('popstate', function(){
       +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(npDayInDir(off,'newer')<0?' disabled':'')+' aria-label="Día siguiente">&rsaquo;</button>'
       +'</div>';
   }
-  // ¿Quedan días más viejos con notas dentro del límite (para "Mostrar más")?
-  function npHasMore(off){ for(let o=off+npState.extra+1;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length) return true; } return false; }
-  function npMoreBtn(off){
-    return '<div class="np-more"><button class="np-more-btn" type="button" data-np-more'+(npHasMore(off)?'':' disabled')+'><span class="np-more-d">Mostrar m&aacute;s &darr;</span><span class="np-more-m">Mostrar d&iacute;a anterior &rarr;</span></button></div>';
+  // ¿El pool supera el slice actual? (hay más notas que revelar con "Mostrar más").
+  function npHasMore(){ return npPool().length > NP_PAGE*npState.page; }
+  function npMoreBtn(){
+    return '<div class="np-more"><button class="np-more-btn" type="button" data-np-more'+(npHasMore()?'':' disabled')+'><span class="np-more-d">Mostrar m&aacute;s &darr;</span><span class="np-more-m">Mostrar m&aacute;s &rarr;</span></button></div>';
   }
   // ── Navegación temporal (reescriben npState y re-renderean; ranking/hero intactos) ──
-  function npGoDay(off){ if(isNaN(off)||off<0||off>NT_LIMIT||off===npState.day) return; npState.day=off; npState.extra=0; npRerender(); }
-  function npNav(dir){ const d=npDayInDir(npState.day,dir); if(d<0) return; npState.day=d; npState.extra=0; npRerender(); }  // salta días vacíos
-  // "Mostrar más": avanza al SIGUIENTE día con notas (apila continuo, sin separador; no cambia el header).
-  function npMore(){ for(let o=npState.day+npState.extra+1;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length){ npState.extra=o-npState.day; npRerender(); return; } } }
+  function npGoDay(off){ if(isNaN(off)||off<0||off>NT_LIMIT||off===npState.day) return; npState.day=off; npState.page=1; npRerender(); }
+  function npNav(dir){ const d=npDayInDir(npState.day,dir); if(d<0) return; npState.day=d; npState.page=1; npRerender(); }  // salta días vacíos
+  // "Mostrar más": revela una página más (+NP_PAGE del pool plano; no salta de día).
+  function npMore(){ if(npHasMore()){ npState.page++; npRerender(); } }
   function npFeed(){
-    const off=npState.day;
-    let notes=npFeedNotes(off);
-    for(let e=1;e<=npState.extra;e++){ notes=notes.concat(ntDayNotes(off+e)); }  // "Mostrar más": apila días previos (continuo, sin separador)
+    const off=npState.day, pool=npPool();
+    const notes=pool.slice(0, NP_PAGE*npState.page);  // slice paginado de a 6
     const body=notes.length?npCards(notes):'<div class="np-empty">No hay notas para esta fecha.</div>';
-    return '<section class="np-feed">'+npFeedHead(off)+body+npMoreBtn(off)+'</section>';
+    return '<section class="np-feed">'+npFeedHead(off, notes.length, pool.length)+body+npMoreBtn()+'</section>';
   }
   function npLatam(){
     const fid=(ntLatamLead()||{}).id;  // la destacada ya va en la primera plana → no duplicar
