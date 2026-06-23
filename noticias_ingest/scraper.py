@@ -547,6 +547,12 @@ KEYWORDS_EXCLUIR = [
     # exclusión por sección/URL se aplica aparte, vía es_url_patrocinada).
     "contenido de marca", "contenido patrocinado", "espacio publicitario",
     "espacio de marca", "publirreportaje", "branded content",
+    # Color cultural / folklórico / ceremonial (WS5 funnel-v2): ruido sin ángulo
+    # económico. CONSERVADOR: NO incluye carnaval, alasitas, ferias ni nada con
+    # arista económica/turística — solo lo inequívocamente ceremonial.
+    "año nuevo andino", "año nuevo aymara", "año nuevo amazónico", "solsticio",
+    "ceremonia ancestral", "ritual ancestral", "fiesta patronal", "fiestas patronales",
+    "entrada folklórica", "entrada folclórica", "danza folklórica", "danza folclórica",
 ]
 
 # Rutas/secciones de contenido patrocinado a excluir por URL (decisión "ambas",
