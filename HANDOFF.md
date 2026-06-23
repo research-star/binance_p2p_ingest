@@ -24,7 +24,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
-| `ingest_noticias.py` | VPS cron user `binance` | `45 11 * * *` UTC (07:45 BO, diario 7/7; corrido de 11:30 para no colisionar con `ine_ipp` días 1-10) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
+| `ingest_noticias.py` | VPS cron user `binance` | `7 0,11-23 * * *` UTC (07:07–20:07 BO, horario 7/7 — 14 corridas/día; minuto :07 evita colisión con `ingest_embi` a :00 y los INE a :15/:30) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -455,7 +455,7 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   `#tab-noticias`, lazy render `window.renderNoticias()` (patrón
   renderBbv/renderGuide).
 - **Feed real desde `feat/noticias-real`**, dos carriles en la MISMA
-  corrida diaria de `ingest_noticias.py` (un cron, un HC; fail-safe por
+  corrida de `ingest_noticias.py` (un cron, un HC; fail-safe por
   carril — si uno falla el otro corre, y cualquier carril en error
   pingea fail):
   - **Bolivia**: scrape de 13 portales → geo-gate universal (ancla Bolivia) →
@@ -626,7 +626,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 0    10,22 * * *    cd /opt/binance_p2p && .venv/bin/python ingest_embi.py
 15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
 30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
-45   11 * * *       cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
+7    0,11-23 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
 ```
 (Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
 
@@ -642,7 +642,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
-- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia diaria → period 24h sugerido.
+- `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia ~14×/día (horario 07:07–20:07 BO desde 2026-06-23) → period 1-2h (configurado en Healthchecks 2026-06-23).
 
 **SSH desde laptop:**
 ```bash
@@ -775,7 +775,9 @@ las referencias existentes a §6–§8.
       corrida de prueba OK (95 candidatos, 10 filas insertadas, 41 s,
       `scoring=tfidf`), cron `45 11 * * *` UTC instalado (11:45, corrido de
       11:30 por colisión con `ine_ipp` días 1-10; backup del crontab previo
-      en `/tmp/crontab.pre-noticias.bak` del VPS), `HC_NOTICIAS` en `.env`
+      en `/tmp/crontab.pre-noticias.bak` del VPS; **schedule original —
+      cambiado a `7 0,11-23 * * *` (14×/día) el 2026-06-23, ver la tabla de
+      crons al inicio**), `HC_NOTICIAS` en `.env`
       con ping de prueba OK. Addendum fail-closed (sin modelo TF-IDF → fail
       + exit 1, sin scrape) entregado en PR aparte post-deploy.
       **Caveat vigente**: la cache key del publish (`n_snap, n_rows,
