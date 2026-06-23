@@ -933,13 +933,21 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
             return 0, "", 0, [], None, None, "—", "keyword_excluida"
-    # Geo-gate UNIVERSAL (antes solo PORTALES_EXIGEN_BOLIVIA): toda nota debe anclar
-    # en Bolivia — por término geográfico/adjetivo o por entidad boliviana detectada.
-    # Corta el ruido extranjero (sucesos/policiales de otros países) en TODOS los
-    # portales, no solo en tres.
+    # Entidades + tema se computan ANTES del geo-gate (WS1 funnel-v2): el gate ahora
+    # rescata por tema, así que necesita la clasificación en el punto de decisión.
     entidades = detectar_entidades(titulo, descripcion)
-    if not (any(t in texto for t in TERMINOS_BOLIVIA)
-            or any(e in ENTIDADES_BOLIVIANAS for e in entidades)):
+    tema, tema_hits = _tema(titulo, descripcion)
+    # Geo-gate funnel-v2 (WS1): PASA si ANCLA en Bolivia (término geográfico/adjetivo o
+    # entidad boliviana — la lógica del gate viejo) OR si clasifica en un tema económico
+    # (no-General). Rescata economía boliviana legítima que NO nombra el país (ej. real:
+    # "el dólar referencial baja a Bs 9,92" → tema Dólar). El set que pasa CONTIENE al del
+    # gate viejo (solo agrega rescates por tema; cero pérdida de recall vs hoy). El ruido
+    # internacional sin ancla NI tema lo siguen conteniendo el umbral editorial 6.7 + el
+    # budget top-N (decisión cerrada: sin veto internacional en v1). "General" anclado NO
+    # se descarta: entra como 'otros' (relleno por relevancia, ver transform.py).
+    ancla_bo = (any(t in texto for t in TERMINOS_BOLIVIA)
+                or any(e in ENTIDADES_BOLIVIANAS for e in entidades))
+    if not (ancla_bo or tema != "General"):
         return 0, "", 0, [], None, None, "—", "falta_bolivia"
 
     # Intentar modelo TF-IDF
@@ -951,20 +959,13 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
-        tema, tema_hits = _tema(titulo, descripcion)
-        # NO se descarta "General": una nota boliviana relevante sin tema de negocios
-        # entra como categoría 'otros' (relleno por relevancia, ver transform.py), NO se
-        # disfraza de ECONOMÍA ni se tira. Calibración 2026-06-21 contra las 96 notas
-        # publicadas: descartar por "General sin entidad económica" tiraba ~60-70% de
-        # noticia relevante mal rotulada (crisis de bloqueos/estado de excepción). El
-        # geo-gate + KEYWORDS_EXCLUIR + umbral del modelo siguen filtrando el ruido real.
+        # tema / tema_hits ya computados arriba (no recomputar).
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 
     # Fallback keywords (path muerto en prod por fail-closed)
-    puntaje, tema, tema_hits = score_keywords(titulo, descripcion, portal)
-    entidades = detectar_entidades(titulo, descripcion)
-    return puntaje, tema, tema_hits, entidades, None, None, "—", ""
+    puntaje, tema_fb, tema_hits_fb = score_keywords(titulo, descripcion, portal)
+    return puntaje, tema_fb, tema_hits_fb, entidades, None, None, "—", ""
 
 
 # ---------------------------------------------------------------------------
