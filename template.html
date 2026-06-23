@@ -582,6 +582,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-figure{margin:16px 0 0;position:relative}
 .np-imgph.np-hero-img{aspect-ratio:auto;height:clamp(240px,30vw,360px)}
 .np-hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:20px 16px 13px;background:linear-gradient(transparent,rgba(20,16,12,.62));color:#F3E4D6;font-family:var(--font-body);font-size:12.5px;line-height:1.45;text-wrap:pretty}
+/* Slots de caption/dek vacíos (ticket portada): colapsan sin hueco y, en el overlay del hero, ocultan el gradiente. Al poblarse desde la futura API reaparecen solos. */
+.np-hero-cap:empty{display:none}
 .np-hero-foot{display:flex;align-items:center;gap:10px;margin-top:14px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
 /* — 4 · feed: encabezado dinámico (§4) + control de fecha (§5) + grilla 3×N sin caja (hairlines) — */
 .np-feed{padding:0 0 8px}
@@ -680,6 +682,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-titlelink{color:inherit;text-decoration:none}
 .np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-card-dek:empty{display:none}  /* dek vaciado (slot futura API): colapsa sin reservar hueco */
 .np-tambien{font-family:var(--font-body);font-size:10.5px;line-height:1.4;color:var(--text-muted);margin-top:7px}
 .np-tambien a{color:var(--text-muted);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
 .np-tambien a:hover{color:var(--up)}
@@ -4456,6 +4459,12 @@ window.addEventListener('popstate', function(){
   // Tamaño de página del grid: el feed se pagina SIEMPRE de a 6 (2 filas de 3) →
   // sin celdas huérfanas mientras el pool alcance.
   const NP_PAGE = 6;
+  // Destacada Latam de la primera plana: OFF (archivada, reversible). En false, npBuildHTML
+  // emite siempre la primera plana 2-col (np-front: hero local 1fr | ranking 372px) y npLatam
+  // deja de excluir la ex-destacada (reaparece como card normal del carril Latam de abajo).
+  // Flip a true restaura el 3-col (np-front.three: local · destacada · ranking) idéntico al previo.
+  // El cuerpo de npHeroLatam()/ntLatamLead() se conserva intacto como record para el flip.
+  const DESTACADA_ENABLED = false;
   // Lead del hero (FIJO al día por-defecto) — se excluye del pool del grid para no duplicarlo.
   function npLeadId(){ const d=ntDayNotes(ntDefaultDay()); return d.length ? d[0].id : null; }
   // Pool plano del feed: lista continua cross-día desde el día activo (npState.day) hacia
@@ -4560,8 +4569,10 @@ window.addEventListener('popstate', function(){
   }
   function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
-  // Caption del hero, ya limpia (medio + dedupe contra el titular).
-  function npCap(n){ var d=ntDek(n); return d?'<figcaption class="np-hero-cap">'+ntEsc(d)+'</figcaption>':''; }
+  // Caption del hero: VACIADA (ticket portada). El <figcaption> se conserva vacío como SLOT
+  // para una futura API de captions (marca data-np-slot="cap"); sin texto, .np-hero-cap:empty
+  // colapsa y oculta el gradiente. El payload sigue trayendo summary/detail (no se renderiza).
+  function npCap(n){ return '<figcaption class="np-hero-cap" data-np-slot="cap"></figcaption>'; }
   // "También en": otros medios que cubrieron el MISMO evento (calibración 2026-06-21).
   // La representante (por tier de fuente) es la nota mostrada; acá van las demás con link.
   function npTambienEn(n){
@@ -4661,7 +4672,8 @@ window.addEventListener('popstate', function(){
     for(let i=0;i<notes.length;i++){ const n=notes[i];
       g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'+npKick(n)
-        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-card-dek',ntDek(n))
+        +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'
+        +'<p class="np-card-dek" data-np-slot="dek"></p>'  /* dek VACIADO: slot para futura API; :empty colapsa. summary/detail siguen en payload, sin render */
         +npTambienEn(n)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
         +'</div></article>';
@@ -4726,7 +4738,10 @@ window.addEventListener('popstate', function(){
     return '<section class="np-feed">'+npFeedHead(off, notes.length, pool.length)+body+npMoreBtn()+'</section>';
   }
   function npLatam(){
-    const fid=(ntLatamLead()||{}).id;  // la destacada ya va en la primera plana → no duplicar
+    // Con la destacada ON, su nota ya va en la primera plana → se excluye acá para no duplicar.
+    // Con la destacada OFF (DESTACADA_ENABLED=false), no se excluye nada → la ex-destacada
+    // reaparece como card normal del carril (fid=null ⇒ el filtro deja pasar todo).
+    const fid = DESTACADA_ENABLED ? (ntLatamLead()||{}).id : null;
     const latam=ntLatam().filter(function(n){ return n.id!==fid; }).slice(0,5); if(!latam.length) return '';
     let grid='';
     for(let i=0;i<latam.length;i++){ const n=latam[i];
@@ -4782,9 +4797,9 @@ window.addEventListener('popstate', function(){
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
   function npBuildHTML(){
-    const front = ntLatamLead()
+    const front = (DESTACADA_ENABLED && ntLatamLead())
       ? '<div class="np-front three">'+npHero()+npHeroLatam()+npRail()+'</div>'   // local · destacada Latam · ranking
-      : '<div class="np-front">'+npHero()+npRail()+'</div>';
+      : '<div class="np-front">'+npHero()+npRail()+'</div>';   // 2-col: hero local 1fr | ranking 372px
     return '<div class="np-page">'+npAdminBar()
       +'<div class="np-body">'+front+npFeed()+'</div>'
       +npLatam()+npFooter()+'</div>';
