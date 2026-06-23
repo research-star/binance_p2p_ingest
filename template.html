@@ -4610,7 +4610,9 @@ window.addEventListener('popstate', function(){
   };
 
   // ── Regiones ──
-  function npKick(n){ const c=ntCatName(ntCategoria(n)); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
+  // Kicker de categoría: SOLO admin (mismo gate que el microtag "ilustrativa", npAdmin.isAdmin).
+  // Anon → sin kicker. El estado admin se refleja post-login porque npRerender() corre tras npCheckMe().
+  function npKick(n){ if(!npAdmin.isAdmin) return ''; const c=ntCatName(ntCategoria(n)); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
 
   // Cuerpo del hero (kicker + titular + imagen 16:10 con caption + fila de fuente).
   function npHeroBody(lead, kick){
@@ -4634,7 +4636,7 @@ window.addEventListener('popstate', function(){
   function npHeroLatam(){
     const lead=ntLatamLead(); if(!lead) return '';
     return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
-      +'<div class="np-kicker">Internacional</div>'
+      +(npAdmin.isAdmin?'<div class="np-kicker">Internacional</div>':'')
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
