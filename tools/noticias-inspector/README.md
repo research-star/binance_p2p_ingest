@@ -95,5 +95,19 @@ de la tabla* en runtime. Consecuencia, etapa por etapa:
 | **Dedup inter-día** (15: vs últimos 7d) | **Sí** (`titulos_recientes`) | **No** si el mirror no tiene los títulos recientes |
 
 O sea: las etapas de **CRITERIO son fieles**; las dos etapas dependientes del **estado de la
-tabla** (budget, dedup inter-día) NO lo son con un mirror viejo. Para fidelidad de esas dos
-hay que **refrescar el mirror desde el VPS** — **no implementado en v1**.
+tabla** (budget, dedup inter-día) NO lo son con un mirror viejo.
+
+### Refrescar el seed desde el VPS (cierra esa salvedad)
+
+El botón **⟳ Refrescar seed (VPS)** baja la tabla `noticias` ACTUAL del VPS por **SSH
+read-only** (`sqlite3 -json … SELECT * FROM noticias`) a `sandbox/vps-seed.json`. La próxima
+corrida siembra desde ese JSON, así **budget y dedup inter-día quedan prod-fieles** (contra
+el estado de HOY, no el del mirror). El chip de estado muestra `seed VPS · hasta <fecha>`
+(verde) vs `seed mirror local … NO prod-fieles` (ámbar).
+
+- Es **opt-in y read-only**: nunca escribe en el VPS (solo SELECT) ni en los DB locales; el
+  dump vive en `sandbox/` (gitignored). La hermeticidad se mantiene.
+- Si el SSH falla (sin clave, timeout), **degrada al mirror local con aviso** — no crashea.
+- **Sin schedule automático** (manual en v1). Endpoints: `POST /api/seed/refresh`,
+  `POST /api/seed/clear`. Config del target: `VPS_HOST`/`VPS_DB` en `insp_config.py`
+  (override por `FB_VPS_HOST`/`FB_VPS_DB`).

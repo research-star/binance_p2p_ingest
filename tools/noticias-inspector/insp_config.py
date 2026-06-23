@@ -32,6 +32,12 @@ REAL_CACHE = DATA_ROOT / "noticias_ingest" / "data" / "cache_urls.db"
 # Gallery webp live in static/ as gal-<slug>.webp (committed; use this checkout's copy).
 GALLERY_DIR = ROOT / "static"
 
+# VPS (prod) target for the OPT-IN seed refresh — SELECT-only, read-only, never written.
+# Refrescar el seed hace prod-fieles las etapas 14 (budget) y 15 (dedup inter-día) cuando
+# el mirror local está stale. Override por env si cambia el host/path.
+VPS_HOST = os.environ.get("FB_VPS_HOST", "binance@46.62.158.88")
+VPS_DB = os.environ.get("FB_VPS_DB", "/opt/binance_p2p/p2p_normalized.db")
+
 # How many days of `noticias` rows to seed into the sandbox so the inter-day
 # dedupe window (DEDUPE_DIAS) and the rolling budget COUNT(*) behave like prod.
 SEED_DIAS = 8  # one more than DEDUPE_DIAS=7 for safety

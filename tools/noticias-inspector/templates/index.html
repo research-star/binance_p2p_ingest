@@ -15,12 +15,15 @@
     <span class="divider"></span>
     <button id="btn-cron-start" class="btn">⏱ Cron 1h: ON</button>
     <button id="btn-cron-stop" class="btn ghost">■ OFF</button>
+    <span class="divider"></span>
+    <button id="btn-seed-refresh" class="btn ghost" title="Baja la tabla noticias actual del VPS (read-only) → budget/dedup prod-fieles">⟳ Refrescar seed (VPS)</button>
   </div>
 </header>
 
 <div id="statusbar" class="statusbar">
   <span id="st-run" class="chip">sin corridas aún</span>
   <span id="st-scoring" class="chip"></span>
+  <span id="st-seed" class="chip"></span>
   <span id="st-hermetic" class="chip"></span>
   <span id="st-cron" class="chip"></span>
   <span id="st-deps" class="chip"></span>
