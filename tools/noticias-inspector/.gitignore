@@ -1,0 +1,18 @@
+# Runtime artifacts — NEVER committed. The inspector writes only here.
+sandbox/
+
+# Any sqlite DB / cache that leaks outside sandbox/ (defensive)
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+cache_urls*.db
+
+# Per-run JSON snapshots (the frontend reads the latest from sandbox/)
+runs/
+last-run.json
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
