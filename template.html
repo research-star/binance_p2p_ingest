@@ -554,10 +554,16 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-src .dot{width:5px;height:5px;border-radius:var(--radius-pill);background:var(--nt-c,var(--text-muted));flex-shrink:0}
 .np-sep{color:var(--line-strong)}
 .np-time{font-family:var(--font-body);font-variant-numeric:tabular-nums}
-/* — placeholder de imagen: degradé cálido neutro + glifo cámara (spec §6) — */
-.np-imgph{position:relative;width:100%;aspect-ratio:16/10;border-radius:var(--radius-xs);background:linear-gradient(135deg,#CDBFAE,#A99A86 55%,#8F8170);border:1px solid var(--border-color);display:flex;align-items:flex-end;justify-content:flex-start;overflow:hidden}
-.np-imgph::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.05) 3px 4px)}
-.np-imgph::after{content:'';position:absolute;top:50%;left:50%;width:34%;max-width:62px;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.5;background:no-repeat center/contain url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.4'><rect x='2.5' y='5' width='19' height='14' rx='1.5'/><circle cx='12' cy='12' r='3.4'/><path d='M7.5 5l1.4-2h6.2l1.4 2'/></svg>")}
+/* — estado vacío editorial (variante B): franja oscura + monograma serif marca de agua +
+   wordmark. SIN ícono cámara. Mismo aspect/dimensiones del card. #2A251F = panel oscuro
+   del repo (= .np-hero-latam / .fb-ticker --tk-bg); --tk-bg está scopeado a .fb-ticker y no
+   cascadea acá → literal-hex. Al inyectar <img> (galería/og:image, z-index:1) este
+   tratamiento queda cubierto; sin imagen, es el estado vacío intencional. — */
+.np-imgph{position:relative;width:100%;aspect-ratio:16/10;border-radius:var(--radius-xs);background:#2A251F;border:1px solid var(--border-color);overflow:hidden}
+/* wordmark abajo-izquierda, muted */
+.np-imgph::before{content:'FinanzasBo';position:absolute;left:12px;bottom:9px;z-index:0;font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#8A7E70;pointer-events:none}
+/* monograma "F" marca de agua: Newsreader, grande, bajo contraste sobre el oscuro (lectura de marca, no splash) */
+.np-imgph::after{content:'F';position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--font-display);font-weight:600;font-size:clamp(76px,17vw,132px);line-height:1;color:#3A332B;z-index:0;pointer-events:none;-webkit-user-select:none;user-select:none}
 .np-imgph>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1}
 /* — galería temática (v1): microtag "ilustrativa" sutil sobre el asset (z sobre .np-imgph>img) — */
 .np-gal-tag{position:absolute;right:8px;top:8px;z-index:2;font-family:var(--font-body);font-size:10px;font-weight:500;line-height:1;letter-spacing:.04em;color:#fff;background:rgba(20,22,28,.55);padding:3px 8px;border-radius:var(--radius-pill);pointer-events:none;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}

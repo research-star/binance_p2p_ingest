@@ -182,7 +182,14 @@ GALLERY_KEYWORD_PRIORITY = [
     # Mantiene 'ley'/'decreto'/'asamblea' suelta en la regla politica de abajo (no migran a la sede).
     (['gobierno', 'ministerio', 'ministro', 'casa grande del pueblo', 'asamblea legislativa', 'plaza murillo'], 'gobierno'),  # [ENT] gobierno → imagen dedicada (sede de gobierno; CC)
     (['pib', 'crecimiento', 'fiscal', 'deficit', 'subvencion'], 'economia'),
-    (['gobierno', 'ministro', 'asamblea', 'ley', 'decreto'], 'politica'),
+    # Poder legislativo = señal política: cubre notas "otros"/General que hoy caían a placeholder
+    # (ej. "Brigadas Parlamentarias…"). Plurales/géneros listados aparte (límite de palabra:
+    # 'parlamentario' NO matchea 'parlamentarias'). 'congreso' y 'orden' EXCLUIDOS (ambiguos).
+    (['gobierno', 'ministro', 'asamblea', 'ley', 'decreto',
+      'parlamentario', 'parlamentaria', 'parlamentarios', 'parlamentarias', 'brigadas parlamentarias',
+      'diputado', 'diputada', 'diputados', 'diputadas',
+      'senador', 'senadora', 'senadores', 'senadoras',
+      'legislativo', 'legislativa', 'legislativos', 'legislativas'], 'politica'),
 ]
 
 # Universo de slugs emisibles = las 17 imágenes existentes (14 base + fmi / banco-central /
