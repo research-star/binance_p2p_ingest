@@ -4490,21 +4490,23 @@ window.addEventListener('popstate', function(){
   }
   function npMarketsData(){
     const tm=(typeof DATA!=='undefined'&&DATA.ts_metrics)||{};
-    const vb=npLastNum(tm.vb10), vs=npLastNum(tm.vs10);
-    const p2p=(npNum(vb)&&npNum(vs))?(vb+vs)/2:(npNum(vb)?vb:(npNum(vs)?vs:null));
+    // Ticker muestra la serie "compra" (vb10 = "USDT Compra" del tab Dólar / dashboard.py:513),
+    // NO el promedio (decisión cerrada). null-guard: si compra falta → '—' (no se sustituye por
+    // venta: "huecos visibles, no rellenados").
+    const vb=npLastNum(tm.vb10);
+    const p2p=npNum(vb)?vb:null;
     const bcb=(typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null;
     let primaSub='s/d', primaDir='flat';
     if(npNum(p2p)&&npNum(bcb)&&bcb>0){ primaSub='prima +'+npFmt((p2p/bcb-1)*100,0)+'%'; primaDir='up'; }
     let embi=null, embiD=null;
     const es=(typeof DATA!=='undefined')&&DATA.embi_data&&DATA.embi_data.series&&DATA.embi_data.series.bolivia;
     if(es){ embi=npLastNum(es); const pv=npPrevNum(es); if(npNum(embi)&&npNum(pv)) embiD=embi-pv; }
-    const ipc=npInflVar12('ipc'), ipp=npInflVar12('ipp');
+    const ipc=npInflVar12('ipc');  // IPP retirado del ticker (frontend-only); DATA.inflacion.ipp queda latente
     return [
       { lab:'Dólar P2P',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
       { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:'flat',                sub:'sin cambios' },
       { lab:'Riesgo país', val:npNum(embi)?npFmt(embi,0):'—',unit:'pb',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,' pb',0):'EMBI Bolivia' },
-      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' },
-      { lab:'IPP interan.',val:ipp?npFmt(ipp.val,1):'—',     unit:'%',      dir:npDir(ipp&&ipp.delta), sub:ipp?npDeltaTxt(ipp.delta,' pp',1):'s/d' }
+      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' }
     ];
   }
 
@@ -4608,7 +4610,9 @@ window.addEventListener('popstate', function(){
   };
 
   // ── Regiones ──
-  function npKick(n){ const c=ntCatName(ntCategoria(n)); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
+  // Kicker de categoría: SOLO admin (mismo gate que el microtag "ilustrativa", npAdmin.isAdmin).
+  // Anon → sin kicker. El estado admin se refleja post-login porque npRerender() corre tras npCheckMe().
+  function npKick(n){ if(!npAdmin.isAdmin) return ''; const c=ntCatName(ntCategoria(n)); return c ? '<div class="np-kicker">'+ntEsc(c)+'</div>' : ''; }
 
   // Cuerpo del hero (kicker + titular + imagen 16:10 con caption + fila de fuente).
   function npHeroBody(lead, kick){
@@ -4632,7 +4636,7 @@ window.addEventListener('popstate', function(){
   function npHeroLatam(){
     const lead=ntLatamLead(); if(!lead) return '';
     return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
-      +'<div class="np-kicker">Internacional</div>'
+      +(npAdmin.isAdmin?'<div class="np-kicker">Internacional</div>':'')
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
@@ -4929,7 +4933,7 @@ window.addEventListener('popstate', function(){
 
   // ── Chrome global: franja de tickers (área 1; reusa npMarketsData de la portada) ──
   // Semántica INVERTIDA uniforme: los indicadores listados son "más alto = peor"
-  // (dólar/riesgo/IPC/IPP) y BCB es flat por dato → npTone(dir) aplica a todos:
+  // (dólar/riesgo/IPC) y BCB es flat por dato → npTone(dir) aplica a todos:
   // up→bad(rojo), down→good(verde), flat→neutro. La flecha conserva la dirección real.
   function npTone(dir){ return dir==='up'?'bad':(dir==='down'?'good':'flat'); }
   function fbRenderTicker(){
