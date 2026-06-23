@@ -1398,6 +1398,14 @@ def procesar_portal(fuente: dict) -> tuple:
 # ⓘ pipeline-anchor: este return es el SEAM que replica tools/noticias-inspector (etapas
 #   1-8 del funnel Bolivia). Si cambiás el orden/etapas del pipeline o el contrato del dict
 #   candidato, actualizá el inspector (inspector_core.py + pipeline_map.py + SYNC.md).
+# Embudo (entran→sobreviven) de la última corrida del scraper. WS6 funnel-v2:
+# side-channel a propósito — NO se mete en el return-tuple (el SEAM de 4 elementos
+# está congelado por el inspector: parity_test/save_snapshot/mirror_bolivia). El
+# caller (ingest_noticias.lane_bolivia) lo lee para armar el embudo unificado.
+# Conteos que NO se pueden derivar del return (entran, cache_skip) viven acá.
+LAST_FUNNEL: dict = {}
+
+
 def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     """Corre el pipeline completo: scrape 13 portales → score → dedupe
     intra-corrida → resolución Google News → cuerpos.
@@ -1405,6 +1413,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     Devuelve (candidatos, descartados, portales_ok, portales_fail).
     Candidatos ordenados por puntaje desc; cada uno con cuerpo (si se pudo)
     y portales_lista (réplicas del mismo título en otros portales).
+    Efecto lateral: rellena el global LAST_FUNNEL (embudo del scraper, WS6).
     """
     modelo = get_modelo()
     if modelo.disponible:
@@ -1422,6 +1431,10 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     descartados = []
     portales_ok = []
     portales_fail = []
+    # Embudo del scraper (WS6): items que ENTRAN al evaluador y los que mueren en el
+    # skip de caché (paso 3, el `continue` de ya_vista que antes no se contaba).
+    entran = 0
+    cache_skip = 0
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {executor.submit(procesar_portal, f): f for f in FUENTES}
@@ -1442,7 +1455,9 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
 
             encontrados = 0
             for item in items_raw:
+                entran += 1
                 if cache.ya_vista(item["link"]):
+                    cache_skip += 1
                     continue
                 # Opinión/columna/editorial (WS4): se detecta acá porque la URL
                 # (item["link"]) vive en el loop, no en evaluar(). Penaliza ×0.7 el
@@ -1532,6 +1547,22 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     # quedaban vistas y no se reconsideraban). La caché se usó arriba SOLO para
     # leer (ya_vista) y saltar el re-scrapeo de cuerpos de URLs ya marcadas.
     cache.close()
+
+    # Embudo del scraper (WS6): se publica en LAST_FUNNEL para que lane_bolivia arme
+    # el embudo unificado. `entran` = items vistos en RSS/scrape; `cache_skip` = los
+    # que ya estaban vistos (paso 3); `evaluados` = los que llegaron a evaluar();
+    # `sobreviven` = los que pasaron evaluar (pre-dedupe); `unicos` = tras dedupe.
+    LAST_FUNNEL.clear()
+    LAST_FUNNEL.update({
+        "entran": entran,
+        "cache_skip": cache_skip,
+        "evaluados": entran - cache_skip,
+        "sobreviven": len(todas),
+        "unicos": len(deduplicadas),
+    })
+    log.info(f"  Embudo scraper: entran={entran} cache_skip={cache_skip} "
+             f"evaluados={entran - cache_skip} sobreviven={len(todas)} "
+             f"unicos={len(deduplicadas)}")
 
     log.info(f"  {len(deduplicadas)} candidatos únicos "
              f"({len(portales_ok)} portales ok, {len(portales_fail)} fail)")
