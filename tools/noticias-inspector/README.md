@@ -79,6 +79,21 @@ FB_DATA_ROOT=/c/Dev/binance_p2p_ingest python hermetic_test.py   # DBs reales by
   capturado). Bolivia es el target de paridad.
 - **`resumen_ia.aplicar`** se stubea a no-op (sin costo de API, determinista): el inspector
   muestra el resumen extractivo, no el reescrito por IA.
-- El `p2p_normalized.db` local es un **mirror posiblemente desactualizado** (el ingest de la
-  laptop está apagado; la data reciente vive en el VPS — fuera de scope). El dedupe inter-día
-  y el budget se calculan contra lo que el mirror tenga.
+### Mirror local stale → fidelidad parcial (limitación de runtime)
+
+El inspector corre contra un **mirror LOCAL** de `p2p_normalized.db` que puede estar
+**desactualizado** (el ingest de la laptop está apagado; la data reciente vive en el VPS —
+fuera de scope). Esto NO es el Sync Contract (eso es sobre el *código*); es sobre el *estado
+de la tabla* en runtime. Consecuencia, etapa por etapa:
+
+| Etapa | ¿Depende del estado del DB? | ¿Fiel a prod con mirror stale? |
+|-------|------------------------------|--------------------------------|
+| Scoring, geo-gate, KEYWORDS_EXCLUIR, patrocinado (4, 10) | No | **Sí** — solo dependen del candidato + constantes vivas |
+| `build_nota`, umbral, agrupar_eventos (11-13) | No | **Sí** |
+| Galería / imágenes (prod-preview) | No | **Sí** |
+| **Presupuesto diario** (14: top-N menos insertadas-hoy) | **Sí** (`COUNT(*) WHERE date=hoy`) | **No** si el mirror no tiene las filas de hoy |
+| **Dedup inter-día** (15: vs últimos 7d) | **Sí** (`titulos_recientes`) | **No** si el mirror no tiene los títulos recientes |
+
+O sea: las etapas de **CRITERIO son fieles**; las dos etapas dependientes del **estado de la
+tabla** (budget, dedup inter-día) NO lo son con un mirror viejo. Para fidelidad de esas dos
+hay que **refrescar el mirror desde el VPS** — **no implementado en v1**.

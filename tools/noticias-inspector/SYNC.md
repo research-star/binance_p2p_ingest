@@ -53,6 +53,16 @@ El inspector **llama** las funciones de criterio (`evaluar` ya corrió dentro de
    Hoy: `gallery_slug_v2(title, summary, detail, tema, category, carril)` y
    `gallery_slug(tema, category, carril)`. Si cambia, ajustar `inspector_core._gallery_slug`.
 
+## Limitación de runtime (≠ Sync Contract)
+
+Aparte del Sync Contract (que es sobre el *código*), hay una limitación de *estado* en
+runtime: el inspector corre contra un **mirror local de `p2p_normalized.db` que puede estar
+stale** (ingest de laptop apagado). Las etapas de **criterio son fieles** (no dependen del
+DB), pero el **presupuesto diario** (etapa 14) y el **dedup inter-día** (etapa 15) **no son
+fieles** si el mirror no tiene las filas recientes/de-hoy. Refrescar el mirror desde el VPS
+daría fidelidad total a esas dos etapas — **no implementado en v1**. Detalle y tabla por
+etapa en el README (§ *Mirror local stale*).
+
 ## Cómo se detecta el drift
 
 - **Estructural (etapas):** `parity_test.py` — set X del inspector vs `lane_bolivia` real.
