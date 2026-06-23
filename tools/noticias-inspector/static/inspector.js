@@ -26,6 +26,17 @@ function renderStatus(d) {
   const miss = (deps.missing || []);
   const dc = $("#st-deps"); dc.className = "chip " + (miss.length ? "warn" : "ok");
   dc.innerHTML = miss.length ? `deps faltan: ${miss.map(m => esc(m.import)).join(", ")}` : "deps OK";
+  // seed source: VPS (prod-fiel) vs mirror local (budget/dedup no fieles)
+  const seed = d.seed || {};
+  const md = seed.max_date || (run && run.sandbox && run.sandbox.seed_max_date) || "?";
+  const sd = $("#st-seed");
+  if (seed.source === "vps") {
+    sd.className = "chip ok";
+    sd.innerHTML = `seed VPS · hasta <b>${esc(md)}</b> (budget/dedup prod-fieles)`;
+  } else {
+    sd.className = "chip warn";
+    sd.innerHTML = `seed mirror local · hasta <b>${esc(md)}</b> · budget/dedup NO prod-fieles`;
+  }
 }
 
 // ── tab 1: funnel ────────────────────────────────────────────────────────────
@@ -144,5 +155,15 @@ window.addEventListener("DOMContentLoaded", () => {
   $("#btn-run-replay").onclick = () => api("/api/run-now?mode=replay", "POST").then(poll);
   $("#btn-cron-start").onclick = () => api("/api/cron/start", "POST").then(poll);
   $("#btn-cron-stop").onclick = () => api("/api/cron/stop", "POST").then(poll);
+  $("#btn-seed-refresh").onclick = () => {
+    const b = $("#btn-seed-refresh"), txt = b.textContent;
+    b.disabled = true; b.textContent = "⟳ bajando del VPS…";
+    api("/api/seed/refresh", "POST").then(r => {
+      b.disabled = false; b.textContent = txt;
+      if (!r.ok) alert("Refresh falló (sigue el mirror local):\n" + (r.error || "?"));
+      else alert(`Seed refrescado del VPS: ${r.n} filas, hasta ${r.max_date}.\nLa próxima corrida usa budget/dedup contra el estado de hoy.`);
+      poll();
+    }).catch(e => { b.disabled = false; b.textContent = txt; alert("Refresh error: " + e); });
+  };
   poll(); setInterval(poll, 3000);
 });

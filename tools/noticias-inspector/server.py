@@ -21,6 +21,7 @@ import deps
 import pipeline_map
 import gallery_view
 import inspector_core as core
+import seed_refresh
 
 try:
     from apscheduler.schedulers.background import BackgroundScheduler
@@ -126,7 +127,24 @@ def api_last_run():
         "state": _state,
         "cron": _cron_status(),
         "deps": deps.check().as_dict(),
+        "seed": seed_refresh.seed_info(),
     })
+
+
+@app.post("/api/seed/refresh")
+def api_seed_refresh():
+    """Opt-in: baja la tabla noticias actual del VPS (read-only) a sandbox/. Alimenta la
+    PRÓXIMA corrida → budget/dedup prod-fieles. Falla de SSH → 502 con error (la UI cae al
+    mirror local con aviso; no crashea)."""
+    res = seed_refresh.refresh_from_vps()
+    return jsonify(res), (200 if res.get("ok") else 502)
+
+
+@app.post("/api/seed/clear")
+def api_seed_clear():
+    """Vuelve al mirror local (descarta el seed VPS)."""
+    cleared = seed_refresh.clear_seed()
+    return jsonify({"cleared": cleared, "seed": seed_refresh.seed_info()})
 
 
 @app.get("/api/constants")
@@ -145,13 +163,21 @@ def api_pipeline_map():
 
 
 def main():
+    import sys
+    # Windows consolas usan cp1252 y crashean al imprimir glyphs no-ASCII (→, ⚠, —).
+    # Forzar UTF-8 con fallback evita que un print de arranque tumbe el server.
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     ap = argparse.ArgumentParser(description="Noticias Inspector server")
     ap.add_argument("--port", type=int, default=5057)
     ap.add_argument("--host", default="127.0.0.1")
     args = ap.parse_args()
     rep = deps.check()
     print(deps.banner(rep))
-    print(f"\nNoticias Inspector → http://{args.host}:{args.port}  (Ctrl-C para salir)")
+    print(f"\nNoticias Inspector -> http://{args.host}:{args.port}  (Ctrl-C para salir)")
     app.run(host=args.host, port=args.port, debug=False, use_reloader=False)
 
 

@@ -19,8 +19,25 @@ import sqlite3
 from pathlib import Path
 
 import insp_config as config  # noqa: E402  (sets sys.path to repo root; named to NOT shadow repo config.py)
+import seed_refresh
 
 import ingest_noticias  # real init_schema  (REGLA DURA: imported, not reimplemented)
+
+
+def _seed_rows(sand: sqlite3.Connection, table: str, rows: list) -> int:
+    """Insert row-dicts (e.g. from the VPS seed JSON) into the sandbox table using the
+    column intersection (VPS schema may lack columns the new DDL adds, and vice-versa)."""
+    if not rows:
+        return 0
+    sand_cols = _columns(sand, table)
+    cols = [c for c in rows[0].keys() if c in sand_cols]
+    if not cols:
+        return 0
+    collist = ", ".join(cols)
+    ph = ", ".join("?" for _ in cols)
+    data = [tuple(r.get(c) for c in cols) for r in rows]
+    sand.executemany(f"INSERT OR IGNORE INTO {table} ({collist}) VALUES ({ph})", data)
+    return len(data)
 
 
 def file_fingerprint(path: Path, full_hash: bool = False) -> dict:
@@ -86,22 +103,27 @@ def build_sandbox() -> dict:
 
     sand = sqlite3.connect(str(db_path))
     seeded = {"noticias": 0, "noticias_hidden": 0}
+    vps_rows = seed_refresh.load_seed_rows()  # None si nunca se refrescó desde el VPS
+    seed_source = "mirror-local"
     try:
         ingest_noticias.init_schema(sand)  # REAL schema (adds tambien_en etc.)
-        if config.REAL_DB.exists():
+        if vps_rows is not None:
+            # Seed PREFERENTE: estado de HOY de la tabla noticias del VPS (refresh opt-in).
+            # Hace prod-fieles las etapas 14 (budget) y 15 (dedup inter-día).
+            seeded["noticias"] = _seed_rows(sand, "noticias", vps_rows)
+            seed_source = "vps"
+        elif config.REAL_DB.exists():
+            # Fallback: mirror local de p2p_normalized.db (puede estar stale; laptop ingest
+            # apagado). El pipeline aplica sus propias ventanas de fecha igual.
             ro = sqlite3.connect(f"file:{config.REAL_DB}?mode=ro", uri=True)
             try:
                 ro.execute("PRAGMA query_only = ON")
-                # Seed ALL noticias rows. The local p2p_normalized.db is a possibly-stale
-                # mirror (laptop ingest disabled; real recent rows live on the VPS — out of
-                # scope). The noticias table is small (~14/day), so a full copy is cheap and
-                # robust to staleness; the pipeline's own date filters (titulos_recientes
-                # last DEDUPE_DIAS, budget COUNT WHERE date=today) apply the real windows.
                 seeded["noticias"] = _seed_table(ro, sand, "noticias")
                 seeded["noticias_hidden"] = _seed_table(ro, sand, "noticias_hidden")
             finally:
                 ro.close()
         sand.commit()
+        max_date = sand.execute("SELECT MAX(date) FROM noticias").fetchone()[0]
     finally:
         sand.close()
 
@@ -118,4 +140,6 @@ def build_sandbox() -> dict:
         "cache_path": cache_path,
         "seeded": seeded,
         "cache": cache_seeded,
+        "seed_source": seed_source,     # "vps" (refrescado) | "mirror-local" (posible stale)
+        "seed_max_date": max_date,      # fecha más reciente sembrada (para el aviso de la UI)
     }

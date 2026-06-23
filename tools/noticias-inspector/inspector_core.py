@@ -84,7 +84,8 @@ def capture_live_snapshot(sandbox_cache_path) -> tuple:
     """REAL correr_scraper (network) with cache pointed at the sandbox copy. Returns the
     full (candidatos, descartados, portales_ok, portales_fail) tuple."""
     with harness(sandbox_cache_path):  # no snapshot -> real correr_scraper
-        return scraper.correr_scraper(cache_db_path=str(sandbox_cache_path))
+        # MUST be a Path (CacheURLs.__init__ does db_path.parent.mkdir) — a str crashes.
+        return scraper.correr_scraper(cache_db_path=Path(sandbox_cache_path))
 
 
 def save_snapshot(snap, path: Path):
@@ -390,7 +391,8 @@ def run(mode="live", snapshot_path=None, ahora_utc=None):
                   "error": lat.get("error")},
         "prod_preview": preview,
         "hermetic": {"ok": hermetic_ok, "before": fp_before, "after": fp_after},
-        "sandbox": {"db": str(info["db_path"]), "cache": info["cache"], "seeded": info["seeded"]},
+        "sandbox": {"db": str(info["db_path"]), "cache": info["cache"], "seeded": info["seeded"],
+                    "seed_source": info.get("seed_source"), "seed_max_date": info.get("seed_max_date")},
     }
     (cfg.SANDBOX_DIR / "last-run.json").write_text(
         json.dumps(run_dict, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
