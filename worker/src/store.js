@@ -61,3 +61,39 @@ export async function unhide(kv, id) {
   delete meta[id];
   return persist(kv, meta);
 }
+
+// ── Curación editorial del riel "Lo más relevante" (presentacional, runtime) ──
+// Vive en el MISMO KV (HIDDEN_KV) pero en claves aparte, por día:
+//   key "curation:<YYYY-MM-DD>" → { order: string[] (ids 16-hex), treatment }
+//     - order     : orden explícito de las notas del riel (las no listadas el
+//                   frontend las pone detrás, en su orden por impacto).
+//     - treatment : "none" | "striped" | "full" — tratamiento visual del BLOQUE.
+// DIVERGE de hide a propósito: la curación es PRESENTACIONAL (no toca el set de
+// ocultos ni el cómputo de `v` ni el build), así que se escribe con PUT directo
+// (last-write-wins) — un solo admin a la vez, sin read-modify-write. La validación
+// de inputs vive en el router (index.js); getCuration es defensivo en lectura.
+
+export const TREATMENTS = new Set(["none", "striped", "full"]);
+
+export function curationKey(day) {
+  return "curation:" + day;
+}
+
+export async function getCuration(kv, day) {
+  const raw = await kv.get(curationKey(day));
+  if (!raw) return { order: [], treatment: "none" };
+  try {
+    const o = JSON.parse(raw);
+    const order = Array.isArray(o.order) ? o.order.filter((x) => typeof x === "string") : [];
+    const treatment = TREATMENTS.has(o.treatment) ? o.treatment : "none";
+    return { order, treatment };
+  } catch {
+    return { order: [], treatment: "none" };
+  }
+}
+
+export async function putCuration(kv, day, order, treatment) {
+  const value = { order, treatment };
+  await kv.put(curationKey(day), JSON.stringify(value));
+  return value;
+}
