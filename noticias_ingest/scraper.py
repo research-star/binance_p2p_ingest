@@ -738,12 +738,25 @@ _TEMA_SPEC = {
                    # Vocabulario de crisis política (calibración 2026-06-21): la cobertura
                    # de la crisis cae en Política, no en Otros/General.
                    "estado de excepcion", "estado de sitio", "toque de queda",
-                   "comite multisectorial", "pacificacion del pais"],
+                   "comite multisectorial", "pacificacion del pais",
+                   # Post-conflicto / reactivación (WS3 funnel-v2): la cobertura del
+                   # desenlace de la crisis caía a General→Otros. Las FRASES específicas
+                   # van como strong (1 basta); los stems ambiguos (reactivacion,
+                   # reconstruccion, normalizacion) van como weak GATEADO por el contexto
+                   # de conflicto de abajo, para NO mis-routear economía genérica.
+                   "desbloqueo", "levantamiento del bloqueo", "levantamiento de los bloqueos",
+                   "fin del paro", "fin de los bloqueos", "reanudacion del transito",
+                   "transitabilidad", "reactivacion economica", "reconstruccion economica",
+                   "reconstruccion del pais"],
         "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia",
-                 "choferes", "transportistas", "bloqueadores", "pacificacion"],
+                 "choferes", "transportistas", "bloqueadores", "pacificacion",
+                 "reactivacion", "reconstruccion", "normalizacion",
+                 "brigada parlamentaria", "brigadas parlamentarias"],
         "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
                     "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino",
                     "estado de excepcion", "central obrera", "pacificacion", "chofer",
+                    "desbloqueo", "transitabilidad", "reanudacion", "normalizacion del abastecimiento",
+                    "brigada parlamentaria", "post conflicto", "mesa de dialogo", "reactivacion economica",
                     "multisectorial", "decreto supremo"],
         "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
                     "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
