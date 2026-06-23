@@ -4501,13 +4501,12 @@ window.addEventListener('popstate', function(){
     let embi=null, embiD=null;
     const es=(typeof DATA!=='undefined')&&DATA.embi_data&&DATA.embi_data.series&&DATA.embi_data.series.bolivia;
     if(es){ embi=npLastNum(es); const pv=npPrevNum(es); if(npNum(embi)&&npNum(pv)) embiD=embi-pv; }
-    const ipc=npInflVar12('ipc'), ipp=npInflVar12('ipp');
+    const ipc=npInflVar12('ipc');  // IPP retirado del ticker (frontend-only); DATA.inflacion.ipp queda latente
     return [
       { lab:'Dólar P2P',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
       { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:'flat',                sub:'sin cambios' },
       { lab:'Riesgo país', val:npNum(embi)?npFmt(embi,0):'—',unit:'pb',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,' pb',0):'EMBI Bolivia' },
-      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' },
-      { lab:'IPP interan.',val:ipp?npFmt(ipp.val,1):'—',     unit:'%',      dir:npDir(ipp&&ipp.delta), sub:ipp?npDeltaTxt(ipp.delta,' pp',1):'s/d' }
+      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' }
     ];
   }
 
@@ -4932,7 +4931,7 @@ window.addEventListener('popstate', function(){
 
   // ── Chrome global: franja de tickers (área 1; reusa npMarketsData de la portada) ──
   // Semántica INVERTIDA uniforme: los indicadores listados son "más alto = peor"
-  // (dólar/riesgo/IPC/IPP) y BCB es flat por dato → npTone(dir) aplica a todos:
+  // (dólar/riesgo/IPC) y BCB es flat por dato → npTone(dir) aplica a todos:
   // up→bad(rojo), down→good(verde), flat→neutro. La flecha conserva la dirección real.
   function npTone(dir){ return dir==='up'?'bad':(dir==='down'?'good':'flat'); }
   function fbRenderTicker(){

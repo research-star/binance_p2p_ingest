@@ -375,6 +375,15 @@ debajo del chart EMBI):
 
 **Frontend subtab "Inflación"** (en `template.html`, hermano de Riesgo País
 dentro de Macro):
+- **⚠️ Corrección 2026-06-23 (supersede lo de abajo sobre IPP):** la subtab
+  Inflación renderiza **solo IPC** (`DATA.inflacion.ipc`); el código lo dice
+  explícito (`template.html`: `// Solo IPC (el IPP se ignora)`). El **IPP
+  (`DATA.inflacion.ipp`) se computa en el payload de `dashboard.py` pero NO se
+  renderiza en ninguna superficie del frontend** desde que el ticker "El día en
+  cifras" (`.fb-ticker`) dejó de mostrar "IPP interanual" (2026-06-23). Las
+  menciones de abajo a "IPP interanual" como KPI hero, al dual **IPC vs IPP**, y
+  al dual-card **IPP por grandes grupos** describen un diseño **no implementado**
+  (stale): el payload `ipp` y los tokens `--chart-ipp-*` quedan latentes.
 - Payload `DATA.inflacion`: `dashboard.py` pivotea `ine_ipc`/`ine_ipp` a
   shape columnar estilo EMBI — `{ipc:{periodos, general:{var_12m,
   var_mensual, var_acumulada}, divisiones:{slug:{label, var_12m, var_mensual,
