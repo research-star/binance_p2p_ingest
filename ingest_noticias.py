@@ -281,6 +281,9 @@ def escribir_csv_debug(candidatos: list, fecha: str):
 
 # ── Carril Bolivia ────────────────────────────────────────────────────────
 
+# ⓘ pipeline-anchor: lane_bolivia es la secuencia (etapas 9-18) que replica
+#   tools/noticias-inspector. Si agregás/quitás/reordenás una etapa, actualizá el mirror
+#   (tools/noticias-inspector/inspector_core.py) + pipeline_map.py + SYNC.md.
 def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
     """Scrape + score + corte 6.7 + dedupe + presupuesto top-N + insert.
     Devuelve dict-resumen; estado='error' nunca propaga excepción."""

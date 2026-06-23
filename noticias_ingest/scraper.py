@@ -1317,6 +1317,9 @@ def procesar_portal(fuente: dict) -> tuple:
     return portal, items_raw, bool(items_raw)
 
 
+# ⓘ pipeline-anchor: este return es el SEAM que replica tools/noticias-inspector (etapas
+#   1-8 del funnel Bolivia). Si cambiás el orden/etapas del pipeline o el contrato del dict
+#   candidato, actualizá el inspector (inspector_core.py + pipeline_map.py + SYNC.md).
 def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     """Corre el pipeline completo: scrape 13 portales → score → dedupe
     intra-corrida → resolución Google News → cuerpos.

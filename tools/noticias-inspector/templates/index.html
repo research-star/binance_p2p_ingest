@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Noticias Inspector · FinanzasBo</title>
+<link rel="stylesheet" href="/static/inspector.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">▣ Noticias Inspector <span class="sub">pipeline de criterio · local</span></div>
+  <div class="controls">
+    <button id="btn-run-live" class="btn">▶ Correr ahora (live)</button>
+    <button id="btn-run-replay" class="btn ghost">↻ Replay (offline)</button>
+    <span class="divider"></span>
+    <button id="btn-cron-start" class="btn">⏱ Cron 1h: ON</button>
+    <button id="btn-cron-stop" class="btn ghost">■ OFF</button>
+  </div>
+</header>
+
+<div id="statusbar" class="statusbar">
+  <span id="st-run" class="chip">sin corridas aún</span>
+  <span id="st-scoring" class="chip"></span>
+  <span id="st-hermetic" class="chip"></span>
+  <span id="st-cron" class="chip"></span>
+  <span id="st-deps" class="chip"></span>
+  <span id="st-running" class="chip hot" hidden>corriendo…</span>
+</div>
+
+<nav class="tabs">
+  <button class="tab on" data-tab="pasos">1 · Pasos (funnel)</button>
+  <button class="tab" data-tab="prod">2 · Cómo se vería en prod</button>
+  <button class="tab" data-tab="galeria">3 · Galería</button>
+  <button class="tab" data-tab="sync">Constantes / Sync</button>
+</nav>
+
+<main>
+  <!-- TAB 1: PASOS -->
+  <section id="tab-pasos" class="tabpane on">
+    <div class="lane-toggle">
+      <button class="lane on" data-lane="bolivia">Bolivia (18 etapas · con scoring)</button>
+      <button class="lane" data-lane="latam">Latam (6 etapas · sin scoring)</button>
+    </div>
+    <div id="funnel" class="terminal"></div>
+  </section>
+
+  <!-- TAB 2: PROD -->
+  <section id="tab-prod" class="tabpane">
+    <p class="hint">Set X de la corrida, renderizado como la sección Noticias (a grandes rasgos). Imagen = cascada real
+      og:image → galería → placeholder, con <b>paridad prod</b> (El Deber / Bloomberg anulan og:image porque prod no puede servirlo).</p>
+    <div id="prodview" class="prodgrid"></div>
+  </section>
+
+  <!-- TAB 3: GALERIA -->
+  <section id="tab-galeria" class="tabpane">
+    <p class="hint">Vista inversa de <code>gallery_slug_v2</code> (leída <b>viva</b> de dashboard.py): por cada slug/imagen, qué
+      <b>keywords</b> y qué <b>temas</b> enrutan una nota ahí.</p>
+    <div id="galleryview" class="gallerygrid"></div>
+  </section>
+
+  <!-- TAB SYNC -->
+  <section id="tab-sync" class="tabpane">
+    <p class="hint">Constantes <b>importadas vivas</b> (auto-sync) vs <b>sync-manual</b> (literales inline / superficie de paridad).</p>
+    <div id="syncview"></div>
+  </section>
+</main>
+
+<script src="/static/inspector.js"></script>
+</body>
+</html>
