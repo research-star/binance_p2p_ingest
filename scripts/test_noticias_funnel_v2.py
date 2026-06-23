@@ -75,9 +75,22 @@ LEGIT = [
 #    (titulo, url). Detección por marcador de título o por sección de URL.
 OPINION = [
     ("OPINIÓN: el costo económico de los bloqueos en Bolivia", ""),
+    ("OPINIÓN — El dólar paralelo y la economía boliviana", ""),  # em-dash (U+2014), fix review
     ("El rumbo del dólar paralelo en Bolivia", "https://eldeber.com.bo/opinion/columna-economica_1"),
     ("La economía boliviana y el litio | OPINIÓN |", ""),
     ("Reflexiones sobre las reservas del BCB", "https://lostiempos.com/columna/analisis_2"),
+]
+
+# G. TEMA-CORRECTNESS (fix review WS3): el vocabulario de recuperación económica SIN
+#    contexto de conflicto NO debe caer en 'Bloqueos / Conflictos' (→ politica); y el
+#    post-conflicto real SÍ debe caer ahí. (titulo, debe_ser_bloqueos)
+TEMA_CHECK = [
+    ("Reactivación económica impulsa la inversión extranjera directa", False),
+    ("La transitabilidad de la nueva autopista mejora el comercio", False),
+    ("Gobierno destaca la reconstrucción del país en salud y educación", False),
+    ("Tras el desbloqueo, mejora la transitabilidad en el eje troncal", True),
+    ("Reactivación económica tras el levantamiento de los bloqueos", True),
+    ("Brigadas parlamentarias investigan los bloqueos en el trópico", True),
 ]
 
 # D. CULTURAL — color folklórico/ceremonial sin ángulo económico → muere.
@@ -97,6 +110,65 @@ INTERNACIONAL = [
     "Greenspan opina sobre la última decisión de la Reserva Federal",
     "La OEA debate una resolución sobre la crisis de Venezuela",
 ]
+
+
+def _check_embudo() -> list:
+    """WS6: el embudo unificado (res['funnel']) debe reconciliar entran→insert.
+    Maneja lane_bolivia con un correr_scraper stubeado + LAST_FUNNEL poblado y
+    verifica las identidades aritméticas (incluido el bucket kill_sin_razon que
+    cierra el modo degradado y el stage scheme_patrocinado del filtro de URL)."""
+    import sqlite3
+    import types
+    import ingest_noticias as ing
+    from noticias_ingest import resumen_ia
+
+    e: list[str] = []
+    base = {"tema": "Tipo de cambio / Dólar", "tema_hits": 10, "entidades": [], "descripcion": "x",
+            "cuerpo": "", "puntaje": 9.0, "score_crudo": 0.9, "score_ajustado": 0.9,
+            "ajuste_aplicado": "—", "es_opinion": False}
+    cands = [
+        {**base, "portal": "El Deber", "titulo": "El dólar sube en Bolivia",
+         "link": "https://eldeber.com.bo/economia/a"},
+        {**base, "portal": "El Deber", "titulo": "Reservas del BCB en alza",
+         "link": "https://eldeber.com.bo/economia/b"},
+        {**base, "portal": "El Deber", "titulo": "Nota patrocinada",
+         "link": "https://eldeber.com.bo/marcas/promo_c"},  # filtrada por es_url_patrocinada
+    ]
+    # 60 kills conocidos + sobreviven 5; evaluados 70 → kill_sin_razon = 5 (degradado).
+    descs = ([{"descartado_por": "falta_bolivia"}] * 40
+             + [{"descartado_por": "keyword_excluida"}] * 15
+             + [{"descartado_por": "umbral"}] * 5)
+    scraper.LAST_FUNNEL.clear()
+    scraper.LAST_FUNNEL.update({"entran": 100, "cache_skip": 30, "evaluados": 70,
+                               "sobreviven": 5, "unicos": 3})
+    saved = (scraper.correr_scraper, scraper.marcar_urls_vistas, resumen_ia.aplicar)
+    scraper.correr_scraper = lambda *a, **k: (cands, descs, ["El Deber"], [])
+    scraper.marcar_urls_vistas = lambda v: None
+    resumen_ia.aplicar = lambda f: 0
+    try:
+        conn = sqlite3.connect(":memory:")
+        ing.init_schema(conn)
+        args = types.SimpleNamespace(umbral=6.7, top=10, dry_run=True, db=":memory:")
+        res = ing.lane_bolivia(conn, args, datetime.now(timezone.utc), "2026-06-23", [])
+        conn.close()
+    finally:
+        scraper.correr_scraper, scraper.marcar_urls_vistas, resumen_ia.aplicar = saved
+
+    f = res.get("funnel")
+    if not f:
+        return ["WS6 embudo: res['funnel'] ausente"]
+    if f["evaluados"] != f["entran"] - f["cache_skip"]:
+        e.append(f"WS6 embudo: evaluados({f['evaluados']}) != entran-cache_skip({f['entran']-f['cache_skip']})")
+    suma = (f["sobreviven"] + f["kill_keyword_excluida"] + f["kill_falta_bolivia"]
+            + f["kill_umbral_modelo"] + f["kill_sin_razon"])
+    if suma != f["evaluados"]:
+        e.append(f"WS6 embudo: sobreviven+kills+sin_razon({suma}) != evaluados({f['evaluados']})")
+    if f["kill_sin_razon"] != 5:
+        e.append(f"WS6 embudo: kill_sin_razon esperado 5 (modo degradado), dio {f['kill_sin_razon']}")
+    if f["scheme_patrocinado"] != len(cands) - f["candidatos"]:
+        e.append(f"WS6 embudo: scheme_patrocinado({f['scheme_patrocinado']}) != "
+                 f"pre-filtro-candidatos({len(cands)-f['candidatos']})")
+    return e
 
 
 def run() -> int:
@@ -155,6 +227,17 @@ def run() -> int:
     if nota_h["category"] != "finanzas":
         err.append(f"build_nota: nota dura Dólar debería ser 'finanzas', dio {nota_h['category']!r}")
 
+    # G. TEMA-CORRECTNESS: recuperación económica sin conflicto NO va a Bloqueos→política.
+    for titulo, debe_bloqueos in TEMA_CHECK:
+        tema = scraper._tema(titulo)[0]
+        es_bloqueos = (tema == "Bloqueos / Conflictos")
+        if es_bloqueos != debe_bloqueos:
+            esperado = "Bloqueos/Conflictos" if debe_bloqueos else "NO Bloqueos (economía/General)"
+            err.append(f"TEMA mal ruteado: {titulo!r} -> {tema!r} (esperado {esperado})")
+
+    # H. WS6 — el embudo unificado reconcilia aritméticamente (entran→insert).
+    err += _check_embudo()
+
     if err:
         print("FAIL test_noticias_funnel_v2:")
         for e in err:
@@ -163,7 +246,7 @@ def run() -> int:
     print(f"OK test_noticias_funnel_v2: {len(RESCATES)} rescates sobreviven + "
           f"{len(LEGIT)} legit pasan + {len(OPINION)} opinión < 6.7 + "
           f"{len(CULTURAL)} cultural muere + {len(INTERNACIONAL)} intl fuera del set + "
-          f"category='opinion' en data.")
+          f"category='opinion' + {len(TEMA_CHECK)} tema-correctness + embudo reconcilia.")
     return 0
 
 
