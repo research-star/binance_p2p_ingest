@@ -581,9 +581,9 @@ OPINION_URL_SECCIONES = (
 )
 _RE_OPINION_TIT = re.compile(
     r"\|\s*opini[oó]n\s*\|"            # ...| OPINIÓN |... (byline-marker pipe)
-    r"|^\s*opini[oó]n\s*[:|\-–]"       # OPINIÓN: / OPINIÓN - al inicio
-    r"|^\s*columna\s*[:|\-–]"          # COLUMNA: al inicio
-    r"|^\s*editorial\s*[:|\-–]",       # EDITORIAL: al inicio
+    r"|^\s*opini[oó]n\s*[:|\-–—]"       # OPINIÓN: / OPINIÓN - al inicio
+    r"|^\s*columna\s*[:|\-–—]"          # COLUMNA: al inicio
+    r"|^\s*editorial\s*[:|\-–—]",       # EDITORIAL: al inicio
     re.IGNORECASE,
 )
 
@@ -774,23 +774,22 @@ _TEMA_SPEC = {
                    "estado de excepcion", "estado de sitio", "toque de queda",
                    "comite multisectorial", "pacificacion del pais",
                    # Post-conflicto / reactivación (WS3 funnel-v2): la cobertura del
-                   # desenlace de la crisis caía a General→Otros. Las FRASES específicas
-                   # van como strong (1 basta); los stems ambiguos (reactivacion,
-                   # reconstruccion, normalizacion) van como weak GATEADO por el contexto
-                   # de conflicto de abajo, para NO mis-routear economía genérica.
+                   # desenlace de la crisis caía a General→Otros. SOLO van como strong
+                   # las frases inequívocamente atadas al conflicto (desbloqueo, fin del
+                   # paro…). Los stems de recuperación (reactivacion/reconstruccion/
+                   # normalizacion/transitabilidad) son weak GATEADO por el contexto de
+                   # conflicto real de abajo — NO se ponen en context (auto-gatearían) ni
+                   # como strong (capturarían economía genérica a Política). Fix review.
                    "desbloqueo", "levantamiento del bloqueo", "levantamiento de los bloqueos",
-                   "fin del paro", "fin de los bloqueos", "reanudacion del transito",
-                   "transitabilidad", "reactivacion economica", "reconstruccion economica",
-                   "reconstruccion del pais"],
+                   "fin del paro", "fin de los bloqueos", "reanudacion del transito"],
         "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia",
                  "choferes", "transportistas", "bloqueadores", "pacificacion",
-                 "reactivacion", "reconstruccion", "normalizacion",
+                 "reactivacion", "reconstruccion", "normalizacion", "transitabilidad",
                  "brigada parlamentaria", "brigadas parlamentarias"],
         "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
                     "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino",
                     "estado de excepcion", "central obrera", "pacificacion", "chofer",
-                    "desbloqueo", "transitabilidad", "reanudacion", "normalizacion del abastecimiento",
-                    "brigada parlamentaria", "post conflicto", "mesa de dialogo", "reactivacion economica",
+                    "desbloqueo", "reanudacion", "post conflicto", "mesa de dialogo",
                     "multisectorial", "decreto supremo"],
         "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
                     "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
