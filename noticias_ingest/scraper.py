@@ -547,6 +547,12 @@ KEYWORDS_EXCLUIR = [
     # exclusión por sección/URL se aplica aparte, vía es_url_patrocinada).
     "contenido de marca", "contenido patrocinado", "espacio publicitario",
     "espacio de marca", "publirreportaje", "branded content",
+    # Color cultural / folklórico / ceremonial (WS5 funnel-v2): ruido sin ángulo
+    # económico. CONSERVADOR: NO incluye carnaval, alasitas, ferias ni nada con
+    # arista económica/turística — solo lo inequívocamente ceremonial.
+    "año nuevo andino", "año nuevo aymara", "año nuevo amazónico", "solsticio",
+    "ceremonia ancestral", "ritual ancestral", "fiesta patronal", "fiestas patronales",
+    "entrada folklórica", "entrada folclórica", "danza folklórica", "danza folclórica",
 ]
 
 # Rutas/secciones de contenido patrocinado a excluir por URL (decisión "ambas",
@@ -564,6 +570,34 @@ def es_url_patrocinada(url: str) -> bool:
     u = (url or "").lower()
     return any(p in u for p in SECCIONES_PATROCINADAS)
 
+
+# Opinión / columna / editorial (WS4 funnel-v2): NO se mata. El data layer le pone
+# category='opinion' (categoría propia) y el ajuste editorial la penaliza ×0.7. Se
+# detecta por sección de URL o por marcador en el título.
+OPINION_URL_SECCIONES = (
+    "/opinion/", "/opiniones/", "/opinion-y-analisis/",
+    "/columna/", "/columnas/", "/columnistas/",
+    "/editorial/", "/editoriales/",
+)
+_RE_OPINION_TIT = re.compile(
+    r"\|\s*opini[oó]n\s*\|"            # ...| OPINIÓN |... (byline-marker pipe)
+    r"|^\s*opini[oó]n\s*[:|\-–—]"       # OPINIÓN: / OPINIÓN - al inicio
+    r"|^\s*columna\s*[:|\-–—]"          # COLUMNA: al inicio
+    r"|^\s*editorial\s*[:|\-–—]",       # EDITORIAL: al inicio
+    re.IGNORECASE,
+)
+
+
+def es_opinion(titulo: str, url: str = "") -> bool:
+    """True si la nota es opinión/columna/editorial (sección de URL o marcador de
+    título). Conservador: solo marcadores inequívocos — NO infiere opinión por
+    byline de nombre suelto (demasiado falso-positivo sobre nota dura)."""
+    u = (url or "").lower()
+    if any(s in u for s in OPINION_URL_SECCIONES):
+        return True
+    return bool(_RE_OPINION_TIT.search(titulo or ""))
+
+
 TERMINOS_BOLIVIA = [
     "bolivia", "bolivian", "boliviano", "boliviana",
     "santa cruz", "la paz", "cochabamba", "sucre", "oruro", "potosí",
@@ -571,6 +605,11 @@ TERMINOS_BOLIVIA = [
     "uyuni", "yacuiba", "quillacollo", "riberalta", "tupiza", "camiri",
     "llallagua", "villazón", "estado boliviano", "gobierno boliviano",
     "ypfb", "bcb", "mefp", "ofep", "central obrera", "ley 1720",
+    # Gentilicios departamentales (WS2 funnel-v2). STEMS largos y no-ambiguos →
+    # substring seguro (ningún término-host común los contiene). Los tokens cortos
+    # o ambiguos (Bs, SIN, ABC, fisco) NO van acá: ver _ENTIDAD_SPEC (word-boundary).
+    "paceñ", "cruceñ", "cochabambin", "orureñ", "potosin", "tarijeñ",
+    "alteñ", "chuquisaqueñ", "beniano", "pandino",
 ]
 PORTALES_EXIGEN_BOLIVIA = {"Bloomberg Línea", "Urgente.bo", "Opinión"}  # legacy: el carril vivo (evaluar) exige Bolivia a TODOS los portales; esto solo afecta el fallback keywords (muerto en prod)
 
@@ -733,12 +772,24 @@ _TEMA_SPEC = {
                    # Vocabulario de crisis política (calibración 2026-06-21): la cobertura
                    # de la crisis cae en Política, no en Otros/General.
                    "estado de excepcion", "estado de sitio", "toque de queda",
-                   "comite multisectorial", "pacificacion del pais"],
+                   "comite multisectorial", "pacificacion del pais",
+                   # Post-conflicto / reactivación (WS3 funnel-v2): la cobertura del
+                   # desenlace de la crisis caía a General→Otros. SOLO van como strong
+                   # las frases inequívocamente atadas al conflicto (desbloqueo, fin del
+                   # paro…). Los stems de recuperación (reactivacion/reconstruccion/
+                   # normalizacion/transitabilidad) son weak GATEADO por el contexto de
+                   # conflicto real de abajo — NO se ponen en context (auto-gatearían) ni
+                   # como strong (capturarían economía genérica a Política). Fix review.
+                   "desbloqueo", "levantamiento del bloqueo", "levantamiento de los bloqueos",
+                   "fin del paro", "fin de los bloqueos", "reanudacion del transito"],
         "weak": ["paro", "conflicto", "protesta", "marcha", "movilizacion", "huelga", "vigilia",
-                 "choferes", "transportistas", "bloqueadores", "pacificacion"],
+                 "choferes", "transportistas", "bloqueadores", "pacificacion",
+                 "reactivacion", "reconstruccion", "normalizacion", "transitabilidad",
+                 "brigada parlamentaria", "brigadas parlamentarias"],
         "context": ["ruta", "carretera", "via", "bloqueo", "paro", "protesta", "sector", "huelga",
                     "transportista", "gremial", "movilizad", "sindical", "conflicto", "camino",
                     "estado de excepcion", "central obrera", "pacificacion", "chofer",
+                    "desbloqueo", "reanudacion", "post conflicto", "mesa de dialogo",
                     "multisectorial", "decreto supremo"],
         "exclude": ["bloqueo mental", "bloqueo de tarjeta", "bloqueo de cuenta", "bloqueo de pantalla",
                     "sin bloqueo", "paro cardiaco", "paro respiratorio", "marcha atras",
@@ -808,6 +859,19 @@ _ENTIDAD_SPEC = {
     "Fitch": ["fitch", "fitch ratings"],
     "Moody's": ["moody", "moodys"],
     "S&P": ["standard and poor", "standard & poor", "standard & poors", "s&p"],
+    # ── Ancla BO ampliada (WS2 funnel-v2) ──
+    # Instituciones/figuras/moneda que anclan la nota en Bolivia aunque NO nombre el
+    # país. TODO token corto o ambiguo entra SOLO por acá (word-boundary vía _wb),
+    # NUNCA por TERMINOS_BOLIVIA (substring crudo), para no matchear "sin"→preposición,
+    # "abc"→alfabeto/diario, "bs"→texto random. Por eso SIN/ABC se anclan por su nombre
+    # completo (no por la sigla pelada), y "bs"/"fisco" van con boundary estricto.
+    "Senasir": ["senasir"],
+    "Gestora": ["gestora publica", "gestora publica de la seguridad social"],
+    "ABC": ["administradora boliviana de carreteras"],
+    "SIN": ["servicio de impuestos nacionales", "impuestos nacionales"],
+    "Fisco": ["fisco"],
+    "Bs": ["bs"],
+    "Figuras BO": ["rodrigo paz", "doria medina", "edman lara", "edmand lara", "evo morales"],
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 
@@ -818,6 +882,8 @@ ENTIDADES_BOLIVIANAS = {
     "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "Gobierno", "ASFI", "ASOBAN", "INE",
     "Aduana", "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "COB", "MEFP",
     "TSE", "TED",
+    # Ancla BO ampliada (WS2 funnel-v2): instituciones/figuras/moneda word-boundary.
+    "Senasir", "Gestora", "ABC", "SIN", "Fisco", "Bs", "Figuras BO",
 }
 # Entidades que dan evidencia económica suficiente para CONSERVAR una nota "General"
 # (sin tema). Excluye las puramente políticas/electorales (Gobierno, TSE, TED, COB).
@@ -878,7 +944,7 @@ def score_keywords(titulo: str, descripcion: str, portal: str) -> tuple:
     return mejor, tema, conf
 
 
-def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
+def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False) -> tuple:
     """
     Devuelve (puntaje, tema, tema_hits, entidades, score_crudo, score_ajustado,
               ajuste_aplicado, descartado_por).
@@ -894,38 +960,39 @@ def evaluar(titulo: str, descripcion: str, portal: str) -> tuple:
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
             return 0, "", 0, [], None, None, "—", "keyword_excluida"
-    # Geo-gate UNIVERSAL (antes solo PORTALES_EXIGEN_BOLIVIA): toda nota debe anclar
-    # en Bolivia — por término geográfico/adjetivo o por entidad boliviana detectada.
-    # Corta el ruido extranjero (sucesos/policiales de otros países) en TODOS los
-    # portales, no solo en tres.
+    # Entidades + tema se computan ANTES del geo-gate (WS1 funnel-v2): el gate ahora
+    # rescata por tema, así que necesita la clasificación en el punto de decisión.
     entidades = detectar_entidades(titulo, descripcion)
-    if not (any(t in texto for t in TERMINOS_BOLIVIA)
-            or any(e in ENTIDADES_BOLIVIANAS for e in entidades)):
+    tema, tema_hits = _tema(titulo, descripcion)
+    # Geo-gate funnel-v2 (WS1): PASA si ANCLA en Bolivia (término geográfico/adjetivo o
+    # entidad boliviana — la lógica del gate viejo) OR si clasifica en un tema económico
+    # (no-General). Rescata economía boliviana legítima que NO nombra el país (ej. real:
+    # "el dólar referencial baja a Bs 9,92" → tema Dólar). El set que pasa CONTIENE al del
+    # gate viejo (solo agrega rescates por tema; cero pérdida de recall vs hoy). El ruido
+    # internacional sin ancla NI tema lo siguen conteniendo el umbral editorial 6.7 + el
+    # budget top-N (decisión cerrada: sin veto internacional en v1). "General" anclado NO
+    # se descarta: entra como 'otros' (relleno por relevancia, ver transform.py).
+    ancla_bo = (any(t in texto for t in TERMINOS_BOLIVIA)
+                or any(e in ENTIDADES_BOLIVIANAS for e in entidades))
+    if not (ancla_bo or tema != "General"):
         return 0, "", 0, [], None, None, "—", "falta_bolivia"
 
     # Intentar modelo TF-IDF
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
     if prob_crudo >= 0:
         # Ajustar score con reglas editoriales
-        prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal)
-        ajuste = detectar_ajuste(titulo, descripcion, portal)
+        prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal, es_opinion)
+        ajuste = detectar_ajuste(titulo, descripcion, portal, es_opinion)
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
-        tema, tema_hits = _tema(titulo, descripcion)
-        # NO se descarta "General": una nota boliviana relevante sin tema de negocios
-        # entra como categoría 'otros' (relleno por relevancia, ver transform.py), NO se
-        # disfraza de ECONOMÍA ni se tira. Calibración 2026-06-21 contra las 96 notas
-        # publicadas: descartar por "General sin entidad económica" tiraba ~60-70% de
-        # noticia relevante mal rotulada (crisis de bloqueos/estado de excepción). El
-        # geo-gate + KEYWORDS_EXCLUIR + umbral del modelo siguen filtrando el ruido real.
+        # tema / tema_hits ya computados arriba (no recomputar).
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
                 round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
 
     # Fallback keywords (path muerto en prod por fail-closed)
-    puntaje, tema, tema_hits = score_keywords(titulo, descripcion, portal)
-    entidades = detectar_entidades(titulo, descripcion)
-    return puntaje, tema, tema_hits, entidades, None, None, "—", ""
+    puntaje, tema_fb, tema_hits_fb = score_keywords(titulo, descripcion, portal)
+    return puntaje, tema_fb, tema_hits_fb, entidades, None, None, "—", ""
 
 
 # ---------------------------------------------------------------------------
@@ -969,7 +1036,8 @@ _RE_FX = re.compile(
 _BONUS_PORTAL = {"El Deber": 1.15, "Correo del Sur": 1.10, "La Razón": 1.10}
 
 
-def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "") -> float:
+def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "",
+                  es_opinion: bool = False) -> float:
     """Ajusta el score del modelo con reglas editoriales."""
     texto = (titulo + " " + descripcion).lower()
     tit = titulo.lower()
@@ -990,6 +1058,12 @@ def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "")
     if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
         return score * 0.5
 
+    # Penalización opinión (x0.7, WS4 funnel-v2): columna/editorial NO se mata
+    # (lleva category='opinion' propia en transform), pero se penaliza y NO recibe
+    # los bonos de portal/FX/instituciones (early-return antes de la bonificación).
+    if es_opinion:
+        return score * 0.7
+
     # Bonificación instituciones (x1.3, max 1.0)
     menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
     if len(menciones) >= 2:
@@ -1007,7 +1081,8 @@ def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "")
     return score
 
 
-def detectar_ajuste(titulo: str, descripcion: str, portal: str) -> str:
+def detectar_ajuste(titulo: str, descripcion: str, portal: str,
+                    es_opinion: bool = False) -> str:
     """Devuelve string descriptivo de qué reglas de ajustar_score se dispararon."""
     texto = (titulo + " " + descripcion).lower()
     tit = titulo.lower()
@@ -1023,6 +1098,8 @@ def detectar_ajuste(titulo: str, descripcion: str, portal: str) -> str:
         return "×0.5 marihuana"
     if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
         return "×0.5 intl sin Bolivia"
+    if es_opinion:
+        return "×0.7 opinión"
     partes = []
     menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
     if len(menciones) >= 2:
@@ -1320,6 +1397,14 @@ def procesar_portal(fuente: dict) -> tuple:
 # ⓘ pipeline-anchor: este return es el SEAM que replica tools/noticias-inspector (etapas
 #   1-8 del funnel Bolivia). Si cambiás el orden/etapas del pipeline o el contrato del dict
 #   candidato, actualizá el inspector (inspector_core.py + pipeline_map.py + SYNC.md).
+# Embudo (entran→sobreviven) de la última corrida del scraper. WS6 funnel-v2:
+# side-channel a propósito — NO se mete en el return-tuple (el SEAM de 4 elementos
+# está congelado por el inspector: parity_test/save_snapshot/mirror_bolivia). El
+# caller (ingest_noticias.lane_bolivia) lo lee para armar el embudo unificado.
+# Conteos que NO se pueden derivar del return (entran, cache_skip) viven acá.
+LAST_FUNNEL: dict = {}
+
+
 def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     """Corre el pipeline completo: scrape 13 portales → score → dedupe
     intra-corrida → resolución Google News → cuerpos.
@@ -1327,6 +1412,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     Devuelve (candidatos, descartados, portales_ok, portales_fail).
     Candidatos ordenados por puntaje desc; cada uno con cuerpo (si se pudo)
     y portales_lista (réplicas del mismo título en otros portales).
+    Efecto lateral: rellena el global LAST_FUNNEL (embudo del scraper, WS6).
     """
     modelo = get_modelo()
     if modelo.disponible:
@@ -1344,6 +1430,10 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     descartados = []
     portales_ok = []
     portales_fail = []
+    # Embudo del scraper (WS6): items que ENTRAN al evaluador y los que mueren en el
+    # skip de caché (paso 3, el `continue` de ya_vista que antes no se contaba).
+    entran = 0
+    cache_skip = 0
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {executor.submit(procesar_portal, f): f for f in FUENTES}
@@ -1364,11 +1454,17 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
 
             encontrados = 0
             for item in items_raw:
+                entran += 1
                 if cache.ya_vista(item["link"]):
+                    cache_skip += 1
                     continue
+                # Opinión/columna/editorial (WS4): se detecta acá porque la URL
+                # (item["link"]) vive en el loop, no en evaluar(). Penaliza ×0.7 el
+                # score y marca la nota para category='opinion' en transform.build_nota.
+                es_op = es_opinion(item["titulo"], item["link"])
                 (puntaje, tema, tema_hits, entidades, sc_crudo, sc_ajustado,
                  ajuste, descartado_por) = evaluar(
-                    item["titulo"], item["descripcion"], portal)
+                    item["titulo"], item["descripcion"], portal, es_opinion=es_op)
                 if puntaje == 0:
                     if descartado_por:
                         descartados.append({
@@ -1386,7 +1482,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                     "link": item["link"], "cuerpo": "",
                     "portales_lista": [{"nombre": portal, "url": item["link"]}],
                     "score_crudo": sc_crudo, "score_ajustado": sc_ajustado,
-                    "ajuste_aplicado": ajuste,
+                    "ajuste_aplicado": ajuste, "es_opinion": es_op,
                 })
                 encontrados += 1
 
@@ -1450,6 +1546,22 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
     # quedaban vistas y no se reconsideraban). La caché se usó arriba SOLO para
     # leer (ya_vista) y saltar el re-scrapeo de cuerpos de URLs ya marcadas.
     cache.close()
+
+    # Embudo del scraper (WS6): se publica en LAST_FUNNEL para que lane_bolivia arme
+    # el embudo unificado. `entran` = items vistos en RSS/scrape; `cache_skip` = los
+    # que ya estaban vistos (paso 3); `evaluados` = los que llegaron a evaluar();
+    # `sobreviven` = los que pasaron evaluar (pre-dedupe); `unicos` = tras dedupe.
+    LAST_FUNNEL.clear()
+    LAST_FUNNEL.update({
+        "entran": entran,
+        "cache_skip": cache_skip,
+        "evaluados": entran - cache_skip,
+        "sobreviven": len(todas),
+        "unicos": len(deduplicadas),
+    })
+    log.info(f"  Embudo scraper: entran={entran} cache_skip={cache_skip} "
+             f"evaluados={entran - cache_skip} sobreviven={len(todas)} "
+             f"unicos={len(deduplicadas)}")
 
     log.info(f"  {len(deduplicadas)} candidatos únicos "
              f"({len(portales_ok)} portales ok, {len(portales_fail)} fail)")

@@ -314,6 +314,7 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         # El href del frontend solo admite http/https: un portal comprometido
         # no debe poder colar un scheme ejecutable (javascript:/data:). Y se
         # excluye el contenido patrocinado por sección/URL (calibración 2026-06-21).
+        n_pre_filtro = len(candidatos)  # WS6: para contar el drop scheme/patrocinado del embudo
         candidatos = [c for c in candidatos
                       if urlparse(c["link"]).scheme in ("http", "https")
                       and not scraper.es_url_patrocinada(c["link"])]
@@ -379,6 +380,45 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             vistas += [(n["url"], n["portal"]) for n in notas if n["puntaje"] < args.umbral]
             vistas += [(n["url"], n["portal"]) for n in dedupe_losers]
             scraper.marcar_urls_vistas(vistas)
+
+        # Embudo unificado del carril Bolivia (WS6 funnel-v2): UN solo lugar arma el
+        # entran→insert por etapa, combinando el embudo del scraper (scraper.LAST_FUNNEL:
+        # entran/cache_skip/evaluados — el skip de caché que antes no se contaba), el
+        # desglose de kills por razón (descartados, que el prod tiraba al piso) y las
+        # etapas del lane (candidatos/sobre_umbral/eventos/dedupe/insertadas). Va al log
+        # y, vía main(), al ping HC_NOTICIAS — para que el próximo análisis no sea a ojo.
+        kill = {"keyword_excluida": 0, "falta_bolivia": 0, "umbral": 0}
+        for d in descartados:
+            r = d.get("descartado_por")
+            if r in kill:
+                kill[r] += 1
+        sf = scraper.LAST_FUNNEL
+        evaluados = sf.get("evaluados", 0)
+        sobreviven = sf.get("sobreviven", 0)
+        # En modo degradado (keywords) evaluar() puede tirar items con descartado_por=""
+        # (no entran a `descartados`), así que el desglose de los 3 kills no reconcilia
+        # con evaluados−sobreviven. Este bucket lo cierra para que el embudo siempre sume
+        # (en modo tfidf da 0). Y `scheme_patrocinado` cuenta el drop del filtro de :317.
+        kill_sin_razon = max(0, evaluados - sobreviven
+                             - kill["keyword_excluida"] - kill["falta_bolivia"] - kill["umbral"])
+        res["funnel"] = {
+            "entran": sf.get("entran", 0),
+            "cache_skip": sf.get("cache_skip", 0),
+            "evaluados": evaluados,
+            "kill_keyword_excluida": kill["keyword_excluida"],
+            "kill_falta_bolivia": kill["falta_bolivia"],
+            "kill_umbral_modelo": kill["umbral"],
+            "kill_sin_razon": kill_sin_razon,
+            "sobreviven": sobreviven,
+            "unicos": sf.get("unicos", 0),
+            "scheme_patrocinado": max(0, n_pre_filtro - res["candidatos"]),
+            "candidatos": res["candidatos"],
+            "sobre_umbral": res["sobre_umbral"],
+            "eventos": res.get("eventos", 0),
+            "dedupe": res["dedupe"],
+            "insertadas": res["insertadas"],
+        }
+        print(f"[noticias] bolivia embudo: {json.dumps(res['funnel'], ensure_ascii=False)}")
     except Exception:
         conn.rollback()  # aislamiento por carril: no dejar inserts a medias
         tb = traceback.format_exc()
@@ -502,13 +542,21 @@ def main() -> int:
             return f"{nombre}=ERROR({r['detalle']})"
         return f"{nombre}=ok insertadas={r['insertadas']} {extra} dedupe={r['dedupe']}"
 
+    # Embudo unificado del carril Bolivia al ping HC (WS6): el dict que armó
+    # lane_bolivia, compacto, para diagnosticar el funnel sin re-correr a ojo.
+    funnel_bo = res_bo.get("funnel")
+    funnel_str = (" funnel_bolivia="
+                  + json.dumps(funnel_bo, ensure_ascii=False, separators=(",", ":"))
+                  ) if funnel_bo else ""
+
     summary = (f"[noticias] mode={'dry-run' if args.dry_run else 'ok'} "
                f"scoring={scoring} fecha={fecha_bo} "
                + _lane_str("bolivia", res_bo,
                            f"candidatos={res_bo['candidatos']} sobre_umbral={res_bo['sobre_umbral']}")
                + " | "
                + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
-               + f" duration_s={dur:.0f}")
+               + f" duration_s={dur:.0f}"
+               + funnel_str)
     print(summary)
 
     if res_bo["estado"] == "error" or res_lt["estado"] == "error":
