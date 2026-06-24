@@ -14,5 +14,5 @@
  },
  "previos_n": 139,
  "scoring": "tfidf",
- "nota_byte_estable": "El contrato byte-estable es res['funnel'] (15 llaves) reproducido por baseline_replay.py desde snapshot.json + vps-seed.json + ahora_utc_pinned + previos.json. INDEPENDIENTE de la fecha de replay: la ventana de dedup inter-día va congelada en previos.json (titulos_recientes usa date('now') del sistema, NO el ahora_utc pinneado -> sin congelarla el embudo solo seria estable <7d). La galeria/prod-preview NO entra al contrato (date-windowed por diseno)."
+ "nota_byte_estable": "El contrato byte-estable es res['funnel'] (15 llaves) reproducido por baseline_replay.py desde snapshot.json + vps-seed.json + ahora_utc_pinned + previos.json. INDEPENDIENTE de la fecha de replay: la ventana de dedup inter-día va congelada en previos.json (titulos_recientes usa date('now') del sistema, NO el ahora_utc pinneado → sin congelarla el embudo solo sería estable <7d). La galería/prod-preview NO entra al contrato (date-windowed por diseño)."
 }
