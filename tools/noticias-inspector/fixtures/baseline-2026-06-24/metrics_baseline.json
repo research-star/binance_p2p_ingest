@@ -1,0 +1,80 @@
+{
+ "funnel_bolivia_canonical_15": {
+  "entran": 237,
+  "cache_skip": 0,
+  "evaluados": 237,
+  "kill_keyword_excluida": 5,
+  "kill_falta_bolivia": 68,
+  "kill_umbral_modelo": 11,
+  "kill_sin_razon": 0,
+  "sobreviven": 153,
+  "unicos": 144,
+  "scheme_patrocinado": 0,
+  "candidatos": 144,
+  "sobre_umbral": 38,
+  "eventos": 35,
+  "dedupe": 2,
+  "insertadas": 2
+ },
+ "volumen_muestra": {
+  "evaluados": 237,
+  "entran": 237,
+  "candidatos_post_scrape": 144,
+  "descartados": 84,
+  "portales_ok": 16,
+  "portales_fail": 8,
+  "finales_set_criterio_diag": 17
+ },
+ "share_otros_General": {
+  "set_criterio_diagnostico": {
+   "n": 17,
+   "category_otros": 8,
+   "category_otros_pct": 47.1,
+   "tema_General": 8,
+   "tema_General_pct": 47.1
+  },
+  "insertadas_prod_faithful": {
+   "n": 0,
+   "category_otros": 0,
+   "category_otros_pct": null,
+   "tema_General": 0,
+   "tema_General_pct": null
+  },
+  "nota": "insertadas prod-faithful puede ser 0 si el budget del día ya estaba lleno; el set de criterio diagnóstico (top=∞) es la lectura relevante de dominancia."
+ },
+ "opinion": {
+  "candidatos_es_opinion": 0,
+  "es_opinion_sobre_umbral_6.7": 0,
+  "es_opinion_en_finales_criterio": 0,
+  "esperado": "~0 sobre 6.7 (la penalización ×0.7 debería tirarlas bajo el corte)",
+  "ejemplos_sobre_umbral": []
+ },
+ "geo_gate": {
+  "gate_survivors_true": 164,
+  "gate_survivors_classifiable_from_snapshot": 155,
+  "pre_seam_intra_dedup_losers_unclassifiable": 9,
+  "por_ancla_bolivia": 119,
+  "rescatadas_por_tema": 36,
+  "anomalia_sin_ancla_General": 0,
+  "rescate_tema_pct_de_classifiable": 23.2,
+  "en_finales_criterio": {
+   "por_ancla": 13,
+   "rescatadas_por_tema": 4,
+   "anomalia": 0,
+   "total": 17
+  },
+  "nota": "gate_survivors_true = evaluados − keyword_excluida − falta_bolivia; los clasificables (candidatos + umbral-deaths) excluyen los pre_seam_intra_dedup_losers (no están en el snapshot). El % de rescate por tema es sobre el set clasificable."
+ },
+ "histograma_muerte_por_etapa": {
+  "etapa4_evaluar(keyword_excluida)": 5,
+  "etapa4_evaluar(falta_bolivia)": 68,
+  "etapa4_evaluar(umbral_modelo<0.33)": 11,
+  "etapa4_evaluar(sin_razon/degradado)": 0,
+  "etapa10_scheme_patrocinado": 0,
+  "etapa12_bajo_umbral_editorial(<6.7)": 106,
+  "etapa13_agrupado(Tambien_en)": 3,
+  "etapa14_budget(diag_inflado=irrelevante)": 0,
+  "etapa15_dedup_inter_dia": 18
+ },
+ "_hermetic_ok": true
+}
