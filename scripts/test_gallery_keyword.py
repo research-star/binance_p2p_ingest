@@ -5,7 +5,7 @@ Reproducible y sin deps: `python scripts/test_gallery_keyword.py` (exit 0 = OK, 
 Cubre los 5 casos del brief: (i) prioridad ante co-ocurrencia, (ii) límite de palabra,
 (iii) multipalabra, (iv) fallback a tema sin keyword, (v) latam→internacional; las
 entidades con foto dedicada (fmi/banco-central/gobierno); más dos guardas: ningún slug
-fuera de las 17 imágenes, y que cada gal-<slug>.webp exista en static/.
+fuera de las 17 imágenes, y que cada set gal-<slug>-<k>.webp de GALLERY_SETS exista en static/.
 """
 import os
 import sys
@@ -16,7 +16,7 @@ except Exception:
     pass
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dashboard import gallery_slug_v2, _gal_wb, _gal_norm, VALID_GALLERY_SLUGS  # noqa: E402
+from dashboard import gallery_slug_v2, _gal_wb, _gal_norm, VALID_GALLERY_SLUGS, GALLERY_SETS  # noqa: E402
 
 PASS, FAIL = 0, 0
 
@@ -116,11 +116,13 @@ leak = emitidos - VALID_GALLERY_SLUGS
 check("slugs emitidos <= VALID_GALLERY_SLUGS (17, subset)", leak, set())
 print(f"          emitidos: {sorted(emitidos)}")
 
-print("== GUARDA FAIL-FAST: cada slug emisible tiene su gal-<slug>.webp en static/ ==")
+print("== GUARDA FAIL-FAST: cada slug de GALLERY_SETS tiene su set gal-<slug>-1..N.webp en static/ ==")
 STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static')
-faltan = sorted(s for s in VALID_GALLERY_SLUGS
-                if not os.path.isfile(os.path.join(STATIC_DIR, f'gal-{s}.webp')))
-check("todos los VALID_GALLERY_SLUGS tienen archivo (incl. fmi/banco-central/gobierno)", faltan, [])
+faltan = sorted(f'gal-{s}-{k}.webp'
+                for s, n in GALLERY_SETS.items()
+                for k in range(1, n + 1)
+                if not os.path.isfile(os.path.join(STATIC_DIR, f'gal-{s}-{k}.webp')))
+check("todos los gal-<slug>-<k>.webp de GALLERY_SETS existen en static/", faltan, [])
 
 print(f"\nRESULTADO: {PASS} OK, {FAIL} FALLA")
 sys.exit(1 if FAIL else 0)

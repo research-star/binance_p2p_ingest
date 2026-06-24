@@ -557,14 +557,18 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   `carril`/`tema`/`temaConfianza` (=`tema_hits`)/`entidades` agregados en
   FASE 3 — `carril` parte los carriles; `summary` hoy no se renderiza). `detail` es un
   extracto ≤400 chars del cuerpo, nunca el artículo completo (sitio público).
-- **Galería de imágenes (v1 — #90, EN PROD)**: cada nota trae `gallerySlug`
-  precomputado → el front (`npImg`) arma `static/gal-<slug>.webp` en la cascada
-  **og:image → galería → placeholder `.np-imgph`** (`gallerySlug=null` → placeholder).
-  17 imágenes reales: 14 de stock Pexels (sin atribución) + 3 **entidades dedicadas** de
-  Wikimedia Commons (`fmi` dominio público, `banco-central` CC0, `gobierno` CC-BY-SA **con
-  crédito**) — fuentes/licencias en `GALLERY-CREDITS.md`; los créditos CC se publican en
-  `/creditos-imagenes.html` (`static/`, link en el footer de Inicio). microtag
-  "ilustrativa" **solo-admin** (`npAdmin.isAdmin`). **Motor de selección v1.1**
+- **Galería de imágenes (v2 — rotación con cooldown)**: cada nota trae `galleryImg`
+  precomputado (`slug-k`) → el front (`npImg`) arma `static/gal-<slug>-<k>.webp` en la
+  cascada **og:image → galería → placeholder `.np-imgph`** (`galleryImg=null` → placeholder).
+  Cada slug tiene un SET de imágenes (`dashboard.GALLERY_SETS`, slug→N); `assign_gallery_images`
+  asigna una por nota rotando con cooldown ~3 días (determinístico, stateless; NO fijo
+  build-a-build — la imagen de una nota puede cambiar al correr la ventana). **46 imágenes
+  reales en 16 slugs, TODAS de Wikimedia Commons** (el slug `elecciones` queda en placeholder:
+  no hay foto electoral boliviana con licencia libre en Commons, solo mapas de resultados
+  partidarios — descartados por sesgo). Licencias CC BY/BY-SA/CC0/PD verificadas
+  archivo por archivo vía Commons API) — fuentes/licencias/autores en `GALLERY-CREDITS.md`;
+  los créditos CC se publican en `/creditos-imagenes.html` (`static/`, link en el footer de
+  Inicio). microtag "ilustrativa" **solo-admin** (`npAdmin.isAdmin`). **Motor de selección v1.1**
   (`dashboard.py` `gallery_slug_v2`): **PASS de PRIORIDAD POR KEYWORD** sobre
   `title`+`summary`+`detail` normalizado (tabla `GALLERY_KEYWORD_PRIORITY`,
   orden = prioridad, límite de palabra + multipalabra) — ante co-ocurrencia gana
