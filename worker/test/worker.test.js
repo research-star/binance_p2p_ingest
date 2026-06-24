@@ -389,3 +389,125 @@ describe("GET /v1/logout (bounce cross-domain, dos pasos)", () => {
     expect(returnTo.searchParams.get("return")).toBe("https://finanzasbo.com/");
   });
 });
+
+const DAY = "2026-06-23";
+
+describe("GET /v1/curation (público)", () => {
+  it("día sin curación → 200 {order:[], treatment:'none'} y CORS abierto", async () => {
+    const r = await call("/v1/curation?day=" + DAY);
+    expect(r.status).toBe(200);
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(await r.json()).toEqual({ order: [], treatment: "none" });
+  });
+
+  it("día inválido (formato) → 422", async () => {
+    expect((await call("/v1/curation?day=23-06-2026")).status).toBe(422);
+  });
+
+  it("día inexistente en calendario (2026-13-40) → 422", async () => {
+    expect((await call("/v1/curation?day=2026-13-40")).status).toBe(422);
+  });
+
+  it("sin day → 422", async () => {
+    expect((await call("/v1/curation")).status).toBe(422);
+  });
+});
+
+describe("POST /v1/curate (auth + gate)", () => {
+  function curate(body, opts = {}) {
+    return call("/v1/curate", { method: "POST", token: opts.token, body: JSON.stringify(body), ...opts });
+  }
+
+  it("sin token → 401 y no escribe", async () => {
+    expect((await call("/v1/curate", { method: "POST", body: JSON.stringify({ day: DAY, order: [ID_A], treatment: "full" }) })).status).toBe(401);
+    expect(await (await call("/v1/curation?day=" + DAY)).json()).toEqual({ order: [], treatment: "none" });
+  });
+
+  it("email no admin → 403 y NO escribe", async () => {
+    const r = await curate({ day: DAY, order: [ID_A], treatment: "full" }, { token: await jwt({ email: NOTADMIN }) });
+    expect(r.status).toBe(403);
+    expect((await r.json()).error).toBe("email_not_allowed");
+    // efecto: la curación no se escribió (gate antes del put)
+    expect(await (await call("/v1/curation?day=" + DAY)).json()).toEqual({ order: [], treatment: "none" });
+  });
+
+  it("válido → 200 y se refleja en GET /v1/curation", async () => {
+    const r = await curate({ day: DAY, order: [ID_A, ID_B], treatment: "striped" }, { token: await jwt() });
+    expect(r.status).toBe(200);
+    expect(await r.json()).toMatchObject({ ok: true, day: DAY, order: [ID_A, ID_B], treatment: "striped" });
+    const g = await (await call("/v1/curation?day=" + DAY)).json();
+    expect(g).toEqual({ order: [ID_A, ID_B], treatment: "striped" });
+  });
+
+  it("curación es por día (otro día no la ve)", async () => {
+    await curate({ day: DAY, order: [ID_A], treatment: "full" }, { token: await jwt() });
+    expect(await (await call("/v1/curation?day=2026-06-24")).json()).toEqual({ order: [], treatment: "none" });
+  });
+
+  it("LWW: un segundo PUT reemplaza (no read-modify-write)", async () => {
+    await curate({ day: DAY, order: [ID_A, ID_B], treatment: "striped" }, { token: await jwt() });
+    await curate({ day: DAY, order: [ID_B], treatment: "none" }, { token: await jwt() });
+    expect(await (await call("/v1/curation?day=" + DAY)).json()).toEqual({ order: [ID_B], treatment: "none" });
+  });
+
+  it("order con duplicados → dedupe preservando orden", async () => {
+    const r = await curate({ day: DAY, order: [ID_A, ID_B, ID_A], treatment: "none" }, { token: await jwt() });
+    expect((await r.json()).order).toEqual([ID_A, ID_B]);
+  });
+
+  it("treatment inválido → 422", async () => {
+    expect((await curate({ day: DAY, order: [], treatment: "rainbow" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("order con id no-16hex → 422", async () => {
+    expect((await curate({ day: DAY, order: ["xyz"], treatment: "none" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("order no-array (string) → 422", async () => {
+    expect((await curate({ day: DAY, order: "abc", treatment: "none" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("order ausente → 422", async () => {
+    expect((await curate({ day: DAY, treatment: "none" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("treatment ausente → 422", async () => {
+    expect((await curate({ day: DAY, order: [] }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("order que excede MAX_ORDER (>20) → 422", async () => {
+    const many = Array.from({ length: 21 }, (_, i) => i.toString(16).padStart(16, "0"));
+    expect((await curate({ day: DAY, order: many, treatment: "none" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("order = MAX_ORDER (20 únicos) → 200 (borde positivo)", async () => {
+    const ids = Array.from({ length: 20 }, (_, i) => i.toString(16).padStart(16, "0"));
+    const r = await curate({ day: DAY, order: ids, treatment: "none" }, { token: await jwt() });
+    expect(r.status).toBe(200);
+    expect((await r.json()).order).toHaveLength(20);
+  });
+
+  it("payload JSON null (parse ok, no objeto) → 422", async () => {
+    expect((await call("/v1/curate", { method: "POST", token: await jwt(), body: "null" })).status).toBe(422);
+  });
+
+  it("día inválido → 422", async () => {
+    expect((await curate({ day: "nope", order: [], treatment: "none" }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("body no-JSON → 422", async () => {
+    expect((await call("/v1/curate", { method: "POST", token: await jwt(), body: "no es json {" })).status).toBe(422);
+  });
+
+  it("order vacío + treatment válido → 200 (tratamiento sin reorden)", async () => {
+    const r = await curate({ day: DAY, order: [], treatment: "full" }, { token: await jwt() });
+    expect(r.status).toBe(200);
+    expect(await (await call("/v1/curation?day=" + DAY)).json()).toEqual({ order: [], treatment: "full" });
+  });
+
+  it("happy path + CORS refleja origin + credentials", async () => {
+    const r = await curate({ day: DAY, order: [ID_A], treatment: "full" }, { token: await jwt(), origin: "http://localhost:8788" });
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("http://localhost:8788");
+    expect(r.headers.get("Access-Control-Allow-Credentials")).toBe("true");
+  });
+});

@@ -645,6 +645,41 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-rank .rk-title{font-family:var(--font-display);font-weight:500;font-size:14.5px;line-height:1.28;color:var(--text-primary);cursor:pointer;text-wrap:pretty}
 .np-rank .rk-title:hover{color:var(--up)}
 .np-rank .rk-meta{font-family:var(--font-body);font-size:10px;color:var(--text-soft);margin-top:5px;letter-spacing:.02em}
+/* — 5b · curación del riel: tratamiento de BLOQUE posicional (none/striped/full) + controles admin —
+   Oscuro = #2A251F, texto #F7E9DD, acentos #C9BBA9 (coherente con la franja del ticker). El patrón
+   es por POSICIÓN: la banda no viaja con la nota (se aplica por índice en el render). — */
+.np-railcard.np-rail-full{background:#2A251F;border-radius:var(--radius-sm);padding:14px 16px}
+.np-railcard.np-rail-full h3{color:#F7E9DD;border-bottom-color:#C9BBA9}
+.np-railcard.np-rail-full h3 .sub{color:#C9BBA9}
+.np-railcard.np-rail-full .np-rank{border-bottom-color:rgba(201,187,169,.20)}
+.np-railcard.np-rail-full .num{color:#C9BBA9}
+.np-railcard.np-rail-full .rk-title{color:#F7E9DD}
+.np-railcard.np-rail-full .rk-title:hover{color:#FFFFFF}
+.np-railcard.np-rail-full .rk-meta{color:#C9BBA9}
+/* franjas: bandas oscuras full-width del riel en posiciones 1·3·5 (índices pares). La card
+   recibe inset horizontal y la banda lo sangra de vuelta (margin neg = padding) → el fondo
+   oscuro llega de borde a borde de la card PERO el contenido queda alineado con las filas
+   claras y con aire interno (no pegado al borde de la banda). */
+.np-railcard.np-rail-striped{padding-left:14px;padding-right:14px}
+.np-rank-band{background:#2A251F;border-radius:var(--radius-xs);border-bottom-color:transparent!important;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+.np-rank-band .num{color:#C9BBA9}
+.np-rank-band .rk-title{color:#F7E9DD}
+.np-rank-band .rk-title:hover{color:#FFFFFF}
+.np-rank-band .rk-meta{color:#C9BBA9}
+/* selector de tratamiento (solo admin) bajo el título del riel */
+.np-treat-ctl{display:flex;gap:6px;margin:-4px 0 12px;flex-wrap:wrap}
+.np-treat-btn{font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:.02em;padding:3px 9px;border:1px solid var(--border-color);border-radius:var(--radius-pill);background:transparent;color:var(--text-secondary);cursor:pointer;transition:all .12s}
+.np-treat-btn:hover{border-color:var(--text-soft)}
+.np-treat-btn.on{background:#2A251F;color:#F7E9DD;border-color:#2A251F}
+.np-railcard.np-rail-full .np-treat-btn{border-color:#C9BBA9;color:#C9BBA9}
+.np-railcard.np-rail-full .np-treat-btn.on{background:#C9BBA9;color:#2A251F;border-color:#C9BBA9}
+/* botones subir/bajar (solo admin) entre el número y el título; el ✕ de ocultar vive aparte (arriba-der) */
+.np-move{display:flex;flex-direction:column;gap:2px;flex:none;justify-content:center}
+.np-move-btn{width:18px;height:15px;display:flex;align-items:center;justify-content:center;font-size:8px;line-height:1;border:1px solid var(--border-color);border-radius:var(--radius-xs);background:transparent;color:var(--text-muted);cursor:pointer;padding:0;transition:all .12s}
+.np-move-btn:hover:not(:disabled){background:var(--blue-accent);color:#fff;border-color:var(--blue-accent)}
+.np-move-btn:disabled{opacity:.32;cursor:default}
+.np-rank-band .np-move-btn,.np-railcard.np-rail-full .np-move-btn{border-color:#C9BBA9;color:#C9BBA9}
+.np-rank-band .np-move-btn:hover:not(:disabled),.np-railcard.np-rail-full .np-move-btn:hover:not(:disabled){background:#C9BBA9;color:#2A251F;border-color:#C9BBA9}
 /* — 6 · banda Latam / Internacional — */
 .np-latam{margin:30px 0 8px;padding:22px 36px;background:var(--bg-secondary);border-top:2px solid var(--text-primary);border-bottom:1px solid var(--border-color)}
 .np-latam-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
@@ -4404,6 +4439,14 @@ window.addEventListener('popstate', function(){
   // (CORS simple, sin preflight). NUNCA recomputa el hash: usa n.id tal cual.
   const NT_API = 'https://api.finanzasbo.com';
   const npAdmin = { checked:false, isAdmin:false, email:null, editMode:false, hiddenItems:null, notice:null };
+  // Curación editorial del riel "Lo más relevante" (presentacional, runtime). order =
+  // orden explícito de los ids del riel (las no listadas van detrás, por impacto);
+  // treatment = tratamiento visual del BLOQUE (none|striped|full). Se puebla desde
+  // /v1/curation del día (ntLoadCuration) y la edita el admin (npSetTreatment/npMoveRiel).
+  // Default = sin reorden + 'none' (= render actual) si no hay curación o el fetch falla.
+  // dirty = el admin editó localmente en esta sesión → el GET tardío de ntLoadCuration
+  // NO debe pisar la edición optimista (race al abrir la tab; ver ntLoadCuration).
+  const npCuration = { order:null, treatment:'none', dirty:false };
   function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
   function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
   function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
@@ -4655,15 +4698,51 @@ window.addEventListener('popstate', function(){
       +'</article>';
   }
 
+  // Las 5 notas del riel (índices 1–5 del día por-defecto; el 0 es el hero) ya
+  // reordenadas por la curación. order = ids explícitos: las listadas (que sigan
+  // estando en el top-5) van primero en ese orden; las no listadas quedan detrás
+  // en su orden por impacto. Sin curación → orden por impacto tal cual (hoy).
+  function npRielNotes(){
+    const cand=ntDayNotes(ntDefaultDay()).slice(1,6);
+    const order=(npCuration && Array.isArray(npCuration.order)) ? npCuration.order : null;
+    if(!order || !order.length) return cand;
+    const byId={}; cand.forEach(function(n){ byId[n.id]=n; });
+    const seen={}, out=[];
+    order.forEach(function(id){ if(byId[id] && !seen[id]){ out.push(byId[id]); seen[id]=1; } });
+    cand.forEach(function(n){ if(!seen[n.id]){ out.push(n); seen[n.id]=1; } });
+    return out;
+  }
+  // Selector de tratamiento del bloque — SOLO admin (gate npAdmin.isAdmin). El admin
+  // prueba limpio/franjas/bloque en vivo; el público nunca ve el control, solo el resultado.
+  function npTreatmentCtl(){
+    if(!npAdmin.isAdmin) return '';
+    const t=npCuration.treatment||'none';
+    function b(val,lab){ return '<button class="np-treat-btn'+(t===val?' on':'')+'" type="button" data-np-treatment="'+val+'" aria-pressed="'+(t===val)+'">'+lab+'</button>'; }
+    return '<div class="np-treat-ctl" role="group" aria-label="Tratamiento del bloque">'+b('none','Limpio')+b('striped','Franjas')+b('full','Bloque')+'</div>';
+  }
+  // Botones subir/bajar por nota — SOLO admin. Van entre el número y el título (el ✕ de
+  // ocultar vive arriba-derecha en modo edición → no chocan). Sin DnD (decisión cerrada).
+  function npMoveCtl(n,i,total){
+    if(!npAdmin.isAdmin) return '';
+    return '<div class="np-move">'
+      +'<button class="np-move-btn" type="button" data-np-move="up" data-np-move-id="'+ntEsc(n.id)+'"'+(i>0?'':' disabled')+' aria-label="Subir">&#9650;</button>'
+      +'<button class="np-move-btn" type="button" data-np-move="down" data-np-move-id="'+ntEsc(n.id)+'"'+(i<total-1?'':' disabled')+' aria-label="Bajar">&#9660;</button>'
+      +'</div>';
+  }
   // Ranking "Lo más relevante hoy" (fijo a ntDefaultDay()); excluye el lead (va en el hero).
+  // Tratamiento de BLOQUE posicional: 'full' = card entera oscura; 'striped' = bandas
+  // oscuras en posiciones 1·3·5 (índices pares, fijas por posición, no viajan con la nota).
   function npRail(){
-    const day=ntDayNotes(ntDefaultDay()), top=day.slice(1,6);
-    if(!top.length) return '<aside class="np-rail"></aside>';
+    const notes=npRielNotes();
+    if(!notes.length) return '<aside class="np-rail"></aside>';
+    const t=npCuration.treatment||'none';
+    const cardCls='np-railcard'+(t!=='none'?' np-rail-'+t:'');
     let rows='';
-    for(let i=0;i<top.length;i++){ const n=top[i];
-      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span><div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
+    for(let i=0;i<notes.length;i++){ const n=notes[i];
+      const band=(t==='striped' && (i%2===0)) ? ' np-rank-band' : '';
+      rows+='<div class="np-rank'+band+'"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
     }
-    return '<aside class="np-rail"><div class="np-railcard"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
+    return '<aside class="np-rail"><div class="'+cardCls+'"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+npTreatmentCtl()+rows+'</div></aside>';
   }
 
   // Tarjeta del feed (16:10 · sin caja · kicker · titular · bajada · fila de fuente al fondo).
@@ -4828,6 +4907,26 @@ window.addEventListener('popstate', function(){
         .catch(function(){});  // fail-open
     }catch(e){}
   }
+  // Fetch fail-open de /v1/curation del día del riel (público, sin credenciales; molde
+  // de ntLoadHidden). Aplica orden + tratamiento al riel; si falla/no existe/shape raro
+  // → default (orden por impacto + 'none'), sin error visible. Una sola vez por load.
+  let ntCurationLoaded=false;
+  function ntLoadCuration(){
+    if(ntCurationLoaded) return; ntCurationLoaded=true;
+    const day=ntDateAt(ntDefaultDay());  // el riel es fijo a ntDefaultDay()
+    try{
+      fetch(NT_API+'/v1/curation?day='+encodeURIComponent(day), { credentials:'omit', cache:'no-store' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if(!d) return;
+          if(npCuration.dirty) return;  // el admin ya editó local en esta sesión → no pisar con el valor del server
+          if(Array.isArray(d.order)) npCuration.order=d.order.filter(function(x){ return typeof x==='string' && /^[0-9a-f]{16}$/.test(x); });
+          if(d.treatment==='none'||d.treatment==='striped'||d.treatment==='full') npCuration.treatment=d.treatment;
+          if(ntBuilt) npRerender();
+        })
+        .catch(function(){});  // fail-open
+    }catch(e){}
+  }
 
   // ── Admin: red (rutas auth, credentials:'include') + interacción ──
   // text/plain ⇒ request CORS "simple" (sin preflight). El id va crudo en el body.
@@ -4919,6 +5018,37 @@ window.addEventListener('popstate', function(){
       npRerender();
     }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se mostró.'}; npRerender(); });
   }
+  // ── Admin: curación del riel (tratamiento + reorden) ──
+  // Persiste {day, order, treatment} en KV vía POST /v1/curate. Body JSON en
+  // text/plain (CORS simple, sin preflight; mismo molde que npPost del hide).
+  function npSaveCuration(){
+    const payload={ day:ntDateAt(ntDefaultDay()), order:npCuration.order||[], treatment:npCuration.treatment||'none' };
+    npPost('/v1/curate', JSON.stringify(payload)).then(function(r){
+      if(r.status===401||r.status===403){ npAuthExpired(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo guardar la curación (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      npAdmin.notice={kind:'info',text:'Curación guardada.'}; npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La curación no se guardó.'}; npRerender(); });
+  }
+  function npSetTreatment(t){
+    if(t!=='none'&&t!=='striped'&&t!=='full') return;
+    if(npCuration.treatment===t) return;
+    npCuration.treatment=t; npCuration.dirty=true;
+    npRerender();        // optimista (como el flujo de hide con NT_HIDDEN)
+    npSaveCuration();
+  }
+  // Sube/baja una nota en el riel. order = orden explícito COMPLETO del riel visible
+  // (los 5 ids), así el público ve exactamente lo mismo. dir = 'up'|'down'.
+  function npMoveRiel(id,dir){
+    if(!id) return;
+    const ids=npRielNotes().map(function(n){ return n.id; });
+    const i=ids.indexOf(id); if(i<0) return;
+    const j = dir==='up' ? i-1 : i+1;
+    if(j<0||j>=ids.length) return;
+    const tmp=ids[i]; ids[i]=ids[j]; ids[j]=tmp;
+    npCuration.order=ids; npCuration.dirty=true;
+    npRerender();        // optimista
+    npSaveCuration();
+  }
   // UN listener delegado en el host (sobrevive al innerHTML= de npRerender porque se
   // ata al host, no a los nodos re-creados). Se liga una sola vez.
   let npListenerBound=false;
@@ -4935,6 +5065,8 @@ window.addEventListener('popstate', function(){
       if((el=t.closest('[data-np-hide]'))){ ev.preventDefault(); npHide(el.getAttribute('data-np-hide')); return; }
       if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
       if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
+      if((el=t.closest('[data-np-treatment]'))){ ev.preventDefault(); npSetTreatment(el.getAttribute('data-np-treatment')); return; }
+      if((el=t.closest('[data-np-move]'))){ ev.preventDefault(); if(el.disabled) return; npMoveRiel(el.getAttribute('data-np-move-id'), el.getAttribute('data-np-move')); return; }
     });
   }
   window.renderNoticias = function(){
@@ -4942,6 +5074,7 @@ window.addEventListener('popstate', function(){
     renderNoticiasPortada();
     npBindHost();
     ntLoadHidden();
+    ntLoadCuration();
     // El probe de sesión (npCheckMe) corre en fbChromeInit (global), no acá: el
     // masthead refleja la sesión en cualquier tab, no solo en Inicio.
   };

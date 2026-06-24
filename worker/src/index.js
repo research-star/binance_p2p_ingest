@@ -18,9 +18,21 @@
 
 import { publicCors, authCors } from "./cors.js";
 import { verifyAccessJwt, getAccessToken } from "./auth.js";
-import { readIndex, hide, unhide } from "./store.js";
+import { readIndex, hide, unhide, getCuration, putCuration, TREATMENTS } from "./store.js";
 
 const ID_RE = /^[0-9a-f]{16}$/;
+const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
+// Tope defensivo del array `order` (el riel son 5 notas; damos holgura sin abrir
+// la puerta a inflar el valor de KV con writes admin maliciosos/buggeados).
+const MAX_ORDER = 20;
+
+// Día válido = ISO YYYY-MM-DD Y fecha real (rechaza 2026-13-40): el round-trip por
+// Date descarta días/meses fuera de rango que el regex solo no atrapa.
+function isValidDay(day) {
+  if (typeof day !== "string" || !DAY_RE.test(day)) return false;
+  const d = new Date(day + "T00:00:00Z");
+  return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === day;
+}
 
 function json(body, status, headers) {
   return new Response(JSON.stringify(body), {
@@ -123,7 +135,8 @@ export default {
     // Preflight: no debería dispararse para text/plain sin headers custom, pero
     // si llega, respondemos OK con el CORS que corresponde al path.
     if (req.method === "OPTIONS") {
-      const headers = path === "/v1/hidden" ? publicCors() : aCors;
+      const isPublic = path === "/v1/hidden" || path === "/v1/curation";
+      const headers = isPublic ? publicCors() : aCors;
       return new Response(null, { status: 204, headers });
     }
 
@@ -131,6 +144,17 @@ export default {
     if (path === "/v1/hidden" && req.method === "GET") {
       const { ids, v } = await readIndex(env.HIDDEN_KV);
       return json({ ids, v }, 200, publicCors());
+    }
+
+    // ── GET /v1/curation?day=<YYYY-MM-DD> — PÚBLICO (molde de /v1/hidden) ──
+    // Devuelve la curación del riel de ese día: { order, treatment }. Si no hay
+    // curación (clave ausente) → { order:[], treatment:"none" } = el default que
+    // ya renderiza el frontend. El público lo lee en runtime (no por build).
+    if (path === "/v1/curation" && req.method === "GET") {
+      const day = new URL(req.url).searchParams.get("day") || "";
+      if (!isValidDay(day)) return json({ error: "bad_day" }, 422, publicCors());
+      const { order, treatment } = await getCuration(env.HIDDEN_KV, day);
+      return json({ order, treatment }, 200, publicCors());
     }
 
     // ── GET /v1/login — bounce de login cross-domain ──
@@ -251,6 +275,44 @@ export default {
       if (!ID_RE.test(id)) return json({ ok: false, error: "bad_id" }, 422, aCors);
       const { v } = await unhide(env.HIDDEN_KV, id);
       return json({ ok: true, id, v }, 200, aCors);
+    }
+
+    // ── POST /v1/curate — auth + gate (molde de /v1/hide) ──
+    // Body JSON en text/plain (request CORS "simple", sin preflight; igual que el
+    // hide). { day, order, treatment }. PUT directo a curation:<day> (LWW). El
+    // `order` se dedupea preservando el orden; los ids deben ser 16-hex.
+    if (path === "/v1/curate" && req.method === "POST") {
+      const g = await gate(req, env);
+      if (!g.ok) return json({ ok: false, error: g.reason }, g.status, aCors);
+      let payload;
+      try {
+        payload = JSON.parse(await req.text());
+      } catch {
+        return json({ ok: false, error: "bad_json" }, 422, aCors);
+      }
+      const day = payload && payload.day;
+      const treatment = payload && payload.treatment;
+      const order = payload && payload.order;
+      if (!isValidDay(day)) return json({ ok: false, error: "bad_day" }, 422, aCors);
+      if (!TREATMENTS.has(treatment))
+        return json({ ok: false, error: "bad_treatment" }, 422, aCors);
+      if (
+        !Array.isArray(order) ||
+        order.length > MAX_ORDER ||
+        !order.every((x) => typeof x === "string" && ID_RE.test(x))
+      )
+        return json({ ok: false, error: "bad_order" }, 422, aCors);
+      // Dedupe preservando orden (defensa: el front no debería mandar duplicados).
+      const seen = new Set();
+      const clean = [];
+      for (const id of order) {
+        if (!seen.has(id)) {
+          seen.add(id);
+          clean.push(id);
+        }
+      }
+      const value = await putCuration(env.HIDDEN_KV, day, clean, treatment);
+      return json({ ok: true, day, ...value }, 200, aCors);
     }
 
     return json({ error: "not_found", path }, 404, publicCors());
