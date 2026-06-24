@@ -251,6 +251,88 @@ GALLERY_SETS = {
 assert set(GALLERY_SETS) <= VALID_GALLERY_SLUGS, \
     "GALLERY_SETS tiene un slug fuera de VALID_GALLERY_SLUGS"
 
+# Estado de licencias por asset 'slug-k' -> (licencia, atrib_requerida). SOLO
+# metadata/medición: NO cambia el render. Poblado a mano desde GALLERY-CREDITS.md
+# (única fuente; el test de sync abajo asegura que ambas vistas no driftean).
+# Sirve para (i) medir el % de atribución que arrastramos mientras acumulamos
+# assets clean y (ii) habilitar el borrado en bloque en el switchover. Esperado:
+# 41 con atrib / 5 clean (agro-2, agro-3, banco-central-3, combustibles-3, fmi-1).
+GALLERY_LICENSES = {
+    'agro-1': ('CC BY-SA 2.0', True),
+    'agro-2': ('Public domain', False),
+    'agro-3': ('Public domain', False),
+    'alimentos-1': ('CC BY-SA 4.0', True),
+    'alimentos-2': ('CC BY-SA 4.0', True),
+    'banco-central-1': ('CC BY-SA 3.0', True),
+    'banco-central-2': ('CC BY-SA 2.0', True),
+    'banco-central-3': ('CC0', False),
+    'bloqueos-1': ('CC BY-SA 4.0', True),
+    'bloqueos-2': ('CC BY-SA 4.0', True),
+    'bloqueos-3': ('CC BY-SA 4.0', True),
+    'combustibles-1': ('CC BY-SA 4.0', True),
+    'combustibles-2': ('CC BY-SA 4.0', True),
+    'combustibles-3': ('CC0', False),
+    'combustibles-4': ('CC BY-SA 3.0', True),
+    'deuda-1': ('CC BY-SA 4.0', True),
+    'deuda-2': ('CC BY-SA 3.0', True),
+    'deuda-3': ('CC BY-SA 4.0', True),
+    'economia-1': ('CC BY-SA 2.0', True),
+    'economia-2': ('CC BY-SA 4.0', True),
+    'economia-3': ('CC BY-SA 4.0', True),
+    'exportaciones-1': ('CC BY-SA 4.0', True),
+    'exportaciones-2': ('CC BY 4.0', True),
+    'exportaciones-3': ('CC BY-SA 3.0', True),
+    'fmi-1': ('Public domain', False),
+    'fmi-2': ('CC BY 3.0', True),
+    'gobierno-1': ('CC BY-SA 4.0', True),
+    'gobierno-2': ('CC BY-SA 4.0', True),
+    'gobierno-3': ('CC BY-SA 3.0', True),
+    'inflacion-1': ('CC BY-SA 4.0', True),
+    'internacional-1': ('CC BY-SA 3.0', True),
+    'internacional-2': ('CC BY 2.0', True),
+    'internacional-3': ('CC BY-SA 3.0', True),
+    'inversion-1': ('CC BY-SA 2.0', True),
+    'inversion-2': ('CC BY-SA 4.0', True),
+    'inversion-3': ('CC BY-SA 4.0', True),
+    'litio-1': ('CC BY-SA 4.0', True),
+    'litio-2': ('CC BY-SA 4.0', True),
+    'litio-3': ('CC BY-SA 4.0', True),
+    'litio-4': ('CC BY-SA 4.0', True),
+    'politica-1': ('CC BY-SA 4.0', True),
+    'politica-2': ('CC BY 3.0', True),
+    'politica-3': ('CC BY 2.0', True),
+    'tipo-cambio-1': ('CC BY-SA 4.0', True),
+    'tipo-cambio-2': ('CC BY-SA 4.0', True),
+    'tipo-cambio-3': ('CC BY-SA 4.0', True),
+}
+
+# Set de assets que requieren atribución (los que se purgan en el switchover).
+GALLERY_ATTRIB_REQUIRED = frozenset(k for k, (lic, req) in GALLERY_LICENSES.items() if req)
+
+# Variantes (slug,k) que GALLERY_SETS implica realmente. Fail-fast: las keys de
+# GALLERY_LICENSES deben cubrirlas EXACTAMENTE — un desajuste (foto agregada al
+# set sin licencia, o licencia huérfana) rompe en carga del módulo, no en silencio.
+_GALLERY_VARIANTS = frozenset(
+    f'{slug}-{k}' for slug, n in GALLERY_SETS.items() for k in range(1, n + 1))
+assert set(GALLERY_LICENSES) == _GALLERY_VARIANTS, \
+    ("GALLERY_LICENSES no cubre exactamente las variantes de GALLERY_SETS; "
+     f"faltan={sorted(_GALLERY_VARIANTS - set(GALLERY_LICENSES))} "
+     f"sobran={sorted(set(GALLERY_LICENSES) - _GALLERY_VARIANTS)}")
+
+
+def gallery_attrib_stats():
+    """% de assets que requieren atribución (len-based), global y por slug.
+    Mide cuánta atribución arrastramos mientras acumulamos clean. Devuelve
+    (pct_global, {slug: pct}); pct en [0,100], slugs en orden de GALLERY_SETS."""
+    total = len(GALLERY_LICENSES)
+    pct_global = 100.0 * len(GALLERY_ATTRIB_REQUIRED) / total if total else 0.0
+    por_slug = {}
+    for slug, n in GALLERY_SETS.items():
+        keys = [f'{slug}-{k}' for k in range(1, n + 1)]
+        req = sum(1 for key in keys if key in GALLERY_ATTRIB_REQUIRED)
+        por_slug[slug] = 100.0 * req / len(keys) if keys else 0.0
+    return pct_global, por_slug
+
 
 def _gal_parse_date(d):
     """'YYYY-MM-DD...' -> date; None si no parsea."""
