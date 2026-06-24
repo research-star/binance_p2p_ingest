@@ -284,7 +284,8 @@ def _gallery_slug(n):
 def prod_image(n):
     """Replica del cascade npImg del frontend: og:image -> galería webp -> placeholder.
     PARIDAD PROD: para fuentes en PROD_IMG_UNAVAILABLE se ANULA el og:image (prod no puede
-    servirlo), cayendo a la galería."""
+    servirlo), cayendo a la galería. La imagen de galería es la ROTADA (galleryImg, 'slug-k'),
+    asignada por dashboard.assign_gallery_images en prod_preview (cooldown v2)."""
     src = (n.get("source") or "").lower()
     og = n.get("image_url") or ""
     prod_nulled = False
@@ -292,12 +293,30 @@ def prod_image(n):
         og, prod_nulled = "", True
     if og and og.startswith(("http://", "https://")):
         return {"kind": "og:image", "url": og}
-    slug = _gallery_slug(n)
-    if slug:
-        webp = f"gal-{slug}.webp"
+    img = n.get("galleryImg")            # 'slug-k' (rotada); None -> placeholder
+    if img:
+        webp = f"gal-{img}.webp"
         if (cfg.GALLERY_DIR / webp).exists():
-            return {"kind": "galeria", "slug": slug, "file": webp, "prod_nulled_og": prod_nulled}
+            return {"kind": "galeria", "slug": n.get("gallerySlug"), "img": img,
+                    "file": webp, "prod_nulled_og": prod_nulled}
     return {"kind": "placeholder", "prod_nulled_og": prod_nulled}
+
+
+def _assign_gallery(notas):
+    """Asigna gallerySlug + galleryImg (rotada, cooldown) a cada nota llamando a las
+    funciones REALES de dashboard.py (regla dura: no se reimplementa el criterio)."""
+    for n in notas:
+        n["gallerySlug"] = _gallery_slug(n)
+    af = getattr(dashboard, "assign_gallery_images", None)
+    if af:
+        try:
+            af(notas)
+            return
+        except Exception:
+            pass
+    for n in notas:                      # fallback defensivo: sin rotación, 1 imagen
+        s = n.get("gallerySlug")
+        n["galleryImg"] = f"{s}-1" if s else None
 
 
 def _section_marker(idx, carril):
@@ -311,6 +330,13 @@ def _section_marker(idx, carril):
 
 
 def prod_preview(bolivia_finales, latam_finales):
+    # Etiquetar carril (para que _gallery_slug rute latam -> 'internacional') y asignar
+    # la imagen rotada con cooldown sobre el set X combinado, usando la función real.
+    for n in bolivia_finales:
+        n["carril"] = n.get("carril") or "bolivia"
+    for n in latam_finales:
+        n["carril"] = "latam"
+    _assign_gallery(list(bolivia_finales) + list(latam_finales))
     out = []
     for idx, n in enumerate(bolivia_finales):
         out.append({"carril": "bolivia", "section": _section_marker(idx, "bolivia"),

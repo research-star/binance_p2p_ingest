@@ -1,53 +1,56 @@
 # Créditos — galería de imágenes temáticas (Noticias)
 
-La mayoría de las imágenes `static/gal-<slug>.webp` (14 temáticas) son fotos de stock libres bajo la
-**Pexels License** (uso comercial permitido, atribución **no** requerida). Tres slugs de **entidad**
-(`fmi`, `banco-central`, `gobierno`) provienen de **Wikimedia Commons** (PD / CC0 / CC-BY-SA) — ver la
-sección al final. Se documentan acá por trazabilidad de licencia. Cada una se recortó a 16:10 horizontal
-y se convirtió a `.webp` (< 150 KB) para el slot `.np-imgph` del front (matching por keyword/`tema`, ver
-`dashboard.py` `gallery_slug_v2` / `GALLERY_KEYWORD_PRIORITY` / `GALLERY_TEMA_SLUGS`).
+Todas las imágenes `static/gal-<slug>-<k>.webp` de la galería v2 provienen de **Wikimedia Commons**, con licencia **verificada archivo por archivo** vía la API de Commons. Cada slug tiene un SET rotativo de imágenes; el front muestra una por nota con rotación + cooldown (ver `dashboard.py` `assign_gallery_images` / `GALLERY_SETS`). Cada imagen se recortó a 16:10 (1200×750) y se convirtió a `.webp` (<150 KB).
 
-**Pexels License** — <https://www.pexels.com/license/>: "Free to use. Attribution is
-not required." Permite uso comercial y modificación sin permiso del autor. (Algunas
-fotos llegaron a Pexels desde Pixabay con licencia equivalente CC0.)
+Las imágenes **PD / CC0** no requieren atribución; se listan por trazabilidad. Las **CC BY / CC BY-SA** requieren atribución (autor + licencia + origen), publicada también en el sitio en **`/creditos-imagenes.html`** (link en el footer de Inicio).
 
-**Para swap de una foto:** dropeá tu `.webp` con el mismo nombre `gal-<slug>.webp` en
-`static/` y actualizá la fila de abajo. Un slug sin archivo cae al placeholder cálido
-del front (no rompe nada).
+**Para cambiar una foto:** dropeá tu `.webp` con el mismo nombre `gal-<slug>-<k>.webp` en `static/`, actualizá la fila de abajo y el conteo en `GALLERY_SETS` si cambia la cantidad.
 
-| slug | Tema / uso | Fotógrafo (Pexels) | Pexels ID | URL imagen |
-|------|-----------|--------------------|-----------|------------|
-| `combustibles`  | Combustibles / YPFB              | ddlogg            | 34636185 | <https://images.pexels.com/photos/34636185/pexels-photo-34636185.jpeg> |
-| `tipo-cambio`   | Tipo de cambio / Dólar           | Pixabay           | 259027   | <https://images.pexels.com/photos/259027/pexels-photo-259027.jpeg> |
-| `litio`         | Litio / Minería (Salar de Uyuni) | Jean-Paul Montanaro | 30612994 | <https://images.pexels.com/photos/30612994/pexels-photo-30612994.jpeg> |
-| `agro`          | Agropecuario / Soya              | Dan Hamill        | 13821931 | <https://images.pexels.com/photos/13821931/pexels-photo-13821931.jpeg> |
-| `deuda`         | Deuda / Finanzas                 | Pixabay           | 534216   | <https://images.pexels.com/photos/534216/pexels-photo-534216.jpeg> |
-| `inflacion`     | Inflación / Precios              | Tara Clark        | 9070106  | <https://images.pexels.com/photos/9070106/pexels-photo-9070106.jpeg> |
-| `exportaciones` | Exportaciones / Comercio         | Nezaket           | 31244440 | <https://images.pexels.com/photos/31244440/pexels-photo-31244440.jpeg> |
-| `inversion`     | Inversión / Infraestructura      | vahapdmr          | 17297091 | <https://images.pexels.com/photos/17297091/pexels-photo-17297091.jpeg> |
-| `elecciones`    | Elecciones / Política económica  | Fatima Yusuf      | 15993793 | <https://images.pexels.com/photos/15993793/pexels-photo-15993793.jpeg> |
-| `bloqueos`      | Bloqueos / Conflictos            | Mohammed Abubakr  | 19488920 | <https://images.pexels.com/photos/19488920/pexels-photo-19488920.jpeg> |
-| `alimentos`     | EMAPA / Alimentos                | Ninobur           | 17109241 | <https://images.pexels.com/photos/17109241/pexels-photo-17109241.jpeg> |
-| `economia`      | Genérica · economía              | Steve             | 1006060  | <https://images.pexels.com/photos/1006060/pexels-photo-1006060.jpeg> |
-| `politica`      | Genérica · política              | Keelan Clemens    | 4157284  | <https://images.pexels.com/photos/4157284/pexels-photo-4157284.jpeg> |
-| `internacional` | Carril Latam · internacional     | Willian Justen    | 36024141 | <https://images.pexels.com/photos/36024141/pexels-photo-36024141.jpeg> |
-
-## Imágenes de entidad — Wikimedia Commons
-
-Tres slugs de **entidad** (`fmi`, `banco-central`, `gobierno`) NO usan Pexels: son sedes
-institucionales de **Wikimedia Commons**, con licencia **verificada archivo por archivo**. Los
-créditos CC se publican además en el sitio en **`/creditos-imagenes.html`** (link en el footer de
-Inicio). PD/CC0 no requieren atribución; se listan por trazabilidad.
-
-| slug | Tema / uso | Archivo (Commons) | Autor | Licencia | ¿Crédito? | URL |
-|------|-----------|-------------------|-------|----------|-----------|-----|
-| `fmi`           | Entidad · FMI (sede, Washington DC)                   | File:IMF building HR.jpg                      | International Monetary Fund | **Dominio público** | No      | <https://commons.wikimedia.org/wiki/File:IMF_building_HR.jpg> |
-| `banco-central` | Entidad · Banco Central de Bolivia (edificio, La Paz) | File:Edificio del Banco Central de Bolivia.jpg | Qhanaaru                   | **CC0 1.0**         | No      | <https://commons.wikimedia.org/wiki/File:Edificio_del_Banco_Central_de_Bolivia.jpg> |
-| `gobierno`      | Entidad · Palacio Quemado / Palacio de Gobierno (La Paz) | File:El Palacio Quemado en La Paz Bolivia.jpg | Parallelepiped09           | **CC BY-SA 4.0**    | **Sí**  | <https://commons.wikimedia.org/wiki/File:El_Palacio_Quemado_en_La_Paz_Bolivia.jpg> |
-
-**CC BY-SA 4.0** (`gobierno`) — <https://creativecommons.org/licenses/by-sa/4.0/>: requiere atribución al
-autor + indicar cambios (recortada/redimensionada a 1200×750) + compartir derivados bajo la misma
-licencia. Atribución cumplida en `/creditos-imagenes.html`. Procesadas igual que las Pexels (recorte 16:10
-1200×750, `.webp` < 150 KB, Pillow).
-
-17/17 slugs con foto real (14 Pexels + 3 entidad Wikimedia). 0 quedaron a placeholder.
+| slug | k | archivo | tema | autor | licencia | atrib. | origen (Commons) |
+|------|---|---------|------|-------|----------|--------|------------------|
+| `agro` | 1 | `gal-agro-1.webp` | Agropecuario / soya | Dennis G. Jarvis | CC BY-SA 2.0 | sí | [Bolivia-32 - Rural Farm (2217307301)](https://commons.wikimedia.org/wiki/File:Bolivia-32_-_Rural_Farm_(2217307301).jpg) |
+| `agro` | 2 | `gal-agro-2.webp` | Agropecuario / soya | USDAgov | Public domain | no | [Mike Starkey Soybean Harvest (52490323767)](https://commons.wikimedia.org/wiki/File:Mike_Starkey_Soybean_Harvest_(52490323767).jpg) |
+| `agro` | 3 | `gal-agro-3.webp` | Agropecuario / soya | USDAgov | Public domain | no | [Mike Starkey Soybean Harvest (52490323352)](https://commons.wikimedia.org/wiki/File:Mike_Starkey_Soybean_Harvest_(52490323352).jpg) |
+| `alimentos` | 1 | `gal-alimentos-1.webp` | Alimentos / abastecimiento | Malopez 21 | CC BY-SA 4.0 | sí | [Mercado de la Paz](https://commons.wikimedia.org/wiki/File:Mercado_de_la_Paz.JPG) |
+| `alimentos` | 2 | `gal-alimentos-2.webp` | Alimentos / abastecimiento | Carlillasa | CC BY-SA 4.0 | sí | [Pan sarnita boliviano](https://commons.wikimedia.org/wiki/File:Pan_sarnita_boliviano.jpg) |
+| `banco-central` | 1 | `gal-banco-central-1.webp` | Banco Central de Bolivia | Caleidoscopic | CC BY-SA 3.0 | sí | [Banco Central de Bolivia](https://commons.wikimedia.org/wiki/File:Banco_Central_de_Bolivia_.jpg) |
+| `banco-central` | 2 | `gal-banco-central-2.webp` | Banco Central de Bolivia | Elias Bizannes from Sydney, Australia | CC BY-SA 2.0 | sí | [Banco Central de Bolivia, La Paz](https://commons.wikimedia.org/wiki/File:Banco_Central_de_Bolivia,_La_Paz.jpg) |
+| `banco-central` | 3 | `gal-banco-central-3.webp` | Banco Central de Bolivia | EEJCC | CC0 | no | [Edificios en la Plaza Murillo de La Paz, Bolivia](https://commons.wikimedia.org/wiki/File:Edificios_en_la_Plaza_Murillo_de_La_Paz,_Bolivia.jpg) |
+| `bloqueos` | 1 | `gal-bloqueos-1.webp` | Bloqueos / conflictos | Wawitasny7 | CC BY-SA 4.0 | sí | [Conflictos sociales de mayo, La Paz 01](https://commons.wikimedia.org/wiki/File:Conflictos_sociales_de_mayo,_La_Paz_01.jpg) |
+| `bloqueos` | 2 | `gal-bloqueos-2.webp` | Bloqueos / conflictos | Wawitasny7 | CC BY-SA 4.0 | sí | [Conflictos sociales de mayo, La Paz 03](https://commons.wikimedia.org/wiki/File:Conflictos_sociales_de_mayo,_La_Paz_03.jpg) |
+| `bloqueos` | 3 | `gal-bloqueos-3.webp` | Bloqueos / conflictos | Wawitasny7 | CC BY-SA 4.0 | sí | [Conflictos sociales de mayo, La Paz 04](https://commons.wikimedia.org/wiki/File:Conflictos_sociales_de_mayo,_La_Paz_04.jpg) |
+| `combustibles` | 1 | `gal-combustibles-1.webp` | Combustibles / YPFB | Ruditaly | CC BY-SA 4.0 | sí | [Arco de YPFB en Camiri - Cordillera, Bolivia](https://commons.wikimedia.org/wiki/File:Arco_de_YPFB_en_Camiri_-_Cordillera,_Bolivia.jpg) |
+| `combustibles` | 2 | `gal-combustibles-2.webp` | Combustibles / YPFB | EEJCC | CC BY-SA 4.0 | sí | [Edificio YPFB, La Paz](https://commons.wikimedia.org/wiki/File:Edificio_YPFB,_La_Paz.jpg) |
+| `combustibles` | 3 | `gal-combustibles-3.webp` | Combustibles / YPFB | Saimmx | CC0 | no | [20250325 202804 NPC fuel dispenser close](https://commons.wikimedia.org/wiki/File:20250325_202804_NPC_fuel_dispenser_close.jpg) |
+| `combustibles` | 4 | `gal-combustibles-4.webp` | Combustibles / YPFB | Filzstift | CC BY-SA 3.0 | sí | [Riberalta Petrol Station 1](https://commons.wikimedia.org/wiki/File:Riberalta_Petrol_Station_1.jpg) |
+| `deuda` | 1 | `gal-deuda-1.webp` | Deuda / finanzas | Jersyval | CC BY-SA 4.0 | sí | [Nuevos Billetes Estado Plurinacional de Bolivia](https://commons.wikimedia.org/wiki/File:Nuevos_Billetes_Estado_Plurinacional_de_Bolivia.jpg) |
+| `deuda` | 2 | `gal-deuda-2.webp` | Deuda / finanzas | Victorgrigas | CC BY-SA 3.0 | sí | [The World Bank Group](https://commons.wikimedia.org/wiki/File:The_World_Bank_Group.jpg) |
+| `deuda` | 3 | `gal-deuda-3.webp` | Deuda / finanzas | Zulmabm | CC BY-SA 4.0 | sí | [Banco de Desarrollo de America Latina (Uruguay) ](https://commons.wikimedia.org/wiki/File:Banco_de_Desarrollo_de_America_Latina_(Uruguay)_(05).jpg) |
+| `economia` | 1 | `gal-economia-1.webp` | Economía (genérica) | Dan Lundberg | CC BY-SA 2.0 | sí | [20170812 Bolivia 1830 La Paz sRGB (26204370699)](https://commons.wikimedia.org/wiki/File:20170812_Bolivia_1830_La_Paz_sRGB_(26204370699).jpg) |
+| `economia` | 2 | `gal-economia-2.webp` | Economía (genérica) | Carlillasa | CC BY-SA 4.0 | sí | [Plaza Avaroa, La Paz, Bolivia](https://commons.wikimedia.org/wiki/File:Plaza_Avaroa,_La_Paz,_Bolivia.jpg) |
+| `economia` | 3 | `gal-economia-3.webp` | Economía (genérica) | Ener6 | CC BY-SA 4.0 | sí | [Un boliviano (moneda)](https://commons.wikimedia.org/wiki/File:Un_boliviano_(moneda).jpg) |
+| `exportaciones` | 1 | `gal-exportaciones-1.webp` | Exportaciones / comercio | EEJCC | CC BY-SA 4.0 | sí | [Vista Aérea de Santa Cruz de la Sierra, Bolivia](https://commons.wikimedia.org/wiki/File:Vista_A%C3%A9rea_de_Santa_Cruz_de_la_Sierra,_Bolivia.jpg) |
+| `exportaciones` | 2 | `gal-exportaciones-2.webp` | Exportaciones / comercio | Ruditaly | CC BY 4.0 | sí | [View to the southwest of Camiri - Bolivia](https://commons.wikimedia.org/wiki/File:View_to_the_southwest_of_Camiri_-_Bolivia.jpg) |
+| `exportaciones` | 3 | `gal-exportaciones-3.webp` | Exportaciones / comercio | ReAl | CC BY-SA 3.0 | sí | [Solohiv natural gas plant - common view](https://commons.wikimedia.org/wiki/File:Solohiv_natural_gas_plant_-_common_view.jpg) |
+| `fmi` | 1 | `gal-fmi-1.webp` | Fondo Monetario Internacional | International Monetary Fund | Public domain | no | [IMF building HR](https://commons.wikimedia.org/wiki/File:IMF_building_HR.jpg) |
+| `fmi` | 2 | `gal-fmi-2.webp` | Fondo Monetario Internacional | Marek Ślusarczyk (Tupungato) Photo portfolio | CC BY 3.0 | sí | [11 International Monetary Fund IMF in Washington](https://commons.wikimedia.org/wiki/File:11_International_Monetary_Fund_IMF_in_Washington_DC_USA_-_Creative_Commons_CC-BY.jpg) |
+| `gobierno` | 1 | `gal-gobierno-1.webp` | Gobierno | Camil Mendoza | CC BY-SA 4.0 | sí | [Palacio quemado, La Paz, Bolivia](https://commons.wikimedia.org/wiki/File:Palacio_quemado,_La_Paz,_Bolivia.jpg) |
+| `gobierno` | 2 | `gal-gobierno-2.webp` | Gobierno | Yastay | CC BY-SA 4.0 | sí | [Plaza Murillo en La Paz vista hacia la Casa Gran](https://commons.wikimedia.org/wiki/File:Plaza_Murillo_en_La_Paz_vista_hacia_la_Casa_Grande_del_Pueblo.jpg) |
+| `gobierno` | 3 | `gal-gobierno-3.webp` | Gobierno | Tasmita Gz | CC BY-SA 3.0 | sí | [Palacio de Gobierno en La Paz](https://commons.wikimedia.org/wiki/File:Palacio_de_Gobierno_en_La_Paz.jpg) |
+| `inflacion` | 1 | `gal-inflacion-1.webp` | Inflación / precios | Malopez 21 | CC BY-SA 4.0 | sí | [Mercado de la Paz](https://commons.wikimedia.org/wiki/File:Mercado_de_la_Paz.JPG) |
+| `internacional` | 1 | `gal-internacional-1.webp` | Internacional (carril Latam) | Victorgrigas | CC BY-SA 3.0 | sí | [The World Bank Group](https://commons.wikimedia.org/wiki/File:The_World_Bank_Group.jpg) |
+| `internacional` | 2 | `gal-internacional-2.webp` | Internacional (carril Latam) | Shiny Things | CC BY 2.0 | sí | [World Bank building at Washington](https://commons.wikimedia.org/wiki/File:World_Bank_building_at_Washington.jpg) |
+| `internacional` | 3 | `gal-internacional-3.webp` | Internacional (carril Latam) | AgnosticPreachersKid | CC BY-SA 3.0 | sí | [The World Bank Group building](https://commons.wikimedia.org/wiki/File:The_World_Bank_Group_building.JPG) |
+| `inversion` | 1 | `gal-inversion-1.webp` | Inversión / infraestructura | Igualdad Digital | CC BY-SA 2.0 | sí | [Panoramic teleferico linea verde la paz bolivia](https://commons.wikimedia.org/wiki/File:Panoramic_teleferico_linea_verde_la_paz_bolivia.jpg) |
+| `inversion` | 2 | `gal-inversion-2.webp` | Inversión / infraestructura | Parallelepiped09 | CC BY-SA 4.0 | sí | [Edificios en Cochabamba](https://commons.wikimedia.org/wiki/File:Edificios_en_Cochabamba.jpg) |
+| `inversion` | 3 | `gal-inversion-3.webp` | Inversión / infraestructura | Ruditaly | CC BY-SA 4.0 | sí | [Construcción de edificios en Equipetrol Norte - ](https://commons.wikimedia.org/wiki/File:Construcci%C3%B3n_de_edificios_en_Equipetrol_Norte_-_Santa_Cruz_de_la_Sierra,_Bolivia.jpg) |
+| `litio` | 1 | `gal-litio-1.webp` | Litio / minería | Diego Delso | CC BY-SA 4.0 | sí | [Isla del Pescado, Salar de Uyuni, Bolivia, 2016-](https://commons.wikimedia.org/wiki/File:Isla_del_Pescado,_Salar_de_Uyuni,_Bolivia,_2016-02-04,_DD_42.JPG) |
+| `litio` | 2 | `gal-litio-2.webp` | Litio / minería | Diego Delso | CC BY-SA 4.0 | sí | [Salar de Uyuni, Bolivia, 2016-02-04, DD 10-12 HD](https://commons.wikimedia.org/wiki/File:Salar_de_Uyuni,_Bolivia,_2016-02-04,_DD_10-12_HDR.JPG) |
+| `litio` | 3 | `gal-litio-3.webp` | Litio / minería | Diego Delso | CC BY-SA 4.0 | sí | [Salar de Uyuni, Bolivia, 2016-02-04, DD 22-24 HD](https://commons.wikimedia.org/wiki/File:Salar_de_Uyuni,_Bolivia,_2016-02-04,_DD_22-24_HDR.JPG) |
+| `litio` | 4 | `gal-litio-4.webp` | Litio / minería | Christopher Crouzet | CC BY-SA 4.0 | sí | [Reflection on the Salar de Uyuni, bolivia](https://commons.wikimedia.org/wiki/File:Reflection_on_the_Salar_de_Uyuni,_bolivia.jpg) |
+| `politica` | 1 | `gal-politica-1.webp` | Política | Yastay | CC BY-SA 4.0 | sí | [Asamblea Legislativa Plurinacional de Bolivia en](https://commons.wikimedia.org/wiki/File:Asamblea_Legislativa_Plurinacional_de_Bolivia_en_La_Paz.jpg) |
+| `politica` | 2 | `gal-politica-2.webp` | Política | Elemaki | CC BY 3.0 | sí | [Palacio Quemado y Plaza Murillo (2)](https://commons.wikimedia.org/wiki/File:Palacio_Quemado_y_Plaza_Murillo_(2).JPG) |
+| `politica` | 3 | `gal-politica-3.webp` | Política | Asamblea Legislativa Plurinacional | CC BY 2.0 | sí | [New Plurinational Legislative Assembly Building ](https://commons.wikimedia.org/wiki/File:New_Plurinational_Legislative_Assembly_Building_(Hemicycle_of_the_Chamber_of_Deputies).jpg) |
+| `tipo-cambio` | 1 | `gal-tipo-cambio-1.webp` | Tipo de cambio / dólar | Ener6 | CC BY-SA 4.0 | sí | [Un boliviano (moneda)](https://commons.wikimedia.org/wiki/File:Un_boliviano_(moneda).jpg) |
+| `tipo-cambio` | 2 | `gal-tipo-cambio-2.webp` | Tipo de cambio / dólar | Jersyval | CC BY-SA 4.0 | sí | [Nuevos Billetes Estado Plurinacional de Bolivia](https://commons.wikimedia.org/wiki/File:Nuevos_Billetes_Estado_Plurinacional_de_Bolivia.jpg) |
+| `tipo-cambio` | 3 | `gal-tipo-cambio-3.webp` | Tipo de cambio / dólar | Ener6 | CC BY-SA 4.0 | sí | [Cinco bolivianos (moneda)](https://commons.wikimedia.org/wiki/File:Cinco_bolivianos_(moneda).jpg) |

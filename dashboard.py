@@ -18,7 +18,7 @@ import re
 import sqlite3
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
 
 try:
@@ -219,6 +219,86 @@ def gallery_slug_v2(title, summary, detail, tema, category, carril):
         if any(p.search(texto) for p in pats):
             return slug
     return gallery_slug(tema, category, carril)
+
+
+# ── Galería v2: rotación con cooldown ────────────────────────────────────────
+# Cada slug tiene un SET de imágenes (gal-<slug>-<k>.webp, k=1..N en static/) en
+# vez de una sola foto fija. A cada nota se le asigna UNA imagen de su slug
+# evitando repetir una usada en los últimos GALLERY_COOLDOWN_DAYS días — salvo que
+# no haya alternativa (fallback round-robin LRU, "salvo que no haya más imágenes").
+#
+# Determinístico (no aleatorio) y STATELESS: una pasada greedy en orden de fecha
+# ascendente sobre las notas mostradas. No persiste estado ni escribe el DB
+# (dashboard.py sigue read-only). En CADA build el cooldown se respeta: ninguna
+# imagen se repite dentro de los GALLERY_COOLDOWN_DAYS si hay alternativa.
+# NO está fijada build-a-build: como el estado arranca vacío en cada corrida, la
+# fase de rotación se ancla a la primera nota de la ventana de 30 días → cuando la
+# ventana avanza (cron */12) una nota puede recibir OTRA imagen de su mismo set
+# (cosmético: sigue siendo una foto correcta del tema; no afecta data ni pipeline).
+# Fijar la imagen por nota requeriría estado persistido (ticket aparte). El
+# inspector lo refleja solo (lee esto vivo).
+GALLERY_COOLDOWN_DAYS = 3
+
+# slug -> nº de imágenes gal-<slug>-1..N.webp presentes en static/. Fuente de verdad
+# del set por slug. Un slug sin entrada (o N=0) → sin galleryImg → placeholder CSS.
+GALLERY_SETS = {
+    'agro': 3, 'alimentos': 2, 'banco-central': 3, 'bloqueos': 3,
+    'combustibles': 4, 'deuda': 3, 'economia': 3,
+    'exportaciones': 3, 'fmi': 2, 'gobierno': 3, 'inflacion': 1,
+    'internacional': 3, 'inversion': 3, 'litio': 4, 'politica': 3,
+    'tipo-cambio': 3,
+}
+assert set(GALLERY_SETS) <= VALID_GALLERY_SLUGS, \
+    "GALLERY_SETS tiene un slug fuera de VALID_GALLERY_SLUGS"
+
+
+def _gal_parse_date(d):
+    """'YYYY-MM-DD...' -> date; None si no parsea."""
+    try:
+        y, m, dd = (int(x) for x in str(d)[:10].split('-'))
+        return date(y, m, dd)
+    except Exception:
+        return None
+
+
+def assign_gallery_images(notas):
+    """Asigna n['galleryImg'] ('slug-k' o None) a cada nota rotando con cooldown.
+    Muta `notas` in-place. Cada nota debe traer 'gallerySlug', 'date' (y opcional
+    'time'/'id' para orden estable). Algoritmo: por slug, elige la imagen menos
+    recientemente usada (por secuencia de asignación) entre las que están FUERA del
+    cooldown de fecha; si todas están dentro del cooldown, cae a la menos reciente
+    igual (LRU). Procesa en orden de fecha ascendente para que el resultado sea
+    determinístico y estable para las notas recientes."""
+    cd = timedelta(days=GALLERY_COOLDOWN_DAYS)
+    order = sorted(range(len(notas)), key=lambda i: (
+        str(notas[i].get('date') or ''), str(notas[i].get('time') or ''),
+        str(notas[i].get('id') or '')))
+    last_date = {}   # (slug, k) -> date del último uso (para cooldown)
+    last_seq = {}    # (slug, k) -> int (orden de asignación; mayor = más reciente)
+    seq = 0
+    for i in order:
+        seq += 1
+        n = notas[i]
+        slug = n.get('gallerySlug')
+        cnt = GALLERY_SETS.get(slug, 0)
+        if not slug or cnt <= 0:
+            n['galleryImg'] = None
+            continue
+        d = _gal_parse_date(n.get('date'))
+        ks = range(1, cnt + 1)
+        if d is not None:
+            elig = [k for k in ks
+                    if (slug, k) not in last_date or (d - last_date[(slug, k)]) >= cd]
+        else:
+            elig = list(ks)
+        pool = elig if elig else list(ks)
+        # menos recientemente usada: secuencia ascendente (nunca usada = -1 = la más
+        # antigua), desempate por k → round-robin estable incluso dentro del cooldown.
+        chosen = min(pool, key=lambda k: (last_seq.get((slug, k), -1), k))
+        n['galleryImg'] = '%s-%d' % (slug, chosen)
+        if d is not None:
+            last_date[(slug, chosen)] = d
+        last_seq[(slug, chosen)] = seq
 
 
 def _laspeyres_contrib(idx_div: dict, idx_tot: dict, var12_tot: dict):
@@ -951,6 +1031,9 @@ def process_data(db_path: Path) -> dict:
             'gallerySlug': gallery_slug_v2(r['title'], r['summary'], r['detail'],
                                            r['tema'], r['category'], r['carril']),
         } for r in noticias_rows]
+        # Galería v2: asigna la imagen rotada por nota (gal-<slug>-<k>.webp) con
+        # cooldown. Muta noticias_data agregando 'galleryImg'. Ver assign_gallery_images().
+        assign_gallery_images(noticias_data)
     except Exception:
         pass  # Tabla noticias no existe aún (dev/fresh DB) — graceful degradation
 

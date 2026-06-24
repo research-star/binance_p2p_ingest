@@ -112,9 +112,13 @@ function renderGallery() {
   api("/api/gallery").then(g => {
     let html = "";
     for (const s of g.slugs) {
+      const imgs = (s.images && s.images.length)
+        ? `<div style="display:flex;flex-wrap:wrap;gap:4px">${s.images.map(im => `<img src="/gal/${esc(im.file)}" title="${esc(im.file)}" loading="lazy" style="width:calc(50% - 2px);aspect-ratio:16/10;object-fit:cover;border-radius:4px;display:block">`).join("")}</div>`
+        : `<div style="aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;color:#777">sin webp</div>`;
+      const cnt = s.set_count != null ? ` <span style="color:#888;font-weight:400">·set ${s.n_images}/${s.set_count}</span>` : "";
       html += `<div class="gcard ${s.valid ? "" : "bad-slug"}">
-        ${s.exists ? `<img src="/gal/${esc(s.webp)}" loading="lazy">` : `<div style="aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;color:#777">sin webp</div>`}
-        <div class="gbody"><div class="gslug">${esc(s.slug)}</div>
+        ${imgs}
+        <div class="gbody"><div class="gslug">${esc(s.slug)}${cnt}</div>
         <div class="grow"><b>temas:</b> ${s.temas.length ? s.temas.map(esc).join(", ") : "—"}</div>
         <div class="grow"><b>keywords:</b> ${s.keyword_rules.length ? s.keyword_rules.flatMap(r => r.keywords).map(k => `<span class="kw">${esc(k)}</span>`).join("") : "—"}</div>
         </div></div>`;

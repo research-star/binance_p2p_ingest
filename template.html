@@ -4635,16 +4635,17 @@ window.addEventListener('popstate', function(){
   // por eso deja de ser placeholder. Las tarjetas del feed Latam NO (usan bandera emoji).
   function npImg(n,cls){
     var ph='<div class="np-imgph'+(cls?' '+cls:'')+'">', u=n&&n.imageUrl,
-        s=(n&&n.gallerySlug)||''; if(!/^[a-z0-9-]*$/.test(s)) s='';
+        s=(n&&n.galleryImg)||''; if(!/^[a-z0-9-]*$/.test(s)) s='';
     if(u && /^https?:\/\//i.test(u))
       return ph+'<img src="'+ntEsc(u)+'" loading="lazy" alt="" onerror="npImgFail(this,\''+s+'\')"></div>';
     return ph+npGallery(n)+'</div>';
   }
-  // Galería temática (v1): <img> del asset /gal-<slug>.webp + microtag "ilustrativa".
-  // Sin slug (o slug no-canónico) → '' → el .np-imgph cae a su placeholder CSS.
-  // .webp interinos (color+label); Diego swapea fotos reales con el mismo naming.
+  // Galería temática (v2): <img> del asset /gal-<galleryImg>.webp + microtag "ilustrativa".
+  // galleryImg = 'slug-k' (imagen rotada por dashboard.py con cooldown; ver
+  // assign_gallery_images). Sin galleryImg (o no-canónico) → '' → el .np-imgph cae
+  // a su placeholder CSS. Cada slug tiene un set de fotos reales (Wikimedia Commons).
   function npGallery(n){
-    var s=n&&n.gallerySlug;
+    var s=n&&n.galleryImg;
     if(!s || !/^[a-z0-9-]+$/.test(s)) return '';
     // Microtag "ilustrativa": SOLO admin (mismo gate que npHideCtl → npAdmin.isAdmin,
     // confirmado vía /v1/me). El público NUNCA emite el <span> → 0 flash: el render
@@ -4657,10 +4658,10 @@ window.addEventListener('popstate', function(){
   // Fallo del hotlink og:image en runtime → swap a galería (no a placeholder): borra
   // el <img> roto e inyecta la galería en el mismo .np-imgph. Expuesta en window
   // porque el onerror inline corre fuera del scope de este IIFE (cierra sobre npGallery).
-  window.npImgFail=function(img,slug){
+  window.npImgFail=function(img,img2){
     var ph=img&&img.parentNode; if(!ph) return;
     ph.removeChild(img);
-    ph.insertAdjacentHTML('beforeend', npGallery({gallerySlug:slug}));
+    ph.insertAdjacentHTML('beforeend', npGallery({galleryImg:img2}));
   };
 
   // ── Regiones ──
