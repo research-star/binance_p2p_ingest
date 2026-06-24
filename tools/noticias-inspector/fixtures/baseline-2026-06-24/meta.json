@@ -1,0 +1,18 @@
+{
+ "fixture": "baseline-2026-06-24",
+ "captured_at_utc": "2026-06-24T19:21:13Z",
+ "ahora_utc_pinned": "2026-06-24T19:21:13Z",
+ "fecha_bo": "2026-06-24",
+ "umbral": 6.7,
+ "top_n_canonical": 14,
+ "scraper_LAST_FUNNEL": {
+  "entran": 237,
+  "cache_skip": 0,
+  "evaluados": 237,
+  "sobreviven": 153,
+  "unicos": 144
+ },
+ "previos_n": 139,
+ "scoring": "tfidf",
+ "nota_byte_estable": "El contrato byte-estable es res['funnel'] (15 llaves) reproducido por baseline_replay.py desde snapshot.json + vps-seed.json + ahora_utc_pinned + previos.json. INDEPENDIENTE de la fecha de replay: la ventana de dedup inter-día va congelada en previos.json (titulos_recientes usa date('now') del sistema, NO el ahora_utc pinneado -> sin congelarla el embudo solo seria estable <7d). La galeria/prod-preview NO entra al contrato (date-windowed por diseno)."
+}

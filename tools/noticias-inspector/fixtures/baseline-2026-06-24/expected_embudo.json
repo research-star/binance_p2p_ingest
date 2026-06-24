@@ -1,0 +1,24 @@
+{
+ "funnel_bolivia_canonical_15": {
+  "entran": 237,
+  "cache_skip": 0,
+  "evaluados": 237,
+  "kill_keyword_excluida": 5,
+  "kill_falta_bolivia": 68,
+  "kill_umbral_modelo": 11,
+  "kill_sin_razon": 0,
+  "sobreviven": 153,
+  "unicos": 144,
+  "scheme_patrocinado": 0,
+  "candidatos": 144,
+  "sobre_umbral": 38,
+  "eventos": 35,
+  "dedupe": 2,
+  "insertadas": 2
+ },
+ "insertadas": 2,
+ "candidatos": 144,
+ "sobre_umbral": 38,
+ "eventos": 35,
+ "dedupe": 2
+}

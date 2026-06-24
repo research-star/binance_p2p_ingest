@@ -467,9 +467,20 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   corrida de `ingest_noticias.py` (un cron, un HC; fail-safe por
   carril — si uno falla el otro corre, y cualquier carril en error
   pingea fail):
-  - **Bolivia**: scrape de 13 portales → geo-gate universal (ancla Bolivia) →
+  - **Bolivia**: scrape de 24 portales (`scraper.FUENTES`,
+    [scraper.py:260](noticias_ingest/scraper.py#L260)) → geo-gate **ancla Bolivia
+    OR tema≠General** (funnel-v2 #130, [scraper.py:977](noticias_ingest/scraper.py#L977):
+    pasa si ANCLA en Bolivia —término geográfico/adjetivo o entidad boliviana, la
+    lógica del gate viejo— **o** clasifica en un tema económico no-General; rescata
+    economía boliviana sin ancla geográfica, ej. real "el dólar referencial baja a
+    Bs 9,92" → tema Dólar. El set CONTIENE al del gate viejo: solo agrega rescates por
+    tema, cero pérdida de recall. El ruido internacional sin ancla NI tema lo siguen
+    conteniendo el corte 6.7 + el budget top-N) →
     scoring TF-IDF 0-10 de RELEVANCIA (**modo DEGRADADO por keywords si falta el
-    modelo**, calibración 2026-06-21; antes fail-closed) → corte editorial
+    modelo**, calibración 2026-06-21; antes fail-closed) **+ penalización opinión
+    ×0.7** (funnel-v2 #130, [scraper.py:1064](noticias_ingest/scraper.py#L1064):
+    columna/editorial NO se mata —va con `category='opinion'`— pero se penaliza el
+    score y no recibe bonos de portal/FX/instituciones) → corte editorial
     `puntaje >= 6.7` → **agrupación por evento + tier de fuente** ("También en…",
     col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día (7 días, umbral
     0.70) → top configurable (default **14/día**, `config.NOTICIAS_TOP_BOLIVIA`;
@@ -482,6 +493,14 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     caller (`lane_bolivia` → `scraper.marcar_urls_vistas`): marca insertadas +
     no-calificadas + dedupe-losers, así una calificada que pierde el budget sigue
     reconsiderable (fix de yield, FASE 3).
+  - **Instrumentación de embudo** (funnel-v2 #130, WS6): `scraper.LAST_FUNNEL`
+    (entran/cache_skip/evaluados/sobreviven/unicos) + el desglose de kills por razón
+    se unifican en `lane_bolivia` → `res["funnel"]` de **15 llaves** (entran…insertadas,
+    [ingest_noticias.py:404](ingest_noticias.py#L404)), que va al log y al ping
+    `HC_NOTICIAS`. El **Noticias Inspector** lo mide etapa-por-etapa (parity FIEL
+    post-#130; `parity_test.py` verde). Baseline congelado replay-byte-estable en
+    `tools/noticias-inspector/fixtures/baseline-2026-06-24/` (criterio-iteración-2):
+    captura prod-fiel + fixture determinista para diffear mismo-input en iteración-3.
   - **Latam** (desde `feat/noticias-latam`): sección Latinoamérica de
     Bloomberg Línea vía RSS outboundfeeds (`noticias_ingest/latam.py`),
     SIN scoring — el criterio editorial de Bloomberg es el filtro
@@ -505,8 +524,8 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   **El Deber queda NULL en prod** (su HTML no baja desde el VPS por bloqueo de
   IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
   la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
-- Catálogos del frontend: 13 portales (`NOTICIAS_PORTALS`, slugs de
-  `noticias_ingest/transform.py`). **`category` editorial de 5 cubos —
+- Catálogos del frontend: 24 portales (`NOTICIAS_PORTALS` en `template.html`;
+  slugs en `noticias_ingest/transform.py`). **`category` editorial de 5 cubos —
   `{economia, finanzas, politica, internacional, otros}`** (calibración 2026-06-21,
   antes 2; `transform.TEMA_CATEGORIA`): Tipo de cambio/Dólar y Deuda/Finanzas →
   `finanzas`; Bloqueos/Conflictos y Elecciones/Política económica → `politica`;
@@ -872,7 +891,7 @@ capa de tokens al principio del `<style>`.
 | Chart inflación (IPC/IPP) | `--chart-ipc-general`, `--chart-ipp-general`, `--chart-infl-total`, 12 `--chart-ipc-*`, 6 `--chart-ipp-*` | sí | JS `THEMES.paper/.slate` |
 | Chart deuda soberana (Riesgo País) | `--chart-debt-em2017/em2022/em2026` (3 categóricos por emisión) | sí | JS `THEMES.paper/.slate` |
 | Chart markers (shared) | `--chart-marker-outline` (halo decorativo α=.6, color = bg-secondary del tema) | sí | JS `THEMES.paper/.slate` |
-| Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (13 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
+| Noticias (tab) | `--cat-*` (6 categorías), `--src-*` (24 portales), `--impact-*` (3 niveles) | sí | JS `THEMES.paper/.slate` (consumidos por CSS via `var()`; ver nota en Delivery) |
 
 ### Tech debt residual
 
