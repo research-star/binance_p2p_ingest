@@ -1076,7 +1076,7 @@ def process_data(db_path: Path) -> dict:
         # patrón: cada ALTER en su try para no abortar las siguientes. Nullables →
         # el SELECT/payload tolera NULL (COALESCE carril; entidades || '[]').
         for _col, _decl in (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
-                            ("tambien_en", "TEXT")):
+                            ("tambien_en", "TEXT"), ("summary_origen", "TEXT")):
             try:
                 conn.execute(f"ALTER TABLE noticias ADD COLUMN {_col} {_decl}")
             except Exception:
@@ -1088,7 +1088,7 @@ def process_data(db_path: Path) -> dict:
             "SELECT id, date, time, source, category, title, summary, detail, "
             "       topics, impact, source_note, url, image_url, "
             "       COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) AS carril, "
-            "       tema, tema_hits, entidades, tambien_en "
+            "       tema, tema_hits, entidades, tambien_en, summary_origen "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
             "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
@@ -1107,6 +1107,9 @@ def process_data(db_path: Path) -> dict:
             'entidades': json.loads(r['entidades'] or '[]'),
             # Mismo evento en otros medios (calibración 2026-06-21): [{source,portal,url}].
             'tambienEn': json.loads(r['tambien_en'] or '[]') if r['tambien_en'] else [],
+            # Origen del summary (0007): 'ia'|'extractivo'|None(legacy). El frontend
+            # marca con asterisco todo lo que NO sea 'ia' (NULL legacy = extractivo).
+            'summaryOrigen': r['summary_origen'],
             # Slug de galería precomputado: motor v1.1 (keyword-priority PRIMARIO sobre
             # title+summary+detail; fallback al lookup por tema). El front arma
             # /gal-<slug>.webp; None → placeholder CSS. Ver gallery_slug_v2().

@@ -204,6 +204,10 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "carril": "bolivia",   # carril del feed (frontend parte Bolivia/Latam por acá, no por category)
         "title": cand["titulo"].strip(),
         "summary": summary,
+        # Origen del summary: arranca 'extractivo' (lo de arriba); resumen_ia.aplicar
+        # lo sube a 'ia' si la IA resume con éxito. El frontend marca con asterisco
+        # todo lo que NO sea 'ia'. (Col summary_origen, migración 0007.)
+        "summary_origen": "extractivo",
         "detail": detail,
         "topics": [tema] if tema and tema != "General" else [],
         "impact": impact_de_puntaje(cand["puntaje"]),
@@ -263,6 +267,7 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "carril": "latam",        # discriminador del carril Latam (antes era category=='latam')
         "title": (getattr(entry, "title", "") or "").strip(),
         "summary": _resumen_extractivo(descripcion, SUMMARY_MAX),
+        "summary_origen": "extractivo",  # resumen_ia.aplicar lo sube a 'ia' en éxito (col 0007)
         "detail": _truncar(contenido, DETAIL_MAX) if contenido else descripcion,
         "topics": [],
         "impact": "medio",

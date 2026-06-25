@@ -128,16 +128,18 @@ CREATE TABLE IF NOT EXISTS noticias (
     carril          TEXT,               -- 'bolivia'|'latam': carril del feed (antes implícito en category=='latam'). Col del ALTER de 0005.
     tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
     entidades       TEXT,               -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
-    tambien_en      TEXT                -- JSON [{source,portal,url}] del mismo evento en otros medios (calibración 2026-06-21).
+    tambien_en      TEXT,               -- JSON [{source,portal,url}] del mismo evento en otros medios (calibración 2026-06-21).
+    summary_origen  TEXT                -- 'ia'|'extractivo': origen del summary (resumen_ia.py vs extracto). NULL legacy = extractivo. Col del ALTER de 0007.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
 
-# Columnas añadidas por ALTER (0005): no las crea CREATE TABLE IF NOT EXISTS sobre
+# Columnas añadidas por ALTER (0005+): no las crea CREATE TABLE IF NOT EXISTS sobre
 # una tabla preexistente. (col, decl) — el self-migrate de init_schema las agrega
 # idempotente; tema/puntaje ya existen de 0002.
 _COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
-            ("tambien_en", "TEXT"))  # tambien_en: calibración 2026-06-21 ("También en…")
+            ("tambien_en", "TEXT"),     # tambien_en: calibración 2026-06-21 ("También en…")
+            ("summary_origen", "TEXT"))  # origen del summary IA vs extractivo (0007)
 
 
 def init_schema(conn: sqlite3.Connection):
@@ -250,15 +252,16 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
                 score_crudo, score_ajustado, created_at_utc, image_url, carril,
-                tema_hits, entidades, tambien_en)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                tema_hits, entidades, tambien_en, summary_origen)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
              n["puntaje"], n["score_crudo"], n["score_ajustado"],
              n["created_at_utc"], n.get("image_url"), n.get("carril"),
              n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False),
-             json.dumps(n.get("tambien_en") or [], ensure_ascii=False)))
+             json.dumps(n.get("tambien_en") or [], ensure_ascii=False),
+             n.get("summary_origen")))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
