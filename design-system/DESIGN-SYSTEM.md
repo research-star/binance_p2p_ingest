@@ -6,8 +6,12 @@ system para explorar layouts on-brand (futuro sync con Claude Design). No es el 
 completo a propósito: el repo trae una DB de >1 GB y HTML generados de 2 MB que solo
 son ruido.
 
-> **Regenerado contra `main` (navbar v3 / chrome editorial incluido).** La galería y el
-> snapshot reflejan el estado real de `template.html`; ver `STATUS.md`.
+> **Spec sincronizado al reskin editorial cálido (#81/#83).** Las tablas de identidad,
+> paleta y tokens de abajo reflejan el estado real de `template.html` (paleta CÁLIDA,
+> tema único `paper`, sin slate/dark-mode). ⚠️ La galería (`design-reference.html`) y el
+> snapshot (`template.snapshot.html`) siguen **congelados en navbar v3 (paleta fría)** y
+> quedan **pendientes de regenerar** (requiere tocar HTML, fuera de este sync de docs);
+> ver `STATUS.md`.
 
 ## Archivos de esta carpeta
 
@@ -23,48 +27,77 @@ son ruido.
 
 ## Identidad visual (respetar)
 
-- **Sobria, institucional, azul petróleo.** El color primario, el texto principal y el
-  accent son el mismo azul `#2c4a6b`; el texto secundario es gris-azulado `#6b7d92`. El
-  fondo de página es un blanco frío `#fafbfe`. NO usar verdes/rojos saturados tipo "trading app".
+- **Editorial cálida, broadsheet — tinta sobre papel.** El fondo de página es un papel
+  cálido `#FBEDE3`; las superficies (cards, navbar, headers) `#FFF7F0`; los hovers/chips
+  `#F3E0D2`. La tinta principal es un casi-negro cálido `#211E1B`. El ticker "El día en
+  cifras" y los paneles editoriales `.np-*` usan una franja oscura **cálida** `#2A251F`
+  (chrome scopeado, **no** un tema oscuro). El acento de marca / links sigue siendo azul
+  petróleo `#2c4a6b`. Las flechas de mercado van en verde/rojo **desaturados**; NO usar
+  verdes/rojos saturados tipo "trading app".
 - Densidad de información alta pero ordenada; tipografía chica (11–14px base).
-- Dos temas: **`paper`** (claro, default) y **`slate`** (oscuro). Todo componente
-  debe verse bien en ambos → usá **siempre variables CSS** (`var(--...)`), nunca
-  colores literales hardcodeados.
+- **Tema único `paper`** (claro). El modo oscuro / `slate` fue **eliminado** —
+  `applyTheme()` fuerza `paper` siempre ([template.html:1445](template.html#L1445)). Todo
+  componente usa **variables CSS** (`var(--...)`), nunca colores literales hardcodeados.
 - Números y datos en mono con `font-variant-numeric:tabular-nums`.
 
 ## Tipografía
 
 | Rol | Familia | Variable | Uso |
 |---|---|---|---|
-| Display / títulos | **Outfit** | `--font-display` | h1, h2, labels, tabs, botones |
+| Display / titulares | **Newsreader** (serif) | `--font-display` | h1, h2, titulares, labels, tabs |
 | Body / párrafos | **Inter** | `--font-body` | texto corrido, subtítulos |
 | Mono / números | **IBM Plex Mono** | `--font-mono` | KPIs, tablas, timestamps |
 
-Pesos cargados (un solo `<link>` Google Fonts): **Outfit** 300/400/500/600/700 ·
-**Inter** 400/500/600/700 · **IBM Plex Mono** 400/500/600.
+Pesos cargados (un solo `<link>` Google Fonts, [template.html:25](template.html#L25)):
+**Newsreader** 400/500/600/700 · **Inter** 400/500/600/700 · **IBM Plex Mono** 400/500/600 ·
+**Outfit** 400 — relegado a labels/leyendas de Plotly; ya no es la cara tipográfica principal.
 
 Escala de tamaños: `--text-2xs` (9.5px) · `--text-xs` (10.5) · `--text-sm` (11) ·
 `--text-base` (12) · `--text-md` (13) · `--text-lg` (14) · `--text-xl` (16) ·
 `--text-2xl` (18) · `--text-3xl` (22) · `--text-4xl` (26) · `--text-5xl` (28).
-Token editorial extra: `--lead-size` (46px, titular líder de portada).
+Token editorial extra: `--lead-size` (39px, titular hero de portada Noticias).
 
-## Colores (tokens clave — `paper` / `slate`)
+## Colores (tokens clave — tema único `paper`, valores de `THEMES.paper`)
 
-| Token | paper (claro) | slate (oscuro) | Uso |
-|---|---|---|---|
-| `--bg-primary` | `#fafbfe` | `#0a1424` | fondo de página |
-| `--bg-secondary` | `#ffffff` | `#122237` | cards, navbar, headers |
-| `--bg-tertiary` | `#dde8ef` | `rgba(110,163,217,.15)` | hover, chips, tooltips |
-| `--border-color` | `rgba(44,74,107,.12)` | `rgba(255,255,255,.10)` | bordes |
-| `--text-primary` | `#2c4a6b` | `#e6ebf2` | texto principal |
-| `--text-secondary` | `#6b7d92` | `#e6ebf2` | texto secundario (navbar v3: navy→gris) |
-| `--text-muted` | `#6b7d92` | `#8a96aa` | labels / metadata |
-| `--blue-accent` | `#2c4a6b` | `#6ea3d9` | acentos, links, logo |
-| `--color-buy` | `#1e4d7a` | `#5a8cc4` | lado compra |
-| `--color-sell` | `#6b7d92` | `#8a9caf` | lado venta |
+Tema único `paper`; los valores son los que `applyTheme()` escribe en runtime desde
+`THEMES.paper` ([template.html:1390](template.html#L1390)). La columna slate quedó eliminada
+con el dark-mode.
 
-Paleta completa (incl. ~20 colores de charts por tema) en el objeto `THEMES` de
-`design-reference.html` / `template.snapshot.html`.
+**Paleta de página (cálida):**
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--bg-primary` | `#FBEDE3` | fondo de página (papel cálido) |
+| `--bg-secondary` | `#FFF7F0` | cards, navbar, headers |
+| `--bg-tertiary` | `#F3E0D2` | hover, chips, tooltips |
+| `--border-color` | `rgba(33,30,27,.12)` | bordes |
+| `--text-primary` | `#211E1B` | texto principal (tinta casi-negra cálida) |
+| `--text-secondary` | `#6B6256` | texto secundario |
+| `--text-muted` | `#766C5C` | labels / metadata |
+| `--text-soft` | `#9E927C` | timestamps / texto terciario |
+
+**Chrome oscuro cálido** (scopeado a componentes, NO es un tema): `#2A251F` en el ticker
+(`.fb-ticker --tk-bg`) y en los paneles editoriales `.np-*` (hero Latam, placeholders de
+imagen, rail/rank-band, botones admin).
+
+**Acentos y mercado:**
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--blue-accent` | `#2c4a6b` | acentos UI, links, logo (azul petróleo — sobrevive el reskin) |
+| `--color-buy` | `#0F5499` | lado compra |
+| `--color-sell` | `#990F3D` | lado venta (claret) |
+| `--up` / `--down` | `#688470` / `#A57067` | flechas de mercado (verde/rojo desaturados) |
+| `--color-accent-warm` | `#FF8833` | acento cálido (realces) |
+
+**Tokens de chart (conservan la paleta azul — VIGENTES, no son drift):** los gráficos
+Plotly mantienen su paleta cromática propia dentro de `THEMES.paper` — p. ej.
+`--chart-spread-line` `#2c4a6b`, rampa heatmap `--chart-heatmap-0..100` (`#dde8ef`→`#162844`),
+`--chart-color-*` (EMBI, 10 países), `--chart-dpf-*`, `--chart-debt-*`, `--chart-ipc-*` /
+`--chart-ipp-*`. Son la identidad cromática de los charts y se preservan tal cual.
+
+Paleta completa (~80 tokens chart/tooltip/noticias del tema `paper`) en el objeto `THEMES`
+de `template.html` ([L1390](template.html#L1390)).
 
 Otros tokens: radios `--radius-xs`(3) · `--radius-sm`(4) · `--radius-md`(6) ·
 **`--radius-lg`(2 — sharp editorial, FASE 3)** · `--radius-xl`(10) · `--radius-pill`(9999);

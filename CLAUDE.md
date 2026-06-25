@@ -1,6 +1,6 @@
 # CLAUDE.md — FinanzasBo
 
-Dashboard del USDT/BOB en Bolivia. Pipeline de ingesta de Binance P2P + Banco Central de Bolivia. Publicación automática en finanzasbo.com.
+Plataforma de inteligencia económica de Bolivia. El USDT/BOB es un módulo entre varios (P2P, BCB oficial, riesgo país/EMBI, DPF, BBV, inflación IPC/IPP, feed de noticias). Pipeline de ingesta multi-fuente (Binance P2P + BCB + INE + EMBI + portales de noticias); publicación automática en finanzasbo.com.
 
 ## Source of truth
 

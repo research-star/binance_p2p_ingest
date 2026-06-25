@@ -1,5 +1,10 @@
 # FinanzasBo · Noticias — Handoff de implementación
 
+> **Paleta superada (pre-reskin).** Este documento usa la paleta FRÍA del navbar
+> v3. El sitio está en paleta CÁLIDA editorial desde el reskin #81/#83: bg-primary
+> #FBEDE3, text-primary #211E1B, tema único (paper), sin slate/dark-mode. Conservar
+> como input de diseño histórico de la tab Noticias; paleta vigente en DESIGN-SYSTEM.md.
+
 > Export de referencia del mockup (artefacto HTML/React/Babel). **La variante elegida es la D ("Terminal · tabla densa")** — las variantes A/B/C/E se incluyen en el source porque forman parte del artefacto, pero la spec de interacciones describe la D, que es la tab a implementar.
 >
 > Nota: el archivo `design-canvas.jsx` (lienzo de artboards con pan/zoom) es tooling del entorno de diseño, **no** parte del diseño; se omite. En producción, el contenido de `VariantD` se monta directo como página.

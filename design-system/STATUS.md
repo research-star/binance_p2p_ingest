@@ -1,17 +1,21 @@
 # STATUS — design-system/
 
-> ✅ **Regenerado contra `main`** — refleja el estado real de `template.html`
-> @ `b787584` (navbar v3 / chrome editorial incluido). Ya **no hay staleness**.
+> ⚠️ **Parcialmente stale tras el reskin editorial cálido (#81/#83).** `DESIGN-SYSTEM.md`
+> (el spec en markdown) está **sincronizado a la paleta CÁLIDA vigente** (tema único `paper`).
+> Los snapshots HTML (`design-reference.html`, `template.snapshot.html`) siguen **congelados
+> en navbar v3 (paleta FRÍA) @ `b787584`** y quedan **pendientes de regenerar** contra `main`.
 
 ## Provenance
 
 - **`design-reference.html`**: CSS (`<style>`) + objeto `THEMES` copiados **verbatim**
-  de `template.html` (byte-idénticos, verificado por diff). Showcase con navbar v3
-  (utility + masthead + nav + buscador), tokens fríos `#fafbfe` / `#2c4a6b`, Outfit.
-- **`template.snapshot.html`**: copia fiel completa de `template.html` (4983 líneas).
-- **`DESIGN-SYSTEM.md`**: tokens corregidos (`--bg-primary:#fafbfe`, `--border-color:.12`,
-  `--text-secondary:#6b7d92`, `--radius-lg:2px`), pesos de fuente (Inter 400–700) y
-  catálogo con refs de línea al template actual.
+  de `template.html`, pero **congelado en navbar v3 (paleta FRÍA `#fafbfe` / `#2c4a6b`,
+  Outfit)** — anterior al reskin cálido. **Stale: pendiente de regenerar** contra `main`.
+- **`template.snapshot.html`**: copia fiel de `template.html` **al estado navbar v3**
+  (4983 líneas). **Stale** por la misma razón — pendiente de regenerar.
+- **`DESIGN-SYSTEM.md`**: ✅ **sincronizado a la paleta CÁLIDA vigente**
+  (`--bg-primary:#FBEDE3`, `--text-primary:#211E1B`, `--text-secondary:#6B6256`, tema único
+  `paper`, tipografía Newsreader/Inter/IBM Plex Mono) y catálogo con refs de línea al
+  template actual.
 
 ## Mantenimiento
 
