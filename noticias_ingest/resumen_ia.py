@@ -5,7 +5,11 @@ OPT-IN y degradación elegante: si no hay ANTHROPIC_API_KEY (o la llamada falla
 o tarda), resumir() devuelve None y el pipeline usa el extracto del cuerpo como
 hasta hoy. NUNCA bloquea ni rompe la ingesta.
 
-Calibración 2026-06-21: resumen NEUTRAL y FACTUAL (qué pasó), sin interpretar.
+Calibración 2026-06-25 (prompt V2, bake-off): resumen NEUTRAL y FACTUAL que
+SUMA un dato fuera del título (baja el eco título↔resumen), parametrizado por
+ÁMBITO según carril (BO="Bolivia" / Latam="América Latina" — nunca "boliviana"
+en Latam). Centinela INSUFICIENTE + patrones de rechazo se tratan como FALLO
+→ resumir() devuelve None y el caller conserva el extracto (origen='extractivo').
 Solo se llama para las notas que se INSERTAN (≤14 BO + ≤8 latam por día) → costo
 acotado. Usa solo stdlib (urllib) — no agrega dependencia al repo.
 
@@ -30,11 +34,33 @@ TIMEOUT_S = 20
 MAX_TOKENS = 120
 RESUMEN_MAX_CHARS = 200  # = transform.SUMMARY_MAX (mismo slot del frontend)
 
+# Prompt V2 (bake-off, 2026-06-25). {ambito} = "Bolivia" (carril BO) | "América
+# Latina" (carril Latam). El INSUFICIENTE es SOLO cuando el texto se limita a
+# repetir el título; si hay cualquier dato extra (cifra/fecha/actor) → resumir.
 _PROMPT = (
-    "Resumí esta noticia económica boliviana en 1-2 frases, en español neutro y "
-    "factual (qué pasó), SIN opinar ni interpretar y sin preámbulo. Máximo ~40 "
-    "palabras. Devolvé solo el resumen.\n\nTitular: {titulo}\n\nTexto: {texto}"
+    "Resumí en español esta noticia económica de {ambito}. Máximo 200 caracteres, "
+    "una oración, sin puntos suspensivos. No repitas el titular; sumá al menos un "
+    "dato que no esté en él (cifra, actor, causa o efecto). Tono neutral. Si el "
+    "texto no aporta NADA más allá del título, respondé exactamente: INSUFICIENTE."
+    "\n\nTitular: {titulo}\n\nTexto: {texto}"
 )
+
+SENTINEL = "INSUFICIENTE"
+# Patrones de rechazo del modelo (no es un resumen): se tratan como FALLO.
+_RECHAZO = ("no puedo", "no me es posible", "lo siento", "la noticia trata sobre")
+
+
+def _es_fallo(txt: str) -> bool:
+    """True si la respuesta IA NO es un resumen usable: centinela INSUFICIENTE,
+    patrón de rechazo, o vacío. El caller degrada a extractivo (origen='extractivo',
+    asterisco en el front) — nunca persiste basura/alucinación como origen='ia'."""
+    t = (txt or "").strip()
+    if not t:
+        return True
+    if t.rstrip(".").upper() == SENTINEL:
+        return True
+    low = t.lower()
+    return any(p in low for p in _RECHAZO)
 
 
 def habilitado() -> bool:
@@ -44,11 +70,14 @@ def habilitado() -> bool:
     return os.environ.get("NOTICIAS_RESUMEN", "1").strip().lower() not in ("0", "false", "no")
 
 
-def resumir(titulo: str, texto: str) -> str | None:
-    """Resumen neutral 1-2 frases (≤200 chars), o None si no hay key / falla.
+def resumir(titulo: str, texto: str, ambito: str = "Bolivia") -> str | None:
+    """Resumen neutral V2 (≤200 chars, sin elipsis) para el `ambito` del carril, o
+    None si no hay key / falla / la IA no pudo resumir.
 
-    Pura degradación: cualquier error (sin key, red, timeout, respuesta rara) →
-    None, y el caller conserva el extracto que ya tenía.
+    Pura degradación: cualquier error (sin key, red, timeout, respuesta rara) y
+    cualquier FALLO de la IA (INSUFICIENTE, rechazo, vacío — ver _es_fallo) → None,
+    y el caller conserva el extracto que ya tenía (origen='extractivo').
+    `ambito` = "Bolivia" (carril BO) | "América Latina" (carril Latam).
     """
     key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not key or not habilitado():
@@ -62,7 +91,8 @@ def resumir(titulo: str, texto: str) -> str | None:
     payload = {
         "model": modelo,
         "max_tokens": MAX_TOKENS,
-        "messages": [{"role": "user", "content": _PROMPT.format(titulo=titulo, texto=cuerpo)}],
+        "messages": [{"role": "user",
+                      "content": _PROMPT.format(ambito=ambito, titulo=titulo, texto=cuerpo)}],
     }
     req = urllib.request.Request(
         API_URL,
@@ -79,11 +109,14 @@ def resumir(titulo: str, texto: str) -> str | None:
             data = json.loads(r.read().decode("utf-8"))
         partes = data.get("content") or []
         txt = "".join(p.get("text", "") for p in partes if p.get("type") == "text").strip()
-        if not txt:
-            return None
+        if _es_fallo(txt):
+            return None  # INSUFICIENTE / rechazo / vacío → degrada a extractivo
         if len(txt) > RESUMEN_MAX_CHARS:
+            # Corte LIMPIO en último límite de palabra ≤200, SIN elipsis.
             corte = txt.rfind(" ", 0, RESUMEN_MAX_CHARS)
-            txt = txt[: corte if corte > RESUMEN_MAX_CHARS // 2 else RESUMEN_MAX_CHARS].rstrip(" ,;:.") + "…"
+            if corte < RESUMEN_MAX_CHARS // 2:
+                corte = RESUMEN_MAX_CHARS
+            txt = txt[:corte].rstrip(" ,;:.")
         return txt
     except Exception as e:
         log.warning(f"[resumen_ia] fallo (uso extracto): {e}")
@@ -104,7 +137,8 @@ def aplicar(notas: list) -> int:
         return 0
     n_ok = 0
     for n in notas:
-        r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "")
+        ambito = "Bolivia" if n.get("carril") == "bolivia" else "América Latina"
+        r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "", ambito)
         if r:
             n["summary"] = r
             n["summary_origen"] = "ia"
