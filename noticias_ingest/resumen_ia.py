@@ -95,7 +95,11 @@ def aplicar(notas: list) -> int:
     habilitado. No-op si no hay key. Devuelve cuántas se resumieron.
 
     Usa `detail` (cuerpo ~400 chars) como insumo; si no hay, el summary actual.
-    Conserva el extracto original si la API falla en esa nota."""
+    Conserva el extracto original si la API falla en esa nota.
+
+    En éxito marca n['summary_origen']='ia' (lo lee el frontend para NO ponerle
+    asterisco). Si falla/degrada, el origen queda como lo dejó transform.build_nota
+    ('extractivo') → el frontend marca con asterisco. (Col summary_origen, 0007.)"""
     if not habilitado():
         return 0
     n_ok = 0
@@ -103,5 +107,6 @@ def aplicar(notas: list) -> int:
         r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "")
         if r:
             n["summary"] = r
+            n["summary_origen"] = "ia"
             n_ok += 1
     return n_ok

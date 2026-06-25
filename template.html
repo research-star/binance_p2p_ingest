@@ -4608,6 +4608,13 @@ window.addEventListener('popstate', function(){
       if(s && norm(s)!==nt) return ntBrief(s, 220); }
     return '';
   }
+  // Bajada con marca de origen (0007): igual a ntDek, pero agrega ' *' cuando el
+  // resumen NO es IA (origen 'extractivo' o legacy NULL). Solo el resumen IA queda
+  // sin asterisco. '' si ntDek no halló texto real (no se inventa un asterisco solo).
+  function ntDekMark(n){
+    var d=ntDek(n); if(!d) return '';
+    return (n && n.summaryOrigen==='ia') ? d : d+' *';
+  }
   function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
   // Caption del hero: VACIADA (ticket portada). El <figcaption> se conserva vacío como SLOT
@@ -4751,7 +4758,7 @@ window.addEventListener('popstate', function(){
       g+='<article class="np-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+npImg(n,'np-card-img')
         +'<div class="np-card-body">'+npKick(n)
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'
-        +'<p class="np-card-dek" data-np-slot="dek"></p>'  /* dek VACIADO: slot para futura API; :empty colapsa. summary/detail siguen en payload, sin render */
+        +'<p class="np-card-dek" data-np-slot="dek">'+ntEsc(ntDekMark(n))+'</p>'  /* dek REACTIVADO (0007): resumen IA (sin *) o extractivo (con ' *'); :empty colapsa si ntDek no halla texto real */
         +npTambienEn(n)
         +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
         +'</div></article>';
@@ -4824,7 +4831,7 @@ window.addEventListener('popstate', function(){
     let grid='';
     for(let i=0;i<latam.length;i++){ const n=latam[i];
       grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
-        +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntDek(n))
+        +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntDekMark(n))
         +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
     }
     return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';

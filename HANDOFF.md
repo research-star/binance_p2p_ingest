@@ -485,7 +485,14 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día (7 días, umbral
     0.70) → top configurable (default **14/día**, `config.NOTICIAS_TOP_BOLIVIA`;
     FASE 3, antes 10). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
-    `ANTHROPIC_API_KEY`; sin key → extracto, como hoy). El **TEMA es independiente
+    `ANTHROPIC_API_KEY`; sin key → extracto). **Activo en prod desde 2026-06-24.**
+    El origen de cada summary se registra en la col `summary_origen`
+    (`'ia'`|`'extractivo'`|NULL legacy; migración `0007`, self-migrate en
+    `init_schema`/`dashboard.py`): `build_nota` arranca `'extractivo'` y
+    `resumen_ia.aplicar` lo sube a `'ia'` en éxito. El frontend **renderiza la
+    bajada (dek)** en las cards BO y el standfirst Latam (`ntDekMark`), con
+    **asterisco** ` *` al final cuando NO es IA (extractivo/legacy); el descarte de
+    `summary≈titular` sigue vigente (dek vacío colapsa). El **TEMA es independiente
     de la relevancia**: lo asigna el motor contextual `_tema`/`_TEMA_SPEC` de
     `scraper.py` (word-boundary + strong/weak/context/exclude, FASE 3) y devuelve
     tema + **confianza** (`tema_hits`); `detectar_entidades` taguea entidades
