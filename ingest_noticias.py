@@ -61,6 +61,23 @@ from noticias_ingest.transform import build_nota, build_nota_latam
 # ── Constantes ────────────────────────────────────────────────────────────
 
 UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
+# Re-resumen B→A (PR re-resumen): cap de notas re-procesadas por corrida y de
+# pasadas por nota. Acotan el gasto API ADICIONAL y frenan el bucle (una nota cuyo
+# cuerpo nunca baja —El Deber por WAF— topa en RESUMEN_REINTENTO_CAP sin quemar API).
+RESUMEN_REINTENTO_TOP = 5   # máx. notas re-resumidas por corrida
+RESUMEN_REINTENTO_CAP = 3   # máx. pasadas de re-resumen por nota (luego deja de ser candidata)
+# Pre-gate de suficiencia: PISO ABSOLUTO de longitud del cuerpo re-fetcheado para
+# que valga la pena gastar la API en re-resumir. Calibrado al piso EMPÍRICO de una A
+# (el detail mínimo de un resumen IA exitoso observado en prod es 231; el avg de un B
+# es 144). Puesto justo POR DEBAJO de ese piso (230) → nunca pre-saltea un cuerpo tan
+# largo como la A más débil, y mata gratis la clase El Deber (cuerpo corto). Es un
+# PROXY de longitud, NO garantía semántica, en DOS direcciones: (a) falso POSITIVO —
+# un cuerpo largo pero basura (boilerplate/paywall) puede volver INSUFICIENTE igual; ese
+# residual lo absorbe el cap de reintentos. (b) falso NEGATIVO — el ancla 231 es un
+# MÍNIMO observado (n=1), no un piso poblacional: una A futura con cuerpo <230 se
+# pre-saltea sin tocar la API. Ese caso se CUENTA en res['pre_skip_umbral'] (va al ping)
+# para que no sea invisible y se pueda re-calibrar. Baja el gasto fuerte, no a cero.
+UMBRAL_SUFICIENCIA = 230
 TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
 LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
@@ -129,7 +146,9 @@ CREATE TABLE IF NOT EXISTS noticias (
     tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
     entidades       TEXT,               -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
     tambien_en      TEXT,               -- JSON [{source,portal,url}] del mismo evento en otros medios (calibración 2026-06-21).
-    summary_origen  TEXT                -- 'ia'|'extractivo': origen del summary (resumen_ia.py vs extracto). NULL legacy = extractivo. Col del ALTER de 0007.
+    summary_origen  TEXT,               -- 'ia'|'extractivo': origen del summary (resumen_ia.py vs extracto). NULL legacy = extractivo. Col del ALTER de 0007.
+    extract_len     INTEGER,            -- longitud del insumo que produjo el summary; lo usa el re-resumen para ver si un re-fetch trae cuerpo mejor. Col del ALTER de 0008.
+    resumen_reintentos INTEGER          -- nº de pasadas de re-resumen sobre la nota; frena el bucle (cap por nota). Col del ALTER de 0008.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
@@ -139,7 +158,9 @@ CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 # idempotente; tema/puntaje ya existen de 0002.
 _COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
             ("tambien_en", "TEXT"),     # tambien_en: calibración 2026-06-21 ("También en…")
-            ("summary_origen", "TEXT"))  # origen del summary IA vs extractivo (0007)
+            ("summary_origen", "TEXT"),  # origen del summary IA vs extractivo (0007)
+            ("extract_len", "INTEGER"),  # longitud del insumo IA — re-resumen (0008)
+            ("resumen_reintentos", "INTEGER"))  # pasadas de re-resumen por nota (0008)
 
 
 def init_schema(conn: sqlite3.Connection):
@@ -252,8 +273,9 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
                 score_crudo, score_ajustado, created_at_utc, image_url, carril,
-                tema_hits, entidades, tambien_en, summary_origen)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                tema_hits, entidades, tambien_en, summary_origen,
+                extract_len, resumen_reintentos)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
@@ -261,7 +283,8 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
              n["created_at_utc"], n.get("image_url"), n.get("carril"),
              n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False),
              json.dumps(n.get("tambien_en") or [], ensure_ascii=False),
-             n.get("summary_origen")))
+             n.get("summary_origen"),
+             n.get("extract_len"), n.get("resumen_reintentos")))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
@@ -494,6 +517,102 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
     return res
 
 
+# ── Re-resumen B→A (notas extractivas/NULL de hoy) ────────────────────────
+
+def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
+                         autorizado: bool = False) -> dict:
+    """Promueve a 'ia' las notas no-IA de HOY (carril Bolivia) cuyo cuerpo mejoró.
+
+    Cada corrida re-fetchea el cuerpo (scrape_cuerpo: RED, NO API; saltea la caché de
+    vistas) y SOLO si el cuerpo nuevo es materialmente más largo que el que produjo el
+    summary actual (extract_len) re-llama a la IA para promover extractivo/NULL → 'ia'.
+    Cap por corrida (RESUMEN_REINTENTO_TOP) y por nota (RESUMEN_REINTENTO_CAP): una nota
+    cuyo cuerpo nunca baja (El Deber, WAF) suma reintentos y topa SIN quemar API.
+
+    `autorizado`: GASTO API ADICIONAL al de inserción. El candado de resumir() exige
+    autorizado=True; el pipeline lo pasa explícito (autorización de Diego en el brief).
+    Best-effort: estado='error' nunca propaga excepción (no debe voltear el ping)."""
+    res = {"estado": "ok", "candidatos": 0, "refetch_mejor": 0, "promovidas": 0,
+           "topadas": 0, "pre_skip_umbral": 0, "errores_api": 0, "detalle": ""}
+    if not resumen_ia.habilitado():
+        return res
+    try:
+        rows = conn.execute(
+            f"""SELECT id, url, title, COALESCE(extract_len, 0) AS ext,
+                       COALESCE(resumen_reintentos, 0) AS rr
+                FROM noticias
+                WHERE date = ? AND {CARRIL_SQL} != 'latam'
+                  AND (summary_origen IS NULL OR summary_origen != 'ia')
+                  AND COALESCE(resumen_reintentos, 0) < ?
+                ORDER BY puntaje DESC
+                LIMIT ?""",
+            (fecha_bo, RESUMEN_REINTENTO_CAP, RESUMEN_REINTENTO_TOP)).fetchall()
+        res["candidatos"] = len(rows)
+        for nid, url, title, ext, rr in rows:
+            cuerpo, _img = scraper.scrape_cuerpo(url)   # re-fetch (RED, no API; salta caché)
+            cuerpo = (cuerpo or "").strip()
+            # PRE-GATE de suficiencia (antes de tocar la API): re-llamar la IA SOLO si el
+            # cuerpo nuevo (1) creció desde el último resumido (> ext) Y (2) supera el piso
+            # absoluto de suficiencia (>= UMBRAL_SUFICIENCIA, ~piso empírico de una A). Si no
+            # pasa → NO se llama la API, solo se suma la pasada. El umbral es proxy de
+            # longitud, no garantía semántica: un cuerpo largo pero basura puede volver
+            # INSUFICIENTE igual; ese residual lo absorbe el cap de reintentos.
+            if len(cuerpo) > ext and len(cuerpo) >= UMBRAL_SUFICIENCIA:
+                # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
+                res["refetch_mejor"] += 1
+                r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)
+                if r and r is not resumen_ia.TRANSITORIO:
+                    # ÉXITO → A. Marca extract_len (= cuerpo que produjo el 'ia').
+                    conn.execute(
+                        "UPDATE noticias SET summary = ?, summary_origen = 'ia', "
+                        "extract_len = ?, resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
+                        "WHERE id = ?", (r, len(cuerpo), nid))
+                    res["promovidas"] += 1
+                elif r is resumen_ia.TRANSITORIO:
+                    # ERROR de red/transitorio: la llamada llegó pero falló reintentable. NO
+                    # marca extract_len → el MISMO cuerpo se puede re-preguntar; solo suma la
+                    # pasada (acotado por el cap). Así un blip de red no quema el cuerpo.
+                    res["errores_api"] += 1
+                    conn.execute(
+                        "UPDATE noticias SET "
+                        "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
+                        (nid,))
+                else:
+                    # INSUFICIENTE SEMÁNTICO (r is None): la IA juzgó este cuerpo y no aportó.
+                    # Marca extract_len (= este cuerpo, ya juzgado) para NO re-preguntar el
+                    # MISMO cuerpo, y suma la pasada. Garantía: 1 cuerpo → ≤1 llamada.
+                    conn.execute(
+                        "UPDATE noticias SET extract_len = ?, "
+                        "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
+                        (len(cuerpo), nid))
+            else:
+                # Cuerpo no mejoró (no bajó / corto, p.ej. El Deber): suma pasada SIN gastar
+                # API; tras el cap deja de ser candidata. COALESCE: una fila con
+                # resumen_reintentos NULL (insertada por el binario viejo el día del deploy)
+                # avanza igual el contador (NULL+1=NULL en SQLite la dejaría candidata eterna).
+                # Telemetría del falso NEGATIVO del pre-gate: el cuerpo creció (> ext) pero
+                # quedó BAJO el umbral → se pre-saltea la API. Si esto es alto, el umbral
+                # puede estar matando A's reales (cuerpo corto pero bueno) — ver caveat.
+                if len(cuerpo) > ext:
+                    res["pre_skip_umbral"] += 1
+                conn.execute(
+                    "UPDATE noticias SET resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
+                    "WHERE id = ?", (nid,))
+            # Commit por nota: una excepción en una nota posterior no descarta las
+            # promociones ya pagadas a la API (el rollback del except solo afecta la
+            # nota en vuelo, no las ya commiteadas).
+            conn.commit()
+            if rr + 1 >= RESUMEN_REINTENTO_CAP:
+                res["topadas"] += 1
+    except Exception:
+        conn.rollback()
+        tb = traceback.format_exc()
+        print(f"[noticias] ERROR reresumir_pendientes:\n{tb}", file=sys.stderr)
+        res["estado"] = "error"
+        res["detalle"] = tb.strip().splitlines()[-1][:200]
+    return res
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -527,6 +646,13 @@ def main() -> int:
             previos = titulos_recientes(conn)
             res_bo = lane_bolivia(conn, args, ahora_utc, fecha_bo, previos)
             res_lt = lane_latam(conn, args, ahora_utc, fecha_bo, previos)
+            # Re-resumen B→A de las no-IA de hoy (Bolivia): re-fetch + IA si el cuerpo
+            # mejoró. autorizado=True = gasto API ADICIONAL autorizado por Diego en el
+            # brief; el candado de resumir() exige el flag explícito. Best-effort: no se
+            # corre en dry-run y su error no voltea el ping (no afecta lo insertado).
+            res_rr = (reresumir_pendientes(conn, fecha_bo, autorizado=True)
+                      if not args.dry_run
+                      else {"estado": "skip", "candidatos": 0, "promovidas": 0})
         finally:
             conn.close()
     except Exception:
@@ -558,6 +684,10 @@ def main() -> int:
                            f"candidatos={res_bo['candidatos']} sobre_umbral={res_bo['sobre_umbral']}")
                + " | "
                + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
+               + (f" reresumen={res_rr.get('estado')}"
+                  f" prom={res_rr.get('promovidas', 0)}/cand={res_rr.get('candidatos', 0)}"
+                  f" preskip={res_rr.get('pre_skip_umbral', 0)}"
+                  f" errapi={res_rr.get('errores_api', 0)}")
                + f" duration_s={dur:.0f}"
                + funnel_str)
     print(summary)

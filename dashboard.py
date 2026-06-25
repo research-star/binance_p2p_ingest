@@ -1076,7 +1076,8 @@ def process_data(db_path: Path) -> dict:
         # patrón: cada ALTER en su try para no abortar las siguientes. Nullables →
         # el SELECT/payload tolera NULL (COALESCE carril; entidades || '[]').
         for _col, _decl in (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
-                            ("tambien_en", "TEXT"), ("summary_origen", "TEXT")):
+                            ("tambien_en", "TEXT"), ("summary_origen", "TEXT"),
+                            ("extract_len", "INTEGER"), ("resumen_reintentos", "INTEGER")):
             try:
                 conn.execute(f"ALTER TABLE noticias ADD COLUMN {_col} {_decl}")
             except Exception:

@@ -14,6 +14,28 @@ Este archivo describe el proyecto y sus convenciones — el "qué" y el "cómo s
 - **Huecos visibles, no rellenados.** Si un día falta data, se ve. No interpolamos silenciosamente.
 - **Calibración con data real boliviana.** Las decisiones de diseño se validan contra el comportamiento del mercado local, no patrones genéricos.
 
+## Resúmenes de noticias (taxonomía A/B/C)
+
+Cada nota lleva un `summary` con un origen (`summary_origen`, migración 0007):
+
+- **A = `'ia'`** — resumen generado por `resumen_ia.py` (Claude Haiku) sobre el cuerpo
+  scrapeado. Estado deseado; el frontend NO le pone asterisco.
+- **B = `'extractivo'`** — extracto del cuerpo/RSS (`transform._resumen_extractivo`),
+  fallback cuando la IA degrada (INSUFICIENTE/rechazo) o no corre. El frontend lo marca con `*`.
+- **C = colapso de render** — el dek queda vacío porque `summary ≈ título` (`ntDek` lo
+  descarta) y `.np-card-dek:empty` colapsa. **NO es un estado de DB**: no hay columna ni
+  migración para C; toda fila tiene `summary`/`detail` no vacíos. C es un outcome del render.
+
+**Re-resumen B→A** (`ingest_noticias.reresumir_pendientes`): cada corrida del cron re-fetchea
+el cuerpo de las notas no-A de HOY (carril Bolivia) y, con un **pre-gate de suficiencia** antes
+de tocar la API, re-llama a la IA **solo si** el cuerpo nuevo (1) es más largo que el que produjo
+el summary actual (`extract_len`, migración 0008) **y** (2) supera el piso absoluto
+`UMBRAL_SUFICIENCIA` (~230, calibrado al detail mínimo de una A), para promover B→A. Cap por
+corrida + por nota (`resumen_reintentos`, 0008)
+para acotar gasto y frenar el bucle (El Deber, cuyo cuerpo no baja por WAF, topa sin quemar
+API). El gasto API del re-resumen está gateado por el candado (`autorizado=True`) +
+autorización de Diego en el brief (ver `CLAUDE.local.md` § Candado de gasto de API).
+
 ## Convenciones del repo
 
 **Naming de branches**: `feat/...`, `fix/...`, `docs/...`, `chore/...`, `refactor/...`.

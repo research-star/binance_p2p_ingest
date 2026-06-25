@@ -34,6 +34,21 @@ MODELO_DEFAULT = "claude-haiku-4-5-20251001"  # corto y barato; overridable por 
 TIMEOUT_S = 20
 MAX_TOKENS = 120
 RESUMEN_MAX_CHARS = 200  # = transform.SUMMARY_MAX (mismo slot del frontend)
+# Palanca de extracción (PR re-resumen): la IA se resume sobre el CUERPO scrapeado
+# (≤10000, = cap de scraper.scrape_cuerpo), no sobre el detail de 400 → menos
+# INSUFICIENTE. TEXTO_MAX acota el insumo (cost-bound). CUERPO_GATE: el cuerpo se usa
+# solo si es "sustantivo"; si no bajó o es basura corta (p.ej. método 1 sin gate de
+# longitud), se cae al detail/RSS como antes — no se feedea un cuerpo trunco "bueno".
+TEXTO_MAX = 10000
+CUERPO_GATE = 300
+
+# Sentinela de FALLO TRANSITORIO (red/timeout/HTTP/JSON): la llamada se intentó pero
+# falló por un error REINTENTABLE. Se DISTINGUE del fallo SEMÁNTICO (INSUFICIENTE/
+# rechazo/vacío → None): el re-resumen NO debe marcar el cuerpo como "ya juzgado"
+# (extract_len) ante un transitorio — el MISMO cuerpo es reintentable, acotado por el
+# cap. Es un objeto único (identidad), nunca un resumen válido. aplicar() lo trata como
+# fallo (no es un string), igual que None → conserva el extracto.
+TRANSITORIO = object()
 
 # Prompt V2.1 (solo-data, 2026-06-25). {ambito} = "Bolivia" (carril BO) | "América
 # Latina" (carril Latam). Endurecido: SOLO la info del texto provisto, PROHIBIDO
@@ -102,7 +117,7 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia", *,
     key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not key or not habilitado():
         return None
-    cuerpo = (texto or "").strip()[:2000]
+    cuerpo = (texto or "").strip()[:TEXTO_MAX]
     titulo = (titulo or "").strip()
     if not (titulo or cuerpo):
         return None
@@ -143,31 +158,49 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia", *,
             txt = txt[:corte].rstrip(" ,;:.")
         return txt
     except Exception as e:
+        # FALLO TRANSITORIO (red/timeout/HTTP/JSON): reintentable. Se devuelve el
+        # sentinela TRANSITORIO (no None) para que el re-resumen NO marque extract_len
+        # (a diferencia del INSUFICIENTE semántico). El log "uso extracto" distingue
+        # esta rama del fallo silencioso de _es_fallo.
         log.warning(f"[resumen_ia] fallo (uso extracto): {e}")
-        return None
+        return TRANSITORIO
+
+
+def insumo_para_ia(n: dict) -> str:
+    """Insumo de texto para la IA: el CUERPO scrapeado (`cuerpo_full`) si es
+    sustantivo (≥ CUERPO_GATE), si no el `detail`/`summary` (RSS/extracto) como antes.
+    Gate anti-basura: un cuerpo corto (no bajó, o trunco del método 1 sin gate) no
+    suma sobre el detail → se usa el fallback."""
+    cuerpo = (n.get("cuerpo_full") or "").strip()
+    if len(cuerpo) >= CUERPO_GATE:
+        return cuerpo
+    return (n.get("detail") or n.get("summary") or "").strip()
 
 
 def aplicar(notas: list, *, autorizado: bool = False) -> int:
     """Reemplaza n['summary'] por el resumen IA en las notas dadas, si está
     habilitado. No-op si no hay key. Devuelve cuántas se resumieron.
 
-    Usa `detail` (cuerpo ~400 chars) como insumo; si no hay, el summary actual.
-    Conserva el extracto original si la API falla en esa nota.
+    Insumo = el CUERPO scrapeado completo (palanca; ver insumo_para_ia), con fallback
+    al detail/summary. Conserva el extracto original si la API falla en esa nota.
 
     `autorizado`: se propaga al candado de resumir() (ver allí). El pipeline lo pasa
     True; un caller ad-hoc sin él hace abortar resumir() antes del POST.
 
     En éxito marca n['summary_origen']='ia' (lo lee el frontend para NO ponerle
     asterisco). Si falla/degrada, el origen queda como lo dejó transform.build_nota
-    ('extractivo') → el frontend marca con asterisco. (Col summary_origen, 0007.)"""
+    ('extractivo') → el frontend marca con asterisco. (Col summary_origen, 0007.)
+    Setea n['extract_len'] = longitud del insumo usado (col 0008) — lo lee el
+    mecanismo de re-resumen para decidir si un re-fetch trajo cuerpo mejor."""
     if not habilitado():
         return 0
     n_ok = 0
     for n in notas:
         ambito = "Bolivia" if n.get("carril") == "bolivia" else "América Latina"
-        r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "", ambito,
-                    autorizado=autorizado)
-        if r:
+        insumo = insumo_para_ia(n)
+        n["extract_len"] = len(insumo)  # insumo que produjo este origen (col 0008)
+        r = resumir(n.get("title", ""), insumo, ambito, autorizado=autorizado)
+        if r and r is not TRANSITORIO:   # solo un string usable es éxito; None/TRANSITORIO → extracto
             n["summary"] = r
             n["summary_origen"] = "ia"
             n_ok += 1
