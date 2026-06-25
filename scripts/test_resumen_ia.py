@@ -61,13 +61,44 @@ def run() -> int:
         if resumen_ia._es_fallo(t):
             errores.append(f"_es_fallo({t!r}) debería ser False")
 
+    # Candado de gasto API: con key habilitada, una llamada SIN autorizado aborta
+    # ANTES del POST; con autorizado=True pasa el candado. CERO red real (urlopen
+    # monkeypatcheado a fallo → resumir degrada a None, sin tocar la API).
+    os.environ["ANTHROPIC_API_KEY"] = "sk-fake-no-network"
+    os.environ.pop("NOTICIAS_RESUMEN", None)
+    try:
+        resumen_ia.resumir("Titular", "cuerpo con datos verificables", "Bolivia")  # autorizado=False
+        errores.append("resumir() ad-hoc sin autorizado debería abortar (RuntimeError)")
+    except RuntimeError:
+        pass  # esperado: candado cazó la llamada ad-hoc, sin POST
+    # aplicar() sin autorizar también aborta (propaga el candado)
+    try:
+        resumen_ia.aplicar([{"title": "T", "detail": "cuerpo", "carril": "bolivia"}])
+        errores.append("aplicar() ad-hoc sin autorizado debería abortar (RuntimeError)")
+    except RuntimeError:
+        pass
+    # Con autorizado=True el candado NO aborta (pipeline-like); red simulada caída → None
+    import urllib.request as _u
+    _orig = _u.urlopen
+    _u.urlopen = lambda *a, **k: (_ for _ in ()).throw(OSError("red bloqueada en test"))
+    try:
+        r = resumen_ia.resumir("Titular", "cuerpo con datos", "Bolivia", autorizado=True)
+        if r is not None:
+            errores.append(f"resumir(autorizado=True) con red caída debería degradar a None (got {r!r})")
+    except RuntimeError as e:
+        errores.append(f"resumir(autorizado=True) NO debería abortar por candado: {e}")
+    finally:
+        _u.urlopen = _orig
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+
     if errores:
         print("FAIL test_resumen_ia:")
         for e in errores:
             print("  -", e)
         return 1
     print("OK test_resumen_ia: sin key → resumir None + aplicar no-op; flag off respetado; "
-          "_es_fallo distingue centinela/rechazo/vacío de resumen real.")
+          "_es_fallo distingue centinela/rechazo/vacío; candado API aborta ad-hoc sin "
+          "autorizar y deja pasar autorizado=True.")
     return 0
 
 

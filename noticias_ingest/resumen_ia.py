@@ -84,7 +84,8 @@ def habilitado() -> bool:
     return os.environ.get("NOTICIAS_RESUMEN", "1").strip().lower() not in ("0", "false", "no")
 
 
-def resumir(titulo: str, texto: str, ambito: str = "Bolivia") -> str | None:
+def resumir(titulo: str, texto: str, ambito: str = "Bolivia", *,
+            autorizado: bool = False) -> str | None:
     """Resumen neutral V2 (≤200 chars, sin elipsis) para el `ambito` del carril, o
     None si no hay key / falla / la IA no pudo resumir.
 
@@ -92,6 +93,11 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia") -> str | None:
     cualquier FALLO de la IA (INSUFICIENTE, rechazo, vacío — ver _es_fallo) → None,
     y el caller conserva el extracto que ya tenía (origen='extractivo').
     `ambito` = "Bolivia" (carril BO) | "América Latina" (carril Latam).
+
+    `autorizado`: CANDADO de gasto API (anti-accidente, NO barrera infranqueable —
+    un caller puede pasar True). El POST solo procede con autorizado=True. El
+    pipeline (ingest_noticias) lo pasa explícito; cualquier script ad-hoc debe
+    setearlo a propósito (acto deliberado y visible) + tener OK de Diego en el brief.
     """
     key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
     if not key or not habilitado():
@@ -100,6 +106,10 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia") -> str | None:
     titulo = (titulo or "").strip()
     if not (titulo or cuerpo):
         return None
+    if not autorizado:
+        raise RuntimeError(
+            "Llamada API ad-hoc no autorizada — requiere flag explícito "
+            "(autorizado=True) + autorización de Diego en el brief")
 
     modelo = os.environ.get("NOTICIAS_RESUMEN_MODELO", "").strip() or MODELO_DEFAULT
     payload = {
@@ -137,12 +147,15 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia") -> str | None:
         return None
 
 
-def aplicar(notas: list) -> int:
+def aplicar(notas: list, *, autorizado: bool = False) -> int:
     """Reemplaza n['summary'] por el resumen IA en las notas dadas, si está
     habilitado. No-op si no hay key. Devuelve cuántas se resumieron.
 
     Usa `detail` (cuerpo ~400 chars) como insumo; si no hay, el summary actual.
     Conserva el extracto original si la API falla en esa nota.
+
+    `autorizado`: se propaga al candado de resumir() (ver allí). El pipeline lo pasa
+    True; un caller ad-hoc sin él hace abortar resumir() antes del POST.
 
     En éxito marca n['summary_origen']='ia' (lo lee el frontend para NO ponerle
     asterisco). Si falla/degrada, el origen queda como lo dejó transform.build_nota
@@ -152,7 +165,8 @@ def aplicar(notas: list) -> int:
     n_ok = 0
     for n in notas:
         ambito = "Bolivia" if n.get("carril") == "bolivia" else "América Latina"
-        r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "", ambito)
+        r = resumir(n.get("title", ""), n.get("detail") or n.get("summary") or "", ambito,
+                    autorizado=autorizado)
         if r:
             n["summary"] = r
             n["summary_origen"] = "ia"
