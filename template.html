@@ -4887,8 +4887,9 @@ window.addEventListener('popstate', function(){
     }catch(e){}
   }
   // Fetch fail-open de /v1/curation del día del riel (público, sin credenciales; molde
-  // de ntLoadHidden). Aplica orden + tratamiento al riel; si falla/no existe/shape raro
-  // → default (orden por impacto + 'none'), sin error visible. Una sola vez por load.
+  // de ntLoadHidden). Aplica SOLO el orden al riel; el treatment del server se ignora y
+  // se fuerza 'full' (Bloque = render único oficial). Si falla/no existe/shape raro →
+  // orden por impacto + 'full', sin error visible. Una sola vez por load.
   let ntCurationLoaded=false;
   function ntLoadCuration(){
     if(ntCurationLoaded) return; ntCurationLoaded=true;
