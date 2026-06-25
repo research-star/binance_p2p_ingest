@@ -494,6 +494,14 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     provisto —prohibido editorializar causas/contexto—; Latam ya NO se rechaza; el
     centinela `INSUFICIENTE` y los patrones de rechazo de la IA se tratan como FALLO
     → degradan a extractivo; corte ≤200 con límite de palabra LIMPIO, sin `…`).
+    La IA se resume sobre el **CUERPO scrapeado completo** (`insumo_para_ia`, ≤10000;
+    fallback al detail si el cuerpo no es sustantivo), no sobre el detail de 400 —palanca
+    contra el starve que producía INSUFICIENTE. **Re-resumen B→A** (`reresumir_pendientes`,
+    paso de `main()` tras los lanes): cada corrida re-fetchea el cuerpo de las no-A de HOY
+    (Bolivia) y re-llama la IA **solo si** el cuerpo nuevo supera `extract_len` (col `0008`),
+    con cap por corrida (`RESUMEN_REINTENTO_TOP`) y por nota (`resumen_reintentos`, col
+    `0008`) — gasto API ADICIONAL gateado por el candado (`autorizado=True`). El Deber (WAF,
+    cuerpo no baja) topa el cap sin quemar API.
     El frontend **renderiza la bajada (dek)** en las cards BO y el standfirst
     Latam (`ntDekMark`), con
     **asterisco** ` *` al final cuando NO es IA (extractivo/legacy); el descarte de

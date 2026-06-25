@@ -212,6 +212,14 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         # todo lo que NO sea 'ia'. (Col summary_origen, migración 0007.)
         "summary_origen": "extractivo",
         "detail": detail,
+        # Cuerpo completo scrapeado (≤10000), TRANSITORIO: insumo de resumen_ia.aplicar
+        # (palanca: la IA se resume sobre el cuerpo, no sobre el detail de 400 → menos
+        # INSUFICIENTE). NO se persiste (insertar_notas usa columnas explícitas).
+        "cuerpo_full": cuerpo,
+        # extract_len: longitud del insumo que produjo el summary (col 0008). Lo setea
+        # resumen_ia.aplicar con el insumo real usado; None si la IA no corrió.
+        "extract_len": None,
+        "resumen_reintentos": 0,  # nº de pasadas de re-resumen (col 0008); arranca en 0
         "topics": [tema] if tema and tema != "General" else [],
         "impact": impact_de_puntaje(cand["puntaje"]),
         "sourceNote": f"{portal} · {dominio}",
@@ -272,6 +280,10 @@ def build_nota_latam(pub_utc: datetime, entry, ahora_utc: datetime | None = None
         "summary": _resumen_extractivo(descripcion, SUMMARY_MAX),
         "summary_origen": "extractivo",  # resumen_ia.aplicar lo sube a 'ia' en éxito (col 0007)
         "detail": _truncar(contenido, DETAIL_MAX) if contenido else descripcion,
+        # Cuerpo completo (≤10000), transitorio: insumo de resumen_ia (palanca, ver build_nota).
+        "cuerpo_full": contenido,
+        "extract_len": None,        # longitud del insumo IA (col 0008); la setea aplicar
+        "resumen_reintentos": 0,    # nº de pasadas de re-resumen (col 0008)
         "topics": [],
         "impact": "medio",
         "sourceNote": source_note,

@@ -61,6 +61,11 @@ from noticias_ingest.transform import build_nota, build_nota_latam
 # ── Constantes ────────────────────────────────────────────────────────────
 
 UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
+# Re-resumen B→A (PR re-resumen): cap de notas re-procesadas por corrida y de
+# pasadas por nota. Acotan el gasto API ADICIONAL y frenan el bucle (una nota cuyo
+# cuerpo nunca baja —El Deber por WAF— topa en RESUMEN_REINTENTO_CAP sin quemar API).
+RESUMEN_REINTENTO_TOP = 5   # máx. notas re-resumidas por corrida
+RESUMEN_REINTENTO_CAP = 3   # máx. pasadas de re-resumen por nota (luego deja de ser candidata)
 TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
 LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
@@ -129,7 +134,9 @@ CREATE TABLE IF NOT EXISTS noticias (
     tema_hits       INTEGER,            -- confianza del tema (clasificación v1; strong*10 + weak-con-contexto). Col del ALTER de 0005.
     entidades       TEXT,               -- JSON array de entidades canónicas (BCB, YPFB, YLB…). Col del ALTER de 0005.
     tambien_en      TEXT,               -- JSON [{source,portal,url}] del mismo evento en otros medios (calibración 2026-06-21).
-    summary_origen  TEXT                -- 'ia'|'extractivo': origen del summary (resumen_ia.py vs extracto). NULL legacy = extractivo. Col del ALTER de 0007.
+    summary_origen  TEXT,               -- 'ia'|'extractivo': origen del summary (resumen_ia.py vs extracto). NULL legacy = extractivo. Col del ALTER de 0007.
+    extract_len     INTEGER,            -- longitud del insumo que produjo el summary; lo usa el re-resumen para ver si un re-fetch trae cuerpo mejor. Col del ALTER de 0008.
+    resumen_reintentos INTEGER          -- nº de pasadas de re-resumen sobre la nota; frena el bucle (cap por nota). Col del ALTER de 0008.
 );
 CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 """
@@ -139,7 +146,9 @@ CREATE INDEX IF NOT EXISTS idx_noticias_date ON noticias(date);
 # idempotente; tema/puntaje ya existen de 0002.
 _COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
             ("tambien_en", "TEXT"),     # tambien_en: calibración 2026-06-21 ("También en…")
-            ("summary_origen", "TEXT"))  # origen del summary IA vs extractivo (0007)
+            ("summary_origen", "TEXT"),  # origen del summary IA vs extractivo (0007)
+            ("extract_len", "INTEGER"),  # longitud del insumo IA — re-resumen (0008)
+            ("resumen_reintentos", "INTEGER"))  # pasadas de re-resumen por nota (0008)
 
 
 def init_schema(conn: sqlite3.Connection):
@@ -252,8 +261,9 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
                (id, date, time, source, category, title, summary, detail,
                 topics, impact, source_note, url, portal, tema, puntaje,
                 score_crudo, score_ajustado, created_at_utc, image_url, carril,
-                tema_hits, entidades, tambien_en, summary_origen)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                tema_hits, entidades, tambien_en, summary_origen,
+                extract_len, resumen_reintentos)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
             (n["id"], n["date"], n["time"], n["source"], n["category"],
              n["title"], n["summary"], n["detail"], json.dumps(n["topics"], ensure_ascii=False),
              n["impact"], n["sourceNote"], n["url"], n["portal"], n["tema"],
@@ -261,7 +271,8 @@ def insertar_notas(conn: sqlite3.Connection, notas: list) -> int:
              n["created_at_utc"], n.get("image_url"), n.get("carril"),
              n.get("tema_hits"), json.dumps(n.get("entidades") or [], ensure_ascii=False),
              json.dumps(n.get("tambien_en") or [], ensure_ascii=False),
-             n.get("summary_origen")))
+             n.get("summary_origen"),
+             n.get("extract_len"), n.get("resumen_reintentos")))
         insertadas += cur.rowcount
     conn.commit()
     return insertadas
@@ -494,6 +505,75 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
     return res
 
 
+# ── Re-resumen B→A (notas extractivas/NULL de hoy) ────────────────────────
+
+def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
+                         autorizado: bool = False) -> dict:
+    """Promueve a 'ia' las notas no-IA de HOY (carril Bolivia) cuyo cuerpo mejoró.
+
+    Cada corrida re-fetchea el cuerpo (scrape_cuerpo: RED, NO API; saltea la caché de
+    vistas) y SOLO si el cuerpo nuevo es materialmente más largo que el que produjo el
+    summary actual (extract_len) re-llama a la IA para promover extractivo/NULL → 'ia'.
+    Cap por corrida (RESUMEN_REINTENTO_TOP) y por nota (RESUMEN_REINTENTO_CAP): una nota
+    cuyo cuerpo nunca baja (El Deber, WAF) suma reintentos y topa SIN quemar API.
+
+    `autorizado`: GASTO API ADICIONAL al de inserción. El candado de resumir() exige
+    autorizado=True; el pipeline lo pasa explícito (autorización de Diego en el brief).
+    Best-effort: estado='error' nunca propaga excepción (no debe voltear el ping)."""
+    res = {"estado": "ok", "candidatos": 0, "refetch_mejor": 0,
+           "promovidas": 0, "topadas": 0, "detalle": ""}
+    if not resumen_ia.habilitado():
+        return res
+    try:
+        rows = conn.execute(
+            f"""SELECT id, url, title, COALESCE(extract_len, 0) AS ext,
+                       COALESCE(resumen_reintentos, 0) AS rr
+                FROM noticias
+                WHERE date = ? AND {CARRIL_SQL} != 'latam'
+                  AND (summary_origen IS NULL OR summary_origen != 'ia')
+                  AND COALESCE(resumen_reintentos, 0) < ?
+                ORDER BY puntaje DESC
+                LIMIT ?""",
+            (fecha_bo, RESUMEN_REINTENTO_CAP, RESUMEN_REINTENTO_TOP)).fetchall()
+        res["candidatos"] = len(rows)
+        for nid, url, title, ext, rr in rows:
+            cuerpo, _img = scraper.scrape_cuerpo(url)   # re-fetch (RED, no API; salta caché)
+            cuerpo = (cuerpo or "").strip()
+            if len(cuerpo) > ext:
+                # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
+                res["refetch_mejor"] += 1
+                r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)
+                if r:
+                    conn.execute(
+                        "UPDATE noticias SET summary = ?, summary_origen = 'ia', "
+                        "extract_len = ?, resumen_reintentos = resumen_reintentos + 1 "
+                        "WHERE id = ?", (r, len(cuerpo), nid))
+                    res["promovidas"] += 1
+                else:
+                    # Cuerpo mejor pero la IA sigue diciendo INSUFICIENTE: registrá el nuevo
+                    # extract_len (no reintentar el MISMO cuerpo) y sumá la pasada.
+                    conn.execute(
+                        "UPDATE noticias SET extract_len = ?, "
+                        "resumen_reintentos = resumen_reintentos + 1 WHERE id = ?",
+                        (len(cuerpo), nid))
+            else:
+                # Cuerpo no mejoró (no bajó / corto, p.ej. El Deber): suma pasada SIN
+                # gastar API; tras el cap deja de ser candidata.
+                conn.execute(
+                    "UPDATE noticias SET resumen_reintentos = resumen_reintentos + 1 "
+                    "WHERE id = ?", (nid,))
+            if rr + 1 >= RESUMEN_REINTENTO_CAP:
+                res["topadas"] += 1
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        tb = traceback.format_exc()
+        print(f"[noticias] ERROR reresumir_pendientes:\n{tb}", file=sys.stderr)
+        res["estado"] = "error"
+        res["detalle"] = tb.strip().splitlines()[-1][:200]
+    return res
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -527,6 +607,13 @@ def main() -> int:
             previos = titulos_recientes(conn)
             res_bo = lane_bolivia(conn, args, ahora_utc, fecha_bo, previos)
             res_lt = lane_latam(conn, args, ahora_utc, fecha_bo, previos)
+            # Re-resumen B→A de las no-IA de hoy (Bolivia): re-fetch + IA si el cuerpo
+            # mejoró. autorizado=True = gasto API ADICIONAL autorizado por Diego en el
+            # brief; el candado de resumir() exige el flag explícito. Best-effort: no se
+            # corre en dry-run y su error no voltea el ping (no afecta lo insertado).
+            res_rr = (reresumir_pendientes(conn, fecha_bo, autorizado=True)
+                      if not args.dry_run
+                      else {"estado": "skip", "candidatos": 0, "promovidas": 0})
         finally:
             conn.close()
     except Exception:
@@ -558,6 +645,8 @@ def main() -> int:
                            f"candidatos={res_bo['candidatos']} sobre_umbral={res_bo['sobre_umbral']}")
                + " | "
                + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
+               + (f" reresumen={res_rr.get('estado')}"
+                  f" prom={res_rr.get('promovidas', 0)}/cand={res_rr.get('candidatos', 0)}")
                + f" duration_s={dur:.0f}"
                + funnel_str)
     print(summary)
