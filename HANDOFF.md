@@ -489,10 +489,11 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     El origen de cada summary se registra en la col `summary_origen`
     (`'ia'`|`'extractivo'`|NULL legacy; migración `0007`, self-migrate en
     `init_schema`/`dashboard.py`): `build_nota` arranca `'extractivo'` y
-    `resumen_ia.aplicar` lo sube a `'ia'` en éxito (prompt **V2** por ámbito
-    BO/Latam, calibración 2026-06-25: Latam ya NO se rechaza; el centinela
-    `INSUFICIENTE` y los patrones de rechazo de la IA se tratan como FALLO →
-    degradan a extractivo; corte ≤200 con límite de palabra LIMPIO, sin `…`).
+    `resumen_ia.aplicar` lo sube a `'ia'` en éxito (prompt **V2.1 solo-data** por
+    ámbito BO/Latam, calibración 2026-06-25: usa EXCLUSIVAMENTE la info del texto
+    provisto —prohibido editorializar causas/contexto—; Latam ya NO se rechaza; el
+    centinela `INSUFICIENTE` y los patrones de rechazo de la IA se tratan como FALLO
+    → degradan a extractivo; corte ≤200 con límite de palabra LIMPIO, sin `…`).
     El frontend **renderiza la bajada (dek)** en las cards BO y el standfirst
     Latam (`ntDekMark`), con
     **asterisco** ` *` al final cuando NO es IA (extractivo/legacy); el descarte de
