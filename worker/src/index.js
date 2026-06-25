@@ -5,6 +5,8 @@
 //   GET  /v1/hidden/admin  auth     → { ids, v, items[{id,by,at}] }
 //   POST /v1/hide          auth     → id en text/plain → agrega a KV, recomputa v
 //   POST /v1/unhide        auth     → id en text/plain → quita de KV, recomputa v
+//   GET  /v1/hero          público  → { overlay }   (flag global del overlay del hero)
+//   POST /v1/hero          auth     → { overlay:bool } en text/plain → PUT a KV (LWW)
 //
 // Gate de las rutas auth (doble): JWT de Access válido AND email ∈ ALLOWED_EMAILS.
 // Writes en text/plain (request CORS "simple" → sin preflight). El Worker es
@@ -18,7 +20,8 @@
 
 import { publicCors, authCors } from "./cors.js";
 import { verifyAccessJwt, getAccessToken } from "./auth.js";
-import { readIndex, hide, unhide, getCuration, putCuration, TREATMENTS } from "./store.js";
+import { readIndex, hide, unhide, getCuration, putCuration, TREATMENTS,
+         getHeroFlag, putHeroFlag } from "./store.js";
 
 const ID_RE = /^[0-9a-f]{16}$/;
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -155,6 +158,13 @@ export default {
       if (!isValidDay(day)) return json({ error: "bad_day" }, 422, publicCors());
       const { order, treatment } = await getCuration(env.HIDDEN_KV, day);
       return json({ order, treatment }, 200, publicCors());
+    }
+
+    // ── GET /v1/hero — PÚBLICO (flag global del overlay del hero; molde de /v1/curation) ──
+    // { overlay: boolean }. Clave ausente → { overlay:false } = sin overlay (default).
+    if (path === "/v1/hero" && req.method === "GET") {
+      const { overlay } = await getHeroFlag(env.HIDDEN_KV);
+      return json({ overlay }, 200, publicCors());
     }
 
     // ── GET /v1/login — bounce de login cross-domain ──
@@ -313,6 +323,24 @@ export default {
       }
       const value = await putCuration(env.HIDDEN_KV, day, clean, treatment);
       return json({ ok: true, day, ...value }, 200, aCors);
+    }
+
+    // ── POST /v1/hero — auth + gate (flag global del overlay; molde de /v1/hide) ──
+    // Body JSON en text/plain (request CORS "simple", sin preflight). { overlay: boolean }.
+    // PUT directo a settings:hero_overlay (LWW).
+    if (path === "/v1/hero" && req.method === "POST") {
+      const g = await gate(req, env);
+      if (!g.ok) return json({ ok: false, error: g.reason }, g.status, aCors);
+      let payload;
+      try {
+        payload = JSON.parse(await req.text());
+      } catch {
+        return json({ ok: false, error: "bad_json" }, 422, aCors);
+      }
+      if (typeof payload?.overlay !== "boolean")
+        return json({ ok: false, error: "bad_overlay" }, 422, aCors);
+      const value = await putHeroFlag(env.HIDDEN_KV, payload.overlay);
+      return json({ ok: true, ...value }, 200, aCors);
     }
 
     return json({ error: "not_found", path }, 404, publicCors());
