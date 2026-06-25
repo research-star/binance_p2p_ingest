@@ -95,15 +95,17 @@ def _slugify(portal: str) -> str:
     return re.sub(r"[^a-z0-9]", "", s) or "desconocido"
 
 
-def _truncar(texto: str, maximo: int) -> str:
-    """Trunca en límite de palabra con elipsis. Nunca corta a mitad de palabra."""
+def _truncar(texto: str, maximo: int, elipsis: bool = True) -> str:
+    """Trunca en límite de palabra. Nunca corta a mitad de palabra.
+    elipsis=True agrega '…' (detail); elipsis=False corta limpio (summary: el
+    slot del card no debe terminar en '…')."""
     texto = (texto or "").strip()
     if len(texto) <= maximo:
         return texto
     corte = texto.rfind(" ", 0, maximo)
     if corte < maximo // 2:
         corte = maximo
-    return texto[:corte].rstrip(" ,;:.") + "…"
+    return texto[:corte].rstrip(" ,;:.") + ("…" if elipsis else "")
 
 
 # Abreviaturas (es-BO) que llevan punto pero NO terminan oración — evitan cortar
@@ -143,7 +145,8 @@ def _resumen_extractivo(texto: str, maximo: int = SUMMARY_MAX) -> str:
     """Resumen = 1-2 oraciones completas que entren en `maximo` chars (mejora
     estética sobre el corte duro a 200; sin IA, calibración 2026-06-21). Si el
     texto ya entra, se devuelve tal cual; si ni la primera oración entra, cae a
-    _truncar (corte por palabra + elipsis)."""
+    _truncar con corte LIMPIO (sin elipsis: el slot del card no termina en '…',
+    calibración 2026-06-25)."""
     texto = (texto or "").strip()
     if not texto or len(texto) <= maximo:
         return texto
@@ -153,7 +156,7 @@ def _resumen_extractivo(texto: str, maximo: int = SUMMARY_MAX) -> str:
         if len(cand) > maximo:
             break
         acc = cand
-    return acc if acc else _truncar(texto, maximo)
+    return acc if acc else _truncar(texto, maximo, elipsis=False)
 
 
 def impact_de_puntaje(puntaje: float) -> str:

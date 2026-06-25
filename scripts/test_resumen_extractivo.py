@@ -6,7 +6,7 @@ Verifica:
   - 1-2 oraciones completas que entran en 200 → ambas, terminando en signo, SIN elipsis.
   - Corte por oración: si la 2ª no entra, queda solo la 1ª (sin elipsis).
   - Abreviaturas (EE.UU.) no parten la oración a la mitad.
-  - 1ª oración > 200 → fallback a _truncar (corte por palabra + elipsis).
+  - 1ª oración > 200 → fallback a corte por palabra LIMPIO, sin elipsis.
 
 Uso: python scripts/test_resumen_extractivo.py
 """
@@ -55,13 +55,15 @@ def run() -> int:
     r4 = _resumen_extractivo(primera + " " + segunda)
     chk(r4 == primera, f"si la 2ª no entra, solo la 1ª | got={r4!r}")
 
-    # 5. Primera oración > 200 → fallback a _truncar (elipsis).
+    # 5. Primera oración > 200 → fallback a corte LIMPIO por palabra, SIN elipsis
+    #    (el slot del card no debe terminar en '…', calibración 2026-06-25).
     muy_larga = ("El Banco Central informó que las reservas internacionales registraron una variación "
                  "significativa durante el último trimestre del año debido a múltiples factores económicos "
                  "y financieros que afectaron al mercado cambiario nacional de manera sostenida")
     r5 = _resumen_extractivo(muy_larga)
-    chk(r5.endswith("…"), f"1ª oración larga → fallback con elipsis | got={r5!r}")
-    chk(len(r5) <= 201, f"fallback no debería exceder ~200 | len={len(r5)}")
+    chk(not r5.endswith("…"), f"1ª oración larga → corte limpio SIN elipsis | got={r5!r}")
+    chk(len(r5) <= 200, f"fallback no debería exceder 200 | len={len(r5)}")
+    chk(muy_larga.startswith(r5), f"corte debería ser prefijo limpio | got={r5!r}")
 
     if errores:
         print("FAIL test_resumen_extractivo:")
@@ -69,7 +71,7 @@ def run() -> int:
             print("  -", e)
         return 1
     print("OK test_resumen_extractivo: oraciones completas + abreviaturas + corte por "
-          "oración + fallback a elipsis.")
+          "oración + fallback corte limpio (sin elipsis).")
     return 0
 
 

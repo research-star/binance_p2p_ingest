@@ -40,12 +40,26 @@ def run() -> int:
     os.environ.pop("ANTHROPIC_API_KEY", None)
     os.environ.pop("NOTICIAS_RESUMEN", None)
 
+    # _es_fallo: centinela / rechazo / vacío → True (degrada a extractivo);
+    # un resumen real → False (se persiste como 'ia').
+    fallo_si = ["INSUFICIENTE", "Insuficiente.", "No puedo resumir esta noticia porque…",
+                "La noticia trata sobre Colombia, no Bolivia.", "Lo siento, no me es posible.", "", "   "]
+    for t in fallo_si:
+        if not resumen_ia._es_fallo(t):
+            errores.append(f"_es_fallo({t!r}) debería ser True")
+    fallo_no = ["El BCB anunció nuevas medidas para el tipo de cambio.",
+                "De la Espriella conformará su gabinete con foco en seguridad y empleo."]
+    for t in fallo_no:
+        if resumen_ia._es_fallo(t):
+            errores.append(f"_es_fallo({t!r}) debería ser False")
+
     if errores:
         print("FAIL test_resumen_ia:")
         for e in errores:
             print("  -", e)
         return 1
-    print("OK test_resumen_ia: sin key → resumir None + aplicar no-op; flag off respetado.")
+    print("OK test_resumen_ia: sin key → resumir None + aplicar no-op; flag off respetado; "
+          "_es_fallo distingue centinela/rechazo/vacío de resumen real.")
     return 0
 
 
