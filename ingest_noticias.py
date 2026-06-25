@@ -66,6 +66,15 @@ UMBRAL_PUNTAJE = 6.7   # corte editorial carril Bolivia (decisión cerrada)
 # cuerpo nunca baja —El Deber por WAF— topa en RESUMEN_REINTENTO_CAP sin quemar API).
 RESUMEN_REINTENTO_TOP = 5   # máx. notas re-resumidas por corrida
 RESUMEN_REINTENTO_CAP = 3   # máx. pasadas de re-resumen por nota (luego deja de ser candidata)
+# Pre-gate de suficiencia: PISO ABSOLUTO de longitud del cuerpo re-fetcheado para
+# que valga la pena gastar la API en re-resumir. Calibrado al piso EMPÍRICO de una A
+# (el detail mínimo de un resumen IA exitoso observado en prod es 231; el avg de un B
+# es 144). Puesto justo POR DEBAJO de ese piso (230) → nunca pre-saltea un cuerpo tan
+# largo como la A más débil, y mata gratis la clase El Deber (cuerpo corto). Es un
+# PROXY de longitud, NO garantía semántica: un cuerpo largo pero basura (boilerplate/
+# paywall) puede volver INSUFICIENTE igual — ese residual lo absorbe el cap de
+# reintentos, no el pre-gate. Baja el gasto fuerte, no a cero.
+UMBRAL_SUFICIENCIA = 230
 TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
 LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
 DEDUPE_DIAS = 7        # ventana de dedupe inter-día contra la tabla noticias
@@ -539,10 +548,13 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
         for nid, url, title, ext, rr in rows:
             cuerpo, _img = scraper.scrape_cuerpo(url)   # re-fetch (RED, no API; salta caché)
             cuerpo = (cuerpo or "").strip()
-            # Mismo gate que la inserción (insumo_para_ia): el cuerpo nuevo debe ser
-            # materialmente mejor que el que produjo el origen actual (> ext) Y sustantivo
-            # (≥ CUERPO_GATE) — así NO se re-llama la IA con texto trunco/sub-gate.
-            if len(cuerpo) > ext and len(cuerpo) >= resumen_ia.CUERPO_GATE:
+            # PRE-GATE de suficiencia (antes de tocar la API): re-llamar la IA SOLO si el
+            # cuerpo nuevo (1) creció desde el último resumido (> ext) Y (2) supera el piso
+            # absoluto de suficiencia (>= UMBRAL_SUFICIENCIA, ~piso empírico de una A). Si no
+            # pasa → NO se llama la API, solo se suma la pasada. El umbral es proxy de
+            # longitud, no garantía semántica: un cuerpo largo pero basura puede volver
+            # INSUFICIENTE igual; ese residual lo absorbe el cap de reintentos.
+            if len(cuerpo) > ext and len(cuerpo) >= UMBRAL_SUFICIENCIA:
                 # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
                 res["refetch_mejor"] += 1
                 r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)

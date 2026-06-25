@@ -498,10 +498,14 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     fallback al detail si el cuerpo no es sustantivo), no sobre el detail de 400 —palanca
     contra el starve que producía INSUFICIENTE. **Re-resumen B→A** (`reresumir_pendientes`,
     paso de `main()` tras los lanes): cada corrida re-fetchea el cuerpo de las no-A de HOY
-    (Bolivia) y re-llama la IA **solo si** el cuerpo nuevo supera `extract_len` (col `0008`),
-    con cap por corrida (`RESUMEN_REINTENTO_TOP`) y por nota (`resumen_reintentos`, col
-    `0008`) — gasto API ADICIONAL gateado por el candado (`autorizado=True`). El Deber (WAF,
-    cuerpo no baja) topa el cap sin quemar API.
+    (Bolivia) y, con un **pre-gate de suficiencia** ANTES de tocar la API, re-llama la IA
+    **solo si** el cuerpo nuevo (1) supera `extract_len` (creció desde el último resumido,
+    col `0008`) **y** (2) pasa el piso absoluto `UMBRAL_SUFICIENCIA` (~230, calibrado al
+    detail mínimo de una A; el avg de un B es 144). Cap por corrida (`RESUMEN_REINTENTO_TOP`)
+    y por nota (`resumen_reintentos`, col `0008`) — gasto API ADICIONAL gateado por el candado
+    (`autorizado=True`). El umbral es proxy de longitud, no garantía semántica: un cuerpo
+    largo pero basura puede volver INSUFICIENTE igual y lo absorbe el cap. El Deber (WAF,
+    cuerpo no baja) ni siquiera dispara la API: cae bajo el umbral y solo suma reintentos.
     El frontend **renderiza la bajada (dek)** en las cards BO y el standfirst
     Latam (`ntDekMark`), con
     **asterisco** ` *` al final cuando NO es IA (extractivo/legacy); el descarte de
