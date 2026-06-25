@@ -42,6 +42,14 @@ RESUMEN_MAX_CHARS = 200  # = transform.SUMMARY_MAX (mismo slot del frontend)
 TEXTO_MAX = 10000
 CUERPO_GATE = 300
 
+# Sentinela de FALLO TRANSITORIO (red/timeout/HTTP/JSON): la llamada se intentó pero
+# falló por un error REINTENTABLE. Se DISTINGUE del fallo SEMÁNTICO (INSUFICIENTE/
+# rechazo/vacío → None): el re-resumen NO debe marcar el cuerpo como "ya juzgado"
+# (extract_len) ante un transitorio — el MISMO cuerpo es reintentable, acotado por el
+# cap. Es un objeto único (identidad), nunca un resumen válido. aplicar() lo trata como
+# fallo (no es un string), igual que None → conserva el extracto.
+TRANSITORIO = object()
+
 # Prompt V2.1 (solo-data, 2026-06-25). {ambito} = "Bolivia" (carril BO) | "América
 # Latina" (carril Latam). Endurecido: SOLO la info del texto provisto, PROHIBIDO
 # agregar causas/contexto/caracterizaciones aunque el modelo las conozca de otra
@@ -150,8 +158,12 @@ def resumir(titulo: str, texto: str, ambito: str = "Bolivia", *,
             txt = txt[:corte].rstrip(" ,;:.")
         return txt
     except Exception as e:
+        # FALLO TRANSITORIO (red/timeout/HTTP/JSON): reintentable. Se devuelve el
+        # sentinela TRANSITORIO (no None) para que el re-resumen NO marque extract_len
+        # (a diferencia del INSUFICIENTE semántico). El log "uso extracto" distingue
+        # esta rama del fallo silencioso de _es_fallo.
         log.warning(f"[resumen_ia] fallo (uso extracto): {e}")
-        return None
+        return TRANSITORIO
 
 
 def insumo_para_ia(n: dict) -> str:
@@ -188,7 +200,7 @@ def aplicar(notas: list, *, autorizado: bool = False) -> int:
         insumo = insumo_para_ia(n)
         n["extract_len"] = len(insumo)  # insumo que produjo este origen (col 0008)
         r = resumir(n.get("title", ""), insumo, ambito, autorizado=autorizado)
-        if r:
+        if r and r is not TRANSITORIO:   # solo un string usable es éxito; None/TRANSITORIO → extracto
             n["summary"] = r
             n["summary_origen"] = "ia"
             n_ok += 1

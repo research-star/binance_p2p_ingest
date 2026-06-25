@@ -532,8 +532,8 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
     `autorizado`: GASTO API ADICIONAL al de inserción. El candado de resumir() exige
     autorizado=True; el pipeline lo pasa explícito (autorización de Diego en el brief).
     Best-effort: estado='error' nunca propaga excepción (no debe voltear el ping)."""
-    res = {"estado": "ok", "candidatos": 0, "refetch_mejor": 0,
-           "promovidas": 0, "topadas": 0, "pre_skip_umbral": 0, "detalle": ""}
+    res = {"estado": "ok", "candidatos": 0, "refetch_mejor": 0, "promovidas": 0,
+           "topadas": 0, "pre_skip_umbral": 0, "errores_api": 0, "detalle": ""}
     if not resumen_ia.habilitado():
         return res
     try:
@@ -561,15 +561,26 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
                 # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
                 res["refetch_mejor"] += 1
                 r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)
-                if r:
+                if r and r is not resumen_ia.TRANSITORIO:
+                    # ÉXITO → A. Marca extract_len (= cuerpo que produjo el 'ia').
                     conn.execute(
                         "UPDATE noticias SET summary = ?, summary_origen = 'ia', "
                         "extract_len = ?, resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
                         "WHERE id = ?", (r, len(cuerpo), nid))
                     res["promovidas"] += 1
+                elif r is resumen_ia.TRANSITORIO:
+                    # ERROR de red/transitorio: la llamada llegó pero falló reintentable. NO
+                    # marca extract_len → el MISMO cuerpo se puede re-preguntar; solo suma la
+                    # pasada (acotado por el cap). Así un blip de red no quema el cuerpo.
+                    res["errores_api"] += 1
+                    conn.execute(
+                        "UPDATE noticias SET "
+                        "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
+                        (nid,))
                 else:
-                    # Cuerpo mejor pero la IA sigue diciendo INSUFICIENTE: registrá el nuevo
-                    # extract_len (no reintentar el MISMO cuerpo) y sumá la pasada.
+                    # INSUFICIENTE SEMÁNTICO (r is None): la IA juzgó este cuerpo y no aportó.
+                    # Marca extract_len (= este cuerpo, ya juzgado) para NO re-preguntar el
+                    # MISMO cuerpo, y suma la pasada. Garantía: 1 cuerpo → ≤1 llamada.
                     conn.execute(
                         "UPDATE noticias SET extract_len = ?, "
                         "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
@@ -675,7 +686,8 @@ def main() -> int:
                + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
                + (f" reresumen={res_rr.get('estado')}"
                   f" prom={res_rr.get('promovidas', 0)}/cand={res_rr.get('candidatos', 0)}"
-                  f" preskip={res_rr.get('pre_skip_umbral', 0)}")
+                  f" preskip={res_rr.get('pre_skip_umbral', 0)}"
+                  f" errapi={res_rr.get('errores_api', 0)}")
                + f" duration_s={dur:.0f}"
                + funnel_str)
     print(summary)
