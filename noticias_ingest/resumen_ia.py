@@ -34,14 +34,19 @@ TIMEOUT_S = 20
 MAX_TOKENS = 120
 RESUMEN_MAX_CHARS = 200  # = transform.SUMMARY_MAX (mismo slot del frontend)
 
-# Prompt V2 (bake-off, 2026-06-25). {ambito} = "Bolivia" (carril BO) | "América
-# Latina" (carril Latam). El INSUFICIENTE es SOLO cuando el texto se limita a
-# repetir el título; si hay cualquier dato extra (cifra/fecha/actor) → resumir.
+# Prompt V2.1 (solo-data, 2026-06-25). {ambito} = "Bolivia" (carril BO) | "América
+# Latina" (carril Latam). Endurecido: SOLO la info del texto provisto, PROHIBIDO
+# agregar causas/contexto/caracterizaciones aunque el modelo las conozca de otra
+# fuente (evita editorializar — riesgo en plataforma de inteligencia económica).
+# Más INSUFICIENTE es esperado y aceptado (fidelidad > cobertura).
 _PROMPT = (
-    "Resumí en español esta noticia económica de {ambito}. Máximo 200 caracteres, "
-    "una oración, sin puntos suspensivos. No repitas el titular; sumá al menos un "
-    "dato que no esté en él (cifra, actor, causa o efecto). Tono neutral. Si el "
-    "texto no aporta NADA más allá del título, respondé exactamente: INSUFICIENTE."
+    "Resumí en español esta noticia económica de {ambito} usando EXCLUSIVAMENTE la "
+    "información del texto provisto. Máximo 200 caracteres, una sola oración, sin "
+    "puntos suspensivos. No repitas el titular: incluí un dato del texto que no esté "
+    "en el título (cifra, monto, fecha o actor). PROHIBIDO agregar causas, contexto, "
+    "interpretaciones o caracterizaciones que no aparezcan en el texto, aunque las "
+    "conozcas de otra fuente. Tono neutral y factual. Si el texto no aporta ningún "
+    "dato verificable más allá del título, respondé exactamente: INSUFICIENTE."
     "\n\nTitular: {titulo}\n\nTexto: {texto}"
 )
 
