@@ -71,9 +71,12 @@ RESUMEN_REINTENTO_CAP = 3   # máx. pasadas de re-resumen por nota (luego deja d
 # (el detail mínimo de un resumen IA exitoso observado en prod es 231; el avg de un B
 # es 144). Puesto justo POR DEBAJO de ese piso (230) → nunca pre-saltea un cuerpo tan
 # largo como la A más débil, y mata gratis la clase El Deber (cuerpo corto). Es un
-# PROXY de longitud, NO garantía semántica: un cuerpo largo pero basura (boilerplate/
-# paywall) puede volver INSUFICIENTE igual — ese residual lo absorbe el cap de
-# reintentos, no el pre-gate. Baja el gasto fuerte, no a cero.
+# PROXY de longitud, NO garantía semántica, en DOS direcciones: (a) falso POSITIVO —
+# un cuerpo largo pero basura (boilerplate/paywall) puede volver INSUFICIENTE igual; ese
+# residual lo absorbe el cap de reintentos. (b) falso NEGATIVO — el ancla 231 es un
+# MÍNIMO observado (n=1), no un piso poblacional: una A futura con cuerpo <230 se
+# pre-saltea sin tocar la API. Ese caso se CUENTA en res['pre_skip_umbral'] (va al ping)
+# para que no sea invisible y se pueda re-calibrar. Baja el gasto fuerte, no a cero.
 UMBRAL_SUFICIENCIA = 230
 TOP_N = NOTICIAS_TOP_BOLIVIA    # tope diario carril Bolivia (config.py)
 LATAM_TOP_N = NOTICIAS_TOP_LATAM  # tope diario carril latam (config.py, presupuesto independiente)
@@ -530,7 +533,7 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
     autorizado=True; el pipeline lo pasa explícito (autorización de Diego en el brief).
     Best-effort: estado='error' nunca propaga excepción (no debe voltear el ping)."""
     res = {"estado": "ok", "candidatos": 0, "refetch_mejor": 0,
-           "promovidas": 0, "topadas": 0, "detalle": ""}
+           "promovidas": 0, "topadas": 0, "pre_skip_umbral": 0, "detalle": ""}
     if not resumen_ia.habilitado():
         return res
     try:
@@ -572,10 +575,15 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
                         "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
                         (len(cuerpo), nid))
             else:
-                # Cuerpo no mejoró (no bajó / corto / sub-gate, p.ej. El Deber): suma pasada
-                # SIN gastar API; tras el cap deja de ser candidata. COALESCE: una fila con
+                # Cuerpo no mejoró (no bajó / corto, p.ej. El Deber): suma pasada SIN gastar
+                # API; tras el cap deja de ser candidata. COALESCE: una fila con
                 # resumen_reintentos NULL (insertada por el binario viejo el día del deploy)
                 # avanza igual el contador (NULL+1=NULL en SQLite la dejaría candidata eterna).
+                # Telemetría del falso NEGATIVO del pre-gate: el cuerpo creció (> ext) pero
+                # quedó BAJO el umbral → se pre-saltea la API. Si esto es alto, el umbral
+                # puede estar matando A's reales (cuerpo corto pero bueno) — ver caveat.
+                if len(cuerpo) > ext:
+                    res["pre_skip_umbral"] += 1
                 conn.execute(
                     "UPDATE noticias SET resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
                     "WHERE id = ?", (nid,))
@@ -666,7 +674,8 @@ def main() -> int:
                + " | "
                + _lane_str("latam", res_lt, f"items_24h={res_lt['items_24h']}")
                + (f" reresumen={res_rr.get('estado')}"
-                  f" prom={res_rr.get('promovidas', 0)}/cand={res_rr.get('candidatos', 0)}")
+                  f" prom={res_rr.get('promovidas', 0)}/cand={res_rr.get('candidatos', 0)}"
+                  f" preskip={res_rr.get('pre_skip_umbral', 0)}")
                + f" duration_s={dur:.0f}"
                + funnel_str)
     print(summary)

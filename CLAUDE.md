@@ -27,9 +27,11 @@ Cada nota lleva un `summary` con un origen (`summary_origen`, migración 0007):
   migración para C; toda fila tiene `summary`/`detail` no vacíos. C es un outcome del render.
 
 **Re-resumen B→A** (`ingest_noticias.reresumir_pendientes`): cada corrida del cron re-fetchea
-el cuerpo de las notas no-A de HOY (carril Bolivia) y, solo si el cuerpo nuevo es
-materialmente más largo que el que produjo el summary actual (`extract_len`, migración 0008),
-re-llama a la IA para promover B→A. Cap por corrida + por nota (`resumen_reintentos`, 0008)
+el cuerpo de las notas no-A de HOY (carril Bolivia) y, con un **pre-gate de suficiencia** antes
+de tocar la API, re-llama a la IA **solo si** el cuerpo nuevo (1) es más largo que el que produjo
+el summary actual (`extract_len`, migración 0008) **y** (2) supera el piso absoluto
+`UMBRAL_SUFICIENCIA` (~230, calibrado al detail mínimo de una A), para promover B→A. Cap por
+corrida + por nota (`resumen_reintentos`, 0008)
 para acotar gasto y frenar el bucle (El Deber, cuyo cuerpo no baja por WAF, topa sin quemar
 API). El gasto API del re-resumen está gateado por el candado (`autorizado=True`) +
 autorización de Diego en el brief (ver `CLAUDE.local.md` § Candado de gasto de API).
