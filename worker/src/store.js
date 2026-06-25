@@ -97,3 +97,30 @@ export async function putCuration(kv, day, order, treatment) {
   await kv.put(curationKey(day), JSON.stringify(value));
   return value;
 }
+
+// ── Flag GLOBAL del overlay del hero (presentacional, runtime) ──
+// Vive en el MISMO KV (HIDDEN_KV) en una clave ÚNICA (no per-día, a diferencia de la
+// curación):
+//   key "settings:hero_overlay" → { overlay: boolean }
+// Lo lee /v1/hero GET (público) y lo escribe /v1/hero POST (auth). PUT directo (LWW),
+// igual que la curación: presentacional, un solo admin a la vez. getHeroFlag es
+// defensivo en lectura (clave ausente / JSON roto → overlay:false = sin overlay).
+
+export const HERO_KEY = "settings:hero_overlay";
+
+export async function getHeroFlag(kv) {
+  const raw = await kv.get(HERO_KEY);
+  if (!raw) return { overlay: false };
+  try {
+    const o = JSON.parse(raw);
+    return { overlay: o.overlay === true };
+  } catch {
+    return { overlay: false };
+  }
+}
+
+export async function putHeroFlag(kv, overlay) {
+  const value = { overlay: overlay === true };
+  await kv.put(HERO_KEY, JSON.stringify(value));
+  return value;
+}

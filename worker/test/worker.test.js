@@ -511,3 +511,65 @@ describe("POST /v1/curate (auth + gate)", () => {
     expect(r.headers.get("Access-Control-Allow-Credentials")).toBe("true");
   });
 });
+
+describe("GET /v1/hero (público) + POST /v1/hero (auth)", () => {
+  function setHero(body, opts = {}) {
+    return call("/v1/hero", { method: "POST", token: opts.token, body: JSON.stringify(body), ...opts });
+  }
+
+  it("sin flag → 200 {overlay:false} y CORS abierto", async () => {
+    const r = await call("/v1/hero");
+    expect(r.status).toBe(200);
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(await r.json()).toEqual({ overlay: false });
+  });
+
+  it("POST sin token → 401 y no escribe", async () => {
+    expect((await call("/v1/hero", { method: "POST", body: JSON.stringify({ overlay: true }) })).status).toBe(401);
+    expect(await (await call("/v1/hero")).json()).toEqual({ overlay: false });
+  });
+
+  it("POST email no admin → 403 y NO escribe", async () => {
+    const r = await setHero({ overlay: true }, { token: await jwt({ email: NOTADMIN }) });
+    expect(r.status).toBe(403);
+    expect(await (await call("/v1/hero")).json()).toEqual({ overlay: false });
+  });
+
+  it("POST válido (true) → 200 y se refleja en GET", async () => {
+    const r = await setHero({ overlay: true }, { token: await jwt() });
+    expect(r.status).toBe(200);
+    expect(await r.json()).toMatchObject({ ok: true, overlay: true });
+    expect(await (await call("/v1/hero")).json()).toEqual({ overlay: true });
+  });
+
+  it("LWW: apagar reemplaza (overlay:false)", async () => {
+    await setHero({ overlay: true }, { token: await jwt() });
+    await setHero({ overlay: false }, { token: await jwt() });
+    expect(await (await call("/v1/hero")).json()).toEqual({ overlay: false });
+  });
+
+  it("overlay no booleano → 422", async () => {
+    expect((await setHero({ overlay: "yes" }, { token: await jwt() })).status).toBe(422);
+    expect((await setHero({ overlay: 1 }, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("overlay ausente → 422", async () => {
+    expect((await setHero({}, { token: await jwt() })).status).toBe(422);
+  });
+
+  it("body no-JSON → 422", async () => {
+    expect((await call("/v1/hero", { method: "POST", token: await jwt(), body: "no json {" })).status).toBe(422);
+  });
+
+  it("happy path + CORS refleja origin + credentials", async () => {
+    const r = await setHero({ overlay: true }, { token: await jwt(), origin: "http://localhost:8788" });
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("http://localhost:8788");
+    expect(r.headers.get("Access-Control-Allow-Credentials")).toBe("true");
+  });
+
+  it("OPTIONS preflight → 204 con CORS público (*), alineado con el GET público", async () => {
+    const r = await call("/v1/hero", { method: "OPTIONS", origin: "http://localhost:8788" });
+    expect(r.status).toBe(204);
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("*");
+  });
+});

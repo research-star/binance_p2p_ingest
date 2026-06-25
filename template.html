@@ -579,7 +579,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-lead-title:hover{color:var(--up)}
 .np-figure{margin:16px 0 0;position:relative}
 .np-imgph.np-hero-img{aspect-ratio:auto;height:clamp(240px,30vw,360px)}
-.np-hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:20px 16px 13px;background:linear-gradient(transparent,rgba(20,16,12,.62));color:#F3E4D6;font-family:var(--font-body);font-size:12.5px;line-height:1.45;text-wrap:pretty}
+.np-hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:26px 16px 14px;background:linear-gradient(transparent,rgba(20,16,12,.50) 52%,rgba(20,16,12,.86));color:#F3E4D6;font-family:var(--font-body);font-size:12.5px;line-height:1.45;text-wrap:pretty}
 /* Slots de caption/dek vacíos (ticket portada): colapsan sin hueco y, en el overlay del hero, ocultan el gradiente. Al poblarse desde la futura API reaparecen solos. */
 .np-hero-cap:empty{display:none}
 .np-hero-foot{display:flex;align-items:center;gap:10px;margin-top:14px;font-family:var(--font-body);font-size:11.5px;color:var(--text-muted)}
@@ -4429,6 +4429,11 @@ window.addEventListener('popstate', function(){
   // Default = sin reorden + 'full'. dirty = el admin editó localmente en esta sesión → el
   // GET tardío de ntLoadCuration NO debe pisar la edición optimista (ver ntLoadCuration).
   const npCuration = { order:null, treatment:'full', dirty:false };
+  // Flag GLOBAL del overlay del hero (no per-día): lo sirve /v1/hero (público) y lo
+  // togglea el admin (npSetHeroOverlay → POST /v1/hero). OFF por defecto = comportamiento
+  // actual (sin overlay). dirty = el admin togglée local en esta sesión → el GET tardío
+  // de ntLoadHero no debe pisarlo.
+  const npOverlay = { on:false, dirty:false };
   function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
   function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
   function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
@@ -4601,10 +4606,14 @@ window.addEventListener('popstate', function(){
   }
   function npTitle(url,text){ return npLink(url, ntEsc(ntCleanTitle(text))); }
   function npStand(cls,txt){ return txt ? '<p class="'+cls+'">'+ntEsc(txt)+'</p>' : ''; }
-  // Caption del hero: VACIADA (ticket portada). El <figcaption> se conserva vacío como SLOT
-  // para una futura API de captions (marca data-np-slot="cap"); sin texto, .np-hero-cap:empty
-  // colapsa y oculta el gradiente. El payload sigue trayendo summary/detail (no se renderiza).
-  function npCap(n){ return '<figcaption class="np-hero-cap" data-np-slot="cap"></figcaption>'; }
+  // Overlay del hero: si el flag GLOBAL está ON (npOverlay.on, servido por /v1/hero),
+  // el <figcaption> rinde la bajada (ntDekMark: resumen IA sin *, extractivo con ' *'). Si
+  // el dek es degenerado (≈título → ntDekMark='') o el flag está OFF, queda vacío y
+  // .np-hero-cap:empty colapsa → sin overlay (= comportamiento actual). data-np-slot="cap".
+  function npCap(n){
+    var d = npOverlay.on ? ntDekMark(n) : '';
+    return '<figcaption class="np-hero-cap" data-np-slot="cap">'+(d?ntEsc(d):'')+'</figcaption>';
+  }
   // "También en": otros medios que cubrieron el MISMO evento (calibración 2026-06-21).
   // La representante (por tier de fuente) es la nota mostrada; acá van las demás con link.
   function npTambienEn(n){
@@ -4849,8 +4858,9 @@ window.addEventListener('popstate', function(){
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
     if(!npAdmin.isAdmin){ return note ? '<div class="np-admin-bar anon">'+note+'</div>' : ''; }
     const editBtn='<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>';
+    const overlayBtn='<button class="fpi-show" type="button" data-np-overlay-toggle aria-pressed="'+(npOverlay.on?'true':'false')+'">'+(npOverlay.on?'Overlay hero: ON':'Overlay hero: OFF')+'</button>';
     const panel = npAdmin.editMode ? npHiddenPanel() : '';
-    return '<div class="np-admin-bar">'+editBtn+note+panel+'</div>';
+    return '<div class="np-admin-bar">'+editBtn+overlayBtn+note+panel+'</div>';
   }
 
   // ── Ensamblaje + interacción (chips re-renderean; estado en memoria) ──
@@ -4904,6 +4914,24 @@ window.addEventListener('popstate', function(){
           // treatment del server IGNORADO: Bloque ('full') es el render único oficial. Un
           // día con curación vieja (treatment 'none'/'striped') igual se ve Bloque.
           npCuration.treatment='full';
+          if(ntBuilt) npRerender();
+        })
+        .catch(function(){});  // fail-open
+    }catch(e){}
+  }
+  // Fetch fail-open del flag GLOBAL de overlay del hero (/v1/hero, público sin
+  // credenciales; molde de ntLoadCuration). OFF por defecto. El admin lo togglea
+  // (npSetHeroOverlay). Una sola vez por load.
+  let ntHeroLoaded=false;
+  function ntLoadHero(){
+    if(ntHeroLoaded) return; ntHeroLoaded=true;
+    try{
+      fetch(NT_API+'/v1/hero', { credentials:'omit', cache:'no-store' })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(d){
+          if(!d) return;
+          if(npOverlay.dirty) return;  // el admin ya togglée local en esta sesión → no pisar
+          npOverlay.on = (d.overlay===true);
           if(ntBuilt) npRerender();
         })
         .catch(function(){});  // fail-open
@@ -5000,6 +5028,19 @@ window.addEventListener('popstate', function(){
       npRerender();
     }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se mostró.'}; npRerender(); });
   }
+  // Toggle GLOBAL del overlay del hero (admin). Optimista (como hide/curación) y
+  // persiste vía POST /v1/hero. dirty evita que el GET tardío de ntLoadHero lo pise.
+  function npSetHeroOverlay(on){
+    on = !!on;
+    if(npOverlay.on===on) return;
+    npOverlay.on=on; npOverlay.dirty=true;
+    npRerender();        // optimista
+    npPost('/v1/hero', JSON.stringify({ overlay:on })).then(function(r){
+      if(r.status===401||r.status===403){ npAuthExpired(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo guardar el overlay del hero (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      npAdmin.notice={kind:'info',text:'Overlay del hero '+(on?'activado':'desactivado')+'.'}; npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. El overlay no se guardó.'}; npRerender(); });
+  }
   // ── Admin: curación del riel (tratamiento + reorden) ──
   // Persiste {day, order, treatment} en KV vía POST /v1/curate. Body JSON en
   // text/plain (CORS simple, sin preflight; mismo molde que npPost del hide).
@@ -5040,6 +5081,7 @@ window.addEventListener('popstate', function(){
       if((el=t.closest('[data-np-hide]'))){ ev.preventDefault(); npHide(el.getAttribute('data-np-hide')); return; }
       if((el=t.closest('[data-np-unhide]'))){ ev.preventDefault(); npUnhide(el.getAttribute('data-np-unhide')); return; }
       if(t.closest('[data-np-edit-toggle]')){ ev.preventDefault(); npToggleEdit(); return; }
+      if(t.closest('[data-np-overlay-toggle]')){ ev.preventDefault(); npSetHeroOverlay(!npOverlay.on); return; }
       if((el=t.closest('[data-np-move]'))){ ev.preventDefault(); if(el.disabled) return; npMoveRiel(el.getAttribute('data-np-move-id'), el.getAttribute('data-np-move')); return; }
     });
   }
@@ -5049,6 +5091,7 @@ window.addEventListener('popstate', function(){
     npBindHost();
     ntLoadHidden();
     ntLoadCuration();
+    ntLoadHero();
     // El probe de sesión (npCheckMe) corre en fbChromeInit (global), no acá: el
     // masthead refleja la sesión en cualquier tab, no solo en Inicio.
   };
