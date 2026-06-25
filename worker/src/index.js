@@ -138,7 +138,10 @@ export default {
     // Preflight: no debería dispararse para text/plain sin headers custom, pero
     // si llega, respondemos OK con el CORS que corresponde al path.
     if (req.method === "OPTIONS") {
-      const isPublic = path === "/v1/hidden" || path === "/v1/curation";
+      // GET /v1/hero es público (como /v1/hidden, /v1/curation); su POST es auth pero
+      // va en text/plain → request "simple", nunca dispara preflight. Alinear el
+      // preflight con el GET público evita drift del patrón (CORS abierto, sin creds).
+      const isPublic = path === "/v1/hidden" || path === "/v1/curation" || path === "/v1/hero";
       const headers = isPublic ? publicCors() : aCors;
       return new Response(null, { status: 204, headers });
     }

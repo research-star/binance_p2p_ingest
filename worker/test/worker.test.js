@@ -566,4 +566,10 @@ describe("GET /v1/hero (público) + POST /v1/hero (auth)", () => {
     expect(r.headers.get("Access-Control-Allow-Origin")).toBe("http://localhost:8788");
     expect(r.headers.get("Access-Control-Allow-Credentials")).toBe("true");
   });
+
+  it("OPTIONS preflight → 204 con CORS público (*), alineado con el GET público", async () => {
+    const r = await call("/v1/hero", { method: "OPTIONS", origin: "http://localhost:8788" });
+    expect(r.status).toBe(204);
+    expect(r.headers.get("Access-Control-Allow-Origin")).toBe("*");
+  });
 });
