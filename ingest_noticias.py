@@ -539,14 +539,17 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
         for nid, url, title, ext, rr in rows:
             cuerpo, _img = scraper.scrape_cuerpo(url)   # re-fetch (RED, no API; salta caché)
             cuerpo = (cuerpo or "").strip()
-            if len(cuerpo) > ext:
+            # Mismo gate que la inserción (insumo_para_ia): el cuerpo nuevo debe ser
+            # materialmente mejor que el que produjo el origen actual (> ext) Y sustantivo
+            # (≥ CUERPO_GATE) — así NO se re-llama la IA con texto trunco/sub-gate.
+            if len(cuerpo) > ext and len(cuerpo) >= resumen_ia.CUERPO_GATE:
                 # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
                 res["refetch_mejor"] += 1
                 r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)
                 if r:
                     conn.execute(
                         "UPDATE noticias SET summary = ?, summary_origen = 'ia', "
-                        "extract_len = ?, resumen_reintentos = resumen_reintentos + 1 "
+                        "extract_len = ?, resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
                         "WHERE id = ?", (r, len(cuerpo), nid))
                     res["promovidas"] += 1
                 else:
@@ -554,17 +557,22 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
                     # extract_len (no reintentar el MISMO cuerpo) y sumá la pasada.
                     conn.execute(
                         "UPDATE noticias SET extract_len = ?, "
-                        "resumen_reintentos = resumen_reintentos + 1 WHERE id = ?",
+                        "resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 WHERE id = ?",
                         (len(cuerpo), nid))
             else:
-                # Cuerpo no mejoró (no bajó / corto, p.ej. El Deber): suma pasada SIN
-                # gastar API; tras el cap deja de ser candidata.
+                # Cuerpo no mejoró (no bajó / corto / sub-gate, p.ej. El Deber): suma pasada
+                # SIN gastar API; tras el cap deja de ser candidata. COALESCE: una fila con
+                # resumen_reintentos NULL (insertada por el binario viejo el día del deploy)
+                # avanza igual el contador (NULL+1=NULL en SQLite la dejaría candidata eterna).
                 conn.execute(
-                    "UPDATE noticias SET resumen_reintentos = resumen_reintentos + 1 "
+                    "UPDATE noticias SET resumen_reintentos = COALESCE(resumen_reintentos, 0) + 1 "
                     "WHERE id = ?", (nid,))
+            # Commit por nota: una excepción en una nota posterior no descarta las
+            # promociones ya pagadas a la API (el rollback del except solo afecta la
+            # nota en vuelo, no las ya commiteadas).
+            conn.commit()
             if rr + 1 >= RESUMEN_REINTENTO_CAP:
                 res["topadas"] += 1
-        conn.commit()
     except Exception:
         conn.rollback()
         tb = traceback.format_exc()
