@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import urllib.request
 
 log = logging.getLogger(__name__)
@@ -53,16 +54,24 @@ _PROMPT = (
 SENTINEL = "INSUFICIENTE"
 # Patrones de rechazo del modelo (no es un resumen): se tratan como FALLO.
 _RECHAZO = ("no puedo", "no me es posible", "lo siento", "la noticia trata sobre")
+# V2.1 induce a veces "INSUFICIENTE\n\n(explicación)" en vez del token exacto. Se
+# trata como FALLO cuando ARRANCA con el centinela seguido de fin / salto / ':' /
+# '(' / '.' / '—' / '-'. ANCLA ^ (no `contains`): un resumen legítimo que use la
+# palabra ("producción insuficiente para…") NO cae porque no arranca con ella.
+_INSUF_PREFIJO = re.compile(r"^INSUFICIENTE(?:[\n\r:(.—-]|\s+[(:—-]|$)")
 
 
 def _es_fallo(txt: str) -> bool:
-    """True si la respuesta IA NO es un resumen usable: centinela INSUFICIENTE,
-    patrón de rechazo, o vacío. El caller degrada a extractivo (origen='extractivo',
-    asterisco en el front) — nunca persiste basura/alucinación como origen='ia'."""
+    """True si la respuesta IA NO es un resumen usable: centinela INSUFICIENTE
+    (exacto o con explicación pegada), patrón de rechazo, o vacío. El caller degrada
+    a extractivo (origen='extractivo', asterisco en el front) — nunca persiste
+    basura/alucinación como origen='ia'."""
     t = (txt or "").strip()
     if not t:
         return True
     if t.rstrip(".").upper() == SENTINEL:
+        return True
+    if _INSUF_PREFIJO.match(t.upper()):
         return True
     low = t.lower()
     return any(p in low for p in _RECHAZO)

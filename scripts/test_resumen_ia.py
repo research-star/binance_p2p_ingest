@@ -43,12 +43,20 @@ def run() -> int:
     # _es_fallo: centinela / rechazo / vacío → True (degrada a extractivo);
     # un resumen real → False (se persiste como 'ia').
     fallo_si = ["INSUFICIENTE", "Insuficiente.", "No puedo resumir esta noticia porque…",
-                "La noticia trata sobre Colombia, no Bolivia.", "Lo siento, no me es posible.", "", "   "]
+                "La noticia trata sobre Colombia, no Bolivia.", "Lo siento, no me es posible.", "", "   ",
+                # V2.1: INSUFICIENTE + explicación pegada (prefijo anclado) → fallo
+                "INSUFICIENTE\n\n(El texto solo contiene el titular.)",
+                "INSUFICIENTE: el texto no aporta datos verificables.",
+                "INSUFICIENTE — sin contenido más allá del título.",
+                "INSUFICIENTE (no hay cuerpo)."]
     for t in fallo_si:
         if not resumen_ia._es_fallo(t):
             errores.append(f"_es_fallo({t!r}) debería ser True")
     fallo_no = ["El BCB anunció nuevas medidas para el tipo de cambio.",
-                "De la Espriella conformará su gabinete con foco en seguridad y empleo."]
+                "De la Espriella conformará su gabinete con foco en seguridad y empleo.",
+                # La palabra "insuficiente" en el cuerpo (no al inicio) NO es fallo
+                "La cosecha fue insuficiente este año, según el informe del INE.",
+                "Producción insuficiente para la demanda interna, advierte la CNI."]
     for t in fallo_no:
         if resumen_ia._es_fallo(t):
             errores.append(f"_es_fallo({t!r}) debería ser False")
