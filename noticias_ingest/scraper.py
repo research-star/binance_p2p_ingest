@@ -19,6 +19,7 @@ puntuar relevancia (puntaje = score_ajustado × 10). Si no, usa keywords.
 
 import hashlib
 import logging
+import os
 import pickle
 import re
 import sqlite3
@@ -273,6 +274,12 @@ FUENTES = [
         # camino RSS; el sufijo _<epoch> de cada URL filtra recencia y chrome (_epoch_url).
         "scrape_complemento": ["https://eldeber.com.bo/pais"],
         "solo_bolivia": False, "metodo": "requests",
+        # Cuerpo vía proxy residencial (opt-in): el HTML de El Deber NO baja desde
+        # la IP de datacenter del VPS (Cloudflare managed challenge 403; recon
+        # 2026-06-26). Con PROXY_URL en el entorno, scrape_cuerpo rutea curl_cffi/
+        # cloudscraper por el proxy → baja el artículo → el pipeline lo resume a A.
+        # Sin PROXY_URL cae a directo → 403 → "","" → queda B (comportamiento actual).
+        "proxy_cuerpo": True,
     },
     {
         "portal": "Correo del Sur",
@@ -1156,15 +1163,28 @@ def _og_image(html: str, base_url: str) -> str:
     return ""
 
 
-def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL_CUERPO) -> tuple[str, str]:
+def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL_CUERPO,
+                  usar_proxy: bool = False) -> tuple[str, str]:
     """Fallback chain: curl_cffi → trafilatura.fetch_url → cloudscraper.
     Los 3 fallbacks comparten un budget total de `timeout` segundos.
 
     Devuelve (cuerpo, image_url): el og:image se parsea del HTML CRUDO en el
     branch que retorna cuerpo, ANTES de que trafilatura.extract descarte el
-    <head>. image_url='' si el portal no expone og:image o no bajó HTML."""
+    <head>. image_url='' si el portal no expone og:image o no bajó HTML.
+
+    `usar_proxy`: OPT-IN per-portal (flag `proxy_cuerpo` en FUENTES). Cuando es True
+    Y existe PROXY_URL en el entorno (http://login:pass@host:port, .env gitignored),
+    rutea curl_cffi y cloudscraper por el proxy residencial → portales con IP
+    bloqueada (El Deber: Cloudflare 403 desde datacenter) bajan su HTML. Fail-safe:
+    usar_proxy False, o PROXY_URL ausente → `_pxkw` queda VACÍO → las llamadas son
+    byte-idénticas a hoy (directo). NO crash. La activación es la presencia de PROXY_URL."""
     if not TIENE_TRAFILATURA:
         return "", ""
+
+    # Proxy opt-in: solo si el portal lo declara Y hay credencial en el entorno.
+    # `_pxkw` se splatea en los get(); vacío cuando off → call idéntico al actual.
+    proxy_url = os.environ.get("PROXY_URL", "").strip() if usar_proxy else ""
+    _pxkw = {"proxies": {"http": proxy_url, "https": proxy_url}} if proxy_url else {}
 
     deadline = time.time() + timeout
 
@@ -1172,7 +1192,7 @@ def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL
     restante = deadline - time.time()
     if restante > 0 and TIENE_CURL_CFFI:
         try:
-            r = curl_requests.get(url, impersonate="chrome120", timeout=min(restante, 10))
+            r = curl_requests.get(url, impersonate="chrome120", timeout=min(restante, 10), **_pxkw)
             if r.status_code == 307:
                 return "", ""  # Sucuri WAF — nunca devuelve contenido útil
             if r.status_code == 200:
@@ -1201,7 +1221,7 @@ def scrape_cuerpo(url: str, metodo: str = "requests", timeout: int = TIMEOUT_URL
     if restante > 2 and TIENE_CLOUDSCRAPER:
         try:
             s = cloudscraper.create_scraper()
-            r = s.get(url, timeout=min(restante, 10))
+            r = s.get(url, timeout=min(restante, 10), **_pxkw)
             if r.status_code == 200:
                 txt = trafilatura.extract(r.text, include_comments=False, include_tables=False)
                 if txt and len(txt) > 100:
@@ -1529,7 +1549,9 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
             return n
         fuente_src = next((f for f in FUENTES if f["portal"] == portal), {})
         t0 = time.time()
-        n["cuerpo"], n["image_url"] = scrape_cuerpo(n["link"], metodo=fuente_src.get("metodo", "requests"))
+        n["cuerpo"], n["image_url"] = scrape_cuerpo(
+            n["link"], metodo=fuente_src.get("metodo", "requests"),
+            usar_proxy=fuente_src.get("proxy_cuerpo", False))
         dt = time.time() - t0
         if not n["cuerpo"]:
             log.warning(f"  [SIN CUERPO] {n['link'][:80]} ({dt:.1f}s)")
