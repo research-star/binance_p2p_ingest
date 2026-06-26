@@ -175,6 +175,9 @@ def init_schema(conn: sqlite3.Connection):
         except sqlite3.OperationalError:
             pass  # columna ya existe (idempotente)
     conn.commit()
+    # Tabla api_spend (mig 0009) self-apply: el cap de gasto la necesita para leer
+    # el acumulado; sin autocrearla, la lectura fail-closed bloquearía todo resumen.
+    resumen_ia.init_spend_schema(conn)
 
 
 # ── Dedupe inter-día ──────────────────────────────────────────────────────
@@ -387,7 +390,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 print(f"[noticias] dry-run bolivia: {n['puntaje']:.1f} "
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
         else:
-            n_resumen = resumen_ia.aplicar(finales, autorizado=True)  # candado API: el pipeline (cron) autoriza
+            # conn: cap de gasto + captura de usage. El gasto se acumula sin commit;
+            # insertar_notas (abajo) lo flushea junto con los INSERTs → atómico.
+            n_resumen = resumen_ia.aplicar(finales, autorizado=True, conn=conn)  # candado API: el pipeline (cron) autoriza
             if n_resumen:
                 print(f"[noticias] bolivia: resumen_ia aplicado a {n_resumen}/{len(finales)}")
             res["insertadas"] = insertar_notas(conn, finales)
@@ -504,7 +509,8 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 print(f"[noticias] dry-run latam: {n['date']} {n['time']} "
                       f"{n['title'][:70]}")
         else:
-            n_resumen = resumen_ia.aplicar(finales, autorizado=True)  # candado API: el pipeline (cron) autoriza
+            # conn: cap de gasto + captura de usage (acumula sin commit; insertar_notas flushea).
+            n_resumen = resumen_ia.aplicar(finales, autorizado=True, conn=conn)  # candado API: el pipeline (cron) autoriza
             if n_resumen:
                 print(f"[noticias] latam: resumen_ia aplicado a {n_resumen}/{len(finales)}")
             res["insertadas"] = insertar_notas(conn, finales)
@@ -560,7 +566,8 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
             if len(cuerpo) > ext and len(cuerpo) >= UMBRAL_SUFICIENCIA:
                 # Cuerpo nuevo materialmente mejor → vale re-llamar la IA.
                 res["refetch_mejor"] += 1
-                r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado)
+                # conn: cap + captura de usage; el UPDATE + commit por nota (abajo) flushea el gasto.
+                r = resumen_ia.resumir(title or "", cuerpo, "Bolivia", autorizado=autorizado, conn=conn)
                 if r and r is not resumen_ia.TRANSITORIO:
                     # ÉXITO → A. Marca extract_len (= cuerpo que produjo el 'ia').
                     conn.execute(
