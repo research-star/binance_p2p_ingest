@@ -504,8 +504,9 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     detail mínimo de una A; el avg de un B es 144). Cap por corrida (`RESUMEN_REINTENTO_TOP`)
     y por nota (`resumen_reintentos`, col `0008`) — gasto API ADICIONAL gateado por el candado
     (`autorizado=True`). El umbral es proxy de longitud, no garantía semántica: un cuerpo
-    largo pero basura puede volver INSUFICIENTE igual y lo absorbe el cap. El Deber (WAF,
-    cuerpo no baja) ni siquiera dispara la API: cae bajo el umbral y solo suma reintentos.
+    largo pero basura puede volver INSUFICIENTE igual y lo absorbe el cap. El Deber: **con
+    el proxy residencial activo (PR #146) su cuerpo SÍ baja** vía proxy → el re-resumen lo
+    promueve a A; sin `PROXY_URL` cae bajo el umbral y solo suma reintentos (fail-safe).
     El frontend **renderiza la bajada (dek)** en las cards BO y el standfirst
     Latam (`ntDekMark`), con
     **asterisco** ` *` al final cuando NO es IA (extractivo/legacy); el descarte de
@@ -545,8 +546,11 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   artículo). Guarda el `og:image`, parseado del HTML crudo en la **fase
   cuerpo del carril Bolivia** y entregado al frontend como **hotlink directo**
   (sin re-host); el slot cae al placeholder `.np-imgph` cuando es NULL.
-  **El Deber queda NULL en prod** (su HTML no baja desde el VPS por bloqueo de
-  IP de datacenter). **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
+  **El Deber: con el proxy residencial ACTIVO (PR #146, `PROXY_URL` en el `.env`
+  del VPS desde 2026-06-26) su HTML SÍ baja vía proxy → `og:image` se puebla
+  (hotlink `pxcdn.eldeber.com.bo`) y el cuerpo se resuelve a A (inserción +
+  re-resumen, ambos cablean el flag `proxy_cuerpo`). Sin `PROXY_URL` vuelve a
+  NULL/B (fail-safe, reversible).** **Latam = FASE 2b** (pendiente). `dashboard.py` self-migra
   la columna (ALTER idempotente) para no depender del orden de aplicación de 0004.
 - Catálogos del frontend: 24 portales (`NOTICIAS_PORTALS` en `template.html`;
   slugs en `noticias_ingest/transform.py`). **`category` editorial de 5 cubos —
