@@ -2128,14 +2128,27 @@ function updateKpis(){
     const p=(vwap/refVal-1)*100;
     return (p>=0?'+':'')+fmt2(p)+'%';
   };
+  // Colorea SOLO el % de prima BCB Ref. Semantica ASIMETRICA (perspectiva de quien
+  // tiene bolivianos): Compra (invertida) prima>0 caro=rojo(--delta-up), <0=verde
+  // (--delta-down); Venta (normal) prima>0=verde(--delta-down), <0=rojo(--delta-up);
+  // ==0 o sin dato => --text-muted (color por defecto del sub).
+  const premColor=(vwap,refVal,invertida)=>{
+    const s=fmtPrem(vwap,refVal);
+    if(vwap==null||refVal==null) return s;
+    const p=(vwap/refVal-1)*100;
+    const c = p>0 ? (invertida?'--delta-up':'--delta-down')
+            : p<0 ? (invertida?'--delta-down':'--delta-up')
+            : '--text-muted';
+    return '<span style="color:var('+c+')">'+s+'</span>';
+  };
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vb10,ref.compra), ICONS.compra, 'buy')+
-    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vs10,ref.venta), ICONS.venta, 'sell')+
+    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vb10,ref.compra,true), ICONS.compra, 'buy')+
+    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vs10,ref.venta,false), ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
-    kpi('Prima P2P', '<span style="color:'+(premium>0?'var(--delta-up)':(premium<0?'var(--delta-down)':'var(--text-muted)'))+'">'+(premium>0?'▲ ':(premium<0?'▼ ':''))+(premium>=0?'+':'')+fmt2(premium)+'%</span>', 'TC Oficial BCB: '+fmt2(meta.bcb_rate), ICONS.bcb, null)+
+    kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', 'TC Oficial BCB: '+fmt2(meta.bcb_rate), ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
     kpi('BCB Ref', fmt2(ref.compra)+' / '+fmt2(ref.venta), 'Compra \u00b7 Venta (BOB/USDT)', ICONS.bcb, null)+
     '</div></div>';
