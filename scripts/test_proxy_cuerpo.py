@@ -136,6 +136,54 @@ def run() -> int:
             scraper.cloudscraper = orig_cs
         os.environ.pop("PROXY_URL", None)
 
+    # ── Re-resumen B→A deriva usar_proxy del flag por portal (extensión Diego) ──
+    # reresumir_pendientes debe pasar usar_proxy=True para El Deber (flagged) y False
+    # para un portal no-flagged. Sin API: scrape_cuerpo mockeado devuelve cuerpo VACÍO
+    # → el pre-gate falla → resumir() nunca se llama (guard _no_api lo asegura).
+    import sqlite3 as _sql
+    import ingest_noticias as _ing
+    conn = _sql.connect(":memory:")
+    _ing.init_schema(conn)
+    FECHA = "2099-01-01"
+
+    def _seed(nid, portal, source):
+        conn.execute(
+            "INSERT INTO noticias (id,date,time,source,category,title,impact,url,portal,"
+            "puntaje,created_at_utc,carril,summary_origen,resumen_reintentos) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (nid, FECHA, "10:00", source, "economia", "T " + nid, "medio",
+             "https://x/" + nid, portal, 7.0, "2099-01-01T10:00:00Z", "bolivia", None, 0))
+    _seed("ed1", "El Deber", "eldeber")     # flagged → usar_proxy=True
+    _seed("ed2", "El Día", "eldia")         # existe en FUENTES, NO flagged → False
+    conn.commit()
+
+    captura = {}
+    orig_sc = _ing.scraper.scrape_cuerpo
+    orig_resumir = _ing.resumen_ia.resumir
+
+    def _fake_sc(url, metodo="requests", timeout=15, usar_proxy=False):
+        captura[url] = usar_proxy
+        return ("", "")  # cuerpo vacío → pre-gate falla → sin API
+
+    def _no_api(*a, **k):
+        raise AssertionError("re-resumen NO debe llamar la API en este test")
+
+    _ing.scraper.scrape_cuerpo = _fake_sc
+    _ing.resumen_ia.resumir = _no_api
+    os.environ["ANTHROPIC_API_KEY"] = "sk-fake-no-network"
+    os.environ.pop("NOTICIAS_RESUMEN", None)
+    try:
+        _ing.reresumir_pendientes(conn, FECHA, autorizado=True)
+        if captura.get("https://x/ed1") is not True:
+            errores.append(f"re-resumen: El Deber debería usar_proxy=True (got {captura.get('https://x/ed1')!r})")
+        if captura.get("https://x/ed2") is not False:
+            errores.append(f"re-resumen: portal no-flagged debería usar_proxy=False (got {captura.get('https://x/ed2')!r})")
+    finally:
+        _ing.scraper.scrape_cuerpo = orig_sc
+        _ing.resumen_ia.resumir = orig_resumir
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+        conn.close()
+
     if errores:
         print("FAIL test_proxy_cuerpo:")
         for e in errores:
@@ -143,7 +191,8 @@ def run() -> int:
         return 1
     print("OK test_proxy_cuerpo: proxy_cuerpo opt-in solo El Deber; GUARD no-flagged sin "
           "kwarg proxies (call idéntico); WIRING pasa proxies con PROXY_URL; FAIL-SAFE "
-          "sin PROXY_URL cae a directo y 403-en-cadena da ('','') sin crash.")
+          "sin PROXY_URL cae a directo y 403-en-cadena da ('','') sin crash; re-resumen "
+          "deriva usar_proxy del flag por portal (El Deber True, no-flagged False).")
     return 0
 
 

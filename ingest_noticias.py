@@ -544,7 +544,7 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
         return res
     try:
         rows = conn.execute(
-            f"""SELECT id, url, title, COALESCE(extract_len, 0) AS ext,
+            f"""SELECT id, url, title, portal, COALESCE(extract_len, 0) AS ext,
                        COALESCE(resumen_reintentos, 0) AS rr
                 FROM noticias
                 WHERE date = ? AND {CARRIL_SQL} != 'latam'
@@ -554,8 +554,13 @@ def reresumir_pendientes(conn: sqlite3.Connection, fecha_bo: str, *,
                 LIMIT ?""",
             (fecha_bo, RESUMEN_REINTENTO_CAP, RESUMEN_REINTENTO_TOP)).fetchall()
         res["candidatos"] = len(rows)
-        for nid, url, title, ext, rr in rows:
-            cuerpo, _img = scraper.scrape_cuerpo(url)   # re-fetch (RED, no API; salta caché)
+        for nid, url, title, portal, ext, rr in rows:
+            # Mismo flag de proxy que el carril de inserción (scrape_item): sin esto el
+            # re-fetch de El Deber pega directo → Cloudflare 403 → "" → nunca promueve a
+            # A (su WAF bloquea la IP del VPS). Deriva proxy_cuerpo de FUENTES por portal.
+            usar_proxy = next((f.get("proxy_cuerpo", False)
+                               for f in scraper.FUENTES if f["portal"] == portal), False)
+            cuerpo, _img = scraper.scrape_cuerpo(url, usar_proxy=usar_proxy)  # re-fetch (RED, no API; salta caché)
             cuerpo = (cuerpo or "").strip()
             # PRE-GATE de suficiencia (antes de tocar la API): re-llamar la IA SOLO si el
             # cuerpo nuevo (1) creció desde el último resumido (> ext) Y (2) supera el piso
