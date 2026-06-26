@@ -466,8 +466,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-data-table td.val{text-align:right;font-family:var(--font-mono);font-weight:500}
 .fb-data-table th.num,.fb-data-table td.num{text-align:right;font-family:var(--font-mono)}
 .fb-data-table td.rate-cell{font-weight:500;font-variant-numeric:tabular-nums}
-.fb-data-table td.rate-cell.neg{color:var(--orange)}
-.fb-data-table td.rate-cell.pos-strong{color:var(--green)}
+.fb-data-table td.rate-cell.neg{color:var(--delta-up)}
+.fb-data-table td.rate-cell.pos-strong{color:var(--delta-down)}
 .fb-data-table td.issuer{font-family:var(--font-display);color:var(--text-primary)}
 .fb-data-table .issuer-name{font-weight:600}
 .fb-data-table .issuer-ticker{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:500;color:var(--text-muted);background:var(--bg-tertiary);padding:1px 6px;border-radius:var(--radius-xs);margin-left:6px;letter-spacing:.04em}
@@ -683,7 +683,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-foot-lab{font-family:var(--font-body);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:11px}
 .np-foot-portals{display:flex;flex-wrap:wrap;gap:7px 16px;align-items:center}
 .np-foot-portal{font-family:var(--font-display);font-weight:500;font-size:14px;color:var(--text-secondary);letter-spacing:.01em}
-.np-foot-portal.linea{color:var(--up);font-weight:600}
 .np-foot-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-color)}
 .np-method{font-family:var(--font-body);font-size:11px;line-height:1.65;color:var(--text-muted)}
 .np-method b{color:var(--text-secondary);font-weight:600}
@@ -1301,11 +1300,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <div class="fb-chart-head blq-head">
           <div>
             <div class="fb-chart-title">Bloqueos por conflicto social</div>
-            <div class="fb-chart-sub" id="blqMapSub">Intensidad: la opacidad refleja los d&iacute;as bloqueado desde el 1 de mayo de 2026.</div>
+            <div class="fb-chart-sub" id="blqMapSub">Activos hoy: bloqueos por conflicto social abiertos en la &uacute;ltima lectura.</div>
           </div>
           <div class="blq-toggle" role="tablist" aria-label="Vista del mapa">
-            <button class="fb-pill active" id="blqTogIntensidad" data-view="intensidad" type="button">Intensidad acumulada</button>
-            <button class="fb-pill" id="blqTogActivos" data-view="activos" type="button">Activos hoy</button>
+            <button class="fb-pill" id="blqTogIntensidad" data-view="intensidad" type="button">Intensidad acumulada</button>
+            <button class="fb-pill active" id="blqTogActivos" data-view="activos" type="button">Activos hoy</button>
           </div>
         </div>
         <div class="blq-layout">
@@ -1315,9 +1314,18 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <div class="fb-chart-source">Datos: ABC (transitabilidad.abc.gob.bo) &middot; v&iacute;a dataset abierto de <a href="https://github.com/mauforonda/transitabilidad-bolivia" target="_blank" rel="noopener">@mauforonda</a></div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
-        <div class="fb-chart-head">
-          <div class="fb-chart-title">Bloqueos por conflicto social en el tiempo</div>
-          <div class="fb-chart-sub">N&uacute;mero de bloqueos abiertos por d&iacute;a desde 2020 &mdash; c&oacute;mo aparecen y se resuelven los conflictos.</div>
+        <div class="fb-chart-head blq-head">
+          <div>
+            <div class="fb-chart-title">Bloqueos por conflicto social en el tiempo</div>
+            <div class="fb-chart-sub">N&uacute;mero de bloqueos abiertos por d&iacute;a desde 2020 &mdash; c&oacute;mo aparecen y se resuelven los conflictos.</div>
+          </div>
+          <div class="blq-toggle" id="blqTrendRange" role="tablist" aria-label="Rango temporal del hist&oacute;rico">
+            <button class="fb-pill" data-range="1m" type="button">1m</button>
+            <button class="fb-pill active" data-range="3m" type="button">3m</button>
+            <button class="fb-pill" data-range="6m" type="button">6m</button>
+            <button class="fb-pill" data-range="1a" type="button">1a</button>
+            <button class="fb-pill" data-range="all" type="button">Todo</button>
+          </div>
         </div>
         <div id="bloqueosTrendChart" style="height:380px;"></div>
         <div class="fb-chart-source">Datos: ABC &middot; v&iacute;a @mauforonda &middot; serie hist&oacute;rica de incidentes de transitabilidad</div>
@@ -1370,7 +1378,7 @@ let last = null;
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-neutral':'#0D7680','color-accent-warm':'#FF8833','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-neutral':'#0D7680','color-accent-warm':'#FF8833','delta-up':'#A8322A','delta-down':'#2C6E49','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -2120,12 +2128,25 @@ function updateKpis(){
     const p=(vwap/refVal-1)*100;
     return (p>=0?'+':'')+fmt2(p)+'%';
   };
+  // Colorea SOLO el % de prima BCB Ref. Semantica ASIMETRICA (perspectiva de quien
+  // tiene bolivianos): Compra (invertida) prima>0 caro=rojo(--delta-up), <0=verde
+  // (--delta-down); Venta (normal) prima>0=verde(--delta-down), <0=rojo(--delta-up);
+  // ==0 o sin dato => --text-muted (color por defecto del sub).
+  const premColor=(vwap,refVal,invertida)=>{
+    const s=fmtPrem(vwap,refVal);
+    if(vwap==null||refVal==null) return s;
+    const p=(vwap/refVal-1)*100;
+    const c = p>0 ? (invertida?'--delta-up':'--delta-down')
+            : p<0 ? (invertida?'--delta-down':'--delta-up')
+            : '--text-muted';
+    return '<span style="color:var('+c+')">'+s+'</span>';
+  };
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vb10,ref.compra), ICONS.compra, 'buy')+
-    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+fmtPrem(last.vs10,ref.venta), ICONS.venta, 'sell')+
+    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vb10,ref.compra,true), ICONS.compra, 'buy')+
+    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vs10,ref.venta,false), ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
     kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', 'TC Oficial BCB: '+fmt2(meta.bcb_rate), ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
@@ -2782,7 +2803,8 @@ var TAB_PANELS = {
 // Datos dinámicos en DATA.bloqueos (bloqueos.json, ingest_bloqueos.py); geometría
 // base lazy desde /bolivia_red_vial.json (static/). Fuente: ABC vía @mauforonda.
 var _bloqueosGeo = null;
-var _blqView = 'intensidad';   // vista del mapa: 'intensidad' | 'activos'
+var _blqView = 'activos';   // vista del mapa: 'intensidad' | 'activos' (default: activos hoy)
+var _blqTrendRange = '3m';  // rango del trend histórico: '1m'|'3m'|'6m'|'1a'|'all' (default: 3 meses)
 window.renderBloqueos = function(){
   var B = (typeof DATA==='object' && DATA.bloqueos) ? DATA.bloqueos : null;
   var elDate  = document.getElementById('bloqueosDate');
@@ -2896,25 +2918,52 @@ window.renderBloqueos = function(){
   if(togI) togI.onclick = function(){ setView('intensidad'); };
   if(togA) togA.onclick = function(){ setView('activos'); };
   setView(_blqView);
-  if(elTrend){
+  // ── Trend histórico con filtro de rango temporal (C2) ──
+  var trendBtns = document.getElementById('blqTrendRange');
+  function filterSerieByRange(s, range){
+    if(range==='all' || !s.length) return s;
+    var days = {'1m':31,'3m':92,'6m':183,'1a':366}[range] || 92;
+    var lastMs = Date.parse(s[s.length-1].fecha+'T00:00:00');
+    if(isNaN(lastMs)) return s;
+    var cutoff = lastMs - days*86400000;
+    return s.filter(function(d){ var t=Date.parse(d.fecha+'T00:00:00'); return !isNaN(t) && t>=cutoff; });
+  }
+  function drawTrend(){
+    if(!elTrend) return;
     if(!serie.length){
       _purgeAndClear(elTrend);
       elTrend.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">Sin serie histórica.</div>';
-    } else {
-      var L = BL(c);
-      Plotly.react(elTrend, [{
-        x: serie.map(function(d){return d.fecha;}),
-        y: serie.map(function(d){return d.abiertos;}),
-        type:'scatter', mode:'lines', fill:'tozeroy',
-        line:{color:alertColor, width:1.5}, fillcolor:hexToRgba(alertColor,.12),
-        hovertemplate:'%{x|%d %b %Y}<br>%{y} bloqueos<extra></extra>'
-      }], {...L,
-        xaxis:{...L.xaxis, tickformat:'%b %Y', nticks:9, tickangle:-30, fixedrange:false},
-        yaxis:{...L.yaxis, title:{text:'Bloqueos abiertos', font:{size:10, color:c.textMuted}}, rangemode:'tozero'},
-        margin:{l:48, r:16, t:16, b:48}, showlegend:false, hovermode:'x', height:380
-      }, PC);
+      return;
     }
+    var sf = filterSerieByRange(serie, _blqTrendRange);
+    var tf = (_blqTrendRange==='1m'||_blqTrendRange==='3m') ? '%d %b' : '%b %Y';
+    var L = BL(c);
+    // autosize:true + automargin (como los charts hermanos de Macro): el trend era
+    // el único con height fijo en el layout -> bajo responsive no re-ajustaba y las
+    // etiquetas anguladas del eje x se recortaban en el borde inferior (fix C1).
+    Plotly.react(elTrend, [{
+      x: sf.map(function(d){return d.fecha;}),
+      y: sf.map(function(d){return d.abiertos;}),
+      type:'scatter', mode:'lines', fill:'tozeroy',
+      line:{color:alertColor, width:1.5}, fillcolor:hexToRgba(alertColor,.12),
+      hovertemplate:'%{x|%d %b %Y}<br>%{y} bloqueos<extra></extra>'
+    }], {...L, autosize:true,
+      xaxis:{...L.xaxis, tickformat:tf, nticks:9, tickangle:-30, fixedrange:false, automargin:true},
+      yaxis:{...L.yaxis, title:{text:'Bloqueos abiertos', font:{size:10, color:c.textMuted}}, rangemode:'tozero', automargin:true},
+      margin:{l:48, r:16, t:16, b:48}, showlegend:false, hovermode:'x'
+    }, PC);
   }
+  if(trendBtns){
+    trendBtns.onclick = function(ev){
+      var b = ev.target.closest('button[data-range]');
+      if(!b) return;
+      _blqTrendRange = b.dataset.range;
+      var allb = trendBtns.querySelectorAll('button');
+      for(var i=0;i<allb.length;i++){ allb[i].classList.toggle('active', allb[i]===b); }
+      drawTrend();
+    };
+  }
+  drawTrend();
 };
 var MACRO_SUBTABS = [
   { id:'riesgo', slug:'/riesgo', title:'FinanzasBo — Riesgo País EMBI',
@@ -3748,7 +3797,7 @@ window.addEventListener('popstate', function(){
   }
   function deltaColor(d){
     if(d==null) return 'var(--text-muted)';
-    return d>0 ? 'var(--orange)' : (d<0 ? 'var(--green)' : 'var(--text-muted)');
+    return d>0 ? 'var(--delta-up)' : (d<0 ? 'var(--delta-down)' : 'var(--text-muted)');
   }
   function arrow(d){
     if(d==null||d===0) return '';
@@ -3780,7 +3829,7 @@ window.addEventListener('popstate', function(){
       + card('Bolivia Δ 1M',
           fmtDelta(bol30d),
           'Cambio últimos ~21 días hábiles',
-          deltaColor(bol30d))
+          null)   // Δ1M en neutro: magnitud mensual sin dirección coloreada (rojo/verde solo en 1d)
       + card('LATINO',
           latLast ? fmtBps(latLast.val) : '—',
           (arrow(lat1d)+' '+fmtDelta(lat1d)+' (1d)').trim(),
@@ -4342,7 +4391,7 @@ window.addEventListener('popstate', function(){
 // ═══ NOTICIAS TAB (variante D "Terminal") — feed real ═══
 // Noticias reales: DATA.noticias (dashboard.py lee la tabla `noticias` de
 // p2p_normalized.db, poblada a diario por ingest_noticias.py en DOS
-// carriles: top-10 por relevancia de 13 portales bolivianos + hasta 5 de
+// carriles: top-10 por relevancia de ~14 portales bolivianos + hasta 5 de
 // Bloomberg Línea Latinoamérica (categoría latam, sin scoring, selección
 // editorial del medio)). Schema por nota:
 // {id, source, category, date:'YYYY-MM-DD', time:'HH:MM', title, summary,
@@ -4824,7 +4873,7 @@ window.addEventListener('popstate', function(){
       pl+='<span class="np-foot-portal'+(linea?' linea':'')+'">'+ntEsc(linea?'Bloomberg Línea':(p?p.name:id))+'</span>';
     }
     return '<footer class="np-footer"><div class="np-foot-sources"><div class="np-foot-lab">Fuentes monitoreadas</div><div class="np-foot-portals">'+pl+'</div></div>'
-      +'<div class="np-foot-grid"><div class="np-method"><b>Metodología.</b> Las notas bolivianas se agregan automáticamente desde 13 portales y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.<div class="np-disc">FinanzasBo agrega y enlaza a las fuentes originales; los derechos pertenecen a cada medio. Indicadores con fines informativos, no constituyen asesoría financiera.</div></div>'
+      +'<div class="np-foot-grid"><div class="np-method"><b>Metodología.</b> FinanzasBo monitorea más de 20 fuentes. Las notas bolivianas se agregan automáticamente y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.<div class="np-disc">FinanzasBo agrega y enlaza a las fuentes originales; los derechos pertenecen a cada medio. Indicadores con fines informativos, no constituyen asesoría financiera.</div></div>'
       +'<div class="np-foot-tabs"><span class="lab">Explorar el panel</span><a>Dólar paralelo</a><a>Macroeconomía</a><a>Bolsa BBV</a><a>Rendimientos DPF</a></div></div>'
       +'<div class="np-foot-copy">© 2026 FinanzasBo · Inteligencia económica de Bolivia · Santa Cruz · <a href="/creditos-imagenes.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Créditos de imágenes</a></div></footer>';
   }
