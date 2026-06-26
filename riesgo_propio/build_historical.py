@@ -30,13 +30,11 @@ from __future__ import annotations
 import csv, io, json, os, ssl, sys, urllib.request
 from datetime import date, timedelta
 
-# --- reuse the validated riesgo_pais engine (do not modify it) ----------------
-RP_SRC = r"C:\Users\RodrigoRosasGuzman\riesgo_pais\src"
-sys.path.insert(0, RP_SRC)
+# --- vendored riesgo_pais engine (self-contained; Linux/VPS-compatible) -------
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "rp_engine"))
 import engine            # noqa: E402  Z-spread, ZeroCurve, interpolate, dirty_price_from_ytm
 import bonds as bondmod  # noqa: E402  Bond, generate_cashflows
-
-HERE = os.path.dirname(os.path.abspath(__file__))
 CTX = ssl.create_default_context(); CTX.check_hostname = False; CTX.verify_mode = ssl.CERT_NONE
 
 # Live anchor = the latest REAL price-driven own-math point recorded by

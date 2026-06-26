@@ -14,7 +14,11 @@ Re-runnable: caller restores a clean index.html from git first. No push.
 import json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITE = r"C:\Users\RodrigoRosasGuzman\finanzasbo_site\index.html"
+# Target index.html: argv[1] or $RIESGO_INJECT_TARGET (used by the VPS publish
+# pipeline), else the local gh-pages worktree (interactive/dev use).
+SITE = (sys.argv[1] if len(sys.argv) > 1
+        else os.environ.get("RIESGO_INJECT_TARGET")
+        or r"C:\Users\RodrigoRosasGuzman\finanzasbo_site\index.html")
 
 data = json.load(open(os.path.join(HERE, "riesgo_propio.json"), encoding="utf-8"))
 html = open(SITE, encoding="utf-8").read()

@@ -14,12 +14,10 @@ from __future__ import annotations
 import json, os, sys
 from datetime import date, datetime, timedelta
 
-RP_SRC = r"C:\Users\RodrigoRosasGuzman\riesgo_pais\src"
-sys.path.insert(0, RP_SRC)
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, "rp_engine"))   # vendored riesgo_pais engine (Linux/VPS-ready)
 import engine, bonds as bondmod, prices as pricemod, ust_curve  # noqa: E402
 import config as rp_config  # noqa: E402
-
-HERE = os.path.dirname(os.path.abspath(__file__))
 STORE = os.path.join(HERE, "riesgo_propio_live.json")
 # Mirror copy inside the locally-served site so the dashboard can fetch it at
 # http://localhost:8000/riesgo_propio_live.json and refresh the live trace.

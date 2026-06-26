@@ -1,0 +1,12 @@
+# Runtime deps for the riesgo-país own-math calculator (run on the VPS publish
+# cycle by scripts/publish_dashboard.py → _inject_riesgo).
+#
+# One-time VPS setup (in the project venv):
+#     pip install -r riesgo_propio/requirements.txt
+#     playwright install --with-deps chromium   # live venue (Deutsche Börse) scrape
+#
+# Without chromium the calculator still runs and degrades to the validated
+# snapshot price for the bonds (the panels appear, just not live-scraped).
+python-dateutil>=2.8     # bonds.py cashflow dates (relativedelta)
+openpyxl>=3.1            # build_historical.py reads the BCRD EMBI workbook
+playwright>=1.40         # live bid scrape from Deutsche Börse (optional; snapshot fallback)
