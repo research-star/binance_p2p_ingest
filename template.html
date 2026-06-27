@@ -3786,7 +3786,7 @@ window.addEventListener('popstate', function(){
   // tiene gaps de fines de semana). Aproximación: 21 días hábiles/mes.
   // 'Max' usa Infinity para tomar todo el histórico (Math.max(0,len-Inf)=0).
   var RANGE_DAYS = {'1M':21, '6M':126, '1Y':252, '5Y':1260, 'Max':Infinity};
-  var DEFAULT_RANGE = '1Y';
+  var DEFAULT_RANGE = 'Max';  // arranca mostrando todo el histórico
 
   var state = {range: DEFAULT_RANGE, activeSet: new Set(DEFAULT_ACTIVE)};
   var rendered = false;
