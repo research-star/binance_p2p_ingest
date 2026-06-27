@@ -17,19 +17,27 @@ fijo (6,86 compra / 6,96 venta). Definición (Anexo II de la RD 88/2026):
 Fuente (reporte histórico detallado, de ahí sale la serie completa):
     https://www.bcb.gob.bo/tco_reporte_detalle_historico.php
 
+El CSV exportado (delimitado por `;`) trae, por día, el DETALLE de operaciones
+(por banco: N° de transacciones y monto USD, por nivel de precio) y al final una
+fila `TOTAL` y una fila `TCO`. La columna `TOTAL BANCOS` de la fila `TCO` es el
+**TCO oficial del día, ya calculado por el BCB** (no lo inventamos: lo leemos).
+Como verificación, el parser recalcula el promedio ponderado por monto del
+detalle (fórmula del Anexo II) y avisa si difiere del publicado. Formato
+verificado contra muestra real del 2026-06-29 (publicado 9.73 = recalculado 9.73).
+
 ──────────────────────────────────────────────────────────────────────────────
-NOTA DE DESARROLLO (2026-06-27): la página del BCB NO es alcanzable desde el
-entorno de desarrollo (firewall). El parser está escrito de forma DEFENSIVA y se
-afina corriéndolo en el VPS, que sí alcanza BCB. Bucle de iteración:
+NOTA DE DESARROLLO: el FORMATO del CSV ya está confirmado (ver arriba). Lo que
+falta resolver en el VPS es la **URL/params exactos de descarga** del CSV: la
+página es un formulario con rango de fechas (el archivo de muestra se llamaba
+`TCO_<desde>_al_<hasta>.csv`), así que `fetch()` del .php base puede devolver el
+HTML del formulario, no el CSV. Bucle de iteración en el VPS (sí alcanza BCB):
 
-    # En el VPS (alcanza BCB): bajar y volcar el crudo para inspección
-    python3 ingest_bcb_tco.py --debug          # escribe bcb_tco_raw.html
+    python3 ingest_bcb_tco.py --debug          # vuelca lo que devuelve la URL a bcb_tco_raw.html
+    python3 ingest_bcb_tco.py --from-file ARCHIVO.csv --dry-run   # parsea offline (ya verde)
 
-    # Parsear un archivo local (CSV o HTML) SIN red, para validar el parser
-    python3 ingest_bcb_tco.py --from-file bcb_tco_raw.html --dry-run
-
-Si el parser no encuentra filas, sale con código ≠0 y un mensaje claro; con
---debug deja el crudo en disco para ajustar las heurísticas en un follow-up.
+Cuando se conozca el endpoint de export, ajustar URL_TCO (o pasar --url con los
+params). Si el parser no encuentra filas, sale con código ≠0 y deja el crudo en
+disco para inspección.
 ──────────────────────────────────────────────────────────────────────────────
 
 Uso:
@@ -42,6 +50,8 @@ Uso:
 """
 
 import argparse
+import csv
+import io
 import json
 import re
 import sys
@@ -149,6 +159,99 @@ def _strip_tags(cell: str) -> str:
     return re.sub(r"<[^>]+>", " ", cell).strip()
 
 
+def _csv_num(s: str) -> float | None:
+    """Número del CSV del BCB: decimal con coma, miles con punto.
+    '9,7300' → 9.73 ; '17.323.468' → 17323468.0 ; '' / '-' → None."""
+    s = (s or "").strip()
+    if s in ("", "-"):
+        return None
+    try:
+        if "," in s:
+            return float(s.replace(".", "").replace(",", "."))
+        return float(s.replace(".", ""))
+    except ValueError:
+        return None
+
+
+def parse_tco_csv(text: str) -> list[dict]:
+    """Parser del CSV oficial del BCB (`tco_reporte_detalle_historico.php`).
+
+    Formato real (verificado 2026-06-29): delimitado por `;`. Por día hay N filas
+    de detalle (una por nivel de precio: `Fecha; TC; <por banco: N°, Monto>...;
+    TOTAL BANCOS N°, Monto`), una fila `TOTAL` y una fila `TCO` con el promedio
+    ponderado ya calculado por el BCB. La columna `TOTAL BANCOS` de la fila `TCO`
+    es el **TCO oficial del día**.
+
+    Estrategia: LEEMOS el TCO publicado (no lo inventamos) y, como chequeo de
+    integridad, RECALCULAMOS el promedio ponderado por monto del detalle
+    (fórmula del Anexo II) y avisamos si difieren > 0.01. Soporta múltiples días
+    en un mismo archivo (reporte por rango)."""
+    rows = list(csv.reader(io.StringIO(text), delimiter=";"))
+
+    # Índice de la columna "TOTAL BANCOS" (desde el header que arranca con 'Fecha')
+    total_idx = None
+    for r in rows:
+        if r and r[0].strip().lower() == "fecha":
+            for i, c in enumerate(r):
+                if "total bancos" in c.lower():
+                    total_idx = i
+                    break
+            break
+
+    # TCO publicado por fecha (fila etiqueta 'TCO', columna TOTAL BANCOS)
+    publicado: dict[str, float] = {}
+    for r in rows:
+        if len(r) > 1 and r[1].strip().upper() == "TCO":
+            fecha = parse_fecha(r[0])
+            if not fecha:
+                continue
+            val = None
+            if total_idx is not None and total_idx < len(r):
+                val = parse_rate(r[total_idx])
+            if val is None:  # fallback: última cotización plausible de la fila
+                cand = [x for x in (parse_rate(c) for c in r[2:]) if x is not None]
+                val = cand[-1] if cand else None
+            if val is not None:
+                publicado[fecha] = val
+
+    # Recalculo (verificación): Σ(precio×monto)/Σ(monto) del detalle, por fecha
+    calc_num: dict[str, float] = {}
+    calc_den: dict[str, float] = {}
+    if total_idx is not None:
+        for r in rows:
+            if len(r) <= total_idx + 1:
+                continue
+            fecha = parse_fecha(r[0])
+            if not fecha:
+                continue
+            label = r[1].strip().upper()
+            if label in ("TCO", "TOTAL"):
+                continue
+            precio = _csv_num(r[1])
+            monto = _csv_num(r[total_idx + 1])
+            if precio is None or monto is None or monto <= 0:
+                continue
+            calc_num[fecha] = calc_num.get(fecha, 0.0) + precio * monto
+            calc_den[fecha] = calc_den.get(fecha, 0.0) + monto
+
+    out = []
+    fechas = set(publicado) | set(calc_den)
+    for fecha in sorted(fechas):
+        pub = publicado.get(fecha)
+        calc = round(calc_num[fecha] / calc_den[fecha], 2) if calc_den.get(fecha) else None
+        if pub is not None and calc is not None and abs(pub - calc) > 0.01:
+            print(f"WARNING: {fecha} TCO publicado {pub} ≠ recalculado {calc} "
+                  f"(usando el publicado)", file=sys.stderr)
+        tco = pub if pub is not None else calc
+        if tco is None:
+            continue
+        verif = "ok" if (pub is not None and calc is not None and abs(pub - calc) <= 0.01) \
+            else ("solo-publicado" if calc is None else "solo-calculado")
+        print(f"  {fecha}: TCO {tco} (publicado={pub}, recalculado={calc}, verif={verif})")
+        out.append({"fecha": fecha, "tco": tco})
+    return out
+
+
 def parse_csv(text: str) -> list[dict]:
     """Parsea un CSV (o pseudo-CSV) de fecha + TCO. Detecta el delimitador y, por
     cada fila, toma la primera celda que parsea como fecha y la primera que parsea
@@ -216,10 +319,19 @@ def parse_html(text: str) -> list[dict]:
 
 
 def parse_content(text: str) -> list[dict]:
-    """Despacha a parser HTML o CSV según el contenido."""
+    """Despacha al parser correcto. Prioridad: (1) CSV oficial del BCB con su
+    fila 'TCO' (el caso real); (2) HTML si la fuente es la página; (3) CSV
+    genérico como último recurso."""
+    # (1) CSV oficial del BCB — lo identifica el header 'TOTAL BANCOS' (firma
+    #     estructural del reporte). Cubre el caso normal (con fila 'TCO') y el
+    #     borde sin fila 'TCO' (recalcula del detalle).
+    if ";" in text and re.search(r"total\s+bancos", text, re.IGNORECASE):
+        entries = parse_tco_csv(text)
+        if entries:
+            return entries
+    # (2)/(3) Fallbacks defensivos (formato desconocido / página HTML).
     looks_html = bool(re.search(r"<\s*(table|html|td|tr|body)\b", text, re.IGNORECASE))
     entries = parse_html(text) if looks_html else parse_csv(text)
-    # Fallback cruzado: si una vía no rindió nada, probar la otra.
     if not entries:
         entries = parse_csv(text) if looks_html else parse_html(text)
     return entries
