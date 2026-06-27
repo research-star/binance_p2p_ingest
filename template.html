@@ -385,8 +385,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    este sizing — conservan su densidad. El radio sharp (2px) sí es global. */
 /* En Macro el subheader no compite con el subnav sticky ni deja doble línea. */
 #tab-macro .fb-subheader{position:static;border-bottom:none;padding:10px 18px 12px}
-/* h1 de Macro = mismo estilo que el resto (.fb-subheader h1: font-display, 26px, 700). */
-#tab-macro .fb-subtitle{margin-top:8px}
+/* h1 y subtítulo de Macro = mismo estilo/espaciado que el resto: el h1 hereda
+   .fb-subheader h1 (font-display, 26px, 700) y el subtítulo hereda .fb-subtitle
+   (margin-top:2px), para que la separación título→subtítulo sea igual a Dólar. */
 /* KPI value y título de gráfico de Macro = estándar (igual que Dólar): el value
    hereda .fb-kpi-value (var(--text-3xl)); el título usa var(--text-lg) como el h2
    de los paneles del tab Dólar (.section-header h2). */
