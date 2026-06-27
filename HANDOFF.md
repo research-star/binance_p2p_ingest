@@ -20,7 +20,7 @@ de backups y, opcionalmente, dashboard local.
 | `normalize.py` | VPS cron user `binance` | `*/5 * * * *` | `HC_NORMALIZE` |
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
-| `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `5 0 * * 2-6` (mar–sáb UTC = lun–vie 20:05 BO, tras la publicación del TCO a las 20:00; baja ventana móvil de 7 días, autorreparable) | `HC_BCB_TCO` pendiente |
+| `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `5 0 * * 2-6` (mar–sáb UTC = lun–vie 20:05 BO, tras la publicación del TCO a las 20:00; baja ventana 14 días atrás + 5 adelante —la fecha del TCO es su vigencia, que va por delante de hoy—, autorreparable) | `HC_BCB_TCO` pendiente |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
@@ -192,7 +192,9 @@ de las filas verdes.
   `scripts/bcb_tco_scrape_and_commit.sh` (wrapper VPS). `tco_reporte_detalle_historico.php`
   es un **formulario** (rango de fechas + botón "Descargar CSV"); el scraper
   introspecciona el form y lo envía con el rango (`--desde/--hasta`, default
-  ventana móvil de 7 días; `--backfill` desde 2026-06-26). Del CSV **lee el TCO
+  ventana 14 días atrás + 5 adelante —buffer porque la fecha del TCO es su
+  vigencia (próximo día hábil), que va por delante de hoy—; `--backfill` desde
+  2026-06-26). Del CSV **lee el TCO
   publicado** (fila `TCO`, col `TOTAL BANCOS`) y lo **verifica** recalculando el
   promedio ponderado por monto del detalle (Anexo II). Salida a `bcb_tco.json`.
   `--from-file` parsea un CSV local offline; `--debug` vuelca el crudo. **Pendiente
@@ -673,6 +675,13 @@ Features clave:
   línea conectada**. La KPI **Prima P2P se calcula vs el TCO** (antes vs el fijo
   6.96, hoy obsoleto), con fail-soft al 6.96 si aún no hay datos de TCO. El ticker
   "El día en cifras" (landing Noticias) también usa el TCO como "BCB oficial".
+  - **Dating por VIGENCIA**: el `fecha` del CSV (y de `bcb_tco.json`) es la fecha
+    en que el TCO **rige**, no la de las operaciones. El cierre del viernes se
+    publica como vigente el **lunes** (regla de fin de semana de la RD 88/2026),
+    así que la fecha de vigencia va por DELANTE de "hoy". Por eso: (a) el rango de
+    descarga lleva buffer `+5 días` en `hasta`; (b) en el chart, el punto más
+    nuevo aparece cuando la línea temporal del P2P alcanza su fecha de vigencia
+    (la KPI/número siempre está al día vía `bcb_tco_last`).
 
 ---
 

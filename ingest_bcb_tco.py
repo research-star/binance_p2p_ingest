@@ -546,10 +546,12 @@ def main():
         # publica 20:00 BO; el cron corre 20:05 BO = 00:05 UTC del día siguiente,
         # así que "hoy BO" = UTC-4.
         bo_today = (datetime.now(timezone.utc) - timedelta(hours=4)).date()
-        # Buffer de +3 días en `hasta`: el endpoint solo exporta fechas publicadas,
-        # así que pedir de más es inocuo y nos cubre de un reloj del VPS atrasado
-        # (visto 2026-06: VPS en 06-27 mientras BCB ya publicaba 06-29).
-        hasta = args.hasta or (bo_today + timedelta(days=3)).isoformat()
+        # Buffer de +5 días en `hasta`: el BCB fecha el TCO por su VIGENCIA (el
+        # próximo día hábil), que va por DELANTE de "hoy" — el cierre del viernes
+        # se publica como vigente el lunes (regla de fin de semana, RD 88/2026).
+        # El endpoint solo exporta fechas publicadas, así que pedir de más es
+        # inocuo; +5 cubre fines de semana largos (feriados).
+        hasta = args.hasta or (bo_today + timedelta(days=5)).isoformat()
         if args.backfill:
             desde = args.desde or "2026-06-26"  # entrada en vigencia del nuevo régimen
         else:
