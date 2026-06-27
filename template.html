@@ -387,11 +387,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 #tab-macro .fb-subheader{position:static;border-bottom:none;padding:10px 18px 12px}
 /* h1 de Macro = mismo estilo que el resto (.fb-subheader h1: font-display, 26px, 700). */
 #tab-macro .fb-subtitle{margin-top:8px}
-#tab-macro .fb-kpi-value{font-size:33px}
+/* KPI value y título de gráfico de Macro = estándar (igual que Dólar): el value
+   hereda .fb-kpi-value (var(--text-3xl)); el título usa var(--text-lg) como el h2
+   de los paneles del tab Dólar (.section-header h2). */
 #tab-macro .fb-kpi-card{padding:16px 20px}
 #tab-macro .fb-chart-card{padding:20px 22px}
 #tab-macro .fb-chart-head{margin-bottom:16px;border-bottom:1px solid var(--border-color);padding-bottom:13px}
-#tab-macro .fb-chart-title{font-family:var(--font-display);font-size:21px;font-weight:600;letter-spacing:-.01em}
+#tab-macro .fb-chart-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;letter-spacing:-.01em}
 #tab-macro .fb-chart-sub{margin-top:6px;line-height:1.45}
 /* ── Subtab Bloqueos: mapa + sidebar de cards + toggle ── */
 .blq-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
@@ -399,7 +401,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .blq-layout{display:grid;grid-template-columns:1fr 248px;gap:16px;align-items:stretch}
 .blq-layout #bloqueosMap{height:520px;min-height:520px}
 .blq-side{display:flex;flex-direction:column;gap:12px}
-.blq-card{border:1px solid var(--border-color);border-radius:var(--radius-lg);background:var(--bg-primary);padding:11px 13px}
+.blq-card{border:1px solid var(--border-color);border-radius:var(--radius-lg);background:var(--bg-tertiary);padding:14px 16px}
 .blq-card h4{font-family:var(--font-display);font-size:var(--text-md);font-weight:600;color:var(--text-primary);margin-bottom:8px;letter-spacing:-.01em}
 .blq-stat{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:var(--text-sm);color:var(--text-secondary)}
 .blq-stat b{font-family:var(--font-display);font-size:var(--text-lg);color:var(--text-primary);font-weight:600}
@@ -410,7 +412,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .blq-dep-track{height:6px;border-radius:3px;background:rgba(192,0,0,.13);overflow:hidden}
 .blq-dep-track i{display:block;height:100%;background:rgb(192,0,0);border-radius:3px}
 .blq-dep-n{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-primary);font-weight:600}
-@media(max-width:760px){.blq-layout{grid-template-columns:1fr}}
+@media(max-width:760px){.blq-layout{grid-template-columns:1fr}.blq-layout #bloqueosMap{height:340px;min-height:340px}.blq-side{flex-direction:row;flex-wrap:wrap}.blq-side>*{flex:1 1 200px}}
 /* El headline editorial 44px clipea en teléfonos <~380px; clamp sin perder presencia. */
 .fb-series-toggles{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:0 4px}
 .fb-stog{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--border-color);background:var(--bg-secondary);font-family:inherit;font-size:var(--text-sm);font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;user-select:none}
@@ -1268,7 +1270,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
           <div class="fb-chart-title">Inflaci&oacute;n interanual por rubro</div>
-          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses por divisi&oacute;n COICOP. Pas&aacute; el mouse para inspeccionar un mes en todos los rubros a la vez &middot; <span id="inflMatrixCursor" style="color:#7a2e1e;font-weight:700">&uacute;ltimo dato</span></div>
+          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses por divisi&oacute;n COICOP. Pas&aacute; el mouse para inspeccionar un mes en todos los rubros a la vez &middot; <span id="inflMatrixCursor" style="color:var(--delta-up);font-weight:700">&uacute;ltimo dato</span></div>
         </div>
         <div id="inflMatrix" class="infl-matrix"></div>
         <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP &middot; base 2016=100</div>
@@ -4237,7 +4239,7 @@ window.addEventListener('popstate', function(){
   function renderKpis(){
     var el=document.getElementById('inflKpis'); if(!el) return;
     if(!ULT){el.innerHTML='';return;}
-    el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'
+    el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid" style="grid-template-columns:repeat(3,1fr)">'
       +kpi('Inflación interanual',fmtPct(ULT.var_12m),'IPC &middot; últimos 12 meses',null,null)
       +kpi('Inflación mensual',fmtPct(ULT.var_mensual),'IPC &middot; último mes',null,null)
       +kpi('Acumulada en el año',fmtPct(ULT.var_acumulada),'IPC &middot; desde enero',null,null)
