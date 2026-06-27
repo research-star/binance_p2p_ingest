@@ -1,13 +1,15 @@
 name: Auto-publish dashboard
 
 # Dispara publish_dashboard.py en el VPS cada push a main, excepto cuando el
-# único cambio es bcb_referencial.json (commits del cron BCB — el publish de
-# */12 los recoge en su ciclo normal sin necesidad de force-deploy).
+# único cambio es data BCB autocommiteada (bcb_referencial.json / bcb_tco.json
+# — commits de los crons BCB; el publish de */12 los recoge en su ciclo normal
+# sin necesidad de force-deploy).
 on:
   push:
     branches: [main]
     paths-ignore:
       - 'bcb_referencial.json'
+      - 'bcb_tco.json'
   workflow_dispatch:   # disparo manual: botón "Run workflow" en la UI o `gh workflow run auto-publish.yml`
 
 concurrency:

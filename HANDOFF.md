@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-06-17.
+Última actualización: 2026-06-27.
 
 ---
 
@@ -20,6 +20,7 @@ de backups y, opcionalmente, dashboard local.
 | `normalize.py` | VPS cron user `binance` | `*/5 * * * *` | `HC_NORMALIZE` |
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
+| `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `5 0 * * 2-6` (mar–sáb UTC = lun–vie 20:05 BO, tras la publicación del TCO a las 20:00; baja ventana 14 días atrás + 5 adelante —la fecha del TCO es su vigencia, que va por delante de hoy—, autorreparable) | `HC_BCB_TCO` pendiente |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
@@ -31,9 +32,9 @@ de backups y, opcionalmente, dashboard local.
 | GitHub Pages | rama `gh-pages` | rebuild ~30-60 s tras push de `publish_dashboard.py` | — |
 
 **Workflow `auto-publish.yml`:** dispara `publish_dashboard.py` en VPS en
-cada push a `main`, **excepto** cuando el único cambio es
-`bcb_referencial.json` (esos los recoge el cron `*/12` en su ciclo normal,
-no fuerzan publish).
+cada push a `main`, **excepto** cuando el único cambio es data BCB
+autocommiteada (`bcb_referencial.json` / `bcb_tco.json`) — esos los recoge el
+cron `*/12` en su ciclo normal, no fuerzan publish.
 
 ### Cerrado desde el último refresh (2026-06-10 → 2026-06-17)
 
@@ -186,7 +187,20 @@ de las filas verdes.
 - **Lógica de cálculo del dashboard** (queries, agregados, métricas): `dashboard.py`.
 - **Pipeline crudo → SQLite**: `ingest.py` (Fase 1), `normalize.py` (Fase 2).
 - **Publish a Pages**: `scripts/publish_dashboard.py` + `.github/workflows/auto-publish.yml`.
-- **BCB scrape**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
+- **BCB scrape (referencial)**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
+- **BCB TCO (Tipo de Cambio Oficial, RD 88/2026)**: `ingest_bcb_tco.py` (lógica) +
+  `scripts/bcb_tco_scrape_and_commit.sh` (wrapper VPS). `tco_reporte_detalle_historico.php`
+  es un **formulario** (rango de fechas + botón "Descargar CSV"); el scraper
+  introspecciona el form y lo envía con el rango (`--desde/--hasta`, default
+  ventana 14 días atrás + 5 adelante —buffer porque la fecha del TCO es su
+  vigencia (próximo día hábil), que va por delante de hoy—; `--backfill` desde
+  2026-06-26). Del CSV **lee el TCO
+  publicado** (fila `TCO`, col `TOTAL BANCOS`) y lo **verifica** recalculando el
+  promedio ponderado por monto del detalle (Anexo II). Salida a `bcb_tco.json`.
+  `--from-file` parsea un CSV local offline; `--debug` vuelca el crudo. **Pendiente
+  de afinar en el VPS**: confirmar que la introspección del form pega al endpoint
+  real de "Descargar CSV" (BCB no es alcanzable desde dev); si no, el `--debug`
+  deja el HTML para fijar el endpoint/params a mano.
 - **EMBI scrape (BCRD)**: `ingest_embi.py` (lógica + cron one-liner). Snapshot Excel +
   ETag cache en `/opt/binance_p2p/embi_audit/` (fuera del repo).
 - **INE Bolivia macro (PIB + IPC + IPP)**: `ingest_ine_pib.py` /
@@ -652,6 +666,22 @@ Features clave:
 - BCB referencial: histórico compra (tabla v2 HTML) + venta (SVG hist),
   merge en `bcb_referencial.json` (119 entradas a la fecha). KPI + línea
   en VWAP con `connectgaps:false` para fines de semana como cortes.
+- BCB TCO (Tipo de Cambio Oficial, RD 88/2026): serie diaria del **nuevo oficial**
+  que reemplaza al fijo 6.96 (promedio ponderado de las compras de USD de los
+  bancos, publicado 20:00 BO, vigente al día siguiente; venta referencial =
+  TCO + 0,10). `ingest_bcb_tco.py` → `bcb_tco.json` → `load_bcb_tco` lo embebe en
+  el payload (`bcb_tco_history` / `bcb_tco_last`). En el chart VWAP del tab Dólar
+  es una **serie nueva** (`#B45309`, toggle "TCO oficial"): **1 dato = punto, ≥2 =
+  línea conectada**. La KPI **Prima P2P se calcula vs el TCO** (antes vs el fijo
+  6.96, hoy obsoleto), con fail-soft al 6.96 si aún no hay datos de TCO. El ticker
+  "El día en cifras" (landing Noticias) también usa el TCO como "BCB oficial".
+  - **Dating por VIGENCIA**: el `fecha` del CSV (y de `bcb_tco.json`) es la fecha
+    en que el TCO **rige**, no la de las operaciones. El cierre del viernes se
+    publica como vigente el **lunes** (regla de fin de semana de la RD 88/2026),
+    así que la fecha de vigencia va por DELANTE de "hoy". Por eso: (a) el rango de
+    descarga lleva buffer `+5 días` en `hasta`; (b) en el chart, el punto más
+    nuevo aparece cuando la línea temporal del P2P alcanza su fecha de vigencia
+    (la KPI/número siempre está al día vía `bcb_tco_last`).
 
 ---
 
@@ -683,6 +713,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 */5  * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
 */12 * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py   (+ curl $HC_DASHBOARD)
 5,35 12-15 * * 1-5  cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh
+5    0 * * 2-6      cd /opt/binance_p2p && bash scripts/bcb_tco_scrape_and_commit.sh   (TCO 20:05 BO)
 0    10,22 * * *    cd /opt/binance_p2p && .venv/bin/python ingest_embi.py
 15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
 30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
@@ -691,7 +722,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 (Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
 
 **Auto-publish workflow** (`.github/workflows/auto-publish.yml`):
-- Dispara en cada push a `main`, con `paths-ignore: bcb_referencial.json`.
+- Dispara en cada push a `main`, con `paths-ignore: bcb_referencial.json` + `bcb_tco.json`.
 - SSH al VPS → `git pull --rebase origin main` → borra
   `publish_dashboard.last_size` (cache bust) → `.venv/bin/python scripts/publish_dashboard.py`.
 - Secret: `HETZNER_SSH_KEY` (repo settings).
@@ -701,6 +732,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_INGEST` — pingeado desde `scripts/watchdog.py` cuando hay snapshot reciente. Confirmado en código del repo.
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
+- `HC_BCB_TCO` — **pendiente** (crear UUID al instalar el cron del TCO; el wrapper no pingea aún).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
 - `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia ~14×/día (horario 07:07–20:07 BO desde 2026-06-23). Monitoreo en **modo Cron** (cron expression `7 0,11-23 * * *`, timezone **UTC**, grace time **2h**). **NO usar modo Simple/period**: el cron tiene gap nocturno (~11h sin corridas, 20:07→07:07 BO) que un period fijo interpretaría como caída y dispararía falsa alarma cada noche.
 

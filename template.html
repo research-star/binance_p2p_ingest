@@ -808,7 +808,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog inactive" data-trace="banda" style="--fb-trace-color:#0D7680"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-band" style="color:#0D7680"></span><span class="fb-stog-label">BCB Ref</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog inactive" data-trace="banda" style="--fb-trace-color:#0D7680"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-band" style="color:#0D7680"></span><span class="fb-stog-label">BCB Ref</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">TCO oficial</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volumen hist&oacute;rico de compra y venta de d&oacute;lares</h2><p>USDT disponible en anuncios activos por lado, en USD millones.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
@@ -1058,8 +1058,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <p>Paneles del libro de anuncios de Binance Bolivia. Lo m&aacute;s importante para entender el d&iacute;a a d&iacute;a:</p>
         <ul>
           <li><strong>USDT Compra / USDT Venta</strong> (KPIs arriba) &mdash; precio VWAP 10% de profundidad. Compra = d&oacute;nde compr&aacute;s USDT; Venta = d&oacute;nde lo vend&eacute;s.</li>
-          <li><strong>Prima P2P</strong> &mdash; cu&aacute;nto por encima del TC oficial BCB est&aacute; el mercado P2P. Hoy ~44%.</li>
-          <li><strong>BCB Ref</strong> &mdash; las dos tasas referenciales que publica el BCB (compra y venta). Distintas del TC oficial; m&aacute;s cercanas al P2P.</li>
+          <li><strong>Prima P2P</strong> &mdash; cu&aacute;nto por encima (o por debajo) del tipo de cambio oficial (TCO) est&aacute; el mercado P2P.</li>
+          <li><strong>BCB Ref</strong> &mdash; las dos tasas referenciales que publica el BCB (compra y venta). La venta referencial = TCO + 0,10 Bs; m&aacute;s cercanas al P2P.</li>
           <li><strong>Spread</strong>, <strong>Profundidad</strong> &mdash; m&eacute;tricas del libro.</li>
           <li><strong>VWAP por nivel de profundidad</strong> &mdash; el gr&aacute;fico principal. Bandas 5/25/50% muestran el deterioro del precio si comprar&iacute;as m&aacute;s vol.</li>
         </ul>
@@ -1116,15 +1116,15 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <summary><strong>BCB Oficial vs BCB Ref</strong></summary>
         <p>El Banco Central de Bolivia publica dos referencias de tipo de cambio que se ven en el dashboard:</p>
         <ul>
-          <li><strong>TC Oficial BCB (~6.96 BOB/USD)</strong>: la cotizaci&oacute;n oficial, fija desde 2011. No refleja el mercado real porque hay restricciones cambiarias.</li>
-          <li><strong>BCB Ref Compra / Venta</strong>: tasas referenciales m&aacute;s recientes que publica el BCB (compra y venta separadas). Est&aacute;n m&aacute;s cerca del P2P pero todav&iacute;a por debajo. Sirve como benchmark intermedio.</li>
+          <li><strong>TCO &mdash; Tipo de Cambio Oficial</strong>: desde la RD 88/2026 (jun-2026) el oficial es din&aacute;mico. El BCB lo publica cada d&iacute;a h&aacute;bil a las 20:00 como promedio ponderado de las compras de USD de los bancos, y rige al d&iacute;a siguiente. Reemplaz&oacute; al tipo de cambio fijo (6,86 compra / 6,96 venta) que rigi&oacute; de 2011 a 2026.</li>
+          <li><strong>BCB Ref Compra / Venta</strong>: tasas referenciales que publica el BCB (compra y venta separadas). La de venta referencial es el TCO + 0,10 Bs. Sirven como benchmark intermedio frente al P2P.</li>
         </ul>
-        <p>El gap entre el TC oficial y el P2P es lo que llamamos <strong>Prima P2P</strong>. Hoy ~44%.</p>
+        <p>El gap entre el oficial y el P2P es lo que llamamos <strong>Prima P2P</strong>; ahora se mide contra el TCO.</p>
       </details>
 
       <details>
         <summary><strong>Prima P2P</strong></summary>
-        <p>F&oacute;rmula: <code>Prima = (P2P_compra_VWAP10 / TC_BCB_oficial - 1) &times; 100</code>. Mide cu&aacute;nto m&aacute;s caro est&aacute; el USDT en el mercado P2P comparado con el TC oficial. Indicador clave del nivel de estr&eacute;s cambiario.</p>
+        <p>F&oacute;rmula: <code>Prima = (P2P_compra_VWAP10 / TCO - 1) &times; 100</code>. Mide cu&aacute;nto m&aacute;s caro est&aacute; el USDT en el mercado P2P comparado con el tipo de cambio oficial (TCO). Indicador clave del nivel de estr&eacute;s cambiario.</p>
       </details>
 
       <details>
@@ -1378,11 +1378,12 @@ let last = null;
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-neutral':'#0D7680','color-accent-warm':'#FF8833','delta-up':'#A8322A','delta-down':'#2C6E49','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-bcb-tco':'#B45309','color-neutral':'#0D7680','color-accent-warm':'#FF8833','delta-up':'#A8322A','delta-down':'#2C6E49','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
   'color-bcb-oficial':'text-muted','color-bcb-ref-compra':'blue-accent','color-bcb-ref-venta':'blue-accent',
+  'color-bcb-tco':'color-accent-warm',
   'color-neutral':'blue-accent','color-accent-warm':'orange'
 };
 let currentView='snapshot', activeThemeValues={...THEMES.paper};
@@ -1737,6 +1738,7 @@ function getC(){
     bcbOficial:    t['color-bcb-oficial']   || t['text-muted'],
     bcbRefCompra:  t['color-bcb-ref-compra']|| t['blue-accent'],
     bcbRefVenta:   t['color-bcb-ref-venta'] || t['blue-accent'],
+    bcbTco:        t['color-bcb-tco']       || t['color-accent-warm'] || t.orange,
     neutral:       t['color-neutral']       || t['blue-accent'],
     accentWarm:    t['color-accent-warm']   || t.orange
   };
@@ -1777,13 +1779,14 @@ function xaxisForView(base, v){
   return cfg;
 }
 
-// VWAP series toggle state (default: solo Compra; banda BCB Ref desactivada)
-const vwapToggle={compra:true,banda:false};
+// VWAP series toggle state (default: Compra + TCO oficial; banda BCB Ref desactivada)
+const vwapToggle={compra:true,banda:false,tco:true};
 function applyVwapToggle(){
   const el=document.getElementById('chartVwap');
   if(!el||!el.data) return;
   const keyFor=function(tr){
     if(tr.name==='Compra') return 'compra';
+    if(tr.name==='TCO') return 'tco';
     if(tr.name&&tr.name.indexOf('BCB')===0) return 'banda';
     return null;
   };
@@ -1823,6 +1826,26 @@ function rVwap(c,v){
       const lineCfg = step ? {color:'transparent',width:0,shape:'hv'} : {color:'transparent',width:0};
       traces.push({x:bx,y:ventaY, name:'BCB Ref base',mode:'lines',line:lineCfg,hoverinfo:'skip',showlegend:false,connectgaps:false});
       traces.push({x:bx,y:compraY,name:'BCB Ref',mode:'lines',line:lineCfg,fill:'tonexty',fillcolor:hexToRgba(c.bcbRefCompra,.18),hoverinfo:'skip',showlegend:false,connectgaps:false});
+    }
+  }
+  // Serie TCO (Tipo de Cambio Oficial, RD 88/2026): el nuevo oficial diario que
+  // reemplaza al fijo 6.96. 1 dato = punto; >=2 = línea conectada (lo que pidió
+  // Diego). Sin _side: es referencia, se muestra independiente del lado.
+  if(meta.bcb_tco_history&&meta.bcb_tco_history.length){
+    const xMinDate = x.length ? x[0].toISOString().slice(0,10) : null;
+    const xMaxDate = x.length ? x[x.length-1].toISOString().slice(0,10) : null;
+    let pts = meta.bcb_tco_history.filter(e=>e&&e.tco!=null);
+    if(xMinDate&&xMaxDate) pts = pts.filter(e=>e.fecha>=xMinDate && e.fecha<=xMaxDate);
+    if(pts.length){
+      const tx = pts.map(e=>new Date(e.fecha+'T00:00:00'));
+      const ty = pts.map(e=>e.tco);
+      const single = pts.length<2;
+      traces.push({x:tx,y:ty,name:'TCO',
+        mode: single?'markers':'lines+markers',
+        line:{color:c.bcbTco,width:2},
+        marker:{size:single?7:3,color:c.bcbTco},
+        connectgaps:true,
+        hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
     }
   }
   traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
@@ -2100,6 +2123,18 @@ function bcbRefAt(tsMs){
   }
   return {compra:meta.bcb_ref_compra, venta:meta.bcb_ref_venta, fecha:meta.bcb_ref_fecha};
 }
+// TCO (Tipo de Cambio Oficial, RD 88/2026) vigente <= un timestamp dado.
+// Fallback al último TCO conocido; null si todavía no hay datos de TCO.
+function bcbTcoAt(tsMs){
+  const hist=meta.bcb_tco_history||[];
+  for(let i=hist.length-1;i>=0;i--){
+    if(hist[i].tco==null) continue;
+    const t=new Date(hist[i].fecha+'T00:00:00').getTime();
+    if(t<=tsMs) return {tco:hist[i].tco, fecha:hist[i].fecha};
+  }
+  if(meta.bcb_tco_last!=null) return {tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha};
+  return null;
+}
 
 const ICONS={
   compra:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="3" x2="12" y2="15"/><polyline points="7,10 12,15 17,10"/><line x1="4" y1="20" x2="20" y2="20"/></svg>',
@@ -2121,7 +2156,11 @@ function kpi(label,value,sub,iconSvg,colorVar){
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
-  const premium=(last.vb10/meta.bcb_rate-1)*100;
+  // Prima P2P vs el TCO oficial (RD 88/2026). Fail-soft: si todavía no hay datos
+  // de TCO, cae al fijo histórico 6.96 (meta.bcb_rate) para no romper la KPI.
+  const tco=bcbTcoAt(new Date(TS_ARR[i]).getTime());
+  const oficial=(tco&&tco.tco!=null)?tco.tco:meta.bcb_rate;
+  const premium=(last.vb10/oficial-1)*100;
   const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
   const fmtPrem=(vwap,refVal)=>{
     if(vwap==null||refVal==null) return '\u2014';
@@ -2148,7 +2187,7 @@ function updateKpis(){
     kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vb10,ref.compra,true), ICONS.compra, 'buy')+
     kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vs10,ref.venta,false), ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
-    kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', 'TC Oficial BCB: '+fmt2(meta.bcb_rate), ICONS.bcb, null)+
+    kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', ((tco&&tco.tco!=null)?'TCO BCB: ':'TC Oficial BCB: ')+fmt2(oficial), ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
     kpi('BCB Ref', fmt2(ref.compra)+' / '+fmt2(ref.venta), 'Compra \u00b7 Venta (BOB/USDT)', ICONS.bcb, null)+
     '</div></div>';
@@ -4583,16 +4622,24 @@ window.addEventListener('popstate', function(){
     // venta: "huecos visibles, no rellenados").
     const vb=npLastNum(tm.vb10);
     const p2p=npNum(vb)?vb:null;
-    const bcb=(typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null;
+    // El oficial es el TCO diario (RD 88/2026); fallback al fijo 6.96 si aún no hay datos.
+    const tcoLast=(typeof meta!=='undefined'&&npNum(meta.bcb_tco_last))?meta.bcb_tco_last:null;
+    const bcb = tcoLast!=null ? tcoLast : ((typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null);
     let primaSub='s/d', primaDir='flat';
-    if(npNum(p2p)&&npNum(bcb)&&bcb>0){ primaSub='prima +'+npFmt((p2p/bcb-1)*100,0)+'%'; primaDir='up'; }
+    if(npNum(p2p)&&npNum(bcb)&&bcb>0){ const pr=(p2p/bcb-1)*100; primaSub='prima '+(pr>=0?'+':'')+npFmt(pr,0)+'%'; primaDir=pr>0?'up':(pr<0?'down':'flat'); }
+    // Tile "BCB oficial": delta diario del TCO si hay historia; si no, sin cambios.
+    let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO oficial':'sin cambios');
+    if(tcoLast!=null){
+      const th=((typeof meta!=='undefined'&&meta.bcb_tco_history)||[]).filter(e=>e&&e.tco!=null);
+      if(th.length>=2){ const d=th[th.length-1].tco-th[th.length-2].tco; bcbDir=npDir(d); bcbSub=npNum(d)?npDeltaTxt(d,' Bs',2):'TCO oficial'; }
+    }
     let embi=null, embiD=null;
     const es=(typeof DATA!=='undefined')&&DATA.embi_data&&DATA.embi_data.series&&DATA.embi_data.series.bolivia;
     if(es){ embi=npLastNum(es); const pv=npPrevNum(es); if(npNum(embi)&&npNum(pv)) embiD=embi-pv; }
     const ipc=npInflVar12('ipc');  // IPP retirado del ticker (frontend-only); DATA.inflacion.ipp queda latente
     return [
       { lab:'Dólar P2P',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
-      { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:'flat',                sub:'sin cambios' },
+      { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:bcbDir,                sub:bcbSub },
       { lab:'Riesgo país', val:npNum(embi)?npFmt(embi,0):'—',unit:'pb',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,' pb',0):'EMBI Bolivia' },
       { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' }
     ];
