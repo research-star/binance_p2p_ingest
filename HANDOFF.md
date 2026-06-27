@@ -692,6 +692,12 @@ Features clave:
     (toma el próximo publicado). `bcb_tco.json` queda PURO (solo lo del BCB); el
     relleno es derivado en build. Efecto: el finde se ve como línea plana que conecta
     con el P2P en vez de un punto suelto adelantado.
+  - **KPI "BCB Ref" = TCO / TCO+0,10** (RD 88: la venta referencial es TCO + 0,10),
+    reordenada **primera** en la fila de KPIs. Fail-soft a `bcb_referencial` si aún no
+    hay TCO. La **banda "BCB Ref" del gráfico se retiró** (toggle + traces): era
+    redundante con la serie TCO y la KPI; el chart del Dólar solo tiene Compra (P2P)
+    + TCO. Se quitaron también los sublabels "Prima BCB Ref" de USDT Compra/Venta
+    (duplicaban la KPI "Prima P2P", que queda como única métrica de prima).
 
 ---
 
