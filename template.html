@@ -2177,6 +2177,12 @@ function updateKpis(){
   const oficial=(tco&&tco.tco!=null)?tco.tco:meta.bcb_rate;
   const premium=(last.vb10/oficial-1)*100;
   const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
+  // Referencia oficial del BCB (RD 88/2026): compra = TCO; venta referencial =
+  // TCO + 0,10 Bs. Fail-soft: si aún no hay TCO, cae a la referencial vieja
+  // (bcb_referencial). Se usa para la tarjeta "BCB Ref" y los sublabels de prima.
+  const hasTco = !!(tco && tco.tco != null);
+  const refCompra = hasTco ? tco.tco : ref.compra;
+  const refVenta  = hasTco ? (tco.tco + 0.10) : ref.venta;
   const fmtPrem=(vwap,refVal)=>{
     if(vwap==null||refVal==null) return '\u2014';
     const p=(vwap/refVal-1)*100;
@@ -2199,12 +2205,12 @@ function updateKpis(){
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vb10,ref.compra,true), ICONS.compra, 'buy')+
-    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vs10,ref.venta,false), ICONS.venta, 'sell')+
+    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), (hasTco?'TCO \u00b7 Venta ref (BOB/USDT)':'Compra \u00b7 Venta (BOB/USDT)'), ICONS.bcb, null)+
+    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vb10,refCompra,true), ICONS.compra, 'buy')+
+    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT &middot; Prima BCB Ref: '+premColor(last.vs10,refVenta,false), ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
     kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', ((tco&&tco.tco!=null)?'TCO BCB: ':'TC Oficial BCB: ')+fmt2(oficial), ICONS.bcb, null)+
     kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
-    kpi('BCB Ref', fmt2(ref.compra)+' / '+fmt2(ref.venta), 'Compra \u00b7 Venta (BOB/USDT)', ICONS.bcb, null)+
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
