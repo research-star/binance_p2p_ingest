@@ -1512,6 +1512,20 @@ function rangeFromState(state){
 // ═══ AGGREGATORS (rango activo + view) ═══
 const TS_FIELDS = ['vb5','vb10','vb25','vb50','vs5','vs10','vs25','vs50','sp5','sp10','sp25','sp50','buy_depth','sell_depth','buy_count','sell_count','depth_ratio','t5buy','t5sell'];
 
+// ── Hora-pared de Bolivia (UTC-4) para los ejes de tiempo de Plotly ──
+// Plotly rotula objetos Date Y números en la zona horaria DEL NAVEGADOR, así que
+// un visitante en Bolivia veía las horas corridas 4h (doble resta). Los STRINGS
+// naive (sin Z) Plotly los interpreta y formatea SIEMPRE en UTC → mismo resultado
+// en todo navegador. Por eso el eje X usa strings de hora-pared boliviana; los ms
+// (escala boMs) se guardan aparte para el cálculo de rangos/comparaciones.
+const BO_OFFSET_MS = 4*3600000;
+function boMs(tsLike){ return new Date(tsLike).getTime() - BO_OFFSET_MS; }
+function boStr(ms){
+  const d=new Date(ms), p=n=>String(n).padStart(2,'0');
+  return d.getUTCFullYear()+'-'+p(d.getUTCMonth()+1)+'-'+p(d.getUTCDate())+' '
+        +p(d.getUTCHours())+':'+p(d.getUTCMinutes())+':'+p(d.getUTCSeconds());
+}
+
 function aggregateTimeView(rangeFromIdx, rangeToIdx, view){
   const tm=DATA.ts_metrics;
   const out={ts:[]};
@@ -1532,7 +1546,8 @@ function aggregateTimeView(rangeFromIdx, rangeToIdx, view){
       for(const f of TS_FIELDS) out[f].push(tm[f][i]);
     }
   }
-  out.x = out.ts.map(t=>new Date(new Date(t).getTime()-4*3600000));
+  out.xms = out.ts.map(t=>boMs(t));   // ms (escala boMs) para math de rangos
+  out.x   = out.xms.map(boStr);       // strings naive (hora Bolivia) para Plotly
   return out;
 }
 
@@ -1549,7 +1564,7 @@ function aggregateHeatmap(rangeFromIdx, rangeToIdx){
   const sums={};
   for(const m of metrics) sums[m.key]=Array.from({length:24},()=>[0,0]);
   for(let i=rangeFromIdx;i<=rangeToIdx;i++){
-    const h=(new Date(new Date(tm.ts[i]).getTime()-4*3600000)).getUTCHours();
+    const h=new Date(boMs(tm.ts[i])).getUTCHours();
     for(const m of metrics){
       const v = m.key==='n_ads' ? (tm.buy_count[i]+tm.sell_count[i]) : tm[m.key][i];
       if(v==null) continue;
@@ -1761,8 +1776,8 @@ function gapShapes(c){
   const op=isLight?0.10:0.22;
   return gaps.map(g=>({
     type:'rect',xref:'x',yref:'paper',
-    x0:new Date(new Date(g.start).getTime()-4*3600000),
-    x1:new Date(new Date(g.end).getTime()-4*3600000),
+    x0:boStr(boMs(g.start)),
+    x1:boStr(boMs(g.end)),
     y0:0,y1:1,
     fillcolor:c.textMuted,opacity:op,line:{width:0},layer:'below',
   }));
@@ -1774,9 +1789,9 @@ function xaxisForView(base, v){
   // cambio de selector y evita que Plotly conserve autorange/rangeslider
   // del render anterior. Padding de medio día en daily/hourly para que los
   // markers del primer/último punto no queden clippeados en el borde.
-  if(v && v.x && v.x.length){
+  if(v && v.xms && v.xms.length){
     const padMs = currentView==='snapshot' ? 0 : 12*3600000;
-    cfg.range = [new Date(v.x[0].getTime() - padMs), new Date(v.x[v.x.length-1].getTime() + padMs)];
+    cfg.range = [boStr(v.xms[0] - padMs), boStr(v.xms[v.xms.length-1] + padMs)];
     cfg.autorange = false;
   }
   delete cfg.dtick;
@@ -1805,7 +1820,7 @@ function applyVwapToggle(){
   });
 }
 function rVwap(c,v){
-  const L=BL(c), x=v.x;
+  const L=BL(c), x=v.x, xms=v.xms||[];
   const traces=[];
   // (La banda "BCB Ref" se retiró: redundante con la serie TCO y la KPI BCB Ref.)
   // Serie TCO (Tipo de Cambio Oficial, RD 88/2026): el nuevo oficial diario que
@@ -1816,17 +1831,18 @@ function rVwap(c,v){
   // independiente del lado. tcoMaxMs extiende el eje X abajo para que no se clippee.
   let tcoMaxMs=null;
   if(meta.bcb_tco_history&&meta.bcb_tco_history.length){
-    const xMinDate = x.length ? x[0].toISOString().slice(0,10) : null;
+    const xMinDate = x.length ? x[0].slice(0,10) : null;  // x[0]="YYYY-MM-DD HH:MM:SS"
     let pts = meta.bcb_tco_history.filter(e=>e&&e.tco!=null);
     if(xMinDate) pts = pts.filter(e=>e.fecha>=xMinDate);
-    if(x.length){
-      const capMs = x[x.length-1].getTime() + 10*86400000;  // tope: ~10 días de adelanto
-      pts = pts.filter(e=>new Date(e.fecha+'T00:00:00').getTime() <= capMs);
+    if(xms.length){
+      // capMs y fechas TCO en escala boMs (medianoche Bolivia tratada como UTC).
+      const capMs = xms[xms.length-1] + 10*86400000;  // tope: ~10 días de adelanto
+      pts = pts.filter(e=>Date.parse(e.fecha+'T00:00:00Z') <= capMs);
     }
     if(pts.length){
-      const tx = pts.map(e=>new Date(e.fecha+'T00:00:00'));
+      const tx = pts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
       const ty = pts.map(e=>e.tco);
-      tcoMaxMs = tx[tx.length-1].getTime();
+      tcoMaxMs = Date.parse(pts[pts.length-1].fecha+'T00:00:00Z');
       const single = pts.length<2;
       traces.push({x:tx,y:ty,name:'TCO',
         mode: single?'markers':'lines+markers',
@@ -1842,8 +1858,8 @@ function rVwap(c,v){
   // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
   // range explícito del P2P lo dejaría fuera de cuadro).
   if(tcoMaxMs!=null && xaVwap.range){
-    const top=(xaVwap.range[1] instanceof Date)?xaVwap.range[1].getTime():new Date(xaVwap.range[1]).getTime();
-    if(tcoMaxMs>top){ xaVwap.range=[xaVwap.range[0], new Date(tcoMaxMs)]; xaVwap.autorange=false; }
+    const topMs=Date.parse(String(xaVwap.range[1]).replace(' ','T')+'Z');  // range[1] = string boStr
+    if(tcoMaxMs>topMs){ xaVwap.range=[xaVwap.range[0], boStr(tcoMaxMs)]; xaVwap.autorange=false; }
   }
   Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
@@ -1865,7 +1881,7 @@ function rOutliers(){
   const stamp=document.getElementById('outliersSnapStamp');
   if(stamp){
     const snapTs = ml ? ml.snapshot_ts : meta.last_ts;
-    stamp.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    stamp.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
   }
   if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
   const refs={BUY:ml.vwap10_buy, SELL:ml.vwap10_sell};
@@ -1929,7 +1945,8 @@ function rFlow(c){
   const L=BL(c);
   const flow=aggregateMerchantFlow(activeRange.fromIdx, activeRange.toIdx, currentView);
   if(!flow.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
-  const x=flow.map(f=>new Date(new Date(f.ts).getTime()-4*3600000));
+  const xms=flow.map(f=>boMs(f.ts));
+  const x=xms.map(boStr);
   const traces=filterDirectionalTraces([
     {_side:'buy', x:x,y:flow.map(f=>f.new_buy),  name:'Nuevos Compra',type:'bar',marker:{color:hexToRgba(c.buy,.5)}},
     {_side:'buy', x:x,y:flow.map(f=>-f.gone_buy),name:'Desap. Compra',type:'bar',marker:{color:hexToRgba(c.buy,.2)}},
@@ -1938,7 +1955,7 @@ function rFlow(c){
     {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
     {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'Total Venta', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
   ], 'flow');
-  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
+  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x,xms})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
 function rOffer(c){
@@ -1957,7 +1974,7 @@ function rOffer(c){
   }
   if(stamp&&od.snapshot_ts){
     const sideLabel = sf==='buy' ? ' · solo Compra' : sf==='sell' ? ' · solo Venta' : ' · Compra + Venta';
-    stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+sideLabel;
+    stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'})+sideLabel;
   }
   if(od.empty){
     _purgeAndClear(el);
@@ -2104,7 +2121,7 @@ window.renderDollar = function(){
 
 // ═══ STATIC CONTENT ═══
 {
-  const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
   const el=document.getElementById('lastUpdateStamp');
   if(el) el.textContent=lastSnapFmt;
 }
@@ -2176,7 +2193,7 @@ function updateKpis(){
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
-const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
 document.getElementById('footer').innerHTML='\u00daltima actualizaci\u00f3n: '+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
