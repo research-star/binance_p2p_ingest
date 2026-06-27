@@ -14,8 +14,10 @@
 set -euo pipefail
 cd /opt/binance_p2p
 
+# HC_BCB_TCO = UUID del check (convención del repo, igual que HC_EMBI/HC_NOTICIAS);
+# el wrapper arma la URL https://hc-ping.com/<uuid>[/start|/fail].
 HC="${HC_BCB_TCO:-}"
-hc(){ [ -n "$HC" ] && curl -fsS -m 10 "${HC}$1" -o /dev/null 2>/dev/null || true; }
+hc(){ [ -n "$HC" ] && curl -fsS -m 10 "https://hc-ping.com/${HC}$1" -o /dev/null 2>/dev/null || true; }
 trap 'hc /fail' ERR
 
 hc /start
