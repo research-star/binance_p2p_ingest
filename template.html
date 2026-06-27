@@ -1829,16 +1829,24 @@ function rVwap(c,v){
     }
   }
   // Serie TCO (Tipo de Cambio Oficial, RD 88/2026): el nuevo oficial diario que
-  // reemplaza al fijo 6.96. 1 dato = punto; >=2 = línea conectada (lo que pidió
-  // Diego). Sin _side: es referencia, se muestra independiente del lado.
+  // reemplaza al fijo 6.96. 1 dato = punto; >=2 = línea conectada. El oficial va
+  // SIEMPRE por delante del P2P (vigencia = próximo día hábil: el cierre del
+  // viernes rige sáb/dom/lun), así que NO se clipea por el borde derecho del P2P
+  // — se dibuja adelantado y el P2P lo va alcanzando. Sin _side: es referencia,
+  // independiente del lado. tcoMaxMs extiende el eje X abajo para que no se clippee.
+  let tcoMaxMs=null;
   if(meta.bcb_tco_history&&meta.bcb_tco_history.length){
     const xMinDate = x.length ? x[0].toISOString().slice(0,10) : null;
-    const xMaxDate = x.length ? x[x.length-1].toISOString().slice(0,10) : null;
     let pts = meta.bcb_tco_history.filter(e=>e&&e.tco!=null);
-    if(xMinDate&&xMaxDate) pts = pts.filter(e=>e.fecha>=xMinDate && e.fecha<=xMaxDate);
+    if(xMinDate) pts = pts.filter(e=>e.fecha>=xMinDate);
+    if(x.length){
+      const capMs = x[x.length-1].getTime() + 10*86400000;  // tope: ~10 días de adelanto
+      pts = pts.filter(e=>new Date(e.fecha+'T00:00:00').getTime() <= capMs);
+    }
     if(pts.length){
       const tx = pts.map(e=>new Date(e.fecha+'T00:00:00'));
       const ty = pts.map(e=>e.tco);
+      tcoMaxMs = tx[tx.length-1].getTime();
       const single = pts.length<2;
       traces.push({x:tx,y:ty,name:'TCO',
         mode: single?'markers':'lines+markers',
@@ -1850,7 +1858,14 @@ function rVwap(c,v){
   }
   traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
   const filtered=filterDirectionalTraces(traces, 'vwap');
-  Plotly.react('chartVwap',filtered,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  const xaVwap=xaWithSlider(xaxisForView(L.xaxis,v));
+  // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
+  // range explícito del P2P lo dejaría fuera de cuadro).
+  if(tcoMaxMs!=null && xaVwap.range){
+    const top=(xaVwap.range[1] instanceof Date)?xaVwap.range[1].getTime():new Date(xaVwap.range[1]).getTime();
+    if(tcoMaxMs>top){ xaVwap.range=[xaVwap.range[0], new Date(tcoMaxMs)]; xaVwap.autorange=false; }
+  }
+  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
 function rVolume(c,v){
