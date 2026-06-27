@@ -63,6 +63,9 @@ from urllib.request import Request, urlopen
 from config import BCB_TCO_JSON
 
 URL_TCO = "https://www.bcb.gob.bo/tco_reporte_detalle_historico.php"
+# Endpoint del botón "Descargar CSV" (GET ?desde=YYYY-MM-DD&hasta=YYYY-MM-DD),
+# confirmado leyendo el <form class="vrd-export"> de la página (2026-06-29).
+CSV_ENDPOINT = "tco_tcreferencial_descargar_csv.php"
 OUTPUT = BCB_TCO_JSON
 RAW_DUMP = Path("bcb_tco_raw.html")
 HEADERS = {"User-Agent": "Mozilla/5.0 (binance_p2p_ingest)"}
@@ -99,7 +102,12 @@ def fetch(url: str) -> str:
 
 
 def _looks_like_tco_csv(text: str) -> bool:
-    """¿El texto es el CSV del reporte (no el HTML del formulario)?"""
+    """¿El texto es el CSV del reporte (y NO el HTML del formulario, que también
+    contiene 'TOTAL BANCOS' como encabezado de columna)?"""
+    head = text.lstrip()[:400].lower()
+    if head[:1] == "<" or any(t in head for t in (
+            "<!doctype", "<html", "<section", "<style", "<form", "<div", "<script")):
+        return False
     return ";" in text and "total bancos" in text.lower()
 
 
@@ -143,6 +151,15 @@ def fetch_report(base_url: str, desde: str, hasta: str) -> str:
       3) Fallback: GET con nombres de parámetros comunes + flag de export.
     Devuelve el texto del CSV. Lanza RuntimeError si nada rinde el CSV (con
     --debug el crudo queda en disco para fijar el endpoint a mano)."""
+    # (0) Endpoint directo del botón "Descargar CSV" (camino confiable). La
+    #     introspección queda como respaldo si el BCB renombra el endpoint.
+    try:
+        resp = _submit(urljoin(base_url, CSV_ENDPOINT), "get", {"desde": desde, "hasta": hasta})
+        if _looks_like_tco_csv(resp):
+            return resp
+    except Exception as e:  # noqa: BLE001
+        print(f"  (endpoint directo de CSV falló: {e})", file=sys.stderr)
+
     page = fetch(base_url)
     if _looks_like_tco_csv(page):
         return page
@@ -529,11 +546,14 @@ def main():
         # publica 20:00 BO; el cron corre 20:05 BO = 00:05 UTC del día siguiente,
         # así que "hoy BO" = UTC-4.
         bo_today = (datetime.now(timezone.utc) - timedelta(hours=4)).date()
-        hasta = args.hasta or bo_today.isoformat()
+        # Buffer de +3 días en `hasta`: el endpoint solo exporta fechas publicadas,
+        # así que pedir de más es inocuo y nos cubre de un reloj del VPS atrasado
+        # (visto 2026-06: VPS en 06-27 mientras BCB ya publicaba 06-29).
+        hasta = args.hasta or (bo_today + timedelta(days=3)).isoformat()
         if args.backfill:
             desde = args.desde or "2026-06-26"  # entrada en vigencia del nuevo régimen
         else:
-            desde = args.desde or (bo_today - timedelta(days=7)).isoformat()
+            desde = args.desde or (bo_today - timedelta(days=14)).isoformat()
         try:
             content = fetch_report(args.url, desde, hasta)
         except Exception as e:
