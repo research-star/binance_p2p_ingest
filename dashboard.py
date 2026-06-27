@@ -487,6 +487,35 @@ def load_bcb_ref(first_date: str | None = None) -> dict:
     return out
 
 
+def _fill_weekends_tco(pub: list[dict]) -> list[dict]:
+    """Rellena sábados y domingos con el TCO del PRÓXIMO día publicado.
+
+    Regla de fin de semana de la RD 88/2026: los sábados y domingos usan el TCO
+    vigente del lunes, que es la publicación del viernes 20:00 (fechada por el BCB
+    con la vigencia = lunes siguiente). NO es interpolación silenciosa: el valor
+    del finde está legalmente definido (= el del próximo día hábil). Las entradas
+    sintéticas llevan `source='bcb_tco_fin_semana'` y NO pisan valores publicados.
+
+    `pub` viene ordenado por fecha, con `tco` no nulo. Cubre también el finde
+    previo al primer publicado (ej. sáb/dom anteriores al primer lunes). Holidays:
+    como toma el PRÓXIMO publicado, un lunes feriado (sin publicación) hace que el
+    finde tome el valor del martes = misma publicación del viernes. Correcto."""
+    if not pub:
+        return pub
+    have = {h['fecha'] for h in pub}
+    pub_days = [(datetime.fromisoformat(h['fecha']).date(), h['tco']) for h in pub]
+    first, last = pub_days[0][0], pub_days[-1][0]
+    extra = []
+    d, one = first - timedelta(days=3), timedelta(days=1)
+    while d <= last:
+        if d.weekday() >= 5 and d.isoformat() not in have:  # 5=sábado, 6=domingo
+            nxt = next((val for (pd, val) in pub_days if pd > d), None)
+            if nxt is not None:
+                extra.append({'fecha': d.isoformat(), 'tco': nxt, 'source': 'bcb_tco_fin_semana'})
+        d += one
+    return sorted(pub + extra, key=lambda h: h['fecha'])
+
+
 def load_bcb_tco(first_date: str | None = None) -> dict:
     """Lee bcb_tco.json (array de {fecha, tco}, generado por ingest_bcb_tco.py).
     Devuelve el último TCO (para la KPI Prima P2P) + el histórico filtrado al
@@ -504,13 +533,15 @@ def load_bcb_tco(first_date: str | None = None) -> dict:
                     [h for h in data if h.get('fecha') and h.get('tco') is not None],
                     key=lambda h: h['fecha'])
                 if full_hist:
-                    latest = full_hist[-1]
+                    latest = full_hist[-1]  # último PUBLICADO (no sintético) para la KPI
                     out['bcb_tco_last'] = latest.get('tco')
                     out['bcb_tco_fecha'] = latest.get('fecha')
+                    # Rellena sáb/dom con el valor del próximo día hábil (regla RD 88/2026)
+                    filled = _fill_weekends_tco(full_hist)
                     if first_date:
-                        out['bcb_tco_history'] = [h for h in full_hist if h['fecha'] >= first_date]
+                        out['bcb_tco_history'] = [h for h in filled if h['fecha'] >= first_date]
                     else:
-                        out['bcb_tco_history'] = full_hist
+                        out['bcb_tco_history'] = filled
     except Exception:
         pass
     return out

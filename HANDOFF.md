@@ -20,7 +20,7 @@ de backups y, opcionalmente, dashboard local.
 | `normalize.py` | VPS cron user `binance` | `*/5 * * * *` | `HC_NORMALIZE` |
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
-| `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `5 0 * * 2-6` (mar–sáb UTC = lun–vie 20:05 BO, tras la publicación del TCO a las 20:00; baja ventana 14 días atrás + 5 adelante —la fecha del TCO es su vigencia, que va por delante de hoy—, autorreparable) | `HC_BCB_TCO` pendiente |
+| `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `5 0 * * 2-6` (mar–sáb UTC = lun–vie 20:05 BO, tras la publicación del TCO a las 20:00; baja ventana 14 días atrás + 5 adelante —la fecha del TCO es su vigencia, que va por delante de hoy—, autorreparable) | `HC_BCB_TCO` (ping desde wrapper; falta crear UUID + .env) |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
@@ -679,9 +679,19 @@ Features clave:
     en que el TCO **rige**, no la de las operaciones. El cierre del viernes se
     publica como vigente el **lunes** (regla de fin de semana de la RD 88/2026),
     así que la fecha de vigencia va por DELANTE de "hoy". Por eso: (a) el rango de
-    descarga lleva buffer `+5 días` en `hasta`; (b) en el chart, el punto más
-    nuevo aparece cuando la línea temporal del P2P alcanza su fecha de vigencia
-    (la KPI/número siempre está al día vía `bcb_tco_last`).
+    descarga lleva buffer `+5 días` en `hasta`; (b) el chart **dibuja el TCO
+    adelantado** — `rVwap` no clipea los puntos TCO por el borde derecho del P2P y
+    **extiende el eje X** hasta el último TCO (el oficial siempre va ~1 día hábil
+    por delante y el P2P lo va alcanzando).
+  - **Relleno de fin de semana** (`_fill_weekends_tco`, dashboard.py): sábados y
+    domingos se rellenan con el TCO del **próximo día publicado** (= la publicación
+    del viernes, fechada el lunes), por la regla de fin de semana de la RD 88/2026.
+    NO es interpolación silenciosa: el valor del finde está legalmente definido. Las
+    entradas sintéticas llevan `source='bcb_tco_fin_semana'`, NO pisan publicados y
+    NO afectan `bcb_tco_last` (sigue siendo el último PUBLICADO). Maneja feriados
+    (toma el próximo publicado). `bcb_tco.json` queda PURO (solo lo del BCB); el
+    relleno es derivado en build. Efecto: el finde se ve como línea plana que conecta
+    con el P2P en vez de un punto suelto adelantado.
 
 ---
 
@@ -732,7 +742,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 - `HC_INGEST` — pingeado desde `scripts/watchdog.py` cuando hay snapshot reciente. Confirmado en código del repo.
 - `HC_NORMALIZE`, `HC_DASHBOARD` — pingeados desde la cron line en VPS (no desde código del repo).
 - `HC_BCB` — **pendiente** (ver § 6).
-- `HC_BCB_TCO` — **pendiente** (crear UUID al instalar el cron del TCO; el wrapper no pingea aún).
+- `HC_BCB_TCO` — pingeado desde `scripts/bcb_tco_scrape_and_commit.sh` (start / éxito / fail vía trap). **Pendiente**: crear el UUID en healthchecks.io (modo **Cron**, expr `5 0 * * 2-6`, TZ **UTC**, grace 2h) y agregarlo como `HC_BCB_TCO` al `.env` + env del crontab. Sin la var, los pings se omiten graceful (no rompe).
 - `HC_EMBI` — pingeado desde `ingest_embi.py` (start / success-with-body / fail-with-body). Period 12h grace 6h.
 - `HC_NOTICIAS` — pingeado desde `ingest_noticias.py` (start / success-with-body / fail-with-body). Ping fail si CUALQUIER carril (Bolivia o latam) erró; el body trae el resumen por carril — un fail puede convivir con inserts del carril sano. Sin modelo TF-IDF el carril Bolivia corre en **modo DEGRADADO por keywords** (calibración 2026-06-21; antes fail-closed con exit 1) y reporta `scoring=keywords`; latam corre igual. UUID en `.env` (activo desde 2026-06-11). Cadencia ~14×/día (horario 07:07–20:07 BO desde 2026-06-23). Monitoreo en **modo Cron** (cron expression `7 0,11-23 * * *`, timezone **UTC**, grace time **2h**). **NO usar modo Simple/period**: el cron tiene gap nocturno (~11h sin corridas, 20:07→07:07 BO) que un period fijo interpretaría como caída y dispararía falsa alarma cada noche.
 
