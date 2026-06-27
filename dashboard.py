@@ -27,12 +27,13 @@ try:
 except ImportError:
     pass  # graceful: sin dotenv, env vars deben venir del entorno (counter → "—")
 
-from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, TEMPLATE_HTML
+from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, TEMPLATE_HTML
 from scripts.fetch_umami_stats import fetch_visits
 
 DEFAULT_DB = NORMALIZED_DB
 DEFAULT_OUTPUT = DASHBOARD_HTML
 BCB_REF_FILE = BCB_REF_JSON
+BCB_TCO_FILE = BCB_TCO_JSON
 
 # Mapeo canónico de nombres de bancos (raw → display).
 BANK_CANONICAL = {
@@ -481,6 +482,35 @@ def load_bcb_ref(first_date: str | None = None) -> dict:
                     out['bcb_ref_history'] = [h for h in full_hist if h['fecha'] >= first_date]
                 else:
                     out['bcb_ref_history'] = full_hist
+    except Exception:
+        pass
+    return out
+
+
+def load_bcb_tco(first_date: str | None = None) -> dict:
+    """Lee bcb_tco.json (array de {fecha, tco}, generado por ingest_bcb_tco.py).
+    Devuelve el último TCO (para la KPI Prima P2P) + el histórico filtrado al
+    rango del gráfico. Fail-soft idéntico a load_bcb_ref: si falta el archivo o
+    está vacío, devuelve None/[] y el frontend cae al fijo 6.96.
+
+    first_date (YYYY-MM-DD): filtra el histórico para el gráfico; el último valor
+    se conserva siempre (bcb_tco_last) para la KPI aunque caiga fuera de rango."""
+    out = {'bcb_tco_last': None, 'bcb_tco_fecha': None, 'bcb_tco_history': []}
+    try:
+        if BCB_TCO_FILE.exists():
+            data = json.loads(BCB_TCO_FILE.read_text(encoding='utf-8'))
+            if isinstance(data, list) and data:
+                full_hist = sorted(
+                    [h for h in data if h.get('fecha') and h.get('tco') is not None],
+                    key=lambda h: h['fecha'])
+                if full_hist:
+                    latest = full_hist[-1]
+                    out['bcb_tco_last'] = latest.get('tco')
+                    out['bcb_tco_fecha'] = latest.get('fecha')
+                    if first_date:
+                        out['bcb_tco_history'] = [h for h in full_hist if h['fecha'] >= first_date]
+                    else:
+                        out['bcb_tco_history'] = full_hist
     except Exception:
         pass
     return out
@@ -1148,6 +1178,7 @@ def process_data(db_path: Path) -> dict:
             'version': '0.3.0',
             'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             **load_bcb_ref(first_date=timestamps[0][:10] if timestamps else None),
+            **load_bcb_tco(first_date=timestamps[0][:10] if timestamps else None),
         }
     }
 

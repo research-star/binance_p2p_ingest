@@ -14,6 +14,10 @@ import os
 from pathlib import Path
 
 # ── Tipo de cambio oficial (referencia para prima paralela) ─────────────────
+# OJO: 6.96 es el tipo de cambio FIJO histórico (vigente 2011 → jun-2026), hoy
+# obsoleto. Desde la RD N° 88/2026 (26-jun-2026) el oficial es el TCO diario
+# (ver BCB_TCO_JSON / ingest_bcb_tco.py). Se conserva como fallback fail-soft
+# del frontend cuando aún no hay datos de TCO.
 BCB_RATE = 6.96
 
 # ── Rutas default (relativas a la raíz del proyecto / cwd) ──────────────────
@@ -22,6 +26,7 @@ LOGS_DIR = Path("logs")
 NORMALIZED_DB = Path("p2p_normalized.db")
 DASHBOARD_HTML = Path("index.html")
 BCB_REF_JSON = Path("bcb_referencial.json")
+BCB_TCO_JSON = Path("bcb_tco.json")  # Tipo de Cambio Oficial diario (RD 88/2026)
 TEMPLATE_HTML = Path(__file__).parent / "template.html"
 
 # Backup opcional de snapshots (env var P2P_BACKUP_DIR). Si no está definida
