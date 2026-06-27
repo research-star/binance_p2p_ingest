@@ -4263,13 +4263,13 @@ window.addEventListener('popstate', function(){
       traces.push({type:'scatter',mode:'markers',x:[x[ln.i]],y:[ln.v],
         marker:{color:WARM_DARK,size:8,line:{color:'#fff',width:1.5}}, hoverinfo:'skip', showlegend:false});
       anns.push({x:x[ln.i],y:ln.v,xref:'x',yref:'y',text:'<b>'+fmtPct(ln.v)+'</b>',
-        showarrow:false,xanchor:'right',yanchor:'bottom',xshift:-8,yshift:6,
+        showarrow:false,xanchor:'left',yanchor:'middle',xshift:10,yshift:0,
         font:{family:'Outfit',size:16,color:WARM_DARK}});
     }
     Plotly.react(el,traces,{...L,
       xaxis:ftx(L,{type:'date',nticks:11,tickangle:0}),
       yaxis:fty(L,{ticksuffix:'%'}),
-      annotations:anns, margin:{l:48,r:18,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
+      annotations:anns, margin:{l:48,r:62,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
   }
   function plotMensual(){
     var el=document.getElementById('inflMensualChart'); if(!el||!IPC) return;
