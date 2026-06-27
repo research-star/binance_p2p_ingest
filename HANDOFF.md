@@ -640,9 +640,13 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   guarda de existencia de archivo en el test, fail-fast). Reglas `[ENT]` (entidad nombrada):
   `fmi`/`banco-central` con foto propia, `gobierno` sobre las generales y bajo los temas
   concretos; `multilaterales`/`asfi` aún proxy. Tests: `scripts/test_gallery_keyword.py`.
-- Visitas en el subheader: mismos placeholders `__VISITS_TODAY__` /
-  `__VISITS_MONTH__` del tab Dólar (`_inject_umami()` usa `str.replace`,
-  que reemplaza todas las ocurrencias — no requirió tocar dashboard.py).
+- Visitas en el subheader: **RETIRADAS de la UI** (los KPIs "Visitas hoy / Visitas
+  mes" del subheader del tab Dólar se quitaron). Mostraban "—" porque Umami no está
+  configurado: `_inject_umami()` solo trae conteos si están las env vars
+  `UMAMI_API_KEY` + `UMAMI_WEBSITE_ID` + `UMAMI_HOST`; sin ellas cae a None → "—".
+  El mecanismo `_inject_umami` (placeholders + `<script>` de tracking) sigue en
+  `dashboard.py` por si se reactiva; ya no hay placeholders en el template, así que
+  el `str.replace` es no-op.
 
 ### Fase 3 — Análisis / Dashboard
 
