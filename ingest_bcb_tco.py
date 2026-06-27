@@ -55,8 +55,9 @@ import io
 import json
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
 from config import BCB_TCO_JSON
@@ -84,15 +85,118 @@ MONTH_ABBR = {
 
 # ── Fetch ────────────────────────────────────────────────────────────────────
 
-def fetch(url: str) -> str:
-    req = Request(url, headers=HEADERS)
-    with urlopen(req, timeout=30) as r:
-        raw = r.read()
-    # El BCB sirve UTF-8; tolerar latin-1 por las dudas.
+def _decode(raw: bytes) -> str:
     try:
         return raw.decode("utf-8")
     except UnicodeDecodeError:
         return raw.decode("latin-1")
+
+
+def fetch(url: str) -> str:
+    req = Request(url, headers=HEADERS)
+    with urlopen(req, timeout=30) as r:
+        return _decode(r.read())
+
+
+def _looks_like_tco_csv(text: str) -> bool:
+    """¿El texto es el CSV del reporte (no el HTML del formulario)?"""
+    return ";" in text and "total bancos" in text.lower()
+
+
+def _attr_val(tag: str, name: str) -> str | None:
+    m = (re.search(name + r'\s*=\s*"([^"]*)"', tag, re.IGNORECASE)
+         or re.search(name + r"\s*=\s*'([^']*)'", tag, re.IGNORECASE))
+    return m.group(1) if m else None
+
+
+def _collect_fields(form_body: str) -> list[tuple]:
+    """(name, value, type) de cada input/select/button del formulario."""
+    out = []
+    for tag in re.findall(r"<(?:input|select|button)\b[^>]*>", form_body, re.IGNORECASE):
+        name = _attr_val(tag, "name")
+        value = _attr_val(tag, "value")
+        typ = (_attr_val(tag, "type")
+               or ("select" if tag.lower().lstrip("<").startswith("select") else "text")).lower()
+        out.append((name, value, typ))
+    return out
+
+
+def _submit(url: str, method: str, params: dict) -> str:
+    if method == "post":
+        req = Request(url, data=urlencode(params).encode(), headers=HEADERS)
+    else:
+        sep = "&" if "?" in url else "?"
+        req = Request(url + sep + urlencode(params), headers=HEADERS)
+    with urlopen(req, timeout=30) as r:
+        return _decode(r.read())
+
+
+def fetch_report(base_url: str, desde: str, hasta: str) -> str:
+    """Obtiene el CSV del reporte TCO para el rango [desde, hasta] (YYYY-MM-DD).
+
+    La página `tco_reporte_detalle_historico.php` es un FORMULARIO con dos date
+    pickers y un botón "Descargar CSV". Estrategia, en orden:
+      1) GET de base_url: si ya devuelve el CSV, listo.
+      2) Introspección: lee el <form>, mapea los campos de fecha a desde/hasta,
+         incluye el submit de CSV, y lo envía con el method/action reales (así no
+         adivino los nombres de los params: los leo de la página).
+      3) Fallback: GET con nombres de parámetros comunes + flag de export.
+    Devuelve el texto del CSV. Lanza RuntimeError si nada rinde el CSV (con
+    --debug el crudo queda en disco para fijar el endpoint a mano)."""
+    page = fetch(base_url)
+    if _looks_like_tco_csv(page):
+        return page
+
+    # (2) Introspección de formularios
+    for m in re.finditer(r"<form\b([^>]*)>(.*?)</form>", page, re.DOTALL | re.IGNORECASE):
+        attrs, body = m.group(1), m.group(2)
+        fields = _collect_fields(body)
+        date_names = [n for n, v, t in fields
+                      if n and (t == "date" or re.search(r"fecha|desde|hasta|inicio|\bfin\b|\bini\b",
+                                                          n, re.IGNORECASE))]
+        if not date_names:
+            continue
+        params = {n: (v or "") for n, v, t in fields if n and t not in ("submit", "button", "reset")}
+        # Mapear el RANGO: preferir nombres explícitos (desde/hasta) sobre un
+        # campo de fecha suelto (el de "Ver datos"). Si no hay nombres claros,
+        # caer a los primeros dos date inputs en orden de documento.
+        start_f = next((n for n in date_names if re.search(r"desde|inicio|\bini\b|from|start", n, re.I)), None)
+        end_f = next((n for n in date_names if re.search(r"hasta|\bfin\b|to|end", n, re.I)), None)
+        if start_f and end_f:
+            params[start_f], params[end_f] = desde, hasta
+        elif len(date_names) >= 2:
+            params[date_names[0]], params[date_names[1]] = desde, hasta
+        else:
+            params[date_names[0]] = hasta
+        # Incluir el submit que dispara la descarga de CSV (no el de "Ver datos")
+        for n, v, t in fields:
+            blob = f"{n or ''} {v or ''}".lower()
+            if t in ("submit", "button") and ("csv" in blob or "descargar" in blob) and n:
+                params[n] = v or ""
+        action = urljoin(base_url, _attr_val(attrs, "action") or base_url)
+        method = (_attr_val(attrs, "method") or "get").lower()
+        try:
+            resp = _submit(action, method, params)
+            if _looks_like_tco_csv(resp):
+                return resp
+        except Exception as e:  # noqa: BLE001 — probamos el siguiente form
+            print(f"  (intento de form falló: {e})", file=sys.stderr)
+
+    # (3) Fallback: nombres comunes + flag de export
+    for a, b in (("desde", "hasta"), ("fecha_ini", "fecha_fin"),
+                 ("fechaInicio", "fechaFin"), ("inicio", "fin")):
+        for extra in ({}, {"csv": "1"}, {"export": "csv"}, {"descargar": "csv"}):
+            try:
+                resp = _submit(base_url, "get", {a: desde, b: hasta, **extra})
+                if _looks_like_tco_csv(resp):
+                    return resp
+            except Exception:  # noqa: BLE001
+                pass
+
+    raise RuntimeError(
+        "no pude obtener el CSV del reporte (la página devolvió el formulario, no "
+        "el CSV). Corré con --debug y revisá bcb_tco_raw.html para fijar el "
+        "endpoint/params exactos del botón 'Descargar CSV'.")
 
 
 # ── Parsers de fecha / número ────────────────────────────────────────────────
@@ -391,6 +495,10 @@ def main():
     parser.add_argument("--debug", action="store_true",
                         help=f"Volcar el contenido crudo a {RAW_DUMP} para inspección")
     parser.add_argument("--url", default=URL_TCO, help="Override del endpoint del BCB")
+    parser.add_argument("--desde", help="Fecha inicial del rango YYYY-MM-DD (default: hoy-7 BO)")
+    parser.add_argument("--hasta", help="Fecha final del rango YYYY-MM-DD (default: hoy BO)")
+    parser.add_argument("--backfill", action="store_true",
+                        help="Rango desde el inicio del régimen (2026-06-26, RD 88/2026)")
     parser.add_argument("--manual", action="store_true")
     parser.add_argument("--fecha")
     parser.add_argument("--tco", type=float)
@@ -415,14 +523,32 @@ def main():
         content = Path(args.from_file).read_text(encoding="utf-8", errors="replace")
         print(f"Leído de archivo local: {args.from_file} ({len(content)} chars)")
     else:
+        # Rango de fechas. Default: ventana móvil de 7 días (AUTORREPARABLE — si una
+        # corrida se pierde un día, la del día siguiente lo recupera, ya que el
+        # reporte exporta todas las fechas publicadas dentro del rango). El TCO se
+        # publica 20:00 BO; el cron corre 20:05 BO = 00:05 UTC del día siguiente,
+        # así que "hoy BO" = UTC-4.
+        bo_today = (datetime.now(timezone.utc) - timedelta(hours=4)).date()
+        hasta = args.hasta or bo_today.isoformat()
+        if args.backfill:
+            desde = args.desde or "2026-06-26"  # entrada en vigencia del nuevo régimen
+        else:
+            desde = args.desde or (bo_today - timedelta(days=7)).isoformat()
         try:
-            content = fetch(args.url)
+            content = fetch_report(args.url, desde, hasta)
         except Exception as e:
-            print(f"ERROR: no pude bajar {args.url}: {e}", file=sys.stderr)
+            print(f"ERROR: {e}", file=sys.stderr)
+            if args.debug:
+                try:
+                    RAW_DUMP.write_text(fetch(args.url), encoding="utf-8")
+                    print(f"[DEBUG] página cruda volcada a {RAW_DUMP}", file=sys.stderr)
+                except Exception:  # noqa: BLE001
+                    pass
             sys.exit(1)
+        print(f"Reporte TCO descargado (rango {desde} → {hasta})")
         if args.debug:
             RAW_DUMP.write_text(content, encoding="utf-8")
-            print(f"[DEBUG] crudo volcado a {RAW_DUMP} ({len(content)} chars)")
+            print(f"[DEBUG] CSV crudo volcado a {RAW_DUMP} ({len(content)} chars)")
 
     entries = parse_content(content)
     for e in entries:
