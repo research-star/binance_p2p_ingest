@@ -640,13 +640,17 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
   guarda de existencia de archivo en el test, fail-fast). Reglas `[ENT]` (entidad nombrada):
   `fmi`/`banco-central` con foto propia, `gobierno` sobre las generales y bajo los temas
   concretos; `multilaterales`/`asfi` aún proxy. Tests: `scripts/test_gallery_keyword.py`.
-- Visitas en el subheader: **RETIRADAS de la UI** (los KPIs "Visitas hoy / Visitas
-  mes" del subheader del tab Dólar se quitaron). Mostraban "—" porque Umami no está
-  configurado: `_inject_umami()` solo trae conteos si están las env vars
-  `UMAMI_API_KEY` + `UMAMI_WEBSITE_ID` + `UMAMI_HOST`; sin ellas cae a None → "—".
-  El mecanismo `_inject_umami` (placeholders + `<script>` de tracking) sigue en
-  `dashboard.py` por si se reactiva; ya no hay placeholders en el template, así que
-  el `str.replace` es no-op.
+- Visitas (Umami): contadores "Visitas hoy / mes" **reubicados al utility-bar**
+  (arriba-izquierda, junto a "Santa Cruz, Bolivia", separados por `|`), **SOLO-ADMIN**.
+  `fbRenderSession()` togglea `#fbVisits` según `npAdmin.isAdmin`; el span nace con
+  `hidden` (oculto pre-JS y para anónimos) y `.fb-util-visits[hidden]{display:none}`
+  repone el reset que la clase `display:inline-flex` pisaría. #153 los había quitado
+  del subheader Dólar porque mostraban "—" (Umami sin creds en prod). Los placeholders
+  `__VISITS_TODAY__`/`__VISITS_MONTH__` **están de vuelta** en el template, así que
+  `_inject_umami()` (dashboard.py) **ya NO es no-op**: reemplaza en build vía `str.replace`
+  con `_fmt_visits` → "1,234" o "—" si faltan las env vars `UMAMI_API_KEY` +
+  `UMAMI_WEBSITE_ID` + `UMAMI_HOST`. Hoy prod sigue sin esas creds → muestran "—"
+  (ahora solo visible para admin). El `<script>` de tracking sigue activo aparte.
 
 ### Fase 3 — Análisis / Dashboard
 

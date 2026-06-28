@@ -267,6 +267,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-chrome{background:var(--bg-primary)}
 .fb-utility{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 36px;border-bottom:1px solid var(--border-color);font-family:var(--font-body);font-size:11px;font-weight:500;color:var(--text-muted)}
 .fb-utility-right{display:flex;align-items:center;gap:12px}
+.fb-utility-left{display:flex;align-items:center;gap:10px;min-width:0}
+.fb-util-visits{display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);letter-spacing:.02em;white-space:nowrap}
+.fb-util-visits strong{font-family:var(--font-mono);font-weight:600;color:var(--text-secondary);font-variant-numeric:tabular-nums}
+/* .fb-util-visits fija display, lo que pisaría el reset display:none del atributo [hidden] del user-agent
+   (autor > UA en el cascade). Reponemos el reset scopeado para que el gate admin (hidden via JS) funcione. */
+.fb-util-visits[hidden]{display:none}
 .fb-util-date{color:var(--text-secondary);letter-spacing:.02em;font-variant-numeric:tabular-nums}
 .fb-util-upd{display:flex;align-items:center;gap:7px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .fb-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent);flex-shrink:0}
@@ -373,7 +379,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   .fb-kpi-grid::-webkit-scrollbar{display:none}
   .fb-kpi-card{flex:0 0 auto;min-width:160px;scroll-snap-align:start}
 }
-@media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
+@media(max-width:600px){.fb-subheader-stats{display:none}#fbVisits{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
 .fb-mono{font-family:var(--font-mono)}
 .fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#9E927C);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
@@ -747,7 +753,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <!-- Chrome editorial v3: utility + masthead scrollean · fila de tabs sticky -->
 <header class="fb-chrome">
   <div class="fb-utility">
-    <span class="fb-util-date" id="fbDate">&mdash;</span>
+    <div class="fb-utility-left">
+      <span class="fb-util-date" id="fbDate">&mdash;</span>
+      <!-- Contadores Umami: SOLO admin (fbRenderSession togglea #fbVisits segun npAdmin.isAdmin).
+           Valores inyectados en build por _inject_umami (str.replace de __VISITS_*__); sin creds → '—'. -->
+      <span class="fb-util-visits" id="fbVisits" hidden><span class="fb-util-sep" aria-hidden="true">|</span>Visitas hoy <strong>__VISITS_TODAY__</strong> &middot; mes <strong>__VISITS_MONTH__</strong></span>
+    </div>
     <div class="fb-utility-right">
       <span class="fb-util-upd"><span class="fb-live"></span>Actualizado <span id="fbUpd">&mdash;</span></span>
       <span class="fb-util-sep">&middot;</span>
@@ -5227,6 +5238,8 @@ window.addEventListener('popstate', function(){
   // ── Sesión en el masthead global (área 2; login reubicado desde la portada) ──
   var FB_LOGIN_BTN='<button class="fb-login" type="button" data-np-login><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Iniciar sesión</button>';
   function fbRenderSession(){
+    // Contadores Umami del utility-bar: visibles SOLO en admin (mismo gate que el chrome admin).
+    var ve=document.getElementById('fbVisits'); if(ve) ve.hidden=!npAdmin.isAdmin;
     var slot=document.getElementById('fbMastheadSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>Cerrar sesión</button></span>';
