@@ -39,6 +39,7 @@ VENV_PYTHON = REPO_ROOT / ".venv/bin/python"
 DASHBOARD_SCRIPT = "dashboard.py"
 DB_PATH = REPO_ROOT / "p2p_normalized.db"
 STATIC_DIR = REPO_ROOT / "static"
+RIESGO_DIR = REPO_ROOT / "riesgo_propio"   # own-math riesgo-país calculator + panels
 
 WORKTREE_PATH = Path("/tmp/gh-pages-publish-wt")
 TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
@@ -297,6 +298,31 @@ def sync_hidden_mirror(ids):
         conn.close()
 
 
+# ── Riesgo-país own-math injection (fail-safe) ───────────────────────────────
+
+def _inject_riesgo(index_path: Path) -> None:
+    """Compute the live own-math riesgo-país number, rebuild the historical
+    series, and inject the panels into the freshly-built index.html.
+
+    Strictly fail-safe: ANY error is logged and swallowed so the normal
+    dashboard still publishes (worst case the panels are absent this cycle).
+    Each sub-step runs with check=False; live_bolivia.py degrades to the
+    snapshot if Playwright/venue is unavailable, so this never blocks publish.
+    """
+    try:
+        if not RIESGO_DIR.exists():
+            return
+        py = str(VENV_PYTHON)
+        run([py, str(RIESGO_DIR / "live_bolivia.py")], check=False)       # live point
+        run([py, str(RIESGO_DIR / "build_historical.py")], check=False)   # history
+        r = run([py, str(RIESGO_DIR / "inject_into_site.py"),
+                 str(index_path)], check=False)                           # panels
+        emit(f"[publish] mode=ok stage=riesgo_inject rc={r.returncode}")
+    except Exception as e:
+        emit(f"[publish] mode=warn stage=riesgo_inject detail=skipped "
+             f"err={type(e).__name__}:{str(e)[:160]}")
+
+
 # ── Main flow ──────────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -396,6 +422,10 @@ def _run(t0: float) -> int:
             TMP_INDEX_PATH.unlink()
             return 1
 
+    # Inyectar los paneles riesgo-país own-math en el HTML ya validado (fail-safe:
+    # si falla, se publica el dashboard normal sin los paneles).
+    _inject_riesgo(TMP_INDEX_PATH)
+
     # Worktree desde origin/gh-pages
     try:
         run(["git", "fetch", REMOTE, REMOTE_BRANCH], cwd=str(REPO_ROOT))
@@ -428,6 +458,15 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
         for asset in STATIC_DIR.iterdir():
             if asset.is_file():
                 shutil.copyfile(asset, WORKTREE_PATH / asset.name)
+
+    # Feeds de datos riesgo-país (servidos como /riesgo_propio_live.json etc.).
+    for jn in ("riesgo_propio_live.json", "riesgo_propio.json"):
+        src = RIESGO_DIR / jn
+        if src.exists():
+            try:
+                shutil.copyfile(src, WORKTREE_PATH / jn)
+            except OSError:
+                pass
 
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     msg = f"dashboard: {ts} snapshots={n_snap} rows={n_rows}"
