@@ -583,7 +583,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-lead-title{font-family:var(--font-display);font-weight:600;color:var(--text-primary);font-size:var(--lead-size);line-height:1.06;letter-spacing:-.01em;margin:10px 0 0;cursor:pointer;text-wrap:balance}
 .np-lead-title:hover{color:var(--up)}
 .np-figure{margin:16px 0 0;position:relative}
-.np-imgph.np-hero-img{aspect-ratio:auto;height:clamp(240px,30vw,360px)}
+.np-imgph.np-hero-img{aspect-ratio:auto;height:clamp(240px,30vw,428px)}
 .np-hero-cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:26px 16px 14px;background:linear-gradient(transparent,rgba(20,16,12,.50) 52%,rgba(20,16,12,.86));color:#F3E4D6;font-family:var(--font-body);font-size:12.5px;line-height:1.45;text-wrap:pretty}
 /* Slots de caption/dek vacíos (ticket portada): colapsan sin hueco y, en el overlay del hero, ocultan el gradiente. Al poblarse desde la futura API reaparecen solos. */
 .np-hero-cap:empty{display:none}
@@ -701,7 +701,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 /* — 2b · dek (summary) + links + estado vacío — */
 .np-titlelink{color:inherit;text-decoration:none}
 .np-titlelink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
-.np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.np-card-dek{font-family:var(--font-body);font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:7px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .np-card-dek:empty{display:none}  /* dek vaciado (slot futura API): colapsa sin reservar hueco */
 .np-tambien{font-family:var(--font-body);font-size:10.5px;line-height:1.4;color:var(--text-muted);margin-top:7px}
 .np-tambien a{color:var(--text-muted);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
@@ -774,7 +774,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           Iniciar sesi&oacute;n
         </button>
       </div>
-      <span class="fb-search-link" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente">
+      <span class="fb-search-link" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente" hidden style="display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Buscar &mdash; pr&oacute;ximamente
       </span>
@@ -812,7 +812,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">TCO oficial</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">Tipo de cambio oficial (TCO)</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: BCB; Binance P2P</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
     <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volumen hist&oacute;rico de compra y venta de d&oacute;lares</h2><p>USDT disponible en anuncios activos por lado, en USD millones.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
   </div><!-- /panel-grid -->
@@ -1829,7 +1829,7 @@ function rVwap(c,v){
   // viernes rige sáb/dom/lun), así que NO se clipea por el borde derecho del P2P
   // — se dibuja adelantado y el P2P lo va alcanzando. Sin _side: es referencia,
   // independiente del lado. tcoMaxMs extiende el eje X abajo para que no se clippee.
-  let tcoMaxMs=null;
+  let tcoMaxMs=null, yRange=null;
   if(meta.bcb_tco_history&&meta.bcb_tco_history.length){
     const xMinDate = x.length ? x[0].slice(0,10) : null;  // x[0]="YYYY-MM-DD HH:MM:SS"
     let pts = meta.bcb_tco_history.filter(e=>e&&e.tco!=null);
@@ -1840,16 +1840,25 @@ function rVwap(c,v){
       pts = pts.filter(e=>Date.parse(e.fecha+'T00:00:00Z') <= capMs);
     }
     if(pts.length){
-      const tx = pts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
-      const ty = pts.map(e=>e.tco);
+      // Baseline del régimen fijo previo (6.91 = prom 6.86 compra / 6.96 venta): un
+      // punto un día ANTES del primer TCO para dibujar el salto del régimen como una
+      // diagonal hacia el precio viejo. Queda BAJO el piso del eje Y (ver yRange) → la
+      // vista inicial se ve igual; la diagonal/precio viejo solo aparece al hacer zoom-out.
+      const baseFecha = new Date(Date.parse(pts[0].fecha+'T00:00:00Z')-86400000).toISOString().slice(0,10);
+      const linePts = [{fecha:baseFecha, tco:6.91}].concat(pts);
+      const tx = linePts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
+      const ty = linePts.map(e=>e.tco);
       tcoMaxMs = Date.parse(pts[pts.length-1].fecha+'T00:00:00Z');
-      const single = pts.length<2;
       traces.push({x:tx,y:ty,name:'TCO',
-        mode: single?'markers':'lines+markers',
+        mode:'lines+markers',
         line:{color:c.bcbTco,width:2},
-        marker:{size:single?7:3,color:c.bcbTco},
+        marker:{size:3,color:c.bcbTco},
         connectgaps:true,
         hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
+      // Eje Y fijo a la vista actual (Compra + TCO del régimen NUEVO); excluye el
+      // baseline viejo para no des-zoomear. Zoomable: el salto se ve al alejar.
+      const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat(pts.map(e=>e.tco));
+      if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
   }
   traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
@@ -1861,7 +1870,7 @@ function rVwap(c,v){
     const topMs=Date.parse(String(xaVwap.range[1]).replace(' ','T')+'Z');  // range[1] = string boStr
     if(tcoMaxMs>topMs){ xaVwap.range=[xaVwap.range[0], boStr(tcoMaxMs)]; xaVwap.autorange=false; }
   }
-  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
 function rVolume(c,v){
@@ -4643,10 +4652,15 @@ window.addEventListener('popstate', function(){
     let primaSub='s/d', primaDir='flat';
     if(npNum(p2p)&&npNum(bcb)&&bcb>0){ const pr=(p2p/bcb-1)*100; primaSub='prima '+(pr>=0?'+':'')+npFmt(pr,0)+'%'; primaDir=pr>0?'up':(pr<0?'down':'flat'); }
     // Tile "BCB oficial": delta diario del TCO si hay historia; si no, sin cambios.
-    let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO oficial':'sin cambios');
+    let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO':'sin cambios');
     if(tcoLast!=null){
-      const th=((typeof meta!=='undefined'&&meta.bcb_tco_history)||[]).filter(e=>e&&e.tco!=null);
-      if(th.length>=2){ const d=th[th.length-1].tco-th[th.length-2].tco; bcbDir=npDir(d); bcbSub=npNum(d)?npDeltaTxt(d,' Bs',2):'TCO oficial'; }
+      // Delta del TCO: solo contra valores PUBLICADOS (excluye el relleno sáb/dom
+      // sintético 'bcb_tco_fin_semana', que duplica el valor → daría 0.00 Bs falso).
+      // Primer día del régimen flexible (1 solo TCO real): compara contra el fijo
+      // previo (RD 88/2026 reemplazó 6.86 compra / 6.96 venta → promedio 6.91).
+      const th=((typeof meta!=='undefined'&&meta.bcb_tco_history)||[]).filter(e=>e&&e.tco!=null&&e.source!=='bcb_tco_fin_semana');
+      let d=th.length>=2?(th[th.length-1].tco-th[th.length-2].tco):(th.length===1?(th[0].tco-6.91):null);
+      if(d!=null){ bcbDir=npDir(d); bcbSub=npNum(d)?npDeltaTxt(d,' Bs',2):'TCO'; }
     }
     let embi=null, embiD=null;
     const es=(typeof DATA!=='undefined')&&DATA.embi_data&&DATA.embi_data.series&&DATA.embi_data.series.bolivia;
