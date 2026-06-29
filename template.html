@@ -299,14 +299,22 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 /* ── Masthead 3 zonas: login (izq) · nameplate (centro óptico) · búsqueda (der) ──
    grid 1fr·auto·1fr ⇒ el nombre queda centrado respecto a la página aunque los
    rieles laterales tengan ancho distinto. La sesión (login/email/logout) la pinta
-   fbRenderSession() en #fbMastheadSession. */
+   fbRenderSession() en el slot global del pie #fbFooterSession (ya NO en el masthead). */
 .fb-masthead{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:18px 36px;border-bottom:2px solid var(--text-primary);background:var(--bg-primary)}
 .fb-masthead-left{justify-self:start;min-width:0}
 /* Acciones (login + buscar) apiladas a la derecha del todo, MISMO formato
    [ícono]+texto, alineadas a la izquierda entre sí ⇒ íconos e inicio de texto
    en la misma vertical (íconos 14px idénticos + gap 7px idéntico). */
 .fb-masthead-actions{display:flex;flex-direction:column;align-items:flex-start;gap:6px;justify-self:end;min-width:0}
-#fbMastheadSession{display:flex;min-width:0}
+#fbFooterSession{display:inline-flex;min-width:0}
+/* Pie de chrome global: acceso admin discreto (declutter del público; el candado
+   real es Cloudflare Access, no esta UI). Anónimo = ícono tenue casi invisible. */
+.fb-chrome-foot{display:flex;justify-content:center;align-items:center;padding:18px 16px 28px;margin-top:6px}
+.fb-foot-login{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.45;cursor:pointer;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
+.fb-foot-login svg{width:15px;height:15px}
+.fb-foot-login:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
+.fb-foot-login:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
+.fb-chrome-foot .fb-session{font-size:12px;color:var(--text-soft)}
 .fb-login,.fb-search-link{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.02em;background:none;border:none;border-bottom:1px solid transparent;padding:2px 0;text-align:left;white-space:nowrap}
 .fb-login svg,.fb-search-link svg{width:14px;height:14px;opacity:.7;flex-shrink:0}
 .fb-login{color:var(--text-secondary);cursor:pointer;transition:color .15s,border-color .15s}
@@ -783,12 +791,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <span class="fb-tagline">Inteligencia econ&oacute;mica de Bolivia</span>
     </div>
     <div class="fb-masthead-actions">
-      <div id="fbMastheadSession">
-        <button class="fb-login" type="button" data-np-login>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Iniciar sesi&oacute;n
-        </button>
-      </div>
+      <!-- El acceso admin se movió al pie de la página (ícono discreto, slot global
+           #fbFooterSession). El masthead ya NO muestra "Iniciar sesión" para el público. -->
       <span class="fb-search-link" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente" hidden style="display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Buscar &mdash; pr&oacute;ximamente
@@ -1374,6 +1378,14 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="fab-popup-title">Mostrar paneles</div>
   <ul class="fab-popup-list" id="fabPopupList"></ul>
 </div>
+
+<!-- Acceso admin: slot GLOBAL al pie (chrome, presente en las 3 tabs, fuera de
+     #tab-noticias para que npRerender no lo pise). fbRenderSession() lo repinta:
+     anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
+     candado real es Cloudflare Access + JWT). -->
+<footer class="fb-chrome-foot" aria-label="Acceso">
+  <div id="fbFooterSession"></div>
+</footer>
 
 <script>
 const DATA = __DATA_PLACEHOLDER__;
@@ -5356,17 +5368,18 @@ window.addEventListener('popstate', function(){
     track.innerHTML=html;
   }
   // ── Sesión en el masthead global (área 2; login reubicado desde la portada) ──
-  var FB_LOGIN_BTN='<button class="fb-login" type="button" data-np-login><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Iniciar sesión</button>';
+  // Anónimo = ícono discreto (sin texto), baja prominencia, fácil de pasar por alto.
+  var FB_LOGIN_BTN='<button class="fb-foot-login" type="button" data-np-login title="Acceso" aria-label="Iniciar sesión"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></button>';
   function fbRenderSession(){
-    var slot=document.getElementById('fbMastheadSession'); if(!slot) return;
+    var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>Cerrar sesión</button></span>';
     }else{
       slot.innerHTML=FB_LOGIN_BTN;
     }
   }
-  // Login/logout viven en el masthead (fuera de #tab-noticias) → listener a nivel
-  // document. npLogin/npLogout intactos (navegan a /v1/login | /v1/logout del Worker).
+  // Login/logout viven en el slot global del pie (fuera de #tab-noticias) → listener
+  // a nivel document. npLogin/npLogout intactos (navegan a /v1/login | /v1/logout del Worker).
   document.addEventListener('click', function(ev){
     var t=ev.target; if(!t||!t.closest) return;
     if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
