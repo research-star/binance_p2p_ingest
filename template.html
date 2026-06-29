@@ -382,6 +382,10 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-macro-tab:hover{color:var(--text-secondary)}
 .fb-macro-tab.active{color:var(--text-primary);font-weight:600}
 .fb-macro-tab:not(:last-child)::after{content:"|";margin:0 16px;color:var(--text-soft);font-weight:300;font-size:.78em}
+/* Móvil: los 3 subtabs en UNA línea (a 24px el label largo "Riesgo país" wrapea
+   ≤414px). Bajar font + apretar el separador "|" entra en una sola fila hasta 320px.
+   Desktop (>600px) intacto: ahí ya caben a 24px. */
+@media(max-width:600px){.fb-macro-tab{font-size:18px}.fb-macro-tab:not(:last-child)::after{margin:0 10px}}
 /* ── FASE 3 · Macro editorial (referencia a-macro.html) ──────────────
    Overrides scopeados a #tab-macro: tratamiento generoso editorial para
    armonizar con Noticias. Los tabs densos (Dólar/DPF/BBV/Guía) NO heredan
