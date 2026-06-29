@@ -425,7 +425,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .blq-legtog:focus-visible{outline:2px solid var(--blue-accent);outline-offset:1px}
 .blq-legtog.off{opacity:.42}
 .blq-legtog.off .blq-dot{filter:grayscale(1)}
-.blq-legtog.off .blq-leglab{text-decoration:line-through}
 .blq-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:rgb(192,0,0)}
 .blq-grad{width:36px;height:10px;border-radius:2px;flex-shrink:0;background:linear-gradient(90deg,rgba(192,0,0,.12),rgb(192,0,0))}
 .blq-dep{display:grid;grid-template-columns:72px 1fr 26px;gap:7px;align-items:center;font-size:var(--text-sm);color:var(--text-secondary);padding:2.5px 0}
@@ -2938,7 +2937,9 @@ window.renderBloqueos = function(){
   // Categorías presentes en el dataset de la vista (orden fijo).
   function presentCats(view){
     var src = (view==='activos') ? ptosEvt : ptosIntCat;
-    return BLQ_CAT_ORDER.filter(function(k){ return src.some(function(p){ return p.cat===k; }); });
+    // Conflicto SIEMPRE presente (aunque tenga 0 hoy): es la categoría ancla y
+    // su "0" es informativo. El resto aparece solo si hay puntos en la vista.
+    return BLQ_CAT_ORDER.filter(function(k){ return k==='conflicto' || src.some(function(p){ return p.cat===k; }); });
   }
   // Estado de visibilidad por vista (lazy init con el default de cada vista).
   function visState(view){
@@ -3007,15 +3008,13 @@ window.renderBloqueos = function(){
     var vis = visState(view);
     var src = (view==='activos') ? ptosEvt : ptosIntCat;
     var cc = {}; src.forEach(function(p){ cc[p.cat] = (cc[p.cat]||0)+1; });
-    var present = BLQ_CAT_ORDER.filter(function(k){ return cc[k]; });
-    if(!present.length) return '<div class="blq-leg" style="color:var(--text-muted)">Sin datos en esta vista.</div>';
-    return present.map(function(k){
+    return presentCats(view).map(function(k){
       var on = !!vis[k];
       return '<div class="blq-leg blq-legtog'+(on?'':' off')+'" data-blq-cat="'+k+'" role="button" tabindex="0"'
         + ' aria-pressed="'+on+'" title="'+(on?'Ocultar':'Mostrar')+' '+blqCat(k).label+'">'
         + '<span class="blq-dot" style="background:'+blqCat(k).c+'"></span>'
         + '<span class="blq-leglab">'+blqCat(k).label+'</span>'
-        + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+cc[k]+'</b></div>';
+        + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+(cc[k]||0)+'</b></div>';
     }).join('');
   }
   function renderSide(view){
