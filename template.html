@@ -386,6 +386,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    ≤414px). Bajar font + apretar el separador "|" entra en una sola fila hasta 320px.
    Desktop (>600px) intacto: ahí ya caben a 24px. */
 @media(max-width:600px){.fb-macro-tab{font-size:18px}.fb-macro-tab:not(:last-child)::after{margin:0 10px}}
+/* Móvil: a ≤600px el .fb-navbar pasa a position:static (no sticky), pero el
+   subnav seguía pegándose a top:var(--nav-h) (~59px) → quedaba un hueco arriba
+   con nada que lo ocupara. Igual que #kpis (que ya hace top:0 acá), flush al
+   techo. Desktop intacto (navbar sticky ocupa --nav-h). */
+@media(max-width:600px){.fb-macro-subnav{top:0}}
 /* ── FASE 3 · Macro editorial (referencia a-macro.html) ──────────────
    Overrides scopeados a #tab-macro: tratamiento generoso editorial para
    armonizar con Noticias. Los tabs densos (Dólar/DPF/BBV/Guía) NO heredan
