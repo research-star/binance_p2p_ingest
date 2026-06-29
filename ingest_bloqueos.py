@@ -42,6 +42,38 @@ COORD_DECIMALS = 3               # ~110 m: define "mismo punto"
 # para asignar cada bloqueo a su depto vía point-in-polygon (ranking por depto).
 DEPTOS_FILE = Path(__file__).parent / "static" / "bolivia_departamentos.json"
 
+# Mapeo curado evento->categoría para el mapa por tipo (ticket Bloqueos-mapa-
+# categorias). La causa viene de la columna `evento` de data.csv (NO `estado`,
+# que es transitabilidad). Eventos no listados caen en "otro"; "ningun evento"
+# se filtra (no es un bloqueo). El diccionario es la fuente de verdad de la
+# clasificación: ampliarlo acá reclasifica sin tocar el frontend.
+EVENTO_CATEGORIA = {
+    "bloqueo por motivos sociales": "conflicto",
+    "bloqueo por demandas locales": "conflicto",
+    "tramo en construccion": "obras",
+    "rehabilitacion": "obras",
+    "reposicion de plataforma": "obras",
+    "crecida de rio": "clima",
+    "no transitar en lluvias": "clima",
+    "inundacion": "clima",
+    "afectacion de puente": "derrumbe",
+    "colapso de puente": "derrumbe",
+    "derrumbe": "derrumbe",
+    "derrumbes menores": "derrumbe",
+    "perdida de plataforma": "derrumbe",
+    "trazo en evaluacion": "otro",
+    "saturacion de plataforma": "otro",
+    "bloqueo": "otro",
+}
+EVENTO_FILTRAR = {"ningun evento", ""}  # no son bloqueos: no van al mapa
+
+
+def categoria_evento(ev):
+    """Categoría de mapa para un valor de `evento`. None = filtrar (no es bloqueo)."""
+    if ev in EVENTO_FILTRAR:
+        return None
+    return EVENTO_CATEGORIA.get(ev, "otro")
+
 
 def _get(url, timeout=60):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
@@ -49,23 +81,44 @@ def _get(url, timeout=60):
         return r.read()
 
 
-def fetch_secciones():
-    """coord (lat5,lon5) -> nombre de tramo (sección), desde data.csv (utf-8 limpio).
-    Best-effort: si data.csv falla, devuelve {} y el hover cae a coordenadas."""
+def fetch_data_csv():
+    """Una sola descarga del maestro data.csv (~15 MB) que produce dos cosas:
+
+      - secciones: {(lat5,lon5) -> nombre de tramo (sección)} para el hover.
+      - eventos_activos: [{lat,lon,cat,evento,estado,sec}] de las filas con
+        `fecha_fin` vacío (= activas en la última consulta), categorizadas por
+        `categoria_evento` y excluyendo "ningun evento". A diferencia de los
+        derivados conflict-only de @mauforonda, acá lat/lon vienen poblados para
+        TODOS los tipos (clima/obras/derrumbe), así que el mapa los puede pintar.
+
+    Best-effort: si data.csv falla, devuelve ({}, []) y el resto degrada (hover
+    cae a coordenadas; el mapa de categorías queda vacío, no rompe)."""
     try:
         raw = _get(f"{BASE}/data.csv", timeout=120).decode("utf-8", "replace")
     except Exception:
-        return {}
+        return {}, []
     sec = {}
+    eventos = []
     for row in csv.DictReader(io.StringIO(raw)):
         try:
-            k = (round(float(row["latitud"]), 5), round(float(row["longitud"]), 5))
+            lat5 = round(float(row["latitud"]), 5)
+            lon5 = round(float(row["longitud"]), 5)
         except (ValueError, KeyError, TypeError):
             continue
         s = (row.get("sección") or "").strip()
         if s:
-            sec[k] = s  # última aparición (más reciente) gana
-    return sec
+            sec[(lat5, lon5)] = s  # última aparición (más reciente) gana
+        if (row.get("fecha_fin") or "").strip():
+            continue  # ya resuelto: no es activo ahora
+        ev = (row.get("evento") or "").strip()
+        cat = categoria_evento(ev)
+        if cat is None:
+            continue  # "ningun evento" / vacío: no es bloqueo
+        eventos.append({
+            "lat": lat5, "lon": lon5, "cat": cat, "evento": ev,
+            "estado": (row.get("estado") or "").strip(), "sec": s,
+        })
+    return sec, eventos
 
 
 def fetch():
@@ -83,7 +136,8 @@ def fetch():
         except (ValueError, KeyError, TypeError):
             continue
     tiempo = json.loads(_get(f"{BASE}/conflictos_tiempo.json"))
-    return activos, coords, tiempo, fetch_secciones()
+    secciones, eventos_activos = fetch_data_csv()
+    return activos, coords, tiempo, secciones, eventos_activos
 
 
 def build_intensidad(coords, tiempo, secciones):
@@ -159,7 +213,7 @@ def por_departamento(puntos, deptos):
     return [{"dep": k, "n": v} for k, v in sorted(counts.items(), key=lambda kv: -kv[1])]
 
 
-def build(activos, coords, tiempo, secciones):
+def build(activos, coords, tiempo, secciones, eventos_activos):
     # Serie diaria: # de conflictos abiertos por día (última lectura del día gana;
     # las entries vienen en orden cronológico).
     daily = {}
@@ -200,8 +254,10 @@ def build(activos, coords, tiempo, secciones):
             "no_conflicto": no_conflicto,
             "total": conflicto + no_conflicto,
         },
-        "activos": activos_pts,          # puntos de bloqueo por conflicto social, ahora
-        "activos_por_departamento": por_departamento(activos_pts, deptos),  # ranking activos
+        "activos": activos_pts,          # puntos de bloqueo por conflicto social, ahora (legacy)
+        "activos_eventos": eventos_activos,  # TODOS los activos por categoría (conflicto/obras/clima/derrumbe/otro) c/lat-lon+sec
+        "activos_por_departamento": por_departamento(activos_pts, deptos),  # ranking activos (conflicto, legacy)
+        "activos_eventos_por_departamento": por_departamento(eventos_activos, deptos),  # ranking de TODOS los activos por depto
         "serie_diaria": serie,           # bloqueos por conflicto abiertos por día (histórico)
         "intensidad": intensidad,        # días bloqueado por punto desde INTENSIDAD_DESDE + ranking depto
     }
@@ -209,8 +265,8 @@ def build(activos, coords, tiempo, secciones):
 
 def main():
     try:
-        activos, coords, tiempo, secciones = fetch()
-        data = build(activos, coords, tiempo, secciones)
+        activos, coords, tiempo, secciones, eventos_activos = fetch()
+        data = build(activos, coords, tiempo, secciones, eventos_activos)
     except Exception as exc:  # noqa: BLE001 — fail-closed, no escribimos parcial
         sys.exit(f"ingest_bloqueos: error: {exc}")
     OUT.write_text(
@@ -220,8 +276,12 @@ def main():
     top = data["intensidad"]["por_departamento"][:3]
     pts = data["intensidad"]["puntos"]
     con_sec = sum(1 for p in pts if p.get("sec"))
+    cat_count = {}
+    for e in data["activos_eventos"]:
+        cat_count[e["cat"]] = cat_count.get(e["cat"], 0) + 1
     print(
         f"OK -> {OUT.name} | activos={len(data['activos'])} | "
+        f"eventos_activos={len(data['activos_eventos'])} por_cat={cat_count} | "
         f"serie={len(data['serie_diaria'])} pts | "
         f"intensidad={len(pts)} pts (max {data['intensidad']['max_dias']}d, {con_sec} c/sección) | "
         f"deptos_top={[(d['dep'], d['n']) for d in top]} | "
