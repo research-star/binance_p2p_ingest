@@ -1313,7 +1313,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <div class="fb-chart-head blq-head">
           <div>
             <div class="fb-chart-title">Bloqueos por conflicto social</div>
-            <div class="fb-chart-sub" id="blqMapSub">Activos hoy: bloqueos por conflicto social abiertos en la &uacute;ltima lectura.</div>
+            <div class="fb-chart-sub" id="blqMapSub">Activos hoy: bloqueos abiertos en la &uacute;ltima lectura, por tipo (conflicto, obras, clima, derrumbe, otro).</div>
           </div>
           <div class="blq-toggle" role="tablist" aria-label="Vista del mapa">
             <button class="fb-pill" id="blqTogIntensidad" data-view="intensidad" type="button">Intensidad acumulada</button>
@@ -2871,6 +2871,18 @@ var TAB_PANELS = {
 var _bloqueosGeo = null;
 var _blqView = 'activos';   // vista del mapa: 'intensidad' | 'activos' (default: activos hoy)
 var _blqTrendRange = '3m';  // rango del trend histórico: '1m'|'3m'|'6m'|'1a'|'all' (default: 3 meses)
+// Categorías del mapa "activos hoy" (cat viene de ingest_bloqueos.categoria_evento).
+// Hex elegidos para ser legibles sobre la cream (#FBEDE3) y distinguibles entre sí
+// (conflicto rojo ladrillo vs obras ámbar: separación de matiz suficiente).
+var BLQ_CAT = {
+  conflicto: {c:'#b3473b', label:'Conflicto social'},
+  obras:     {c:'#c77f0e', label:'Obras'},
+  clima:     {c:'#2d6ca6', label:'Clima'},
+  derrumbe:  {c:'#835c3b', label:'Derrumbe / geológico'},
+  otro:      {c:'#8c8479', label:'Otro'}
+};
+var BLQ_CAT_ORDER = ['conflicto','obras','clima','derrumbe','otro'];
+function blqCat(k){ return BLQ_CAT[k] || BLQ_CAT.otro; }
 window.renderBloqueos = function(){
   var B = (typeof DATA==='object' && DATA.bloqueos) ? DATA.bloqueos : null;
   var elDate  = document.getElementById('bloqueosDate');
@@ -2891,8 +2903,15 @@ window.renderBloqueos = function(){
   var intens = B.intensidad || null;
   var ptosInt = (intens && intens.puntos) ? intens.puntos : [];
   var ptosAct = B.activos || [];
+  // Puntos activos por categoría (nuevo derivado). Fallback: si bloqueos.json aún
+  // no trae activos_eventos (ventana entre deploy del front y la próxima corrida
+  // del ingest), degradamos a los activos legacy como 'conflicto' — sin romper.
+  var ptosEvt = Array.isArray(B.activos_eventos)
+    ? B.activos_eventos
+    : ptosAct.map(function(p){ return {lat:p.lat, lon:p.lon, cat:'conflicto', evento:'bloqueo por conflicto social', sec:p.sec}; });
   var depInt = (intens && intens.por_departamento) ? intens.por_departamento : [];
-  var depAct = B.activos_por_departamento || [];
+  // Ranking por depto de TODOS los activos (nuevo); fallback al legacy conflict-only.
+  var depAct = B.activos_eventos_por_departamento || B.activos_por_departamento || [];
   var maxd = (intens && intens.max_dias) ? intens.max_dias : 1;
   var lmax = Math.log(maxd + 1) || 1;
   if(elDate){
@@ -2906,11 +2925,14 @@ window.renderBloqueos = function(){
     // Etiqueta = nombre del tramo (sección); fallback a coordenadas si faltara.
     function lab(p){ return p.sec || (p.lat.toFixed(3)+', '+p.lon.toFixed(3)); }
     if(view==='activos'){
+      // Un punto por bloqueo activo, color por categoría (conflicto/obras/clima/
+      // derrumbe/otro). Hover: tramo + tipo de evento crudo.
       return {type:'scattergeo', mode:'markers',
-        lat: ptosAct.map(function(p){return p.lat;}), lon: ptosAct.map(function(p){return p.lon;}),
-        marker:{size:7, color:'rgb(192,0,0)', opacity:0.85, line:{width:0.5, color:'#ffffff'}},
-        customdata: ptosAct.map(lab),
-        hovertemplate:'<b>%{customdata}</b><br>Bloqueo activo<extra></extra>'};
+        lat: ptosEvt.map(function(p){return p.lat;}), lon: ptosEvt.map(function(p){return p.lon;}),
+        marker:{size:7, opacity:0.9, line:{width:0.5, color:'#ffffff'},
+          color: ptosEvt.map(function(p){ return blqCat(p.cat).c; })},
+        customdata: ptosEvt.map(function(p){ return [lab(p), blqCat(p.cat).label, p.evento||'—']; }),
+        hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[1]} · %{customdata[2]}<extra></extra>'};
     }
     return {type:'scattergeo', mode:'markers',
       lat: ptosInt.map(function(p){return p.lat;}), lon: ptosInt.map(function(p){return p.lon;}),
@@ -2940,18 +2962,28 @@ window.renderBloqueos = function(){
   }
   // Cards del sidebar (cambian con la vista).
   function renderSide(view){
-    var pts = (view==='activos') ? ptosAct : ptosInt;
+    var pts = (view==='activos') ? ptosEvt : ptosInt;
     var dep = (view==='activos') ? depAct : depInt;
-    var legend = (view==='activos')
-      ? '<div class="blq-leg"><span class="blq-dot"></span>Bloqueo por conflicto social abierto hoy</div>'
-      : '<div class="blq-leg"><span class="blq-grad"></span>Opacidad = días bloqueado (desde 1 may)</div>';
+    var legend, nota;
+    if(view==='activos'){
+      // Leyenda = categorías PRESENTES hoy, con su conteo (orden fijo).
+      var cc = {}; ptosEvt.forEach(function(p){ cc[p.cat] = (cc[p.cat]||0)+1; });
+      legend = BLQ_CAT_ORDER.filter(function(k){ return cc[k]; }).map(function(k){
+        return '<div class="blq-leg"><span class="blq-dot" style="background:'+blqCat(k).c+'"></span>'+blqCat(k).label
+          + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+cc[k]+'</b></div>';
+      }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">Sin bloqueos activos hoy.</div>';
+      nota = 'Incluye conflicto social, obras, clima, derrumbe y otros. Los reportes sin tipo de evento no se grafican.';
+    }else{
+      legend = '<div class="blq-leg"><span class="blq-grad"></span>Opacidad = días bloqueado (desde 1 may)</div>';
+      nota = 'Filtro: solo conflicto social';
+    }
     var maxn = dep.length ? dep[0].n : 1;
     var depRows = dep.map(function(d){
       var pct = Math.max(4, Math.round(100*d.n/maxn));
       return '<div class="blq-dep"><span>'+d.dep+'</span><span class="blq-dep-track"><i style="width:'+pct+'%"></i></span><span class="blq-dep-n">'+d.n+'</span></div>';
     }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">Sin datos por departamento.</div>';
     var ver = (view==='activos')
-      ? 'Bloqueos por conflicto social abiertos en la última lectura ('+pts.length+').'
+      ? pts.length+' bloqueos activos hoy, por tipo de evento.'
       : 'Cada punto es un tramo de carretera; '+pts.length+' con bloqueo desde el 1 may.';
     elSide.innerHTML =
       '<div class="blq-card"><h4>Resumen ahora</h4>'
@@ -2960,7 +2992,7 @@ window.renderBloqueos = function(){
         + '<div class="blq-stat"><span>Total activos</span><b>'+resumen.total+'</b></div></div>'
       + '<div class="blq-card"><h4>Qué estás viendo</h4>'
         + '<div class="blq-leg">'+ver+'</div>'+legend
-        + '<div class="blq-leg" style="margin-top:5px;color:var(--text-muted)">Filtro: solo conflicto social</div></div>'
+        + '<div class="blq-leg" style="margin-top:5px;color:var(--text-muted)">'+nota+'</div></div>'
       + '<div class="blq-card"><h4>Por departamento</h4>'+depRows+'</div>';
   }
   function setView(view){
@@ -2968,7 +3000,7 @@ window.renderBloqueos = function(){
     if(togI) togI.classList.toggle('active', view==='intensidad');
     if(togA) togA.classList.toggle('active', view==='activos');
     if(elSub) elSub.innerHTML = (view==='activos')
-      ? 'Activos hoy: bloqueos por conflicto social abiertos en la última lectura.'
+      ? 'Activos hoy: bloqueos abiertos en la última lectura, por tipo (conflicto, obras, clima, derrumbe, otro).'
       : 'Intensidad: la opacidad refleja los días bloqueado desde el 1 de mayo de 2026.';
     if(elSide) renderSide(view);
     if(!elMap) return;
