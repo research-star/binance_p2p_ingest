@@ -328,14 +328,21 @@ def _inject_riesgo(index_path: Path) -> None:
 def main() -> int:
     t0 = time.time()
 
-    cleanup_worktree(WORKTREE_PATH)
-    if TMP_INDEX_PATH.exists():
-        TMP_INDEX_PATH.unlink()
-
     with pid_lock(LOCK_PATH) as acquired:
         if not acquired:
             emit("[publish] otra instancia activa, saliendo limpio")
             return 0
+        # Cleanup DENTRO del lock. Si se hiciera antes (como estaba), un segundo
+        # proceso —p.ej. el cron */12 que arranca mientras este publish está en
+        # el inject lento de riesgo (Playwright, ~2 min) y cruza un tick— borraría
+        # el worktree y el index temporal de la corrida EN CURSO antes de chequear
+        # el lock, y luego saldría limpio por lock-fail. La corrida en vuelo
+        # crasheaba después en _commit_and_push con FileNotFoundError sobre
+        # /tmp/publish_dashboard_index.html. Dentro del lock, solo el dueño limpia
+        # (su propio leftover de un crash previo); el perdedor no toca nada.
+        cleanup_worktree(WORKTREE_PATH)
+        if TMP_INDEX_PATH.exists():
+            TMP_INDEX_PATH.unlink()
         return _run(t0)
 
 
