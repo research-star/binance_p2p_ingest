@@ -419,6 +419,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .blq-stat{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:var(--text-sm);color:var(--text-secondary)}
 .blq-stat b{font-family:var(--font-display);font-size:var(--text-lg);color:var(--text-primary);font-weight:600}
 .blq-leg{display:flex;align-items:center;gap:7px;font-size:var(--text-sm);color:var(--text-secondary);line-height:1.4;padding:2px 0}
+/* Ítem de leyenda clickeable (toggle de categoría). OFF = atenuado + tachado. */
+.blq-legtog{cursor:pointer;border-radius:5px;margin:0 -5px;padding:2px 5px;transition:background .12s,opacity .12s;user-select:none}
+.blq-legtog:hover{background:rgba(33,30,27,.06)}
+.blq-legtog:focus-visible{outline:2px solid var(--blue-accent);outline-offset:1px}
+.blq-legtog.off{opacity:.42}
+.blq-legtog.off .blq-dot{filter:grayscale(1)}
 .blq-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:rgb(192,0,0)}
 .blq-grad{width:36px;height:10px;border-radius:2px;flex-shrink:0;background:linear-gradient(90deg,rgba(192,0,0,.12),rgb(192,0,0))}
 .blq-dep{display:grid;grid-template-columns:72px 1fr 26px;gap:7px;align-items:center;font-size:var(--text-sm);color:var(--text-secondary);padding:2.5px 0}
@@ -2883,6 +2889,11 @@ var BLQ_CAT = {
 };
 var BLQ_CAT_ORDER = ['conflicto','obras','clima','derrumbe','otro'];
 function blqCat(k){ return BLQ_CAT[k] || BLQ_CAT.otro; }
+// Visibilidad de categorías por vista (independiente entre 'activos' e 'intensidad').
+// null = sin inicializar → se setea con el default de la vista (activos: todas ON;
+// intensidad: solo conflicto ON). Persiste entre redibujos; togglear en una vista
+// NO afecta a la otra.
+var _blqVis = { activos:null, intensidad:null };
 window.renderBloqueos = function(){
   var B = (typeof DATA==='object' && DATA.bloqueos) ? DATA.bloqueos : null;
   var elDate  = document.getElementById('bloqueosDate');
@@ -2914,6 +2925,34 @@ window.renderBloqueos = function(){
   var depAct = B.activos_eventos_por_departamento || B.activos_por_departamento || [];
   var maxd = (intens && intens.max_dias) ? intens.max_dias : 1;
   var lmax = Math.log(maxd + 1) || 1;
+  // Intensidad categorizada (nuevo derivado): conflicto del legacy + 4 cats de
+  // data.csv. Fallback: si bloqueos.json aún no lo trae (ventana post-merge,
+  // pre-ingest), degradamos a la intensidad legacy conflict-only — sin romper.
+  var ic = B.intensidad_categorias || null;
+  var ptosIntCat = (ic && Array.isArray(ic.puntos))
+    ? ic.puntos
+    : ptosInt.map(function(p){ return {lat:p.lat, lon:p.lon, cat:'conflicto', dias:p.dias, sec:p.sec}; });
+  var maxdCat = (ic && ic.max_dias) ? ic.max_dias : maxd;
+  var lmaxCat = Math.log(maxdCat + 1) || 1;   // lmax GLOBAL: magnitud comparable entre cats (conflicto domina)
+  // Categorías presentes en el dataset de la vista (orden fijo).
+  function presentCats(view){
+    var src = (view==='activos') ? ptosEvt : ptosIntCat;
+    // Conflicto SIEMPRE presente (aunque tenga 0 hoy): es la categoría ancla y
+    // su "0" es informativo. El resto aparece solo si hay puntos en la vista.
+    return BLQ_CAT_ORDER.filter(function(k){ return k==='conflicto' || src.some(function(p){ return p.cat===k; }); });
+  }
+  // Estado de visibilidad por vista (lazy init con el default de cada vista).
+  function visState(view){
+    var present = presentCats(view);
+    if(!_blqVis[view]){
+      var st = {};
+      present.forEach(function(k){ st[k] = (view==='intensidad') ? (k==='conflicto') : true; });
+      _blqVis[view] = st;
+    } else {
+      present.forEach(function(k){ if(!(k in _blqVis[view])) _blqVis[view][k] = (view==='intensidad') ? (k==='conflicto') : true; });
+    }
+    return _blqVis[view];
+  }
   if(elDate){
     var ul = B.ultima_lectura || B.updated_at;
     elDate.textContent = ul
@@ -2924,22 +2963,25 @@ window.renderBloqueos = function(){
   function markersTrace(view){
     // Etiqueta = nombre del tramo (sección); fallback a coordenadas si faltara.
     function lab(p){ return p.sec || (p.lat.toFixed(3)+', '+p.lon.toFixed(3)); }
+    var vis = visState(view);
     if(view==='activos'){
-      // Un punto por bloqueo activo, color por categoría (conflicto/obras/clima/
-      // derrumbe/otro). Hover: tramo + tipo de evento crudo.
+      // Un punto por bloqueo activo, color por categoría. Solo cats visibles.
+      var pe = ptosEvt.filter(function(p){ return vis[p.cat]; });
       return {type:'scattergeo', mode:'markers',
-        lat: ptosEvt.map(function(p){return p.lat;}), lon: ptosEvt.map(function(p){return p.lon;}),
+        lat: pe.map(function(p){return p.lat;}), lon: pe.map(function(p){return p.lon;}),
         marker:{size:7, opacity:0.9, line:{width:0.5, color:'#ffffff'},
-          color: ptosEvt.map(function(p){ return blqCat(p.cat).c; })},
-        customdata: ptosEvt.map(function(p){ return [lab(p), blqCat(p.cat).label, p.evento||'—']; }),
+          color: pe.map(function(p){ return blqCat(p.cat).c; })},
+        customdata: pe.map(function(p){ return [lab(p), blqCat(p.cat).label, p.evento||'—']; }),
         hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[1]} · %{customdata[2]}<extra></extra>'};
     }
+    // Intensidad: color por categoría × opacidad por días (lmax global). Solo cats visibles.
+    var pi = ptosIntCat.filter(function(p){ return vis[p.cat]; });
     return {type:'scattergeo', mode:'markers',
-      lat: ptosInt.map(function(p){return p.lat;}), lon: ptosInt.map(function(p){return p.lon;}),
+      lat: pi.map(function(p){return p.lat;}), lon: pi.map(function(p){return p.lon;}),
       marker:{size:6, line:{width:0},
-        color: ptosInt.map(function(p){ var a=0.12+0.78*(Math.log(p.dias+1)/lmax); return 'rgba(192,0,0,'+a.toFixed(3)+')'; })},
-      customdata: ptosInt.map(function(p){return [lab(p), p.dias];}),
-      hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[1]} días bloqueado desde el 1 may<extra></extra>'};
+        color: pi.map(function(p){ var a=0.12+0.78*(Math.log(p.dias+1)/lmaxCat); return hexToRgba(blqCat(p.cat).c, a); })},
+      customdata: pi.map(function(p){ return [lab(p), p.dias, blqCat(p.cat).label]; }),
+      hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[2]} · %{customdata[1]} días bloqueado desde el 1 may<extra></extra>'};
   }
   function drawMapa(geo, view){
     var traces = [];
@@ -2961,39 +3003,64 @@ window.renderBloqueos = function(){
     }, PC);
   }
   // Cards del sidebar (cambian con la vista).
+  // Leyenda clickeable: categorías PRESENTES en la vista, con conteo + estado ON/OFF.
+  function legendRows(view){
+    var vis = visState(view);
+    var src = (view==='activos') ? ptosEvt : ptosIntCat;
+    var cc = {}; src.forEach(function(p){ cc[p.cat] = (cc[p.cat]||0)+1; });
+    return presentCats(view).map(function(k){
+      var on = !!vis[k];
+      return '<div class="blq-leg blq-legtog'+(on?'':' off')+'" data-blq-cat="'+k+'" role="button" tabindex="0"'
+        + ' aria-pressed="'+on+'" title="'+(on?'Ocultar':'Mostrar')+' '+blqCat(k).label+'">'
+        + '<span class="blq-dot" style="background:'+blqCat(k).c+'"></span>'
+        + '<span class="blq-leglab">'+blqCat(k).label+'</span>'
+        + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+(cc[k]||0)+'</b></div>';
+    }).join('');
+  }
   function renderSide(view){
-    var pts = (view==='activos') ? ptosEvt : ptosInt;
+    var vis = visState(view);
     var dep = (view==='activos') ? depAct : depInt;
-    var legend, nota;
-    if(view==='activos'){
-      // Leyenda = categorías PRESENTES hoy, con su conteo (orden fijo).
-      var cc = {}; ptosEvt.forEach(function(p){ cc[p.cat] = (cc[p.cat]||0)+1; });
-      legend = BLQ_CAT_ORDER.filter(function(k){ return cc[k]; }).map(function(k){
-        return '<div class="blq-leg"><span class="blq-dot" style="background:'+blqCat(k).c+'"></span>'+blqCat(k).label
-          + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+cc[k]+'</b></div>';
-      }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">Sin bloqueos activos hoy.</div>';
-      nota = 'Incluye conflicto social, obras, clima, derrumbe y otros. Los reportes sin tipo de evento no se grafican.';
-    }else{
-      legend = '<div class="blq-leg"><span class="blq-grad"></span>Opacidad = días bloqueado (desde 1 may)</div>';
-      nota = 'Filtro: solo conflicto social';
-    }
+    var src = (view==='activos') ? ptosEvt : ptosIntCat;
+    var visN = src.filter(function(p){ return vis[p.cat]; }).length;
+    var nota = (view==='activos')
+      ? 'Tocá una categoría para mostrarla u ocultarla. Los reportes sin tipo de evento no se grafican.'
+      : 'Opacidad = días bloqueado desde el 1 may. Tocá una categoría para mostrarla u ocultarla.';
     var maxn = dep.length ? dep[0].n : 1;
     var depRows = dep.map(function(d){
       var pct = Math.max(4, Math.round(100*d.n/maxn));
       return '<div class="blq-dep"><span>'+d.dep+'</span><span class="blq-dep-track"><i style="width:'+pct+'%"></i></span><span class="blq-dep-n">'+d.n+'</span></div>';
     }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">Sin datos por departamento.</div>';
     var ver = (view==='activos')
-      ? pts.length+' bloqueos activos hoy, por tipo de evento.'
-      : 'Cada punto es un tramo de carretera; '+pts.length+' con bloqueo desde el 1 may.';
+      ? visN+' de '+src.length+' bloqueos activos visibles, por tipo.'
+      : visN+' de '+src.length+' tramos visibles (intensidad desde el 1 may).';
     elSide.innerHTML =
       '<div class="blq-card"><h4>Resumen ahora</h4>'
         + '<div class="blq-stat"><span>Por conflicto social</span><b>'+resumen.conflicto+'</b></div>'
         + '<div class="blq-stat"><span>Otros (clima/obras)</span><b>'+resumen.no_conflicto+'</b></div>'
         + '<div class="blq-stat"><span>Total activos</span><b>'+resumen.total+'</b></div></div>'
       + '<div class="blq-card"><h4>Qué estás viendo</h4>'
-        + '<div class="blq-leg">'+ver+'</div>'+legend
+        + '<div class="blq-leg">'+ver+'</div>'+legendRows(view)
         + '<div class="blq-leg" style="margin-top:5px;color:var(--text-muted)">'+nota+'</div></div>'
       + '<div class="blq-card"><h4>Por departamento</h4>'+depRows+'</div>';
+  }
+  // Toggle de categoría (click/teclado en la leyenda) — afecta solo la vista activa.
+  function toggleCat(k){
+    var vis = visState(_blqView);
+    if(!(k in vis)) return;
+    vis[k] = !vis[k];
+    renderSide(_blqView);
+    drawMapa(_bloqueosGeo, _blqView);
+  }
+  if(elSide){
+    elSide.onclick = function(ev){
+      var t = ev.target.closest('[data-blq-cat]'); if(!t) return;
+      toggleCat(t.getAttribute('data-blq-cat'));
+    };
+    elSide.onkeydown = function(ev){
+      if(ev.key!=='Enter' && ev.key!==' ') return;
+      var t = ev.target.closest('[data-blq-cat]'); if(!t) return;
+      ev.preventDefault(); toggleCat(t.getAttribute('data-blq-cat'));
+    };
   }
   function setView(view){
     _blqView = view;
@@ -3001,7 +3068,7 @@ window.renderBloqueos = function(){
     if(togA) togA.classList.toggle('active', view==='activos');
     if(elSub) elSub.innerHTML = (view==='activos')
       ? 'Activos hoy: bloqueos abiertos en la última lectura, por tipo (conflicto, obras, clima, derrumbe, otro).'
-      : 'Intensidad: la opacidad refleja los días bloqueado desde el 1 de mayo de 2026.';
+      : 'Intensidad acumulada: color por tipo, opacidad por días bloqueado desde el 1 de mayo de 2026.';
     if(elSide) renderSide(view);
     if(!elMap) return;
     // Render inmediato (Bolivia + puntos); la red vial/deptos se agregan al llegar

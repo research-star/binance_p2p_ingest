@@ -20,7 +20,7 @@ import io
 import json
 import sys
 import urllib.request
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, date, timezone, timedelta
 from pathlib import Path
 
 BASE = "https://raw.githubusercontent.com/mauforonda/transitabilidad-bolivia/master"
@@ -94,8 +94,34 @@ def _get(url, timeout=60):
         return r.read()
 
 
+def _dias_distintos(ranges, hasta):
+    """ranges: lista de (fecha_reporte, fecha_fin) 'YYYY-MM-DD' ('' = abierto).
+    Días distintos con el evento activo desde INTENSIDAD_DESDE hasta `hasta`
+    (última consulta), uniendo solapes. Mismo criterio que build_intensidad
+    (días distintos), pero derivado de los rangos de data.csv para clima/obras/
+    derrumbe/otro (que NO están en conflictos_tiempo.json)."""
+    dias = set()
+    try:
+        tope = date.fromisoformat(hasta)
+    except (ValueError, TypeError):
+        return 0
+    for fr, ff in ranges:
+        try:
+            lo = date.fromisoformat(max(fr, INTENSIDAD_DESDE))
+            hi = date.fromisoformat(ff) if ff else tope
+        except (ValueError, TypeError):
+            continue
+        if hi > tope:
+            hi = tope
+        d = lo
+        while d <= hi:
+            dias.add(d.toordinal())
+            d += timedelta(days=1)
+    return len(dias)
+
+
 def fetch_data_csv():
-    """Una sola descarga del maestro data.csv (~15 MB) que produce dos cosas:
+    """Una sola descarga del maestro data.csv (~15 MB) que produce tres cosas:
 
       - secciones: {(lat5,lon5) -> nombre de tramo (sección)} para el hover.
       - eventos_activos: [{lat,lon,cat,evento,estado,sec}] de las filas con
@@ -103,15 +129,23 @@ def fetch_data_csv():
         `categoria_evento` y excluyendo "ningun evento". A diferencia de los
         derivados conflict-only de @mauforonda, acá lat/lon vienen poblados para
         TODOS los tipos (clima/obras/derrumbe), así que el mapa los puede pintar.
+      - intens_cat: [{lat,lon,cat,dias,sec}] intensidad histórica desde
+        INTENSIDAD_DESDE para las 4 categorías NO-conflicto (clima/obras/derrumbe/
+        otro), bucketizada por (cat, coord ~110m). `dias` = días distintos con
+        evento activo (rango fecha_reporte..fecha_fin). Conflicto NO sale de acá:
+        su intensidad sigue viniendo de build_intensidad/conflictos_tiempo (el
+        discovery mostró que data.csv-evento difiere ~28% del cálculo validado).
 
-    Best-effort: si data.csv falla, devuelve ({}, []) y el resto degrada (hover
-    cae a coordenadas; el mapa de categorías queda vacío, no rompe)."""
+    Best-effort: si data.csv falla, devuelve ({}, [], []) y el resto degrada."""
     try:
         raw = _get(f"{BASE}/data.csv", timeout=120).decode("utf-8", "replace")
     except Exception:
-        return {}, []
+        return {}, [], []
     sec = {}
     eventos = []
+    cat_ranges = {}   # (cat,lat3,lon3) -> [(fecha_reporte, fecha_fin)]
+    cat_sec = {}      # (cat,lat3,lon3) -> sección (última no vacía)
+    max_consulta = ""
     for row in csv.DictReader(io.StringIO(raw)):
         try:
             lat5 = round(float(row["latitud"]), 5)
@@ -121,17 +155,33 @@ def fetch_data_csv():
         s = (row.get("sección") or "").strip()
         if s:
             sec[(lat5, lon5)] = s  # última aparición (más reciente) gana
-        if (row.get("fecha_fin") or "").strip():
-            continue  # ya resuelto: no es activo ahora
+        fc = (row.get("fecha_consulta") or "")[:10]
+        if fc > max_consulta:
+            max_consulta = fc
         ev = (row.get("evento") or "").strip()
         cat = categoria_evento(ev)
         if cat is None:
             continue  # "ningun evento" / vacío: no es bloqueo
-        eventos.append({
-            "lat": lat5, "lon": lon5, "cat": cat, "evento": ev,
-            "estado": (row.get("estado") or "").strip(), "sec": s,
-        })
-    return sec, eventos
+        ff = (row.get("fecha_fin") or "").strip()[:10]
+        if not ff:
+            eventos.append({
+                "lat": lat5, "lon": lon5, "cat": cat, "evento": ev,
+                "estado": (row.get("estado") or "").strip(), "sec": s,
+            })
+        if cat != "conflicto":  # conflicto va por la fuente legacy
+            fr = (row.get("fecha_reporte") or "")[:10]
+            if fr:
+                k = (cat, round(lat5, COORD_DECIMALS), round(lon5, COORD_DECIMALS))
+                cat_ranges.setdefault(k, []).append((fr, ff))
+                if s:
+                    cat_sec[k] = s
+    intens_cat = []
+    for (cat, la, lo), ranges in cat_ranges.items():
+        d = _dias_distintos(ranges, max_consulta)
+        if d > 0:
+            intens_cat.append({"lat": la, "lon": lo, "cat": cat, "dias": d,
+                               "sec": cat_sec.get((cat, la, lo), "")})
+    return sec, eventos, intens_cat
 
 
 def fetch():
@@ -149,8 +199,8 @@ def fetch():
         except (ValueError, KeyError, TypeError):
             continue
     tiempo = json.loads(_get(f"{BASE}/conflictos_tiempo.json"))
-    secciones, eventos_activos = fetch_data_csv()
-    return activos, coords, tiempo, secciones, eventos_activos
+    secciones, eventos_activos, intens_cat = fetch_data_csv()
+    return activos, coords, tiempo, secciones, eventos_activos, intens_cat
 
 
 def build_intensidad(coords, tiempo, secciones):
@@ -226,7 +276,7 @@ def por_departamento(puntos, deptos):
     return [{"dep": k, "n": v} for k, v in sorted(counts.items(), key=lambda kv: -kv[1])]
 
 
-def build(activos, coords, tiempo, secciones, eventos_activos):
+def build(activos, coords, tiempo, secciones, eventos_activos, intens_cat):
     # Serie diaria: # de conflictos abiertos por día (última lectura del día gana;
     # las entries vienen en orden cronológico).
     daily = {}
@@ -256,6 +306,19 @@ def build(activos, coords, tiempo, secciones, eventos_activos):
     deptos = _load_deptos()
     intensidad = build_intensidad(coords, tiempo, secciones)
     intensidad["por_departamento"] = por_departamento(intensidad["puntos"], deptos)
+    # Intensidad categorizada: conflicto = puntos del legacy (build_intensidad,
+    # fuente conflictos_tiempo — NO regresiona la vista validada) tagueados cat;
+    # las 4 cats no-conflicto vienen de data.csv (intens_cat). Orden: menor dias
+    # primero (se dibuja debajo; los hotspots quedan arriba), igual que el legacy.
+    conf_pts = [{"lat": p["lat"], "lon": p["lon"], "cat": "conflicto",
+                 "dias": p["dias"], "sec": p.get("sec", "")}
+                for p in intensidad["puntos"]]
+    ic_pts = sorted(conf_pts + intens_cat, key=lambda p: p["dias"])
+    intensidad_categorias = {
+        "desde": INTENSIDAD_DESDE,
+        "max_dias": max((p["dias"] for p in ic_pts), default=0),
+        "puntos": ic_pts,
+    }
     now = datetime.now(TZ)
     return {
         "updated_at": now.isoformat(timespec="seconds"),
@@ -272,14 +335,15 @@ def build(activos, coords, tiempo, secciones, eventos_activos):
         "activos_por_departamento": por_departamento(activos_pts, deptos),  # ranking activos (conflicto, legacy)
         "activos_eventos_por_departamento": por_departamento(eventos_activos, deptos),  # ranking de TODOS los activos por depto
         "serie_diaria": serie,           # bloqueos por conflicto abiertos por día (histórico)
-        "intensidad": intensidad,        # días bloqueado por punto desde INTENSIDAD_DESDE + ranking depto
+        "intensidad": intensidad,        # días bloqueado por punto desde INTENSIDAD_DESDE + ranking depto (conflicto, legacy)
+        "intensidad_categorias": intensidad_categorias,  # idem por categoría: conflicto(legacy)+obras/clima/derrumbe/otro(data.csv)
     }
 
 
 def main():
     try:
-        activos, coords, tiempo, secciones, eventos_activos = fetch()
-        data = build(activos, coords, tiempo, secciones, eventos_activos)
+        activos, coords, tiempo, secciones, eventos_activos, intens_cat = fetch()
+        data = build(activos, coords, tiempo, secciones, eventos_activos, intens_cat)
     except Exception as exc:  # noqa: BLE001 — fail-closed, no escribimos parcial
         sys.exit(f"ingest_bloqueos: error: {exc}")
     OUT.write_text(
@@ -292,9 +356,14 @@ def main():
     cat_count = {}
     for e in data["activos_eventos"]:
         cat_count[e["cat"]] = cat_count.get(e["cat"], 0) + 1
+    ic = data["intensidad_categorias"]
+    ic_count = {}
+    for p in ic["puntos"]:
+        ic_count[p["cat"]] = ic_count.get(p["cat"], 0) + 1
     print(
         f"OK -> {OUT.name} | activos={len(data['activos'])} | "
         f"eventos_activos={len(data['activos_eventos'])} por_cat={cat_count} | "
+        f"intensidad_cat={len(ic['puntos'])} pts (max {ic['max_dias']}d) por_cat={ic_count} | "
         f"serie={len(data['serie_diaria'])} pts | "
         f"intensidad={len(pts)} pts (max {data['intensidad']['max_dias']}d, {con_sec} c/sección) | "
         f"deptos_top={[(d['dep'], d['n']) for d in top]} | "
