@@ -382,6 +382,15 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-macro-tab:hover{color:var(--text-secondary)}
 .fb-macro-tab.active{color:var(--text-primary);font-weight:600}
 .fb-macro-tab:not(:last-child)::after{content:"|";margin:0 16px;color:var(--text-soft);font-weight:300;font-size:.78em}
+/* Móvil: los 3 subtabs en UNA línea (a 24px el label largo "Riesgo país" wrapea
+   ≤414px). Bajar font + apretar el separador "|" entra en una sola fila hasta 320px.
+   Desktop (>600px) intacto: ahí ya caben a 24px. */
+@media(max-width:600px){.fb-macro-tab{font-size:18px}.fb-macro-tab:not(:last-child)::after{margin:0 10px}}
+/* Móvil: a ≤600px el .fb-navbar pasa a position:static (no sticky), pero el
+   subnav seguía pegándose a top:var(--nav-h) (~59px) → quedaba un hueco arriba
+   con nada que lo ocupara. Igual que #kpis (que ya hace top:0 acá), flush al
+   techo. Desktop intacto (navbar sticky ocupa --nav-h). */
+@media(max-width:600px){.fb-macro-subnav{top:0}}
 /* ── FASE 3 · Macro editorial (referencia a-macro.html) ──────────────
    Overrides scopeados a #tab-macro: tratamiento generoso editorial para
    armonizar con Noticias. Los tabs densos (Dólar/DPF/BBV/Guía) NO heredan
@@ -1764,6 +1773,15 @@ function getC(){
 }
 function BL(c){return{paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',dragmode:false,font:{family:'Outfit,sans-serif',color:c.fontcolor,size:10.5},margin:{l:48,r:16,t:32,b:32},xaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showgrid:false,showline:false,tickangle:-30,fixedrange:true},yaxis:{gridcolor:hexToRgba(c.gridcolor,.5),tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},zeroline:false,showline:false,gridwidth:1,fixedrange:true},legend:{orientation:'h',y:1.08,yanchor:'bottom',x:0,xanchor:'left',font:{size:11,family:'Outfit',color:c.fontcolor}},hoverlabel:{font:{family:cssVar('--tooltip-font'),size:11,color:cssVar('--tooltip-text')},bgcolor:cssVar('--tooltip-bg'),bordercolor:cssVar('--tooltip-border')},hovermode:'x unified'}}
 const PC={displayModeBar:false,responsive:true,scrollZoom:false};
+// Locale 'es' para ejes de tiempo de Plotly (meses ene/feb/…). Se registra una
+// sola vez; NO cambia el default global (no usamos setPlotConfig) → solo afecta
+// charts que pasen locale:'es' en su config (hoy: el trend de Bloqueos).
+if(window.Plotly&&Plotly.register){try{Plotly.register({moduleType:'locale',name:'es',dictionary:{},format:{
+  days:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
+  shortDays:['dom','lun','mar','mié','jue','vie','sáb'],
+  months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+  shortMonths:['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
+  periods:['AM','PM'],date:'%d/%m/%Y'}});}catch(e){}}
 function xaWithSlider(xa){
   xa.rangeslider={visible:false};
   return xa;
@@ -2999,7 +3017,7 @@ window.renderBloqueos = function(){
       xaxis:{...L.xaxis, tickformat:tf, nticks:9, tickangle:-30, fixedrange:false, automargin:true},
       yaxis:{...L.yaxis, title:{text:'Bloqueos abiertos', font:{size:10, color:c.textMuted}}, rangemode:'tozero', automargin:true},
       margin:{l:48, r:16, t:16, b:48}, showlegend:false, hovermode:'x'
-    }, PC);
+    }, {...PC, locale:'es'});  // meses del eje X + hover en español (ene/feb/…)
   }
   if(trendBtns){
     trendBtns.onclick = function(ev){
