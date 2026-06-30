@@ -2233,12 +2233,20 @@ function kpi(label,value,sub,iconSvg,colorVar){
        + '<div class="fb-kpi-value"'+(colorVar?' style="color:var(--color-'+colorVar+')"':'')+'>'+value+'</div>'
        + '<div class="fb-kpi-sub">'+sub+'</div></div>';
 }
+function tcoFechaCorta(f){  // "2026-06-30" -> "30 jun"
+  const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const p=(f||'').split('-');
+  return p.length>=3 ? (String(+p[2])+' '+(M[+p[1]-1]||p[1])) : (f||'');
+}
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
   // Prima P2P vs el TCO oficial (RD 88/2026). Fail-soft: si todavía no hay datos
   // de TCO, cae al fijo histórico 6.96 (meta.bcb_rate) para no romper la KPI.
-  const tco=bcbTcoAt(new Date(TS_ARR[i]).getTime());
+  // TCO a mostrar: el ÚLTIMO publicado por el BCB (meta.bcb_tco_last), no el
+  // "vigente hoy" — es el dato más nuevo (ej. el de mañana, ya anunciado) y es lo
+  // que se espera ver apenas el BCB lo publica. La fecha de vigencia va en el sublabel.
+  const tco=(meta.bcb_tco_last!=null)?{tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha}:null;
   const oficial=(tco&&tco.tco!=null)?tco.tco:meta.bcb_rate;
   const premium=(last.vb10/oficial-1)*100;
   const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
@@ -2252,7 +2260,7 @@ function updateKpis(){
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), (hasTco?'TCO \u00b7 Venta ref (BOB/USDT)':'Compra \u00b7 Venta (BOB/USDT)'), ICONS.bcb, null)+
+    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), (hasTco?('TCO \u00b7 Venta ref \u00b7 vig. '+tcoFechaCorta(tco.fecha)):'Compra \u00b7 Venta (BOB/USDT)'), ICONS.bcb, null)+
     kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT', ICONS.compra, 'buy')+
     kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT', ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
