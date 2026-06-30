@@ -1,33 +1,70 @@
 #!/usr/bin/env bash
-# Wrapper para correr ingest_bcb_tco.py y commitear el JSON si cambió.
-# Invocado desde el cron del VPS (lun-vie 20:05 BO = 00:05 UTC mar-sáb).
-# El TCO se publica a las 20:00 BO; corremos 5 min después. El scraper baja una
-# ventana móvil (14 días atrás + 5 adelante; el TCO se fecha por su vigencia, que
-# va por delante de hoy) — autorreparable: si una corrida cae muy temprano y el
-# BCB aún no subió el dato, la del día siguiente lo recupera.
-# Primera corrida / backfill del histórico: ejecutar a mano una vez con
+# Wrapper para ingest_bcb_tco.py — pensado para correr CADA 5 MIN desde las 20:00 BO
+# y reintentar hasta capturar el TCO del día.
+#
+# Cron del VPS (user binance):
+#   */5 0-3 * * 2-6   cd /opt/binance_p2p && bash scripts/bcb_tco_scrape_and_commit.sh
+#   (UTC 00:00–03:55 mar–sáb = 20:00–23:55 BO lun–vie. El TCO se publica a las 20:00
+#    BO pero a veces con minutos de atraso, por eso reintentamos cada 5 min.)
+#
+# Idempotente y AUTO-FRENANTE (clave para correr cada 5 min sin ensuciar el repo):
+#   - Si bcb_tco.json YA tiene una fecha de VIGENCIA futura (> hoy BO), ya capturamos
+#     el valor de esta noche → no hace nada (los ticks restantes son no-op).
+#   - Si no, corre el scraper. Solo commitea/pushea cuando aparece una FECHA NUEVA
+#     (no por el simple bump de `fetched_at`), evitando ~48 commits basura por noche.
+#   - Si el scraper solo re-trae el valor viejo (BCB aún no publicó), descarta el
+#     cambio y reintenta en el próximo tick.
+#   - Autorreparable igual que antes: si una noche nunca se logra, la corrida del
+#     día hábil siguiente lo recupera (el scraper baja una ventana de 14 días atrás).
+#
+# Primera corrida / backfill del histórico:
 #   .venv/bin/python ingest_bcb_tco.py --backfill
 #
-# Healthcheck (healthchecks.io): pingea $HC_BCB_TCO (start/éxito/fail) si está
-# definido en el entorno (env var arriba del crontab y en .env). Si está vacío,
-# los pings se omiten sin error (graceful, igual que el resto de scrapers).
-set -euo pipefail
+# Healthcheck (healthchecks.io): pingea $HC_BCB_TCO en el ÉXITO (captura del valor
+# nuevo) y /fail si el scraper rompe. Sin /start por tick (evita falsos "started").
+set -uo pipefail
 cd /opt/binance_p2p
 
-# HC_BCB_TCO = UUID del check (convención del repo, igual que HC_EMBI/HC_NOTICIAS);
-# el wrapper arma la URL https://hc-ping.com/<uuid>[/start|/fail].
+# HC_BCB_TCO = UUID del check; el wrapper arma https://hc-ping.com/<uuid>[/fail].
 HC="${HC_BCB_TCO:-}"
 hc(){ [ -n "$HC" ] && curl -fsS -m 10 "https://hc-ping.com/${HC}$1" -o /dev/null 2>/dev/null || true; }
-trap 'hc /fail' ERR
 
-hc /start
-.venv/bin/python ingest_bcb_tco.py
-if ! git diff --quiet bcb_tco.json; then
+# Fecha de hoy en Bolivia (UTC-4, sin DST). El TCO se fecha por su VIGENCIA (el
+# próximo día hábil), así que al capturarlo max(fecha) queda > hoy_bo.
+hoy_bo=$(date -u -d '-4 hours' +%F)
+
+max_fecha(){
+  [ -f bcb_tco.json ] || { echo ""; return 0; }
+  .venv/bin/python -c "import json;d=json.load(open('bcb_tco.json'));print(max((e.get('fecha','') for e in d),default=''))" 2>/dev/null || echo ""
+}
+
+# ¿Ya tenemos el valor de esta noche (vigencia futura)? → nada que hacer.
+antes=$(max_fecha)
+if [ -n "$antes" ] && [[ "$antes" > "$hoy_bo" ]]; then
+  exit 0
+fi
+
+# Intento de captura. Si el scraper rompe (red/parse), pingea /fail y sale sin
+# romper el cron; el próximo tick reintenta.
+if ! .venv/bin/python ingest_bcb_tco.py; then
+  hc /fail
+  exit 0
+fi
+
+despues=$(max_fecha)
+if [ -n "$despues" ] && [[ "$despues" > "$hoy_bo" ]]; then
+  # Capturamos una fecha nueva → commit + push (con reintentos por red).
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   git add bcb_tco.json
   git -c user.name="VPS BCB Scraper" \
       -c user.email="bcb-scraper@finanzasbo.com" \
       commit -m "chore(bcb): scrape TCO $(date -u +%Y-%m-%dT%H:%MZ)"
-  git push origin "$CURRENT_BRANCH"
+  for i in 1 2 3 4; do
+    git push origin "$CURRENT_BRANCH" && break || sleep $((2**i))
+  done
+  hc  # éxito (el dashboard lo recoge el cron de publish */12)
+else
+  # Solo se bumpeó `fetched_at` (mismo valor viejo) → descartar para no commitear
+  # cada 5 min. Reintentará en el próximo tick.
+  git checkout -- bcb_tco.json 2>/dev/null || true
 fi
-hc   # éxito (URL base)
