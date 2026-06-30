@@ -2,7 +2,13 @@
   {
     "fecha": "2026-06-29",
     "tco": 9.73,
-    "source": "bcb_tco",
+    "source": "bcb_tco_portada",
     "fetched_at_utc": "2026-06-30T00:05:03.884063Z"
+  },
+  {
+    "fecha": "2026-06-30",
+    "tco": 9.76,
+    "source": "bcb_tco_portada",
+    "fetched_at_utc": "2026-06-30T01:17:24.642872Z"
   }
 ]
