@@ -14,8 +14,16 @@ fijo (6,86 compra / 6,96 venta). Definición (Anexo II de la RD 88/2026):
   - Redondeado a 2 decimales. Sáb/dom/feriados = TCO del último día hábil.
   - El valor referencial de venta = TCO + 0,10 Bs.
 
-Fuente (reporte histórico detallado, de ahí sale la serie completa):
-    https://www.bcb.gob.bo/tco_reporte_detalle_historico.php
+Fuentes (dos, ver `--via`):
+
+  1. PORTADA (default, `--via portada`) — https://www.bcb.gob.bo/
+     Card "Tipo de cambio oficial" (server-rendered) con HOY y MAÑANA. Es la
+     fuente PRIMARIA porque va por DELANTE del detalle histórico, que tiene
+     rezago: la portada ya muestra el TCO de MAÑANA cuando el detalle todavía no
+     lo publicó. Parser: `parse_homepage_tco`.
+
+  2. HISTÓRICO (`--via historico`, forzado por `--backfill`) — reporte detallado:
+     https://www.bcb.gob.bo/tco_reporte_detalle_historico.php
 
 El CSV exportado (delimitado por `;`) trae, por día, el DETALLE de operaciones
 (por banco: N° de transacciones y monto USD, por nivel de precio) y al final una
@@ -41,8 +49,10 @@ disco para inspección.
 ──────────────────────────────────────────────────────────────────────────────
 
 Uso:
-    python3 ingest_bcb_tco.py                       # fetch + parse + guarda histórico
+    python3 ingest_bcb_tco.py                       # portada (HOY+MAÑANA) → guarda
     python3 ingest_bcb_tco.py --dry-run             # imprime sin escribir
+    python3 ingest_bcb_tco.py --via historico       # detalle CSV (verificación)
+    python3 ingest_bcb_tco.py --backfill            # serie completa (detalle, fuerza historico)
     python3 ingest_bcb_tco.py --from-file ARCHIVO   # parsea un archivo local (offline)
     python3 ingest_bcb_tco.py --debug               # vuelca el crudo a bcb_tco_raw.html
     python3 ingest_bcb_tco.py --url OTRA_URL        # override del endpoint
@@ -55,13 +65,14 @@ import io
 import json
 import re
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode, urljoin
 from urllib.request import Request, urlopen
 
 from config import BCB_TCO_JSON
 
+URL_HOME = "https://www.bcb.gob.bo/"  # portada: card TCO con HOY+MAÑANA (fuente primaria)
 URL_TCO = "https://www.bcb.gob.bo/tco_reporte_detalle_historico.php"
 # Endpoint del botón "Descargar CSV" (GET ?desde=YYYY-MM-DD&hasta=YYYY-MM-DD),
 # confirmado leyendo el <form class="vrd-export"> de la página (2026-06-29).
@@ -272,6 +283,67 @@ def parse_rate(s: str) -> float | None:
     except ValueError:
         return None
     return val if TCO_MIN <= val <= TCO_MAX else None
+
+
+# ── Parser de la PORTADA (https://www.bcb.gob.bo/) ───────────────────────────
+# La portada trae un card "Tipo de cambio oficial" (clase is-tc-oficial) con HOY
+# y MAÑANA, y va por DELANTE del detalle histórico (tco_reporte_detalle_*), que
+# tiene rezago: la portada ya muestra MAÑANA cuando el detalle aún no la publicó.
+# Por eso es la fuente primaria. Server-rendered (validado 2026-06-30): los
+# valores están en el HTML, no se cargan por JS. Estructura:
+#   <article class="bcb-kpi2-card is-tc-oficial">
+#     <time datetime="2026-06-29">LUNES 29 ... / MARTES 30 ...</time>
+#     <div class="bcb-tco-duo-label">Hoy <span>Hasta 00:00</span></div>
+#     <div class="bcb-tco-duo-num">9,73</div>
+#     <div class="bcb-tco-duo-label">Mañana <span>MARTES 30 DE JUNIO, 2026</span></div>
+#     <div class="bcb-tco-duo-num">9,76</div>
+
+def _parse_es_date_home(text: str) -> str | None:
+    """'MARTES 30 DE JUNIO, 2026' → '2026-06-30'. None si no parsea."""
+    if not text:
+        return None
+    m = re.search(r"(\d{1,2})\s+DE\s+([A-Za-zÁÉÍÓÚáéíóúÑñ]+)[,]?\s+(\d{4})", text)
+    if not m:
+        return None
+    dia, mes, anio = int(m.group(1)), m.group(2).lower(), int(m.group(3))
+    mm = SPANISH_MONTHS.get(mes)
+    if not mm:
+        return None
+    try:
+        return date(anio, mm, dia).isoformat()
+    except ValueError:
+        return None
+
+
+def parse_homepage_tco(html: str) -> list[dict]:
+    """Extrae [HOY, MAÑANA] del card 'Tipo de cambio oficial' de la portada.
+
+    Devuelve [{fecha, tco}] (0, 1 o 2 entradas). Robusto: se acota al card
+    is-tc-oficial (evita falsos positivos como el color CSS rgba(8,49,76,…)) y
+    valida cada número con parse_rate (exige decimal + rango plausible). HOY toma
+    la fecha del <time datetime>; MAÑANA, la del primer <span> del card que
+    parsea como fecha ('Hasta 00:00' no parsea)."""
+    i = html.find("is-tc-oficial")
+    seg = html[i:i + 4000] if i != -1 else html  # el card es chico; ventana acotada
+    nums = re.findall(r'bcb-tco-duo-num"[^>]*>\s*([\d.]*\d[,.]\d+)\s*<', seg)
+    mhoy = re.search(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', seg)
+    hoy = mhoy.group(1) if mhoy else None
+    manana = None
+    for s in re.findall(r"<span>([^<]+)</span>", seg):
+        d = _parse_es_date_home(s)
+        if d:
+            manana = d
+            break
+    out = []
+    if hoy and len(nums) >= 1:
+        v = parse_rate(nums[0])
+        if v is not None:
+            out.append({"fecha": hoy, "tco": v})
+    if manana and len(nums) >= 2:
+        v = parse_rate(nums[1])
+        if v is not None:
+            out.append({"fecha": manana, "tco": v})
+    return out
 
 
 # ── Parsers de contenido ─────────────────────────────────────────────────────
@@ -520,7 +592,15 @@ def main():
     parser.add_argument("--fecha")
     parser.add_argument("--tco", type=float)
     parser.add_argument("--source", default="manual")
+    parser.add_argument("--via", choices=["portada", "historico"], default="portada",
+                        help="Fuente del TCO: 'portada' (default, fresca: HOY+MAÑANA de "
+                             "bcb.gob.bo) o 'historico' (detalle CSV, para backfill/verificación)")
     args = parser.parse_args()
+
+    # El backfill necesita el rango histórico del detalle CSV; la portada solo
+    # tiene HOY+MAÑANA. El resto del tiempo, la portada es la fuente primaria
+    # (va por delante del detalle, que tiene rezago).
+    via = "historico" if args.backfill else args.via
 
     # Entrada manual (backfill puntual / corrección)
     if args.manual:
@@ -539,6 +619,16 @@ def main():
     if args.from_file:
         content = Path(args.from_file).read_text(encoding="utf-8", errors="replace")
         print(f"Leído de archivo local: {args.from_file} ({len(content)} chars)")
+    elif via == "portada":
+        try:
+            content = fetch(URL_HOME)
+        except Exception as e:
+            print(f"ERROR: no pude bajar la portada {URL_HOME}: {e}", file=sys.stderr)
+            sys.exit(1)
+        print(f"Portada BCB descargada ({len(content)} chars)")
+        if args.debug:
+            RAW_DUMP.write_text(content, encoding="utf-8")
+            print(f"[DEBUG] HTML crudo volcado a {RAW_DUMP} ({len(content)} chars)")
     else:
         # Rango de fechas. Default: ventana móvil de 7 días (AUTORREPARABLE — si una
         # corrida se pierde un día, la del día siguiente lo recupera, ya que el
@@ -572,9 +662,14 @@ def main():
             RAW_DUMP.write_text(content, encoding="utf-8")
             print(f"[DEBUG] CSV crudo volcado a {RAW_DUMP} ({len(content)} chars)")
 
-    entries = parse_content(content)
+    if via == "portada":
+        entries = parse_homepage_tco(content)
+        fuente = "bcb_tco_portada"
+    else:
+        entries = parse_content(content)
+        fuente = "bcb_tco"
     for e in entries:
-        e["source"] = "bcb_tco"
+        e["source"] = fuente
 
     if not entries:
         print("ERROR: no parseé ninguna entrada de TCO. Revisá el formato de la "

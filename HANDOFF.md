@@ -189,18 +189,24 @@ de las filas verdes.
 - **Publish a Pages**: `scripts/publish_dashboard.py` + `.github/workflows/auto-publish.yml`.
 - **BCB scrape (referencial)**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
 - **BCB TCO (Tipo de Cambio Oficial, RD 88/2026)**: `ingest_bcb_tco.py` (lógica) +
-  `scripts/bcb_tco_scrape_and_commit.sh` (wrapper VPS). `tco_reporte_detalle_historico.php`
-  es un **formulario** (rango de fechas + botón "Descargar CSV"); el scraper
-  introspecciona el form y lo envía con el rango (`--desde/--hasta`, default
-  ventana 14 días atrás + 5 adelante —buffer porque la fecha del TCO es su
-  vigencia (próximo día hábil), que va por delante de hoy—; `--backfill` desde
-  2026-06-26). Del CSV **lee el TCO
-  publicado** (fila `TCO`, col `TOTAL BANCOS`) y lo **verifica** recalculando el
-  promedio ponderado por monto del detalle (Anexo II). Salida a `bcb_tco.json`.
-  `--from-file` parsea un CSV local offline; `--debug` vuelca el crudo. **Pendiente
-  de afinar en el VPS**: confirmar que la introspección del form pega al endpoint
-  real de "Descargar CSV" (BCB no es alcanzable desde dev); si no, el `--debug`
-  deja el HTML para fijar el endpoint/params a mano.
+  `scripts/bcb_tco_scrape_and_commit.sh` (wrapper VPS). **Dos fuentes** (`--via`):
+  - **Portada** (`--via portada`, DEFAULT): `https://www.bcb.gob.bo/` trae un card
+    "Tipo de cambio oficial" (server-rendered, clase `is-tc-oficial`) con **HOY y
+    MAÑANA**. Es la fuente **primaria** porque va por **delante** del detalle
+    histórico, que tiene **rezago** (la portada ya muestra el TCO de mañana cuando
+    el detalle aún no). Parser `parse_homepage_tco` (lee `<time datetime>` para HOY,
+    el `<span>` con fecha en español para MAÑANA, y las dos `bcb-tco-duo-num`;
+    valida rango con `parse_rate`). `source='bcb_tco_portada'`.
+  - **Histórico** (`--via historico`, lo fuerza `--backfill`): el reporte
+    `tco_reporte_detalle_historico.php` es un **formulario** (rango + "Descargar
+    CSV"); el scraper introspecciona el form (`--desde/--hasta`, default ventana
+    14 días atrás + 5 adelante; `--backfill` desde 2026-06-26). Del CSV **lee el
+    TCO publicado** (fila `TCO`, col `TOTAL BANCOS`) y lo **verifica** recalculando
+    el promedio ponderado del detalle (Anexo II). `source='bcb_tco'`. Se usa para
+    backfill/verificación, no en el cron diario.
+  - Salida a `bcb_tco.json` (merge dedup por fecha; `_fill_weekends_tco` en
+    `dashboard.py` sintetiza sáb/dom). `--from-file` parsea un archivo local
+    offline (respeta `--via`); `--debug` vuelca el crudo.
 - **EMBI scrape (BCRD)**: `ingest_embi.py` (lógica + cron one-liner). Snapshot Excel +
   ETag cache en `/opt/binance_p2p/embi_audit/` (fuera del repo).
 - **INE Bolivia macro (PIB + IPC + IPP)**: `ingest_ine_pib.py` /
