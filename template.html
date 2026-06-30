@@ -1881,23 +1881,29 @@ function rVwap(c,v){
       // diagonal hacia el precio viejo. Queda BAJO el piso del eje Y (ver yRange) → la
       // vista inicial se ve igual; la diagonal/precio viejo solo aparece al hacer zoom-out.
       const baseFecha = new Date(Date.parse(pts[0].fecha+'T00:00:00Z')-86400000).toISOString().slice(0,10);
-      // Terminal: extiende el ÚLTIMO valor hasta la medianoche del día siguiente, para
-      // que el TCO vigente se vea como una línea horizontal que cubre TODO su día de
-      // vigencia (el TCO rige el día calendario completo, RD 88/2026), no como un punto.
       const lastP = pts[pts.length-1];
+      // Fin del día de vigencia del último valor (medianoche siguiente). NO es un dato
+      // publicado: el TCO del día siguiente recién se publica esa noche. Solo se usa
+      // para extender la línea sobre el día, sin crear un punto/fecha futura.
       const termFecha = new Date(Date.parse(lastP.fecha+'T00:00:00Z')+86400000).toISOString().slice(0,10);
-      const linePts = [{fecha:baseFecha, tco:6.91}].concat(pts).concat([{fecha:termFecha, tco:lastP.tco}]);
-      const tx = linePts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
-      const ty = linePts.map(e=>e.tco);
-      // Marcadores solo en los días reales (no en baseline ni terminal sintéticos).
-      const msz = linePts.map(e=>(e.fecha===baseFecha||e.fecha===termFecha)?0:4);
+      // Traza principal: escalones con los valores REALES (markers + hover), terminando
+      // en el último día PUBLICADO. shape 'hv' → cada valor se mantiene plano hasta el
+      // día siguiente (el TCO rige el día calendario completo, RD 88/2026).
+      const mainPts = [{fecha:baseFecha, tco:6.91}].concat(pts);
+      const tx = mainPts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
+      const ty = mainPts.map(e=>e.tco);
+      const msz = mainPts.map(e=>e.fecha===baseFecha?0:4);  // baseline sintético: sin marker
       tcoMaxMs = Date.parse(termFecha+'T00:00:00Z');  // el eje llega al fin del día vigente
       traces.push({x:tx,y:ty,name:'TCO',
         mode:'lines+markers',
-        line:{color:c.bcbTco,width:2,shape:'hv'},   // escalonado: cada valor, plano todo su día
+        line:{color:c.bcbTco,width:2,shape:'hv'},
         marker:{size:msz,color:c.bcbTco},
         connectgaps:true,
         hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
+      // Extensión horizontal del ÚLTIMO valor sobre todo su día de vigencia, SIN punto
+      // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
+      traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
+        name:'TCO', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
       // Eje Y fijo a la vista actual (Compra + TCO del régimen NUEVO); excluye el
       // baseline viejo para no des-zoomear. Zoomable: el salto se ve al alejar.
       const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat(pts.map(e=>e.tco));
