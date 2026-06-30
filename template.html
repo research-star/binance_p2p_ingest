@@ -1829,6 +1829,16 @@ function xaxisForView(base, v){
     const padMs = currentView==='snapshot' ? 0 : 12*3600000;
     cfg.range = [boStr(v.xms[0] - padMs), boStr(v.xms[v.xms.length-1] + padMs)];
     cfg.autorange = false;
+    // Ticks anclados en el ÚLTIMO día con datos (hoy) y hacia atrás (~8 ticks), para
+    // que el día en curso SIEMPRE aparezca rotulado aunque la jornada aún no esté
+    // completa. tickformat '%d %b' se mantiene (Plotly lo aplica a los tickvals).
+    const DAY=86400000;
+    const lastDayMs = Math.floor(v.xms[v.xms.length-1]/DAY)*DAY;  // medianoche del último día (escala boMs)
+    const firstMs = v.xms[0];
+    const stepDays = Math.max(1, Math.round(Math.max(1,(lastDayMs-firstMs)/DAY)/7));
+    const vals=[];
+    for(let t=lastDayMs; t>=firstMs-DAY; t-=stepDays*DAY) vals.unshift(boStr(t));
+    if(vals.length){ cfg.tickmode='array'; cfg.tickvals=vals; delete cfg.nticks; }
   }
   delete cfg.dtick;
   return cfg;
