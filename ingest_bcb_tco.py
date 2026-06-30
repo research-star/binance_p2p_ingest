@@ -323,11 +323,21 @@ def parse_homepage_tco(html: str) -> list[dict]:
     valida cada número con parse_rate (exige decimal + rango plausible). HOY toma
     la fecha del <time datetime>; MAÑANA, la del primer <span> del card que
     parsea como fecha ('Hasta 00:00' no parsea)."""
-    i = html.find("is-tc-oficial")
-    seg = html[i:i + 4000] if i != -1 else html  # el card es chico; ventana acotada
+    # Anclar en el PRIMER bcb-tco-duo-num REAL (markup con valor: ...num">9,73<).
+    # NO usar html.find("is-tc-oficial"): esa clase también aparece ARRIBA en el
+    # <style> de la página (regla .bcb-kpi2-card.is-tc-oficial{…}), muy lejos del
+    # markup, y la ventana caería sobre el CSS sin los valores. El CSS de la clase
+    # `.bcb-tco-duo-num{…}` lleva `{`, no `">`, así que el regex la ignora.
+    anchor = re.search(r'bcb-tco-duo-num"[^>]*>\s*[\d.]*\d[,.]\d', html)
+    if not anchor:
+        return []
+    a = anchor.start()
+    seg = html[a:a + 3000]  # ventana hacia adelante: ambos valores + span de MAÑANA
     nums = re.findall(r'bcb-tco-duo-num"[^>]*>\s*([\d.]*\d[,.]\d+)\s*<', seg)
-    mhoy = re.search(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', seg)
-    hoy = mhoy.group(1) if mhoy else None
+    # HOY: el <time datetime> más cercano ANTES del anchor (el del card TCO).
+    times = re.findall(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', html[:a])
+    hoy = times[-1] if times else None
+    # MAÑANA: primer <span> con fecha DESPUÉS del anchor ("Hasta 00:00" no parsea).
     manana = None
     for s in re.findall(r"<span>([^<]+)</span>", seg):
         d = _parse_es_date_home(s)
