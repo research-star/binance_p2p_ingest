@@ -8048,5 +8048,51 @@
     "mv": 1025.2
    }
   }
+ },
+ {
+  "ts": "2026-06-30T23:24:24+00:00",
+  "date": "2026-06-30",
+  "bp": 429.3,
+  "bp_stripped": 429.0,
+  "n_bonds": 3,
+  "curve": "treasury",
+  "prices": {
+   "USP37878AC26": {
+    "clean": 95.38,
+    "src": "snapshot",
+    "zspread_bp": 331.5,
+    "stripped_bp": 331.5,
+    "ytm_pct": 7.4092,
+    "name": "BOLIVIA 4.50% 2028",
+    "coupon": 4.5,
+    "maturity": "2028-03-20",
+    "amt": 1000,
+    "mv": 966.5
+   },
+   "USP37878AE81": {
+    "clean": 95.995,
+    "src": "snapshot",
+    "zspread_bp": 463.5,
+    "stripped_bp": 463.2,
+    "ytm_pct": 8.7957,
+    "name": "BOLIVIA 7.50% 2030",
+    "coupon": 7.5,
+    "maturity": "2030-03-02",
+    "amt": 850,
+    "mv": 837.2
+   },
+   "USP37878AF56": {
+    "clean": 101.26,
+    "src": "snapshot",
+    "zspread_bp": 493.7,
+    "stripped_bp": 493.1,
+    "ytm_pct": 9.1183,
+    "name": "BOLIVIA 9.45% 2031",
+    "coupon": 9.45,
+    "maturity": "2031-05-14",
+    "amt": 1000,
+    "mv": 1025.2
+   }
+  }
  }
 ]
