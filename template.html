@@ -1892,10 +1892,14 @@ function rVwap(c,v){
       // vista inicial se ve igual; la diagonal/precio viejo solo aparece al hacer zoom-out.
       const baseFecha = new Date(Date.parse(pts[0].fecha+'T00:00:00Z')-86400000).toISOString().slice(0,10);
       const lastP = pts[pts.length-1];
-      // Fin del día de vigencia del último valor (medianoche siguiente). NO es un dato
-      // publicado: el TCO del día siguiente recién se publica esa noche. Solo se usa
-      // para extender la línea sobre el día, sin crear un punto/fecha futura.
-      const termFecha = new Date(Date.parse(lastP.fecha+'T00:00:00Z')+86400000).toISOString().slice(0,10);
+      // Fin de la extensión del último valor: como mínimo la medianoche siguiente a su
+      // vigencia, y si el dato quedó atrás (aún no se capturó el TCO de hoy), se
+      // ARRASTRA hasta el fin del día en curso (Bolivia): el último oficial publicado
+      // sigue rigiendo hasta que haya uno nuevo (regla de arrastre, RD 88/2026).
+      // NO es un dato publicado: se dibuja sin punto/fecha hoverable.
+      const finVigMs = Date.parse(lastP.fecha+'T00:00:00Z')+86400000;
+      const finHoyMs = Math.floor((Date.now()-4*3600000)/86400000)*86400000 + 86400000;  // fin del día BO
+      const termFecha = new Date(Math.max(finVigMs, finHoyMs)).toISOString().slice(0,10);
       // Traza principal: escalones con los valores REALES (markers + hover), terminando
       // en el último día PUBLICADO. shape 'hv' → cada valor se mantiene plano hasta el
       // día siguiente (el TCO rige el día calendario completo, RD 88/2026).

@@ -52,7 +52,11 @@ if ! .venv/bin/python ingest_bcb_tco.py; then
 fi
 
 despues=$(max_fecha)
-if [ -n "$despues" ] && [[ "$despues" > "$hoy_bo" ]]; then
+# Commitear cuando la fecha máxima AVANZA respecto a lo que ya teníamos (no solo
+# cuando es > hoy): si una noche falla la captura, el valor reaparece al día
+# siguiente como HOY en la portada (fecha == hoy_bo) y también debe guardarse —
+# con la comparación vs hoy_bo esa recuperación diurna se descartaba.
+if [ -n "$despues" ] && { [ -z "$antes" ] || [[ "$despues" > "$antes" ]]; }; then
   # Capturamos una fecha nueva → commit + push (con reintentos por red).
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   git add bcb_tco.json
