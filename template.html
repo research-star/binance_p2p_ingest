@@ -4836,6 +4836,36 @@ window.addEventListener('popstate', function(){
 
   // ── Átomos de markup ──
   function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
+  // ── Hora de la nota (gating admin) ─────────────────────────────────────────
+  // La hora del carril BOLIVIA es la hora de la CORRIDA del scraper, NO de publicación:
+  // confunde al público, así que se OCULTA al usuario normal y solo el admin la ve rotulada
+  // "Scrapeado a las HH:MM". El carril LATAM muestra pubDate real (n.time) a todos; el admin
+  // ve ADEMÁS el scrapeo, derivado de createdAtUtc (n.time de Latam es la publicación, no el
+  // scrapeo — etiquetarlo "Scrapeado" sería falso). npTime() es la ÚNICA fuente del texto;
+  // se resuelve por npAdmin.isAdmin + carril y por eso reacciona a npRerender() post-login.
+  // npScrapeHHMM: created_at_utc (ISO UTC) → hora Bolivia (UTC-4 fijo, mismo criterio que NT_TODAY).
+  function npScrapeHHMM(n){
+    try{ var t=Date.parse(n&&n.createdAtUtc); if(isNaN(t)) return '';
+      var d=new Date(t-4*3600000), p=function(x){return String(x).padStart(2,'0');};
+      return p(d.getUTCHours())+':'+p(d.getUTCMinutes());
+    }catch(e){ return ''; }
+  }
+  function npTime(n){
+    if(!n) return '';
+    if(ntEsLatam(n)){
+      var pub=ntEsc(n.time||'');                       // pubDate real: visible para todos
+      if(!npAdmin.isAdmin) return pub;
+      var scr=npScrapeHHMM(n);                          // scrapeo real: solo admin, de createdAtUtc
+      return scr ? pub+' · Scrapeado a las '+scr : pub;
+    }
+    // Bolivia: n.time = hora de corrida. Público sin hora; admin la ve rotulada.
+    if(!npAdmin.isAdmin || !n.time) return '';
+    return 'Scrapeado a las '+ntEsc(n.time);
+  }
+  // Adaptadores de markup: el separador desaparece junto con la hora (sin "·" huérfano).
+  // Foot/meta (hero + card): span np-sep + np-time. Ranking/latam: separador plano " · ".
+  function npTimeFoot(n){ var t=npTime(n); return t ? '<span class="np-sep">·</span><span class="np-time">'+t+'</span>' : ''; }
+  function npTimeSep(n){ var t=npTime(n); return t ? ' · '+t : ''; }
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
   // Poda del sufijo del medio en el título (" - El Deber", " | Correo del Sur", …).
   // Solo corta colas RECONOCIDAS como nombre de medio (lista cerrada) → nunca toca el
@@ -4958,7 +4988,7 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+npTimeFoot(lead)+'</div>'
       +npTambienEn(lead);
   }
   // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
@@ -4978,7 +5008,7 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+npTimeFoot(lead)+'</div>'
       +'</article>';
   }
 
@@ -5013,7 +5043,7 @@ window.addEventListener('popstate', function(){
     if(!notes.length) return '<aside class="np-rail"></aside>';
     let rows='';
     for(let i=0;i<notes.length;i++){ const n=notes[i];
-      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
+      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+npTimeSep(n)+'</div></div></div>';
     }
     return '<aside class="np-rail"><div class="np-railcard np-rail-full"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
   }
@@ -5027,7 +5057,7 @@ window.addEventListener('popstate', function(){
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'
         +'<p class="np-card-dek" data-np-slot="dek">'+ntEsc(ntDekMark(n))+'</p>'  /* dek REACTIVADO (0007): resumen IA (sin *) o extractivo (con ' *'); :empty colapsa si ntDek no halla texto real */
         +npTambienEn(n)
-        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
+        +'<div class="np-card-meta">'+npSrc(n.source)+npTimeFoot(n)+'</div>'
         +'</div></article>';
     }
     return '<div class="np-feed-grid">'+g+'</div>';
@@ -5099,7 +5129,7 @@ window.addEventListener('popstate', function(){
     for(let i=0;i<latam.length;i++){ const n=latam[i];
       grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
         +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntDekMark(n))
-        +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
+        +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+npTimeSep(n)+'</div></article>';
     }
     return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';
   }
