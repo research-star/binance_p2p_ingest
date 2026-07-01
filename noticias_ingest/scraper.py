@@ -482,6 +482,32 @@ FUENTES = [
     },
 ]
 
+# ── Tipo de fuente (M2, tier institucional) ─────────────────────────────────
+# Clasificación 'noticiero' (medio de prensa) vs 'institucion' (organismo público /
+# regulador o cámara / gremio que publica DATOS PRIMARIOS: fuente primaria, no refrito).
+# Base del boost editorial +1 que aplica ingest_noticias.lane_bolivia DESPUÉS del corte
+# 6.7 (solo-reordena: no rescata sub-umbral). Se estampa `tipo` sobre CADA dict de FUENTES
+# (todas quedan clasificadas). Criterio del split (revisión de Diego):
+#   institucion → BCB/INE/MEFP/ASFI/Aduana (Estado/reguladores) + CAINCO/IBCE/CEPB/CNI
+#                 (cámaras/gremios con estadística y reportes propios).
+#   noticiero   → el resto (El Deber, La Razón, Bloomberg Línea, Unitel, …): prensa.
+# Bloomberg Línea es prensa (noticiero); su relevancia se maneja aparte con el piso M1.
+FUENTES_INSTITUCIONALES = frozenset({
+    "BCB", "INE", "MEFP", "ASFI", "Aduana",   # organismos públicos / reguladores
+    "CAINCO", "IBCE", "CEPB", "CNI",          # cámaras / gremios empresariales
+})
+for _f in FUENTES:
+    _f["tipo"] = "institucion" if _f["portal"] in FUENTES_INSTITUCIONALES else "noticiero"
+
+# Identificación de Bloomberg Línea (M1, piso de relevancia en carril Bolivia).
+PORTAL_BLOOMBERG = "Bloomberg Línea"
+
+
+def es_fuente_institucional(portal: str) -> bool:
+    """True si el portal es fuente institucional (organismo/gremio, dato primario).
+    Base del boost +1 de M2. Default seguro: fuente no listada = noticiero (sin boost)."""
+    return portal in FUENTES_INSTITUCIONALES
+
 
 # ---------------------------------------------------------------------------
 # KEYWORDS (solo conteo de relevancia del fallback sin modelo — MUERTO en prod por
@@ -990,6 +1016,18 @@ def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False
         # Ajustar score con reglas editoriales
         prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal, es_opinion)
         ajuste = detectar_ajuste(titulo, descripcion, portal, es_opinion)
+        # M1: piso Bloomberg-Bolivia. Una nota de Bloomberg Línea en el carril Bolivia que
+        # sobrevivió los gates DUROS (exclusión de keywords + geo-gate) es editorialmente
+        # relevante por definición → piso 9/10. DOMINA los ajustes editoriales (bonos/
+        # penalties) y el umbral del modelo (NO se descarta por umbral): "≥9 pase lo que
+        # pase salvo gates duros". Solo carril Bolivia (evaluar no corre en Latam).
+        if portal == PORTAL_BLOOMBERG:
+            base = round(prob_ajustado * 10, 1)
+            puntaje = max(base, 9.0)
+            ajuste_bloom = ajuste if base >= 9.0 else (
+                ((ajuste + "; ") if ajuste and ajuste != "—" else "") + f"piso_bloomberg(base={base})")
+            return (puntaje, tema, tema_hits, entidades,
+                    round(prob_crudo, 4), round(prob_ajustado, 4), ajuste_bloom, "")
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
             return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
