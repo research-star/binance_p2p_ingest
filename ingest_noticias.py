@@ -56,7 +56,7 @@ import requests
 
 from config import NORMALIZED_DB, NOTICIAS_TOP_BOLIVIA, NOTICIAS_TOP_LATAM
 from noticias_ingest import latam, resumen_ia, scraper
-from noticias_ingest.transform import build_nota, build_nota_latam
+from noticias_ingest.transform import build_nota, build_nota_latam, impact_de_puntaje
 
 # ── Constantes ────────────────────────────────────────────────────────────
 
@@ -310,6 +310,20 @@ def escribir_csv_debug(candidatos: list, fecha: str):
 
 # ── Carril Bolivia ────────────────────────────────────────────────────────
 
+def _boost_institucional(seleccion: list[dict]) -> None:
+    """M2: +1 (cap 10) al `puntaje` de notas de fuente institucional (organismo/gremio
+    con dato primario), IN-PLACE. Recalcula también `impact` (banda derivada del puntaje)
+    para que el reordenamiento se refleje en el ranking del frontend, que ordena por
+    impact, NO por puntaje. Debe llamarse DESPUÉS del corte editorial 6.7 → SOLO-REORDENA:
+    nunca rescata una nota sub-umbral (una institucional de 5.8 ya quedó afuera). Fuentes
+    primarias (INE/IBCE/BCB/ASFI/…) pesan más que refritos de prensa. score_crudo/
+    score_ajustado conservan el valor del modelo. Split: scraper.FUENTES_INSTITUCIONALES."""
+    for n in seleccion:
+        if scraper.es_fuente_institucional(n["portal"]):
+            n["puntaje"] = min(round(n["puntaje"] + 1.0, 1), 10.0)
+            n["impact"] = impact_de_puntaje(n["puntaje"])
+
+
 # ⓘ pipeline-anchor: lane_bolivia es la secuencia (etapas 9-18) que replica
 #   tools/noticias-inspector. Si agregás/quitás/reordenás una etapa, actualizá el mirror
 #   (tools/noticias-inspector/inspector_core.py) + pipeline_map.py + SYNC.md.
@@ -317,7 +331,8 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
     """Scrape + score + corte 6.7 + dedupe + presupuesto top-N + insert.
     Devuelve dict-resumen; estado='error' nunca propaga excepción."""
     res = {"estado": "ok", "insertadas": 0, "candidatos": 0,
-           "sobre_umbral": 0, "dedupe": 0, "detalle": "", "scoring": "desconocido"}
+           "sobre_umbral": 0, "dedupe": 0, "evictadas": 0,
+           "detalle": "", "scoring": "desconocido"}
     try:
         # Resiliencia: modo DEGRADADO por keywords si el modelo TF-IDF no carga
         # (calibración 2026-06-21: antes era fail-closed y el carril Bolivia no
@@ -353,6 +368,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         escribir_csv_debug(candidatos, fecha_bo)
 
         seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
+        # M2: boost institucional (+1). Se aplica DESPUÉS del corte 6.7 → solo-reordena,
+        # nunca rescata sub-umbral (ver _boost_institucional).
+        _boost_institucional(seleccion)
         seleccion.sort(key=lambda n: -n["puntaje"])
         res["sobre_umbral"] = len(seleccion)
         # Agrupa por evento ("También en…"): colapsa la misma noticia cubierta por
@@ -360,56 +378,138 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         # otras fuentes en tambien_en. Antes del presupuesto → menos casi-duplicados
         # en el feed. Calibración 2026-06-21.
         seleccion = agrupar_eventos(seleccion)
+        # agrupar_eventos DEVUELVE los eventos ordenados por puntaje MÁXIMO del grupo (gmax),
+        # pero la fila que se inserta es el REPRESENTANTE (fuente de menor tier), cuyo
+        # n["puntaje"] puede ser < gmax. El compare-and-evict de abajo compara y corta por
+        # n["puntaje"], así que re-ordenamos por ESE valor para restaurar el invariante
+        # -puntaje que el loop asume (sin esto, el `break` por mínimo descarta candidatas
+        # válidas y una candidata podría "evictar" a otra recién insertada en memoria).
+        seleccion.sort(key=lambda n: -n["puntaje"])
         res["eventos"] = len(seleccion)
 
-        # Presupuesto diario: descuenta lo ya insertado hoy en ESTE carril
-        # (excluye latam: presupuestos independientes). El carril ya no se deriva
-        # de category (colapsada) sino de la col `carril` (CARRIL_SQL = robusto a
-        # legacy). Budget rolling: las corridas del día llenan hasta el cupo.
-        ya_hoy = conn.execute(
-            f"SELECT COUNT(*) FROM noticias WHERE date = ? AND {CARRIL_SQL} != 'latam'",
-            (fecha_bo,)).fetchone()[0]
-        budget = max(0, args.top - ya_hoy)
-        if ya_hoy:
-            print(f"[noticias] bolivia: ya_insertadas_hoy={ya_hoy} budget_restante={budget}")
+        # Ranking ROTATIVO intra-día (cupo `args.top` = NOTICIAS_TOP_BOLIVIA). Reemplaza
+        # el budget ADITIVO anterior (llenaba hasta el cupo y frenaba: las corridas 3+
+        # insertaban 0). Ahora, con el cupo lleno, la nota de MENOR score del día es
+        # EVICTADA (DELETE físico) cuando entra una candidata de mayor score. La
+        # comparación es SOLO contra insertadas de HOY (carril != latam), NUNCA días
+        # previos (excluye latam: presupuestos independientes; CARRIL_SQL robusto a legacy).
+        # `hoy` = ranking vivo del día {id, puntaje, url, portal}; el mínimo se recomputa
+        # al vuelo. Como `seleccion` está en orden -puntaje, una candidata nunca puede
+        # evictar a otra insertada en ESTA corrida (todas tienen score >= el suyo): la
+        # evicción solo toca filas pre-existentes de menor score.
+        cap = args.top
+        hoy = [dict(id=r[0], puntaje=r[1], url=r[2], portal=r[3], title=r[4]) for r in conn.execute(
+            f"SELECT id, puntaje, url, portal, title FROM noticias "
+            f"WHERE date = ? AND {CARRIL_SQL} != 'latam'", (fecha_bo,)).fetchall()]
+        hoy_ids = {h["id"] for h in hoy}
+        if hoy:
+            print(f"[noticias] bolivia: ya_insertadas_hoy={len(hoy)} cap={cap}")
 
-        finales = []
+        # Colisiones de PK: id = hash_link(url) es date-INDEPENDIENTE y la PK es GLOBAL, pero
+        # insertar_notas usa INSERT OR IGNORE. Si una candidata comparte URL con una fila YA
+        # existente en CUALQUIER día o carril, su INSERT se descartaría en silencio. Nunca
+        # debe disparar una evicción: borraría una fila buena de hoy sin reemplazo (pérdida
+        # neta, estado='ok'). Las detectamos ANTES del loop (una query batch) y las tratamos
+        # como no-insertables (marcadas vista, como un re-scrape ya publicado).
+        cand_ids = [n["id"] for n in seleccion]
+        existentes = set()
+        if cand_ids:
+            ph = ",".join("?" * len(cand_ids))
+            existentes = {r[0] for r in conn.execute(
+                f"SELECT id FROM noticias WHERE id IN ({ph})", cand_ids).fetchall()}
+
+        finales = []          # candidatas que SE insertan (post compare-and-evict)
         dedupe_losers = []
+        colisiones = []       # id ya en la tabla (cualquier día/carril): ni evictar ni insertar
+        evicciones = []       # filas del día a BORRAR (menor score, desplazadas por una mejor)
         for n in seleccion:
-            if len(finales) >= budget:
-                break  # budget-loser: queda SIN marcar (reconsiderable, yield real)
+            if n["id"] in existentes or n["id"] in hoy_ids:
+                # Ya persistida (cualquier día/carril) o duplicada en ESTA corrida: no
+                # re-insertar ni evictar por ella (cierra el net-negativo del INSERT OR IGNORE).
+                colisiones.append(n)
+                continue
             if es_repetida(n["title"], previos):
                 res["dedupe"] += 1
                 dedupe_losers.append(n)  # gemelo de una nota ya publicada (no insertable ~7d)
                 continue
-            finales.append(n)
-            previos.append(n["title"])
+            if len(hoy) < cap:
+                # Cupo con lugar: inserción aditiva (idéntico al comportamiento < cupo).
+                finales.append(n)
+                previos.append(n["title"])
+                hoy.append(dict(id=n["id"], puntaje=n["puntaje"], url=n["url"], portal=n["portal"], title=n["title"]))
+                hoy_ids.add(n["id"])
+                continue
+            # Cupo lleno: rota SOLO si supera ESTRICTO al mínimo del día.
+            peor = min(hoy, key=lambda x: x["puntaje"])
+            if n["puntaje"] > peor["puntaje"]:
+                evicciones.append(peor)
+                hoy.remove(peor)
+                hoy_ids.discard(peor["id"])
+                # El título de la evictada sale de `previos`: si en ESTA misma corrida llega
+                # una near-dup mejor cubierta del mismo evento, que NO quede bloqueada por el
+                # título de una fila que ya no existe (yield perdido).
+                if peor.get("title") in previos:
+                    previos.remove(peor["title"])
+                finales.append(n)
+                previos.append(n["title"])
+                hoy.append(dict(id=n["id"], puntaje=n["puntaje"], url=n["url"], portal=n["portal"], title=n["title"]))
+                hoy_ids.add(n["id"])
+            else:
+                # No supera el mínimo. Como `seleccion` está en orden -puntaje y el mínimo
+                # solo SUBE con cada evicción, ninguna candidata siguiente lo superará →
+                # cortamos. Queda SIN marcar → reconsiderable (igual que el ex budget-loser).
+                break
+        res["evictadas"] = len(evicciones)
 
         if args.dry_run:
             for n in finales:
                 print(f"[noticias] dry-run bolivia: {n['puntaje']:.1f} "
                       f"[{n['category']}] {n['portal']}: {n['title'][:70]}")
+            if evicciones:
+                print(f"[noticias] dry-run bolivia: evictaría {len(evicciones)} de menor "
+                      f"score por rotación (cap={cap}): {[e['id'] for e in evicciones]}")
         else:
+            # Evicción por rotación — PRIMER borrado físico de `noticias` en el repo.
+            # DELETE por id EXACTO (nunca por rango). Guardas date + carril = red de
+            # seguridad: aunque `id` es PK único (WHERE id=? borra exactamente 1 fila),
+            # las guardas garantizan que un id errado JAMÁS toque otro día ni Latam.
+            # Se ejecuta sobre `conn` SIN commit → insertar_notas (abajo) lo flushea
+            # atómico junto a los INSERTs y el gasto de resumen (rollback del lane si algo
+            # falla). rowcount != 1 ⇒ el id no correspondía a una fila BO de hoy: abortamos
+            # antes de tocar nada más, para no borrar de menos ni de más.
+            for e in evicciones:
+                cur = conn.execute(
+                    f"DELETE FROM noticias WHERE id = ? AND date = ? AND {CARRIL_SQL} != 'latam'",
+                    (e["id"], fecha_bo))
+                if cur.rowcount != 1:
+                    raise RuntimeError(
+                        f"evicción inesperada id={e['id']} rowcount={cur.rowcount} "
+                        f"(esperado 1) — abortando la corrida para no borrar de más")
             # conn: cap de gasto + captura de usage. El gasto se acumula sin commit;
-            # insertar_notas (abajo) lo flushea junto con los INSERTs → atómico.
+            # insertar_notas (abajo) lo flushea junto con los INSERTs → atómico. El resumen
+            # se gasta SOLO en `finales` (las que efectivamente se insertan tras la
+            # rotación); las descartadas por no superar el mínimo NUNCA llegan acá.
             n_resumen = resumen_ia.aplicar(finales, autorizado=True, conn=conn)  # candado API: el pipeline (cron) autoriza
             if n_resumen:
                 print(f"[noticias] bolivia: resumen_ia aplicado a {n_resumen}/{len(finales)}")
             res["insertadas"] = insertar_notas(conn, finales)
+            if evicciones:
+                print(f"[noticias] bolivia: rotación evictó {len(evicciones)} de menor score (cap={cap})")
             # Fix de cacheo (FASE 3): marcar como vistas lo que NO debe reconsiderarse:
             #  - insertadas (`finales`)
             #  - no-calificadas (puntaje < umbral): deterministas, no van a calificar
-            #  - dedupe-losers: gemelos de una nota YA publicada; pierden el mismo
-            #    dedupe de título mientras su par viva en titulos_recientes (~7d), así
-            #    que NO son insertables — marcarlos evita re-scrapear su cuerpo cada
-            #    corrida (clave con cadencia diurna cada 3h).
-            # El budget-loser (calificado, perdió el cupo) queda SIN marcar: SÍ es
-            # reconsiderable en una corrida posterior (budget rolling / día siguiente).
-            # Antes correr_scraper marcaba TODO lo evaluado → las que perdían el top-N
-            # se descartaban para siempre (bug de yield).
+            #  - dedupe-losers: gemelos de una nota YA publicada (~7d, no insertables) —
+            #    marcarlos evita re-scrapear su cuerpo cada corrida.
+            #  - EVICTADAS: su lugar lo tomó una mejor; marcar su URL evita re-scrapearla
+            #    (requisito de rotación). Su título sigue en titulos_recientes de la
+            #    corrida, no reaparece por dedupe.
+            # La candidata que NO superó el mínimo (rompió el loop) queda SIN marcar → SÍ
+            # reconsiderable en una corrida posterior (como el ex budget-loser).
             vistas = [(n["url"], n["portal"]) for n in finales]
             vistas += [(n["url"], n["portal"]) for n in notas if n["puntaje"] < args.umbral]
             vistas += [(n["url"], n["portal"]) for n in dedupe_losers]
+            vistas += [(n["url"], n["portal"]) for n in colisiones]   # re-scrape ya en tabla: no re-bajar cuerpo
+            vistas += [(e["url"], e["portal"]) for e in evicciones]
             scraper.marcar_urls_vistas(vistas)
 
         # Embudo unificado del carril Bolivia (WS6 funnel-v2): UN solo lugar arma el
@@ -447,6 +547,7 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             "sobre_umbral": res["sobre_umbral"],
             "eventos": res.get("eventos", 0),
             "dedupe": res["dedupe"],
+            "evictadas": res["evictadas"],
             "insertadas": res["insertadas"],
         }
         print(f"[noticias] bolivia embudo: {json.dumps(res['funnel'], ensure_ascii=False)}")

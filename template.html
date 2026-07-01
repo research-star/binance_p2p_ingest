@@ -1886,11 +1886,13 @@ function rVwap(c,v){
       pts = pts.filter(e=>Date.parse(e.fecha+'T00:00:00Z') <= capMs);
     }
     if(pts.length){
-      // Baseline del régimen fijo previo (6.91 = prom 6.86 compra / 6.96 venta): un
-      // punto un día ANTES del primer TCO para dibujar el salto del régimen como una
-      // diagonal hacia el precio viejo. Queda BAJO el piso del eje Y (ver yRange) → la
-      // vista inicial se ve igual; la diagonal/precio viejo solo aparece al hacer zoom-out.
-      const baseFecha = new Date(Date.parse(pts[0].fecha+'T00:00:00Z')-86400000).toISOString().slice(0,10);
+      // Oficial PRE-régimen: el peg FIJO derogado (6.86 compra / 6.96 venta) se
+      // representa por su promedio 6.91 — constante de PRODUCTO en el render, NO dato
+      // scrapeado (no vive en bcb_tco.json). Es un escalón PLANO en 6.91 desde el primer
+      // día PLOTEADO hasta el primer TCO dinámico (RD 88/2026, cutoff 2026-06-26), donde
+      // salta vertical. Solo cuando la ventana incluye días pre-régimen.
+      const OFICIAL_FIJO=6.91, CUTOFF='2026-06-26';
+      const preRegime = !!(xMinDate && xMinDate < CUTOFF);
       const lastP = pts[pts.length-1];
       // Fin de la extensión del último valor: como mínimo la medianoche siguiente a su
       // vigencia, y si el dato quedó atrás (aún no se capturó el TCO de hoy), se
@@ -1900,13 +1902,23 @@ function rVwap(c,v){
       const finVigMs = Date.parse(lastP.fecha+'T00:00:00Z')+86400000;
       const finHoyMs = Math.floor((Date.now()-4*3600000)/86400000)*86400000 + 86400000;  // fin del día BO
       const termFecha = new Date(Math.max(finVigMs, finHoyMs)).toISOString().slice(0,10);
-      // Traza principal: escalones con los valores REALES (markers + hover), terminando
-      // en el último día PUBLICADO. shape 'hv' → cada valor se mantiene plano hasta el
-      // día siguiente (el TCO rige el día calendario completo, RD 88/2026).
-      const mainPts = [{fecha:baseFecha, tco:6.91}].concat(pts);
+      // Relleno DIARIO de 6.91 desde el primer día ploteado hasta el primer TCO real
+      // (x coincidente con éste → el shape 'hv' produce el escalón como VERTICAL exacto
+      // en ese x, no un salto tardío). El relleno diario es lo que sincroniza el hover:
+      // con 'x unified' el tooltip elige el punto TCO más cercano en x, así que sin
+      // puntos intermedios el tooltip saltaría al TCO nuevo a mitad del backfill mientras
+      // la línea sigue en 6.91. Con relleno diario, hover=6.91 en TODO el tramo pre-régimen
+      // y la transición del tooltip cae en el MISMO x que el step de la línea.
+      let head=[];
+      if(preRegime){
+        const d0=Date.parse(xMinDate+'T00:00:00Z'), d1=Date.parse(pts[0].fecha+'T00:00:00Z');
+        for(let t=d0; t<=d1; t+=86400000)
+          head.push({fecha:new Date(t).toISOString().slice(0,10), tco:OFICIAL_FIJO});
+      }
+      const mainPts = head.concat(pts);
       const tx = mainPts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
       const ty = mainPts.map(e=>e.tco);
-      const msz = mainPts.map(e=>e.fecha===baseFecha?0:4);  // baseline sintético: sin marker
+      const msz = mainPts.map((e,i)=> i<head.length ? 0 : 4);  // relleno 6.91: sin marker
       tcoMaxMs = Date.parse(termFecha+'T00:00:00Z');  // el eje llega al fin del día vigente
       traces.push({x:tx,y:ty,name:'TCO',
         mode:'lines+markers',
@@ -1918,8 +1930,9 @@ function rVwap(c,v){
       // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
       traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
         name:'TCO', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
-      // Eje Y fijo a la vista actual (Compra + TCO del régimen NUEVO); excluye el
-      // baseline viejo para no des-zoomear. Zoomable: el salto se ve al alejar.
+      // Rango Y por defecto: SOLO P2P (Compra) + TCO dinámico (≥26-jun). El 6.91 queda
+      // en los datos pero NO empuja el piso — cae bajo la vista por defecto (visible en
+      // el hover unificado, que es x-based). Decisión de producto vigente de Diego.
       const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat(pts.map(e=>e.tco));
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
@@ -4840,6 +4853,36 @@ window.addEventListener('popstate', function(){
 
   // ── Átomos de markup ──
   function npSrc(id){ return '<span class="np-src" style="--nt-c:var(--src-'+ntEsc(id)+', var(--text-muted))"><span class="dot"></span>'+ntEsc(ntPortalName(id))+'</span>'; }
+  // ── Hora de la nota (gating admin) ─────────────────────────────────────────
+  // La hora del carril BOLIVIA es la hora de la CORRIDA del scraper, NO de publicación:
+  // confunde al público, así que se OCULTA al usuario normal y solo el admin la ve rotulada
+  // "Scrapeado a las HH:MM". El carril LATAM muestra pubDate real (n.time) a todos; el admin
+  // ve ADEMÁS el scrapeo, derivado de createdAtUtc (n.time de Latam es la publicación, no el
+  // scrapeo — etiquetarlo "Scrapeado" sería falso). npTime() es la ÚNICA fuente del texto;
+  // se resuelve por npAdmin.isAdmin + carril y por eso reacciona a npRerender() post-login.
+  // npScrapeHHMM: created_at_utc (ISO UTC) → hora Bolivia (UTC-4 fijo, mismo criterio que NT_TODAY).
+  function npScrapeHHMM(n){
+    try{ var t=Date.parse(n&&n.createdAtUtc); if(isNaN(t)) return '';
+      var d=new Date(t-4*3600000), p=function(x){return String(x).padStart(2,'0');};
+      return p(d.getUTCHours())+':'+p(d.getUTCMinutes());
+    }catch(e){ return ''; }
+  }
+  function npTime(n){
+    if(!n) return '';
+    if(ntEsLatam(n)){
+      var pub=ntEsc(n.time||'');                       // pubDate real: visible para todos
+      if(!npAdmin.isAdmin) return pub;
+      var scr=npScrapeHHMM(n);                          // scrapeo real: solo admin, de createdAtUtc
+      return scr ? pub+' · Scrapeado a las '+scr : pub;
+    }
+    // Bolivia: n.time = hora de corrida. Público sin hora; admin la ve rotulada.
+    if(!npAdmin.isAdmin || !n.time) return '';
+    return 'Scrapeado a las '+ntEsc(n.time);
+  }
+  // Adaptadores de markup: el separador desaparece junto con la hora (sin "·" huérfano).
+  // Foot/meta (hero + card): span np-sep + np-time. Ranking/latam: separador plano " · ".
+  function npTimeFoot(n){ var t=npTime(n); return t ? '<span class="np-sep">·</span><span class="np-time">'+t+'</span>' : ''; }
+  function npTimeSep(n){ var t=npTime(n); return t ? ' · '+t : ''; }
   function npLink(url,inner){ return (url && /^https?:\/\//i.test(url)) ? '<a class="np-titlelink" href="'+ntEsc(url)+'" target="_blank" rel="noopener noreferrer">'+inner+'</a>' : inner; }
   // Poda del sufijo del medio en el título (" - El Deber", " | Correo del Sur", …).
   // Solo corta colas RECONOCIDAS como nombre de medio (lista cerrada) → nunca toca el
@@ -4962,7 +5005,7 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+npTimeFoot(lead)+'</div>'
       +npTambienEn(lead);
   }
   // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
@@ -4982,7 +5025,7 @@ window.addEventListener('popstate', function(){
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
-      +'<div class="np-hero-foot">'+npSrc(lead.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(lead.time)+'</span></div>'
+      +'<div class="np-hero-foot">'+npSrc(lead.source)+npTimeFoot(lead)+'</div>'
       +'</article>';
   }
 
@@ -5017,7 +5060,7 @@ window.addEventListener('popstate', function(){
     if(!notes.length) return '<aside class="np-rail"></aside>';
     let rows='';
     for(let i=0;i<notes.length;i++){ const n=notes[i];
-      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+' · '+ntEsc(n.time)+'</div></div></div>';
+      rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+npTimeSep(n)+'</div></div></div>';
     }
     return '<aside class="np-rail"><div class="np-railcard np-rail-full"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
   }
@@ -5031,7 +5074,7 @@ window.addEventListener('popstate', function(){
         +'<h3 class="np-card-title">'+npTitle(n.url,n.title)+'</h3>'
         +'<p class="np-card-dek" data-np-slot="dek">'+ntEsc(ntDekMark(n))+'</p>'  /* dek REACTIVADO (0007): resumen IA (sin *) o extractivo (con ' *'); :empty colapsa si ntDek no halla texto real */
         +npTambienEn(n)
-        +'<div class="np-card-meta">'+npSrc(n.source)+'<span class="np-sep">·</span><span class="np-time">'+ntEsc(n.time)+'</span></div>'
+        +'<div class="np-card-meta">'+npSrc(n.source)+npTimeFoot(n)+'</div>'
         +'</div></article>';
     }
     return '<div class="np-feed-grid">'+g+'</div>';
@@ -5103,7 +5146,7 @@ window.addEventListener('popstate', function(){
     for(let i=0;i<latam.length;i++){ const n=latam[i];
       grid+='<article class="np-latam-card"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<div class="np-latam-flag">'+ntEsc(ntLatamFlag(n))+'</div>'
         +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntDekMark(n))
-        +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+' · '+ntEsc(n.time)+'</div></article>';
+        +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+npTimeSep(n)+'</div></article>';
     }
     return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';
   }

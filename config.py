@@ -44,8 +44,10 @@ WATCHDOG_STALE_MIN = 15
 # Cupos diarios por carril (presupuestos INDEPENDIENTES; budget rolling: las
 # corridas del día llenan hasta el cupo, no la primera se queda con todo).
 # También overridables por CLI (--top / --top-latam). Subidos de 10/5 → 14/8
-# en FASE 3 para más cobertura con la cadencia diurna cada 3h.
-NOTICIAS_TOP_BOLIVIA = 14
+# en FASE 3 para más cobertura con la cadencia diurna cada 3h. BO subido a 50
+# al pasar de budget ADITIVO (llenaba y frenaba) a ranking ROTATIVO intra-día
+# (la de menor score se evicta cuando entra una mejor; ver lane_bolivia).
+NOTICIAS_TOP_BOLIVIA = 50
 NOTICIAS_TOP_LATAM = 8
 
 # ── INE Bolivia ingest ──────────────────────────────────────────────────────

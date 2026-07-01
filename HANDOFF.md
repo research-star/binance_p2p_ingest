@@ -26,6 +26,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
 | `ingest_noticias.py` | VPS cron user `binance` | `7 0,11-23 * * *` UTC (07:07–20:07 BO, horario 7/7 — 14 corridas/día; minuto :07 evita colisión con `ingest_embi` a :00 y los INE a :15/:30) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
+| `scripts/retencion_noticias.py` | VPS cron user `binance` | `40 4 * * *` UTC (00:40 BO, hueco nocturno) — backup 20d a JSONL append-only (`noticias_ingest/data/noticias_archive.jsonl`, gitignored) + borrado físico 30d de `noticias`; bajo flock, borrado con self-archive (nunca borra sin archivar) | — (sin HC aún) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -500,11 +501,17 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     modelo**, calibración 2026-06-21; antes fail-closed) **+ penalización opinión
     ×0.7** (funnel-v2 #130, [scraper.py:1064](noticias_ingest/scraper.py#L1064):
     columna/editorial NO se mata —va con `category='opinion'`— pero se penaliza el
-    score y no recibe bonos de portal/FX/instituciones) → corte editorial
-    `puntaje >= 6.7` → **agrupación por evento + tier de fuente** ("También en…",
-    col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día (7 días, umbral
-    0.70) → top configurable (default **14/día**, `config.NOTICIAS_TOP_BOLIVIA`;
-    FASE 3, antes 10). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
+    score y no recibe bonos de portal/FX/instituciones) **· piso Bloomberg-Bolivia ≥9**
+    (M1: Bloomberg Línea que pasa los gates duros —exclusión + geo-gate— queda ≥9,
+    dominando ajustes y el umbral del modelo; solo carril Bolivia) → corte editorial
+    `puntaje >= 6.7` → **boost institucional +1** (M2, `_boost_institucional`:
+    fuentes primarias INE/IBCE/BCB/ASFI/… reordenan por sobre refritos; se aplica
+    DESPUÉS del corte → NO rescata sub-umbral; recomputa `impact`. Split en
+    `scraper.FUENTES_INSTITUCIONALES`) → **agrupación por evento + tier de fuente**
+    ("También en…", col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día
+    (7 días, umbral 0.70) → **top rotativo por score** (cupo **50/día**,
+    `config.NOTICIAS_TOP_BOLIVIA`; con cupo lleno evicta el de menor score del día —
+    DELETE físico, #179). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
     `ANTHROPIC_API_KEY`; sin key → extracto). **Activo en prod desde 2026-06-24.**
     El origen de cada summary se registra en la col `summary_origen`
     (`'ia'`|`'extractivo'`|NULL legacy; migración `0007`, self-migrate en
@@ -744,6 +751,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
 30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
 7    0,11-23 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
+40   4 * * *        cd /opt/binance_p2p && .venv/bin/python scripts/retencion_noticias.py   (backup 20d + borrado 30d de `noticias`; 00:40 BO)
 ```
 (Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
 
