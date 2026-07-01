@@ -1,0 +1,8 @@
+{
+  "name": "binance-p2p-ingest-publish",
+  "private": true,
+  "description": "Tooling Node del publish: wrangler para el deploy a Cloudflare Pages (Direct Upload). Consumido por scripts/publish_dashboard.py via npx --no-install.",
+  "devDependencies": {
+    "wrangler": "4.106.0"
+  }
+}

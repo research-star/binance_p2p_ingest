@@ -64,6 +64,19 @@ PUBLISH_BRANCH_LOCAL = "gh-pages-publish"
 REMOTE = "origin"
 REMOTE_BRANCH = "gh-pages"
 
+# Dual-publish F1 (migración hosting): espejo a Cloudflare Pages vía wrangler
+# Direct Upload, SOLO tras push OK a gh-pages (que sigue siendo el fallback
+# vivo hasta el cutover de dominio). wrangler vive en node_modules/ del repo
+# (package.json pinea la versión); credenciales en .env del VPS.
+CF_PAGES_PROJECT = "finanzasbo"
+CF_DEPLOY_TIMEOUT_S = 180
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(REPO_ROOT / ".env")
+except ImportError:
+    pass  # graceful: sin dotenv, CLOUDFLARE_* deben venir del entorno (si faltan → cf=skip)
+
 
 def emit(line: str):
     print(line, file=sys.stderr, flush=True)
@@ -454,6 +467,50 @@ def _run(t0: float) -> int:
             TMP_INDEX_PATH.unlink()
 
 
+def deploy_cf_pages():
+    """Espejo del worktree a Cloudflare Pages (wrangler Direct Upload).
+
+    NO-FATAL por contrato: cuando esto corre, gh-pages ya quedó publicado
+    (fallback vivo). Acá solo se loguea cf=ok/skip/error y se retorna —
+    jamás propaga excepción al publish (todo el cuerpo está envuelto).
+    Direct Upload no consume cuota de builds de CF Pages (límite 500/mes
+    aplica solo a builds Git-integrados).
+    """
+    try:
+        token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
+        account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
+        if not token or not account:
+            emit("[publish] cf=skip reason=no_credentials")
+            return
+        t_cf0 = time.time()
+        try:
+            # --no-install: si node_modules falta, fallar rápido y visible en
+            # vez de dejar que npx descargue wrangler de la red en pleno cron.
+            r = subprocess.run(
+                ["npx", "--no-install", "wrangler", "pages", "deploy",
+                 str(WORKTREE_PATH),
+                 f"--project-name={CF_PAGES_PROJECT}", "--branch=main"],
+                cwd=str(REPO_ROOT),
+                env={**os.environ, "WRANGLER_SEND_METRICS": "false"},
+                capture_output=True, text=True,
+                timeout=CF_DEPLOY_TIMEOUT_S, check=False)
+        except subprocess.TimeoutExpired:
+            emit(f"[publish] cf=error stage=timeout timeout_s={CF_DEPLOY_TIMEOUT_S}")
+            return
+        cf_s = time.time() - t_cf0
+        if r.returncode != 0:
+            # tail, no head: wrangler pone la causa al final, tras el progreso
+            detail = " ".join(((r.stderr or "") + " " + (r.stdout or "")).split())[-300:]
+            emit(f"[publish] cf=error stage=deploy rc={r.returncode} "
+                 f"cf_s={cf_s:.2f} detail={detail}")
+            return
+        urls = re.findall(r"https://[^\s]+\.pages\.dev", r.stdout or "")
+        emit(f"[publish] cf=ok url={urls[-1] if urls else '?'} cf_s={cf_s:.2f}")
+    except Exception as e:
+        emit(f"[publish] cf=error stage=internal "
+             f"detail={type(e).__name__}:{str(e)[:200]}")
+
+
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
                      n_snap: int, n_rows: int, embi_max: str | None,
                      ipc_max: str | None, ipp_max: str | None,
@@ -498,6 +555,10 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
              f"stderr={(e.stderr or '')[:300]}")
         return 1
     push_s = time.time() - t_push0
+
+    # Dual-publish F1: recién acá, con gh-pages ya publicado. El worktree
+    # sigue vivo (cleanup en el finally del caller). No-fatal.
+    deploy_cf_pages()
 
     try:
         r = run(["git", "rev-parse", "--short", "HEAD"], cwd=str(WORKTREE_PATH))
