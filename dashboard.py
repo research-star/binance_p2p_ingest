@@ -1150,7 +1150,7 @@ def process_data(db_path: Path) -> dict:
             "SELECT id, date, time, source, category, title, summary, detail, "
             "       topics, impact, source_note, url, image_url, "
             "       COALESCE(carril, CASE WHEN category = 'latam' THEN 'latam' ELSE 'bolivia' END) AS carril, "
-            "       tema, tema_hits, entidades, tambien_en, summary_origen "
+            "       tema, tema_hits, entidades, tambien_en, summary_origen, created_at_utc "
             "FROM noticias "
             "WHERE date >= date('now', '-4 hours', '-29 days') "
             "  AND id NOT IN (SELECT id FROM noticias_hidden WHERE id IS NOT NULL) "
@@ -1163,6 +1163,11 @@ def process_data(db_path: Path) -> dict:
             'topics': json.loads(r['topics'] or '[]'),
             'impact': r['impact'], 'sourceNote': r['source_note'], 'url': r['url'],
             'imageUrl': r['image_url'],
+            # Hora de la CORRIDA del scraper (ISO UTC). Solo la consume el gating admin
+            # del render de hora (npTime): el carril BO la oculta al público y el admin la
+            # ve como "Scrapeado a las HH:MM"; en Latam el admin la usa para el scrapeo real
+            # (n.time de Latam es la publicación, no el scrapeo). No la ve el usuario normal.
+            'createdAtUtc': r['created_at_utc'],
             'carril': r['carril'],   # 'bolivia'|'latam': el frontend parte los carriles por acá
             'tema': r['tema'],                  # tema fino (clasificación v1) — para matching de galería
             'temaConfianza': r['tema_hits'],    # confianza del tema (gate sugerido >=10)
