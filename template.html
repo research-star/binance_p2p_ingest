@@ -1322,7 +1322,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head blq-head">
           <div>
-            <div class="fb-chart-title">Bloqueos por conflicto social</div>
+            <div class="fb-chart-title">Bloqueos en carreteras de Bolivia</div>
             <div class="fb-chart-sub" id="blqMapSub">Activos hoy: bloqueos abiertos en la &uacute;ltima lectura, por tipo (conflicto, obras, clima, derrumbe, otro).</div>
           </div>
           <div class="blq-toggle" role="tablist" aria-label="Vista del mapa">
@@ -1339,7 +1339,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head blq-head">
           <div>
-            <div class="fb-chart-title">Bloqueos por conflicto social en el tiempo</div>
+            <div class="fb-chart-title">Bloqueos en el tiempo</div>
             <div class="fb-chart-sub">N&uacute;mero de bloqueos abiertos por d&iacute;a desde 2020 &mdash; c&oacute;mo aparecen y se resuelven los conflictos.</div>
           </div>
           <div class="blq-toggle" id="blqTrendRange" role="tablist" aria-label="Rango temporal del hist&oacute;rico">
@@ -3201,7 +3201,7 @@ var MACRO_SUBTABS = [
     subtitle:'Inflación al consumidor (IPC) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
     render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } },
   { id:'bloqueos', slug:'/bloqueos', title:'FinanzasBo — Bloqueos en Bolivia',
-    subtitle:'Bloqueos de carreteras por conflictos sociales &middot; Fuente: ABC vía @mauforonda &middot; Datos al <span id="bloqueosDate">&mdash;</span>',
+    subtitle:'Bloqueos en Bolivia &middot; Fuente: ABC vía @mauforonda &middot; Datos al <span id="bloqueosDate">&mdash;</span>',
     render:function(){ if(typeof window.renderBloqueos==='function') window.renderBloqueos(); } }
 ];
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
