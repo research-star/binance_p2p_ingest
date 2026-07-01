@@ -26,6 +26,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
 | `ingest_noticias.py` | VPS cron user `binance` | `7 0,11-23 * * *` UTC (07:07–20:07 BO, horario 7/7 — 14 corridas/día; minuto :07 evita colisión con `ingest_embi` a :00 y los INE a :15/:30) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
+| `scripts/retencion_noticias.py` | VPS cron user `binance` | `40 4 * * *` UTC (00:40 BO, hueco nocturno) — backup 20d a JSONL append-only (`noticias_ingest/data/noticias_archive.jsonl`, gitignored) + borrado físico 30d de `noticias`; bajo flock, borrado con self-archive (nunca borra sin archivar) | — (sin HC aún) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -744,6 +745,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
 30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
 7    0,11-23 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
+40   4 * * *        cd /opt/binance_p2p && .venv/bin/python scripts/retencion_noticias.py   (backup 20d + borrado 30d de `noticias`; 00:40 BO)
 ```
 (Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
 
