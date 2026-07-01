@@ -286,17 +286,20 @@ def parse_rate(s: str) -> float | None:
 
 
 # ── Parser de la PORTADA (https://www.bcb.gob.bo/) ───────────────────────────
-# La portada trae un card "Tipo de cambio oficial" (clase is-tc-oficial) con HOY
-# y MAÑANA, y va por DELANTE del detalle histórico (tco_reporte_detalle_*), que
-# tiene rezago: la portada ya muestra MAÑANA cuando el detalle aún no la publicó.
-# Por eso es la fuente primaria. Server-rendered (validado 2026-06-30): los
-# valores están en el HTML, no se cargan por JS. Estructura:
+# La portada trae un card "Tipo de cambio oficial" (clase is-tc-oficial).
+# Server-rendered (los valores están en el HTML, no se cargan por JS).
+#
+# El BCB rediseñó el card el 2026-07-01: ya NO muestra el dúo HOY/MAÑANA sino un
+# ÚNICO valor vigente con su fecha en <time datetime>. Estructura ACTUAL:
 #   <article class="bcb-kpi2-card is-tc-oficial">
-#     <time datetime="2026-06-29">LUNES 29 ... / MARTES 30 ...</time>
-#     <div class="bcb-tco-duo-label">Hoy <span>Hasta 00:00</span></div>
-#     <div class="bcb-tco-duo-num">9,73</div>
-#     <div class="bcb-tco-duo-label">Mañana <span>MARTES 30 DE JUNIO, 2026</span></div>
-#     <div class="bcb-tco-duo-num">9,76</div>
+#     <div class="bcb-kpi2-asof"><time datetime="2026-07-01">miércoles 1 ...</time></div>
+#     <div class="bcb-tco-value"><div class="bcb-tco-amount">
+#       <span class="bcb-tco-num">9,76</span></div></div>
+#   </article>
+# Estructura VIEJA (hasta 2026-06-30), aún soportada como fallback:
+#   <div class="bcb-tco-duo-num">9,73</div>  (HOY)
+#   <div class="bcb-tco-duo-label">Mañana <span>MARTES 30 DE JUNIO, 2026</span></div>
+#   <div class="bcb-tco-duo-num">9,76</div>  (MAÑANA)
 
 def _parse_es_date_home(text: str) -> str | None:
     """'MARTES 30 DE JUNIO, 2026' → '2026-06-30'. None si no parsea."""
@@ -316,43 +319,48 @@ def _parse_es_date_home(text: str) -> str | None:
 
 
 def parse_homepage_tco(html: str) -> list[dict]:
-    """Extrae [HOY, MAÑANA] del card 'Tipo de cambio oficial' de la portada.
+    """Extrae el TCO del card 'Tipo de cambio oficial' de la portada.
 
-    Devuelve [{fecha, tco}] (0, 1 o 2 entradas). Robusto: se acota al card
-    is-tc-oficial (evita falsos positivos como el color CSS rgba(8,49,76,…)) y
-    valida cada número con parse_rate (exige decimal + rango plausible). HOY toma
-    la fecha del <time datetime>; MAÑANA, la del primer <span> del card que
-    parsea como fecha ('Hasta 00:00' no parsea)."""
-    # Anclar en el PRIMER bcb-tco-duo-num REAL (markup con valor: ...num">9,73<).
-    # NO usar html.find("is-tc-oficial"): esa clase también aparece ARRIBA en el
-    # <style> de la página (regla .bcb-kpi2-card.is-tc-oficial{…}), muy lejos del
-    # markup, y la ventana caería sobre el CSS sin los valores. El CSS de la clase
-    # `.bcb-tco-duo-num{…}` lleva `{`, no `">`, así que el regex la ignora.
-    anchor = re.search(r'bcb-tco-duo-num"[^>]*>\s*[\d.]*\d[,.]\d', html)
+    Devuelve [{fecha, tco}] (0, 1 o 2 entradas). Se acota al ARTICLE del card
+    is-tc-oficial en el MARKUP —no al <style>— y valida cada número con parse_rate
+    (exige decimal + rango plausible). Soporta el formato ACTUAL (un único
+    `<span class="bcb-tco-num">` + fecha en `<time datetime>`; 1 entrada) y, como
+    fallback, el VIEJO dúo `bcb-tco-duo-num` HOY/MAÑANA (hasta 2 entradas)."""
+    # Anclar en el ATRIBUTO class del article: 'is-tc-oficial"' (comilla de cierre).
+    # NO usar html.find("is-tc-oficial") a secas: esa clase también aparece ARRIBA
+    # en el <style> (reglas `.is-tc-oficial{…}` / `.is-tc-oficial .algo{…}`), que NO
+    # llevan `"` inmediatamente después, así que el patrón `is-tc-oficial"` las salta.
+    anchor = re.search(r'is-tc-oficial"[^>]*>', html)
     if not anchor:
         return []
-    a = anchor.start()
-    seg = html[a:a + 3000]  # ventana hacia adelante: ambos valores + span de MAÑANA
-    nums = re.findall(r'bcb-tco-duo-num"[^>]*>\s*([\d.]*\d[,.]\d+)\s*<', seg)
-    # HOY: el <time datetime> más cercano ANTES del anchor (el del card TCO).
-    times = re.findall(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', html[:a])
-    hoy = times[-1] if times else None
-    # MAÑANA: primer <span> con fecha DESPUÉS del anchor ("Hasta 00:00" no parsea).
-    manana = None
-    for s in re.findall(r"<span>([^<]+)</span>", seg):
-        d = _parse_es_date_home(s)
-        if d:
-            manana = d
-            break
+    seg = html[anchor.start():anchor.start() + 2000]
+    end = seg.find("</article>")  # acotar al card (no derramar al siguiente article)
+    if end != -1:
+        seg = seg[:end]
+    # Fecha de vigencia: <time datetime="YYYY-MM-DD"> dentro del card.
+    fm = re.search(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', seg)
+    fecha = fm.group(1) if fm else None
+    # Valores: `bcb-tco-num` (actual) o `bcb-tco-duo-num` (viejo). En el formato
+    # actual hay 1; en el viejo, 2 (HOY, MAÑANA).
+    nums = re.findall(r'bcb-tco-(?:duo-)?num"[^>]*>\s*([\d.]*\d[,.]\d+)\s*<', seg)
     out = []
-    if hoy and len(nums) >= 1:
+    if fecha and len(nums) >= 1:
         v = parse_rate(nums[0])
         if v is not None:
-            out.append({"fecha": hoy, "tco": v})
-    if manana and len(nums) >= 2:
-        v = parse_rate(nums[1])
-        if v is not None:
-            out.append({"fecha": manana, "tco": v})
+            out.append({"fecha": fecha, "tco": v})
+    # Fallback formato VIEJO: segundo valor = MAÑANA, fechado por el primer <span>
+    # del card que parsea como fecha ('Hasta 00:00' no parsea).
+    if len(nums) >= 2:
+        manana = None
+        for s in re.findall(r"<span>([^<]+)</span>", seg):
+            d = _parse_es_date_home(s)
+            if d:
+                manana = d
+                break
+        if manana:
+            v = parse_rate(nums[1])
+            if v is not None:
+                out.append({"fecha": manana, "tco": v})
     return out
 
 
