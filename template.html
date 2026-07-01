@@ -1886,23 +1886,35 @@ function rVwap(c,v){
       pts = pts.filter(e=>Date.parse(e.fecha+'T00:00:00Z') <= capMs);
     }
     if(pts.length){
-      // Baseline del régimen fijo previo (6.91 = prom 6.86 compra / 6.96 venta): un
-      // punto un día ANTES del primer TCO para dibujar el salto del régimen como una
-      // diagonal hacia el precio viejo. Queda BAJO el piso del eje Y (ver yRange) → la
-      // vista inicial se ve igual; la diagonal/precio viejo solo aparece al hacer zoom-out.
-      const baseFecha = new Date(Date.parse(pts[0].fecha+'T00:00:00Z')-86400000).toISOString().slice(0,10);
+      // Oficial PRE-régimen: el peg FIJO derogado (6.86 compra / 6.96 venta) se
+      // representa por su promedio 6.91 — constante de PRODUCTO en el render, NO dato
+      // scrapeado (no vive en bcb_tco.json). Es un escalón PLANO en 6.91 desde el primer
+      // día PLOTEADO hasta el primer TCO dinámico (RD 88/2026, cutoff 2026-06-26), donde
+      // salta vertical. Solo cuando la ventana incluye días pre-régimen.
+      const OFICIAL_FIJO=6.91, CUTOFF='2026-06-26';
+      const preRegime = !!(xMinDate && xMinDate < CUTOFF);
       const lastP = pts[pts.length-1];
       // Fin del día de vigencia del último valor (medianoche siguiente). NO es un dato
       // publicado: el TCO del día siguiente recién se publica esa noche. Solo se usa
       // para extender la línea sobre el día, sin crear un punto/fecha futura.
       const termFecha = new Date(Date.parse(lastP.fecha+'T00:00:00Z')+86400000).toISOString().slice(0,10);
-      // Traza principal: escalones con los valores REALES (markers + hover), terminando
-      // en el último día PUBLICADO. shape 'hv' → cada valor se mantiene plano hasta el
-      // día siguiente (el TCO rige el día calendario completo, RD 88/2026).
-      const mainPts = [{fecha:baseFecha, tco:6.91}].concat(pts);
+      // Relleno DIARIO de 6.91 desde el primer día ploteado hasta el primer TCO real
+      // (x coincidente con éste → el shape 'hv' produce el escalón como VERTICAL exacto
+      // en ese x, no un salto tardío). El relleno diario es lo que sincroniza el hover:
+      // con 'x unified' el tooltip elige el punto TCO más cercano en x, así que sin
+      // puntos intermedios el tooltip saltaría al TCO nuevo a mitad del backfill mientras
+      // la línea sigue en 6.91. Con relleno diario, hover=6.91 en TODO el tramo pre-régimen
+      // y la transición del tooltip cae en el MISMO x que el step de la línea.
+      let head=[];
+      if(preRegime){
+        const d0=Date.parse(xMinDate+'T00:00:00Z'), d1=Date.parse(pts[0].fecha+'T00:00:00Z');
+        for(let t=d0; t<=d1; t+=86400000)
+          head.push({fecha:new Date(t).toISOString().slice(0,10), tco:OFICIAL_FIJO});
+      }
+      const mainPts = head.concat(pts);
       const tx = mainPts.map(e=>e.fecha+' 00:00:00');  // string naive: medianoche Bolivia
       const ty = mainPts.map(e=>e.tco);
-      const msz = mainPts.map(e=>e.fecha===baseFecha?0:4);  // baseline sintético: sin marker
+      const msz = mainPts.map((e,i)=> i<head.length ? 0 : 4);  // relleno 6.91: sin marker
       tcoMaxMs = Date.parse(termFecha+'T00:00:00Z');  // el eje llega al fin del día vigente
       traces.push({x:tx,y:ty,name:'TCO',
         mode:'lines+markers',
@@ -1914,8 +1926,9 @@ function rVwap(c,v){
       // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
       traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
         name:'TCO', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
-      // Eje Y fijo a la vista actual (Compra + TCO del régimen NUEVO); excluye el
-      // baseline viejo para no des-zoomear. Zoomable: el salto se ve al alejar.
+      // Rango Y por defecto: SOLO P2P (Compra) + TCO dinámico (≥26-jun). El 6.91 queda
+      // en los datos pero NO empuja el piso — cae bajo la vista por defecto (visible en
+      // el hover unificado, que es x-based). Decisión de producto vigente de Diego.
       const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat(pts.map(e=>e.tco));
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
