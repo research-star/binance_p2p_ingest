@@ -501,11 +501,17 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
     modelo**, calibración 2026-06-21; antes fail-closed) **+ penalización opinión
     ×0.7** (funnel-v2 #130, [scraper.py:1064](noticias_ingest/scraper.py#L1064):
     columna/editorial NO se mata —va con `category='opinion'`— pero se penaliza el
-    score y no recibe bonos de portal/FX/instituciones) → corte editorial
-    `puntaje >= 6.7` → **agrupación por evento + tier de fuente** ("También en…",
-    col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día (7 días, umbral
-    0.70) → top configurable (default **14/día**, `config.NOTICIAS_TOP_BOLIVIA`;
-    FASE 3, antes 10). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
+    score y no recibe bonos de portal/FX/instituciones) **· piso Bloomberg-Bolivia ≥9**
+    (M1: Bloomberg Línea que pasa los gates duros —exclusión + geo-gate— queda ≥9,
+    dominando ajustes y el umbral del modelo; solo carril Bolivia) → corte editorial
+    `puntaje >= 6.7` → **boost institucional +1** (M2, `_boost_institucional`:
+    fuentes primarias INE/IBCE/BCB/ASFI/… reordenan por sobre refritos; se aplica
+    DESPUÉS del corte → NO rescata sub-umbral; recomputa `impact`. Split en
+    `scraper.FUENTES_INSTITUCIONALES`) → **agrupación por evento + tier de fuente**
+    ("También en…", col `tambien_en`; `agrupar_eventos`) → dedupe fuzzy inter-día
+    (7 días, umbral 0.70) → **top rotativo por score** (cupo **50/día**,
+    `config.NOTICIAS_TOP_BOLIVIA`; con cupo lleno evicta el de menor score del día —
+    DELETE físico, #179). **Resumen IA opt-in** (`noticias_ingest/resumen_ia.py`,
     `ANTHROPIC_API_KEY`; sin key → extracto). **Activo en prod desde 2026-06-24.**
     El origen de cada summary se registra en la col `summary_origen`
     (`'ia'`|`'extractivo'`|NULL legacy; migración `0007`, self-migrate en

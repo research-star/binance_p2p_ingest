@@ -162,10 +162,12 @@ def mirror_bolivia(snapshot, conn, args, ahora_utc, fecha_bo, previos):
     notas = [transform.build_nota(c, ahora_utc) for c in kept]
     stages[11]["out"] = len(notas)
 
-    # Stage 12: editorial threshold (>= UMBRAL_PUNTAJE via args.umbral)
+    # Stage 12: editorial threshold (>= UMBRAL_PUNTAJE via args.umbral) + boost institucional M2
     seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
     stages[12]["killed"] = [_nota_brief(n, "bajo_umbral") for n in notas if n["puntaje"] < args.umbral]
     stages[12]["out"] = len(seleccion)
+    # M2: mismo helper que la lane real (reordena, no mata; DESPUÉS del corte → no rescata).
+    ing._boost_institucional(seleccion)
     seleccion.sort(key=lambda n: -n["puntaje"])
 
     # Stage 13: agrupar_eventos (collapses same-event into representative + tambien_en)

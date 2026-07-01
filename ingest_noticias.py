@@ -56,7 +56,7 @@ import requests
 
 from config import NORMALIZED_DB, NOTICIAS_TOP_BOLIVIA, NOTICIAS_TOP_LATAM
 from noticias_ingest import latam, resumen_ia, scraper
-from noticias_ingest.transform import build_nota, build_nota_latam
+from noticias_ingest.transform import build_nota, build_nota_latam, impact_de_puntaje
 
 # ── Constantes ────────────────────────────────────────────────────────────
 
@@ -310,6 +310,20 @@ def escribir_csv_debug(candidatos: list, fecha: str):
 
 # ── Carril Bolivia ────────────────────────────────────────────────────────
 
+def _boost_institucional(seleccion: list[dict]) -> None:
+    """M2: +1 (cap 10) al `puntaje` de notas de fuente institucional (organismo/gremio
+    con dato primario), IN-PLACE. Recalcula también `impact` (banda derivada del puntaje)
+    para que el reordenamiento se refleje en el ranking del frontend, que ordena por
+    impact, NO por puntaje. Debe llamarse DESPUÉS del corte editorial 6.7 → SOLO-REORDENA:
+    nunca rescata una nota sub-umbral (una institucional de 5.8 ya quedó afuera). Fuentes
+    primarias (INE/IBCE/BCB/ASFI/…) pesan más que refritos de prensa. score_crudo/
+    score_ajustado conservan el valor del modelo. Split: scraper.FUENTES_INSTITUCIONALES."""
+    for n in seleccion:
+        if scraper.es_fuente_institucional(n["portal"]):
+            n["puntaje"] = min(round(n["puntaje"] + 1.0, 1), 10.0)
+            n["impact"] = impact_de_puntaje(n["puntaje"])
+
+
 # ⓘ pipeline-anchor: lane_bolivia es la secuencia (etapas 9-18) que replica
 #   tools/noticias-inspector. Si agregás/quitás/reordenás una etapa, actualizá el mirror
 #   (tools/noticias-inspector/inspector_core.py) + pipeline_map.py + SYNC.md.
@@ -354,6 +368,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         escribir_csv_debug(candidatos, fecha_bo)
 
         seleccion = [n for n in notas if n["puntaje"] >= args.umbral]
+        # M2: boost institucional (+1). Se aplica DESPUÉS del corte 6.7 → solo-reordena,
+        # nunca rescata sub-umbral (ver _boost_institucional).
+        _boost_institucional(seleccion)
         seleccion.sort(key=lambda n: -n["puntaje"])
         res["sobre_umbral"] = len(seleccion)
         # Agrupa por evento ("También en…"): colapsa la misma noticia cubierta por

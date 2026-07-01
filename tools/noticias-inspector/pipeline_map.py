@@ -30,7 +30,7 @@ BOLIVIA_STAGES = [
     {"i": 9, "name": "guard scrape-total-fail", "fn": "lane_bolivia (portales_ok)", "kind": "lane", "ref": "ingest_noticias.py:304"},
     {"i": 10, "name": "filtro scheme + patrocinado", "fn": "urlparse scheme + scraper.es_url_patrocinada", "kind": "lane", "ref": "ingest_noticias.py:314"},
     {"i": 11, "name": "build_nota (candidato -> fila)", "fn": "transform.build_nota", "kind": "lane", "ref": "transform.py:173"},
-    {"i": 12, "name": "umbral editorial (>= 6.7)", "fn": "puntaje >= UMBRAL_PUNTAJE", "kind": "lane", "ref": "ingest_noticias.py:322"},
+    {"i": 12, "name": "umbral editorial (>= 6.7) + boost institucional M2 (+1)", "fn": "puntaje >= UMBRAL_PUNTAJE; luego _boost_institucional (+1 a instituciones, reordena, no rescata sub-umbral)", "kind": "lane", "ref": "ingest_noticias.py:356"},
     {"i": 13, "name": "agrupar por evento", "fn": "ingest.agrupar_eventos (+ También en)", "kind": "lane", "ref": "ingest_noticias.py:329"},
     {"i": 14, "name": "presupuesto diario (top-N)", "fn": "budget = TOP_N - ya_hoy", "kind": "lane", "ref": "ingest_noticias.py:336"},
     {"i": 15, "name": "dedup inter-día (7d)", "fn": "ingest.es_repetida (>= UMBRAL_DEDUP_DB)", "kind": "lane", "ref": "ingest_noticias.py:348"},
