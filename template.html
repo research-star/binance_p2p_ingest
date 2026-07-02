@@ -1939,7 +1939,11 @@ function rVwap(c,v){
         line:{color:c.bcbTco,width:2,shape:'hv'},
         marker:{size:msz,color:c.bcbTco},
         connectgaps:true,
-        hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
+        // Sin hover propio: con 'x unified' la TCO (1 punto/día + extensión futura)
+        // competía por el ancla del tooltip y lo "lockeaba" en su medianoche cerca
+        // del borde derecho. La serie Compra MANDA el hover; el valor de la TCO
+        // viaja como texto derivado en el tooltip de Compra (vigente a esa fecha).
+        hoverinfo:'skip'});
       // Extensión horizontal del ÚLTIMO valor sobre todo su día de vigencia, SIN punto
       // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
       traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
@@ -1951,7 +1955,13 @@ function rVwap(c,v){
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
   }
-  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy}});
+  // TCO vigente en la fecha (BO) de cada punto Compra, como texto del tooltip:
+  // el hover ancla SOLO en la serie azul y muestra la TCO correspondiente.
+  const tcoHist=(meta.bcb_tco_history||[]).filter(e=>e&&e.tco!=null);
+  const tcoAtDay=function(dstr){ let val=null; for(const e of tcoHist){ if(e.fecha<=dstr) val=e.tco; else break; } return val; };
+  const tcoTxt=x.map(function(s){ const t=tcoAtDay(s.slice(0,10)); return t!=null ? ('<br>TCO '+fmt2(t)+' BOB/USD') : ''; });
+  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
+    text:tcoTxt, hovertemplate:'Compra %{y:.2f}%{text}<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
   const xaVwap=xaWithSlider(xaxisForView(L.xaxis,v));
   // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
