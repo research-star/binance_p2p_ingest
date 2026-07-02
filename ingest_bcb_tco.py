@@ -301,11 +301,18 @@ def parse_rate(s: str) -> float | None:
 #   <div class="bcb-tco-duo-label">Mañana <span>MARTES 30 DE JUNIO, 2026</span></div>
 #   <div class="bcb-tco-duo-num">9,76</div>  (MAÑANA)
 
+# El BCB alterna MAYÚSCULAS y minúsculas ("MARTES 30 DE JUNIO, 2026" vs
+# "jueves  2 de julio, 2026" con doble espacio) según la versión de la página →
+# case-insensitive y \s+ obligatorios.
+_ES_DATE_RE = re.compile(r"(\d{1,2})\s+de\s+([A-Za-zÁÉÍÓÚáéíóúÑñ]+)[,]?\s+(\d{4})",
+                         re.IGNORECASE)
+
+
 def _parse_es_date_home(text: str) -> str | None:
-    """'MARTES 30 DE JUNIO, 2026' → '2026-06-30'. None si no parsea."""
+    """'MARTES 30 DE JUNIO, 2026' / 'jueves  2 de julio, 2026' → ISO. None si no parsea."""
     if not text:
         return None
-    m = re.search(r"(\d{1,2})\s+DE\s+([A-Za-zÁÉÍÓÚáéíóúÑñ]+)[,]?\s+(\d{4})", text)
+    m = _ES_DATE_RE.search(text)
     if not m:
         return None
     dia, mes, anio = int(m.group(1)), m.group(2).lower(), int(m.group(3))
@@ -318,49 +325,61 @@ def _parse_es_date_home(text: str) -> str | None:
         return None
 
 
+def _find_dates_home(seg: str) -> list[str]:
+    """TODAS las fechas del card, en orden de aparición, de AMBAS formas que el
+    BCB fue alternando: <time datetime="YYYY-MM-DD"> y texto 'd de mes, yyyy'
+    (cualquier capitalización). Puede haber repetidas (el encabezado 'as-of'
+    suele listar hoy y mañana juntas)."""
+    found: list[tuple[int, str]] = []
+    for m in re.finditer(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', seg):
+        found.append((m.start(), m.group(1)))
+    for m in _ES_DATE_RE.finditer(seg):
+        dia, mes, anio = int(m.group(1)), m.group(2).lower(), int(m.group(3))
+        mm = SPANISH_MONTHS.get(mes)
+        if not mm:
+            continue
+        try:
+            found.append((m.start(), date(anio, mm, dia).isoformat()))
+        except ValueError:
+            pass
+    found.sort()
+    return [f for _, f in found]
+
+
 def parse_homepage_tco(html: str) -> list[dict]:
     """Extrae el TCO del card 'Tipo de cambio oficial' de la portada.
 
-    Devuelve [{fecha, tco}] (0, 1 o 2 entradas). Se acota al ARTICLE del card
-    is-tc-oficial en el MARKUP —no al <style>— y valida cada número con parse_rate
-    (exige decimal + rango plausible). Soporta el formato ACTUAL (un único
-    `<span class="bcb-tco-num">` + fecha en `<time datetime>`; 1 entrada) y, como
-    fallback, el VIEJO dúo `bcb-tco-duo-num` HOY/MAÑANA (hasta 2 entradas)."""
-    # Anclar en el ATRIBUTO class del article: 'is-tc-oficial"' (comilla de cierre).
-    # NO usar html.find("is-tc-oficial") a secas: esa clase también aparece ARRIBA
-    # en el <style> (reglas `.is-tc-oficial{…}` / `.is-tc-oficial .algo{…}`), que NO
-    # llevan `"` inmediatamente después, así que el patrón `is-tc-oficial"` las salta.
-    anchor = re.search(r'is-tc-oficial"[^>]*>', html)
+    Devuelve [{fecha, tco}] (0, 1 o 2 entradas). AGNÓSTICO AL FORMATO: el BCB
+    alterna la estructura del card según la hora y la retoca seguido (jun-29:
+    dúo HOY/MAÑANA con <time> y fechas en MAYÚSCULAS; 01-jul de día: un solo
+    `bcb-tco-num` con <time>; 01-jul de noche: dúo SIN <time>, fechas en
+    minúsculas con doble espacio). En vez de asumir una estructura:
+
+      1. Se acota al <article ... is-tc-oficial ...> del MARKUP (el anchor
+         tolera clases extra; las reglas del <style> no matchean `<article`).
+      2. Junta TODOS los valores (`bcb-tco-num` o `bcb-tco-duo-num`, en orden:
+         HOY primero, MAÑANA después si está).
+      3. Junta TODAS las fechas del card (<time datetime> y/o texto en español,
+         cualquier capitalización) y las ordena únicas ascendente.
+      4. Empareja fechas↔valores por posición: la fecha más vieja es HOY (el
+         1er valor), la siguiente MAÑANA (el 2do). Si hay menos fechas que
+         valores, solo se emiten los pares completos (conservador).
+
+    Cada valor se valida con parse_rate (decimal + rango plausible)."""
+    anchor = re.search(r"<article[^>]*\bis-tc-oficial\b[^>]*>", html)
     if not anchor:
         return []
-    seg = html[anchor.start():anchor.start() + 2000]
+    seg = html[anchor.start():]
     end = seg.find("</article>")  # acotar al card (no derramar al siguiente article)
     if end != -1:
         seg = seg[:end]
-    # Fecha de vigencia: <time datetime="YYYY-MM-DD"> dentro del card.
-    fm = re.search(r'<time[^>]*datetime="(\d{4}-\d{2}-\d{2})"', seg)
-    fecha = fm.group(1) if fm else None
-    # Valores: `bcb-tco-num` (actual) o `bcb-tco-duo-num` (viejo). En el formato
-    # actual hay 1; en el viejo, 2 (HOY, MAÑANA).
     nums = re.findall(r'bcb-tco-(?:duo-)?num"[^>]*>\s*([\d.]*\d[,.]\d+)\s*<', seg)
+    fechas = sorted(set(_find_dates_home(seg)))
     out = []
-    if fecha and len(nums) >= 1:
-        v = parse_rate(nums[0])
+    for f, n in zip(fechas, nums):
+        v = parse_rate(n)
         if v is not None:
-            out.append({"fecha": fecha, "tco": v})
-    # Fallback formato VIEJO: segundo valor = MAÑANA, fechado por el primer <span>
-    # del card que parsea como fecha ('Hasta 00:00' no parsea).
-    if len(nums) >= 2:
-        manana = None
-        for s in re.findall(r"<span>([^<]+)</span>", seg):
-            d = _parse_es_date_home(s)
-            if d:
-                manana = d
-                break
-        if manana:
-            v = parse_rate(nums[1])
-            if v is not None:
-                out.append({"fecha": manana, "tco": v})
+            out.append({"fecha": f, "tco": v})
     return out
 
 
