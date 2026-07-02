@@ -1955,15 +1955,21 @@ function rVwap(c,v){
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
   }
-  // TCO vigente en la fecha (BO) de cada punto Compra, como texto del tooltip:
-  // el hover ancla SOLO en la serie azul y muestra la TCO correspondiente.
+  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
+    hovertemplate:'Compra %{y:.2f}<extra></extra>'});
+  // Compañera de hover de la TCO: el valor VIGENTE por fecha, muestreado sobre la
+  // MISMA grilla x que Compra. Así el hover unificado le dibuja su renglón NATIVO
+  // (glifo naranja alineado, misma tipografía) sin competir por el ancla — sus
+  // puntos coinciden exactos con los azules. Se dibuja superpuesta al step visual
+  // (mismos valores → overlap exacto); null pre-régimen → sin línea ni renglón.
+  // name 'TCO' → el toggle de la serie la apaga junto con el step.
   const tcoHist=(meta.bcb_tco_history||[]).filter(e=>e&&e.tco!=null);
   const tcoAtDay=function(dstr){ let val=null; for(const e of tcoHist){ if(e.fecha<=dstr) val=e.tco; else break; } return val; };
-  // El renglón del TCO lleva su "rayita" naranja (— coloreado) para leerse como
-  // serie, igual que el ícono azul de Compra que dibuja el hover unificado.
-  const tcoTxt=x.map(function(s){ const t=tcoAtDay(s.slice(0,10)); return t!=null ? ('<br><span style="color:'+c.bcbTco+'">—</span> TCO '+fmt2(t)+' BOB/USD') : ''; });
-  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
-    text:tcoTxt, hovertemplate:'Compra %{y:.2f}%{text}<extra></extra>'});
+  const tcoY=x.map(function(s){ return tcoAtDay(s.slice(0,10)); });
+  if(tcoY.some(function(t){return t!=null;}))
+    traces.push({x:x, y:tcoY, name:'TCO', mode:'lines',
+      line:{color:c.bcbTco,width:2,shape:'hv'}, connectgaps:false, showlegend:false,
+      hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
   const xaVwap=xaWithSlider(xaxisForView(L.xaxis,v));
   // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
