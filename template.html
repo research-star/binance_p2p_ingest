@@ -1382,7 +1382,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">Mover abajo &darr;</button>
   <div class="panel-menu-divider" id="pmiDivider"></div>
   <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">Descargar PNG</button>
-  <button class="panel-menu-item" data-action="download-csv" role="menuitem" type="button">Descargar CSV</button>
 </div>
 
 <button class="fab-more" id="fabMore" type="button" aria-label="Más gráficas. 0 paneles ocultos" title="Más gráficas">
@@ -2786,10 +2785,6 @@ document.querySelectorAll('#panelMenu .panel-menu-item').forEach(item=>{
       document.querySelectorAll('.panel-grid .js-plotly-plot').forEach(p=>{try{Plotly.Plots.resize(p)}catch(e){}});
     }else if(action==='download-png'){
       downloadPanelPng(panel.dataset.panel);
-    }else if(action==='download-csv'){
-      const id=panel.dataset.panel;
-      const csv = (id in PANEL_TABLE_ROOT) ? csvFromTablePanel(id) : csvFromChartPanel(id);
-      _triggerDownload(csv, id+'_'+_stamp()+'.csv', 'text/csv;charset=utf-8');
     }
     closePanelMenu(true);
   });
