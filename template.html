@@ -2273,12 +2273,21 @@ function tcoFechaCorta(f){  // "2026-06-30" -> "30 jun"
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
-  // Prima P2P vs el TCO oficial (RD 88/2026). Fail-soft: si todavía no hay datos
-  // de TCO, cae al fijo histórico 6.96 (meta.bcb_rate) para no romper la KPI.
-  // TCO a mostrar: el ÚLTIMO publicado por el BCB (meta.bcb_tco_last), no el
-  // "vigente hoy" — es el dato más nuevo (ej. el de mañana, ya anunciado) y es lo
-  // que se espera ver apenas el BCB lo publica. La fecha de vigencia va en el sublabel.
-  const tco=(meta.bcb_tco_last!=null)?{tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha}:null;
+  // TCO como el card del BCB: de día muestra el VIGENTE HOY; cuando ya se conoce
+  // el de mañana (el BCB lo publica ~20:00 y el cron lo captura), muestra AMBOS
+  // hasta la medianoche (Bolivia). A las 00:00 el de "mañana" pasa a ser el
+  // vigente y queda solo. Data-driven: el dúo aparece cuando existe una entrada
+  // con fecha futura en el histórico (incluye fines de semana, regla RD 88/2026).
+  const hoyBo = new Date(Date.now()-4*3600000).toISOString().slice(0,10);
+  let tcoHoy=null, tcoManana=null;
+  (meta.bcb_tco_history||[]).forEach(function(e){
+    if(!e || e.tco==null || !e.fecha) return;
+    if(e.fecha<=hoyBo) tcoHoy=e;                       // ordenado asc → queda el último ≤ hoy
+    else if(!tcoManana) tcoManana=e;                   // primera fecha futura = mañana
+  });
+  // Fail-soft en cadena: sin vigente-hoy usa el último publicado; sin datos, 6.96.
+  if(!tcoHoy && meta.bcb_tco_last!=null) tcoHoy={tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha};
+  const tco=tcoHoy;
   const oficial=(tco&&tco.tco!=null)?tco.tco:meta.bcb_rate;
   const premium=(last.vb10/oficial-1)*100;
   const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
@@ -2288,11 +2297,15 @@ function updateKpis(){
   const hasTco = !!(tco && tco.tco != null);
   const refCompra = hasTco ? tco.tco : ref.compra;
   const refVenta  = hasTco ? (tco.tco + 0.10) : ref.venta;
+  const bcbSub = !hasTco ? 'Compra · Venta (BOB/USDT)'
+    : (tcoManana
+        ? ('Hoy · <b>Mañana ('+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
+        : ('TCO · Venta ref · vig. '+tcoFechaCorta(tco.fecha)));
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), (hasTco?('TCO \u00b7 Venta ref \u00b7 vig. '+tcoFechaCorta(tco.fecha)):'Compra \u00b7 Venta (BOB/USDT)'), ICONS.bcb, null)+
+    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null)+
     kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT', ICONS.compra, 'buy')+
     kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT', ICONS.venta, 'sell')+
     kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
