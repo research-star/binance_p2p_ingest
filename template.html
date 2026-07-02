@@ -1959,7 +1959,9 @@ function rVwap(c,v){
   // el hover ancla SOLO en la serie azul y muestra la TCO correspondiente.
   const tcoHist=(meta.bcb_tco_history||[]).filter(e=>e&&e.tco!=null);
   const tcoAtDay=function(dstr){ let val=null; for(const e of tcoHist){ if(e.fecha<=dstr) val=e.tco; else break; } return val; };
-  const tcoTxt=x.map(function(s){ const t=tcoAtDay(s.slice(0,10)); return t!=null ? ('<br>TCO '+fmt2(t)+' BOB/USD') : ''; });
+  // El renglón del TCO lleva su "rayita" naranja (— coloreado) para leerse como
+  // serie, igual que el ícono azul de Compra que dibuja el hover unificado.
+  const tcoTxt=x.map(function(s){ const t=tcoAtDay(s.slice(0,10)); return t!=null ? ('<br><span style="color:'+c.bcbTco+'">—</span> TCO '+fmt2(t)+' BOB/USD') : ''; });
   traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
     text:tcoTxt, hovertemplate:'Compra %{y:.2f}%{text}<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
