@@ -1967,7 +1967,11 @@ function rVwap(c,v){
   const tcoAtDay=function(dstr){ let val=null; for(const e of tcoHist){ if(e.fecha<=dstr) val=e.tco; else break; } return val; };
   const tcoY=x.map(function(s){ return tcoAtDay(s.slice(0,10)); });
   if(tcoY.some(function(t){return t!=null;}))
-    traces.push({x:x, y:tcoY, name:'TCO', mode:'lines',
+    // opacity:0 → INVISIBLE en el plot (en vista "Por día" sus puntos caen a la
+    // hora del último snapshot, no a medianoche, y desfasada del step visual
+    // dibujaba "cajitas"). El renglón y el glifo naranja del hover unificado NO
+    // heredan la opacidad de la traza, así que el tooltip queda intacto.
+    traces.push({x:x, y:tcoY, name:'TCO', mode:'lines', opacity:0,
       line:{color:c.bcbTco,width:2,shape:'hv'}, connectgaps:false, showlegend:false,
       hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
