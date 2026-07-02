@@ -3207,6 +3207,19 @@ window.renderBloqueos = function(){
   drawTrend();
 };
 // ── Tasas (TRE): serie mensual del BCB, bcb_tre.json via ingest_bcb_tre.py ──
+// Locale 'es' mínimo para que Plotly rotule los meses en español (%b/%B en
+// ticks y hover). Registrado una vez, se activa por-plot con config locale:'es'.
+if(window.Plotly&&Plotly.register){
+  Plotly.register({moduleType:'locale', name:'es',
+    dictionary:{},
+    format:{
+      days:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
+      shortDays:['dom','lun','mar','mié','jue','vie','sáb'],
+      months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
+      shortMonths:['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'],
+      date:'%d/%m/%Y'
+    }});
+}
 window.renderTasas = (function(){
   let built=false;
   const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
@@ -3234,10 +3247,17 @@ window.renderTasas = (function(){
        line:{color:c.accentWarm,width:1.5,shape:'hv'}, marker:{size:3,color:c.accentWarm},
        hovertemplate:'ME %{y:.2f}%<extra></extra>'}
     ];
+    // Último valor rotulado al final de cada serie (patrón de Inflación interanual).
+    const lastX=x[x.length-1];
+    const endLabels=[
+      {x:lastX, y:last.mn, text:'<b>'+fmt2(last.mn)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.blue}},
+      {x:lastX, y:(last.me!=null?last.me:0), text:'<b>'+fmt2(last.me!=null?last.me:0)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.accentWarm}}
+    ].map(a=>({...a, showarrow:false, xanchor:'left', yanchor:'middle', xshift:10}));
     Plotly.react('chartTre',traces,{...L,
       xaxis:{...L.xaxis,tickformat:'%b %Y',hoverformat:'%b %Y',nticks:10,showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4},
       yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero',gridcolor:'rgba(33,30,27,.09)',showgrid:true,automargin:true},
-      showlegend:true, margin:{l:56,r:16,t:36,b:48}, height:380}, PC);
+      annotations:endLabels,
+      showlegend:true, margin:{l:56,r:64,t:36,b:48}, height:380}, {...PC, locale:'es'});
   };
 })();
 
