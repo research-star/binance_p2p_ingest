@@ -1235,6 +1235,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-macro-tab active" data-subtab="riesgo" type="button">Riesgo pa&iacute;s</button>
     <button class="fb-macro-tab" data-subtab="inflacion" type="button">Inflaci&oacute;n</button>
     <button class="fb-macro-tab" data-subtab="bloqueos" type="button">Bloqueos</button>
+    <button class="fb-macro-tab" data-subtab="tasas" type="button">Tasas</button>
   </nav>
   <!-- Sub-panel default: Riesgo País (contenido EMBI re-alojado; ids internos intactos). -->
   <div id="subtab-riesgo">
@@ -1352,6 +1353,20 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         </div>
         <div id="bloqueosTrendChart" style="height:380px;"></div>
         <div class="fb-chart-source">Datos: ABC &middot; v&iacute;a @mauforonda &middot; serie hist&oacute;rica de incidentes de transitabilidad</div>
+      </div>
+    </div>
+  </div>
+  <!-- Sub-panel: Tasas (TRE mensual del BCB, xlsx via ingest_bcb_tre.py).
+       Render lazy: window.renderTasas (hook de MACRO_SUBTABS). -->
+  <div id="subtab-tasas" style="display:none;">
+    <div class="content">
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">Tasa de Referencia (TRE)</div>
+          <div class="fb-chart-sub" id="treSub">Serie mensual por vigencia &middot; MN (moneda nacional) y ME (moneda extranjera), en % anual.</div>
+        </div>
+        <div id="chartTre" style="height:380px;"></div>
+        <div class="fb-chart-source">Fuente: Banco Central de Bolivia &middot; Evoluci&oacute;n de las Tasas de Referencia &middot; Actas de Directorio 026/2018 y 040/2023</div>
       </div>
     </div>
   </div>
@@ -2911,6 +2926,7 @@ var ROUTE_MAP = {
   '/riesgo':    {tab:'macro', subtab:'riesgo'},
   '/inflacion': {tab:'macro', subtab:'inflacion'},
   '/bloqueos':  {tab:'macro', subtab:'bloqueos'},
+  '/tasas':     {tab:'macro', subtab:'tasas'},
   '/dpf':       {tab:'dpf'},
   '/bbv':       {tab:'bbv'},
   '/guia':      {tab:'guide'},
@@ -3190,6 +3206,41 @@ window.renderBloqueos = function(){
   }
   drawTrend();
 };
+// ── Tasas (TRE): serie mensual del BCB, bcb_tre.json via ingest_bcb_tre.py ──
+window.renderTasas = (function(){
+  let built=false;
+  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  function vigLabel(v){ const p=(v||'').split('-'); return p.length>=2 ? (MES[+p[1]-1]+' '+p[0]) : (v||'—'); }
+  return function(){
+    const el=document.getElementById('chartTre');
+    if(!el) return;
+    const T=(DATA.bcb_tre&&DATA.bcb_tre.history)||[];
+    if(!T.length){ el.innerHTML='<div class="view-hint">Sin datos de TRE</div>'; return; }
+    const last=T[T.length-1];
+    const d=document.getElementById('tasasDate'); if(d) d.textContent=vigLabel(last.vigencia);
+    const sub=document.getElementById('treSub');
+    if(sub) sub.textContent='Vigente '+vigLabel(last.vigencia)+': MN '+fmt2(last.mn)+'% · ME '+fmt2(last.me!=null?last.me:0)+'% · serie mensual por vigencia, en % anual.';
+    if(built) return;  // serie mensual estática: un build por carga alcanza
+    built=true;
+    const c=getC(), L=BL(c);
+    // Strings naive (hora-pared Bolivia): Plotly los rotula igual en todo navegador.
+    const x=T.map(e=>e.vigencia+' 00:00:00');
+    // shape 'hv': la tasa rige el mes completo hasta la vigencia siguiente.
+    const traces=[
+      {x:x, y:T.map(e=>e.mn), name:'MN', mode:'lines+markers',
+       line:{color:c.blue,width:2,shape:'hv'}, marker:{size:4,color:c.blue},
+       hovertemplate:'MN %{y:.2f}%<extra></extra>'},
+      {x:x, y:T.map(e=>e.me), name:'ME', mode:'lines+markers',
+       line:{color:c.accentWarm,width:1.5,shape:'hv'}, marker:{size:3,color:c.accentWarm},
+       hovertemplate:'ME %{y:.2f}%<extra></extra>'}
+    ];
+    Plotly.react('chartTre',traces,{...L,
+      xaxis:{...L.xaxis,tickformat:'%b %Y',hoverformat:'%b %Y',nticks:10,showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4},
+      yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero',gridcolor:'rgba(33,30,27,.09)',showgrid:true,automargin:true},
+      showlegend:true, margin:{l:56,r:16,t:36,b:48}, height:380}, PC);
+  };
+})();
+
 var MACRO_SUBTABS = [
   { id:'riesgo', slug:'/riesgo', title:'FinanzasBo — Riesgo País EMBI',
     subtitle:'EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span>',
@@ -3202,7 +3253,10 @@ var MACRO_SUBTABS = [
     render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } },
   { id:'bloqueos', slug:'/bloqueos', title:'FinanzasBo — Bloqueos en Bolivia',
     subtitle:'Bloqueos en Bolivia &middot; Fuente: ABC vía @mauforonda &middot; Datos al <span id="bloqueosDate">&mdash;</span>',
-    render:function(){ if(typeof window.renderBloqueos==='function') window.renderBloqueos(); } }
+    render:function(){ if(typeof window.renderBloqueos==='function') window.renderBloqueos(); } },
+  { id:'tasas', slug:'/tasas', title:'FinanzasBo — Tasa de Referencia (TRE)',
+    subtitle:'Tasa de Referencia (TRE) del BCB &middot; Vigente <span id="tasasDate">&mdash;</span>',
+    render:function(){ if(typeof window.renderTasas==='function') window.renderTasas(); } }
 ];
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
 var TAB_TITLES = {

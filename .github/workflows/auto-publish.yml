@@ -10,6 +10,7 @@ on:
     paths-ignore:
       - 'bcb_referencial.json'
       - 'bcb_tco.json'
+      - 'bcb_tre.json'
   workflow_dispatch:   # disparo manual: botón "Run workflow" en la UI o `gh workflow run auto-publish.yml`
 
 concurrency:

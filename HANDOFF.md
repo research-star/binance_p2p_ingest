@@ -21,6 +21,7 @@ de backups y, opcionalmente, dashboard local.
 | `scripts/watchdog.py` | VPS cron user `binance` | `*/5 * * * *` | pinga `HC_INGEST` si snapshot reciente |
 | `bcb_referencial.py` (via `scripts/bcb_scrape_and_commit.sh`) | VPS cron user `binance` | `5,35 12-15 * * 1-5` (8 corridas/día lun-vie, 08:05–11:35 BO) | `HC_BCB` pendiente |
 | `ingest_bcb_tco.py` (via `scripts/bcb_tco_scrape_and_commit.sh`) | VPS cron user `binance` | `*/5 0-3 * * 2-6` (cada 5 min, UTC 00:00–03:55 mar–sáb = 20:00–23:55 BO lun–vie; reintenta hasta capturar el TCO, que el BCB publica a las 20:00 BO pero a veces con atraso; baja ventana 14 días atrás + 5 adelante —la fecha del TCO es su vigencia, que va por delante de hoy—. Wrapper idempotente/auto-frenante: solo commitea si aparece una fecha nueva y no hace nada una vez capturado el valor de la noche) | `HC_BCB_TCO` (ping desde wrapper; falta crear UUID + .env) |
+| `ingest_bcb_tre.py` (via `scripts/bcb_tre_scrape_and_commit.sh`) | VPS cron user `binance` | `15 12 * * *` (diario 08:15 BO; la TRE es MENSUAL pero el día de publicación varía — wrapper idempotente: no-op si ya tiene la vigencia del mes, commitea solo cuando la vigencia máxima avanza. Descubre el xlsx de la gestión más alta del listado `?q=tasas_interes`, el nombre cambia por año) | `HC_BCB_TRE` (ping desde wrapper; falta crear UUID + .env) |
 | `ingest_embi.py` | VPS cron user `binance` | `0 10,22 * * *` (2/día, 06:00 y 18:00 BO) | `HC_EMBI` |
 | `ingest_ine_pib.py` | Código en main, **ingest PAUSADO por decisión** — no scheduleado, no ping | (cuando se reanude) diario post-cierre Q (PIB trim) + semanal (PIB anual) | `HC_INE_PIB` (pausado en UI de Diego) |
 | `ingest_ine_ipc.py` | VPS cron user `binance` | `15 5,11,17,23 1-10 * *` UTC | `HC_INE_IPC` |
@@ -34,7 +35,7 @@ de backups y, opcionalmente, dashboard local.
 
 **Workflow `auto-publish.yml`:** dispara `publish_dashboard.py` en VPS en
 cada push a `main`, **excepto** cuando el único cambio es data BCB
-autocommiteada (`bcb_referencial.json` / `bcb_tco.json`) — esos los recoge el
+autocommiteada (`bcb_referencial.json` / `bcb_tco.json` / `bcb_tre.json`) — esos los recoge el
 cron `*/12` en su ciclo normal, no fuerzan publish.
 
 ### Cerrado desde el último refresh (2026-06-10 → 2026-06-17)
@@ -747,6 +748,7 @@ los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
 */12 * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py   (+ curl $HC_DASHBOARD)
 5,35 12-15 * * 1-5  cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh
 */5  0-3 * * 2-6    cd /opt/binance_p2p && bash scripts/bcb_tco_scrape_and_commit.sh   (TCO cada 5 min, 20:00–23:55 BO, hasta capturar)
+15   12 * * *       cd /opt/binance_p2p && bash scripts/bcb_tre_scrape_and_commit.sh   (TRE diario 08:15 BO; no-op si el mes ya está)
 0    10,22 * * *    cd /opt/binance_p2p && .venv/bin/python ingest_embi.py
 15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
 30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
