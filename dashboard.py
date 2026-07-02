@@ -27,7 +27,7 @@ try:
 except ImportError:
     pass  # graceful: sin dotenv, env vars deben venir del entorno (counter → "—")
 
-from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, TEMPLATE_HTML
+from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, BCB_TRE_JSON, TEMPLATE_HTML
 from scripts.fetch_umami_stats import fetch_visits
 
 DEFAULT_DB = NORMALIZED_DB
@@ -542,6 +542,23 @@ def load_bcb_tco(first_date: str | None = None) -> dict:
                         out['bcb_tco_history'] = [h for h in filled if h['fecha'] >= first_date]
                     else:
                         out['bcb_tco_history'] = filled
+    except Exception:
+        pass
+    return out
+
+
+def load_bcb_tre() -> dict:
+    """Lee bcb_tre.json (serie mensual de la TRE por vigencia, generado por
+    ingest_bcb_tre.py). Fail-soft: sin archivo o corrupto → history vacío y el
+    frontend muestra 'Sin datos de TRE'."""
+    out = {'history': []}
+    try:
+        if BCB_TRE_JSON.exists():
+            data = json.loads(BCB_TRE_JSON.read_text(encoding='utf-8'))
+            if isinstance(data, list):
+                out['history'] = sorted(
+                    [h for h in data if h.get('vigencia') and h.get('mn') is not None],
+                    key=lambda h: h['vigencia'])
     except Exception:
         pass
     return out
@@ -1205,6 +1222,7 @@ def process_data(db_path: Path) -> dict:
         'inflacion': inflacion_data,
         'noticias': noticias_data,
         'bloqueos': load_bloqueos(),
+        'bcb_tre': load_bcb_tre(),
         'gaps': gaps,
         'meta': {
             'total_snapshots': len(timestamps),

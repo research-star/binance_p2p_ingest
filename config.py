@@ -27,6 +27,7 @@ NORMALIZED_DB = Path("p2p_normalized.db")
 DASHBOARD_HTML = Path("index.html")
 BCB_REF_JSON = Path("bcb_referencial.json")
 BCB_TCO_JSON = Path("bcb_tco.json")  # Tipo de Cambio Oficial diario (RD 88/2026)
+BCB_TRE_JSON = Path("bcb_tre.json")  # Tasa de Referencia mensual (Actas 026/2018 y 040/2023)
 TEMPLATE_HTML = Path(__file__).parent / "template.html"
 
 # Backup opcional de snapshots (env var P2P_BACKUP_DIR). Si no está definida
