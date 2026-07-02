@@ -476,6 +476,12 @@ def deploy_cf_pages():
     Direct Upload no consume cuota de builds de CF Pages (límite 500/mes
     aplica solo a builds Git-integrados).
     """
+    # Kill-switch reversible por env-var (default ON): CF_DEPLOY_ENABLED=0 en el
+    # .env del VPS pausa el espejo CF sin tocar el push a gh-pages ni revertir
+    # código. Reactivar = CF_DEPLOY_ENABLED=1 (o quitar la línea), sin merge.
+    if os.environ.get("CF_DEPLOY_ENABLED", "1").strip().lower() in ("0", "false", "no", "off"):
+        emit("[publish] cf=skip reason=disabled")
+        return
     try:
         token = os.environ.get("CLOUDFLARE_API_TOKEN", "").strip()
         account = os.environ.get("CLOUDFLARE_ACCOUNT_ID", "").strip()
