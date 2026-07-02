@@ -1965,13 +1965,17 @@ function rVwap(c,v){
   // name 'TCO' → el toggle de la serie la apaga junto con el step.
   const tcoHist=(meta.bcb_tco_history||[]).filter(e=>e&&e.tco!=null);
   const tcoAtDay=function(dstr){ let val=null; for(const e of tcoHist){ if(e.fecha<=dstr) val=e.tco; else break; } return val; };
-  const tcoY=x.map(function(s){ return tcoAtDay(s.slice(0,10)); });
-  if(tcoY.some(function(t){return t!=null;}))
-    // opacity:0 → INVISIBLE en el plot (en vista "Por día" sus puntos caen a la
-    // hora del último snapshot, no a medianoche, y desfasada del step visual
-    // dibujaba "cajitas"). El renglón y el glifo naranja del hover unificado NO
-    // heredan la opacidad de la traza, así que el tooltip queda intacto.
-    traces.push({x:x, y:tcoY, name:'TCO', mode:'lines', opacity:0,
+  // Invisibilidad SIN matar el glifo del tooltip: el glifo del hover unificado
+  // hereda width/opacity de la traza (opacity:0 o width:0 lo borran — validado
+  // empíricamente), así que la traza va con ancho normal pero SIN segmentos
+  // dibujables: cada punto queda aislado entre gaps null (un punto aislado en
+  // mode:'lines' no dibuja nada, pero sigue siendo hovereable). Así en "Por día"
+  // no se dibuja la línea desfasada (las "cajitas") y el renglón conserva su
+  // rayita naranja.
+  const tcoXX=[], tcoYY=[];
+  x.forEach(function(s){ const t=tcoAtDay(s.slice(0,10)); tcoXX.push(s, s); tcoYY.push(t, null); });
+  if(tcoYY.some(function(t){return t!=null;}))
+    traces.push({x:tcoXX, y:tcoYY, name:'TCO', mode:'lines',
       line:{color:c.bcbTco,width:2,shape:'hv'}, connectgaps:false, showlegend:false,
       hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
