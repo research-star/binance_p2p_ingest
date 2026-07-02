@@ -3249,17 +3249,17 @@ window.renderTasas = (function(){
     // shape 'hv': la tasa rige el mes completo hasta la vigencia siguiente.
     const traces=[
       {x:x, y:T.map(e=>e.mn), name:'MN', mode:'lines+markers',
-       line:{color:c.blue,width:2,shape:'hv'}, marker:{size:4,color:c.blue},
+       line:{color:c.sell,width:2,shape:'hv'}, marker:{size:4,color:c.sell},
        hovertemplate:'MN %{y:.2f}%<extra></extra>'},
       {x:x, y:T.map(e=>e.me), name:'ME', mode:'lines+markers',
-       line:{color:c.accentWarm,width:1.5,shape:'hv'}, marker:{size:3,color:c.accentWarm},
+       line:{color:c.buy,width:1.5,shape:'hv'}, marker:{size:3,color:c.buy},
        hovertemplate:'ME %{y:.2f}%<extra></extra>'}
     ];
     // Último valor rotulado al final de cada serie (patrón de Inflación interanual).
     const lastX=x[x.length-1];
     const endLabels=[
-      {x:lastX, y:last.mn, text:'<b>'+fmt2(last.mn)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.blue}},
-      {x:lastX, y:(last.me!=null?last.me:0), text:'<b>'+fmt2(last.me!=null?last.me:0)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.accentWarm}}
+      {x:lastX, y:last.mn, text:'<b>'+fmt2(last.mn)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.sell}},
+      {x:lastX, y:(last.me!=null?last.me:0), text:'<b>'+fmt2(last.me!=null?last.me:0)+'%</b>', font:{family:'IBM Plex Mono,monospace', size:11.5, color:c.buy}}
     ].map(a=>({...a, showarrow:false, xanchor:'left', yanchor:'middle', xshift:10}));
     Plotly.react('chartTre',traces,{...L,
       xaxis:{...L.xaxis,tickformat:'%b %Y',hoverformat:'%b %Y',nticks:10,showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4},
