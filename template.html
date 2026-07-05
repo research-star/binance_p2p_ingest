@@ -5206,8 +5206,15 @@ window.addEventListener('popstate', function(){
   // reordenadas por la curación. order = ids explícitos: las listadas (que sigan
   // estando en el top-5) van primero en ese orden; las no listadas quedan detrás
   // en su orden por impacto. Sin curación → orden por impacto tal cual (hoy).
+  // Relleno "no encoge" (mismo criterio que npPool): si el día por-defecto no
+  // alcanza 5 candidatos —p.ej. quedan pocas notas tras ocultar—, se completa con
+  // las siguientes por impacto de días anteriores, para que "Lo más relevante hoy"
+  // muestre siempre 5 mientras el archivo alcance. En días con volumen normal ni se
+  // dispara (el slice del día ya llena 5).
   function npRielNotes(){
-    const cand=ntDayNotes(ntDefaultDay()).slice(1,6);
+    const day=ntDefaultDay();
+    let cand=ntDayNotes(day).slice(1,6);
+    for(let o=day+1;o<=NT_LIMIT && cand.length<5;o++){ cand=cand.concat(ntDayNotes(o).slice(0,5-cand.length)); }
     const order=(npCuration && Array.isArray(npCuration.order)) ? npCuration.order : null;
     if(!order || !order.length) return cand;
     const byId={}; cand.forEach(function(n){ byId[n.id]=n; });
