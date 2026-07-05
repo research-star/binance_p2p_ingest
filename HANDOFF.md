@@ -241,11 +241,12 @@ pipeline completo con data fresca del VPS; esto es la versión manual mínima):
 
 1. **Build**: `python dashboard.py` regenera `index.html` local desde
    `p2p_normalized.db`. Para no ensuciar el working tree, generar a un
-   directorio temporal (dashboard.py no crea el directorio padre):
-   `New-Item -ItemType Directory -Force "$env:TEMP\fb-preview" | Out-Null;
-   python dashboard.py --output "$env:TEMP\fb-preview\index.html"`.
+   directorio temporal (dashboard.py crea los directorios padres solo):
+   `python dashboard.py --output "$env:TEMP\fb-preview\index.html"`.
    Como el output se llama `index.html`, también escribe un alias
-   `p2p_dashboard.html` al lado (inocuo en un temp dir).
+   `p2p_dashboard.html` al lado (inocuo en un temp dir), y además hornea la
+   versión EN en `<dir>\en\index.html` (doble bake i18n; `--output-en` para
+   otro path).
    **No commitear `index.html`** — el publish productivo lo hace el VPS.
 2. **Servir**: `python -m http.server 8000 --directory <dir del build>`.
    NO abrir con `file://` — rompe el routing por History API.
@@ -670,7 +671,11 @@ Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 
 `dashboard.py` lee `p2p_normalized.db` + `bcb_referencial.json` +
 `template.html`, produce `index.html` autocontenido (~770 KB) con
-Plotly.js. Publicado en `https://research-star.github.io/binance_p2p_ingest/`.
+Plotly.js, más la versión en inglés `en/index.html` (doble bake vía
+`i18n_bake.py` + `i18n/*.json`; misma data). El EN es fail-soft de punta a
+punta: si su bake falla, dashboard.py lo omite con warn (el ES no se
+bloquea) y `publish_dashboard.py` degrada a warn + EN stale.
+Publicado en `https://research-star.github.io/binance_p2p_ingest/`.
 Opcional `--csv` exporta métricas por snapshot.
 
 11 paneles: VWAP por profundidad, Spread efectivo, Profundidad por lado,

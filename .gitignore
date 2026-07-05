@@ -99,6 +99,10 @@ noticias_ingest/data/
 # p2p_dashboard.html es un alias local por compatibilidad, no se sube.
 p2p_dashboard.html
 
+# Dashboard EN: artefacto del doble bake (i18n_bake), regenerado en cada
+# deploy — vive solo en gh-pages, no en main.
+/en/
+
 # Design system: prototipo extraído del zip (kit local, regenerable). El zip y
 # los .md curados viven en design-system/ (untracked); lo extraído se ignora.
 design-system/_unzipped/

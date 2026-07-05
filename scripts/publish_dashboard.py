@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-publish_dashboard.py — Genera index.html via dashboard.py y lo pushea a gh-pages.
+publish_dashboard.py — Genera index.html (ES) + en/index.html (EN) via
+dashboard.py y los pushea a gh-pages.
 
 Diseñado para correr vía cron cada 12 min en el VPS productivo. La rama
 `gh-pages` en el remoto es orphan (sin parent en main) y GH Pages la sirve
@@ -17,6 +18,11 @@ Mecánica:
 - Cleanup garantizado del worktree y del index temp en try/finally.
 - Validación de tamaño: mínimo absoluto + chequeo secundario contra el último
   publish exitoso (ratio floor) para detectar generación severamente truncada.
+- Salida dual-idioma: el EN es fail-SOFT — si falta o viene truncado se
+  publica solo el ES (warn), nunca bloquea el publish (misma filosofía
+  fail-safe que _inject_riesgo). dashboard.py cubre la otra mitad: si el
+  bake EN falla (clave faltante / en.json roto) omite el output EN con warn
+  y sale 0, de modo que acá degrada al mismo camino output_missing.
 """
 
 import contextlib
@@ -43,6 +49,7 @@ RIESGO_DIR = REPO_ROOT / "riesgo_propio"   # own-math riesgo-país calculator + 
 
 WORKTREE_PATH = Path("/tmp/gh-pages-publish-wt")
 TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
+TMP_INDEX_EN_PATH = Path("/tmp/publish_dashboard_index_en.html")
 LOCK_PATH = Path("/tmp/publish_dashboard.lock")
 LAST_SIZE_STATE_PATH = Path("/var/log/binance_p2p/publish_dashboard.last_size")
 
@@ -313,14 +320,17 @@ def sync_hidden_mirror(ids):
 
 # ── Riesgo-país own-math injection (fail-safe) ───────────────────────────────
 
-def _inject_riesgo(index_path: Path) -> None:
+def _inject_riesgo(index_paths: "list[Path]") -> None:
     """Compute the live own-math riesgo-país number, rebuild the historical
-    series, and inject the panels into the freshly-built index.html.
+    series, and inject the panels into the freshly-built index files.
 
     Strictly fail-safe: ANY error is logged and swallowed so the normal
     dashboard still publishes (worst case the panels are absent this cycle).
     Each sub-step runs with check=False; live_bolivia.py degrades to the
     snapshot if Playwright/venue is unavailable, so this never blocks publish.
+
+    Los cómputos (live + historical) corren UNA vez; la inyección corre una
+    vez por index (ES y, si en_ok, EN) — misma data, dos HTMLs.
     """
     try:
         if not RIESGO_DIR.exists():
@@ -328,9 +338,11 @@ def _inject_riesgo(index_path: Path) -> None:
         py = str(VENV_PYTHON)
         run([py, str(RIESGO_DIR / "live_bolivia.py")], check=False)       # live point
         run([py, str(RIESGO_DIR / "build_historical.py")], check=False)   # history
-        r = run([py, str(RIESGO_DIR / "inject_into_site.py"),
-                 str(index_path)], check=False)                           # panels
-        emit(f"[publish] mode=ok stage=riesgo_inject rc={r.returncode}")
+        for index_path in index_paths:                                    # panels
+            r = run([py, str(RIESGO_DIR / "inject_into_site.py"),
+                     str(index_path)], check=False)
+            emit(f"[publish] mode=ok stage=riesgo_inject "
+                 f"target={index_path.name} rc={r.returncode}")
     except Exception as e:
         emit(f"[publish] mode=warn stage=riesgo_inject detail=skipped "
              f"err={type(e).__name__}:{str(e)[:160]}")
@@ -356,6 +368,8 @@ def main() -> int:
         cleanup_worktree(WORKTREE_PATH)
         if TMP_INDEX_PATH.exists():
             TMP_INDEX_PATH.unlink()
+        if TMP_INDEX_EN_PATH.exists():
+            TMP_INDEX_EN_PATH.unlink()
         return _run(t0)
 
 
@@ -411,18 +425,19 @@ def _run(t0: float) -> int:
              f"total_s={total_s:.2f}")
         return 0
 
-    # Generar HTML
+    # Generar HTML (ES + EN en la misma corrida de dashboard.py)
     t_gen0 = time.time()
     try:
         run([str(VENV_PYTHON), DASHBOARD_SCRIPT,
-             "--output", str(TMP_INDEX_PATH)], cwd=str(REPO_ROOT))
+             "--output", str(TMP_INDEX_PATH),
+             "--output-en", str(TMP_INDEX_EN_PATH)], cwd=str(REPO_ROOT))
     except subprocess.CalledProcessError as e:
         emit(f"[publish] mode=error stage=dashboard_generation rc={e.returncode} "
              f"stderr={(e.stderr or '')[:300]}")
         return 1
     gen_s = time.time() - t_gen0
 
-    # Validación de tamaño
+    # Validación de tamaño (ES: fail-hard, igual que siempre)
     if not TMP_INDEX_PATH.exists():
         emit("[publish] mode=error stage=validate detail=output_missing")
         return 1
@@ -432,6 +447,8 @@ def _run(t0: float) -> int:
         emit(f"[publish] mode=error stage=validate detail=size_too_small "
              f"size={new_size} min={MIN_INDEX_SIZE_BYTES}")
         TMP_INDEX_PATH.unlink()
+        if TMP_INDEX_EN_PATH.exists():
+            TMP_INDEX_EN_PATH.unlink()
         return 1
 
     if last is not None and last.get("size"):
@@ -440,11 +457,31 @@ def _run(t0: float) -> int:
             emit(f"[publish] mode=error stage=validate detail=size_shrink "
                  f"size={new_size} last={last['size']} ratio_floor={SHRINK_RATIO_FLOOR}")
             TMP_INDEX_PATH.unlink()
+            if TMP_INDEX_EN_PATH.exists():
+                TMP_INDEX_EN_PATH.unlink()
             return 1
 
-    # Inyectar los paneles riesgo-país own-math en el HTML ya validado (fail-safe:
-    # si falla, se publica el dashboard normal sin los paneles).
-    _inject_riesgo(TMP_INDEX_PATH)
+    # Validación EN: fail-SOFT (misma filosofía que _inject_riesgo). Un EN
+    # ausente o truncado NUNCA bloquea el publish del ES — se loguea warn y
+    # se publica solo ES este ciclo.
+    en_ok = True
+    if not TMP_INDEX_EN_PATH.exists():
+        emit("[publish] mode=warn stage=validate_en detail=output_missing")
+        en_ok = False
+    else:
+        en_size = TMP_INDEX_EN_PATH.stat().st_size
+        if en_size < MIN_INDEX_SIZE_BYTES:
+            emit(f"[publish] mode=warn stage=validate_en detail=size_too_small "
+                 f"size={en_size} min={MIN_INDEX_SIZE_BYTES}")
+            en_ok = False
+
+    # Inyectar los paneles riesgo-país own-math en los HTML ya validados
+    # (fail-safe: si falla, se publica el dashboard normal sin los paneles).
+    # Cómputo único; inyección por idioma.
+    riesgo_targets = [TMP_INDEX_PATH]
+    if en_ok:
+        riesgo_targets.append(TMP_INDEX_EN_PATH)
+    _inject_riesgo(riesgo_targets)
 
     # Worktree desde origin/gh-pages
     try:
@@ -456,15 +493,19 @@ def _run(t0: float) -> int:
              f"stderr={(e.stderr or '')[:300]}")
         if TMP_INDEX_PATH.exists():
             TMP_INDEX_PATH.unlink()
+        if TMP_INDEX_EN_PATH.exists():
+            TMP_INDEX_EN_PATH.unlink()
         return 1
 
     try:
         return _commit_and_push(t0, gen_s, new_size, n_snap, n_rows,
-                                embi_max, ipc_max, ipp_max, hidden_v)
+                                embi_max, ipc_max, ipp_max, hidden_v, en_ok)
     finally:
         cleanup_worktree(WORKTREE_PATH)
         if TMP_INDEX_PATH.exists():
             TMP_INDEX_PATH.unlink()
+        if TMP_INDEX_EN_PATH.exists():
+            TMP_INDEX_EN_PATH.unlink()
 
 
 def deploy_cf_pages():
@@ -520,9 +561,19 @@ def deploy_cf_pages():
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
                      n_snap: int, n_rows: int, embi_max: str | None,
                      ipc_max: str | None, ipp_max: str | None,
-                     hidden_v: str | None) -> int:
+                     hidden_v: str | None, en_ok: bool) -> int:
     existing_index = WORKTREE_PATH / "index.html"
     shutil.copyfile(TMP_INDEX_PATH, existing_index)
+
+    # EN: solo si validó OK. Si no, se deja el en/ stale del publish anterior
+    # en su lugar (fail-toward-stale, igual que la mirror de ocultos) — un EN
+    # viejo es mejor que un 404 en /en/.
+    if en_ok:
+        en_dir = WORKTREE_PATH / "en"
+        en_dir.mkdir(exist_ok=True)
+        shutil.copyfile(TMP_INDEX_EN_PATH, en_dir / "index.html")
+    else:
+        emit("[publish] mode=warn stage=commit_en detail=stale_en_preserved")
 
     if STATIC_DIR.exists():
         for asset in STATIC_DIR.iterdir():

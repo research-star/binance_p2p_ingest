@@ -7,14 +7,21 @@
 <style>html,body{margin:0;background:#f5f7fa;color:#2c4a6b;font:14px/1.4 system-ui,sans-serif}.w{padding:40px 20px;text-align:center}</style>
 </head>
 <body>
-<div class="w">Redirigiendo…</div>
+<div class="w">Redirigiendo… · Redirecting…</div>
 <script>
   // Capture requested path (incl. querystring + hash) and bounce to "/" with
   // ?path=<encoded>. The SPA reads it, history.replaceState's to the real
   // path, and activates the matching tab. Fallbacks to "/" if no match.
+  // /en prefix-aware: /en/foo bounces to /en/?path=/foo (EN SPA lives at /en/).
   (function(){
-    var p = window.location.pathname + window.location.search + window.location.hash;
-    window.location.replace('/?path=' + encodeURIComponent(p));
+    var pn = window.location.pathname;
+    var sh = window.location.search + window.location.hash;
+    if (pn === '/en' || pn.indexOf('/en/') === 0) {
+      var rest = pn === '/en' ? '' : pn.slice(3);
+      window.location.replace('/en/?path=' + encodeURIComponent((rest || '/') + sh));
+    } else {
+      window.location.replace('/?path=' + encodeURIComponent(pn + sh));
+    }
   })();
 </script>
 </body>
