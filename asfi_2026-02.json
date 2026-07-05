@@ -109,8 +109,13 @@
      ],
      "resumen": "Fundación Pro Mujer IFD convoca Asamblea General Ordinaria para 12 de febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "12 de febrero de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -124,8 +129,13 @@
      ],
      "resumen": "Fundación Pro Mujer IFD convoca Asamblea General Extraordinaria para 12 de febrero",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "12 de febrero de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -210,7 +220,18 @@
      "resumen": "Panamerican Investments cumple compromisos financieros Bonos PISA I Emisión 2",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.5",
+        "valor": "0.15",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -223,7 +244,25 @@
      "resumen": "TELECEL cumple compromisos financieros dic-2025 con RCSD 3,00 y DFN/E 0,35",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "2",
+        "valor": "3",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.5",
+        "valor": "0.52",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -249,8 +288,13 @@
      ],
      "resumen": "Toyosa utiliza Bs 4.858.665,06 de Pagarés V Emisión 4",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 4,9 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -429,8 +473,13 @@
      ],
      "resumen": "Toyosa S.A. destina Bs 1.728.738,72 de Pagarés V-Emisión 4 a capital operativo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -682,7 +731,32 @@
      "resumen": "iBolsa ST reporta coeficientes MADEPA-iBOLSA ST 004 periodo 18.12.25-17.01.26",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "6.74",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "6",
+        "valor": "23.64",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2.3",
+        "valor": "1.93",
+        "ok": true
+       }
+      ]
+     }
     }
    ]
   },
@@ -1038,8 +1112,12 @@
      ],
      "resumen": "iBolsa ST ejecuta destino de recursos MADEPA-IBOLSA ST 004 por Bs68,3M",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "destino": "Recambio de Pasivos",
+      "monto": "Bs 34,0 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1505,8 +1583,12 @@
      ],
      "resumen": "BNB Leasing convoca JGE para 18 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "18 de febrero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1520,8 +1602,13 @@
      ],
      "resumen": "BNB Leasing convoca Junta General Ordinaria de Accionistas para 18 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "18 de febrero de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1635,8 +1722,13 @@
      ],
      "resumen": "BNB convoca Junta General Ordinaria de Accionistas para 19 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "19 de febrero de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1649,8 +1741,12 @@
      ],
      "resumen": "BNB convoca Junta General Extraordinaria para 19 febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "19 de febrero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1664,8 +1760,12 @@
      ],
      "resumen": "BNB Corporación convoca Junta General Extraordinaria para 20 febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "20 de febrero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1679,8 +1779,13 @@
      ],
      "resumen": "BNB Corporación convoca Junta General Ordinaria de Accionistas para 20 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "20 de febrero de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1955,8 +2060,13 @@
      ],
      "resumen": "BNB Valores convoca Junta General Ordinaria de Accionistas para 18 de febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "18 de febrero de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1971,7 +2081,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Laura Uzquiano Monzon",
-      "cargo": "Auditora Interna de manera interina hasta el 2 de marzo de 2",
+      "cargo": "Auditora Interna de manera interina hasta el 2 de marzo de 2026",
       "movimiento": "designación"
      },
      "resumen_v": 2
@@ -2049,8 +2159,13 @@
      ],
      "resumen": "YPFB Andina convoca Junta Gral Ordinaria Accionistas 18 feb 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "18 de febrero de 2026",
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2081,8 +2196,13 @@
      ],
      "resumen": "BNB SAFI convoca Junta General Ordinaria de Accionistas para 18 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "18 de febrero de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2096,8 +2216,13 @@
      ],
      "resumen": "BNB SAFI convoca Junta General Extraordinaria 19 febrero aumento capital",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "19 de febrero de 2026",
+      "agenda": "emisión de valores · aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2304,7 +2429,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Marcela Ugarte Barroso",
-      "cargo": "Gerenta Nacional de Experiencia de la Clientela y Operacione",
+      "cargo": "Gerenta Nacional de Experiencia de la Clientela y Operaciones",
       "movimiento": "designación a.i."
      },
      "resumen_v": 2
@@ -2993,8 +3118,13 @@
      ],
      "resumen": "Banco FIE aprueba amortización de capital en cinco emisiones de bonos subordinados",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "cupones",
+     "resumen_v": 2,
+     "campos": {
+      "instrumento": "Bonos Subordinados Banco FIE 4”",
+      "estado": "programado",
+      "amortiza": "sí"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3281,8 +3411,13 @@
      ],
      "resumen": "Toyosa utiliza Bs 4.465.863,12 de Pagarés V Emisión 4",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 4,5 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3476,8 +3611,12 @@
      ],
      "resumen": "YPFB Transporte convoca Junta General de Accionistas para 20 febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "20 de febrero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3492,7 +3631,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Ramiro Vladimir Mora Miranda",
-      "cargo": "Gerente Nacional de Tecnologías de la Información en Oficina",
+      "cargo": "Gerente Nacional de Tecnologías de la Información en Oficina Nacional",
       "movimiento": "renuncia"
      },
      "resumen_v": 2
@@ -3519,8 +3658,13 @@
      ],
      "resumen": "Fundación Pro Mujer IFD convoca Asamblea General Extraordinaria 23 febrero",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "23 de febrero de 2026",
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3954,8 +4098,27 @@
      ],
      "resumen": "YPFB Andina renueva Directorio y aprueba remuneración de consejeros",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Jesús Eduardo Flores Castillo",
+        "cargo": "Director Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Mauricio Dino Vedia Vaca",
+        "cargo": "Director Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Fernando Ibañez Villarroel",
+        "cargo": "Director Suplente",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4207,10 +4370,7 @@
      ],
      "resumen": "BNB Valores conforma Mesa Directiva y designa miembros de comités",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "designación"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -4444,8 +4604,13 @@
      ],
      "resumen": "Banco Solidario convoca Junta General Ordinaria de Accionistas para 6 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "6 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4458,8 +4623,12 @@
      ],
      "resumen": "Banco Solidario convoca Junta Extraordinaria de Accionistas para 6 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "6 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4473,8 +4642,13 @@
      ],
      "resumen": "Banco Solidario convoca JGE para emisión de Bonos Subordinados el 6 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "6 de marzo de 2026",
+      "agenda": "emisión de valores · estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4488,8 +4662,13 @@
      ],
      "resumen": "Banco Solidario convoca Junta General Extraordinaria para 6 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "6 de marzo de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4785,10 +4964,7 @@
      ],
      "resumen": "Mercantil Santa Cruz Agencia de Bolsa elige nueva junta directiva período 2026-2027",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "designación"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -4987,7 +5163,32 @@
      "resumen": "iBolsa ST informa coeficientes período enero 2026 Patrimonio Autónomo LAS LOMAS",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "0.6",
+        "valor": "8.15",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "2.07",
+        "ok": false
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.62",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -5074,8 +5275,13 @@
      ],
      "resumen": "Toyosa S.A. destina Bs 18.946.733,10 de Pagarés Toyosa V - Emisión 4",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 18,9 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -5344,8 +5550,13 @@
      ],
      "resumen": "KERKUS Corredores de Seguros convoca Junta General Ordinaria para 12 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "12 de marzo de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6090,7 +6301,7 @@
      ],
      "resumen": "Comunica que, en cumplimiento con lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de Cesión de Derechos sobre Flujos de Ventas Futuras para Fines de Titularización",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos"
     }
    ]
   },
@@ -6152,8 +6363,17 @@
      ],
      "resumen": "Compañía Americana de Inversiones convoca Junta General Ordinaria de Accionistas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Marcela Rocabado Cerda",
+        "cargo": "Funcionario Responsable Suplente ante la UIF",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6784,8 +7004,11 @@
      ],
      "resumen": "iBolsa destina Bs 7.000.000,00 a recambio de pasivos MADEPA-IBOLSA ST 004",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "monto": "Bs 7,0 M"
+     }
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -6945,8 +7168,27 @@
      ],
      "resumen": "Asamblea CRECER IFD aprueba EEFF 2025 con utilidades Bs 32.327.898,85",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Asociados Nathan Robison Carttar",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Queen Soraya Elizabeth Quiroga Berazain",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Carlos Arteaga Rivero",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7148,7 +7390,18 @@
      "resumen": "iBolsa rectifica ratio CCCV en Patrimonio Autónomo Las Lomas iBOLSA ST 003",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "3",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7269,8 +7522,11 @@
      ],
      "resumen": "iBolsa ejecuta destino recursos Patrimonio MADEPA-IBOLSA ST 004 por Bs8.942.463,92",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "monto": "Bs 7,3 M"
+     }
     }
    ]
   },

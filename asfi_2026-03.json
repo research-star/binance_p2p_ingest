@@ -16,8 +16,13 @@
      ],
      "resumen": "Multivalores convoca Junta General Ordinaria de Accionistas para 20 marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "20 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -47,8 +52,12 @@
      ],
      "resumen": "Valores Unión convoca Junta General Ordinaria de Accionistas para 20 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "20 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -75,8 +84,13 @@
      ],
      "resumen": "CLÍNICA METROPOLITANA DE LAS AMÉRICAS convoca JGA para 7 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "7 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -320,8 +334,12 @@
      ],
      "resumen": "Fundación Pro Mujer IFD convoca Asamblea General Extraordinaria 13 marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "13 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -383,8 +401,11 @@
      ],
      "resumen": "iBolsa destina Bs 15.568.594,68 a Capital de Operaciones MADEPA-IBOLSA ST 004",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "campos": {
+      "monto": "Bs 15,6 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -415,8 +436,17 @@
      ],
      "resumen": "Multiplika S.A. designa Directorio y aprueba EEFF 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Jose Federico Escudero",
+        "cargo": "Síndico Titular",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -903,7 +933,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Marco Antonio Camacho Villazón",
-      "cargo": "Gerente Nacional División Banca Minorista en Oficina Naciona",
+      "cargo": "Gerente Nacional División Banca Minorista en Oficina Nacional",
       "movimiento": "designación"
      },
      "resumen_v": 2
@@ -1248,7 +1278,39 @@
      "resumen": "iBolsa ST reporta coeficientes MADEPA-iBOLSA ST 004 período feb 2026",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "13.65",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "6",
+        "valor": "17.64",
+        "ok": true
+       },
+       {
+        "sigla": "CCC",
+        "op": ">=",
+        "req": "3",
+        "valor": "23.93",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2.3",
+        "valor": "1.93",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1302,12 +1364,7 @@
      ],
      "resumen": "Renuncia Mario Alberto Patiño de Gerente General Credibolsa; asume Álvaro Rodrigo Zelada",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "persona": "Mario Alberto Patiño Serrate",
-      "cargo": "Gerente General y como miembro de los Comités de los cuales ",
-      "movimiento": "renuncia"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -1322,7 +1379,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
-      "cargo": "Responsable de Gestión Integral de Riesgos el 3 de marzo de ",
+      "cargo": "Responsable de Gestión Integral de Riesgos el 3 de marzo de 2026",
       "movimiento": "renuncia"
      },
      "resumen_v": 2
@@ -1367,8 +1424,12 @@
      ],
      "resumen": "Fortaleza convoca Junta General Ordinaria de Accionistas para 18 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "18 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2364,8 +2425,12 @@
      ],
      "resumen": "Banco PYME Ecofuturo convoca Junta General Ordinaria para 31 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "31 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2726,8 +2791,12 @@
      ],
      "resumen": "DISMATEC S.A. convoca Junta General Ordinaria de Accionistas para 23 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "23 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2952,10 +3021,7 @@
      ],
      "resumen": "Banco Solidario nombra Directorio y Comités de Directorio gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "nombramiento"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -3186,7 +3252,7 @@
      ],
      "resumen": "Credibolsa cancela dividendos gestión 2025 a accionistas",
      "resumen_origen": "ia",
-     "grupo": "dividendos",
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -3580,8 +3646,13 @@
      ],
      "resumen": "Banco Prodem convoca Junta General Ordinaria de Accionistas 25 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "25 de marzo de 2026",
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3595,8 +3666,13 @@
      ],
      "resumen": "Banco Prodem convoca Junta General Extraordinaria para 25.03.2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "25 de marzo de 2026",
+      "agenda": "emisión de valores · aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3833,6 +3909,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "campos": {
+      "monto": "Bs 22,9 M",
       "fecha_pago": "23 de marzo de 2026"
      },
      "resumen_v": 2
@@ -3864,6 +3941,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "campos": {
+      "monto": "Bs 5,5 M",
       "fecha_pago": "23 de marzo de 2026"
      },
      "resumen_v": 2
@@ -4043,8 +4121,13 @@
      ],
      "resumen": "IDEPRO IFD convoca Asamblea General Ordinaria de Asociados para 16 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "16 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4057,8 +4140,12 @@
      ],
      "resumen": "IDEPRO IFD convoca Asamblea General Extraordinaria para 16 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "16 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4300,8 +4387,13 @@
      ],
      "resumen": "DELAPAZ incrementa materialidad del Gerente General a Bs14.000.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "23 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4579,7 +4671,32 @@
      "resumen": "iBolsa ST reporta indicadores financieros Patrimonio Autónomo LAS LOMAS febrero 2026",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "0.6",
+        "valor": "8.96",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "3.08",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.62",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -4704,8 +4821,13 @@
      ],
      "resumen": "Rechaza ENDE Corani renuncia del Síndico Luis Orlando Vargas Delgadillo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "24 de marzo de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5429,7 +5551,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Marcela Ugarte Barroso",
-      "cargo": "Gerenta Nacional de Experiencia de la Clientela y Operacione",
+      "cargo": "Gerenta Nacional de Experiencia de la Clientela y Operaciones",
       "movimiento": "designación a.i."
      },
      "resumen_v": 2
@@ -5679,12 +5801,7 @@
      ],
      "resumen": "ENTEL ratifica Bazán Auza como Presidente y Del Solar Bueno como Gerente General",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "persona": "Jorge Francisco",
-      "cargo": "Gerente General al señor Jorge Francisco del Solar Bueno",
-      "movimiento": "remoción"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -5814,8 +5931,17 @@
      ],
      "resumen": "SAFI Unión aprueba distribución dividendos Bs 25.440.020,09 gestión 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Julio Cesar Gemio Montes de Oca",
+        "cargo": "Síndico Titular",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6415,8 +6541,12 @@
      ],
      "resumen": "Fundación Pro Mujer IFD convoca Asamblea General Extraordinaria 6 abril incremento Capital Social",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "6 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6610,12 +6740,7 @@
      ],
      "resumen": "Franco Antonio Mauricio Urquidi Fernández designado Vicepres. Ejecutivo a.i. en Banco BISA",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "persona": "Franco Antonio Mauricio Urquidi Fernández",
-      "cargo": "Vicepresidente Ejecutivo",
-      "movimiento": "designación a.i."
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -6714,7 +6839,7 @@
      ],
      "resumen": "Comunica que, en cumplimiento con lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de Cesión de Derechos sobre Flujos de Ventas Futuras para Fines de Titularización",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos"
     },
     {
      "seccion": "Noticias",
@@ -6776,8 +6901,17 @@
      ],
      "resumen": "Junta Ordinaria de Microfinanza Rating aprueba EEFF y ratifica Síndico y Directorio",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Diego Daniel Gallardo Mustafá",
+        "cargo": "Síndico",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7146,7 +7280,7 @@
      ],
      "resumen": "Asamblea FANCESA acuerda cuarto intermedio en Bonos Intercambio VI Serie B",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "compromisos",
      "resumen_v": 2
     },
     {
@@ -7160,7 +7294,7 @@
      ],
      "resumen": "FANCESA suspende asamblea de tenedores de Bonos IV hasta 8 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "compromisos",
      "resumen_v": 2
     },
     {
@@ -7527,7 +7661,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
-      "cargo": "Administrador y Representante Legal de la Sucursal Santa Cru",
+      "cargo": "Administrador y Representante Legal de la Sucursal Santa Cruz",
       "movimiento": "renuncia"
      },
      "resumen_v": 2
@@ -7642,12 +7776,7 @@
      ],
      "resumen": "KERKUS designa Gerente General a.i. Silvia Patricia Gómez Aguilar 27.03-02.04.2026",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "persona": "Silvia Patricia Gómez Aguilar",
-      "cargo": "Gerente General",
-      "movimiento": "designación a.i."
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -7700,10 +7829,7 @@
      ],
      "resumen": "Aprueban Directorio y Síndicos de Banco Fortaleza con Guido Hinojosa como Presidente",
      "resumen_origen": "ia",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "nombramiento"
-     },
+     "grupo": "otros",
      "resumen_v": 2
     },
     {
@@ -8235,8 +8361,13 @@
      ],
      "resumen": "Pro Mujer IFD convoca Asamblea Gral. Extraordinaria para 7 de abril de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "7 de abril de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",

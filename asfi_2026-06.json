@@ -146,7 +146,12 @@
      ],
      "resumen": "Comunica que, en reunión de Directorio de 28 de mayo de 2026, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 12 de junio de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "12 de junio de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -380,7 +385,12 @@
      ],
      "resumen": "Comunica que, de los recursos captados a través de la Emisión de “Pagarés Toyosa V - Emisión 5”, el 29 de mayo de 2026, se utilizaron de la siguiente manera: Capital de operaciones/Pago a proveedores",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos",
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 7,0 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -961,7 +971,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Diego Fernando Fuentes Chavez",
-      "cargo": "Gerente Nacional División Innovación y Tecnología en Oficina",
+      "cargo": "Gerente Nacional División Innovación y Tecnología en Oficina Nacional",
       "movimiento": "designación"
      }
     },
@@ -997,12 +1007,7 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 02 de junio de 2026, se determinó lo siguiente: Aprobar la designación de Daniela Beatriz Soza Pérez, como Gerente General Titular de la Sociedad, con",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
-     "campos": {
-      "persona": "Darío Monasterio Suárez",
-      "cargo": "Gerente General Titular de la Sociedad",
-      "movimiento": "designación"
-     }
+     "grupo": "otros"
     },
     {
      "seccion": "Noticias",
@@ -1326,7 +1331,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Patricia Raldes Moreno",
-      "cargo": "Gerente de Planificación y Proyectos a la señora Patricia Ra",
+      "cargo": "Gerente de Planificación y Proyectos a la señora Patricia Raldes Moreno",
       "movimiento": "designación"
      }
     },
@@ -1382,7 +1387,56 @@
      ],
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 03 de junio de 2026, realizada con el 99.33% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "directorio",
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Yussef Ernesto Akly Flores",
+        "cargo": "Director Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Raúl Álvarez Egüez",
+        "cargo": "Director Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Marcelo Jesús Luizaga Espada",
+        "cargo": "Director Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Fernando Ibañez Villarroel",
+        "cargo": "Director Suplente",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Luis Andres Ritter Zamora",
+        "cargo": "Síndico Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Sebastián Daroca Oller",
+        "cargo": "Director Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Fernando Campero Paz",
+        "cargo": "Director Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Juan Pablo Robles Guerra",
+        "cargo": "Director Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Victor Eduardo Duran Saavedra",
+        "cargo": "Síndico Titular",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1932,7 +1986,11 @@
      ],
      "resumen": "Comunica que, el 9 de junio de 2026, a requerimiento de los Accionistas, publicó en la Gaceta Electrónica de Comercio, la convocatoria a Junta General Ordinaria de Accionistas, a realizarse el 19 de",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "19 de junio de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2028,7 +2086,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de junio de 2026, se determinó lo siguiente: Aprobar la selección y contratación de la Firma de Auditoría Externa Ruizmier Pelaez S.R.L., para auditar",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "Firma de Auditoría Externa Ruizmier Pelaez S.R.L."
+     }
     },
     {
      "seccion": "Noticias",
@@ -2301,7 +2362,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 11 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2432,7 +2497,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Vittorio José Aloisio Zenteno",
-      "cargo": "Síndico y Sergio Aniceto Armando Pascual Ávila al cargo de D",
+      "cargo": "Síndico y Sergio Aniceto Armando Pascual Ávila al cargo de Director",
       "movimiento": "renuncia"
      }
     },
@@ -2470,7 +2535,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la firma Ruizmier Pelaez S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "Ruizmier Pelaez S.R.L."
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2484,7 +2552,12 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de junio de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "19 de junio de 2026",
+      "agenda": "emisión de valores · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2661,7 +2734,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 11 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2752,7 +2829,12 @@
      ],
      "resumen": "Comunica que, de los recursos captados a través de la emisión de “Pagarés Toyosa V - Emisión 5”, el 11 de junio de 2026, se utilizaron de la siguiente manera: - Capital de operaciones/Pago a",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos",
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 3,1 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2986,10 +3068,7 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 12 de junio de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "designación"
-     }
+     "grupo": "otros"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3018,7 +3097,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3278,10 +3361,7 @@
      ],
      "resumen": "Comunica que, el 10 de junio de 2026 el Síndico Titular Jorge Luis Bellido Vildozo presentó su renuncia al cargo, la misma se hace efectiva desde el mismo día.",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "renuncia"
-     }
+     "grupo": "otros"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3434,7 +3514,32 @@
      ],
      "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo - LAS LOMAS – iBOLSA ST 003, dando cumplimiento a lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "0.6",
+        "valor": "7.61",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "3.1",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.73",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Cartas Circulares",
@@ -3485,7 +3590,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 12 de junio de 2026, se determinó lo siguiente: Convocar a la Junta General Extraordinaria de Accionistas, de forma mixta virtual y/o presencial, a",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "30 de junio de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3638,7 +3747,12 @@
      ],
      "resumen": "Comunica que, el 17 de junio de 2026, se efectuó la publicación de la primera convocatoria a Junta General Ordinaria de Accionistas, a celebrarse el 26 de junio de 2026, a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "26 de junio de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4262,7 +4376,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 18 de junio de 2026, se determinó lo siguiente: Considerar la contratación de la firma de auditoría externa Summa Consulting Group S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "Summa Consulting Group S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4312,7 +4430,12 @@
      ],
      "resumen": "Comunica que, de acuerdo a lo establecido por el artículo 288 del Código de Comercio modificado por la Ley N° 779 y de conformidad a lo determinado en la Reunión de Directorio 10/2026, procedió el 17",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "29 de junio de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4521,7 +4644,11 @@
      ],
      "resumen": "Comunica que, en reunión de Directorio de 23 de junio de 2026, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 1 de julio de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "1 de julio de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4920,7 +5047,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la firma BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5240,7 +5371,15 @@
      "resumen_origen": "extractivo",
      "grupo": "compromisos",
      "campos": {
-      "liquidez": "84.44%"
+      "indicadores": [
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "84.44%",
+        "ok": true
+       }
+      ]
      }
     },
     {
@@ -5307,9 +5446,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de junio de 2026, se determinó lo siguiente: Aprobar por unanimidad la designación de la firma Tudela & TH Consulting Group S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
+     "grupo": "auditorias",
      "campos": {
-      "movimiento": "designación"
+      "firma": "Tudela & TH Consulting Group S.R.L.",
+      "gestion": "2026"
      }
     },
     {
@@ -5323,9 +5463,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de junio de 2026, se determinó lo siguiente: Aprobar por unanimidad la designación de la firma Tudela & TH Consulting Group S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
+     "grupo": "auditorias",
      "campos": {
-      "movimiento": "designación"
+      "firma": "Tudela & TH Consulting Group S.R.L.",
+      "gestion": "2026"
      }
     },
     {
@@ -5401,9 +5542,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de junio de 2026, se determinó lo siguiente: Aprobar la designación y contratación de los servicios profesionales de la firma PricewaterhouseCoopers",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
+     "grupo": "auditorias",
      "campos": {
-      "movimiento": "designación"
+      "firma": "PricewaterhouseCoopers S.R.L.",
+      "gestion": "2026"
      }
     },
     {
@@ -5418,7 +5560,12 @@
      ],
      "resumen": "Comunica que, en reunión de Directorio de 25 de junio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 6 de julio de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "6 de julio de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5851,7 +5998,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 25 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la Empresa PricewaterhouseCoopers S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "Empresa PricewaterhouseCoopers S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5957,7 +6108,32 @@
      ],
      "resumen": "Aclara que, los Compromisos Financieros al 31 de marzo de 2026, fueron objeto de modificación como resultado del proceso de Auditoría Externa realizado por la firma BERTHINASSURANCE GROUP AUDITORÍA &",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.5",
+        "valor": "1.75",
+        "ok": true
+       },
+       {
+        "sigla": "RDL",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "2.34",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "3",
+        "valor": "4.73",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6086,7 +6262,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 26 de junio de 2026, se determinó lo siguiente: Autorizar la contratación de la firma PricewaterhouseCoopers S.R.L., para la realización de la Auditoría",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "PricewaterhouseCoopers S.R.L."
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6227,7 +6406,21 @@
      ],
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 29 de junio de 2026, realizada con el 99.34% de los accionistas, determinó lo siguiente: Aprobar los Estados Financieros auditados de la",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "directorio",
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Manuel Segundo Llanos Menares",
+        "cargo": "Síndico Suplente",
+        "tipo": "sale"
+       },
+       {
+        "persona": "William Javier Olmos Anglarill",
+        "cargo": "Síndico Titular",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",

@@ -123,8 +123,82 @@
      ],
      "resumen": "YPFB Chaco renueva Directorio con 6 nuevos Directores Titulares",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Armin Ludwig Dorgathen Tapia",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Felix Fernando Salazar Cuba",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Miguel Angel Navia Vargas",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Jorge Márquez Ostria",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Luis Fernando Vincenti Vargas",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Wilman Yabeta Viera",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Yussef Ernesto Akly Flores",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Jaime Augusto Soria Galvarro Teran",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "José Jorge Antonio Téllez Sasamoto",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Juan Carlos Cordova Salinas",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Nelson Mario Salazar Cabrera",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Ricardo Vargas Ruilova",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Luis Andres Ritter Zamora",
+        "cargo": "Síndico Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Jorge Eduardo Campos Arce",
+        "cargo": "Director Laboral",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -887,7 +961,25 @@
      "resumen": "iBolsa informa coeficientes PATRIMONIO AUTÓNOMO MADEPA - iBOLSA ST 004",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "9.56",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "6",
+        "valor": "15.98",
+        "ok": true
+       }
+      ]
+     }
     }
    ]
   },
@@ -1503,8 +1595,27 @@
      "tags": [],
      "resumen": "Designan nuevo Directorio de EMIPA con Zenteno como Presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Eduardo Rodrigo Quintanilla Ballivián",
+        "cargo": "Secretario",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Juan Hernando Gavidia Velezmoro",
+        "cargo": "Vocal",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Edgar Daniel Estrada Paredes",
+        "cargo": "Vocal",
+        "tipo": "entra"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1531,8 +1642,12 @@
      ],
      "resumen": "YPFB Transporte designa a Akly Flores como Presidente del Directorio",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "15 de enero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1546,8 +1661,13 @@
      ],
      "resumen": "Banco Económico convoca Junta General Ordinaria de Accionistas para 19 enero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "19 de enero de 2026",
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1561,7 +1681,7 @@
      ],
      "resumen": "Banco Económico convoca JGE 19 enero para aumento capital y emisión acciones",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "compromisos",
      "resumen_v": 2
     },
     {
@@ -1575,8 +1695,12 @@
      ],
      "resumen": "Banco Económico convoca Junta Extraordinaria 19 ene para aumento de capital",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "19 de enero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1760,7 +1884,32 @@
      "resumen": "BCP cumple coeficiente adecuación patrimonial 13,07% al 31/12/2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.07%",
+        "ok": true
+       },
+       {
+        "sigla": "Liquidez",
+        "op": ">=",
+        "req": "30%",
+        "valor": "61.36%",
+        "ok": true
+       },
+       {
+        "sigla": "Cobertura",
+        "op": ">=",
+        "req": "100%",
+        "valor": "153.98%",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -1774,9 +1923,29 @@
      "resumen_origen": "extractivo",
      "grupo": "compromisos",
      "campos": {
-      "cap": "13.01%",
-      "liquidez": "83.19%",
-      "cobertura": "152.33%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.01%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "83.19%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "152.33%",
+        "ok": true
+       }
+      ]
      }
     },
     {
@@ -1791,9 +1960,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "12.97%",
-      "liquidez": "72.92%",
-      "cobertura": "112.50%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.97%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "72.92%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "112.5%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -1809,9 +1998,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "13.07%",
-      "liquidez": "65.95%",
-      "cobertura": "112.33%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.07%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "65.95%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "112.33%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -1828,9 +2037,22 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "13.31%",
-      "liquidez": "67.40%",
-      "cobertura": "177.72%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.31%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "67.4%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -1865,10 +2087,6 @@
      "resumen": "Banco Unión reporta CAP 12,38%, IL 53,33% y CPI 176,85% en promedio",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "campos": {
-      "liquidez": "50.43%",
-      "cobertura": "12.33%"
-     },
      "resumen_v": 2
     },
     {
@@ -1964,7 +2182,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Luis Eduardo Ayllon Quinteros",
-      "cargo": "Gerente Técnico quien asumirá funciones a partir de la citad",
+      "cargo": "Gerente Técnico quien asumirá funciones a partir de la citada fecha",
       "movimiento": "designación"
      },
      "resumen_v": 2
@@ -2013,8 +2231,12 @@
      ],
      "resumen": "BNB convoca Junta Extraordinaria 21 enero para autorizar dos emisiones Bonos Subordinados",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "21 de enero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2028,8 +2250,12 @@
      ],
      "resumen": "BNB convoca Junta Extraordinaria 21/01/26 para considerar emisiones Programa Bonos BNB III",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "21 de enero de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2198,8 +2424,22 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.77%",
-      "liquidez": "78.77%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.77%",
+        "ok": true
+       },
+       {
+        "sigla": "CP",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.77%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2215,8 +2455,22 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.77%",
-      "liquidez": "78.77%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.77%",
+        "ok": true
+       },
+       {
+        "sigla": "CP",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.77%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2232,8 +2486,22 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.77%",
-      "liquidez": "78.77%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.77%",
+        "ok": true
+       },
+       {
+        "sigla": "CP",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.77%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2249,8 +2517,22 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.77%",
-      "liquidez": "78.77%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.77%",
+        "ok": true
+       },
+       {
+        "sigla": "CP",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.77%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2267,9 +2549,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "13.15%",
-      "liquidez": "75.45%",
-      "cobertura": "191.84%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.15%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "75.45%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "191.84%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2286,9 +2588,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "11.00%",
-      "liquidez": "86.15%",
-      "cobertura": "290.07%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "15.24%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "86.15%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "290.07%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2455,8 +2777,12 @@
      ],
      "resumen": "BNB Corporación convoca Junta General Ordinaria de Accionistas para 21 enero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "21 de enero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2562,7 +2888,32 @@
      "resumen": "ITACAMBA CEMENTO cumple compromisos financieros al 31.12.2025: RDP 1,18, RCSD 5,28, RC 1,63",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.5",
+        "valor": "1.18",
+        "ok": true
+       },
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "5.28",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.63",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -2589,9 +2940,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.61%",
-      "liquidez": "73.54%",
-      "cobertura": "212.67%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.61%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "73.54%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "212.67%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2607,9 +2978,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.61%",
-      "liquidez": "73.54%",
-      "cobertura": "212.67%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.61%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "73.54%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "212.67%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2625,9 +3016,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "14.61%",
-      "liquidez": "73.54%",
-      "cobertura": "212.67%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.61%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "73.54%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "212.67%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -2829,8 +3240,27 @@
      "tags": [],
      "resumen": "Designan Presidente y Vicepresidente del Directorio de YPFB Chaco",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "directorio",
+     "resumen_v": 2,
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Yussef Ernesto Akly Flores",
+        "cargo": "Presidente",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Ricardo Vargas Ruilova",
+        "cargo": "Vicepresidente",
+        "tipo": "entra"
+       },
+       {
+        "persona": "José Jorge Antonio Tellez Sasamoto",
+        "cargo": "Director Secretario",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3341,10 +3771,6 @@
      "resumen": "CRECER IFD cumple compromisos financieros diciembre 2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "campos": {
-      "liquidez": "11.16%",
-      "cobertura": "483.33%"
-     },
      "resumen_v": 2
     },
     {
@@ -3463,8 +3889,13 @@
      ],
      "resumen": "Convoca Gas y Electricidad S.A. Junta General Ordinaria de Accionistas 26 de febrero",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "26 de febrero de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3521,8 +3952,12 @@
      ],
      "resumen": "Banco BISA convoca Junta General Ordinaria de Accionistas para 30 de enero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "30 de enero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3536,8 +3971,13 @@
      ],
      "resumen": "Banco BISA convoca JGA Extraordinaria para 30 de enero a las 11:30",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "30 de enero de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3649,7 +4089,25 @@
      "resumen": "iBolsa informa coeficientes financieros Patrimonio Las Lomas dic 2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "0.6",
+        "valor": "6.26",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "4.09",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -3680,7 +4138,32 @@
      "resumen": "Gas y Electricidad S.A. reporta ratios de deuda al 31-dic-2025: RCD 1,36, RDP 2,19, RC 1,20",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.36",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.4",
+        "valor": "2.19",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.2",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -4245,7 +4728,7 @@
      ],
      "resumen": "Banco Económico aumenta capital a Bs952.973.000 con emisión de 99.880 acciones",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "compromisos",
      "resumen_v": 2
     },
     {
@@ -4373,7 +4856,32 @@
      "resumen": "Jalasoft cumple compromisos financieros dic-2025 en bonos I, III y IV",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "2",
+        "valor": "2.81",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.17",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "2",
+        "valor": "5.32",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -4557,8 +5065,13 @@
      ],
      "resumen": "Autoriza CRECER IFD Asamblea General Extraordinaria 24 febrero 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "24 de febrero de 2026",
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4571,8 +5084,12 @@
      ],
      "resumen": "CRECER IFD convoca Asamblea General Ordinaria para 24 de febrero de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "24 de febrero de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4680,9 +5197,29 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cap": "12.10%",
-      "liquidez": "87.28%",
-      "cobertura": "237.25%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.1%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "45%",
+        "valor": "87.28%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "237.25%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -5285,11 +5822,6 @@
      "resumen": "DIACONÍA FRIF cumple compromisos financieros programa bonos a diciembre 2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "campos": {
-      "cap": "26.92%",
-      "liquidez": "25.14%",
-      "cobertura": "268.11%"
-     },
      "resumen_v": 2
     },
     {
@@ -5444,8 +5976,13 @@
      ],
      "resumen": "Banco PYME Ecofuturo convoca Junta General Ordinaria para 5 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "5 de marzo de 2026",
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5459,8 +5996,13 @@
      ],
      "resumen": "Banco PYME Ecofuturo convoca Junta General Extraordinaria 5 de marzo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "5 de marzo de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5474,8 +6016,12 @@
      ],
      "resumen": "Banco PYME Ecofuturo convoca JGE 5 marzo para aprobar Bonos ECOFUTURO 3 y Pagarés",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "5 de marzo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5659,7 +6205,36 @@
      "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
-      "cobertura": "109%"
+      "indicadores": [
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "2.74",
+        "ok": true
+       },
+       {
+        "sigla": "ROER",
+        "op": "<=",
+        "req": "3%",
+        "valor": "0.76%",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "4.5",
+        "valor": "1.13",
+        "ok": true
+       },
+       {
+        "sigla": "RCG",
+        "op": ">=",
+        "req": "80%",
+        "valor": "109%",
+        "ok": true
+       }
+      ]
      },
      "resumen_v": 2
     },
@@ -6033,11 +6608,6 @@
      "resumen": "Bisa Leasing cumple compromisos financieros programas bonos IV-VII al 31/12/2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "campos": {
-      "cap": "32.78%",
-      "liquidez": "29.52%",
-      "cobertura": "320.39%"
-     },
      "resumen_v": 2
     },
     {
@@ -6052,7 +6622,39 @@
      "resumen": "DISMATEC S.A. cumple compromisos financieros al 31/12/2025 en seis emisiones",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.75",
+        "valor": "2.63",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.72",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.65",
+        "valor": "1.98",
+        "ok": true
+       },
+       {
+        "sigla": "OEV",
+        "op": "<=",
+        "req": "3%",
+        "valor": "0%",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6117,7 +6719,25 @@
      "resumen": "Nacional Vida cumple compromisos financieros con RCSD 2,22 y RDP 0,50 al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "2.22",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1",
+        "valor": "0.5",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6130,7 +6750,32 @@
      "resumen": "INDUSTRIA TEXTIL TSM cumple compromisos financieros dic-25 con RDP 1,57, RDL 3,50 y RCD 3,28",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.5",
+        "valor": "1.57",
+        "ok": true
+       },
+       {
+        "sigla": "RDL",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "3.5",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "3",
+        "valor": "3.28",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6144,7 +6789,32 @@
      "resumen": "INCOTEC reporta indicadores financieros dic-25 RCSD 1,68 RDP 1,64",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.68",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.64",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.42",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6158,7 +6828,25 @@
      "resumen": "Paga cupón N°1 de Pagarés INCOTEC I",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.68",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.42",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6171,7 +6859,32 @@
      "resumen": "PLASTIFORTE reporta Índices Financieros: RC 2,46, RDP 1,34, RCSD 1,66",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "2.46",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.5",
+        "valor": "1.34",
+        "ok": true
+       },
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "1.66",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6546,7 +7259,32 @@
      "resumen": "PROLEGA cumple compromisos financieros dic-25 con RDP 1,77 y RCI/RCD 1,86",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "3",
+        "valor": "1.77",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.75",
+        "valor": "1.86",
+        "ok": true
+       },
+       {
+        "sigla": "RL",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "1.54",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6560,7 +7298,25 @@
      "resumen": "SOBOCE reporta indicadores financieros dic.25 dentro de compromisos Bonos VII",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.4",
+        "valor": "0.79",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "4.69",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6574,7 +7330,25 @@
      "resumen": "SOBOCE reporta Indicadores Financieros dic.25: RDP 0,7943 y RCD 4,6923",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.4",
+        "valor": "0.79",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "4.69",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -6641,9 +7415,6 @@
      "resumen": "IDEPRO IFD cumple compromisos financieros Bonos Subordinados 1 al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "campos": {
-      "cobertura": "7.51%"
-     },
      "resumen_v": 2
     },
     {
@@ -7013,7 +7784,32 @@
      "resumen": "Nexolider cumple compromisos financieros Bonos 2025 con RDC 4,51 y RDP 1,75",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDC",
+        "op": ">=",
+        "req": "2.5",
+        "valor": "4.51",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.5",
+        "valor": "1.75",
+        "ok": true
+       },
+       {
+        "sigla": "RCL",
+        "op": ">=",
+        "req": "1",
+        "valor": "2.44",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7045,7 +7841,18 @@
      "resumen": "Droguería INTI cumple compromisos financieros Bonos INTI V y VI al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2",
+        "valor": "0.56",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7059,7 +7866,32 @@
      "resumen": "EMPRESA MINERA SAN LUCAS cumple compromisos financieros Pagarés Bursátiles Emisión 1 y 2",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1.15",
+        "valor": "1.3",
+        "ok": true
+       },
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.5",
+        "valor": "2.22",
+        "ok": true
+       },
+       {
+        "sigla": "RDFP",
+        "op": "<=",
+        "req": "1.85",
+        "valor": "0.63",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7103,7 +7935,32 @@
      "resumen": "Granja Avícola Integral Sofía cumple compromisos financieros Bonos Sofía II y III",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDL",
+        "op": ">=",
+        "req": "1.15",
+        "valor": "1.55",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "1.75",
+        "valor": "1.52",
+        "ok": true
+       },
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "3",
+        "valor": "3.33",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7115,7 +7972,32 @@
      ],
      "resumen": "Los Compromisos Financieros asumidos con información al 31 de diciembre de 2025, son los siguientes: Indicadores Financieros Compromiso Diciembre 2025 Razón Corriente (RC) >= 2,50 2,52 Relación Deuda",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "2.5",
+        "valor": "2.52",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.68",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.25",
+        "valor": "1.69",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7129,7 +8011,32 @@
      "resumen": "IASA cumple indicadores financieros bonos IASA IV y V al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1.15",
+        "valor": "1.23",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.2",
+        "valor": "1.93",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "2.5",
+        "valor": "2.52",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7154,7 +8061,32 @@
      "resumen": "MADISA cumple compromisos financieros Pagarés Bursátiles I dic-2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "2",
+        "valor": "3.73",
+        "ok": true
+       },
+       {
+        "sigla": "RE",
+        "op": "<=",
+        "req": "2.2",
+        "valor": "1.28",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "2.01",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7167,7 +8099,32 @@
      "resumen": "PILAT cumple compromisos financieros Bonos Pilat II al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "0.75",
+        "valor": "0.28",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1",
+        "valor": "3.72",
+        "ok": true
+       },
+       {
+        "sigla": "RTD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "2.48",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7180,7 +8137,32 @@
      "resumen": "Nutrioil cumple compromisos financieros al 31.12.2025",
      "resumen_origen": "ia",
      "grupo": "compromisos",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.02",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "3.8",
+        "valor": "2.8",
+        "ok": true
+       },
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.24",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
@@ -7192,7 +8174,39 @@
      ],
      "resumen": "Los Compromisos Financieros al 31 de diciembre de 2025, son los siguientes: Indicadores Financieros Compromiso Dic-25 Relación de Endeudamiento (RDP) RDP <= 2.2 1.44 Relación de Cobertura de Servicio",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.2",
+        "valor": "1.44",
+        "ok": true
+       },
+       {
+        "sigla": "RCSD",
+        "op": ">=",
+        "req": "1.3",
+        "valor": "2.2",
+        "ok": true
+       },
+       {
+        "sigla": "OPR",
+        "op": "<=",
+        "req": "0.2",
+        "valor": "0.05",
+        "ok": true
+       },
+       {
+        "sigla": "RDL",
+        "op": ">=",
+        "req": "1",
+        "valor": "1.28",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Noticias",
