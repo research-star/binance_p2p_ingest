@@ -810,6 +810,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
     <button class="fb-tab" data-tab="macro">Macro</button>
     <button class="fb-tab" data-tab="asfi">ASFI</button>
+    <button class="fb-tab" data-tab="mercado247">Mercado 24/7</button>
     <button class="fb-tab" data-tab="dpf" hidden>Rendimientos DPF</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
     <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>
@@ -1432,6 +1433,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     </div>
   </div>
 </div><!-- /tab-macro -->
+
+<!-- Mercado 24/7: isla oscura autocontenida (bundle namespaceado .m247 en
+     static/mercado247-tab.js). Lazy-render vía window.renderMercado247() en
+     activateTab. data-mercado247 marca el contenedor de montaje. -->
+<div id="tab-mercado247" style="display:none;" data-mercado247></div><!-- /tab-mercado247 -->
 
 <div id="tab-noticias">
 </div><!-- /tab-noticias -->
@@ -3027,6 +3033,7 @@ var ROUTE_MAP = {
   '/guia':      {tab:'guide'},
   '/dolar':     {tab:'dollar'},
   '/asfi':      {tab:'asfi'},
+  '/mercado247':{tab:'mercado247'},
   '/noticias':  {tab:'noticias', alias:true}
 };
 // Registro tabId → id del contenedor DOM. Resuelve el mismatch dollar↔tab-dolar
@@ -3038,7 +3045,8 @@ var TAB_PANELS = {
   bbv:      'tab-bbv',
   guide:    'tab-guide',
   noticias: 'tab-noticias',
-  asfi:     'tab-asfi'
+  asfi:     'tab-asfi',
+  mercado247: 'tab-mercado247'
 };
 // Lista GENÉRICA de subtabs de Macro. Reactivar un subtab pausado (ej. PIB) =
 // agregar un entry acá + su <div id="subtab-ID"> + su chip; cero refactor.
@@ -3382,7 +3390,8 @@ var TAB_TITLES = {
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',
   'noticias': 'FinanzasBo — Inicio',
-  'asfi':     'FinanzasBo — ASFI · Mercado de Valores'
+  'asfi':     'FinanzasBo — ASFI · Mercado de Valores',
+  'mercado247': 'FinanzasBo — Mercado 24/7'
 };
 // Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
 // slug del subtab activo, no un slug de tab.
@@ -3438,6 +3447,7 @@ function activateTab(target, subtab){
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   if(target==='noticias' && typeof window.renderNoticias==='function'){window.renderNoticias();}
   if(target==='asfi' && typeof window.renderAsfi==='function'){window.renderAsfi();}
+  if(target==='mercado247' && typeof window.renderMercado247==='function'){window.renderMercado247();}
   // Dólar es lazy como el resto: render idempotente en el primer activate, con
   // #tab-dolar ya visible (loop de arriba) → Plotly dimensiona bien sin resize manual.
   if(target==='dollar' && typeof window.renderDollar==='function'){window.renderDollar();}
@@ -5910,5 +5920,10 @@ function initAsfi(){
 window.renderAsfi=function(){ if(!st.init) initAsfi(); };
 })();
 </script>
+
+<!-- Mercado 24/7 — bundle autocontenido (copiado plano a la raíz por
+     publish_dashboard.py, igual que favicon.svg). Expone window.renderMercado247(),
+     invocado con lazy-render desde activateTab. defer: no bloquea el parse. -->
+<script src="mercado247-tab.js" defer></script>
 
 </body></html>
