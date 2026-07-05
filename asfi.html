@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASFI · Hechos Relevantes del Mercado de Valores — FinanzasBo</title>
+<meta name="description" content="Reporte Informativo diario de ASFI (Registro del Mercado de Valores de Bolivia), condensado: emisiones, cupones, juntas, calificaciones y movimientos de personal.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-primary:#F7E4D7;--bg-secondary:#FFF7F0;--bg-tertiary:#F3E0D2;
+  --border-color:rgba(33,30,27,.12);--line-strong:rgba(33,30,27,.24);
+  --text-primary:#211E1B;--text-secondary:#6B6256;--text-muted:#766C5C;--text-soft:#9E927C;
+  --blue-accent:#2C4A6B;--np-accent:#B5503F;--teal:#0D7680;--canvas:#E8E1D6;
+  --font-display:'Newsreader',Georgia,serif;
+  --font-body:'Inter',-apple-system,sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--canvas)}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);min-height:100vh;font-size:13px}
+a{color:var(--blue-accent)}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+
+header{background:var(--bg-secondary);border-bottom:1px solid var(--border-color);padding:22px 20px 18px}
+.hd{max-width:980px;margin:0 auto;display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.hd .brand{font-family:var(--font-display);font-size:15px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-secondary);text-decoration:none}
+.hd .brand b{color:var(--blue-accent)}
+h1{font-family:var(--font-display);font-size:26px;font-weight:500;letter-spacing:-.01em;margin-top:6px}
+.sub{color:var(--text-muted);font-size:12px;margin-top:4px;max-width:640px;line-height:1.5}
+
+.nav-dia{display:flex;align-items:center;gap:10px;margin:22px 0 6px;flex-wrap:wrap}
+.nav-dia button{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);
+  font-family:var(--font-mono);font-size:13px;padding:7px 13px;cursor:pointer;border-radius:2px}
+.nav-dia button:hover:not(:disabled){background:var(--bg-tertiary)}
+.nav-dia button:disabled{opacity:.35;cursor:default}
+.nav-dia input[type=date]{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);
+  font-family:var(--font-mono);font-size:13px;padding:6px 10px;border-radius:2px}
+.dia-titulo{font-family:var(--font-display);font-size:20px;font-weight:600;margin-left:4px}
+.dia-meta{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+.dia-meta a{color:var(--text-muted)}
+
+.filtros{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 4px}
+.chip{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-secondary);
+  font-size:11px;font-weight:500;padding:4px 11px;border-radius:9999px;cursor:pointer;user-select:none}
+.chip.on{background:var(--blue-accent);border-color:var(--blue-accent);color:#fff}
+.filtros input[type=search]{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);
+  font-family:var(--font-body);font-size:12px;padding:6px 10px;border-radius:2px;min-width:200px;flex:1;max-width:300px}
+.filtros select{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);
+  font-size:12px;padding:6px 8px;border-radius:2px}
+
+.seccion{margin-top:30px}
+.seccion>h2{font-family:var(--font-display);font-size:17px;font-weight:600;padding-bottom:6px;
+  border-bottom:2px solid var(--sec-color,var(--blue-accent));color:var(--sec-color,var(--blue-accent));
+  display:flex;justify-content:space-between;align-items:baseline}
+.seccion>h2 .n{font-family:var(--font-mono);font-size:11px;font-weight:400;color:var(--text-muted)}
+.categoria{margin-top:16px}
+.categoria>h3{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:8px}
+
+.item{background:var(--bg-secondary);border:1px solid var(--border-color);border-left:3px solid var(--sec-color,var(--blue-accent));
+  padding:12px 15px;margin-bottom:8px;border-radius:2px}
+.item .ent{font-weight:600;font-size:13px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.item .tags{display:inline-flex;gap:5px;flex-wrap:wrap}
+.item .tag{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;
+  background:var(--bg-tertiary);color:var(--text-secondary);padding:2px 7px;border-radius:9999px}
+.item .res{margin-top:6px;font-size:13px;line-height:1.55;color:var(--text-primary)}
+.item .res .ast{color:var(--np-accent);cursor:help}
+.item details{margin-top:7px}
+.item summary{font-size:11px;color:var(--text-muted);cursor:pointer;user-select:none}
+.item summary:hover{color:var(--blue-accent)}
+.item .full{margin-top:8px;font-size:12px;line-height:1.6;color:var(--text-secondary);white-space:pre-wrap;
+  border-top:1px dashed var(--border-color);padding-top:8px}
+
+.vacio{margin:60px auto;text-align:center;color:var(--text-muted);font-size:13px}
+footer{margin-top:50px;padding-top:16px;border-top:1px solid var(--border-color);
+  font-size:11px;color:var(--text-muted);line-height:1.7}
+@media(max-width:640px){
+  h1{font-size:21px}
+  .wrap{padding:0 12px 40px}
+  .nav-dia .dia-titulo{width:100%;order:9;margin-left:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <div>
+      <a class="brand" href="/"><b>FinanzasBo</b> · inteligencia económica</a>
+      <h1>ASFI — Hechos Relevantes del Mercado de Valores</h1>
+      <div class="sub">Condensado diario del Reporte Informativo de la Dirección de Supervisión de
+        Valores (Registro del Mercado de Valores): emisiones autorizadas, pagos de cupones, juntas,
+        calificaciones de riesgo, compromisos financieros y movimientos de personal.</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="nav-dia">
+    <button id="btnPrev" title="Día anterior">←</button>
+    <input type="date" id="selFecha">
+    <button id="btnNext" title="Día siguiente">→</button>
+    <button id="btnHoy" title="Último reporte disponible">Último</button>
+    <span class="dia-titulo" id="diaTitulo"></span>
+    <span class="dia-meta" id="diaMeta"></span>
+  </div>
+
+  <div class="filtros" id="filtros">
+    <input type="search" id="txtBuscar" placeholder="Filtrar por entidad o texto…">
+    <select id="selTag"><option value="">Todos los temas</option></select>
+  </div>
+
+  <div id="contenido"><div class="vacio">Cargando…</div></div>
+
+  <footer>
+    Fuente: <a href="https://www.asfi.gob.bo/la/hechos-relevantes-2026" rel="noopener" target="_blank">ASFI
+    — Autoridad de Supervisión del Sistema Financiero</a>, Reporte Informativo del Registro del Mercado de
+    Valores. Los resúmenes se generan automáticamente; los marcados con <span style="color:var(--np-accent)">*</span>
+    son extractos del texto original sin procesamiento editorial. El texto completo de cada comunicado está
+    disponible en cada tarjeta y en el PDF original de ASFI. FinanzasBo no es responsable por el contenido de
+    los comunicados, que es de exclusiva responsabilidad de quien los presenta e inscribe en el RMV.
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const SEC_ORDEN = ["Hechos Relevantes","Noticias","Resoluciones Administrativas",
+                   "Cartas de Autorización","Cartas Circulares","Cartas de Aclaración"];
+const SEC_COLOR = {"Hechos Relevantes":"#2C4A6B","Noticias":"#0D7680",
+                   "Resoluciones Administrativas":"#B5503F","Cartas de Autorización":"#7A5EA8",
+                   "Cartas Circulares":"#9A6B2F","Cartas de Aclaración":"#9A6B2F"};
+const TAG_LABEL = {emision:"Emisión",cupon:"Cupones",personal:"Personal",junta:"Juntas",
+                   calificacion:"Calificación",compromisos:"Compromisos fin.",prestamo:"Préstamos",
+                   dividendos:"Dividendos",uso_fondos:"Uso de fondos",titularizacion:"Titularización",
+                   auditoria:"Auditoría",resolucion:"Resolución",tramite:"Trámite"};
+const VISOR = "https://appweb2.asfi.gob.bo/PaginasPublicas2/VistaHechosRelevantes/VisorDocumentos.aspx?variable1=";
+const MESES_ES = ["enero","febrero","marzo","abril","mayo","junio","julio",
+                  "agosto","septiembre","octubre","noviembre","diciembre"];
+const DIAS_ES = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+
+let indice = null;        // asfi_index.json
+let fechas = [];          // fechas disponibles asc
+let cacheMes = {};        // "2026-07" -> data
+let fechaActual = null;
+let filtroTag = "", filtroTxt = "";
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function fmtFecha(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  const dt = new Date(Date.UTC(y,m-1,d));
+  return DIAS_ES[dt.getUTCDay()]+" "+d+" de "+MESES_ES[m-1]+" de "+y;
+}
+
+async function cargarIndice(){
+  const r = await fetch("asfi_index.json",{cache:"no-cache"});
+  indice = await r.json();
+  fechas = Object.keys(indice.dias).sort();
+  const sel = $("selFecha");
+  sel.min = fechas[0]; sel.max = fechas[fechas.length-1];
+}
+
+async function cargarDia(fecha){
+  const mes = fecha.slice(0,7);
+  if(!cacheMes[mes]){
+    const r = await fetch("asfi_"+mes+".json",{cache:"no-cache"});
+    cacheMes[mes] = await r.json();
+  }
+  return (cacheMes[mes].dias||{})[fecha] || null;
+}
+
+function irA(fecha){
+  if(!fechas.length) return;
+  if(!indice.dias[fecha]){
+    // snap al día disponible más cercano hacia atrás (o el primero)
+    const antes = fechas.filter(f => f <= fecha);
+    fecha = antes.length ? antes[antes.length-1] : fechas[0];
+  }
+  fechaActual = fecha;
+  $("selFecha").value = fecha;
+  const i = fechas.indexOf(fecha);
+  $("btnPrev").disabled = i <= 0;
+  $("btnNext").disabled = i >= fechas.length-1;
+  history.replaceState(null,"","#"+fecha);
+  render();
+}
+
+async function render(){
+  const cont = $("contenido");
+  cont.innerHTML = '<div class="vacio">Cargando…</div>';
+  const dia = await cargarDia(fechaActual);
+  $("diaTitulo").textContent = fmtFecha(fechaActual);
+  if(!dia){ cont.innerHTML = '<div class="vacio">Sin reporte para este día.</div>'; $("diaMeta").innerHTML=""; return; }
+  $("diaMeta").innerHTML = dia.items.length+" comunicados · "+
+    (dia.guid ? '<a href="'+VISOR+dia.guid+'" target="_blank" rel="noopener">PDF original ↗</a>' : "");
+
+  // filtros
+  const txt = filtroTxt.toLowerCase();
+  const items = dia.items.filter(it =>
+    (!filtroTag || it.tags.includes(filtroTag)) &&
+    (!txt || (it.entidad+" "+it.texto+" "+it.categoria).toLowerCase().includes(txt)));
+
+  if(!items.length){ cont.innerHTML = '<div class="vacio">Ningún comunicado matchea el filtro.</div>'; return; }
+
+  // agrupar sección → categoría (preservando orden del reporte)
+  const html = [];
+  for(const sec of SEC_ORDEN){
+    const enSec = items.filter(it => it.seccion === sec);
+    if(!enSec.length) continue;
+    const color = SEC_COLOR[sec] || "#2C4A6B";
+    html.push('<section class="seccion" style="--sec-color:'+color+'">');
+    html.push('<h2>'+esc(sec)+'<span class="n">'+enSec.length+' comunicado'+(enSec.length>1?"s":"")+'</span></h2>');
+    const cats = [...new Set(enSec.map(it => it.categoria))];
+    for(const cat of cats){
+      html.push('<div class="categoria">');
+      if(cat) html.push('<h3>'+esc(cat)+'</h3>');
+      for(const it of enSec.filter(x => x.categoria === cat)){
+        const ast = it.resumen_origen !== "ia"
+          ? ' <span class="ast" title="Extracto automático del texto original (sin resumen editorial)">*</span>' : "";
+        html.push('<div class="item">');
+        html.push('<div class="ent">'+esc(it.entidad || "ASFI")+
+          '<span class="tags">'+it.tags.map(t=>'<span class="tag">'+esc(TAG_LABEL[t]||t)+'</span>').join("")+'</span></div>');
+        html.push('<div class="res">'+esc(it.resumen)+ast+'</div>');
+        if(it.texto && it.texto.length > (it.resumen||"").length + 20){
+          html.push('<details><summary>Texto completo</summary><div class="full">'+esc(it.texto)+'</div></details>');
+        }
+        html.push('</div>');
+      }
+      html.push('</div>');
+    }
+    html.push('</section>');
+  }
+  cont.innerHTML = html.join("");
+}
+
+function poblarTags(){
+  const sel = $("selTag");
+  Object.entries(TAG_LABEL).forEach(([v,l])=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=l; sel.appendChild(o);
+  });
+}
+
+async function init(){
+  try{ await cargarIndice(); }
+  catch(e){ $("contenido").innerHTML = '<div class="vacio">No pude cargar los datos ASFI.</div>'; return; }
+  poblarTags();
+  $("btnPrev").onclick = ()=>{ const i=fechas.indexOf(fechaActual); if(i>0) irA(fechas[i-1]); };
+  $("btnNext").onclick = ()=>{ const i=fechas.indexOf(fechaActual); if(i<fechas.length-1) irA(fechas[i+1]); };
+  $("btnHoy").onclick  = ()=> irA(fechas[fechas.length-1]);
+  $("selFecha").onchange = e => irA(e.target.value);
+  $("txtBuscar").oninput = e => { filtroTxt = e.target.value.trim(); render(); };
+  $("selTag").onchange   = e => { filtroTag = e.target.value; render(); };
+  document.addEventListener("keydown", e=>{
+    if(e.target.tagName === "INPUT") return;
+    if(e.key === "ArrowLeft")  $("btnPrev").click();
+    if(e.key === "ArrowRight") $("btnNext").click();
+  });
+  const hash = location.hash.replace("#","");
+  irA(/^\d{4}-\d{2}-\d{2}$/.test(hash) ? hash : fechas[fechas.length-1]);
+}
+init();
+})();
+</script>
+</body>
+</html>
