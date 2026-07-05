@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"><head>
+<html lang="{{lang}}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="description" content="{{t:meta.description}}">
 <meta name="author" content="FinanzasBo">
@@ -7,16 +7,20 @@
 <meta property="og:description" content="{{t:meta.og_description}}">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://finanzasbo.com/og.png">
-<meta property="og:url" content="https://finanzasbo.com">
+<meta property="og:url" content="https://finanzasbo.com{{base}}/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{t:meta.twitter_title}}">
 <meta name="twitter:description" content="{{t:meta.twitter_description}}">
 <meta name="twitter:image" content="https://finanzasbo.com/og.png">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="manifest" href="site.webmanifest">
+<link rel="canonical" href="https://finanzasbo.com{{base}}/">
+<link rel="alternate" hreflang="es" href="https://finanzasbo.com/">
+<link rel="alternate" hreflang="en" href="https://finanzasbo.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://finanzasbo.com/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#FBEDE3">
 <title>{{t:meta.title}}</title>
 <!-- Umami analytics (only emitted if UMAMI_WEBSITE_ID present at build time) -->
@@ -271,8 +275,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-util-upd{display:flex;align-items:center;gap:7px;letter-spacing:.04em;font-variant-numeric:tabular-nums}
 .fb-live{width:6px;height:6px;border-radius:var(--radius-pill);background:var(--up);box-shadow:0 0 0 3px color-mix(in srgb,var(--up) 22%,transparent);flex-shrink:0}
 .fb-util-sep{color:var(--text-soft)}
-.fb-util-lang{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:2px 4px;transition:color .15s}
-.fb-util-lang:hover{color:var(--text-primary)}
+.fb-util-lang{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 4px;display:inline-flex;align-items:center;gap:4px}
+.fb-lang-opt{color:var(--text-muted);text-decoration:none;cursor:pointer;transition:color .15s}
+.fb-lang-opt:hover{color:var(--text-primary)}
+.fb-lang-opt.active{color:var(--text-primary);cursor:default}
+.fb-lang-div{color:var(--line-strong)}
 /* ── Ticker "movimientos" (barra oscura cálida, full-width) · entre utility y masthead ──
    Semántica de color INVERTIDA: la flecha muestra la dirección real (▲/▼/■); el COLOR
    codifica bueno/malo (subir=malo=rojo, bajar=bueno=verde) salvo BCB oficial (neutro).
@@ -776,7 +783,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="fb-utility-right">
       <span class="fb-util-upd"><span class="fb-live"></span>{{t:nav.updated_label}} <span id="fbUpd">&mdash;</span></span>
       <span class="fb-util-sep">&middot;</span>
-      <button class="fb-util-lang" id="langToggle" title="{{t:nav.lang_title}}" aria-label="{{t:nav.lang_aria}}">ES</button>
+      <span class="fb-util-lang" id="langToggle" title="{{t:nav.lang_title}}" aria-label="{{t:nav.lang_aria}}"><a class="fb-lang-opt" data-lang="es" href="/">ES</a><span class="fb-lang-div" aria-hidden="true">|</span><a class="fb-lang-opt" data-lang="en" href="/en/">EN</a></span>
     </div>
   </div>
   <section class="fb-ticker" id="fbTicker" aria-label="{{t:ticker.aria}}">
@@ -812,9 +819,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
+    <!-- i18n:es-only -->
     <button class="fb-tab" data-tab="dpf" hidden>{{t:nav.tab_dpf}}</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
     <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>
+    <!-- /i18n:es-only -->
   </div>
 </nav>
 <div id="tab-dolar" style="display:none;">
@@ -842,6 +851,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <div class="footer" id="footer"></div>
 </div><!-- /tab-dolar -->
 
+<!-- i18n:es-only -->
 <div id="tab-dpf" style="display:none;">
   <div class="fb-subheader">
     <div>
@@ -921,6 +931,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     </div>
   </div>
 </div><!-- /tab-dpf -->
+<!-- /i18n:es-only -->
 
 
 <!-- ═══ ASFI TAB (hechos relevantes RMV; data client-side de asfi_*.json) ═══ -->
@@ -982,6 +993,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   </div>
 </div><!-- /tab-asfi -->
 
+<!-- i18n:es-only -->
 <div id="tab-bbv" style="display:none;">
   <div class="fb-subheader">
     <div>
@@ -1284,6 +1296,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
   </div>
 </div><!-- /tab-guide -->
+<!-- /i18n:es-only -->
 
 <div id="tab-macro" style="display:none;">
   <!-- Header ÚNICO: el h1 no cambia; el subtítulo se swapea por subtab (ver activateMacroSubtab). -->
@@ -1465,6 +1478,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 </footer>
 
 <script>
+// ═══ i18n: constantes horneadas por i18n_bake (bake ES: 'es'/''; bake EN: 'en'/'/en') ═══
+var FB_LANG='{{lang}}', FB_BASE='{{base}}';
 const DATA = __DATA_PLACEHOLDER__;
 if(!DATA||typeof DATA!=='object'||!DATA.ts_metrics||!Array.isArray(DATA.ts_metrics.ts)||!DATA.ts_metrics.ts.length){
   document.getElementById('errorBanner').classList.add('show');
@@ -1871,7 +1886,7 @@ const PC={displayModeBar:false,responsive:true,scrollZoom:false};
 // Locale 'es' para ejes de tiempo de Plotly (meses ene/feb/…). Se registra una
 // sola vez; NO cambia el default global (no usamos setPlotConfig) → solo afecta
 // charts que pasen locale:'es' en su config (hoy: el trend de Bloqueos).
-if(window.Plotly&&Plotly.register){try{Plotly.register({moduleType:'locale',name:'es',dictionary:{},format:{
+if(FB_LANG==='es'&&window.Plotly&&Plotly.register){try{Plotly.register({moduleType:'locale',name:'es',dictionary:{},format:{
   days:['domingo','lunes','martes','miércoles','jueves','viernes','sábado'],
   shortDays:['dom','lun','mar','mié','jue','vie','sáb'],
   months:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
@@ -1895,9 +1910,9 @@ function gapShapes(c){
     fillcolor:c.textMuted,opacity:op,line:{width:0},layer:'below',
   }));
 }
-function hoverFmtForView(){return currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'}
+function hoverFmtForView(){return FB_LANG==='es'?(currentView==='snapshot'?'%d %b · %H:%M':currentView==='hourly'?'%d %b · %Hh':'%d %b'):(currentView==='snapshot'?'%b %d · %H:%M':currentView==='hourly'?'%b %d · %Hh':'%b %d')}
 function xaxisForView(base, v){
-  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:'%d %b',hoverformat:hoverFmtForView(),showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4};
+  const cfg={...base,tickfont:{...(base.tickfont||{}),size:10},tickangle:-30,nticks:8,tickformat:FB_LANG==='es'?'%d %b':'%b %d',hoverformat:hoverFmtForView(),showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4};
   // range explícito del rango activo: fuerza al eje a redibujarse con cada
   // cambio de selector y evita que Plotly conserve autorange/rangeslider
   // del render anterior. Padding de medio día en daily/hourly para que los
@@ -2069,7 +2084,7 @@ function rOutliers(){
   const stamp=document.getElementById('outliersSnapStamp');
   if(stamp){
     const snapTs = ml ? ml.snapshot_ts : meta.last_ts;
-    stamp.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
+    stamp.textContent = new Date(snapTs).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
   }
   if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
   const refs={BUY:ml.vwap10_buy, SELL:ml.vwap10_sell};
@@ -2162,7 +2177,7 @@ function rOffer(c){
   }
   if(stamp&&od.snapshot_ts){
     const sideLabel = sf==='buy' ? '{{t:dolar.offer_side_solo_compra}}' : sf==='sell' ? '{{t:dolar.offer_side_solo_venta}}' : '{{t:dolar.offer_side_ambos}}';
-    stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'})+sideLabel;
+    stamp.textContent=new Date(od.snapshot_ts).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'})+sideLabel;
   }
   if(od.empty){
     _purgeAndClear(el);
@@ -2234,7 +2249,7 @@ function rActivityHm(c){
   if(!el) return;
   var matrix=DATA.activity_heatmap;
   if(!matrix||!matrix.length){el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
-  var dayLabels=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
+  var dayLabels=FB_LANG==='es'?['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom']:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   var hourLabels=Array.from({length:24},function(_,i){return i+'h'});
   var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
   // Normalizamos contra maxZ para que el helper pueda aplicar threshold 0.6
@@ -2309,7 +2324,7 @@ window.renderDollar = function(){
 
 // ═══ STATIC CONTENT ═══
 {
-  const lastSnapFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
+  const lastSnapFmt=new Date(meta.last_ts).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
   const el=document.getElementById('lastUpdateStamp');
   if(el) el.textContent=lastSnapFmt;
 }
@@ -2353,10 +2368,12 @@ function kpi(label,value,sub,iconSvg,colorVar){
        + '<div class="fb-kpi-value"'+(colorVar?' style="color:var(--color-'+colorVar+')"':'')+'>'+value+'</div>'
        + '<div class="fb-kpi-sub">'+sub+'</div></div>';
 }
-function tcoFechaCorta(f){  // "2026-06-30" -> "30 jun"
-  const M=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+function tcoFechaCorta(f){  // ES "2026-06-30" -> "30 jun" · EN -> "Jun 30"
+  const M=FB_LANG==='es'?['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const p=(f||'').split('-');
-  return p.length>=3 ? (String(+p[2])+' '+(M[+p[1]-1]||p[1])) : (f||'');
+  if(p.length<3) return (f||'');
+  const mo=M[+p[1]-1]||p[1], day=String(+p[2]);
+  return FB_LANG==='es' ? (day+' '+mo) : (mo+' '+day);
 }
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
@@ -2402,15 +2419,40 @@ function updateKpis(){
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
-const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
+const lastTsFmt=new Date(meta.last_ts).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
 document.getElementById('footer').innerHTML='{{t:dolar.footer_ultima}}'+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
 // Theme toggle eliminado: modo oscuro removido, tema único claro forzado.
-// Language toggle (visual only — no real translation)
+// Language toggle: navegación real (full page, NO SPA) a la ruta equivalente
+// del otro idioma. Marca activo el idioma actual (FB_LANG) y computa el slug
+// sin prefijo al vuelo. Los tabs ES-only (/guia,/bbv,/dpf) no existen en EN →
+// al saltar a EN caen al home /en/.
 {
-  const btn=document.getElementById('langToggle');
-  if(btn) btn.addEventListener('click',function(){this.textContent=this.textContent.trim()==='ES'?'EN':'ES'});
+  const box=document.getElementById('langToggle');
+  if(box){
+    box.querySelectorAll('.fb-lang-opt').forEach(function(a){
+      a.classList.toggle('active', a.dataset.lang===FB_LANG);
+    });
+    box.addEventListener('click', function(e){
+      const a=e.target.closest('.fb-lang-opt');
+      if(!a) return;
+      e.preventDefault();
+      const to=a.dataset.lang;
+      if(to===FB_LANG) return;                 // ya estamos en ese idioma
+      const slug=fbSlug(window.location.pathname);
+      let target;
+      if(to==='en'){
+        // ES→EN. Tabs ES-only no tienen equivalente EN → home.
+        if(slug==='/guia'||slug==='/bbv'||slug==='/dpf') target='/en/';
+        else target = slug==='/' ? '/en/' : '/en'+slug;
+      } else {
+        // EN→ES: el slug sin prefijo YA es el path ES.
+        target = slug==='/' ? '/' : slug;
+      }
+      window.location.href=target;
+    });
+  }
 }
 // View toggle (Por snapshot / Por día)
 {
@@ -2898,7 +2940,7 @@ function sortTable(table, th){
     if(bv==null) return -1;
     const an=parseFloat(av), bn=parseFloat(bv);
     const numeric = (av!==''&&bv!==''&&!isNaN(an)&&!isNaN(bn));
-    const cmp = numeric ? (an-bn) : String(av).localeCompare(String(bv),'es-BO',{sensitivity:'base'});
+    const cmp = numeric ? (an-bn) : String(av).localeCompare(String(bv),FB_LANG==='es'?'es-BO':'en-US',{sensitivity:'base'});
     return cmp*st.dir;
   });
   rows.forEach(r=>tbody.appendChild(r));
@@ -3017,6 +3059,22 @@ function initHelpTooltips(){
 // pero la barra canonicaliza a '/' (marca alias:true → excluido de TAB_TO_SLUG).
 // Macro tiene subtabs deep-linkables vía slugs PLANOS (un solo nivel, sin parser
 // nuevo): /riesgo (preservado) y /inflacion; /macro resuelve al subtab default.
+// i18n routing: ROUTE_MAP keys quedan SIN prefijo. fbSlug normaliza el
+// location.pathname del deploy (ES en '/', EN en '/en') a un slug sin prefijo
+// que matchea las keys. fbHref reconstruye el path del deploy para pushState/
+// replaceState (special-case '/': ES → '/', EN → '/en/').
+function fbSlug(pathname){
+  if(FB_BASE && pathname.indexOf(FB_BASE)===0){
+    var rest = pathname.slice(FB_BASE.length);
+    return rest === '' ? '/' : rest;   // '/en' → '/', '/en/riesgo' → '/riesgo'
+  }
+  return pathname;
+}
+function fbHref(slug){
+  // Slug canónico sin prefijo → path del deploy. Home ('/') en EN vive en '/en/'.
+  if(slug === '/') return FB_BASE ? FB_BASE + '/' : '/';
+  return FB_BASE + slug;
+}
 var ROUTE_MAP = {
   '/':          {tab:'noticias'},
   '/macro':     {tab:'macro', subtab:'riesgo'},
@@ -3024,9 +3082,11 @@ var ROUTE_MAP = {
   '/inflacion': {tab:'macro', subtab:'inflacion'},
   '/bloqueos':  {tab:'macro', subtab:'bloqueos'},
   '/tasas':     {tab:'macro', subtab:'tasas'},
+  /* i18n:es-only */
   '/dpf':       {tab:'dpf'},
   '/bbv':       {tab:'bbv'},
   '/guia':      {tab:'guide'},
+  /* /i18n:es-only */
   '/dolar':     {tab:'dollar'},
   '/asfi':      {tab:'asfi'},
   '/noticias':  {tab:'noticias', alias:true}
@@ -3131,7 +3191,7 @@ window.renderBloqueos = function(){
   if(elDate){
     var ul = B.ultima_lectura || B.updated_at;
     elDate.textContent = ul
-      ? new Date(ul).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+      ? new Date(ul).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})
       : '—';
   }
   // Traza de puntos según vista: intensidad (opacidad log por días) o activos (rojo sólido).
@@ -3276,7 +3336,7 @@ window.renderBloqueos = function(){
       return;
     }
     var sf = filterSerieByRange(serie, _blqTrendRange);
-    var tf = (_blqTrendRange==='1m'||_blqTrendRange==='3m') ? '%d %b' : '%b %Y';
+    var tf = (_blqTrendRange==='1m'||_blqTrendRange==='3m') ? (FB_LANG==='es'?'%d %b':'%b %d') : '%b %Y';
     var L = BL(c);
     // autosize:true + automargin (como los charts hermanos de Macro): el trend era
     // el único con height fijo en el layout -> bajo responsive no re-ajustaba y las
@@ -3291,7 +3351,7 @@ window.renderBloqueos = function(){
       xaxis:{...L.xaxis, tickformat:tf, nticks:9, tickangle:-30, fixedrange:false, automargin:true},
       yaxis:{...L.yaxis, title:{text:'{{t:macro.blq_trend_yaxis}}', font:{size:10, color:c.textMuted}}, rangemode:'tozero', automargin:true},
       margin:{l:48, r:16, t:16, b:48}, showlegend:false, hovermode:'x'
-    }, {...PC, locale:'es'});  // meses del eje X + hover en español (ene/feb/…)
+    }, {...PC, locale:FB_LANG});  // ES: meses del eje X + hover en español (ene/feb/…); EN: default Plotly
   }
   if(trendBtns){
     trendBtns.onclick = function(ev){
@@ -3308,7 +3368,7 @@ window.renderBloqueos = function(){
 // ── Tasas (TRE): serie mensual del BCB, bcb_tre.json via ingest_bcb_tre.py ──
 // Locale 'es' mínimo para que Plotly rotule los meses en español (%b/%B en
 // ticks y hover). Registrado una vez, se activa por-plot con config locale:'es'.
-if(window.Plotly&&Plotly.register){
+if(FB_LANG==='es'&&window.Plotly&&Plotly.register){
   Plotly.register({moduleType:'locale', name:'es',
     dictionary:{},
     format:{
@@ -3321,7 +3381,7 @@ if(window.Plotly&&Plotly.register){
 }
 window.renderTasas = (function(){
   let built=false;
-  const MES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const MES=FB_LANG==='es'?['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function vigLabel(v){ const p=(v||'').split('-'); return p.length>=2 ? (MES[+p[1]-1]+' '+p[0]) : (v||'—'); }
   return function(){
     const el=document.getElementById('chartTre');
@@ -3356,7 +3416,7 @@ window.renderTasas = (function(){
       xaxis:{...L.xaxis,tickformat:'%b %Y',hoverformat:'%b %Y',nticks:10,showline:true,linecolor:'rgba(33,30,27,.5)',linewidth:1,ticks:'outside',tickcolor:'rgba(33,30,27,.5)',ticklen:4},
       yaxis:{...L.yaxis,ticksuffix:'%',tickformat:'.2f',rangemode:'tozero',gridcolor:'rgba(33,30,27,.09)',showgrid:true,automargin:true},
       annotations:endLabels,
-      showlegend:true, margin:{l:56,r:64,t:36,b:48}, height:380}, {...PC, locale:'es'});
+      showlegend:true, margin:{l:56,r:64,t:36,b:48}, height:380}, {...PC, locale:FB_LANG});
   };
 })();
 
@@ -3380,9 +3440,11 @@ var MACRO_SUBTABS = [
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
 var TAB_TITLES = {
   'dollar':   '{{t:dolar.doc_title}}',
+  /* i18n:es-only */
   'dpf':      'FinanzasBo — Rendimientos DPF',
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',
+  /* /i18n:es-only */
   'noticias': '{{t:macro.doc_title_noticias}}',
   'asfi':     '{{t:macro.doc_title_asfi}}'
 };
@@ -3466,8 +3528,8 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
     } else {
       slug = TAB_TO_SLUG[target];
     }
-    if(slug && window.location.pathname !== slug){
-      history.pushState({tab: target, subtab: macroState.current}, '', slug);
+    if(slug && window.location.pathname !== fbHref(slug)){
+      history.pushState({tab: target, subtab: macroState.current}, '', fbHref(slug));
     }
   });
 });
@@ -3497,15 +3559,15 @@ document.addEventListener('click', function(e){
     var subId = chip.dataset.subtab;
     activateMacroSubtab(subId);
     var sub = MACRO_SUBTABS.find(function(s){return s.id===subId;});
-    if(sub && sub.slug && window.location.pathname !== sub.slug){
-      history.pushState({tab:'macro', subtab:subId}, '', sub.slug);
+    if(sub && sub.slug && window.location.pathname !== fbHref(sub.slug)){
+      history.pushState({tab:'macro', subtab:subId}, '', fbHref(sub.slug));
     }
   });
 })();
 
 // Back/forward del browser
 window.addEventListener('popstate', function(){
-  var r = ROUTE_MAP[window.location.pathname] || {tab:'noticias'};
+  var r = ROUTE_MAP[fbSlug(window.location.pathname)] || {tab:'noticias'};
   activateTab(r.tab, r.subtab);
 });
 
@@ -3520,9 +3582,11 @@ window.addEventListener('popstate', function(){
   var qs = new URLSearchParams(window.location.search);
   var fromQs = qs.get('path');
   if(fromQs){
-    history.replaceState(null, '', fromQs);
+    // El 404.html ya entrega un slug SIN prefijo (/en/foo → ?path=/foo).
+    // Re-prefijamos con FB_BASE al reescribir la barra ('/'→ EN '/en/').
+    history.replaceState(null, '', FB_BASE + fromQs);
   }
-  var path = window.location.pathname;
+  var path = fbSlug(window.location.pathname);
   var initial;
   if(ROUTE_MAP[path]){
     initial = ROUTE_MAP[path];
@@ -3530,12 +3594,12 @@ window.addEventListener('popstate', function(){
     // propio del tab ('/' para Noticias) sin recargar.
     if(initial.alias){
       var canon = TAB_TO_SLUG[initial.tab];
-      if(canon && window.location.pathname !== canon){
-        history.replaceState(null, '', canon);
+      if(canon && window.location.pathname !== fbHref(canon)){
+        history.replaceState(null, '', fbHref(canon));
       }
     }
   } else {
-    history.replaceState(null, '', '/');
+    history.replaceState(null, '', fbHref('/'));
     initial = {tab:'noticias'};
   }
   function runInitial(){ activateTab(initial.tab, initial.subtab); }
@@ -3546,6 +3610,7 @@ window.addEventListener('popstate', function(){
   }
 })();
 
+/* i18n:es-only */
 // ═══ DPF TAB LOGIC ═══
 (function(){
   var dpfState={tipo:'DPF',plazo:360,moneda:'BOB',categoria:'BANCOS MULTIPLES'};
@@ -4162,6 +4227,7 @@ window.addEventListener('popstate', function(){
     });
   });
 })();
+/* /i18n:es-only */
 
 // ═══ RIESGO PAÍS TAB ═══
 (function(){
@@ -4367,7 +4433,7 @@ window.addEventListener('popstate', function(){
   // mes+año en 5Y, año en Max.
   function xTickFormat(){
     switch(state.range){
-      case '1M':  return '%d %b';
+      case '1M':  return FB_LANG==='es'?'%d %b':'%b %d';
       case '6M':  return '%b';
       case '1Y':  return '%b';
       case '5Y':  return "%b '%y";
@@ -4621,7 +4687,7 @@ window.addEventListener('popstate', function(){
 (function(){
   var IPC = (typeof DATA==='object' && DATA.inflacion && DATA.inflacion.ipc) ? DATA.inflacion.ipc : null;
   var ULT = (DATA.inflacion && DATA.inflacion.ultimo && DATA.inflacion.ultimo.ipc) || null;
-  var MES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var MES = FB_LANG==='es'?['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var WARM_DARK='#990F3D', WARM_MID='#C8385C', WARM_LITE='#E8C9C0', SLATE='#0F5499', COOL='#0F5499';  // FT "pocos tonos, más matices": claret (inflación) + oxford (rubros/deflación)
   var GREY_LO='#D8CFC4', GREY_HI='#9A8F82';  // grises de contexto (años pasados de la acumulada)
   function hex2rgb(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
@@ -4850,18 +4916,20 @@ window.addEventListener('popstate', function(){
     cni:      { id:'cni',      name:'CNI',       full:'Cámara Nacional de Industrias',  color:'var(--src-cni, var(--text-muted))' }
   };
   const NOTICIAS_PORTAL_ORDER = ['eldeber','correosur','unitel','larazon','bloomberg','eju','eldia','brujula','fides','erbol','urgente','opinion','lostiempos','lapatria','elmundo','bcb','ine','mefp','asfi','aduana','cainco','ibce','cepb','cni'];
-  const NT_PAISES = { argentina:'Argentina', brasil:'Brasil', chile:'Chile', colombia:'Colombia', mexico:'México', peru:'Perú', uruguay:'Uruguay', paraguay:'Paraguay', ecuador:'Ecuador', bolivia:'Bolivia', venezuela:'Venezuela', panama:'Panamá' };
+  const NT_PAISES = FB_LANG==='es'
+    ? { argentina:'Argentina', brasil:'Brasil', chile:'Chile', colombia:'Colombia', mexico:'México', peru:'Perú', uruguay:'Uruguay', paraguay:'Paraguay', ecuador:'Ecuador', bolivia:'Bolivia', venezuela:'Venezuela', panama:'Panamá' }
+    : { argentina:'Argentina', brasil:'Brazil', chile:'Chile', colombia:'Colombia', mexico:'Mexico', peru:'Peru', uruguay:'Uruguay', paraguay:'Paraguay', ecuador:'Ecuador', bolivia:'Bolivia', venezuela:'Venezuela', panama:'Panama' };
 
   // ── "Hoy" + helpers de fecha / escape ──
   function ntParseD(d){ const p=String(d).split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
   function ntISO(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
   const NT_TODAY = (function(){ try{ const g=Date.parse(meta.generated_at); if(!isNaN(g)) return new Date(g-4*3600000).toISOString().slice(0,10); }catch(e){} return ntISO(new Date()); })();
-  const NT_DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-  const NT_MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  const NT_MES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  const NT_WD = ['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];  // weekday corto para chips del control de fecha
-  function ntFechaLarga(d){ const dt=ntParseD(d); return NT_DIAS[dt.getDay()]+' '+dt.getDate()+' de '+NT_MESES[dt.getMonth()]+' de '+dt.getFullYear(); }
-  function ntFechaCorta(d){ const dt=ntParseD(d); return dt.getDate()+' '+NT_MES_CORTO[dt.getMonth()]; }
+  const NT_DIAS = FB_LANG==='es'?['domingo','lunes','martes','miércoles','jueves','viernes','sábado']:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const NT_MESES = FB_LANG==='es'?['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const NT_MES_CORTO = FB_LANG==='es'?['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const NT_WD = FB_LANG==='es'?['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB']:['SUN','MON','TUE','WED','THU','FRI','SAT'];  // weekday corto para chips del control de fecha
+  function ntFechaLarga(d){ const dt=ntParseD(d); return FB_LANG==='es' ? (NT_DIAS[dt.getDay()]+' '+dt.getDate()+' de '+NT_MESES[dt.getMonth()]+' de '+dt.getFullYear()) : (NT_DIAS[dt.getDay()]+', '+NT_MESES[dt.getMonth()]+' '+dt.getDate()+', '+dt.getFullYear()); }
+  function ntFechaCorta(d){ const dt=ntParseD(d); return FB_LANG==='es' ? (dt.getDate()+' '+NT_MES_CORTO[dt.getMonth()]) : (NT_MES_CORTO[dt.getMonth()]+' '+dt.getDate()); }
   function ntEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   // ── Feed real (graceful vacío estilo EMBI: sin DATA.noticias → portada vacía sana) ──
@@ -4979,7 +5047,7 @@ window.addEventListener('popstate', function(){
 
   // ── Formato numérico (es-BO: coma decimal, punto miles) ──
   function npNum(v){ return typeof v==='number' && isFinite(v); }
-  function npFmt(v,frac){ return new Intl.NumberFormat('es-BO',{minimumFractionDigits:frac,maximumFractionDigits:frac}).format(v); }
+  function npFmt(v,frac){ return new Intl.NumberFormat(FB_LANG==='es'?'es-BO':'en-US',{minimumFractionDigits:frac,maximumFractionDigits:frac}).format(v); }
   function npLastNum(a){ if(!a) return null; for(let i=a.length-1;i>=0;i--) if(npNum(a[i])) return a[i]; return null; }
   function npPrevNum(a){ if(!a) return null; let s=0; for(let i=a.length-1;i>=0;i--){ if(npNum(a[i])){ if(++s===2) return a[i]; } } return null; }
   function npDir(d){ return (!npNum(d)||d===0)?'flat':(d>0?'up':'down'); }
@@ -5263,7 +5331,7 @@ window.addEventListener('popstate', function(){
   }
 
   // Encabezado dinámico del feed (§4). El control de fecha (§5) lo monta C3 (npDateStrip).
-  function ntFechaSlash(off){ const dt=ntParseD(ntDateAt(off)); const p=function(x){return String(x).padStart(2,'0');}; return p(dt.getDate())+'/'+p(dt.getMonth()+1)+'/'+String(dt.getFullYear()).slice(2); }
+  function ntFechaSlash(off){ const dt=ntParseD(ntDateAt(off)); const p=function(x){return String(x).padStart(2,'0');}; return FB_LANG==='es' ? (p(dt.getDate())+'/'+p(dt.getMonth()+1)+'/'+String(dt.getFullYear()).slice(2)) : (NT_MES_CORTO[dt.getMonth()]+' '+dt.getDate()+', '+dt.getFullYear()); }
   // shown = notas en el slice actual; total = tamaño del pool visible (cross-día desde
   // el día activo). El contador refleja lo realmente mostrado sobre el pool paginable.
   function npFeedHead(off, shown, total){
@@ -5658,9 +5726,16 @@ window.addEventListener('popstate', function(){
       var src=(typeof meta!=='undefined' && meta && (meta.generated_at||meta.last_ts))||null;
       var d=src?new Date(src):new Date();
       if(isNaN(d.getTime())) d=new Date();
-      var f=d.toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'America/La_Paz'}).replace(/,/g,'');
-      f=f.charAt(0).toUpperCase()+f.slice(1);
-      var h=d.toLocaleTimeString('es-BO',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
+      var f;
+      if(FB_LANG==='es'){
+        // ES: "Viernes 4 de julio de 2026" (sin comas, primera letra mayúscula).
+        f=d.toLocaleDateString('es-BO',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'America/La_Paz'}).replace(/,/g,'');
+        f=f.charAt(0).toUpperCase()+f.slice(1);
+      }else{
+        // EN: "Friday, July 4, 2026" (comas nativas en-US, ya capitalizado).
+        f=d.toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'America/La_Paz'});
+      }
+      var h=d.toLocaleTimeString(FB_LANG==='es'?'es-BO':'en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
       var de=document.getElementById('fbDate'); if(de) de.textContent=f+' · Santa Cruz, Bolivia';
       var ue=document.getElementById('fbUpd'); if(ue) ue.textContent=h;
     }catch(e){}
@@ -5691,8 +5766,8 @@ window.addEventListener('popstate', function(){
 (function(){
 'use strict';
 var st = {init:false, indice:null, fechas:[], cacheMes:{}, fecha:null, tema:'', txt:''};
-var MESES_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-var DIAS_ES=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+var MESES_ES=FB_LANG==='es'?['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DIAS_ES=FB_LANG==='es'?['domingo','lunes','martes','miércoles','jueves','viernes','sábado']:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var VISOR='https://appweb2.asfi.gob.bo/PaginasPublicas2/VistaHechosRelevantes/VisorDocumentos.aspx?variable1=';
 
 /* Íconos por rubro (stroke 1.5, 24-box). Keyed por substring de la categoría. */
@@ -5718,7 +5793,9 @@ function icono(cat){
 }
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function fmtFecha(iso){var pt=iso.split('-'),d=new Date(Date.UTC(+pt[0],+pt[1]-1,+pt[2]));
-  return DIAS_ES[d.getUTCDay()]+' '+(+pt[2])+' de '+MESES_ES[+pt[1]-1]+' de '+pt[0];}
+  return FB_LANG==='es'
+    ? (DIAS_ES[d.getUTCDay()]+' '+(+pt[2])+' de '+MESES_ES[+pt[1]-1]+' de '+pt[0])
+    : (DIAS_ES[d.getUTCDay()]+', '+MESES_ES[+pt[1]-1]+' '+(+pt[2])+', '+pt[0]);}
 function campo(it,k){return (it.campos&&it.campos[k])||'';}
 function celda(v){return v?esc(v):'<span style="color:var(--text-soft)">—</span>';}
 function resHtml(it){
@@ -5793,7 +5870,7 @@ var GRUPOS=[
 ];
 
 function cargarIndice(cb){
-  fetch('asfi_index.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(idx){
+  fetch('/asfi_index.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(idx){
     st.indice=idx; st.fechas=Object.keys(idx.dias||{}).sort();
     var inp=document.getElementById('asfiFecha');
     if(st.fechas.length){inp.min=st.fechas[0];inp.max=st.fechas[st.fechas.length-1];}
@@ -5803,7 +5880,7 @@ function cargarIndice(cb){
 function cargarDia(fecha,cb){
   var mes=fecha.slice(0,7);
   if(st.cacheMes[mes]){cb(null,(st.cacheMes[mes].dias||{})[fecha]||null);return;}
-  fetch('asfi_'+mes+'.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(d){
+  fetch('/asfi_'+mes+'.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(d){
     st.cacheMes[mes]=d; cb(null,(d.dias||{})[fecha]||null);
   }).catch(function(e){cb(e,null);});
 }
@@ -5818,7 +5895,7 @@ function irA(fecha){
   var i=st.fechas.indexOf(fecha);
   document.getElementById('asfiPrev').disabled=(i<=0);
   document.getElementById('asfiNext').disabled=(i>=st.fechas.length-1);
-  if(window.location.pathname==='/asfi'){history.replaceState(null,'','/asfi#'+fecha);}
+  if(fbSlug(window.location.pathname)==='/asfi'){history.replaceState(null,'',fbHref('/asfi')+'#'+fecha);}
   pintar();
 }
 function pintar(){
