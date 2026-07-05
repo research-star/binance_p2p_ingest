@@ -49,15 +49,21 @@ SPEND_DDL = (
 
 TRANSITORIO = object()  # fallo reintentable (red/HTTP) — ver resumen_ia.py
 
+# V2 telegráfico (2026-07-05, pedido de Diego: "más compacto"): estilo titular
+# de agencia, no oración completa. RESUMEN_V versiona el prompt — aplicar()
+# re-procesa los items resumidos con una versión anterior (bajo el cap).
+RESUMEN_V = 2
 _PROMPT = (
-    "Resumí en español, en UNA sola oración de máximo 200 caracteres, este "
-    "comunicado del Registro del Mercado de Valores de Bolivia (ASFI). Usá "
-    "EXCLUSIVAMENTE la información del texto: conservá montos, fechas, nombres "
-    "de instrumentos y cargos tal como aparecen. PROHIBIDO agregar contexto, "
-    "causas o interpretaciones. Sin puntos suspensivos. Si el texto es una "
-    "tabla, resumí el dato principal (indicador y valor, o instrumento y "
-    "calificación). Si no hay contenido resumible, respondé exactamente: "
-    "INSUFICIENTE.\n\nEntidad: {entidad}\n\nComunicado: {texto}"
+    "Convertí este comunicado del mercado de valores boliviano (ASFI/RMV) en un "
+    "titular telegráfico de MÁXIMO 90 caracteres, estilo cable de agencia: "
+    "sujeto + acción + dato clave. Ejemplos del estilo: «BISA desembolsa "
+    "Bs 25,0M a DATEC», «Renuncia la Resp. de Riesgos de AICC SAFI», «Autorizan "
+    "Bonos INCOTEC II», «Paga cupón N°9 de Bonos Subordinados 2021». Usá SOLO "
+    "información del texto; conservá montos, números de cupón y nombres tal "
+    "como aparecen (podés abreviar cargos y razones sociales). Sin punto final, "
+    "sin comillas, sin puntos suspensivos, sin agregar contexto. Si el texto no "
+    "da para un titular, respondé exactamente: INSUFICIENTE."
+    "\n\nEntidad: {entidad}\n\nComunicado: {texto}"
 )
 
 SENTINEL = "INSUFICIENTE"
@@ -198,19 +204,21 @@ def resumir_item(entidad: str, texto: str, *, autorizado: bool = False,
 
 
 def aplicar(items: list, *, autorizado: bool = False, conn=None) -> int:
-    """Completa item['resumen']/['resumen_origen'] en los items que aún no
-    tengan origen 'ia'. Idempotente: re-correr solo procesa los pendientes
-    (permite backfill en tandas bajo el cap mensual). Devuelve n resumidos."""
+    """Completa item['resumen']/['resumen_origen'] en los items pendientes:
+    sin resumen IA, o resumidos con una versión de prompt anterior a RESUMEN_V
+    (la migración a un prompt nuevo corre sola, en tandas bajo el cap).
+    Idempotente. Devuelve n resumidos."""
     if not habilitado():
         return 0
     n_ok = 0
     for it in items:
-        if it.get("resumen_origen") == "ia":
+        if it.get("resumen_origen") == "ia" and it.get("resumen_v") == RESUMEN_V:
             continue
         r = resumir_item(it.get("entidad", ""), it.get("texto", ""),
                          autorizado=autorizado, conn=conn)
         if isinstance(r, str):
             it["resumen"] = r
             it["resumen_origen"] = "ia"
+            it["resumen_v"] = RESUMEN_V
             n_ok += 1
     return n_ok
