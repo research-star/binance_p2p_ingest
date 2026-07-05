@@ -38,7 +38,10 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la Consultora RUIZMIER PELAEZ S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "Consultora RUIZMIER PELAEZ S.R.L."
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -223,7 +226,12 @@
      ],
      "resumen": "Comunica que, en reunión de Directorio de 30 de junio de 2026, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 13 de julio de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "13 de julio de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -248,10 +256,7 @@
      ],
      "resumen": "Comunica que, el 30 de junio de 2026 y en virtud a la designación aprobada por el Directorio, suscribió un contrato para la prestación de servicios de Auditoría Externa gestión 2026, con la empresa",
      "resumen_origen": "extractivo",
-     "grupo": "personal",
-     "campos": {
-      "movimiento": "designación"
-     }
+     "grupo": "otros"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -427,7 +432,12 @@
      ],
      "resumen": "Comunica que, de los recursos captados a través de la Emisión de “Pagarés Toyosa V - Emisión 5”, el 30 de junio de 2026, se utilizaron de la siguiente manera: - Capital de operaciones/Pago a",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos",
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 3,0 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -540,7 +550,16 @@
      ],
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de junio de 2026, realizada con el 94.38% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "directorio",
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Gonzalo Eduardo Zenteno Mendoza",
+        "cargo": "Síndico Titular",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -777,7 +796,11 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la firma BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "auditorias",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -804,7 +827,12 @@
      ],
      "resumen": "Comunica que, en reunión de Directorio de 2 de julio de 2026, se aprobó por unanimidad, la convocatoria a Junta General Ordinaria de Accionistas, a realizarse el 14 de julio de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "14 de julio de 2026",
+      "agenda": "distribución de resultados · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -829,7 +857,66 @@
      ],
      "resumen": "Ha comunicado que el 01 de julio de 2026, con la participación del 99.32% de los accionistas, se reanudó después de un cuarto intermedio la Junta General Ordinaria de Accionistas de 15 de junio de",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "directorio",
+     "campos": {
+      "cambios": [
+       {
+        "persona": "Oscar Álvarez Daher",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Stevo Ostoic Gonzales",
+        "cargo": "Directores Titulares",
+        "tipo": "sale"
+       },
+       {
+        "persona": "María Eugenia Mosciaro Gil",
+        "cargo": "Síndico Titular",
+        "tipo": "sale"
+       },
+       {
+        "persona": "Sergio Antonio Gottret Valdez",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Víctor Eduardo Durán Saavedra",
+        "cargo": "Directores Titulares",
+        "tipo": "entra"
+       },
+       {
+        "persona": "José Alberto Sottocorno Vera",
+        "cargo": "Síndico Titular",
+        "tipo": "entra"
+       },
+       {
+        "persona": "Sebastián Daroca Oller",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Nelson Mario Salazar Cabrera",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Juan Luis Briancon Sánchez",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Marcelo Pantoja Saavedra",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       },
+       {
+        "persona": "Carlos Walter Larrain Sánchez",
+        "cargo": "Directores Titulares",
+        "tipo": "ratificado"
+       }
+      ]
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -844,6 +931,7 @@
      "grupo": "personal",
      "campos": {
       "persona": "Dennise Karina Nistahuz Ibañez",
+      "cargo": "Responsable de Gestión de Riesgos, Funcionario Responsable UIF y Responsable de Segurid…",
       "movimiento": "renuncia"
      }
     },
@@ -951,7 +1039,12 @@
      ],
      "resumen": "Comunica que, el 2 de julio de 2026, se utilizaron los recursos captados a través de la Emisión de Pagarés Toyosa V - Emisión 5, de la siguiente manera: - Capital de operaciones/Pago a proveedores",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos",
+     "campos": {
+      "instrumento": "Pagarés Toyosa V",
+      "destino": "Capital de operaciones/Pago a proveedores del exterior",
+      "monto": "Bs 2,3 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -984,9 +1077,29 @@
      "resumen_origen": "extractivo",
      "grupo": "compromisos",
      "campos": {
-      "cap": "13.82%",
-      "liquidez": "66.38%",
-      "cobertura": "170.19%"
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.82%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "66.38%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "170.19%",
+        "ok": true
+       }
+      ]
      }
     },
     {
@@ -1018,7 +1131,7 @@
      ],
      "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo LAS LOMAS - iBOLSA ST 003, el 2 de julio de 2026, dando cumplimiento como parte del destino de los recursos obtenidos mediante la",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "uso_fondos"
     },
     {
      "seccion": "Noticias",
@@ -1031,7 +1144,39 @@
      ],
      "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo MADEPA - iBOLSA ST 004, dando cumplimiento a lo establecido en la Cláusula Décima Segunda, Vigésima Séptima y Trigésima Tercera del",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "7.95",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "6",
+        "valor": "8.41",
+        "ok": true
+       },
+       {
+        "sigla": "CCC",
+        "op": ">=",
+        "req": "1",
+        "valor": "12.07",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.93",
+        "ok": true
+       }
+      ]
+     }
     },
     {
      "seccion": "Resoluciones Administrativas",
