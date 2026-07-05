@@ -617,6 +617,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .np-feed-headmain{min-width:0}
 .np-feed-title{font-family:var(--font-display);font-weight:600;font-size:27px;line-height:1.1;letter-spacing:-.01em;color:var(--text-primary);margin:0}
 .np-feed-sub{font-family:var(--font-body);font-size:11.5px;font-weight:500;color:var(--text-soft);letter-spacing:.02em;margin:4px 0 0}
+.np-lang-note{display:block;font-family:var(--font-body);font-size:11.5px;font-weight:500;color:var(--text-soft);letter-spacing:.02em;margin:2px 0 0}
+.np-lang-note:empty{display:none}
 /* — control de fecha (dateline editorial: chips mono, sin date-picker) — */
 .np-datectl{display:flex;align-items:stretch;gap:6px;flex:none}
 .np-dc-arrow{display:inline-flex;align-items:center;justify-content:center;width:30px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);font-size:17px;line-height:1;cursor:pointer;border-radius:var(--radius-sm);font-family:var(--font-body);transition:border-color .15s,color .15s}
@@ -4898,7 +4900,7 @@ window.addEventListener('popstate', function(){
   const npOverlay = { on:false, dirty:false };
   function npEdit(){ return npAdmin.isAdmin && npAdmin.editMode; }
   function npNoteAttr(n){ return npEdit() ? ' data-note-id="'+ntEsc(n.id)+'"' : ''; }
-  function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="Ocultar nota" aria-label="Ocultar nota">✕</button>' : ''; }
+  function npHideCtl(n){ return npEdit() ? '<button class="fb-icon-btn np-hide-btn" type="button" data-np-hide="'+ntEsc(n.id)+'" title="{{t:noticias.hide_note}}" aria-label="{{t:noticias.hide_note}}">✕</button>' : ''; }
   function npById(id){ for(let i=0;i<NOTICIAS_NEWS.length;i++) if(NOTICIAS_NEWS[i].id===id) return NOTICIAS_NEWS[i]; return null; }
 
   // ── Jerarquía editorial (regla frontend; reversible a campo backend) ──
@@ -4917,7 +4919,7 @@ window.addEventListener('popstate', function(){
   function ntLatam(){ return ntVisible().filter(ntEsLatam).slice().sort(function(a,b){ return String(b.date+b.time).localeCompare(String(a.date+a.time)); }); }
   function ntPortalName(id){ const p=NOTICIAS_PORTALS[id]; return p?p.name:id; }
   // Categoría → nombre display (kicker). Fallback: capitaliza el slug crudo.
-  const NT_CAT_NAMES = { economia:'Economía', finanzas:'Finanzas', politica:'Política', internacional:'Internacional', otros:'Otros', hidrocarburos:'Hidrocarburos', agro:'Agro', mineria:'Minería', mundo:'Mundo', latam:'Internacional' };
+  const NT_CAT_NAMES = { economia:'{{t:noticias.cat_economia}}', finanzas:'{{t:noticias.cat_finanzas}}', politica:'{{t:noticias.cat_politica}}', internacional:'{{t:noticias.cat_internacional}}', otros:'{{t:noticias.cat_otros}}', hidrocarburos:'{{t:noticias.cat_hidrocarburos}}', agro:'{{t:noticias.cat_agro}}', mineria:'{{t:noticias.cat_mineria}}', mundo:'{{t:noticias.cat_mundo}}', latam:'{{t:noticias.cat_internacional}}' };
   function ntCatName(c){ return c ? (NT_CAT_NAMES[c] || (c.charAt(0).toUpperCase()+c.slice(1))) : ''; }
   // Categoría editorial DERIVADA del `tema` (no del campo `category` guardado): así las
   // notas viejas, rotuladas antes de la calibración 2026-06-21, muestran el rótulo HONESTO
@@ -5046,11 +5048,11 @@ window.addEventListener('popstate', function(){
       var pub=ntEsc(n.time||'');                       // pubDate real: visible para todos
       if(!npAdmin.isAdmin) return pub;
       var scr=npScrapeHHMM(n);                          // scrapeo real: solo admin, de createdAtUtc
-      return scr ? pub+' · Scrapeado a las '+scr : pub;
+      return scr ? pub+'{{t:noticias.scraped_at_latam}}'+scr : pub;
     }
     // Bolivia: n.time = hora de corrida. Público sin hora; admin la ve rotulada.
     if(!npAdmin.isAdmin || !n.time) return '';
-    return 'Scrapeado a las '+ntEsc(n.time);
+    return '{{t:noticias.scraped_at}}'+ntEsc(n.time);
   }
   // Adaptadores de markup: el separador desaparece junto con la hora (sin "·" huérfano).
   // Foot/meta (hero + card): span np-sep + np-time. Ranking/latam: separador plano " · ".
@@ -5128,7 +5130,7 @@ window.addEventListener('popstate', function(){
       parts.push((s.url&&/^https?:\/\//i.test(s.url))
         ? '<a href="'+ntEsc(s.url)+'" target="_blank" rel="noopener noreferrer">'+nm+'</a>' : nm);
     }
-    return '<p class="np-tambien">También en: '+parts.join(', ')+'</p>';
+    return '<p class="np-tambien">{{t:noticias.tambien_en}}'+parts.join(', ')+'</p>';
   }
   // Slot de imagen — cascada: og:image (hotlink, carril BO) → GALERÍA temática
   // (match por `tema`, gallerySlug precomputado en dashboard.py) → placeholder CSS.
@@ -5154,7 +5156,7 @@ window.addEventListener('popstate', function(){
     // confirmado vía /v1/me). El público NUNCA emite el <span> → 0 flash: el render
     // inicial corre isAdmin=false y el tag solo aparece tras npRerender() post-/v1/me,
     // que únicamente se dispara si hay hint de sesión (el anónimo puro ni prueba).
-    var tag = npAdmin.isAdmin ? '<span class="np-gal-tag">ilustrativa</span>' : '';
+    var tag = npAdmin.isAdmin ? '<span class="np-gal-tag">{{t:noticias.gal_tag_ilustrativa}}</span>' : '';
     return '<img class="np-gal-img" src="/gal-'+s+'.webp" loading="lazy" alt="" onerror="this.style.display=\'none\';if(this.nextElementSibling)this.nextElementSibling.remove()">'
       +tag;
   }
@@ -5184,7 +5186,7 @@ window.addEventListener('popstate', function(){
   // Hero local: nota líder del día por-defecto (izquierda de la primera plana).
   function npHero(){
     const lead=ntDayNotes(ntDefaultDay())[0];
-    if(!lead) return '<article class="np-hero"><div class="np-empty">No hay portada disponible.</div></article>';
+    if(!lead) return '<article class="np-hero"><div class="np-empty">{{t:noticias.empty_hero}}</div></article>';
     return '<article class="np-hero"'+npNoteAttr(lead)+'>'+npHeroBody(lead)+'</article>';
   }
   // Destacada internacional: mejor nota del carril Latam (Bloomberg), al medio de la
@@ -5194,7 +5196,7 @@ window.addEventListener('popstate', function(){
   function npHeroLatam(){
     const lead=ntLatamLead(); if(!lead) return '';
     return '<article class="np-hero np-hero-latam"'+npNoteAttr(lead)+'>'+npHideCtl(lead)
-      +(npAdmin.isAdmin?'<div class="np-kicker">Internacional</div>':'')
+      +(npAdmin.isAdmin?'<div class="np-kicker">{{t:noticias.kicker_internacional}}</div>':'')
       +'<h1 class="np-lead-title">'+npTitle(lead.url,lead.title)+'</h1>'
       +'<figure class="np-figure">'+npImg(lead,'np-hero-img')
         +npCap(lead)+'</figure>'
@@ -5228,8 +5230,8 @@ window.addEventListener('popstate', function(){
   function npMoveCtl(n,i,total){
     if(!npAdmin.isAdmin) return '';
     return '<div class="np-move">'
-      +'<button class="np-move-btn" type="button" data-np-move="up" data-np-move-id="'+ntEsc(n.id)+'"'+(i>0?'':' disabled')+' aria-label="Subir">&#9650;</button>'
-      +'<button class="np-move-btn" type="button" data-np-move="down" data-np-move-id="'+ntEsc(n.id)+'"'+(i<total-1?'':' disabled')+' aria-label="Bajar">&#9660;</button>'
+      +'<button class="np-move-btn" type="button" data-np-move="up" data-np-move-id="'+ntEsc(n.id)+'"'+(i>0?'':' disabled')+' aria-label="{{t:noticias.move_up_aria}}">&#9650;</button>'
+      +'<button class="np-move-btn" type="button" data-np-move="down" data-np-move-id="'+ntEsc(n.id)+'"'+(i<total-1?'':' disabled')+' aria-label="{{t:noticias.move_down_aria}}">&#9660;</button>'
       +'</div>';
   }
   // Ranking "Lo más relevante hoy" (fijo a ntDefaultDay()); excluye el lead (va en el hero).
@@ -5242,7 +5244,7 @@ window.addEventListener('popstate', function(){
     for(let i=0;i<notes.length;i++){ const n=notes[i];
       rows+='<div class="np-rank"'+npNoteAttr(n)+'>'+npHideCtl(n)+'<span class="num">'+(i+1)+'</span>'+npMoveCtl(n,i,notes.length)+'<div class="rk-main"><div class="rk-title">'+npTitle(n.url,n.title)+'</div><div class="rk-meta">'+ntEsc(ntPortalName(n.source))+npTimeSep(n)+'</div></div></div>';
     }
-    return '<aside class="np-rail"><div class="np-railcard np-rail-full"><h3>Lo más relevante hoy <span class="sub">por impacto</span></h3>'+rows+'</div></aside>';
+    return '<aside class="np-rail"><div class="np-railcard np-rail-full"><h3>{{t:noticias.rail_title}} <span class="sub">{{t:noticias.rail_sub}}</span></h3>'+rows+'</div></aside>';
   }
 
   // Tarjeta del feed (16:10 · sin caja · kicker · titular · bajada · fila de fuente al fondo).
@@ -5266,10 +5268,10 @@ window.addEventListener('popstate', function(){
   // el día activo). El contador refleja lo realmente mostrado sobre el pool paginable.
   function npFeedHead(off, shown, total){
     let title, sub;
-    if(off===0){ title='Las noticias de hoy'; sub='Selección editorial · '+shown+' de '+total+' notas'; }
-    else { const f=ntFechaSlash(off); title='Las noticias del '+f; sub='Archivo · '+f+' · '+shown+' de '+total+' notas'; }
+    if(off===0){ title='{{t:noticias.feed_title_today}}'; sub='{{t:noticias.feed_sub_editorial_prefix}}'+shown+' de '+total+'{{t:noticias.feed_counter_notas}}'; }
+    else { const f=ntFechaSlash(off); title='{{t:noticias.feed_title_archive_prefix}}'+f; sub='{{t:noticias.feed_sub_archive_prefix}}'+f+' · '+shown+' de '+total+'{{t:noticias.feed_counter_notas}}'; }
     return '<div class="np-feed-head"><div class="np-feed-headmain"><h2 class="np-feed-title">'+ntEsc(title)+'</h2>'
-      +'<p class="np-feed-sub">'+ntEsc(sub)+'</p></div>'+npDateStrip(off)+'</div>';
+      +'<p class="np-feed-sub">'+ntEsc(sub)+'</p><span class="np-lang-note">{{t:noticias.content_es_note}}</span></div>'+npDateStrip(off)+'</div>';
   }
   // Control de fecha (§5): tira de 7 chips (HOY a la derecha) + flechas ‹ ›.
   // Ventana: HOY anclado a la derecha cuando el día activo es reciente; si es más
@@ -5284,7 +5286,7 @@ window.addEventListener('popstate', function(){
   function npDateChips(active){
     const offs=npDateWindow(active); let h='';
     for(let i=0;i<offs.length;i++){ const off=offs[i], dt=ntParseD(ntDateAt(off));
-      const dw = off===0 ? 'HOY' : NT_WD[dt.getDay()];
+      const dw = off===0 ? '{{t:noticias.datectl_today_chip}}' : NT_WD[dt.getDay()];
       const empty = !ntDayNotes(off).length;  // día sin notas → chip gris, no clickeable
       h+='<button class="np-day'+(off===active?' on':'')+(empty?' empty':'')+'" type="button" data-np-day="'+off+'"'+(empty?' disabled':'')+' aria-pressed="'+(off===active)+'">'
         +'<span class="np-day-wd">'+dw+'</span><span class="np-day-dn">'+String(dt.getDate()).padStart(2,'0')+'</span></button>';
@@ -5294,16 +5296,16 @@ window.addEventListener('popstate', function(){
   // Día más cercano CON notas en una dirección (older=pasado, newer=hacia hoy); -1 si no hay.
   function npDayInDir(from,dir){ const step=dir==='older'?1:-1; for(let d=from+step; d>=0&&d<=NT_LIMIT; d+=step){ if(ntDayNotes(d).length) return d; } return -1; }
   function npDateStrip(off){
-    return '<div class="np-datectl" role="group" aria-label="Navegar por fecha">'
-      +'<button class="np-dc-arrow" type="button" data-np-nav="older"'+(npDayInDir(off,'older')<0?' disabled':'')+' aria-label="Día anterior">&lsaquo;</button>'
+    return '<div class="np-datectl" role="group" aria-label="{{t:noticias.datectl_aria}}">'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="older"'+(npDayInDir(off,'older')<0?' disabled':'')+' aria-label="{{t:noticias.datectl_prev_aria}}">&lsaquo;</button>'
       +'<div class="np-dc-days">'+npDateChips(off)+'</div>'
-      +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(npDayInDir(off,'newer')<0?' disabled':'')+' aria-label="Día siguiente">&rsaquo;</button>'
+      +'<button class="np-dc-arrow" type="button" data-np-nav="newer"'+(npDayInDir(off,'newer')<0?' disabled':'')+' aria-label="{{t:noticias.datectl_next_aria}}">&rsaquo;</button>'
       +'</div>';
   }
   // ¿El pool supera el slice actual? (hay más notas que revelar con "Mostrar más").
   function npHasMore(){ return npPool().length > NP_PAGE*npState.page; }
   function npMoreBtn(){
-    return '<div class="np-more"><button class="np-more-btn" type="button" data-np-more'+(npHasMore()?'':' disabled')+'><span class="np-more-d">Mostrar m&aacute;s &darr;</span><span class="np-more-m">Mostrar m&aacute;s &rarr;</span></button></div>';
+    return '<div class="np-more"><button class="np-more-btn" type="button" data-np-more'+(npHasMore()?'':' disabled')+'><span class="np-more-d">{{t:noticias.more_btn_desktop}}</span><span class="np-more-m">{{t:noticias.more_btn_mobile}}</span></button></div>';
   }
   // ── Navegación temporal (reescriben npState y re-renderean; ranking/hero intactos) ──
   function npGoDay(off){ if(isNaN(off)||off<0||off>NT_LIMIT||off===npState.day) return; npState.day=off; npState.page=1; npRerender(); }
@@ -5313,7 +5315,7 @@ window.addEventListener('popstate', function(){
   function npFeed(){
     const off=npState.day, pool=npPool();
     const notes=pool.slice(0, NP_PAGE*npState.page);  // slice paginado de a 6
-    const body=notes.length?npCards(notes):'<div class="np-empty">No hay notas para esta fecha.</div>';
+    const body=notes.length?npCards(notes):'<div class="np-empty">{{t:noticias.empty_day}}</div>';
     return '<section class="np-feed">'+npFeedHead(off, notes.length, pool.length)+body+npMoreBtn()+'</section>';
   }
   function npLatam(){
@@ -5328,17 +5330,17 @@ window.addEventListener('popstate', function(){
         +'<h3 class="np-latam-title">'+npTitle(n.url,n.title)+'</h3>'+npStand('np-latam-stand',ntDekMark(n))
         +'<div class="np-latam-time">'+ntEsc(ntFechaCorta(n.date))+npTimeSep(n)+'</div></article>';
     }
-    return '<section class="np-latam"><div class="np-latam-head"><h2>Latam / Internacional</h2><span class="by"><span class="dot"></span>Selección editorial · Bloomberg Línea</span></div><div class="np-latam-grid">'+grid+'</div></section>';
+    return '<section class="np-latam"><div class="np-latam-head"><h2>{{t:noticias.latam_title}}</h2><span class="by"><span class="dot"></span>{{t:noticias.latam_byline}}</span></div><div class="np-latam-grid">'+grid+'</div></section>';
   }
   function npFooter(){
     let pl='';
     for(let i=0;i<NOTICIAS_PORTAL_ORDER.length;i++){ const id=NOTICIAS_PORTAL_ORDER[i], p=NOTICIAS_PORTALS[id], linea=(id==='bloomberg');
       pl+='<span class="np-foot-portal'+(linea?' linea':'')+'">'+ntEsc(linea?'Bloomberg Línea':(p?p.name:id))+'</span>';
     }
-    return '<footer class="np-footer"><div class="np-foot-sources"><div class="np-foot-lab">Fuentes monitoreadas</div><div class="np-foot-portals">'+pl+'</div></div>'
-      +'<div class="np-foot-grid"><div class="np-method"><b>Metodología.</b> FinanzasBo monitorea más de 20 fuentes. Las notas bolivianas se agregan automáticamente y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.<div class="np-disc">FinanzasBo agrega y enlaza a las fuentes originales; los derechos pertenecen a cada medio. Indicadores con fines informativos, no constituyen asesoría financiera.</div></div>'
-      +'<div class="np-foot-tabs"><span class="lab">Explorar el panel</span><a href="/" data-foottab="noticias">Inicio</a><a href="/dolar" data-foottab="dollar">D&oacute;lar</a><a href="/macro" data-foottab="macro">Macro</a></div></div>'
-      +'<div class="np-foot-copy">© 2026 FinanzasBo · Inteligencia económica de Bolivia · Santa Cruz · <a href="/creditos-imagenes.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px">Créditos de imágenes</a></div></footer>';
+    return '<footer class="np-footer"><div class="np-foot-sources"><div class="np-foot-lab">{{t:noticias.foot_sources_label}}</div><div class="np-foot-portals">'+pl+'</div></div>'
+      +'<div class="np-foot-grid"><div class="np-method">{{t:noticias.foot_method}}<div class="np-disc">{{t:noticias.foot_disclaimer}}</div></div>'
+      +'<div class="np-foot-tabs"><span class="lab">{{t:noticias.foot_explore}}</span><a href="/" data-foottab="noticias">{{t:noticias.foot_tab_inicio}}</a><a href="/dolar" data-foottab="dollar">{{t:noticias.foot_tab_dolar}}</a><a href="/macro" data-foottab="macro">{{t:noticias.foot_tab_macro}}</a></div></div>'
+      +'<div class="np-foot-copy">{{t:noticias.foot_copy}}<a href="/creditos-imagenes.html" style="color:inherit;text-decoration:underline;text-underline-offset:2px">{{t:noticias.foot_credits_link}}</a></div></footer>';
   }
 
   // ── Admin bar + panel de ocultas (PR-C2; vacío salvo #admin) ──
@@ -5346,22 +5348,22 @@ window.addEventListener('popstate', function(){
   function npHiddenPanel(){
     const items = npAdmin.hiddenItems;
     let rows;
-    if(items===null){ rows='<div class="np-hidden-empty">Cargando notas ocultas…</div>'; }
-    else if(!items.length){ rows='<div class="np-hidden-empty">No hay notas ocultas.</div>'; }
+    if(items===null){ rows='<div class="np-hidden-empty">{{t:noticias.hidden_loading}}</div>'; }
+    else if(!items.length){ rows='<div class="np-hidden-empty">{{t:noticias.hidden_empty}}</div>'; }
     else {
       rows='';
       for(let i=0;i<items.length;i++){ const it=items[i], n=npById(it.id);
         // Cruce con DATA.noticias para el título; nota fuera del feed → degradar a id+fecha.
-        const title = n ? ntEsc(n.title) : '<span class="np-hi-id">'+ntEsc(it.id)+'</span> · fuera del feed actual';
+        const title = n ? ntEsc(n.title) : '<span class="np-hi-id">'+ntEsc(it.id)+'</span>{{t:noticias.hidden_out_of_feed}}';
         const parts = [];
         if(n){ parts.push(ntEsc(ntPortalName(n.source))); if(n.date) parts.push(ntEsc(ntFechaCorta(n.date))); }
-        if(it.at) parts.push('ocultada '+ntEsc(npShortAt(it.at)));
+        if(it.at) parts.push('{{t:noticias.hidden_at_prefix}}'+ntEsc(npShortAt(it.at)));
         rows+='<div class="np-hidden-item"><div class="np-hi-main"><div class="np-hi-title">'+title+'</div>'
           +'<div class="np-hi-meta">'+parts.join(' · ')+'</div></div>'
-          +'<button class="fpi-show" type="button" data-np-unhide="'+ntEsc(it.id)+'">Mostrar</button></div>';
+          +'<button class="fpi-show" type="button" data-np-unhide="'+ntEsc(it.id)+'">{{t:noticias.hidden_show_btn}}</button></div>';
       }
     }
-    return '<div class="np-hidden-panel"><h4>Notas ocultas</h4>'+rows+'</div>';
+    return '<div class="np-hidden-panel"><h4>{{t:noticias.hidden_panel_title}}</h4>'+rows+'</div>';
   }
   function npAdminBar(){
     // La SESIÓN (login / email / cerrar sesión) vive ahora en el masthead global
@@ -5369,8 +5371,8 @@ window.addEventListener('popstate', function(){
     // + el aviso de estado. Anónimo ⇒ nada (salvo un aviso pendiente, ej. sesión expirada).
     const note = npAdmin.notice ? '<div class="np-admin-note '+npAdmin.notice.kind+'">'+ntEsc(npAdmin.notice.text)+'</div>' : '';
     if(!npAdmin.isAdmin){ return note ? '<div class="np-admin-bar anon">'+note+'</div>' : ''; }
-    const editBtn='<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'Salir de edición':'Editar ocultas')+'</button>';
-    const overlayBtn='<button class="fpi-show" type="button" data-np-overlay-toggle aria-pressed="'+(npOverlay.on?'true':'false')+'">'+(npOverlay.on?'Overlay hero: ON':'Overlay hero: OFF')+'</button>';
+    const editBtn='<button class="fpi-show" type="button" data-np-edit-toggle>'+(npAdmin.editMode?'{{t:noticias.admin_edit_exit_btn}}':'{{t:noticias.admin_edit_btn}}')+'</button>';
+    const overlayBtn='<button class="fpi-show" type="button" data-np-overlay-toggle aria-pressed="'+(npOverlay.on?'true':'false')+'">'+(npOverlay.on?'{{t:noticias.admin_overlay_on}}':'{{t:noticias.admin_overlay_off}}')+'</button>';
     const panel = npAdmin.editMode ? npHiddenPanel() : '';
     return '<div class="np-admin-bar">'+editBtn+overlayBtn+note+panel+'</div>';
   }
@@ -5488,7 +5490,7 @@ window.addEventListener('popstate', function(){
   function npAuthExpired(){
     npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
     npClearHint();  // sesión muerta = logout forzado: limpiar hint para no re-probar al próximo load
-    npAdmin.notice={ kind:'warn', text:'Tu sesión expiró. Iniciá sesión de nuevo para seguir gestionando notas.' };
+    npAdmin.notice={ kind:'warn', text:'{{t:noticias.notice_session_expired}}' };
     fbRenderSession(); npRerender();
   }
   // Confirma sesión con GET /v1/me. redirect:'manual' ⇒ si Access intercepta en el
@@ -5510,7 +5512,7 @@ window.addEventListener('popstate', function(){
     fetch(NT_API+'/v1/hidden/admin', { credentials:'include', cache:'no-store' })
       .then(function(r){ if(r.status===401||r.status===403){ npAuthExpired(); return null; } return r.ok ? r.json() : null; })
       .then(function(d){ if(d===null) return; npAdmin.hiddenItems=(d && Array.isArray(d.items))?d.items:[]; npRerender(); })
-      .catch(function(){ npAdmin.hiddenItems=[]; npAdmin.notice={kind:'warn',text:'No se pudo cargar la lista de ocultas.'}; npRerender(); });
+      .catch(function(){ npAdmin.hiddenItems=[]; npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_hidden_list_fail}}'}; npRerender(); });
   }
   function npToggleEdit(){
     npAdmin.editMode=!npAdmin.editMode; npAdmin.notice=null;
@@ -5521,24 +5523,24 @@ window.addEventListener('popstate', function(){
     if(!id) return;
     npPost('/v1/hide', id).then(function(r){
       if(r.status===401||r.status===403){ npAuthExpired(); return; }
-      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo ocultar la nota (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_hide_fail_prefix}}'+r.status+'{{t:noticias.notice_retry_suffix}}'}; npRerender(); return; }
       NT_HIDDEN.add(id);  // desaparece instant de los 4 carriles vía ntVisible()
-      npAdmin.notice={kind:'info',text:'Nota ocultada.'};
+      npAdmin.notice={kind:'info',text:'{{t:noticias.notice_hidden_ok}}'};
       if(npAdmin.editMode){ npAdmin.hiddenItems=null; npLoadAdminList(); }
       npRerender();
-    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se ocultó.'}; npRerender(); });
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_hide_offline}}'}; npRerender(); });
   }
   function npUnhide(id){
     if(!id) return;
     npPost('/v1/unhide', id).then(function(r){
       if(r.status===401||r.status===403){ npAuthExpired(); return; }
-      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo mostrar la nota (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_unhide_fail_prefix}}'+r.status+'{{t:noticias.notice_retry_suffix}}'}; npRerender(); return; }
       NT_HIDDEN.delete(id);
       if(npAdmin.hiddenItems) npAdmin.hiddenItems=npAdmin.hiddenItems.filter(function(it){ return it.id!==id; });
       // Honesto: la versión publicada ya excluyó la nota; reaparece en el feed recién al próximo refresh.
-      npAdmin.notice={kind:'info',text:'Nota quitada de ocultas. Volverá a aparecer en el sitio en el próximo refresh (unos minutos): la versión publicada todavía la excluye.'};
+      npAdmin.notice={kind:'info',text:'{{t:noticias.notice_unhide_ok}}'};
       npRerender();
-    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La nota no se mostró.'}; npRerender(); });
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_unhide_offline}}'}; npRerender(); });
   }
   // Toggle GLOBAL del overlay del hero (admin). Optimista (como hide/curación) y
   // persiste vía POST /v1/hero. dirty evita que el GET tardío de ntLoadHero lo pise.
@@ -5549,9 +5551,9 @@ window.addEventListener('popstate', function(){
     npRerender();        // optimista
     npPost('/v1/hero', JSON.stringify({ overlay:on })).then(function(r){
       if(r.status===401||r.status===403){ npAuthExpired(); return; }
-      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo guardar el overlay del hero (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
-      npAdmin.notice={kind:'info',text:'Overlay del hero '+(on?'activado':'desactivado')+'.'}; npRerender();
-    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. El overlay no se guardó.'}; npRerender(); });
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_overlay_fail_prefix}}'+r.status+'{{t:noticias.notice_retry_suffix}}'}; npRerender(); return; }
+      npAdmin.notice={kind:'info',text:'{{t:noticias.notice_overlay_prefix}}'+(on?'{{t:noticias.notice_overlay_on_word}}':'{{t:noticias.notice_overlay_off_word}}')+'.'}; npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_overlay_offline}}'}; npRerender(); });
   }
   // ── Admin: curación del riel (tratamiento + reorden) ──
   // Persiste {day, order, treatment} en KV vía POST /v1/curate. Body JSON en
@@ -5560,9 +5562,9 @@ window.addEventListener('popstate', function(){
     const payload={ day:ntDateAt(ntDefaultDay()), order:npCuration.order||[], treatment:npCuration.treatment||'full' };
     npPost('/v1/curate', JSON.stringify(payload)).then(function(r){
       if(r.status===401||r.status===403){ npAuthExpired(); return; }
-      if(!r.ok){ npAdmin.notice={kind:'warn',text:'No se pudo guardar la curación (error '+r.status+'). Intentá de nuevo.'}; npRerender(); return; }
-      npAdmin.notice={kind:'info',text:'Curación guardada.'}; npRerender();
-    }).catch(function(){ npAdmin.notice={kind:'warn',text:'Sin conexión con el servidor. La curación no se guardó.'}; npRerender(); });
+      if(!r.ok){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_curation_fail_prefix}}'+r.status+'{{t:noticias.notice_retry_suffix}}'}; npRerender(); return; }
+      npAdmin.notice={kind:'info',text:'{{t:noticias.notice_curation_ok}}'}; npRerender();
+    }).catch(function(){ npAdmin.notice={kind:'warn',text:'{{t:noticias.notice_curation_offline}}'}; npRerender(); });
   }
   // Sube/baja una nota en el riel. order = orden explícito COMPLETO del riel visible
   // (los 5 ids), así el público ve exactamente lo mismo. dir = 'up'|'down'.
