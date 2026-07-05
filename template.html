@@ -819,8 +819,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <!-- Sub-header -->
 <div class="fb-subheader">
   <div>
-    <h1>Mercado P2P USDT/BOB</h1>
-    <div class="fb-subtitle">Datos: Binance P2P &middot; solo anunciantes verificados &middot; Actualizado <span id="lastUpdateStamp">&mdash;</span></div>
+    <h1>{{t:dolar.h1}}</h1>
+    <div class="fb-subtitle">{{t:dolar.subtitle}} <span id="lastUpdateStamp">&mdash;</span></div>
   </div>
 </div>
 
@@ -829,12 +829,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 
 <div class="content">
 
-  <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">Por snapshot</button><button class="ds-chip" data-view="daily" type="button">Por d&iacute;a</button></div></div>
+  <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">{{t:dolar.toggle_snapshot}}</button><button class="ds-chip" data-view="daily" type="button">{{t:dolar.toggle_daily}}</button></div></div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>Precio evolutivo del d&oacute;lar paralelo</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">Compra</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">Tipo de cambio oficial (TCO)</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">Datos: BCB; Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>Oferta USDT por rango de precios y cantidad de usuarios <span class="help-tip" tabindex="0" aria-label="Detalle del panel oferta"><span class="help-icon">i</span><span class="help-pop">Histograma de la liquidez del libro en el &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB; el rango se calcula din&aacute;micamente sobre el 80% central del USDT total ofertado, anclado al mid-price entre VWAP 10% Compra y Venta. Las colas extremas (cebo, lurkers) se excluyen para preservar legibilidad &mdash; visibles en el panel Outliers detectados.<br><br>Las dos series Compra/Venta usan <em>barmode:overlay</em> con opacity 0.55. La l&iacute;nea dorada cuenta oferentes &uacute;nicos por bin (ambos lados combinados) y nunca se filtra por el toggle.</span></span></h2><p>Distribuci&oacute;n de la liquidez del &uacute;ltimo snapshot del rango activo. Bins de 0.10 BOB. Caveat &zeta; aplica.</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="Filtro de lado"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>Compra</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>Venta</span></label></div><p class="snap-stamp">Snapshot del <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
-    <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>Volumen hist&oacute;rico de compra y venta de d&oacute;lares</h2><p>USDT disponible en anuncios activos por lado, en USD millones.</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="Mover panel" title="Mover">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="Más acciones del panel" title="Más acciones" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">Datos: Binance P2P</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
+    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_offer_h2}} <span class="help-tip" tabindex="0" aria-label="{{t:dolar.offer_help_aria}}"><span class="help-icon">i</span><span class="help-pop">{{t:dolar.offer_help_pop}}</span></span></h2><p>{{t:dolar.offer_sub}}</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="{{t:dolar.side_filter_aria}}"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_buy}}</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_sell}}</span></label></div><p class="snap-stamp">{{t:dolar.offer_snap_label}} <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
+    <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vol_h2}}</h2><p>{{t:dolar.panel_vol_sub}}</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -1437,12 +1437,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 </div><!-- /tab-noticias -->
 
 <div class="panel-menu" id="panelMenu" role="menu" aria-hidden="true">
-  <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">Ocultar panel</button>
-  <button class="panel-menu-item" data-action="toggle-width" role="menuitem" type="button">Ancho: <span class="pmi-state" id="pmiWidthState">&mdash;</span></button>
-  <button class="panel-menu-item" data-action="move-up" role="menuitem" type="button">Mover arriba &uarr;</button>
-  <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">Mover abajo &darr;</button>
+  <button class="panel-menu-item" data-action="hide" role="menuitem" type="button">{{t:dolar.pm_hide}}</button>
+  <button class="panel-menu-item" data-action="toggle-width" role="menuitem" type="button">{{t:dolar.pm_width}}<span class="pmi-state" id="pmiWidthState">&mdash;</span></button>
+  <button class="panel-menu-item" data-action="move-up" role="menuitem" type="button">{{t:dolar.pm_move_up}}</button>
+  <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">{{t:dolar.pm_move_down}}</button>
   <div class="panel-menu-divider" id="pmiDivider"></div>
-  <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">Descargar PNG</button>
+  <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">{{t:dolar.pm_download_png}}</button>
 </div>
 
 <button class="fab-more" id="fabMore" type="button" aria-label="{{t:footer.fab_aria_initial}}" title="{{t:footer.fab_title}}">
@@ -1656,12 +1656,12 @@ function aggregateTimeView(rangeFromIdx, rangeToIdx, view){
 function aggregateHeatmap(rangeFromIdx, rangeToIdx){
   const tm=DATA.ts_metrics;
   const metrics=[
-    {key:'buy_depth',  label:'Profundidad Compra'},
-    {key:'sell_depth', label:'Profundidad Venta'},
-    {key:'sp10',       label:'Spread 10%'},
-    {key:'n_ads',      label:'Anuncios verificados'},
-    {key:'vb10',       label:'VWAP 10% Compra'},
-    {key:'vs10',       label:'VWAP 10% Venta'},
+    {key:'buy_depth',  label:'{{t:dolar.hm_label_prof_compra}}'},
+    {key:'sell_depth', label:'{{t:dolar.hm_label_prof_venta}}'},
+    {key:'sp10',       label:'{{t:dolar.hm_label_spread10}}'},
+    {key:'n_ads',      label:'{{t:dolar.hm_label_anuncios}}'},
+    {key:'vb10',       label:'{{t:dolar.hm_label_vwap_compra}}'},
+    {key:'vs10',       label:'{{t:dolar.hm_label_vwap_venta}}'},
   ];
   const sums={};
   for(const m of metrics) sums[m.key]=Array.from({length:24},()=>[0,0]);
@@ -1995,7 +1995,7 @@ function rVwap(c,v){
       const ty = mainPts.map(e=>e.tco);
       const msz = mainPts.map((e,i)=> i<head.length ? 0 : 4);  // relleno 6.91: sin marker
       tcoMaxMs = Date.parse(termFecha+'T00:00:00Z');  // el eje llega al fin del día vigente
-      traces.push({x:tx,y:ty,name:'TCO',
+      traces.push({x:tx,y:ty,name:'{{t:dolar.trace_tco}}',
         mode:'lines+markers',
         line:{color:c.bcbTco,width:2,shape:'hv'},
         marker:{size:msz,color:c.bcbTco},
@@ -2008,7 +2008,7 @@ function rVwap(c,v){
       // Extensión horizontal del ÚLTIMO valor sobre todo su día de vigencia, SIN punto
       // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
       traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
-        name:'TCO', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
+        name:'{{t:dolar.trace_tco}}', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
       // Rango Y por defecto: SOLO P2P (Compra) + TCO dinámico (≥26-jun). El 6.91 queda
       // en los datos pero NO empuja el piso — cae bajo la vista por defecto (visible en
       // el hover unificado, que es x-based). Decisión de producto vigente de Diego.
@@ -2016,8 +2016,8 @@ function rVwap(c,v){
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
   }
-  traces.push({_side:'buy', x:x,y:v.vb10,name:'Compra',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
-    hovertemplate:'Compra %{y:.2f}<extra></extra>'});
+  traces.push({_side:'buy', x:x,y:v.vb10,name:'{{t:dolar.trace_vwap_compra}}',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
+    hovertemplate:'{{t:dolar.hover_vwap_compra}} %{y:.2f}<extra></extra>'});
   // Compañera de hover de la TCO: el valor VIGENTE por fecha, muestreado sobre la
   // MISMA grilla x que Compra. Así el hover unificado le dibuja su renglón NATIVO
   // (glifo naranja alineado, misma tipografía) sin competir por el ancla — sus
@@ -2036,9 +2036,9 @@ function rVwap(c,v){
   const tcoXX=[], tcoYY=[];
   x.forEach(function(s){ const t=tcoAtDay(s.slice(0,10)); tcoXX.push(s, s); tcoYY.push(t, null); });
   if(tcoYY.some(function(t){return t!=null;}))
-    traces.push({x:tcoXX, y:tcoYY, name:'TCO', mode:'lines',
+    traces.push({x:tcoXX, y:tcoYY, name:'{{t:dolar.trace_tco}}', mode:'lines',
       line:{color:c.bcbTco,width:2,shape:'hv'}, connectgaps:false, showlegend:false,
-      hovertemplate:'TCO %{y:.2f} BOB/USD<extra></extra>'});
+      hovertemplate:'{{t:dolar.hover_tco}} %{y:.2f} BOB/USD<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
   const xaVwap=xaWithSlider(xaxisForView(L.xaxis,v));
   // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
@@ -2047,7 +2047,7 @@ function rVwap(c,v){
     const topMs=Date.parse(String(xaVwap.range[1]).replace(' ','T')+'Z');  // range[1] = string boStr
     if(tcoMaxMs>topMs){ xaVwap.range=[xaVwap.range[0], boStr(tcoMaxMs)]; xaVwap.autorange=false; }
   }
-  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'BOB/USDT',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_bob_usdt}}',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
 function rVolume(c,v){
@@ -2055,10 +2055,10 @@ function rVolume(c,v){
   // Volumen = USDT disponible en anuncios activos por lado (USDT ~ USD), escala en millones.
   const toM=arr=>(arr||[]).map(d=>d==null?null:d/1e6);
   const traces=filterDirectionalTraces([
-    {_side:'buy', x:x,y:toM(v.buy_depth), name:'Compra',fill:'tozeroy',fillcolor:hexToRgba(c.buy,.10), line:{color:c.buy,width:1.5}},
-    {_side:'sell',x:x,y:toM(v.sell_depth),name:'Venta', fill:'tozeroy',fillcolor:hexToRgba(c.sell,.10),line:{color:c.sell,width:1.5}}
+    {_side:'buy', x:x,y:toM(v.buy_depth), name:'{{t:dolar.trace_vol_compra}}',fill:'tozeroy',fillcolor:hexToRgba(c.buy,.10), line:{color:c.buy,width:1.5}},
+    {_side:'sell',x:x,y:toM(v.sell_depth),name:'{{t:dolar.trace_vol_venta}}', fill:'tozeroy',fillcolor:hexToRgba(c.sell,.10),line:{color:c.sell,width:1.5}}
   ], 'volumen');
-  Plotly.react('chartVolume',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'USD (millones)',font:{size:10,color:c.textMuted}},tickformat:',.1f',rangemode:'tozero',automargin:true,gridcolor:'rgba(33,30,27,.09)',showgrid:true},shapes:gapShapes(c),height:chartHeight('chartVolume')},PC);
+  Plotly.react('chartVolume',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_usd_millones}}',font:{size:10,color:c.textMuted}},tickformat:',.1f',rangemode:'tozero',automargin:true,gridcolor:'rgba(33,30,27,.09)',showgrid:true},shapes:gapShapes(c),height:chartHeight('chartVolume')},PC);
 }
 function rOutliers(){
   const ml=DATA.merchants_last||null;
@@ -2069,7 +2069,7 @@ function rOutliers(){
     const snapTs = ml ? ml.snapshot_ts : meta.last_ts;
     stamp.textContent = new Date(snapTs).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
   }
-  if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(!ml||!ml.BUY){el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
   const refs={BUY:ml.vwap10_buy, SELL:ml.vwap10_sell};
   const sides=[];
   if(panelShowBuy('merchants'))  sides.push('BUY');
@@ -2083,21 +2083,21 @@ function rOutliers(){
   }
   rows.sort((a,b)=>Math.abs(b.dev)-Math.abs(a.dev));
   if(!rows.length){
-    el.innerHTML='<div class="view-hint">No se detectaron outliers en el &uacute;ltimo snapshot.</div>';
+    el.innerHTML='<div class="view-hint">{{t:dolar.outliers_none}}</div>';
     return;
   }
   const levelRank={red:2, yellow:1};
   const html='<table class="fb-rank-table outliers-table"><thead><tr>'+
-    '<th data-sort-key="side" aria-sort="none">Lado<span class="sort-arrow"></span></th>'+
-    '<th data-sort-key="nick" aria-sort="none">Merchant<span class="sort-arrow"></span></th>'+
-    '<th class="num" data-sort-key="depth" aria-sort="none">Depth (USDT)<span class="sort-arrow"></span></th>'+
-    '<th class="num" data-sort-key="vwap" aria-sort="none">VWAP (BOB)<span class="sort-arrow"></span></th>'+
-    '<th class="num" data-sort-key="dev" aria-sort="none">Desv. %<span class="sort-arrow"></span></th>'+
-    '<th data-sort-key="pill" aria-sort="none">Pill<span class="sort-arrow"></span></th>'+
+    '<th data-sort-key="side" aria-sort="none">{{t:dolar.th_lado}}<span class="sort-arrow"></span></th>'+
+    '<th data-sort-key="nick" aria-sort="none">{{t:dolar.th_merchant}}<span class="sort-arrow"></span></th>'+
+    '<th class="num" data-sort-key="depth" aria-sort="none">{{t:dolar.th_depth}}<span class="sort-arrow"></span></th>'+
+    '<th class="num" data-sort-key="vwap" aria-sort="none">{{t:dolar.th_vwap}}<span class="sort-arrow"></span></th>'+
+    '<th class="num" data-sort-key="dev" aria-sort="none">{{t:dolar.th_desv}}<span class="sort-arrow"></span></th>'+
+    '<th data-sort-key="pill" aria-sort="none">{{t:dolar.th_pill}}<span class="sort-arrow"></span></th>'+
     '</tr></thead><tbody>'+
     rows.map(r=>{
-      const tip='vs VWAP 10% '+(r.side==='BUY'?'Compra ':'Venta ')+(refs[r.side]!=null?fmt4(refs[r.side])+' BOB':'');
-      const sideLabel=r.side==='BUY'?'Compra':'Venta';
+      const tip='{{t:dolar.outlier_tip_prefix}}'+(r.side==='BUY'?'{{t:dolar.outlier_tip_buy}}':'{{t:dolar.outlier_tip_sell}}')+(refs[r.side]!=null?fmt4(refs[r.side])+' BOB':'');
+      const sideLabel=r.side==='BUY'?'{{t:dolar.outlier_side_buy}}':'{{t:dolar.outlier_side_sell}}';
       const sideCls=r.side==='BUY'?'side-buy':'side-sell';
       return '<tr'+
         ' data-sort-side="'+sideLabel+'"'+
@@ -2111,7 +2111,7 @@ function rOutliers(){
         '<td class="num">'+fmtInt(r.depth)+'</td>'+
         '<td class="num">'+fmt4(r.vwap)+'</td>'+
         '<td class="num">'+(r.dev>=0?'+':'')+fmt2(r.dev)+'%</td>'+
-        '<td><span class="pill pill-'+r.level+'" title="'+tip.replace(/"/g,'&quot;')+'">outlier</span></td>'+
+        '<td><span class="pill pill-'+r.level+'" title="'+tip.replace(/"/g,'&quot;')+'">{{t:dolar.outlier_pill_text}}</span></td>'+
       '</tr>';
     }).join('')+
     '</tbody></table>';
@@ -2130,18 +2130,18 @@ function rFlow(c){
   if(!el) return;
   const L=BL(c);
   const flow=aggregateMerchantFlow(activeRange.fromIdx, activeRange.toIdx, currentView);
-  if(!flow.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(!flow.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
   const xms=flow.map(f=>boMs(f.ts));
   const x=xms.map(boStr);
   const traces=filterDirectionalTraces([
-    {_side:'buy', x:x,y:flow.map(f=>f.new_buy),  name:'Nuevos Compra',type:'bar',marker:{color:hexToRgba(c.buy,.5)}},
-    {_side:'buy', x:x,y:flow.map(f=>-f.gone_buy),name:'Desap. Compra',type:'bar',marker:{color:hexToRgba(c.buy,.2)}},
-    {_side:'buy', x:x,y:flow.map(f=>f.n_buy),    name:'Total Compra', yaxis:'y2',line:{color:c.buy,width:2},mode:'lines'},
-    {_side:'sell',x:x,y:flow.map(f=>f.new_sell), name:'Nuevos Venta', type:'bar',marker:{color:hexToRgba(c.sell,.5)}},
-    {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'Desap. Venta',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
-    {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'Total Venta', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
+    {_side:'buy', x:x,y:flow.map(f=>f.new_buy),  name:'{{t:dolar.trace_flow_nuevos_compra}}',type:'bar',marker:{color:hexToRgba(c.buy,.5)}},
+    {_side:'buy', x:x,y:flow.map(f=>-f.gone_buy),name:'{{t:dolar.trace_flow_desap_compra}}',type:'bar',marker:{color:hexToRgba(c.buy,.2)}},
+    {_side:'buy', x:x,y:flow.map(f=>f.n_buy),    name:'{{t:dolar.trace_flow_total_compra}}', yaxis:'y2',line:{color:c.buy,width:2},mode:'lines'},
+    {_side:'sell',x:x,y:flow.map(f=>f.new_sell), name:'{{t:dolar.trace_flow_nuevos_venta}}', type:'bar',marker:{color:hexToRgba(c.sell,.5)}},
+    {_side:'sell',x:x,y:flow.map(f=>-f.gone_sell),name:'{{t:dolar.trace_flow_desap_venta}}',type:'bar',marker:{color:hexToRgba(c.sell,.2)}},
+    {_side:'sell',x:x,y:flow.map(f=>f.n_sell),   name:'{{t:dolar.trace_flow_total_venta}}', yaxis:'y2',line:{color:c.sell,width:2},mode:'lines'}
   ], 'flow');
-  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x,xms})),yaxis:{...L.yaxis,title:{text:'Flujo',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'Total',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
+  Plotly.react('chartFlow',traces,{...L,barmode:'relative',xaxis:xaWithSlider(xaxisForView(L.xaxis,{x,xms})),yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_flujo}}',font:{size:10,color:c.textMuted}},tickformat:'.0f'},yaxis2:{overlaying:'y',side:'right',showgrid:false,fixedrange:true,tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},title:{text:'{{t:dolar.axis_flow_total}}',font:{size:10,color:c.textMuted}}},shapes:gapShapes(c),showlegend:true,height:chartHeight('chartFlow')},PC);
 }
 
 function rOffer(c){
@@ -2154,17 +2154,17 @@ function rOffer(c){
   const od=aggregateOfferDistribution(activeRange.fromIdx, activeRange.toIdx, sf);
   if(!od){
     _purgeAndClear(el);
-    el.innerHTML='<div class="view-hint">Sin data en el rango activo</div>';
+    el.innerHTML='<div class="view-hint">{{t:dolar.offer_empty_range}}</div>';
     if(stamp) stamp.textContent='—';
     return;
   }
   if(stamp&&od.snapshot_ts){
-    const sideLabel = sf==='buy' ? ' · solo Compra' : sf==='sell' ? ' · solo Venta' : ' · Compra + Venta';
+    const sideLabel = sf==='buy' ? '{{t:dolar.offer_side_solo_compra}}' : sf==='sell' ? '{{t:dolar.offer_side_solo_venta}}' : '{{t:dolar.offer_side_ambos}}';
     stamp.textContent=new Date(od.snapshot_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'})+sideLabel;
   }
   if(od.empty){
     _purgeAndClear(el);
-    el.innerHTML='<div class="view-hint">Sin oferta en el último snapshot del rango activo</div>';
+    el.innerHTML='<div class="view-hint">{{t:dolar.offer_empty_snapshot}}</div>';
     return;
   }
   const L=BL(c);
@@ -2172,12 +2172,12 @@ function rOffer(c){
   // construimos solo la(s) traza(s) del lado, sin pasar por
   // filterDirectionalTraces (no aplica acá porque el dataset ya viene filtrado).
   const traces=[];
-  if(panelShowBuy('offer_range'))  traces.push({type:'bar', name:'Compra', x:od.labels, y:od.buy,
+  if(panelShowBuy('offer_range'))  traces.push({type:'bar', name:'{{t:dolar.trace_offer_compra}}', x:od.labels, y:od.buy,
     marker:{color:c.buy}, opacity:0.55, yaxis:'y'});
-  if(panelShowSell('offer_range')) traces.push({type:'bar', name:'Venta',  x:od.labels, y:od.sell,
+  if(panelShowSell('offer_range')) traces.push({type:'bar', name:'{{t:dolar.trace_offer_venta}}',  x:od.labels, y:od.sell,
     marker:{color:c.sell}, opacity:0.55, yaxis:'y'});
   // Oferentes únicos: refleja el subset filtrado.
-  traces.push({type:'scatter', mode:'lines+markers', name:'Nro. de oferentes',
+  traces.push({type:'scatter', mode:'lines+markers', name:'{{t:dolar.trace_offer_oferentes}}',
     x:od.labels, y:od.offerers,
     line:{color:c.accentWarm, width:2},
     marker:{color:c.accentWarm, size:5},
@@ -2187,11 +2187,11 @@ function rOffer(c){
     barmode:'overlay',
     showlegend:true,
     legend:{orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:{size:11,family:'Outfit',color:c.fontcolor}},
-    xaxis:{...L.xaxis, type:'category', title:{text:'Precio (BOB, bins 0.10)',font:{size:10,color:c.textMuted}}, tickangle:-30, showline:true, linecolor:'rgba(33,30,27,.5)', linewidth:1, ticks:'outside', tickcolor:'rgba(33,30,27,.5)', ticklen:4},
-    yaxis:{...L.yaxis, title:{text:'USDT disponible',font:{size:10,color:c.textMuted},standoff:12}, tickformat:',.0f', rangemode:'tozero', automargin:true, gridcolor:'rgba(33,30,27,.09)', showgrid:true},
+    xaxis:{...L.xaxis, type:'category', title:{text:'{{t:dolar.axis_precio_bins}}',font:{size:10,color:c.textMuted}}, tickangle:-30, showline:true, linecolor:'rgba(33,30,27,.5)', linewidth:1, ticks:'outside', tickcolor:'rgba(33,30,27,.5)', ticklen:4},
+    yaxis:{...L.yaxis, title:{text:'{{t:dolar.axis_usdt_disponible}}',font:{size:10,color:c.textMuted},standoff:12}, tickformat:',.0f', rangemode:'tozero', automargin:true, gridcolor:'rgba(33,30,27,.09)', showgrid:true},
     yaxis2:{overlaying:'y', side:'right', showgrid:false, fixedrange:true,
       tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
-      title:{text:'Nro. oferentes',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
+      title:{text:'{{t:dolar.axis_nro_oferentes}}',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
     margin:{l:60,r:60,t:36,b:60},
     height:chartHeight('chartOffer')
   }, PC);
@@ -2201,7 +2201,7 @@ function rHeatmap(c){
   const el=document.getElementById('chartHeatmap');
   if(!el) return;
   const hm=aggregateHeatmap(activeRange.fromIdx, activeRange.toIdx);
-  if(!hm||!hm.metrics||!hm.metrics.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(!hm||!hm.metrics||!hm.metrics.length){_purgeAndClear(el);el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
   // Normalize each row 0..1 for color; keep real values in customdata for hover
   const z=[], text=[], labels=[];
   for(const m of hm.metrics){
@@ -2231,7 +2231,7 @@ function rActivityHm(c){
   var el=document.getElementById('chartActivityHm');
   if(!el) return;
   var matrix=DATA.activity_heatmap;
-  if(!matrix||!matrix.length){el.innerHTML='<div class="view-hint">Sin datos</div>';return}
+  if(!matrix||!matrix.length){el.innerHTML='<div class="view-hint">{{t:dolar.empty_sin_datos}}</div>';return}
   var dayLabels=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
   var hourLabels=Array.from({length:24},function(_,i){return i+'h'});
   var maxZ=Math.max.apply(null,[].concat.apply([],matrix));
@@ -2249,7 +2249,7 @@ function rActivityHm(c){
     type:'heatmap',colorscale:cs,showscale:false,
     text:textMatrix,texttemplate:'%{text}',
     textfont:{family:'IBM Plex Mono,monospace',size:9.5,color:textColors},
-    hovertemplate:'%{y} %{x}<br>Volumen: %{text} USDT<extra></extra>',
+    hovertemplate:'%{y} %{x}<br>{{t:dolar.ahm_hover}} %{text} USDT<extra></extra>',
     xgap:1,ygap:1
   }],{...L,
     margin:{l:50,r:16,t:8,b:40},
@@ -2383,25 +2383,25 @@ function updateKpis(){
   const hasTco = !!(tco && tco.tco != null);
   const refCompra = hasTco ? tco.tco : ref.compra;
   const refVenta  = hasTco ? (tco.tco + 0.10) : ref.venta;
-  const bcbSub = !hasTco ? 'Compra · Venta (BOB/USDT)'
+  const bcbSub = !hasTco ? '{{t:dolar.kpi_bcb_sub_no_tco}}'
     : (tcoManana
-        ? ('Hoy · <b>Mañana ('+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
-        : ('TCO · Venta ref · vig. '+tcoFechaCorta(tco.fecha)));
+        ? ('{{t:dolar.kpi_bcb_sub_hoy_manana}}'+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
+        : ('{{t:dolar.kpi_bcb_sub_tco}}'+tcoFechaCorta(tco.fecha)));
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
-    kpi('BCB Ref', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null)+
-    kpi('USDT Compra', fmt2(last.vb10), 'BOB/USDT', ICONS.compra, 'buy')+
-    kpi('USDT Venta', fmt2(last.vs10), 'BOB/USDT', ICONS.venta, 'sell')+
-    kpi('Spread', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'% del precio', ICONS.spread, null)+
-    kpi('Prima P2P', (premium>=0?'+':'')+fmt2(premium)+'%', ((tco&&tco.tco!=null)?'TCO BCB: ':'TC Oficial BCB: ')+fmt2(oficial), ICONS.bcb, null)+
-    kpi('Profundidad', buyDepth+' / '+sellDepth, 'Compra \u00b7 Venta (USDT)', ICONS.profundidad, null)+
+    kpi('{{t:dolar.kpi_bcb_ref}}', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null)+
+    kpi('{{t:dolar.kpi_usdt_compra}}', fmt2(last.vb10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.compra, 'buy')+
+    kpi('{{t:dolar.kpi_usdt_venta}}', fmt2(last.vs10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.venta, 'sell')+
+    kpi('{{t:dolar.kpi_spread}}', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'{{t:dolar.kpi_spread_sub}}', ICONS.spread, null)+
+    kpi('{{t:dolar.kpi_prima}}', (premium>=0?'+':'')+fmt2(premium)+'%', ((tco&&tco.tco!=null)?'{{t:dolar.kpi_prima_sub_tco}}':'{{t:dolar.kpi_prima_sub_oficial}}')+fmt2(oficial), ICONS.bcb, null)+
+    kpi('{{t:dolar.kpi_profundidad}}', buyDepth+' / '+sellDepth, '{{t:dolar.kpi_prof_sub}}', ICONS.profundidad, null)+
     '</div></div>';
 }
 const DASHBOARD_VERSION='v0.3.0';
 const lastTsFmt=new Date(meta.last_ts).toLocaleString('es-BO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZone:'America/La_Paz'});
-document.getElementById('footer').innerHTML='\u00daltima actualizaci\u00f3n: '+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
+document.getElementById('footer').innerHTML='{{t:dolar.footer_ultima}}'+lastTsFmt+' \u00b7 FinanzasBo \u00b7 '+DASHBOARD_VERSION;
 
 // ═══ EVENTS ═══
 // Theme toggle eliminado: modo oscuro removido, tema único claro forzado.
@@ -2795,7 +2795,7 @@ function openPanelMenu(panel, btn){
   activePanelForMenu=panel;
   const menu=document.getElementById('panelMenu');
   const isFull=panel.classList.contains('full-width');
-  document.getElementById('pmiWidthState').textContent = isFull ? 'completo (clic para \u00bd)' : '\u00bd (clic para completo)';
+  document.getElementById('pmiWidthState').textContent = isFull ? '{{t:dolar.pm_width_state_full}}' : '{{t:dolar.pm_width_state_half}}';
   const grid=panel.parentElement;
   const sibs=[...grid.children];
   const idx=sibs.indexOf(panel);
@@ -3377,7 +3377,7 @@ var MACRO_SUBTABS = [
 ];
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
 var TAB_TITLES = {
-  'dollar':   'FinanzasBo — Mercado P2P USDT/BOB',
+  'dollar':   '{{t:dolar.doc_title}}',
   'dpf':      'FinanzasBo — Rendimientos DPF',
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',

@@ -14,6 +14,8 @@ Verifica:
   - Sustitución de {{lang}} / {{base}}.
   - Higiene de diccionarios reales (i18n/*.json): sin comillas rectas en
     valores; keys(en) ⊆ keys(es).
+  - Cobertura de tokens: todo {{t:clave}} de template.html existe en es.json
+    Y en en.json (clave faltante = fallo en PR-time, no en el bake del VPS).
   - static/404.html: canary barato de la lógica prefix-aware /en.
 
 Uso:  python -m pytest scripts/test_i18n_bake.py -q
@@ -230,6 +232,20 @@ def test_dict_values_no_straight_quotes():
     for name, table in (('es.json', _load(_ES_JSON)), ('en.json', en)):
         malos = {k: v for k, v in table.items() if "'" in v or '"' in v}
         assert not malos, f"{name}: comillas rectas en valores de {sorted(malos)}"
+
+
+def test_template_tokens_exist_in_both_dicts():
+    """Cobertura de tokens: TODO {{t:clave}} del template debe existir en
+    es.json Y en en.json — mismo regex que el motor (_TOKEN_RE). Así una
+    clave faltante rompe en PR-time (pytest) y no en el bake del VPS."""
+    tpl = (ROOT / 'template.html').read_text(encoding='utf-8')
+    keys = set(i18n_bake._TOKEN_RE.findall(tpl))
+    assert keys, 'template.html sin tokens {{t:...}} — ¿regex o template rotos?'
+    es, en = _load(_ES_JSON), _load(_EN_JSON)
+    faltan_es = sorted(k for k in keys if k not in es)
+    faltan_en = sorted(k for k in keys if k not in en)
+    assert not faltan_es, f"tokens del template sin clave en es.json: {faltan_es}"
+    assert not faltan_en, f"tokens del template sin clave en en.json: {faltan_en}"
 
 
 def test_dict_en_keys_subset_of_es():
