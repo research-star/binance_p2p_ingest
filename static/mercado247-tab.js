@@ -18,25 +18,32 @@
   /* ================= estilos (todo namespaceado bajo .m247) ================= */
   const CSS = `
 .m247 {
-  --m247-bg: #0d0f12; --m247-surface: #15181d; --m247-surface-2: #1b1f26;
-  --m247-border: #262b33; --m247-border-strong: #343b46;
-  --m247-ink: #e8eaed; --m247-ink-2: #9aa3ae; --m247-ink-3: #626b76;
-  --m247-up: #10b981; --m247-down: #ef4444; --m247-star: #f5c518;
-  --m247-radius: 10px;
+  /* Tema claro de FinanzasBo: consume los tokens del sitio (:root) para que el
+     tab combine con el resto de la página. Fallbacks por si se usa aislado. */
+  --m247-bg: var(--bg-primary, #F7E4D7);
+  --m247-surface: var(--bg-secondary, #FFF7F0);
+  --m247-surface-2: var(--bg-tertiary, #F3E0D2);
+  --m247-border: var(--border-color, rgba(33,30,27,0.12));
+  --m247-border-strong: var(--line-strong, rgba(33,30,27,0.24));
+  --m247-ink: var(--text-primary, #211E1B);
+  --m247-ink-2: var(--text-secondary, #6B6256);
+  --m247-ink-3: var(--text-muted, #766C5C);
+  /* Mismos verdes/rojos que los gráficos de mercado del sitio (subas/bajas). */
+  --m247-up: #688470; --m247-down: #A57067; --m247-star: #C47E2A;
+  --m247-font: var(--font-body, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  --m247-font-display: var(--font-display, Georgia, serif);
+  --m247-font-mono: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
+  --m247-radius: var(--radius-md, 8px);
   color: var(--m247-ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--m247-font);
   font-size: 15px;
   line-height: 1.4;
   text-align: left;
-  background: var(--m247-bg);
-  border-radius: 14px;
-  padding: 20px;
-  margin: 4px 0 24px;
 }
 .m247 .m247-head { margin: 0 0 4px; }
 .m247 .m247-head h2 {
-  margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: 0.01em; color: var(--m247-ink);
-  font-family: inherit;
+  margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; color: var(--m247-ink);
+  font-family: var(--m247-font-display);
 }
 .m247 .m247-head p { margin: 4px 0 16px; color: var(--m247-ink-2); font-size: 0.82rem; }
 .m247 *, .m247 *::before, .m247 *::after { box-sizing: border-box; }
@@ -63,7 +70,7 @@
   font-size: 0.85rem; cursor: pointer;
 }
 .m247 .m247-tab:hover { color: var(--m247-ink); border-color: var(--m247-border-strong); }
-.m247 .m247-tab.is-active { background: var(--m247-ink); border-color: var(--m247-ink); color: #0b0d10; font-weight: 700; }
+.m247 .m247-tab.is-active { background: var(--m247-ink); border-color: var(--m247-ink); color: var(--m247-surface); font-weight: 700; }
 
 .m247 .m247-toolbar { display: flex; gap: 10px; margin-bottom: 12px; }
 .m247 .m247-search {
@@ -81,7 +88,7 @@
   font-size: 0.82rem; cursor: pointer; white-space: nowrap;
 }
 .m247 .m247-sort:hover { color: var(--m247-ink); }
-.m247 .m247-sort.is-active { background: var(--m247-ink); border-color: var(--m247-ink); color: #0b0d10; font-weight: 700; }
+.m247 .m247-sort.is-active { background: var(--m247-ink); border-color: var(--m247-ink); color: var(--m247-surface); font-weight: 700; }
 
 .m247 .m247-summary {
   border: 1px solid var(--m247-border); border-radius: var(--m247-radius);
@@ -126,7 +133,8 @@
 .m247 .m247-star.is-fav, .m247 .m247-star:hover { color: var(--m247-star); }
 .m247 .m247-sym { font-weight: 800; font-size: 0.98rem; letter-spacing: 0.02em; }
 .m247 .m247-price {
-  font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums;
+  font-family: var(--m247-font-mono);
+  font-weight: 600; font-size: 0.92rem; font-variant-numeric: tabular-nums;
   white-space: nowrap; transition: color 0.5s;
 }
 .m247 .m247-price.flash-up { color: var(--m247-up); transition: none; }
@@ -136,7 +144,7 @@
   color: var(--m247-ink-3); font-size: 0.74rem;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.m247 .m247-chg { font-size: 0.8rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.m247 .m247-chg { font-family: var(--m247-font-mono); font-size: 0.8rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .m247 .m247-chg.up { color: var(--m247-up); }
 .m247 .m247-chg.down { color: var(--m247-down); }
 .m247 .m247-chg.flat { color: var(--m247-ink-2); }
@@ -150,7 +158,8 @@
   color: var(--m247-ink-3); font-size: 0.72rem;
 }
 .m247 .m247-card-foot {
-  margin-top: 7px; color: var(--m247-ink-3); font-size: 0.72rem;
+  margin-top: 7px; color: var(--m247-ink-3); font-size: 0.7rem;
+  font-family: var(--m247-font-mono);
   font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 8px;
 }
 .m247 .m247-note { margin-top: 20px; color: var(--m247-ink-3); font-size: 0.72rem; text-align: center; }
@@ -158,15 +167,15 @@
 
 .m247-tooltip {
   position: fixed; z-index: 9999; pointer-events: none;
-  background: #20252d; border: 1px solid #343b46; border-radius: 8px;
-  padding: 7px 10px; font-size: 0.72rem; color: #9aa3ae;
-  font-variant-numeric: tabular-nums; box-shadow: 0 6px 20px rgba(0,0,0,0.5); max-width: 220px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-secondary, #FFF7F0); border: 1px solid var(--line-strong, rgba(33,30,27,0.24)); border-radius: 8px;
+  padding: 7px 10px; font-size: 0.72rem; color: var(--text-secondary, #6B6256);
+  font-variant-numeric: tabular-nums; box-shadow: 0 6px 20px rgba(33,30,27,0.18); max-width: 220px;
+  font-family: var(--font-mono, "IBM Plex Mono", ui-monospace, monospace);
 }
-.m247-tooltip b { color: #e8eaed; font-weight: 600; }
-.m247-tooltip .tt-time { color: #626b76; display: block; margin-bottom: 3px; }
-.m247-tooltip .up { color: #10b981; }
-.m247-tooltip .down { color: #ef4444; }
+.m247-tooltip b { color: var(--text-primary, #211E1B); font-weight: 600; }
+.m247-tooltip .tt-time { color: var(--text-muted, #766C5C); display: block; margin-bottom: 3px; }
+.m247-tooltip .up { color: #688470; }
+.m247-tooltip .down { color: #A57067; }
 
 @media (max-width: 640px) {
   .m247 .m247-toolbar { flex-direction: column; }
@@ -429,7 +438,7 @@
   }
 
   /* ================= gráfico de velas ================= */
-  const UP = "#10b981", DOWN = "#ef4444", REF = "#4b5563", PAD_Y = 8;
+  const UP = "#688470", DOWN = "#A57067", REF = "#9E927C", PAD_Y = 8;
 
   function drawChart(canvas, candles, prevDayPx, hoverIdx) {
     const dpr = window.devicePixelRatio || 1;
@@ -471,7 +480,7 @@
 
     if (hoverIdx != null && candles[hoverIdx]) {
       const cx = step * hoverIdx + step / 2;
-      ctx.strokeStyle = "rgba(232,234,237,0.35)"; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+      ctx.strokeStyle = "rgba(33,30,27,0.30)"; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
       ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
       ctx.setLineDash([]);
     }
