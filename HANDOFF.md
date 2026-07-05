@@ -1290,14 +1290,19 @@ El `www` (Drupal/CDN) sí acepta cualquier IP, pero solo tiene el iframe.
 
 **Deploy (pendiente al merge del PR):**
 1. `cd /opt/binance_p2p && .venv/bin/pip install pypdf` (única dependencia nueva).
-2. Backfill one-shot (los 122 PDFs ya están en `/tmp/asfi_docs/pdf_nombrados`
-   del VPS; si el reboot los borró, la data JSON ya viene en el repo — solo
-   faltarían resúmenes IA):
-   `ASFI_RESUMEN_CAP_USD=5 .venv/bin/python ingest_asfi.py --resumir`
-   (~3.2k items ≈ $2-3 one-shot de Haiku; re-correr hasta que no promueva más).
+2. Backfill de resúmenes IA (la data JSON de los 122 días ya viene en el
+   repo con extractos; esto solo promueve B→A):
+   `.venv/bin/python ingest_asfi.py --resumir`
+   Bajo el cap de $1/mes la promoción es GRADUAL por diseño (decisión de
+   Diego 2026-07-05: cap $1 en todo, sin override): cada corrida promueve
+   hasta agotar el $1 del mes y frena sola; re-correr en meses siguientes
+   retoma donde quedó (~3.2k items ≈ $2.5 total ≈ 2-3 meses de tandas).
+   Mientras tanto esos días se ven con extracto + asterisco (origen B).
 3. Cron: `10 1,13,23 * * * cd /opt/binance_p2p && ./scripts/asfi_scrape_and_commit.sh >> /var/log/binance_p2p/asfi.log 2>&1`
 4. (Opcional) UUID healthchecks → `HC_ASFI` en `.env`.
 
 **Gasto API.** Autorizado por Diego (sesión 2026-07-05, brief del módulo:
-elección explícita "Extracción + resumen IA"). Corrida diaria ≈ 26 items ≈
-$0.04/día bajo cap propio — no toca el presupuesto de noticias.
+elección explícita "Extracción + resumen IA"). Cap confirmado por Diego en la
+misma sesión: **$1/mes, default del código, SIN override** (`ASFI_RESUMEN_CAP_USD`
+no debe estar en el `.env`). Techo total de IA del sitio = noticias $1 + ASFI $1
+= $2/mes. Corrida diaria ≈ 26 items ≈ $0.03/día — entra cómoda bajo el $1.
