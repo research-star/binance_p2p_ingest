@@ -111,7 +111,9 @@
 }
 .m247 .m247-empty { color: var(--m247-ink-2); text-align: center; padding: 48px 12px; font-size: 0.9rem; }
 
-.m247 .m247-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.m247 .m247-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media (max-width: 900px) { .m247 .m247-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .m247 .m247-grid { grid-template-columns: 1fr; } }
 .m247 .m247-card {
   border: 1px solid var(--m247-border); border-radius: var(--m247-radius);
   background: var(--m247-surface); padding: 12px 12px 10px;
@@ -143,7 +145,7 @@
 .m247 .m247-chg.down { color: var(--m247-down); }
 .m247 .m247-chg.flat { color: var(--m247-ink-2); }
 .m247 .m247-chart {
-  position: relative; height: 158px; border-radius: 6px;
+  position: relative; height: 190px; border-radius: 6px;
   background: var(--m247-surface-2); overflow: hidden;
 }
 .m247 .m247-chart canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
@@ -156,16 +158,51 @@
   font-family: var(--m247-font-mono);
   font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 8px;
 }
-.m247 .m247-more {
+.m247 .m247-add {
   border: 1px dashed var(--m247-border-strong); border-radius: var(--m247-radius);
   background: transparent; color: var(--m247-ink-2); cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  min-height: 240px; font-family: var(--m247-font); transition: background 0.15s, color 0.15s;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 260px; font-family: var(--m247-font); transition: background 0.15s, color 0.15s;
 }
-.m247 .m247-more:hover { background: var(--m247-surface); color: var(--m247-ink); border-color: var(--m247-ink-3); }
-.m247 .m247-more .plus { font-size: 2rem; line-height: 1; font-weight: 300; }
-.m247 .m247-more .lbl { font-size: 0.82rem; font-weight: 600; }
-.m247 .m247-more .cnt { font-size: 0.72rem; color: var(--m247-ink-3); }
+.m247 .m247-add:hover { background: var(--m247-surface); color: var(--m247-ink); border-color: var(--m247-ink-3); }
+.m247 .m247-add .plus { font-size: 2.4rem; line-height: 1; font-weight: 300; }
+.m247 .m247-add .lbl { font-size: 0.9rem; font-weight: 600; }
+.m247 .m247-add .cnt { font-size: 0.74rem; color: var(--m247-ink-3); }
+
+/* Dropdown para agregar activos (anclado al body, tema del sitio) */
+.m247-picker {
+  position: fixed; z-index: 9998; width: 320px; max-width: calc(100vw - 24px);
+  background: var(--bg-secondary, #FFF7F0); border: 1px solid var(--line-strong, rgba(33,30,27,0.24));
+  border-radius: 10px; box-shadow: 0 10px 32px rgba(33,30,27,0.24);
+  font-family: var(--font-body, sans-serif); color: var(--text-primary, #211E1B);
+  overflow: hidden; display: flex; flex-direction: column; max-height: 60vh;
+}
+.m247-picker-head { padding: 10px 12px 8px; border-bottom: 1px solid var(--border-color, rgba(33,30,27,0.12)); }
+.m247-picker-head .t { font-size: 0.82rem; font-weight: 700; margin-bottom: 8px; }
+.m247-picker-search {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border-color, rgba(33,30,27,0.12));
+  border-radius: 8px; background: var(--bg-primary, #F7E4D7); color: inherit; font: inherit; font-size: 0.85rem; outline: none;
+}
+.m247-picker-list { overflow-y: auto; padding: 4px; }
+.m247-picker-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%; padding: 7px 9px; border: none; background: transparent; cursor: pointer;
+  border-radius: 7px; color: inherit; font: inherit; text-align: left;
+}
+.m247-picker-item:hover { background: var(--bg-tertiary, #F3E0D2); }
+.m247-picker-item .pi-sym { font-weight: 700; font-size: 0.85rem; }
+.m247-picker-item .pi-name { color: var(--text-muted, #766C5C); font-size: 0.72rem; margin-left: 6px; font-weight: 400; }
+.m247-picker-item .pi-vol { color: var(--text-muted, #766C5C); font-size: 0.72rem; font-family: var(--font-mono, monospace); white-space: nowrap; }
+.m247-picker-item .pi-plus { color: #688470; font-weight: 700; font-size: 1rem; }
+.m247-picker-empty { padding: 16px 12px; color: var(--text-muted, #766C5C); font-size: 0.8rem; text-align: center; }
+.m247-picker-foot { padding: 8px; border-top: 1px solid var(--border-color, rgba(33,30,27,0.12)); }
+.m247-picker-more {
+  width: 100%; padding: 9px; border: 1px solid var(--line-strong, rgba(33,30,27,0.24));
+  border-radius: 8px; background: var(--bg-primary, #F7E4D7); color: inherit; font: inherit;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.m247-picker-more:hover { background: var(--bg-tertiary, #F3E0D2); }
+.m247-picker-more:disabled { opacity: 0.5; cursor: default; }
 .m247 .m247-note { margin-top: 20px; color: var(--m247-ink-3); font-size: 0.72rem; text-align: center; }
 .m247 .m247-note a { color: var(--m247-ink-2); }
 
@@ -538,7 +575,8 @@
   const CTX_REFRESH_MS = 30000;
   const CANDLE_TTL_MS = 2 * 60 * 1000;
   const LS = { favs: "m247.favs", tab: "m247.tab", sort: "m247.sort" };
-  const PAGE_SIZE = 12; // tarjetas por lote — limita cuántas velas se piden a la vez
+  const TOP_N = 5;      // tarjetas fijas por defecto (top por volumen)
+  const ADD_BATCH = 10; // cuántas suma el botón "agregar las siguientes"
 
   let mounted = false;
 
@@ -578,9 +616,8 @@
     let tab = localStorage.getItem(LS.tab) || "fav";
     let sortMode = localStorage.getItem(LS.sort) || "volume";
     let search = "";
-    let shownCount = PAGE_SIZE; // cuántas tarjetas de la lista actual se muestran
-    let lastSig = "";           // firma de la vista (tab|sort|search): al cambiar, resetea el paginado
-    let moreTileEl = null;
+    let addTileEl = null; // tile "＋ Agregar" (6º slot)
+    let pickerEl = null;  // dropdown de selección abierto (o null)
     let lastUpdate = 0;
     let feedStatus = "offline";
     let loaded = false;
@@ -735,7 +772,7 @@
       el.innerHTML =
         '<div class="m247-card-top">' +
           '<div class="m247-card-left">' +
-            '<button type="button" class="m247-star" aria-label="Favorito" title="Agregar a favoritos">★</button>' +
+            '<button type="button" class="m247-star" aria-label="Fijar" title="Fijar / quitar de la vista">★</button>' +
             '<span class="m247-sym"></span>' +
           "</div>" +
           '<span class="m247-price"></span>' +
@@ -793,8 +830,7 @@
       localStorage.setItem(LS.favs, JSON.stringify([...favs]));
       const el = cardEls.get(key);
       if (el) el.querySelector(".m247-star").classList.toggle("is-fav", favs.has(key));
-      if (tab === "fav") renderGrid();
-      else updateSummary();
+      renderGrid(); // fijar/desfijar puede agregar o quitar una tarjeta
     }
 
     function visibleAssets() {
@@ -812,15 +848,31 @@
       return list;
     }
 
-    function renderGrid() {
+    // Tarjetas mostradas: top-N por volumen + los que el usuario fijó (favs).
+    function shownAssets() {
       const list = visibleAssets();
+      return list.filter((a, i) => i < TOP_N || favs.has(a.key));
+    }
 
-      // Al cambiar de pestaña/orden/búsqueda, volver al primer lote.
-      const sig = tab + "|" + sortMode + "|" + search;
-      if (sig !== lastSig) { shownCount = PAGE_SIZE; lastSig = sig; }
+    // Candidatos para el dropdown de agregar: no mostrados, de la categoría
+    // actual (o de todo el universo en la pestaña Favoritos), por volumen.
+    function pickerCandidates(q) {
+      const shownKeys = new Set(shownAssets().map((a) => a.key));
+      const out = [];
+      for (const a of assets.values()) {
+        if (tab !== "fav" && a.category !== tab) continue;
+        if (shownKeys.has(a.key)) continue;
+        if (!(a.volume24h > 0) && !Number.isFinite(a.price)) continue;
+        if (q && !(a.symbol.toLowerCase().includes(q) || a.name.toLowerCase().includes(q))) continue;
+        out.push(a);
+      }
+      out.sort((x, y) => y.volume24h - x.volume24h);
+      return out;
+    }
 
-      const pageList = list.slice(0, shownCount);
-      const wanted = new Set(pageList.map((a) => a.key));
+    function renderGrid() {
+      const shown = shownAssets();
+      const wanted = new Set(shown.map((a) => a.key));
       for (const [key, el] of cardEls) {
         if (!wanted.has(key)) {
           observer.unobserve(el);
@@ -830,7 +882,7 @@
         }
       }
       let anchor = null;
-      for (const a of pageList) {
+      for (const a of shown) {
         let el = cardEls.get(a.key);
         if (!el) {
           el = buildCard(a);
@@ -844,32 +896,114 @@
         anchor = el;
       }
 
-      // Tile "＋ mostrar más": revela el siguiente lote sin recargar todo.
-      if (moreTileEl) { moreTileEl.remove(); moreTileEl = null; }
-      const remaining = list.length - pageList.length;
-      if (remaining > 0) {
-        moreTileEl = document.createElement("button");
-        moreTileEl.type = "button";
-        moreTileEl.className = "m247-more";
-        moreTileEl.innerHTML =
+      // Tile "＋ Agregar" (6º slot): abre el dropdown de selección.
+      if (addTileEl) { addTileEl.remove(); addTileEl = null; }
+      const canAdd = pickerCandidates("").length;
+      if (loaded && canAdd > 0) {
+        addTileEl = document.createElement("button");
+        addTileEl.type = "button";
+        addTileEl.className = "m247-add";
+        addTileEl.innerHTML =
           '<span class="plus">+</span>' +
-          '<span class="lbl">Mostrar más</span>' +
-          `<span class="cnt">${remaining} activo${remaining === 1 ? "" : "s"} más</span>`;
-        moreTileEl.addEventListener("click", () => {
-          shownCount += PAGE_SIZE;
-          renderGrid();
+          '<span class="lbl">Agregar activo</span>' +
+          `<span class="cnt">${canAdd} disponible${canAdd === 1 ? "" : "s"}</span>`;
+        addTileEl.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          togglePicker(addTileEl);
         });
-        if (anchor) anchor.after(moreTileEl);
-        else els.grid.appendChild(moreTileEl);
+        if (anchor) anchor.after(addTileEl);
+        else els.grid.appendChild(addTileEl);
       }
 
-      els.empty.hidden = list.length > 0 || !loaded;
-      if (loaded && !list.length) {
-        els.empty.textContent = tab === "fav" && !search
-          ? "Todavía no tenés favoritos: tocá la ★ de cualquier activo para fijarlo acá."
-          : "No hay activos que coincidan con la búsqueda en esta pestaña.";
+      if (pickerEl) refreshPicker();
+
+      els.empty.hidden = shown.length > 0 || canAdd > 0 || !loaded;
+      if (loaded && !shown.length && !canAdd) {
+        els.empty.textContent = "No hay activos que coincidan con la búsqueda en esta pestaña.";
       }
       updateSummary();
+    }
+
+    /* ---------- dropdown de agregar ---------- */
+    function closePicker() {
+      if (pickerEl) { pickerEl.remove(); pickerEl = null; }
+      document.removeEventListener("click", onDocClickPicker, true);
+      document.removeEventListener("keydown", onKeyPicker, true);
+    }
+    function onDocClickPicker(ev) {
+      if (pickerEl && !pickerEl.contains(ev.target) && ev.target !== addTileEl && !(addTileEl && addTileEl.contains(ev.target))) closePicker();
+    }
+    function onKeyPicker(ev) { if (ev.key === "Escape") closePicker(); }
+
+    function togglePicker(anchorEl) {
+      if (pickerEl) { closePicker(); return; }
+      pickerEl = document.createElement("div");
+      pickerEl.className = "m247-picker";
+      pickerEl.innerHTML =
+        '<div class="m247-picker-head">' +
+          '<div class="t">Agregar activo</div>' +
+          '<input type="search" class="m247-picker-search" placeholder="Buscar ticker o nombre…" autocomplete="off" spellcheck="false" />' +
+        "</div>" +
+        '<div class="m247-picker-list"></div>' +
+        '<div class="m247-picker-foot"><button type="button" class="m247-picker-more"></button></div>';
+      document.body.appendChild(pickerEl);
+      pickerEl.addEventListener("click", (ev) => ev.stopPropagation());
+      const searchInput = pickerEl.querySelector(".m247-picker-search");
+      searchInput.addEventListener("input", () => refreshPicker());
+      pickerEl.querySelector(".m247-picker-more").addEventListener("click", () => {
+        const next = pickerCandidates("").slice(0, ADD_BATCH);
+        for (const a of next) favs.add(a.key);
+        localStorage.setItem(LS.favs, JSON.stringify([...favs]));
+        renderGrid();
+        searchInput && searchInput.focus();
+      });
+      positionPicker(anchorEl);
+      refreshPicker();
+      setTimeout(() => searchInput.focus(), 0);
+      document.addEventListener("click", onDocClickPicker, true);
+      document.addEventListener("keydown", onKeyPicker, true);
+    }
+
+    function positionPicker(anchorEl) {
+      if (!pickerEl || !anchorEl) return;
+      const r = anchorEl.getBoundingClientRect();
+      const w = pickerEl.offsetWidth || 320;
+      let left = r.left;
+      if (left + w > window.innerWidth - 12) left = window.innerWidth - w - 12;
+      pickerEl.style.left = Math.max(12, left) + "px";
+      pickerEl.style.top = Math.min(r.top, window.innerHeight - pickerEl.offsetHeight - 12) + "px";
+    }
+
+    function refreshPicker() {
+      if (!pickerEl) return;
+      const q = pickerEl.querySelector(".m247-picker-search").value.trim().toLowerCase();
+      const cands = pickerCandidates(q);
+      const listEl = pickerEl.querySelector(".m247-picker-list");
+      if (!cands.length) {
+        listEl.innerHTML = '<div class="m247-picker-empty">No hay más activos para agregar.</div>';
+      } else {
+        listEl.innerHTML = cands.slice(0, 60).map((a) =>
+          `<button type="button" class="m247-picker-item" data-key="${a.key.replace(/"/g, "&quot;")}">` +
+            `<span><span class="pi-sym">${a.symbol}</span>` +
+            (a.name && a.name !== a.symbol ? `<span class="pi-name">${a.name}</span>` : "") + "</span>" +
+            `<span class="pi-vol">${fmtVol(a.volume24h)}</span>` +
+          "</button>"
+        ).join("");
+        listEl.querySelectorAll(".m247-picker-item").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            favs.add(btn.dataset.key);
+            localStorage.setItem(LS.favs, JSON.stringify([...favs]));
+            renderGrid();
+          });
+        });
+      }
+      const moreBtn = pickerEl.querySelector(".m247-picker-more");
+      const rest = pickerCandidates("").length;
+      const n = Math.min(ADD_BATCH, rest);
+      moreBtn.textContent = n > 0 ? `＋ Agregar las ${n} de mayor volumen` : "No hay más para agregar";
+      moreBtn.disabled = n === 0;
+      const anchor = addTileEl || (cardEls.size ? [...cardEls.values()].pop() : null);
+      if (anchor) positionPicker(anchor);
     }
 
     function updateSummary() {
@@ -935,6 +1069,7 @@
     els.tabs.addEventListener("click", (ev) => {
       const btn = ev.target.closest(".m247-tab");
       if (!btn) return;
+      closePicker();
       tab = btn.dataset.cat;
       localStorage.setItem(LS.tab, tab);
       syncControls();
@@ -943,6 +1078,7 @@
     els.sorts.addEventListener("click", (ev) => {
       const btn = ev.target.closest(".m247-sort");
       if (!btn) return;
+      closePicker();
       sortMode = btn.dataset.sort;
       localStorage.setItem(LS.sort, sortMode);
       syncControls();
