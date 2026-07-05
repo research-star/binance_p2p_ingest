@@ -1287,16 +1287,16 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <!-- Header ÚNICO: el h1 no cambia; el subtítulo se swapea por subtab (ver activateMacroSubtab). -->
   <div class="fb-subheader">
     <div>
-      <h1>Macroeconom&iacute;a</h1>
+      <h1>{{t:macro.h1}}</h1>
       <div class="fb-subtitle" id="macroSubtitle">&mdash;</div>
     </div>
   </div>
   <!-- Subnav: REUSA .fb-view-toggle + .ds-chip. Switchea sub-paneles vía data-subtab. -->
-  <nav class="fb-macro-subnav" id="macroSubnav" aria-label="Sub-secciones de Macroeconom&iacute;a">
-    <button class="fb-macro-tab active" data-subtab="riesgo" type="button">Riesgo pa&iacute;s</button>
-    <button class="fb-macro-tab" data-subtab="inflacion" type="button">Inflaci&oacute;n</button>
-    <button class="fb-macro-tab" data-subtab="bloqueos" type="button">Bloqueos</button>
-    <button class="fb-macro-tab" data-subtab="tasas" type="button">Tasas</button>
+  <nav class="fb-macro-subnav" id="macroSubnav" aria-label="{{t:macro.subnav_aria}}">
+    <button class="fb-macro-tab active" data-subtab="riesgo" type="button">{{t:macro.subtab_riesgo}}</button>
+    <button class="fb-macro-tab" data-subtab="inflacion" type="button">{{t:macro.subtab_inflacion}}</button>
+    <button class="fb-macro-tab" data-subtab="bloqueos" type="button">{{t:macro.subtab_bloqueos}}</button>
+    <button class="fb-macro-tab" data-subtab="tasas" type="button">{{t:macro.subtab_tasas}}</button>
   </nav>
   <!-- Sub-panel default: Riesgo País (contenido EMBI re-alojado; ids internos intactos). -->
   <div id="subtab-riesgo">
@@ -1304,25 +1304,25 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="content">
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Spread soberano por pa&iacute;s</div>
-          <div class="fb-chart-sub">Pas&aacute; el mouse sobre el gr&aacute;fico para ver todos los pa&iacute;ses activos en esa fecha. Series en bps.</div>
+          <div class="fb-chart-title">{{t:macro.riesgo_chart_spread_title}}</div>
+          <div class="fb-chart-sub">{{t:macro.riesgo_chart_spread_sub}}</div>
         </div>
         <div class="fb-series-toggles" id="riesgoCountryToggles" style="margin-bottom:10px"></div>
         <div class="fb-view-toggle" id="riesgoRange" style="margin-bottom:12px"></div>
         <div id="riesgoChart" style="height:440px;"></div>
-        <div class="fb-chart-source">Fuente: BCRD redistribuyendo JPMorgan EMBI Global Diversified Subindices &middot; Bandas de riesgo: umbrales referenciales (&lt;350 / 350-700 / &gt;700 bps), no est&aacute;ndar oficial de mercado.</div>
+        <div class="fb-chart-source">{{t:macro.riesgo_chart_spread_source}}</div>
       </div>
       <!-- Cronograma servicio deuda soberana 2026-2031. Dataset estático embebido
            en JS (const DEBT_SCHEDULE, junto a su render) — no pasa por dashboard.py.
            Render lazy: window.renderDeudaSoberana, colgado del hook de la subtab. -->
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Servicio de deuda en bonos soberanos</div>
-          <div class="fb-chart-sub">Capital + cupones por a&ntilde;o seg&uacute;n emisi&oacute;n, 2026-2031. En millones de USD.</div>
+          <div class="fb-chart-title">{{t:macro.riesgo_chart_deuda_title}}</div>
+          <div class="fb-chart-sub">{{t:macro.riesgo_chart_deuda_sub}}</div>
         </div>
         <div id="deudaKpis"></div>
         <div id="deudaChart" style="height:400px;"></div>
-        <div class="fb-chart-source">Capital + cupones (USD MM). Cifras seg&uacute;n t&eacute;rminos contractuales de cada emisi&oacute;n; cupones semestrales. Bono 2031: vencimiento &uacute;nico seg&uacute;n t&eacute;rminos de colocaci&oacute;n. Fuentes: prospectos de emisi&oacute;n, MEFP, Cbonds.</div>
+        <div class="fb-chart-source">{{t:macro.riesgo_chart_deuda_source}}</div>
       </div>
     </div>
   </div>
@@ -1333,47 +1333,47 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="content">
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Inflaci&oacute;n interanual</div>
-          <div class="fb-chart-sub" id="inflInterSub">Variaci&oacute;n del IPC general a 12 meses (respecto al mismo mes del a&ntilde;o anterior).</div>
+          <div class="fb-chart-title">{{t:macro.infl_chart_inter_title}}</div>
+          <div class="fb-chart-sub" id="inflInterSub">{{t:macro.infl_chart_inter_sub_default}}</div>
         </div>
         <div id="inflInteranualChart" style="height:360px;"></div>
-        <div class="fb-chart-source">Fuente: Instituto Nacional de Estad&iacute;stica &middot; IPC general &middot; base 2016=100</div>
+        <div class="fb-chart-source">{{t:macro.infl_chart_inter_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Inflaci&oacute;n mensual</div>
-          <div class="fb-chart-sub">Variaci&oacute;n del IPC mes a mes. Barras hacia abajo = meses con deflaci&oacute;n.</div>
+          <div class="fb-chart-title">{{t:macro.infl_chart_mensual_title}}</div>
+          <div class="fb-chart-sub">{{t:macro.infl_chart_mensual_sub}}</div>
         </div>
         <div id="inflMensualChart" style="height:340px;"></div>
-        <div class="fb-chart-source">Fuente: Instituto Nacional de Estad&iacute;stica &middot; base 2016=100</div>
+        <div class="fb-chart-source">{{t:macro.infl_chart_mensual_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Inflaci&oacute;n acumulada por a&ntilde;o</div>
-          <div class="fb-chart-sub">Cada l&iacute;nea es un a&ntilde;o; el eje horizontal son los meses. La l&iacute;nea oscura es el a&ntilde;o en curso.</div>
+          <div class="fb-chart-title">{{t:macro.infl_chart_acum_title}}</div>
+          <div class="fb-chart-sub">{{t:macro.infl_chart_acum_sub}}</div>
         </div>
         <div id="inflAcumChart" style="height:380px;"></div>
-        <div class="fb-chart-source">Fuente: INE &middot; IPC acumulado desde enero de cada a&ntilde;o</div>
+        <div class="fb-chart-source">{{t:macro.infl_chart_acum_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Inflaci&oacute;n interanual por rubro</div>
-          <div class="fb-chart-sub">Variaci&oacute;n a 12 meses por divisi&oacute;n COICOP. Pas&aacute; el mouse para inspeccionar un mes en todos los rubros a la vez &middot; <span id="inflMatrixCursor" style="color:var(--delta-up);font-weight:700">&uacute;ltimo dato</span></div>
+          <div class="fb-chart-title">{{t:macro.infl_chart_matrix_title}}</div>
+          <div class="fb-chart-sub">{{t:macro.infl_chart_matrix_sub}}<span id="inflMatrixCursor" style="color:var(--delta-up);font-weight:700">{{t:macro.infl_matrix_cursor_default}}</span></div>
         </div>
         <div id="inflMatrix" class="infl-matrix"></div>
-        <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP &middot; base 2016=100</div>
+        <div class="fb-chart-source">{{t:macro.infl_chart_matrix_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Qu&eacute; rubros est&aacute;n m&aacute;s caros hoy</div>
-          <div class="fb-chart-sub" id="inflRankingSub">Inflaci&oacute;n interanual por divisi&oacute;n, &uacute;ltimo dato disponible.</div>
+          <div class="fb-chart-title">{{t:macro.infl_chart_ranking_title}}</div>
+          <div class="fb-chart-sub" id="inflRankingSub">{{t:macro.infl_chart_ranking_sub_default}}</div>
         </div>
         <div id="inflRankingChart" style="height:420px;"></div>
-        <div class="fb-chart-source">Fuente: INE &middot; IPC por divisi&oacute;n COICOP</div>
+        <div class="fb-chart-source">{{t:macro.infl_chart_ranking_source}}</div>
       </div>
       <div class="fb-chart-card" id="inflEmpty" style="display:none;text-align:center;padding:48px;">
-        <h2 style="margin:0 0 8px">Inflaci&oacute;n</h2>
-        <p class="fb-subtitle" style="margin:0">A&uacute;n no hay datos del INE disponibles. Las series del IPC aparecen autom&aacute;ticamente con el pr&oacute;ximo release.</p>
+        <h2 style="margin:0 0 8px">{{t:macro.infl_empty_title}}</h2>
+        <p class="fb-subtitle" style="margin:0">{{t:macro.infl_empty_body}}</p>
       </div>
     </div>
   </div>
@@ -1384,36 +1384,36 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head blq-head">
           <div>
-            <div class="fb-chart-title">Bloqueos en carreteras de Bolivia</div>
-            <div class="fb-chart-sub" id="blqMapSub">Activos hoy: bloqueos abiertos en la &uacute;ltima lectura, por tipo (conflicto, obras, clima, derrumbe, otro).</div>
+            <div class="fb-chart-title">{{t:macro.blq_map_title}}</div>
+            <div class="fb-chart-sub" id="blqMapSub">{{t:macro.blq_map_sub_default}}</div>
           </div>
-          <div class="blq-toggle" role="tablist" aria-label="Vista del mapa">
-            <button class="fb-pill" id="blqTogIntensidad" data-view="intensidad" type="button">Intensidad acumulada</button>
-            <button class="fb-pill active" id="blqTogActivos" data-view="activos" type="button">Activos hoy</button>
+          <div class="blq-toggle" role="tablist" aria-label="{{t:macro.blq_toggle_aria}}">
+            <button class="fb-pill" id="blqTogIntensidad" data-view="intensidad" type="button">{{t:macro.blq_toggle_intensidad}}</button>
+            <button class="fb-pill active" id="blqTogActivos" data-view="activos" type="button">{{t:macro.blq_toggle_activos}}</button>
           </div>
         </div>
         <div class="blq-layout">
           <div id="bloqueosMap"></div>
           <div class="blq-side" id="blqSide"></div>
         </div>
-        <div class="fb-chart-source">Datos: ABC (transitabilidad.abc.gob.bo) &middot; v&iacute;a dataset abierto de <a href="https://github.com/mauforonda/transitabilidad-bolivia" target="_blank" rel="noopener">@mauforonda</a></div>
+        <div class="fb-chart-source">{{t:macro.blq_map_source}}<a href="https://github.com/mauforonda/transitabilidad-bolivia" target="_blank" rel="noopener">@mauforonda</a></div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px;">
         <div class="fb-chart-head blq-head">
           <div>
-            <div class="fb-chart-title">Bloqueos en el tiempo</div>
-            <div class="fb-chart-sub">N&uacute;mero de bloqueos abiertos por d&iacute;a desde 2020 &mdash; c&oacute;mo aparecen y se resuelven los conflictos.</div>
+            <div class="fb-chart-title">{{t:macro.blq_trend_title}}</div>
+            <div class="fb-chart-sub">{{t:macro.blq_trend_sub}}</div>
           </div>
-          <div class="blq-toggle" id="blqTrendRange" role="tablist" aria-label="Rango temporal del hist&oacute;rico">
+          <div class="blq-toggle" id="blqTrendRange" role="tablist" aria-label="{{t:macro.blq_trend_range_aria}}">
             <button class="fb-pill" data-range="1m" type="button">1m</button>
             <button class="fb-pill active" data-range="3m" type="button">3m</button>
             <button class="fb-pill" data-range="6m" type="button">6m</button>
             <button class="fb-pill" data-range="1a" type="button">1a</button>
-            <button class="fb-pill" data-range="all" type="button">Todo</button>
+            <button class="fb-pill" data-range="all" type="button">{{t:macro.blq_range_todo}}</button>
           </div>
         </div>
         <div id="bloqueosTrendChart" style="height:380px;"></div>
-        <div class="fb-chart-source">Datos: ABC &middot; v&iacute;a @mauforonda &middot; serie hist&oacute;rica de incidentes de transitabilidad</div>
+        <div class="fb-chart-source">{{t:macro.blq_trend_source}}</div>
       </div>
     </div>
   </div>
@@ -1423,11 +1423,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="content">
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">Tasa de Referencia (TRE)</div>
-          <div class="fb-chart-sub" id="treSub">Serie mensual por vigencia &middot; MN (moneda nacional) y ME (moneda extranjera), en % anual.</div>
+          <div class="fb-chart-title">{{t:macro.tasas_chart_title}}</div>
+          <div class="fb-chart-sub" id="treSub">{{t:macro.tasas_chart_sub_default}}</div>
         </div>
         <div id="chartTre" style="height:380px;"></div>
-        <div class="fb-chart-source">Fuente: Banco Central de Bolivia &middot; Evoluci&oacute;n de las Tasas de Referencia &middot; Actas de Directorio 026/2018 y 040/2023</div>
+        <div class="fb-chart-source">{{t:macro.tasas_chart_source}}</div>
       </div>
     </div>
   </div>
@@ -3054,11 +3054,11 @@ var _blqTrendRange = '3m';  // rango del trend histórico: '1m'|'3m'|'6m'|'1a'|'
 // Hex elegidos para ser legibles sobre la cream (#FBEDE3) y distinguibles entre sí
 // (conflicto rojo ladrillo vs obras ámbar: separación de matiz suficiente).
 var BLQ_CAT = {
-  conflicto: {c:'#b3473b', label:'Conflicto social'},
-  obras:     {c:'#c77f0e', label:'Obras'},
-  clima:     {c:'#2d6ca6', label:'Clima'},
-  derrumbe:  {c:'#835c3b', label:'Derrumbe / geológico'},
-  otro:      {c:'#8c8479', label:'Otro'}
+  conflicto: {c:'#b3473b', label:'{{t:macro.blq_cat_conflicto}}'},
+  obras:     {c:'#c77f0e', label:'{{t:macro.blq_cat_obras}}'},
+  clima:     {c:'#2d6ca6', label:'{{t:macro.blq_cat_clima}}'},
+  derrumbe:  {c:'#835c3b', label:'{{t:macro.blq_cat_derrumbe}}'},
+  otro:      {c:'#8c8479', label:'{{t:macro.blq_cat_otro}}'}
 };
 var BLQ_CAT_ORDER = ['conflicto','obras','clima','derrumbe','otro'];
 function blqCat(k){ return BLQ_CAT[k] || BLQ_CAT.otro; }
@@ -3077,7 +3077,7 @@ window.renderBloqueos = function(){
   var togI = document.getElementById('blqTogIntensidad');
   var togA = document.getElementById('blqTogActivos');
   if(!B){
-    if(elSide) elSide.innerHTML = '<div class="view-hint" style="padding:24px;text-align:center">Sin datos de bloqueos disponibles.</div>';
+    if(elSide) elSide.innerHTML = '<div class="view-hint" style="padding:24px;text-align:center">{{t:macro.blq_no_data}}</div>';
     return;
   }
   var c = getC();
@@ -3092,7 +3092,7 @@ window.renderBloqueos = function(){
   // del ingest), degradamos a los activos legacy como 'conflicto' — sin romper.
   var ptosEvt = Array.isArray(B.activos_eventos)
     ? B.activos_eventos
-    : ptosAct.map(function(p){ return {lat:p.lat, lon:p.lon, cat:'conflicto', evento:'bloqueo por conflicto social', sec:p.sec}; });
+    : ptosAct.map(function(p){ return {lat:p.lat, lon:p.lon, cat:'conflicto', evento:'{{t:macro.blq_fallback_evento}}', sec:p.sec}; });
   var depInt = (intens && intens.por_departamento) ? intens.por_departamento : [];
   // Ranking por depto de TODOS los activos (nuevo); fallback al legacy conflict-only.
   var depAct = B.activos_eventos_por_departamento || B.activos_por_departamento || [];
@@ -3154,7 +3154,7 @@ window.renderBloqueos = function(){
       marker:{size:6, line:{width:0},
         color: pi.map(function(p){ var a=0.12+0.78*(Math.log(p.dias+1)/lmaxCat); return hexToRgba(blqCat(p.cat).c, a); })},
       customdata: pi.map(function(p){ return [lab(p), p.dias, blqCat(p.cat).label]; }),
-      hovertemplate:'<b>%{customdata[0]}</b><br>%{customdata[2]} · %{customdata[1]} días bloqueado desde el 1 may<extra></extra>'};
+      hovertemplate:'{{t:macro.blq_hover_intensidad}}'};
   }
   function drawMapa(geo, view){
     var traces = [];
@@ -3184,7 +3184,7 @@ window.renderBloqueos = function(){
     return presentCats(view).map(function(k){
       var on = !!vis[k];
       return '<div class="blq-leg blq-legtog'+(on?'':' off')+'" data-blq-cat="'+k+'" role="button" tabindex="0"'
-        + ' aria-pressed="'+on+'" title="'+(on?'Ocultar':'Mostrar')+' '+blqCat(k).label+'">'
+        + ' aria-pressed="'+on+'" title="'+(on?'{{t:macro.blq_leg_hide}}':'{{t:macro.blq_leg_show}}')+' '+blqCat(k).label+'">'
         + '<span class="blq-dot" style="background:'+blqCat(k).c+'"></span>'
         + '<span class="blq-leglab">'+blqCat(k).label+'</span>'
         + '<b style="margin-left:auto;font-variant-numeric:tabular-nums">'+(cc[k]||0)+'</b></div>';
@@ -3196,25 +3196,25 @@ window.renderBloqueos = function(){
     var src = (view==='activos') ? ptosEvt : ptosIntCat;
     var visN = src.filter(function(p){ return vis[p.cat]; }).length;
     var nota = (view==='activos')
-      ? 'Tocá una categoría para mostrarla u ocultarla. Los reportes sin tipo de evento no se grafican.'
-      : 'Opacidad = días bloqueado desde el 1 may. Tocá una categoría para mostrarla u ocultarla.';
+      ? '{{t:macro.blq_note_activos}}'
+      : '{{t:macro.blq_note_intensidad}}';
     var maxn = dep.length ? dep[0].n : 1;
     var depRows = dep.map(function(d){
       var pct = Math.max(4, Math.round(100*d.n/maxn));
       return '<div class="blq-dep"><span>'+d.dep+'</span><span class="blq-dep-track"><i style="width:'+pct+'%"></i></span><span class="blq-dep-n">'+d.n+'</span></div>';
-    }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">Sin datos por departamento.</div>';
+    }).join('') || '<div class="blq-leg" style="color:var(--text-muted)">{{t:macro.blq_dep_empty}}</div>';
     var ver = (view==='activos')
-      ? visN+' de '+src.length+' bloqueos activos visibles, por tipo.'
-      : visN+' de '+src.length+' tramos visibles (intensidad desde el 1 may).';
+      ? visN+' de '+src.length+'{{t:macro.blq_ver_activos}}'
+      : visN+' de '+src.length+'{{t:macro.blq_ver_intensidad}}';
     elSide.innerHTML =
-      '<div class="blq-card"><h4>Resumen ahora</h4>'
-        + '<div class="blq-stat"><span>Por conflicto social</span><b>'+resumen.conflicto+'</b></div>'
-        + '<div class="blq-stat"><span>Otros (clima/obras)</span><b>'+resumen.no_conflicto+'</b></div>'
-        + '<div class="blq-stat"><span>Total activos</span><b>'+resumen.total+'</b></div></div>'
-      + '<div class="blq-card"><h4>Qué estás viendo</h4>'
+      '<div class="blq-card"><h4>{{t:macro.blq_side_resumen}}</h4>'
+        + '<div class="blq-stat"><span>{{t:macro.blq_side_conflicto}}</span><b>'+resumen.conflicto+'</b></div>'
+        + '<div class="blq-stat"><span>{{t:macro.blq_side_otros}}</span><b>'+resumen.no_conflicto+'</b></div>'
+        + '<div class="blq-stat"><span>{{t:macro.blq_side_total}}</span><b>'+resumen.total+'</b></div></div>'
+      + '<div class="blq-card"><h4>{{t:macro.blq_side_viendo}}</h4>'
         + '<div class="blq-leg">'+ver+'</div>'+legendRows(view)
         + '<div class="blq-leg" style="margin-top:5px;color:var(--text-muted)">'+nota+'</div></div>'
-      + '<div class="blq-card"><h4>Por departamento</h4>'+depRows+'</div>';
+      + '<div class="blq-card"><h4>{{t:macro.blq_side_dep}}</h4>'+depRows+'</div>';
   }
   // Toggle de categoría (click/teclado en la leyenda) — afecta solo la vista activa.
   function toggleCat(k){
@@ -3240,8 +3240,8 @@ window.renderBloqueos = function(){
     if(togI) togI.classList.toggle('active', view==='intensidad');
     if(togA) togA.classList.toggle('active', view==='activos');
     if(elSub) elSub.innerHTML = (view==='activos')
-      ? 'Activos hoy: bloqueos abiertos en la última lectura, por tipo (conflicto, obras, clima, derrumbe, otro).'
-      : 'Intensidad acumulada: color por tipo, opacidad por días bloqueado desde el 1 de mayo de 2026.';
+      ? '{{t:macro.blq_sub_activos_js}}'
+      : '{{t:macro.blq_sub_intensidad_js}}';
     if(elSide) renderSide(view);
     if(!elMap) return;
     // Render inmediato (Bolivia + puntos); la red vial/deptos se agregan al llegar
@@ -3270,7 +3270,7 @@ window.renderBloqueos = function(){
     if(!elTrend) return;
     if(!serie.length){
       _purgeAndClear(elTrend);
-      elTrend.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">Sin serie histórica.</div>';
+      elTrend.innerHTML = '<div class="view-hint" style="padding:32px;text-align:center">{{t:macro.blq_trend_empty}}</div>';
       return;
     }
     var sf = filterSerieByRange(serie, _blqTrendRange);
@@ -3284,10 +3284,10 @@ window.renderBloqueos = function(){
       y: sf.map(function(d){return d.abiertos;}),
       type:'scatter', mode:'lines', fill:'tozeroy',
       line:{color:alertColor, width:1.5}, fillcolor:hexToRgba(alertColor,.12),
-      hovertemplate:'%{x|%d %b %Y}<br>%{y} bloqueos<extra></extra>'
+      hovertemplate:'{{t:macro.blq_trend_hover}}'
     }], {...L, autosize:true,
       xaxis:{...L.xaxis, tickformat:tf, nticks:9, tickangle:-30, fixedrange:false, automargin:true},
-      yaxis:{...L.yaxis, title:{text:'Bloqueos abiertos', font:{size:10, color:c.textMuted}}, rangemode:'tozero', automargin:true},
+      yaxis:{...L.yaxis, title:{text:'{{t:macro.blq_trend_yaxis}}', font:{size:10, color:c.textMuted}}, rangemode:'tozero', automargin:true},
       margin:{l:48, r:16, t:16, b:48}, showlegend:false, hovermode:'x'
     }, {...PC, locale:'es'});  // meses del eje X + hover en español (ene/feb/…)
   }
@@ -3325,11 +3325,11 @@ window.renderTasas = (function(){
     const el=document.getElementById('chartTre');
     if(!el) return;
     const T=(DATA.bcb_tre&&DATA.bcb_tre.history)||[];
-    if(!T.length){ el.innerHTML='<div class="view-hint">Sin datos de TRE</div>'; return; }
+    if(!T.length){ el.innerHTML='<div class="view-hint">{{t:macro.tasas_no_data}}</div>'; return; }
     const last=T[T.length-1];
     const d=document.getElementById('tasasDate'); if(d) d.textContent=vigLabel(last.vigencia);
     const sub=document.getElementById('treSub');
-    if(sub) sub.textContent='Vigente '+vigLabel(last.vigencia)+': MN '+fmt2(last.mn)+'% · ME '+fmt2(last.me!=null?last.me:0)+'% · serie mensual por vigencia, en % anual.';
+    if(sub) sub.textContent='{{t:macro.tasas_sub_vigente}}'+vigLabel(last.vigencia)+'{{t:macro.tasas.tre_sub.mn_frag}}'+fmt2(last.mn)+'{{t:macro.tasas.tre_sub.me_frag}}'+fmt2(last.me!=null?last.me:0)+'{{t:macro.tasas_sub_serie}}';
     if(built) return;  // serie mensual estática: un build por carga alcanza
     built=true;
     const c=getC(), L=BL(c);
@@ -3337,12 +3337,12 @@ window.renderTasas = (function(){
     const x=T.map(e=>e.vigencia+' 00:00:00');
     // shape 'hv': la tasa rige el mes completo hasta la vigencia siguiente.
     const traces=[
-      {x:x, y:T.map(e=>e.mn), name:'MN', mode:'lines+markers',
+      {x:x, y:T.map(e=>e.mn), name:'{{t:macro.tasas.serie_mn}}', mode:'lines+markers',
        line:{color:c.sell,width:2,shape:'hv'}, marker:{size:4,color:c.sell},
-       hovertemplate:'MN %{y:.2f}%<extra></extra>'},
-      {x:x, y:T.map(e=>e.me), name:'ME', mode:'lines+markers',
+       hovertemplate:'{{t:macro.tasas.hover_mn}}'},
+      {x:x, y:T.map(e=>e.me), name:'{{t:macro.tasas.serie_me}}', mode:'lines+markers',
        line:{color:c.buy,width:1.5,shape:'hv'}, marker:{size:3,color:c.buy},
-       hovertemplate:'ME %{y:.2f}%<extra></extra>'}
+       hovertemplate:'{{t:macro.tasas.hover_me}}'}
     ];
     // Último valor rotulado al final de cada serie (patrón de Inflación interanual).
     const lastX=x[x.length-1];
@@ -3359,20 +3359,20 @@ window.renderTasas = (function(){
 })();
 
 var MACRO_SUBTABS = [
-  { id:'riesgo', slug:'/riesgo', title:'FinanzasBo — Riesgo País EMBI',
-    subtitle:'EMBI Global Diversified &middot; Fuente: BCRD &middot; Datos al <span id="riesgoDate">&mdash;</span>',
+  { id:'riesgo', slug:'/riesgo', title:'{{t:macro.doc_title_riesgo}}',
+    subtitle:'{{t:macro.riesgo_subtitle}}<span id="riesgoDate">&mdash;</span>',
     render:function(){
       if(typeof window.renderRiesgoPais==='function') window.renderRiesgoPais();
       if(typeof window.renderDeudaSoberana==='function') window.renderDeudaSoberana();
     } },
-  { id:'inflacion', slug:'/inflacion', title:'FinanzasBo — Inflación',
-    subtitle:'Inflación al consumidor (IPC) &middot; Fuente: INE &middot; Datos al <span id="inflDate">&mdash;</span>',
+  { id:'inflacion', slug:'/inflacion', title:'{{t:macro.doc_title_inflacion}}',
+    subtitle:'{{t:macro.infl_subtitle}}<span id="inflDate">&mdash;</span>',
     render:function(){ if(typeof window.renderInflacion==='function') window.renderInflacion(); } },
-  { id:'bloqueos', slug:'/bloqueos', title:'FinanzasBo — Bloqueos en Bolivia',
-    subtitle:'Bloqueos en Bolivia &middot; Fuente: ABC vía @mauforonda &middot; Datos al <span id="bloqueosDate">&mdash;</span>',
+  { id:'bloqueos', slug:'/bloqueos', title:'{{t:macro.doc_title_bloqueos}}',
+    subtitle:'{{t:macro.blq_subtitle}}<span id="bloqueosDate">&mdash;</span>',
     render:function(){ if(typeof window.renderBloqueos==='function') window.renderBloqueos(); } },
-  { id:'tasas', slug:'/tasas', title:'FinanzasBo — Tasa de Referencia (TRE)',
-    subtitle:'Tasa de Referencia (TRE) del BCB &middot; Vigente <span id="tasasDate">&mdash;</span>',
+  { id:'tasas', slug:'/tasas', title:'{{t:macro.doc_title_tasas}}',
+    subtitle:'{{t:macro.tasas_subtitle}}<span id="tasasDate">&mdash;</span>',
     render:function(){ if(typeof window.renderTasas==='function') window.renderTasas(); } }
 ];
 // Títulos de los flat tabs (Macro los lleva por subtab en MACRO_SUBTABS).
@@ -3381,8 +3381,8 @@ var TAB_TITLES = {
   'dpf':      'FinanzasBo — Rendimientos DPF',
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',
-  'noticias': 'FinanzasBo — Inicio',
-  'asfi':     'FinanzasBo — ASFI · Mercado de Valores'
+  'noticias': '{{t:macro.doc_title_noticias}}',
+  'asfi':     '{{t:macro.doc_title_asfi}}'
 };
 // Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
 // slug del subtab activo, no un slug de tab.
@@ -4170,9 +4170,9 @@ window.addEventListener('popstate', function(){
   var SERIES_ORDER = ['bolivia','latino','global','argentina','brasil','chile','colombia','mexico','peru','ecuador'];
   var DEFAULT_ACTIVE = ['bolivia','latino'];
   var COUNTRY_LABELS = {
-    bolivia:'Bolivia', latino:'LATINO', global:'Global',
-    argentina:'Argentina', brasil:'Brasil', chile:'Chile',
-    colombia:'Colombia', mexico:'México', peru:'Perú', ecuador:'Ecuador'
+    bolivia:'Bolivia', latino:'{{t:macro.riesgo_country_latino}}', global:'Global',
+    argentina:'Argentina', brasil:'{{t:macro.riesgo_country_brasil}}', chile:'Chile',
+    colombia:'Colombia', mexico:'{{t:macro.riesgo_country_mexico}}', peru:'{{t:macro.riesgo_country_peru}}', ecuador:'Ecuador'
   };
   // Colores leídos en runtime desde CSS variables (--chart-color-*) vía
   // helper cssVar() definido a nivel módulo (cerca de getC()).
@@ -4241,9 +4241,9 @@ window.addEventListener('popstate', function(){
           deltaColor(bol1d))
       + card('Bolivia Δ 1M',
           fmtDelta(bol30d),
-          'Cambio últimos ~21 días hábiles',
+          '{{t:macro.riesgo_kpi_delta_sub}}',
           null)   // Δ1M en neutro: magnitud mensual sin dirección coloreada (rojo/verde solo en 1d)
-      + card('LATINO',
+      + card('{{t:macro.riesgo_country_latino}}',
           latLast ? fmtBps(latLast.val) : '—',
           (arrow(lat1d)+' '+fmtDelta(lat1d)+' (1d)').trim(),
           deltaColor(lat1d))
@@ -4305,9 +4305,9 @@ window.addEventListener('popstate', function(){
   // autorange de Plotly, y un rect que sobresalga del rango de datos
   // expandiría el eje y aplastando la línea.
   var RISK_BANDS = [
-    {key:'low',  label:'BAJO',  y0:-Infinity, y1:350},
-    {key:'mid',  label:'MEDIO', y0:350,       y1:700},
-    {key:'high', label:'ALTO',  y0:700,       y1:Infinity}
+    {key:'low',  label:'{{t:macro.riesgo_band_bajo}}',  y0:-Infinity, y1:350},
+    {key:'mid',  label:'{{t:macro.riesgo_band_medio}}', y0:350,       y1:700},
+    {key:'high', label:'{{t:macro.riesgo_band_alto}}',  y0:700,       y1:Infinity}
   ];
 
   function visibleExtent(sl){
@@ -4508,11 +4508,11 @@ window.addEventListener('popstate', function(){
   var DEBT_SCHEDULE = {
     years: [2026, 2027, 2028, 2029, 2030, 2031],
     series: [
-      { id: 'em2017', label: 'Emisión 2017 (4,5% · vto 2028)',
+      { id: 'em2017', label: '{{t:macro.riesgo_deuda_serie_2017}}',
         values: [370.8, 355.8, 340.8, 0, 0, 0] },
-      { id: 'em2022', label: 'Emisión 2022 (7,5% · vto 2030)',
+      { id: 'em2022', label: '{{t:macro.riesgo_deuda_serie_2022}}',
         values: [63.8, 63.8, 336.5, 315.2, 294.0, 0] },
-      { id: 'em2026', label: 'Emisión 2026 (9,45% · vto 2031)',
+      { id: 'em2026', label: '{{t:macro.riesgo_deuda_serie_2026}}',
         values: [47.3, 94.5, 94.5, 94.5, 94.5, 1047.3] }
     ],
     totals: [481.8, 514.1, 771.8, 409.7, 388.5, 1047.3]
@@ -4539,12 +4539,12 @@ window.addEventListener('popstate', function(){
     });
     var lastIdx = DEBT_SCHEDULE.years.length - 1;
     el.innerHTML = '<div class="fb-kpi-grid" style="grid-template-columns:repeat(3,1fr)">'
-      + kpiCard('Servicio total 2026-2031', fmtMm(total),
-          'Capital + cupones de las 3 emisiones vigentes')
-      + kpiCard('Pico intermedio', DEBT_SCHEDULE.years[peakIdx]+' · '+fmtMm(DEBT_SCHEDULE.totals[peakIdx]),
-          'Última cuota del bono 2017 + primera del 2022')
+      + kpiCard('{{t:macro.riesgo_deuda_kpi_total}}', fmtMm(total),
+          '{{t:macro.riesgo_deuda_kpi_total_sub}}')
+      + kpiCard('{{t:macro.riesgo_deuda_kpi_pico}}', DEBT_SCHEDULE.years[peakIdx]+' · '+fmtMm(DEBT_SCHEDULE.totals[peakIdx]),
+          '{{t:macro.riesgo_deuda_kpi_pico_sub}}')
       + kpiCard('Bullet', DEBT_SCHEDULE.years[lastIdx]+' · '+fmtMm(DEBT_SCHEDULE.totals[lastIdx]),
-          'Vencimiento único del bono 2026')
+          '{{t:macro.riesgo_deuda_kpi_bullet_sub}}')
       + '</div>';
   }
 
@@ -4560,7 +4560,7 @@ window.addEventListener('popstate', function(){
         // muestra filas "$0 MM".
         y:s.values.map(function(v){return v===0 ? null : v;}),
         marker:{color:cssVar('--chart-debt-'+s.id), line:{width:0}},
-        hovertemplate:s.label+': $%{y:,.0f} MM<extra></extra>'
+        hovertemplate:s.label+'{{t:macro.riesgo_deuda_hover}}'
       };
     });
     var gridc = cssVar('--chart-grid', 'rgba(120,120,120,.10)');
@@ -4572,7 +4572,7 @@ window.addEventListener('popstate', function(){
       margin:{l:56, r:16, t:8, b:64},
       xaxis:{type:'category', showgrid:false, tickangle:0, showline:true, linecolor:'rgba(33,30,27,.5)', linewidth:1, ticks:'outside', tickcolor:'rgba(33,30,27,.5)', ticklen:4, zeroline:false},
       yaxis:{tickformat:',d', showgrid:true, gridcolor:gridc, zeroline:false,
-             rangemode:'tozero', title:{text:'USD MM', font:{size:10, color:fontc}}},
+             rangemode:'tozero', title:{text:'{{t:macro.riesgo_deuda_yaxis}}', font:{size:10, color:fontc}}},
       hovermode:'x unified',
       hoverlabel:{bgcolor:cssVar('--tooltip-bg','#fff'), bordercolor:cssVar('--tooltip-border','rgba(33,30,27,.18)'),
                   font:{family:"'IBM Plex Mono', monospace", size:11, color:cssVar('--tooltip-text','#211E1B')}},
@@ -4638,9 +4638,9 @@ window.addEventListener('popstate', function(){
     var el=document.getElementById('inflKpis'); if(!el) return;
     if(!ULT){el.innerHTML='';return;}
     el.innerHTML='<div class="fb-kpi-wrap"><div class="fb-kpi-grid" style="grid-template-columns:repeat(3,1fr)">'
-      +kpi('Inflación interanual',fmtPct(ULT.var_12m),'IPC &middot; últimos 12 meses',null,null)
-      +kpi('Inflación mensual',fmtPct(ULT.var_mensual),'IPC &middot; último mes',null,null)
-      +kpi('Acumulada en el año',fmtPct(ULT.var_acumulada),'IPC &middot; desde enero',null,null)
+      +kpi('{{t:macro.infl_kpi_inter}}',fmtPct(ULT.var_12m),'{{t:macro.infl_kpi_inter_sub}}',null,null)
+      +kpi('{{t:macro.infl_kpi_mensual}}',fmtPct(ULT.var_mensual),'{{t:macro.infl_kpi_mensual_sub}}',null,null)
+      +kpi('{{t:macro.infl_kpi_acum}}',fmtPct(ULT.var_acumulada),'{{t:macro.infl_kpi_acum_sub}}',null,null)
       +'</div></div>';
   }
   function plotInteranual(){
@@ -4650,11 +4650,11 @@ window.addEventListener('popstate', function(){
     var sub=document.getElementById('inflInterSub');
     if(sub && ULT && ULT.periodo){
       var prev=(parseInt(ULT.periodo.slice(0,4),10)-1)+'-'+ULT.periodo.slice(5,7);
-      sub.textContent='Variación del IPC general respecto al mismo mes del año anterior ('+periodoLabel(ULT.periodo)+' vs '+periodoLabel(prev)+').';
+      sub.textContent='{{t:macro.infl_inter_sub_prefix}}'+periodoLabel(ULT.periodo)+' vs '+periodoLabel(prev)+').';
     }
     var traces=[{type:'scatter',mode:'lines',x:x,y:y,
       line:{color:WARM_DARK,width:2.6}, fill:'tozeroy', fillcolor:hexToRgba(WARM_MID,.10),
-      hovertemplate:'%{x|%b %Y}<br>%{y:.2f}% interanual<extra></extra>'}];
+      hovertemplate:'{{t:macro.infl_inter_hover}}'}];
     var anns=[];
     if(ln.i>=0){
       traces.push({type:'scatter',mode:'markers',x:[x[ln.i]],y:[ln.v],
@@ -4674,7 +4674,7 @@ window.addEventListener('popstate', function(){
     var x=IPC.periodos.map(function(p){return p+'-01';});
     var cols=IPC.general.var_mensual.map(function(v){return (v!=null&&v<0)?COOL:WARM_MID;});
     Plotly.react(el,[{type:'bar',x:x,y:IPC.general.var_mensual,marker:{color:cols},
-      hovertemplate:'%{x|%b %Y}<br>%{y:.2f}% mensual<extra></extra>'}],
+      hovertemplate:'{{t:macro.infl_mensual_hover}}'}],
       {...L, xaxis:ftx(L,{type:'date',tickformat:'%Y',nticks:11,tickangle:0}),
        yaxis:fty(L,{ticksuffix:'%'}),
        margin:{l:48,r:14,t:12,b:34}, showlegend:false, hovermode:'x', height:340}, PC);
@@ -4694,7 +4694,7 @@ window.addEventListener('popstate', function(){
       var col=isLast?WARM_DARK:mix(GREY_LO,GREY_HI,t); colorOf[yr]=col;  // pasados en gris (contexto), en curso en claret
       return {type:'scatter',mode:isLast?'lines+markers':'lines',name:yr,x:MES,y:byYear[yr],
         line:{color:col,width:isLast?2.8:1.3}, marker:{size:isLast?5:0,color:WARM_DARK},
-        opacity:isLast?1:0.8, connectgaps:false, hovertemplate:'<b>'+yr+'</b>  %{y:.2f}% acum.<extra></extra>'};
+        opacity:isLast?1:0.8, connectgaps:false, hovertemplate:'<b>'+yr+'{{t:macro.infl_acum_hover}}'};
     });
     // Etiquetas directas al final de cada línea (reemplazan la leyenda); descolisión
     // vertical por grupo de mes + líder que apunta al punto real cuando se desplaza.
@@ -4762,7 +4762,7 @@ window.addEventListener('popstate', function(){
       lastPn=-1;
       _cells.forEach(function(cell){ Plotly.relayout(cell,{shapes:[]}); });
       _slugs.forEach(function(s){ setBadge(s,lastNonNull(_divs[s].var_12m).v); });
-      if(cur) cur.textContent='último dato';
+      if(cur) cur.textContent='{{t:macro.infl_matrix_cursor_js}}';
     }
     _cells.forEach(function(gd){
       gd.on('plotly_hover',function(ev){ if(ev.points&&ev.points.length) moveTo(ev.points[0].pointNumber); });
@@ -4780,13 +4780,13 @@ window.addEventListener('popstate', function(){
     var sub=document.getElementById('inflRankingSub');
     if(sub && ULT && ULT.periodo){
       var prev=(parseInt(ULT.periodo.slice(0,4),10)-1)+'-'+ULT.periodo.slice(5,7);
-      sub.textContent='Inflación interanual (variación a 12 meses) al cierre de '+periodoLabel(ULT.periodo)+', comparada contra '+periodoLabel(prev)+'. Negativos entre paréntesis.';
+      sub.textContent='{{t:macro.infl_ranking_sub_prefix}}'+periodoLabel(ULT.periodo)+'{{t:macro.infl_ranking_sub_mid}}'+periodoLabel(prev)+'{{t:macro.infl_ranking_sub_suffix}}';
     }
     Plotly.react(el,[{type:'bar',orientation:'h',
       y:rows.map(function(r){return r.label;}),x:rows.map(function(r){return r.v;}),
       marker:{color:cols}, text:rows.map(function(r){return fmtBar(r.v);}), textposition:'auto',
       cliponaxis:false, customdata:rows.map(function(r){return fmtBar(r.v);}),
-      hovertemplate:'%{y}<br>%{customdata} interanual<extra></extra>'}],
+      hovertemplate:'{{t:macro.infl_ranking_hover}}'}],
       {...L, xaxis:Object.assign({},L.xaxis,{ticksuffix:'%',showgrid:true,gridcolor:FT_GRID,gridwidth:1,showline:false,ticks:'',zeroline:true,zerolinecolor:FT_ZERO,zerolinewidth:1.2}),
        yaxis:Object.assign({},L.yaxis,{automargin:true,showgrid:false,showline:false,zeroline:false,ticks:'',tickfont:{family:'Outfit',size:11,color:c.textMuted}}),
        margin:{l:8,r:14,t:12,b:32}, showlegend:false, height:420}, PC);
