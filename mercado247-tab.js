@@ -117,7 +117,7 @@
 }
 .m247 .m247-empty { color: var(--m247-ink-2); text-align: center; padding: 48px 12px; font-size: 0.9rem; }
 
-.m247 .m247-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(226px, 1fr)); gap: 12px; }
+.m247 .m247-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
 .m247 .m247-card {
   border: 1px solid var(--m247-border); border-radius: var(--m247-radius);
   background: var(--m247-surface); padding: 12px 12px 10px;
@@ -149,7 +149,7 @@
 .m247 .m247-chg.down { color: var(--m247-down); }
 .m247 .m247-chg.flat { color: var(--m247-ink-2); }
 .m247 .m247-chart {
-  position: relative; height: 110px; border-radius: 6px;
+  position: relative; height: 158px; border-radius: 6px;
   background: var(--m247-surface-2); overflow: hidden;
 }
 .m247 .m247-chart canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
@@ -162,6 +162,16 @@
   font-family: var(--m247-font-mono);
   font-variant-numeric: tabular-nums; display: flex; justify-content: space-between; gap: 8px;
 }
+.m247 .m247-more {
+  border: 1px dashed var(--m247-border-strong); border-radius: var(--m247-radius);
+  background: transparent; color: var(--m247-ink-2); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  min-height: 240px; font-family: var(--m247-font); transition: background 0.15s, color 0.15s;
+}
+.m247 .m247-more:hover { background: var(--m247-surface); color: var(--m247-ink); border-color: var(--m247-ink-3); }
+.m247 .m247-more .plus { font-size: 2rem; line-height: 1; font-weight: 300; }
+.m247 .m247-more .lbl { font-size: 0.82rem; font-weight: 600; }
+.m247 .m247-more .cnt { font-size: 0.72rem; color: var(--m247-ink-3); }
 .m247 .m247-note { margin-top: 20px; color: var(--m247-ink-3); font-size: 0.72rem; text-align: center; }
 .m247 .m247-note a { color: var(--m247-ink-2); }
 
@@ -329,9 +339,14 @@
       if (!u || !ctx || u.isDelisted) return;
       const mark = parseFloat(ctx.markPx);
       const mid = parseFloat(ctx.midPx);
+      // Los dexs HIP-3 devuelven el nombre del universo ya prefijado
+      // ("xyz:SKHX"); el dex principal no ("BTC"). key = nombre exacto que
+      // usa la API (para velas y mids); symbol = ticker limpio para mostrar.
+      const rawName = u.name;
+      const symbol = rawName.includes(":") ? rawName.slice(rawName.indexOf(":") + 1) : rawName;
       out.push({
-        key: dex.name ? `${dex.name}:${u.name}` : u.name,
-        symbol: u.name,
+        key: rawName,
+        symbol: symbol,
         dex: dex.name,
         dexName: dex.fullName,
         price: Number.isFinite(mid) ? mid : mark,
@@ -525,6 +540,7 @@
   const CTX_REFRESH_MS = 30000;
   const CANDLE_TTL_MS = 2 * 60 * 1000;
   const LS = { favs: "m247.favs", tab: "m247.tab", sort: "m247.sort" };
+  const PAGE_SIZE = 12; // tarjetas por lote — limita cuántas velas se piden a la vez
 
   let mounted = false;
 
@@ -564,6 +580,9 @@
     let tab = localStorage.getItem(LS.tab) || "fav";
     let sortMode = localStorage.getItem(LS.sort) || "volume";
     let search = "";
+    let shownCount = PAGE_SIZE; // cuántas tarjetas de la lista actual se muestran
+    let lastSig = "";           // firma de la vista (tab|sort|search): al cambiar, resetea el paginado
+    let moreTileEl = null;
     let lastUpdate = 0;
     let feedStatus = "offline";
     let loaded = false;
@@ -797,7 +816,13 @@
 
     function renderGrid() {
       const list = visibleAssets();
-      const wanted = new Set(list.map((a) => a.key));
+
+      // Al cambiar de pestaña/orden/búsqueda, volver al primer lote.
+      const sig = tab + "|" + sortMode + "|" + search;
+      if (sig !== lastSig) { shownCount = PAGE_SIZE; lastSig = sig; }
+
+      const pageList = list.slice(0, shownCount);
+      const wanted = new Set(pageList.map((a) => a.key));
       for (const [key, el] of cardEls) {
         if (!wanted.has(key)) {
           observer.unobserve(el);
@@ -807,7 +832,7 @@
         }
       }
       let anchor = null;
-      for (const a of list) {
+      for (const a of pageList) {
         let el = cardEls.get(a.key);
         if (!el) {
           el = buildCard(a);
@@ -820,6 +845,26 @@
         else els.grid.prepend(el);
         anchor = el;
       }
+
+      // Tile "＋ mostrar más": revela el siguiente lote sin recargar todo.
+      if (moreTileEl) { moreTileEl.remove(); moreTileEl = null; }
+      const remaining = list.length - pageList.length;
+      if (remaining > 0) {
+        moreTileEl = document.createElement("button");
+        moreTileEl.type = "button";
+        moreTileEl.className = "m247-more";
+        moreTileEl.innerHTML =
+          '<span class="plus">+</span>' +
+          '<span class="lbl">Mostrar más</span>' +
+          `<span class="cnt">${remaining} activo${remaining === 1 ? "" : "s"} más</span>`;
+        moreTileEl.addEventListener("click", () => {
+          shownCount += PAGE_SIZE;
+          renderGrid();
+        });
+        if (anchor) anchor.after(moreTileEl);
+        else els.grid.appendChild(moreTileEl);
+      }
+
       els.empty.hidden = list.length > 0 || !loaded;
       if (loaded && !list.length) {
         els.empty.textContent = tab === "fav" && !search
