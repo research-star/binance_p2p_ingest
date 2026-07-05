@@ -12,9 +12,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 30 de junio de 2026, realizada con el 99.99% de los accionistas, determinó lo siguiente: Aprobar la reducción voluntaria de Capital",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Fortaleza Leasing aprueba reducción Capital Pagado Bs 13,57M",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -24,9 +25,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Comunica que, en reunión de Directorio de 30 de junio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 16 de julio de 2026 a Hrs.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Convoca Seguros Illimani S.A. JGA Ordinaria para 16 julio 2026",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -36,12 +38,13 @@
      "tags": [
       "auditoria"
      ],
-     "resumen": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la Consultora RUIZMIER PELAEZ S.R.L.",
-     "resumen_origen": "extractivo",
+     "resumen": "CLÍNICA METROPOLITANA contrata RUIZMIER PELAEZ para auditoría externa 2026",
+     "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
       "firma": "Consultora RUIZMIER PELAEZ S.R.L."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -49,9 +52,10 @@
      "entidad": "Droguería INTI S.A.",
      "texto": "Comunica que, el 30 de junio de 2026, la Asamblea de Tenedores de Bonos INTI VI, celebrada a Hrs. 14:00 donde se determinó aprobar lo siguiente:\n1. El informe del Representante Común de Tenedores de Bonos Valores Unión S.A. Agencia de Bolsa, sin observaciones\n2. El informe de la Sociedad sobre su situación económica y financiera, sin observaciones.",
      "tags": [],
-     "resumen": "Comunica que, el 30 de junio de 2026, la Asamblea de Tenedores de Bonos INTI VI, celebrada a Hrs.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Droguería INTI aprueba informes en Asamblea de Bonos INTI VI",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -61,14 +65,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026, el señor Jacques Luis Muñoz Arce, deja de ejercer funciones en el cargo de Gerente de Operaciones y Mantenimiento a.i., manteniendo su vínculo laboral con la",
-     "resumen_origen": "extractivo",
+     "resumen": "Renuncia Gerente de Operaciones y Mantenimiento a.i. de ENDE Transmisión",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Jacques Luis Muñoz Arce",
       "cargo": "Gerente de Operaciones y Mantenimiento",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -78,14 +83,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, el 1 de julio de 2026, el señor René Cesar Córdova Salinas, fue designado como Gerente de Operaciones y Mantenimiento a.i., quien tomó posesión del cargo, a partir de la mencionada fecha.",
-     "resumen_origen": "extractivo",
+     "resumen": "René Cesar Córdova Salinas asume Gerencia de Operaciones y Mantenimiento a.i. en ENDE Transmisión",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "René Cesar Córdova Salinas",
       "cargo": "Gerente de Operaciones y Mantenimiento",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -93,9 +99,10 @@
      "entidad": "IMPORT. EXPORT. LAS LOMAS LTDA.",
      "texto": "Comunica que, el 29 de junio de 2026, con la participación del 100% de los inversionistas de los Bonos vigentes en circulación, se llevaron a cabo las Asambleas Generales de Tenedores de BONOS LAS LOMAS I, conforme a lo siguiente: Emisión Hora inicio de la Asamblea BONOS LAS LOMAS I - EMISIÓN 2 10:00 BONOS LAS LOMAS I - EMISIÓN 3 10:30 BONOS LAS LOMAS I - EMISIÓN 4 11:00 Los Tenedores de Bonos de cada una de las Asambleas determinaron lo siguiente:\n1. Considerar y tomar conocimiento del Informe de la Sociedad Emisora.\n2. Considerar y tomar conocimiento del Informe del Representante Común de Tenedores de Bonos.",
      "tags": [],
-     "resumen": "Comunica que, el 29 de junio de 2026, con la participación del 100% de los inversionistas de los Bonos vigentes en circulación, se llevaron a cabo las Asambleas Generales de Tenedores de BONOS LAS",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "IMPORT. EXPORT. LAS LOMAS realiza Asambleas Generales Bonos Las Lomas I Emisiones 2, 3 y 4",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -118,9 +125,10 @@
       "junta",
       "personal"
      ],
-     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de junio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Industrias de Aceite ratifica Directorio y destina Bs 4.124.064 a Reserva Legal",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -130,9 +138,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 30 de junio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: Enviar a la Autoridad de Fiscalización y",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "KERKUS SEGUROS solicita disminución voluntaria de capital",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -142,9 +151,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de junio de 2026, realizada con el 99.03% de los accionistas, determinó lo siguiente: Aplazar el tratamiento del Orden del Día y su",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "SOBOCE aplaza Junta General Ordinaria de Accionistas para 30 de julio de 2026",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -152,9 +162,10 @@
      "entidad": "Banco de Desarrollo Productivo S.A.M.",
      "texto": "Comunica que, en mérito a lo autorizado mediante carta ASFI/DSR I/R-122487/2026, el 30 de junio de 2026, procedió con el registro contable del Incremento de Capital Pagado por Bs22.423.300,00, producto de la capitalización de utilidades de la Sociedad de la gestión 2025.",
      "tags": [],
-     "resumen": "Comunica que, en mérito a lo autorizado mediante carta ASFI/DSR I/R-122487/2026, el 30 de junio de 2026, procedió con el registro contable del Incremento de Capital Pagado por Bs22.423.300,00",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "BDP registra incremento capital pagado Bs 22.423.300,00",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -165,9 +176,10 @@
       "emision",
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 30 de junio de 2026, realizada con el 98.54% de los accionistas, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Banco Unión aprueba Bonos Banco Unión II por Bs1.020.000.000,00",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -178,9 +190,10 @@
       "junta",
       "auditoria"
      ],
-     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de junio de 2026, realizada con el 98.54% de los accionistas, determinó lo siguiente: Elegir a la firma de Auditoría externa para los",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Banco Unión elige a PwC como auditor externo 2026",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -210,9 +223,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Asamblea General Ordinaria de Socios de 30 de junio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: Aprobar la contratación de los Auditores Externos",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Aprueba GLOBAL FIC contratación de auditores BERTHINASSURANCE GROUP",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -224,14 +238,15 @@
       "junta",
       "personal"
      ],
-     "resumen": "Comunica que, en reunión de Directorio de 30 de junio de 2026, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 13 de julio de 2026 a Hrs.",
-     "resumen_origen": "extractivo",
+     "resumen": "Pro Mujer IFD convoca Asamblea Extraordinaria para autorizar emisión de Pagarés a MSC EXPANSIÓN",
+     "resumen_origen": "ia",
      "grupo": "juntas",
      "campos": {
       "tipo": "Extraordinaria",
       "fecha_junta": "13 de julio de 2026",
       "agenda": "emisión de valores"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -241,9 +256,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 01 de julio de 2026, realizada con el 60.00% de los asociados, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Fundación Pro Mujer IFD autoriza aporte Capital Ordinario ante ASFI",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -254,9 +270,10 @@
       "personal",
       "auditoria"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026 y en virtud a la designación aprobada por el Directorio, suscribió un contrato para la prestación de servicios de Auditoría Externa gestión 2026, con la empresa",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "IDEPRO IFD contrata auditoría externa 2026 con RUIZMIER PELAEZ",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -264,9 +281,10 @@
      "entidad": "FIPADE Sociedad Administradora de Fondos de Inversión S.A.",
      "texto": "Comunica que, debido al efecto de la variación en la cotización del Tipo de Cambio Oficial del dólar estadunidense, el Capital Social de la Sociedad quedó temporalmente inferior al mínimo requerido. En cumplimiento a la normativa, la Sociedad ya se encuentra gestionando las acciones necesarias para regularizar y restablecer el importe exigido dentro de los plazos establecidos.",
      "tags": [],
-     "resumen": "Comunica que, debido al efecto de la variación en la cotización del Tipo de Cambio Oficial del dólar estadunidense, el Capital Social de la Sociedad quedó temporalmente inferior al mínimo requerido.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "FIPADE Capital Social inferior al mínimo por variación TCO dólar",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -274,9 +292,10 @@
      "entidad": "MULTIFONDOS Sociedad Administradora de Fondos de Inversión S.A.",
      "texto": "Comunica que, como resultado de la variación del Tipo de Cambio Oficial, el Capital Social de la Sociedad, se redujo a un monto inferior al mínimo establecido por la normativa vigente. En este sentido, la Sociedad realizará la adecuación correspondiente dentro del plazo previsto por la normativa aplicable.",
      "tags": [],
-     "resumen": "Comunica que, como resultado de la variación del Tipo de Cambio Oficial, el Capital Social de la Sociedad, se redujo a un monto inferior al mínimo establecido por la normativa vigente.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "MULTIFONDOS reduce Capital Social por variación de TC",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -284,9 +303,10 @@
      "entidad": "Panamerican Sociedad Administradora de Fondos de Inversión S.A.",
      "texto": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente:\n1. Tomar conocimiento de la nota ASFI/DSV/R-122155/2026 de 25 de junio de 2026, respecto a remisión de resultados de la inspección especial a Panamerican Safi S.A. y plan de acción propuesto.\n2. Aprobar los temas tratados en el Comité de Gestión Integral de Riesgos.\n- Política de Gestión Integral de Riesgos.\n- Informe sobre la Sensibilidad de la Información en el Servicio en la Nube.\n- Matriz de Riesgo Contrato de Servicio GWS.\n- Procedimiento para la Gestión de Eventos de Riesgo Operativo.\n3. Aprobar los temas tratados en el Comité de Cumplimiento.\n- Informes del Funcionario Responsable\n- Modificaciones al Manual Interno UIF\n- Acta Comité de Cumplimiento\n4. Aprobar los temas tratados en el Comité de Tecnología de la Información.\n- Infraestructura del NEOFondo FIA MP\n- Plan de Contingencias Tecnológicas\n- Modificación del Reglamento del Comité Operativo de Tecnología de la Información y del Reglamento del Comité de Tecnología de la Información\n5. Aprobar los temas tratados en el Comité de Seguridad de la Información.\n- Plan de Continuidad del Negocio\n- Política de Seguridad de la Información\n- Política de Seguridad de Banca Electrónica\n- Modificación Procedimientos\n- Nuevos Procedimientos\n6. Aprobar normativa NEOFondo FIA MP.",
      "tags": [],
-     "resumen": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Panamerican SAFI aprueba políticas de riesgos, cumplimiento, tecnología y seguridad de información",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -297,9 +317,10 @@
       "junta",
       "titularizacion"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026 a Hrs.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "BDP ST celebra Asamblea General Tenedores Valores Titularización CIDRE IFD - BDP ST 061",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -310,9 +331,10 @@
       "junta",
       "titularizacion"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026 a Hrs.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "BDP ST celebra Asamblea General Tenedores Valores Titularización CIDRE IFD - BDP ST 064",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -323,9 +345,10 @@
       "junta",
       "personal"
      ],
-     "resumen": "Ha comunicado que en reunión de Directorio de 01 de julio de 2026, se determinó lo siguiente: - Aceptar la renuncia del señor José Fernando Jiménez Taquiguchi al cargo de Síndico Titular.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Renuncia José Fernando Jiménez Taquiguchi como Síndico Titular de BDP Titularización",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -336,15 +359,16 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 11 de la Emisión de Bonos PLASTIFORTE - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos",
-     "resumen_origen": "extractivo",
+     "resumen": "Paga cupón N°11 de Bonos PLASTIFORTE - Emisión 1",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "11",
       "instrumento": "Bonos PLASTIFORTE",
       "fecha_pago": "2 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -355,15 +379,16 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 6 de la Emisión de Bonos Subordinados Banco BISA II - Emisión 2 (Serie Única) dentro del Programa de",
-     "resumen_origen": "extractivo",
+     "resumen": "Paga cupón N°6 de Bonos Subordinados Banco BISA II Emisión 2",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "6",
       "instrumento": "Bonos Subordinados Banco BISA II",
       "fecha_pago": "2 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -375,9 +400,10 @@
       "junta",
       "personal"
      ],
-     "resumen": "Comunica que, mediante publicaciones en medio de prensa escrita nacional el 30 de junio de 2026, convoca a las Asambleas de Tenedores de Bonos COBEE correspondientes a la gestión 2026, bajo las",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Convoca Asambleas Tenedores Bonos COBEE V y VI Emisión 1 para 10 julio",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -397,12 +423,13 @@
      "tags": [
       "prestamo"
      ],
-     "resumen": "Comunica que, el 18 de junio de 2026, obtuvo un desembolso correspondiente a la emisión privada de Pagarés con GANASAFI S.A.",
-     "resumen_origen": "extractivo",
+     "resumen": "Ferroviaria Oriental desembolsa Bs 7,0M emisión Pagarés GANASAFI",
+     "resumen_origen": "ia",
      "grupo": "prestamos",
      "campos": {
       "monto": "Bs 7,0 M"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -413,14 +440,15 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, realizó el 1 de julio de 2026, la provisión de los fondos correspondientes a favor de BISA S.A.",
-     "resumen_origen": "extractivo",
+     "resumen": "PLASTIFORTE paga cupón N°11 de Bonos PLASTIFORTE - Emisión 1",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "11",
       "instrumento": "Bonos PLASTIFORTE",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -430,14 +458,15 @@
      "tags": [
       "uso_fondos"
      ],
-     "resumen": "Comunica que, de los recursos captados a través de la Emisión de “Pagarés Toyosa V - Emisión 5”, el 30 de junio de 2026, se utilizaron de la siguiente manera: - Capital de operaciones/Pago a",
-     "resumen_origen": "extractivo",
+     "resumen": "Toyosa S.A. utiliza Bs 3.005.000,00 de Pagarés Toyosa V en capital operaciones",
+     "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "campos": {
       "instrumento": "Pagarés Toyosa V",
       "destino": "Capital de operaciones/Pago a proveedores del exterior",
       "monto": "Bs 3,0 M"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -447,14 +476,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, el señor Ruben Carlos Paz Monasterios, Gerente Nacional de Auditoría Interna, hará uso de sus vacaciones desde el 1 al 30 de julio de 2026, reincorporándose a sus funciones el 31 de",
-     "resumen_origen": "extractivo",
+     "resumen": "Banco Fortaleza designa Héctor Mena Sarco Ger. Nal. Auditoría Interna a.i. julio 2026",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Ruben Carlos Paz Monasterios",
       "cargo": "Gerente Nacional de Auditoría Interna",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -464,14 +494,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica la designación temporal del señor Freddy Aceituno Uluchi en el cargo de Gerente Regional - Oriente a.i., a partir del 1 de julio de 2026 y será efectivo hasta el 8 de julio de 2026, periodo",
-     "resumen_origen": "extractivo",
+     "resumen": "Designan a Freddy Aceituno Uluchi como Gerente Regional Oriente a.i. de Banco Solidario",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Freddy Aceituno Uluchi",
       "cargo": "Gerente Regional - Oriente",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -482,12 +513,13 @@
       "cupon",
       "titularizacion"
      ],
-     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo Las Lomas - iBOLSA ST 003, el 30 de junio de 2026, efectuó el pago del Cupón correspondiente, comprendiendo el pago de capital e",
-     "resumen_origen": "extractivo",
+     "resumen": "iBolsa paga cupón de Titularización Las Lomas iBOLSA ST 003 a seis series",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     }
    ]
   },
@@ -503,14 +535,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, con carta recepcionada el 1 de julio de 2026, el señor Guillermo Torrez Sanjines, presentó renuncia a su cargo de Síndico, la misma será puesta en consideración en la próxima sesión de",
-     "resumen_origen": "extractivo",
+     "resumen": "Renuncia Guillermo Torrez Sanjines como Síndico de ENDE Corani",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Guillermo Torrez Sanjines",
       "cargo": "Síndico",
       "movimiento": "renuncia"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -518,9 +551,10 @@
      "entidad": "Mayoreo y Distribución S.A. (MADISA)",
      "texto": "Comunica que, el 30 de junio de 2026, la Sociedad suscribió un contrato de préstamo bajo línea de crédito del Banco Ganadero S.A. por Bs12.812.500,00, monto que fue desembolsado en la misma fecha.",
      "tags": [],
-     "resumen": "Comunica que, el 30 de junio de 2026, la Sociedad suscribió un contrato de préstamo bajo línea de crédito del Banco Ganadero S.A.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "MADISA obtiene crédito Bs 12.812.500 de Banco Ganadero",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -530,13 +564,14 @@
      "tags": [
       "prestamo"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026, el Banco Bisa S.A.",
-     "resumen_origen": "extractivo",
+     "resumen": "Banco Bisa desembolsa Bs 42.500.000 a Sociedad Agroindustrial Nutrioil S.A.",
+     "resumen_origen": "ia",
      "grupo": "prestamos",
      "campos": {
       "banco": "Banco Bisa S.A.",
       "monto": "Bs 42,5 M"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -548,8 +583,8 @@
       "personal",
       "dividendos"
      ],
-     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de junio de 2026, realizada con el 94.38% de los accionistas, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
+     "resumen": "Tigre S.A. distribuye Bs 33.647.120 en dividendos a partir sept 2026",
+     "resumen_origen": "ia",
      "grupo": "directorio",
      "campos": {
       "cambios": [
@@ -559,7 +594,8 @@
         "tipo": "ratificado"
        }
       ]
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -569,12 +605,13 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Ha comunicado que en reunión de Directorio de 01 de julio de 2026, se determinó lo siguiente: Aprobar la designación de cargos y posesión de los miembros del Directorio de la institución",
-     "resumen_origen": "extractivo",
+     "resumen": "Tigre S.A. designa nueva Junta Directiva gestión 2026 con Teruel de Presidente",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "movimiento": "designación"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -584,9 +621,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 01 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Toyosa otorga Poder Especial a Gerónimo Antonio Meleán Eterovic para proteger derechos de TMC",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -594,9 +632,10 @@
      "entidad": "Entidad de Depósito de Valores de Bolivia S.A.",
      "texto": "Comunica que, de acuerdo con la solicitud realizada por la Bolsa Boliviana de Valores S.A. (BBV) para el registro de la emisión de una nueva acción representada mediante anotación en cuenta a ser intercambiada de manera parcial paulatina por una acción física emitida previamente por la BBV, informa lo siguiente: Habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 2 de julio de 2026, procedió con el registro de la emisión de una nueva acción emitida por la BBV, en el Sistema de Registro de Anotaciones en Cuenta a cargo de la Entidad.",
      "tags": [],
-     "resumen": "Comunica que, de acuerdo con la solicitud realizada por la Bolsa Boliviana de Valores S.A.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "BBV registra nueva acción en anotación en cuenta",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -604,9 +643,10 @@
      "entidad": "Fundación Diaconía Fondo Rotativo de Inversión y Fomento - DIACONÍA FRIF - IFD",
      "texto": "Comunica que, suscribió la adenda de Contrato Préstamo de Liquidez N° 11390 el 1 de julio de 2026, entre el BDP SAM y DIACONIA FRIF IFD, ambas partes acuerdan renovar el plazo de la obligación a 86 días adicionales, a partir del 1 de julio de 2026, estableciendo una nueva fecha de pago o devolución de préstamo para el 25 de septiembre de 2026, donde el capital asciende a Bs100.000.000,00.",
      "tags": [],
-     "resumen": "Comunica que, suscribió la adenda de Contrato Préstamo de Liquidez N° 11390 el 1 de julio de 2026, entre el BDP SAM y DIACONIA FRIF IFD, ambas partes acuerdan renovar el plazo de la obligación a 86",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "DIACONÍA FRIF renueva Préstamo Liquidez N°11390 por Bs 100.0M hasta 25.09.26",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -614,9 +654,10 @@
      "entidad": "AICC SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A. (AICC SAFI S.A.)",
      "texto": "Comunica que, como resultado de la variación del Tipo de Cambio Oficial, el Capital Social de la Sociedad, se redujo a un monto inferior al mínimo establecido por la normativa vigente. En este sentido, la Sociedad realizará la adecuación correspondiente dentro del plazo previsto por la normativa vigente.",
      "tags": [],
-     "resumen": "Comunica que, como resultado de la variación del Tipo de Cambio Oficial, el Capital Social de la Sociedad, se redujo a un monto inferior al mínimo establecido por la normativa vigente.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "AICC SAFI reduce Capital Social por variación tipo cambio",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -626,9 +667,10 @@
      "tags": [
       "titularizacion"
      ],
-     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo MADEPA - iBOLSA ST 004, dando cumplimiento a lo establecido en el Contrato de Cesión, Cláusula Décima Segunda Control de Ventas y",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "iBolsa ST verifica sin discrepancia fondos MADEPA-iBOLSA ST 004 período 8",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -638,15 +680,16 @@
      "tags": [
       "cupon"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS LAS LOMAS I - EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra",
-     "resumen_origen": "extractivo",
+     "resumen": "BNB Valores paga Cupón N°11 y amortización Bonos Las Lomas I - Emisión 3",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "11",
       "instrumento": "BONOS LAS LOMAS I",
       "estado": "pagado",
       "amortiza": "sí"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -656,15 +699,16 @@
      "tags": [
       "cupon"
      ],
-     "resumen": "Comunica que, el 30 de junio de 2026, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS LAS LOMAS I - EMISIÓN 4, correspondiente a la Serie Única con Clave de Pizarra",
-     "resumen_origen": "extractivo",
+     "resumen": "BNB Valores paga Cupón Nº11 y amortización Bonos Las Lomas I Emisión 4",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "11",
       "instrumento": "BONOS LAS LOMAS I",
       "estado": "pagado",
       "amortiza": "sí"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -675,9 +719,10 @@
       "emision",
       "uso_fondos"
      ],
-     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos por Bs2.505.931,78 para compra de mercadería como capital de operaciones.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Farmacia Chávez utiliza Bs 2.505.931,78 en mercadería Bonos II",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -688,15 +733,16 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, el 2 de julio de 2026, realizó la provisión de los fondos respectivos a BISA S.A.",
-     "resumen_origen": "extractivo",
+     "resumen": "Gas y Electricidad S.A. provisiona fondos para pago cupón N°38 Bonos Serie B",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "38",
       "instrumento": "Bonos GAS & ELECTRICIDAD SOCIEDAD ANÓNIMA",
       "fecha_pago": "6 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -706,13 +752,14 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, procedió a la suscripción del Testimonio N° 653/2026 de 1 de julio de 2026, mediante el cual, otorga Poder General de Administración, Amplio y Suficiente al señor Freddy Aceituno Uluchi",
-     "resumen_origen": "extractivo",
+     "resumen": "Banco Solidario otorga Poder General a Freddy Aceituno Uluchi",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Freddy Aceituno Uluchi",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -722,15 +769,16 @@
      "tags": [
       "cupon"
      ],
-     "resumen": "Comunica que, el 2 de julio de 2026, realizó la provisión de fondos para el pago del Cupón N° 2 de la Serie Única de los “BONOS SOCIALES AVANZA MUJER BANCOSOL 2\", que se cancelará, a partir del 3 de",
-     "resumen_origen": "extractivo",
+     "resumen": "Bancosol paga cupón N°2 de Bonos Sociales Avanza Mujer Bancosol 2",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "2",
       "instrumento": "BONOS SOCIALES AVANZA MUJER BANCOSOL 2\"",
       "fecha_pago": "3 de julio",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -740,9 +788,10 @@
      "tags": [
       "emision"
      ],
-     "resumen": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 1 de julio de 2026, procedió con el registro",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "Registra Pagarés Bursátiles FARMACIA CHAVEZ I - Emisión 3",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -752,9 +801,10 @@
      "tags": [
       "resolucion"
      ],
-     "resumen": "RESUELVE: PRIMERO.- Sancionar a VALORES UNIÓN S.A.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "ASFI sanciona a Valores Unión S.A. Agencia de Bolsa con amonestación y multa",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Cartas Circulares",
@@ -794,13 +844,14 @@
      "tags": [
       "auditoria"
      ],
-     "resumen": "Ha comunicado que en reunión de Directorio de 30 de junio de 2026, se determinó lo siguiente: Aprobar la contratación de la firma BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
-     "resumen_origen": "extractivo",
+     "resumen": "Fortaleza Leasing aprueba auditoría externa con BERTHINASSURANCE para gestión 2026",
+     "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
       "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
       "gestion": "2026"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -810,12 +861,13 @@
      "tags": [
       "dividendos"
      ],
-     "resumen": "Comunica que, a partir del 3 de julio de 2026, realizará el pago de dividendos a los Accionistas de la Sociedad, mismos que corresponden a la gestión concluida al 31 de marzo de 2026.",
-     "resumen_origen": "extractivo",
+     "resumen": "Droguería INTI paga dividendos gestión 31 marzo 2026",
+     "resumen_origen": "ia",
      "grupo": "dividendos",
      "campos": {
       "fecha_pago": "3 de julio de 2026"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -825,14 +877,15 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Comunica que, en reunión de Directorio de 2 de julio de 2026, se aprobó por unanimidad, la convocatoria a Junta General Ordinaria de Accionistas, a realizarse el 14 de julio de 2026 a Hrs.",
-     "resumen_origen": "extractivo",
+     "resumen": "MADISA convoca Junta Ordinaria de Accionistas para 14 julio 2026",
+     "resumen_origen": "ia",
      "grupo": "juntas",
      "campos": {
       "tipo": "Ordinaria",
       "fecha_junta": "14 de julio de 2026",
       "agenda": "distribución de resultados · directorio"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -842,9 +895,10 @@
      "tags": [
       "junta"
      ],
-     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 01 de julio de 2026, realizada con el 99.32% de los accionistas, determinó lo siguiente: 1.",
-     "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "resumen": "YPFB Chaco aprueba estados financieros gestión 31.03.2026",
+     "resumen_origen": "ia",
+     "grupo": "otros",
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -855,8 +909,8 @@
       "junta",
       "personal"
      ],
-     "resumen": "Ha comunicado que el 01 de julio de 2026, con la participación del 99.32% de los accionistas, se reanudó después de un cuarto intermedio la Junta General Ordinaria de Accionistas de 15 de junio de",
-     "resumen_origen": "extractivo",
+     "resumen": "YPFB Chaco renueva Directorio con cinco titulares y nombra nuevo Síndico",
+     "resumen_origen": "ia",
      "grupo": "directorio",
      "campos": {
       "cambios": [
@@ -916,7 +970,8 @@
         "tipo": "ratificado"
        }
       ]
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Hechos Relevantes",
@@ -926,14 +981,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, la señora Dennise Karina Nistahuz Ibañez, presentó renuncia el 2 de julio de 2026, a los cargos: Responsable de Gestión de Riesgos, Funcionario Responsable UIF y Responsable de",
-     "resumen_origen": "extractivo",
+     "resumen": "Renuncia Dennise Karina Nistahuz Ibañez de AICC SAFI, Resp. Gestión Riesgos",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Dennise Karina Nistahuz Ibañez",
       "cargo": "Responsable de Gestión de Riesgos, Funcionario Responsable UIF y Responsable de Segurid…",
       "movimiento": "renuncia"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -944,15 +1000,16 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 2 de la Emisión de BONOS SOCIALES AVANZA MUJER BANCOSOL 2 (Serie Única), se realizará a partir del 3 de julio",
-     "resumen_origen": "extractivo",
+     "resumen": "Paga cupón N°2 de Bonos Sociales Avanza Mujer Bancosol 2",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "2",
       "instrumento": "BONOS SOCIALES AVANZA MUJER BANCOSOL 2",
       "fecha_pago": "3 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -963,15 +1020,16 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 38 de la Emisión de Bonos GAS & ELECTRICIDAD S.A.",
-     "resumen_origen": "extractivo",
+     "resumen": "Paga cupón N°38 de Bonos GAS & ELECTRICIDAD S.A. Serie B",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "38",
       "instrumento": "Bonos GAS & ELECTRICIDAD S.A.",
       "fecha_pago": "6 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -982,14 +1040,15 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, el 2 de julio de 2026, concluyó con el pago del Cupón N° 11 de la Emisión de Bonos PLASTIFORTE - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos PLASTIFORTE.",
-     "resumen_origen": "extractivo",
+     "resumen": "Paga cupón N°11 de Bonos PLASTIFORTE Emisión 1",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "11",
       "instrumento": "Bonos PLASTIFORTE",
       "estado": "pagado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1000,14 +1059,15 @@
       "emision",
       "cupon"
      ],
-     "resumen": "Comunica que, el 2 de julio de 2026, concluyó con el pago del Cupón N° 6 de la Emisión de Bonos Subordinados Banco BISA II - Emisión 2 (Serie Única) dentro del Programa de Emisiones de Bonos",
-     "resumen_origen": "extractivo",
+     "resumen": "BISA paga cupón N°6 de Bonos Subordinados Banco BISA II",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "6",
       "instrumento": "Bonos Subordinados Banco BISA II",
       "estado": "pagado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1017,8 +1077,8 @@
      "tags": [
       "cupon"
      ],
-     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón Nº 71 y amortización de capital de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Serie B, con Clave de",
-     "resumen_origen": "extractivo",
+     "resumen": "BNB Valores paga Cupón Nº71 y amortización Valores Titularización Nuevatel BDP ST 049",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "71",
@@ -1026,7 +1086,8 @@
       "fecha_pago": "6 de julio de 2026",
       "estado": "programado",
       "amortiza": "sí"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1037,14 +1098,15 @@
       "emision",
       "uso_fondos"
      ],
-     "resumen": "Comunica que, el 2 de julio de 2026, se utilizaron los recursos captados a través de la Emisión de Pagarés Toyosa V - Emisión 5, de la siguiente manera: - Capital de operaciones/Pago a proveedores",
-     "resumen_origen": "extractivo",
+     "resumen": "Toyosa utiliza Bs 2.314.000 de Pagarés Toyosa V - Emisión 5",
+     "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "campos": {
       "instrumento": "Pagarés Toyosa V",
       "destino": "Capital de operaciones/Pago a proveedores del exterior",
       "monto": "Bs 2,3 M"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1054,15 +1116,16 @@
      "tags": [
       "cupon"
      ],
-     "resumen": "Comunica que, el 3 de julio de 2026, procedió con la provisión de los fondos necesarios para el pago del Cupón N° 9 de la Serie Única de la Emisión denominada Bonos Subordinados Banco Fortaleza 2021",
-     "resumen_origen": "extractivo",
+     "resumen": "Banco Fortaleza paga Cupón N°9 Bonos Subordinados 2021",
+     "resumen_origen": "ia",
      "grupo": "cupones",
      "campos": {
       "cupon_n": "9",
       "instrumento": "Bonos Subordinados Banco Fortaleza 2021",
       "fecha_pago": "6 de julio de 2026",
       "estado": "programado"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1073,8 +1136,8 @@
       "emision",
       "compromisos"
      ],
-     "resumen": "Comunica que, al 30 de junio de 2026, los Compromisos Financieros asumidos en la Emisión de Bonos denominados Bonos Subordinados Banco Ganadero V, Bonos Subordinados Banco Ganadero VI, Bonos",
-     "resumen_origen": "extractivo",
+     "resumen": "Banco Ganadero cumple compromisos financieros Bonos Subordinados y Bonos al 30.06.2026",
+     "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
       "indicadores": [
@@ -1100,7 +1163,8 @@
         "ok": true
        }
       ]
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1110,14 +1174,15 @@
      "tags": [
       "personal"
      ],
-     "resumen": "Comunica que, el señor Alberto Suxo Soza, quien desempeña el cargo de Jefe de Sucursal, fue designado temporalmente el 3 de julio de 2026, como Gerente Nacional de Créditos a.i.",
-     "resumen_origen": "extractivo",
+     "resumen": "Alberto Suxo Soza designado Gerente Nac. de Créditos a.i. en DIACONÍA FRIF",
+     "resumen_origen": "ia",
      "grupo": "personal",
      "campos": {
       "persona": "Alberto Suxo Soza",
       "cargo": "Jefe de Sucursal",
       "movimiento": "designación a.i."
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1129,9 +1194,10 @@
       "uso_fondos",
       "titularizacion"
      ],
-     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo LAS LOMAS - iBOLSA ST 003, el 2 de julio de 2026, dando cumplimiento como parte del destino de los recursos obtenidos mediante la",
-     "resumen_origen": "extractivo",
-     "grupo": "uso_fondos"
+     "resumen": "iBolsa desembolsa capital de operaciones a Import. Export. LAS LOMAS Ltda.",
+     "resumen_origen": "ia",
+     "grupo": "uso_fondos",
+     "resumen_v": 2
     },
     {
      "seccion": "Noticias",
@@ -1142,8 +1208,8 @@
       "compromisos",
       "titularizacion"
      ],
-     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo MADEPA - iBOLSA ST 004, dando cumplimiento a lo establecido en la Cláusula Décima Segunda, Vigésima Séptima y Trigésima Tercera del",
-     "resumen_origen": "extractivo",
+     "resumen": "iBolsa comunica coeficientes MADEPA-iBOLSA ST 004 período mayo-junio 2026",
+     "resumen_origen": "ia",
      "grupo": "compromisos",
      "campos": {
       "indicadores": [
@@ -1176,7 +1242,8 @@
         "ok": true
        }
       ]
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1187,15 +1254,16 @@
       "emision",
       "resolucion"
      ],
-     "resumen": "RESUELVE: PRIMERO.- Autorizar la Oferta Pública e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión de Bonos denominada “BONOS INCOTEC",
-     "resumen_origen": "extractivo",
+     "resumen": "Autorizan Bonos INCOTEC II de INCOTEC S.A.",
+     "resumen_origen": "ia",
      "grupo": "emisiones",
      "campos": {
       "instrumento": "BONOS INCOTEC II",
       "emisor": "INGENIERÍA Y CONSTRUCCIONES TÉCNICAS – INCOTEC S.A.",
       "registro": "ASFI/DSV-ED-ICT-029/2026",
       "pizarra": "ICT-N1U-26"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1206,15 +1274,16 @@
       "emision",
       "resolucion"
      ],
-     "resumen": "RESUELVE: PRIMERO. - Autorizar la Oferta Pública e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión de Bonos denominada “BONOS TIENDA",
-     "resumen_origen": "extractivo",
+     "resumen": "Autorizan Bonos TIENDA AMIGA II de TIENDA AMIGA ER S.A.",
+     "resumen_origen": "ia",
      "grupo": "emisiones",
      "campos": {
       "instrumento": "BONOS TIENDA AMIGA II",
       "emisor": "TIENDA AMIGA ER S.A.",
       "registro": "ASFI/DSV-ED-TAE-030/2026",
       "pizarra": "TAE-N1U-26"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1225,14 +1294,15 @@
       "emision",
       "resolucion"
      ],
-     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS TIENDA AMIGA",
-     "resumen_origen": "extractivo",
+     "resumen": "Autorizan Programa Bonos TIENDA AMIGA II de TIENDA AMIGA ER S.A.",
+     "resumen_origen": "ia",
      "grupo": "emisiones",
      "campos": {
       "instrumento": "BONOS TIENDA AMIGA II",
       "emisor": "TIENDA AMIGA ER S.A.",
       "registro": "ASFI/DSV-PEB-TAE-007/2026"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1243,14 +1313,15 @@
       "emision",
       "resolucion"
      ],
-     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS BISA LEASING",
-     "resumen_origen": "extractivo",
+     "resumen": "Autorizan Programa Bonos BISA LEASING VIII",
+     "resumen_origen": "ia",
      "grupo": "emisiones",
      "campos": {
       "instrumento": "BONOS BISA LEASING VIII",
       "emisor": "BISA LEASING S.A.",
       "registro": "ASFI/DSV-PEB-BIL-012/2026"
-     }
+     },
+     "resumen_v": 2
     },
     {
      "seccion": "Cartas Circulares",
