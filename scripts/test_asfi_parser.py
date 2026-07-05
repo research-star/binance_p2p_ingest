@@ -9,6 +9,8 @@ Sub-tests:
   tags           — clasificador de keywords: casos positivos + el falso
                    positivo "cuenta designada" ≠ personal (regresión).
   extracto       — fallback extractivo: primera oración, cap 200, corte limpio.
+  extract        — grupo + campos estructurados (préstamo/cupón/emisión/personal
+                   + regresión: desembolso de patrimonio autónomo ≠ préstamo).
   candado        — resumen.resumir_item SIN autorizado=True lanza RuntimeError
                    (con key presente); sin key devuelve None sin llamar red.
   cap            — con cap agotado no hay POST (fail-closed devuelve None).
@@ -24,7 +26,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from asfi_ingest import parser, resumen  # noqa: E402
+from asfi_ingest import extract, parser, resumen  # noqa: E402
 
 FIXTURE = ROOT / "scripts" / "fixtures" / "asfi_reporte_2026-07-03.pdf"
 
@@ -88,6 +90,60 @@ def t_extracto(errores: list):
         errores.append(f"extracto cap/corte: len={len(largo)}")
 
 
+def t_extract(errores: list):
+    """Clasificación de grupo + extracción de campos (casos reales de calibración)."""
+    def item(seccion, texto, entidad="X S.A."):
+        it = {"seccion": seccion, "categoria": "", "entidad": entidad,
+              "texto": texto, "tags": parser.clasificar_tags(texto, seccion)}
+        return extract.enriquecer(it)
+
+    it = item("Hechos Relevantes",
+              "Ha comunicado que, el 31 de diciembre de 2025, el Banco BISA S.A., "
+              "procedió al desembolso por un monto de Bs25.000.000,00 en calidad de "
+              "préstamo de dinero.")
+    if it["grupo"] != "prestamos":
+        errores.append(f"extract: préstamo → grupo {it['grupo']}")
+    c = it.get("campos", {})
+    if c.get("banco") != "Banco BISA S.A." or c.get("monto") != "Bs 25,0 M":
+        errores.append(f"extract: campos préstamo {c}")
+
+    it = item("Noticias",
+              "Comunica que, el pago del Cupón N° 38 de la Emisión de Bonos GAS & "
+              "ELECTRICIDAD S.A. (Serie B), se realizará a partir del 6 de julio de 2026.")
+    c = it.get("campos", {})
+    if it["grupo"] != "cupones" or c.get("cupon_n") != "38" \
+            or c.get("instrumento") != "Bonos GAS & ELECTRICIDAD S.A." \
+            or c.get("estado") != "programado":
+        errores.append(f"extract: cupón {it['grupo']} {c}")
+
+    it = item("Resoluciones Administrativas",
+              "RESUELVE: PRIMERO.- Autorizar la Oferta Pública e inscribir la Emisión "
+              "de Bonos denominada \u201cBONOS TIENDA AMIGA II\u201d de TIENDA AMIGA ER S.A., "
+              "bajo el Número de Registro ASFI/DSV-ED-TAE-030/2026 y Clave de Pizarra "
+              "TAE-N1U-26.")
+    c = it.get("campos", {})
+    if it["grupo"] != "emisiones" or c.get("emisor") != "TIENDA AMIGA ER S.A." \
+            or c.get("instrumento") != "BONOS TIENDA AMIGA II" \
+            or c.get("registro") != "ASFI/DSV-ED-TAE-030/2026":
+        errores.append(f"extract: emisión {it['grupo']} {c}")
+
+    # Desembolso de patrimonio autónomo NO es préstamo bancario (regresión iBolsa)
+    it = item("Noticias",
+              "Comunica que, en calidad de Administrador del Patrimonio Autónomo LAS "
+              "LOMAS, se efectuó el desembolso correspondiente al capital de operaciones "
+              "del Originador.")
+    if it["grupo"] == "prestamos":
+        errores.append("extract: desembolso de patrimonio autónomo cayó en préstamos")
+
+    it = item("Noticias",
+              "Comunica que, la señora Dennise Karina Nistahuz Ibañez, presentó renuncia "
+              "el 2 de julio de 2026, a los cargos: Responsable de Gestión de Riesgos.")
+    c = it.get("campos", {})
+    if it["grupo"] != "personal" or c.get("persona") != "Dennise Karina Nistahuz Ibañez" \
+            or c.get("movimiento") != "renuncia":
+        errores.append(f"extract: personal {it['grupo']} {c}")
+
+
 def t_candado(errores: list):
     prev = os.environ.pop("ANTHROPIC_API_KEY", None)
     try:
@@ -138,7 +194,7 @@ def t_cap(errores: list):
 
 def run() -> int:
     errores: list = []
-    for t in (t_parser_fixture, t_tags, t_extracto, t_candado, t_cap):
+    for t in (t_parser_fixture, t_tags, t_extracto, t_extract, t_candado, t_cap):
         t(errores)
     if errores:
         print("FAIL test_asfi_parser:")
@@ -147,7 +203,9 @@ def run() -> int:
         return 1
     print("OK test_asfi_parser: fixture real 03-jul parsea fecha/secciones/entidades/"
           "tags (incl. tabla compromisos Banco Ganadero); clasificador sin falso "
-          "positivo 'designada'; extracto con cap 200; candado lanza sin autorizado; "
+          "positivo 'designada'; extracto con cap 200; extract clasifica grupo y "
+          "campos (préstamo/cupón/emisión/personal, patrimonio autónomo ≠ préstamo); "
+          "candado lanza sin autorizado; "
           "cap agotado y conn=None fail-closean sin POST.")
     return 0
 

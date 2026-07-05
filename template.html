@@ -809,9 +809,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab active" data-tab="noticias">Inicio</button>
     <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
     <button class="fb-tab" data-tab="macro">Macro</button>
-    <!-- ASFI es página aparte (asfi.html, estática en gh-pages), NO tab del SPA:
-         sin data-tab el wiring de activateTab la ignora y el <a> navega normal. -->
-    <a class="fb-tab" href="asfi.html" style="text-decoration:none;display:inline-block">ASFI</a>
+    <button class="fb-tab" data-tab="asfi">ASFI</button>
     <button class="fb-tab" data-tab="dpf" hidden>Rendimientos DPF</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
     <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>
@@ -921,6 +919,64 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     </div>
   </div>
 </div><!-- /tab-dpf -->
+
+
+<!-- ═══ ASFI TAB (hechos relevantes RMV; data client-side de asfi_*.json) ═══ -->
+<style>
+/* Tab ASFI — reusa tokens y .fb-data-table; solo lo propio lleva prefijo asfi- */
+.asfi-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.asfi-nav button{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-mono);font-size:12px;padding:6px 11px;cursor:pointer;border-radius:2px}
+.asfi-nav button:hover:not(:disabled){background:var(--bg-tertiary)}
+.asfi-nav button:disabled{opacity:.35;cursor:default}
+.asfi-nav input[type=date]{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font-mono);font-size:12px;padding:5px 8px;border-radius:2px}
+.asfi-filtros{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 4px}
+.asfi-filtros input[type=search]{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);font-size:12px;padding:6px 10px;border-radius:2px;min-width:190px}
+.asfi-filtros select{border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);font-size:12px;padding:6px 8px;border-radius:2px}
+.asfi-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:2px;margin-top:14px;overflow:hidden}
+.asfi-card>h3{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text-primary);padding:10px 14px;border-bottom:1px solid var(--border-color);background:var(--bg-tertiary)}
+.asfi-card>h3 .n{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;font-weight:400;color:var(--text-muted)}
+.asfi-card .fb-data-table{font-size:12px}
+.asfi-card .fb-data-table td{padding:7px 12px;vertical-align:top}
+.asfi-card tr[data-exp]{cursor:pointer}
+.asfi-ico{width:15px;height:15px;flex-shrink:0;color:var(--blue-accent)}
+.asfi-ico-td{width:26px;padding-right:0!important;color:var(--text-soft)}
+.asfi-ico-td svg{width:14px;height:14px;vertical-align:-2px}
+.asfi-ent{font-weight:600;color:var(--text-primary)}
+.asfi-badge{display:inline-block;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:9999px;background:var(--bg-tertiary);color:var(--text-secondary);white-space:nowrap}
+.asfi-badge.neg{background:rgba(181,80,63,.12);color:var(--np-accent)}
+.asfi-badge.pos{background:rgba(30,77,122,.10);color:var(--blue-accent)}
+.asfi-det td{background:var(--bg-tertiary);font-size:11.5px;line-height:1.6;color:var(--text-secondary);white-space:pre-wrap;padding:10px 14px 12px}
+.asfi-res{color:var(--text-secondary)}
+.asfi-ast{color:var(--np-accent);cursor:help}
+.asfi-otros-row td{font-size:12px}
+.asfi-sec-chip{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-soft);white-space:nowrap}
+.asfi-vacio{margin:44px auto;text-align:center;color:var(--text-muted);font-size:13px}
+.asfi-fuente{margin-top:18px;font-size:10.5px;color:var(--text-muted);line-height:1.6}
+@media(max-width:640px){.asfi-card .fb-data-table{display:block;overflow-x:auto}}
+</style>
+<div id="tab-asfi" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>ASFI &mdash; Mercado de Valores</h1>
+      <div class="fb-subtitle">Reporte Informativo diario del Registro del Mercado de Valores &middot; <span id="asfiFechaLabel">&mdash;</span> &middot; <span id="asfiMetaN">&mdash;</span></div>
+    </div>
+    <div class="asfi-nav">
+      <button id="asfiPrev" title="D&iacute;a anterior">&larr;</button>
+      <input type="date" id="asfiFecha">
+      <button id="asfiNext" title="D&iacute;a siguiente">&rarr;</button>
+      <button id="asfiUltimo" title="&Uacute;ltimo reporte">&Uacute;ltimo</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="asfi-filtros">
+      <input type="search" id="asfiBuscar" placeholder="Filtrar por entidad, persona o texto&hellip;">
+      <select id="asfiTema"><option value="">Todos los temas</option></select>
+      <span class="asfi-sec-chip" id="asfiPdfSlot"></span>
+    </div>
+    <div id="asfiCuerpo"><div class="asfi-vacio">Cargando&hellip;</div></div>
+    <div class="asfi-fuente">Fuente: ASFI &mdash; Direcci&oacute;n de Supervisi&oacute;n de Valores, Reporte Informativo del RMV. Los titulares se generan autom&aacute;ticamente; los marcados con <span style="color:var(--np-accent)">*</span> son extractos del texto original. El contenido de los comunicados es de exclusiva responsabilidad de quien los presenta e inscribe en el RMV.</div>
+  </div>
+</div><!-- /tab-asfi -->
 
 <div id="tab-bbv" style="display:none;">
   <div class="fb-subheader">
@@ -2968,6 +3024,7 @@ var ROUTE_MAP = {
   '/bbv':       {tab:'bbv'},
   '/guia':      {tab:'guide'},
   '/dolar':     {tab:'dollar'},
+  '/asfi':      {tab:'asfi'},
   '/noticias':  {tab:'noticias', alias:true}
 };
 // Registro tabId → id del contenedor DOM. Resuelve el mismatch dollar↔tab-dolar
@@ -2978,7 +3035,8 @@ var TAB_PANELS = {
   dpf:      'tab-dpf',
   bbv:      'tab-bbv',
   guide:    'tab-guide',
-  noticias: 'tab-noticias'
+  noticias: 'tab-noticias',
+  asfi:     'tab-asfi'
 };
 // Lista GENÉRICA de subtabs de Macro. Reactivar un subtab pausado (ej. PIB) =
 // agregar un entry acá + su <div id="subtab-ID"> + su chip; cero refactor.
@@ -3321,7 +3379,8 @@ var TAB_TITLES = {
   'dpf':      'FinanzasBo — Rendimientos DPF',
   'bbv':      'FinanzasBo — Bolsa Boliviana de Valores',
   'guide':    'FinanzasBo — Guía del dashboard',
-  'noticias': 'FinanzasBo — Inicio'
+  'noticias': 'FinanzasBo — Inicio',
+  'asfi':     'FinanzasBo — ASFI · Mercado de Valores'
 };
 // Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
 // slug del subtab activo, no un slug de tab.
@@ -3376,6 +3435,7 @@ function activateTab(target, subtab){
   if(target==='bbv' && typeof window.renderBbv==='function'){window.renderBbv();}
   if(target==='guide' && typeof window.renderGuide==='function'){window.renderGuide();}
   if(target==='noticias' && typeof window.renderNoticias==='function'){window.renderNoticias();}
+  if(target==='asfi' && typeof window.renderAsfi==='function'){window.renderAsfi();}
   // Dólar es lazy como el resto: render idempotente en el primer activate, con
   // #tab-dolar ya visible (loop de arriba) → Plotly dimensiona bien sin resize manual.
   if(target==='dollar' && typeof window.renderDollar==='function'){window.renderDollar();}
@@ -5610,4 +5670,195 @@ window.addEventListener('popstate', function(){
   window.addEventListener('resize',measure);
 })();
 </script>
+
+<script>
+/* ═══ ASFI TAB LOGIC ═══
+   Lazy: activateTab llama window.renderAsfi() en cada activate; el primer
+   call inicializa (fetch de asfi_index.json + wiring), los siguientes son
+   no-op salvo re-render. Data: asfi_index.json + asfi_YYYY-MM.json en la
+   raíz de gh-pages (mismo origen; generados por ingest_asfi.py en el VPS). */
+(function(){
+'use strict';
+var st = {init:false, indice:null, fechas:[], cacheMes:{}, fecha:null, tema:'', txt:''};
+var MESES_ES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+var DIAS_ES=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+var VISOR='https://appweb2.asfi.gob.bo/PaginasPublicas2/VistaHechosRelevantes/VisorDocumentos.aspx?variable1=';
+
+/* Íconos por rubro (stroke 1.5, 24-box). Keyed por substring de la categoría. */
+var ICONS=[
+ ['Agencias de Bolsa','M3 17l5-5 4 3 6-8M14 7h4v4'],
+ ['Bolsas de Valores','M4 21h16M5 21V9m4 12V9m6 12V9m4 12V9M3 9l9-5 9 5'],
+ ['Calificadoras','M12 3a9 9 0 019 9h-4a5 5 0 00-5-5V3zM12 12l-4 4'],
+ ['Fondos de Inversi','M12 3v9h9a9 9 0 11-9-9zM15 3.5A9 9 0 0120.5 9H15V3.5z'],
+ ['Administradoras de Fondos','M12 3v9h9a9 9 0 11-9-9zM15 3.5A9 9 0 0120.5 9H15V3.5z'],
+ ['Titularizaci','M12 3l9 4.5-9 4.5-9-4.5L12 3zM3 12l9 4.5 9-4.5M3 16.5L12 21l9-4.5'],
+ ['Seguros','M12 3l8 3v6c0 4.5-3.5 8-8 9-4.5-1-8-4.5-8-9V6l8-3z'],
+ ['Depósito de Valores','M5 8h14v12H5zM8 8V5a4 4 0 018 0v3M12 13v3'],
+ ['Arrendamiento','M14 3l7 7-2 2-1-1-2 2 1 1-2 2-1-1-2 2v3H3v-9l11-8zM7 17a1 1 0 100 2 1 1 0 000-2z'],
+ ['Financieras de Desarrollo','M12 21V9m0 12c0-4-3-6-7-6 0-4 3-6 7-6s7 2 7 6c-4 0-7 2-7 6z'],
+ ['AUTORIDAD','M3 9l9-6 9 6M5 9v9m4-9v9m6-9v9m4-9v9M3 21h18'],
+ ['CONTROLADORAS','M12 3v5m0 0L6 12m6-4l6 4M4 14h4v4H4zm12 0h4v4h-4zm-6 2h4v4h-4z'],
+ ['Auditor','M9 3h6v3H9zM6 5H4v16h16V5h-2M8 12l2.5 2.5L16 9']
+];
+function icono(cat){
+  for(var i=0;i<ICONS.length;i++){ if(cat && cat.indexOf(ICONS[i][0])!==-1)
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="'+ICONS[i][1]+'"/></svg>'; }
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/></svg>';
+}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtFecha(iso){var pt=iso.split('-'),d=new Date(Date.UTC(+pt[0],+pt[1]-1,+pt[2]));
+  return DIAS_ES[d.getUTCDay()]+' '+(+pt[2])+' de '+MESES_ES[+pt[1]-1]+' de '+pt[0];}
+function campo(it,k){return (it.campos&&it.campos[k])||'';}
+function celda(v){return v?esc(v):'<span style="color:var(--text-soft)">—</span>';}
+function resHtml(it){
+  var ast = it.resumen_origen==='ia' ? '' : ' <span class="asfi-ast" title="Extracto automático del texto original">*</span>';
+  return '<span class="asfi-res">'+esc(it.resumen||'')+ast+'</span>';
+}
+function badgeMov(m){
+  if(!m) return celda('');
+  var neg=/renuncia|desvincul|remoci/.test(m);
+  return '<span class="asfi-badge '+(neg?'neg':'pos')+'">'+esc(m)+'</span>';
+}
+
+/* Config de tablitas: columnas + extractor de celdas por item. */
+var TEMAS_LABEL={emisiones:'Emisiones',cupones:'Cupones y pagos',prestamos:'Préstamos',
+  personal:'Personal',dividendos:'Dividendos',compromisos:'Compromisos financieros',
+  calificaciones:'Calificaciones',otros:'Otros comunicados'};
+var GRUPOS=[
+ {id:'emisiones',titulo:'Emisiones y programas autorizados',cols:['','Emisor','Instrumento','Registro'],
+  fila:function(it){return [celda(campo(it,'emisor')||it.entidad),celda(campo(it,'instrumento')),
+    celda(campo(it,'registro')+(campo(it,'pizarra')?' · '+campo(it,'pizarra'):''))];}},
+ {id:'cupones',titulo:'Cupones y pagos de valores',cols:['','Pagador','Instrumento','Cupón','Fecha','Estado'],
+  fila:function(it){var e=campo(it,'estado');
+    return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',celda(campo(it,'instrumento')),
+      celda(campo(it,'cupon_n')&&('N° '+campo(it,'cupon_n')+(campo(it,'amortiza')?' + capital':''))),
+      celda(campo(it,'fecha_pago')),
+      '<span class="asfi-badge '+(e==='pagado'?'pos':'')+'">'+esc(e||'—')+'</span>'];}},
+ {id:'prestamos',titulo:'Préstamos y desembolsos recibidos',cols:['','Empresa','Banco','Monto'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
+    celda(campo(it,'banco')),celda(campo(it,'monto'))];}},
+ {id:'dividendos',titulo:'Pagos de dividendos',cols:['','Empresa','Pago desde'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',celda(campo(it,'fecha_pago'))];}},
+ {id:'personal',titulo:'Movimientos de personal',cols:['','Entidad','Persona','Cargo','Movimiento'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
+    celda(campo(it,'persona')),celda(campo(it,'cargo')),badgeMov(campo(it,'movimiento'))];}},
+ {id:'compromisos',titulo:'Compromisos financieros reportados',cols:['','Entidad','CAP','Liquidez','Cobertura'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
+    celda(campo(it,'cap')),celda(campo(it,'liquidez')),celda(campo(it,'cobertura'))];}},
+ {id:'calificaciones',titulo:'Calificaciones de riesgo',cols:['','Calificadora','Detalle'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',resHtml(it)];}}
+];
+
+function cargarIndice(cb){
+  fetch('asfi_index.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(idx){
+    st.indice=idx; st.fechas=Object.keys(idx.dias||{}).sort();
+    var inp=document.getElementById('asfiFecha');
+    if(st.fechas.length){inp.min=st.fechas[0];inp.max=st.fechas[st.fechas.length-1];}
+    cb(null);
+  }).catch(function(e){cb(e);});
+}
+function cargarDia(fecha,cb){
+  var mes=fecha.slice(0,7);
+  if(st.cacheMes[mes]){cb(null,(st.cacheMes[mes].dias||{})[fecha]||null);return;}
+  fetch('asfi_'+mes+'.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(d){
+    st.cacheMes[mes]=d; cb(null,(d.dias||{})[fecha]||null);
+  }).catch(function(e){cb(e,null);});
+}
+function irA(fecha){
+  if(!st.fechas.length) return;
+  if(!st.indice.dias[fecha]){
+    var antes=st.fechas.filter(function(f){return f<=fecha;});
+    fecha=antes.length?antes[antes.length-1]:st.fechas[0];
+  }
+  st.fecha=fecha;
+  document.getElementById('asfiFecha').value=fecha;
+  var i=st.fechas.indexOf(fecha);
+  document.getElementById('asfiPrev').disabled=(i<=0);
+  document.getElementById('asfiNext').disabled=(i>=st.fechas.length-1);
+  if(window.location.pathname==='/asfi'){history.replaceState(null,'','/asfi#'+fecha);}
+  pintar();
+}
+function pintar(){
+  var cuerpo=document.getElementById('asfiCuerpo');
+  cuerpo.innerHTML='<div class="asfi-vacio">Cargando…</div>';
+  cargarDia(st.fecha,function(err,dia){
+    document.getElementById('asfiFechaLabel').textContent=fmtFecha(st.fecha);
+    if(err||!dia){cuerpo.innerHTML='<div class="asfi-vacio">Sin reporte para este día.</div>';
+      document.getElementById('asfiMetaN').textContent='—';return;}
+    document.getElementById('asfiMetaN').textContent=dia.items.length+' comunicados';
+    var pdf=document.getElementById('asfiPdfSlot');
+    pdf.innerHTML=dia.guid?'<a href="'+VISOR+esc(dia.guid)+'" target="_blank" rel="noopener" style="color:var(--text-muted)">PDF original ↗</a>':'';
+    var q=st.txt.toLowerCase();
+    var items=dia.items.filter(function(it){
+      if(st.tema && (it.grupo||'otros')!==st.tema) return false;
+      if(!q) return true;
+      var blob=(it.entidad+' '+it.texto+' '+it.categoria+' '+JSON.stringify(it.campos||{})).toLowerCase();
+      return blob.indexOf(q)!==-1;
+    });
+    if(!items.length){cuerpo.innerHTML='<div class="asfi-vacio">Ningún comunicado matchea el filtro.</div>';return;}
+    var html=[]; var usados={};
+    GRUPOS.forEach(function(g){
+      var arr=items.filter(function(it){return (it.grupo||'otros')===g.id;});
+      if(!arr.length) return;
+      arr.forEach(function(it){usados[dia.items.indexOf(it)]=1;});
+      html.push('<div class="asfi-card"><h3>'+g.titulo+'<span class="n">'+arr.length+'</span></h3>');
+      html.push('<table class="fb-data-table"><thead><tr>');
+      g.cols.forEach(function(c,ci){html.push('<th'+(ci===0?' class="asfi-ico-td"':'')+'>'+c+'</th>');});
+      html.push('</tr></thead><tbody>');
+      arr.forEach(function(it){
+        var idx=dia.items.indexOf(it);
+        html.push('<tr data-exp="'+idx+'" title="Click: texto completo"><td class="asfi-ico-td">'+icono(it.categoria)+'</td>');
+        g.fila(it).forEach(function(c){html.push('<td>'+c+'</td>');});
+        html.push('</tr>');
+        html.push('<tr class="asfi-det" data-det="'+idx+'" style="display:none"><td colspan="'+g.cols.length+'">'+esc(it.texto)+'</td></tr>');
+      });
+      html.push('</tbody></table></div>');
+    });
+    var otros=items.filter(function(it,i){return (it.grupo||'otros')==='otros';});
+    if(otros.length){
+      html.push('<div class="asfi-card"><h3>Otros comunicados<span class="n">'+otros.length+'</span></h3>');
+      html.push('<table class="fb-data-table"><tbody>');
+      otros.forEach(function(it){
+        var idx=dia.items.indexOf(it);
+        html.push('<tr class="asfi-otros-row" data-exp="'+idx+'" title="Click: texto completo">'+
+          '<td class="asfi-ico-td">'+icono(it.categoria)+'</td>'+
+          '<td style="min-width:140px"><span class="asfi-ent">'+esc(it.entidad||'ASFI')+'</span></td>'+
+          '<td>'+resHtml(it)+'</td>'+
+          '<td style="text-align:right"><span class="asfi-sec-chip">'+esc(it.seccion)+'</span></td></tr>');
+        html.push('<tr class="asfi-det" data-det="'+idx+'" style="display:none"><td colspan="4">'+esc(it.texto)+'</td></tr>');
+      });
+      html.push('</tbody></table></div>');
+    }
+    cuerpo.innerHTML=html.join('');
+  });
+}
+function initAsfi(){
+  st.init=true;
+  document.getElementById('asfiPrev').onclick=function(){var i=st.fechas.indexOf(st.fecha);if(i>0)irA(st.fechas[i-1]);};
+  document.getElementById('asfiNext').onclick=function(){var i=st.fechas.indexOf(st.fecha);if(i<st.fechas.length-1)irA(st.fechas[i+1]);};
+  document.getElementById('asfiUltimo').onclick=function(){irA(st.fechas[st.fechas.length-1]);};
+  document.getElementById('asfiFecha').onchange=function(e){irA(e.target.value);};
+  document.getElementById('asfiBuscar').oninput=function(e){st.txt=e.target.value.trim();pintar();};
+  var sel=document.getElementById('asfiTema');
+  Object.keys(TEMAS_LABEL).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=TEMAS_LABEL[k];sel.appendChild(o);});
+  sel.onchange=function(e){st.tema=e.target.value;pintar();};
+  document.getElementById('asfiCuerpo').addEventListener('click',function(e){
+    var tr=e.target.closest('tr[data-exp]');
+    if(!tr || e.target.closest('a')) return;
+    var det=document.querySelector('tr.asfi-det[data-det="'+tr.getAttribute('data-exp')+'"]');
+    if(det) det.style.display=(det.style.display==='none')?'':'none';
+  });
+  cargarIndice(function(err){
+    if(err||!st.fechas.length){
+      document.getElementById('asfiCuerpo').innerHTML='<div class="asfi-vacio">No pude cargar los datos ASFI.</div>';
+      return;
+    }
+    var hash=window.location.hash.replace('#','');
+    irA(/^\d{4}-\d{2}-\d{2}$/.test(hash)?hash:st.fechas[st.fechas.length-1]);
+  });
+}
+window.renderAsfi=function(){ if(!st.init) initAsfi(); };
+})();
+</script>
+
 </body></html>

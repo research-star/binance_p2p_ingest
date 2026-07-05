@@ -40,7 +40,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from asfi_ingest import fetch, parser, resumen
+from asfi_ingest import extract, fetch, parser, resumen
 
 log = logging.getLogger("ingest_asfi")
 
@@ -127,6 +127,7 @@ def persistir_reporte(pdf: "bytes | str", guid: str, titulo: str,
     for it in rep["items"]:
         it.setdefault("resumen", resumen.extracto(it["texto"]))
         it.setdefault("resumen_origen", "extractivo")
+        extract.enriquecer(it)  # grupo + campos para las tablitas del frontend
     mes = fecha[:7]
     data = cargar_mes(mes, datadir)
     data["dias"][fecha] = {"guid": guid, "titulo": titulo, "items": rep["items"]}
@@ -200,6 +201,23 @@ def correr_diario(gestion: int, datadir: Path, con_ia: bool) -> int:
     return nuevos
 
 
+def correr_reextraer(datadir: Path) -> int:
+    """Recomputa tags/grupo/campos sobre TODA la data persistida (los JSON
+    guardan `texto` completo — no hace falta re-bajar PDFs). Para cuando
+    evoluciona el clasificador o el extractor de campos. No toca resúmenes."""
+    n = 0
+    for p in sorted(datadir.glob("asfi_????-??.json")):
+        mes = p.stem.replace("asfi_", "")
+        data = cargar_mes(mes, datadir)
+        for dia in data["dias"].values():
+            for it in dia["items"]:
+                it["tags"] = parser.clasificar_tags(it["texto"], it["seccion"])
+                extract.enriquecer(it)
+                n += 1
+        guardar_mes(mes, data, datadir)
+    return n
+
+
 def correr_backfill(pdf_dir: Path, datadir: Path, con_ia: bool) -> int:
     conocidas = fechas_existentes(datadir)
     n = 0
@@ -224,6 +242,8 @@ def main() -> int:
     ap.add_argument("--backfill", metavar="DIR", help="parsear PDFs locales de DIR")
     ap.add_argument("--resumir", action="store_true",
                     help="solo pasar IA sobre items pendientes de la data existente")
+    ap.add_argument("--reextraer", action="store_true",
+                    help="recomputar tags/grupo/campos sobre la data existente (sin red ni IA)")
     ap.add_argument("--gestion", type=int,
                     default=datetime.now(timezone.utc).year)
     ap.add_argument("--sin-ia", action="store_true")
@@ -241,6 +261,11 @@ def main() -> int:
     args.datadir.mkdir(parents=True, exist_ok=True)
     con_ia = not args.sin_ia
 
+    if args.reextraer:
+        n = correr_reextraer(args.datadir)
+        reescribir_index(args.datadir)
+        log.info(f"reextraer: {n} items recomputados")
+        return 0
     if args.resumir:
         n = aplicar_ia(args.datadir)
         reescribir_index(args.datadir)
