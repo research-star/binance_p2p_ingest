@@ -40,12 +40,6 @@
   line-height: 1.4;
   text-align: left;
 }
-.m247 .m247-head { margin: 0 0 4px; }
-.m247 .m247-head h2 {
-  margin: 0; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.01em; color: var(--m247-ink);
-  font-family: var(--m247-font-display);
-}
-.m247 .m247-head p { margin: 4px 0 16px; color: var(--m247-ink-2); font-size: 0.82rem; }
 .m247 *, .m247 *::before, .m247 *::after { box-sizing: border-box; }
 .m247 [hidden] { display: none !important; }
 .m247 button { font: inherit; }
@@ -195,10 +189,13 @@
 `;
 
   const HTML = `
-<div class="m247-head">
-  <h2>Mercado 24/7</h2>
-  <p>Acciones, índices, commodities, forex y cripto en vivo las 24 horas — precios de perpetuos de la API pública de Hyperliquid.</p>
+<div class="fb-subheader">
+  <div>
+    <h1>Mercado 24/7</h1>
+    <div class="fb-subtitle">Acciones, índices, commodities, forex y cripto en vivo 24/7 &middot; precios de perpetuos de la API pública de Hyperliquid</div>
+  </div>
 </div>
+<div class="content">
 <div class="m247-pills">
   <span class="m247-pill" data-m247="nyse-pill"><span class="m247-dot is-off"></span>NYSE / Nasdaq <b data-m247="nyse">—</b></span>
   <span class="m247-pill"><span class="m247-dot is-live"></span>Mercado HL <b>24/7</b></span>
@@ -233,6 +230,7 @@
 <p class="m247-note">Precios mark de perpetuos de la API pública de
   <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a>
   (incl. mercados HIP-3 de acciones, índices, commodities y forex). No es asesoramiento financiero.</p>
+</div>
 `;
 
   /* ================= nombres y clasificación ================= */
