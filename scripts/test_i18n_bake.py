@@ -267,6 +267,35 @@ def test_dict_en_keys_subset_of_es():
 # ── load_lang ───────────────────────────────────────────────────────────────
 
 
+# ── Cobertura data.* (workstream f: labels COICOP/PIB por idioma) ──────────
+
+
+def test_dashboard_coicop_pib_slugs_have_data_keys_in_both_dicts():
+    """Todo slug de INE_IPC_DIVISIONES/INE_IPP_GRUPOS (dashboard.py) debe tener
+    su clave data.coicop.<slug>/data.pib.<slug> en es.json Y en en.json —
+    si no, el relabel EN cae al fallback genérico (slug.replace + capitalize)
+    en vez de al label real. Import hermético: dashboard.py no toca la DB al
+    importarse (side effects solo bajo `if __name__ == '__main__'`)."""
+    sys.path.insert(0, str(ROOT))
+    import dashboard  # noqa: E402 (import diferido a propósito)
+    es, en = _load(_ES_JSON), _load(_EN_JSON)
+    faltan_es, faltan_en = [], []
+    for slug in dashboard.INE_IPC_DIVISIONES:
+        key = f'data.coicop.{slug}'
+        if key not in es:
+            faltan_es.append(key)
+        if key not in en:
+            faltan_en.append(key)
+    for slug in dashboard.INE_IPP_GRUPOS:
+        key = f'data.pib.{slug}'
+        if key not in es:
+            faltan_es.append(key)
+        if key not in en:
+            faltan_en.append(key)
+    assert not faltan_es, f"slugs COICOP/PIB sin clave en es.json: {sorted(faltan_es)}"
+    assert not faltan_en, f"slugs COICOP/PIB sin clave en en.json: {sorted(faltan_en)}"
+
+
 def test_load_lang_missing_file():
     with pytest.raises(FileNotFoundError):
         i18n_bake.load_lang('xx-inexistente')

@@ -15,6 +15,7 @@ horneados desde el mismo template vía i18n_bake (doble bake, misma data).
 """
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -1320,6 +1321,42 @@ def _inject_umami(html: str, stats: dict) -> str:
     return html
 
 
+# ── Relabel por idioma (workstream f) ───────────────────────────────────────
+# `data` se construye UNA sola vez (ver SEAM más abajo) con labels en español
+# (INE_IPC_DIVISIONES / INE_IPP_GRUPOS). Para EN no se reconstruye la data:
+# se relabelan in-place las dos subtrees que cargan 'label' (payload de
+# inflación IPC/IPP), sobre un deep copy — el payload ES nunca se toca. Los
+# slugs desconocidos (futuros cambios del INE) preservan el mismo fallback
+# que process_data ya usa: slug.replace('_', ' ').capitalize().
+_RELABEL_PATHS = (
+    # (ruta dentro de data['inflacion'], prefijo de clave i18n)
+    (('ipc', 'divisiones'), 'data.coicop.'),
+    (('ipp', 'grupos'), 'data.pib.'),
+)
+
+
+def _relabel_inflacion_for_lang(data: dict, table: dict) -> dict:
+    """Devuelve `data` con los labels de divisiones/grupos de inflación
+    resueltos contra `table` (i18n_bake.load_lang(lang)) para el idioma dado.
+
+    No muta `data`: deep-copy solo de la subtree 'inflacion' (evita copiar
+    ts_metrics/merchants/etc., que son potencialmente grandes). El resto del
+    dict se comparte por referencia con el original.
+    """
+    out = dict(data)
+    inflacion = copy.deepcopy(data.get('inflacion'))
+    if inflacion:
+        for (familia, campo), prefix in _RELABEL_PATHS:
+            desglose = (inflacion.get(familia) or {}).get(campo)
+            if not desglose:
+                continue
+            for slug, entry in desglose.items():
+                entry['label'] = table.get(
+                    prefix + slug, slug.replace('_', ' ').capitalize())
+    out['inflacion'] = inflacion
+    return out
+
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1347,19 +1384,21 @@ def main():
 
     template = TEMPLATE_HTML.read_text(encoding='utf-8')
 
-    # Data única para ambos idiomas. SEAM (workstream f): acá se enganchará la
-    # parametrización de labels por idioma — hoy `data` sale con labels en
-    # español para ES y EN por igual; cuando exista build_data(lang) (o un
-    # relabel per-lang), mover esta construcción adentro del loop de idiomas.
-    data_json = json.dumps(data)
+    # Data única para ambos idiomas (una sola pasada de process_data). Labels
+    # de inflación IPC/IPP (COICOP/PIB) sí varían por idioma: se resuelven acá
+    # ABAJO, dentro del loop, sobre un deep-copy barato de la subtree
+    # 'inflacion' (_relabel_inflacion_for_lang) — nunca se reconstruye `data`
+    # dos veces ni se muta el payload ES.
     umami_stats = _fetch_umami_stats()  # fetch único (una sola llamada HTTP)
 
     output_en = args.output_en or (args.output.parent / 'en' / 'index.html')
     for lang, base, outpath in (('es', '', args.output),
                                 ('en', '/en', output_en)):
         try:
-            html = i18n_bake.bake(template, lang, base,
-                                  i18n_bake.load_lang(lang))
+            lang_table = i18n_bake.load_lang(lang)
+            html = i18n_bake.bake(template, lang, base, lang_table)
+            data_lang = _relabel_inflacion_for_lang(data, lang_table)
+            data_json = json.dumps(data_lang)
         except Exception as e:
             if lang == 'es':
                 raise  # ES es el producto primario: abort ruidoso, sin output.
