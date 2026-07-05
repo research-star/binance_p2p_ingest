@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="es"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="Noticias económicas, datos macro y análisis financiero/económico">
+<meta name="description" content="{{t:meta.description}}">
 <meta name="author" content="FinanzasBo">
-<meta property="og:title" content="FinanzasBo — Inteligencia económica de Bolivia">
-<meta property="og:description" content="Noticias económicas, datos macro y análisis financiero/económico">
+<meta property="og:title" content="{{t:meta.og_title}}">
+<meta property="og:description" content="{{t:meta.og_description}}">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://finanzasbo.com/og.png">
 <meta property="og:url" content="https://finanzasbo.com">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FinanzasBo — Inteligencia económica de Bolivia">
-<meta name="twitter:description" content="Noticias económicas, datos macro y análisis financiero/económico">
+<meta name="twitter:title" content="{{t:meta.twitter_title}}">
+<meta name="twitter:description" content="{{t:meta.twitter_description}}">
 <meta name="twitter:image" content="https://finanzasbo.com/og.png">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 <meta name="theme-color" content="#FBEDE3">
-<title>FinanzasBo — Inteligencia económica de Bolivia</title>
+<title>{{t:meta.title}}</title>
 <!-- Umami analytics (only emitted if UMAMI_WEBSITE_ID present at build time) -->
 __UMAMI_SCRIPT__
 <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
@@ -763,7 +763,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <body>
 
 <div class="error-banner" id="errorBanner" role="alert" aria-live="polite">
-  No se pudo cargar el dataset. <span class="eb-retry">Reintentando...</span>
+  {{t:meta.error_banner}} <span class="eb-retry">{{t:meta.error_retry}}</span>
 </div>
 
 
@@ -772,15 +772,15 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="fb-utility">
     <span class="fb-util-date" id="fbDate">&mdash;</span>
     <div class="fb-utility-right">
-      <span class="fb-util-upd"><span class="fb-live"></span>Actualizado <span id="fbUpd">&mdash;</span></span>
+      <span class="fb-util-upd"><span class="fb-live"></span>{{t:nav.updated_label}} <span id="fbUpd">&mdash;</span></span>
       <span class="fb-util-sep">&middot;</span>
-      <button class="fb-util-lang" id="langToggle" title="Idioma" aria-label="Cambiar idioma">ES</button>
+      <button class="fb-util-lang" id="langToggle" title="{{t:nav.lang_title}}" aria-label="{{t:nav.lang_aria}}">ES</button>
     </div>
   </div>
-  <section class="fb-ticker" id="fbTicker" aria-label="Indicadores del d&iacute;a">
+  <section class="fb-ticker" id="fbTicker" aria-label="{{t:ticker.aria}}">
     <div class="fb-ticker-tag" aria-hidden="true">
-      <span class="tk-kicker">El d&iacute;a en cifras</span>
-      <span class="tk-sub">Mercados</span>
+      <span class="tk-kicker">{{t:ticker.kicker}}</span>
+      <span class="tk-sub">{{t:ticker.sub_markets}}</span>
     </div>
     <div class="fb-ticker-track" id="fbTickerTrack" role="list"></div>
   </section>
@@ -788,14 +788,14 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <div class="fb-masthead-left" aria-hidden="true"></div>
     <div class="fb-brand">
       <span class="fb-nameplate">Finanzas<span class="fb-np-bo">Bo</span></span>
-      <span class="fb-tagline">Inteligencia econ&oacute;mica de Bolivia</span>
+      <span class="fb-tagline">{{t:nav.tagline}}</span>
     </div>
     <div class="fb-masthead-actions">
       <!-- El acceso admin se movió al pie de la página (ícono discreto, slot global
            #fbFooterSession). El masthead ya NO muestra "Iniciar sesión" para el público. -->
-      <span class="fb-search-link" aria-disabled="true" title="B&uacute;squeda &mdash; pr&oacute;ximamente" hidden style="display:none">
+      <span class="fb-search-link" aria-disabled="true" title="{{t:nav.search_title}}" hidden style="display:none">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Buscar &mdash; pr&oacute;ximamente
+        {{t:nav.search_label}}
       </span>
     </div>
   </div>
@@ -806,11 +806,11 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
          DPF/BBV/Guía OCULTAS con `hidden` (nav-only): el botón sigue en el DOM y cableado,
          sus rutas/paneles intactos (accesibles por URL directa). REVERTIR = quitar los
          `hidden` y reponer el orden original (Inicio · Macro · Dólar · DPF · BBV · Guía). -->
-    <button class="fb-tab active" data-tab="noticias">Inicio</button>
-    <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
-    <button class="fb-tab" data-tab="macro">Macro</button>
-    <button class="fb-tab" data-tab="asfi">ASFI</button>
-    <button class="fb-tab" data-tab="dpf" hidden>Rendimientos DPF</button>
+    <button class="fb-tab active" data-tab="noticias">{{t:nav.tab_inicio}}</button>
+    <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
+    <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
+    <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
+    <button class="fb-tab" data-tab="dpf" hidden>{{t:nav.tab_dpf}}</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
     <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>
   </div>
@@ -1445,12 +1445,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">Descargar PNG</button>
 </div>
 
-<button class="fab-more" id="fabMore" type="button" aria-label="Más gráficas. 0 paneles ocultos" title="Más gráficas">
+<button class="fab-more" id="fabMore" type="button" aria-label="{{t:footer.fab_aria_initial}}" title="{{t:footer.fab_title}}">
   <span class="fab-icon">&#9636;</span>
   <span class="fab-badge" id="fabBadge">0</span>
 </button>
 <div class="fab-popup" id="fabPopup" role="menu" aria-hidden="true" aria-labelledby="fabMore">
-  <div class="fab-popup-title">Mostrar paneles</div>
+  <div class="fab-popup-title">{{t:footer.fab_popup_title}}</div>
   <ul class="fab-popup-list" id="fabPopupList"></ul>
 </div>
 
@@ -1458,7 +1458,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
      #tab-noticias para que npRerender no lo pise). fbRenderSession() lo repinta:
      anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
      candado real es Cloudflare Access + JWT). -->
-<footer class="fb-chrome-foot" aria-label="Acceso">
+<footer class="fb-chrome-foot" aria-label="{{t:footer.access_aria}}">
   <div id="fbFooterSession"></div>
 </footer>
 
@@ -2608,7 +2608,7 @@ function updateFab(){
     fab.classList.add('show');
     badge.textContent=hidden.length;
   }
-  fab.setAttribute('aria-label','M\u00e1s gr\u00e1ficas. '+hidden.length+' paneles ocultos');
+  fab.setAttribute('aria-label','{{t:footer.fab_aria_prefix}}'+hidden.length+'{{t:footer.fab_aria_suffix}}');
 }
 function updatePopupList(){
   const list=document.getElementById('fabPopupList');
@@ -2621,7 +2621,7 @@ function updatePopupList(){
   }
   list.innerHTML=hidden.map(id=>{
     const t=panelTitle(id);
-    return '<li class="fab-popup-item"><span class="fpi-title">'+t.replace(/</g,'&lt;')+'</span><button class="fpi-show" data-show-id="'+id+'" type="button">Mostrar</button></li>';
+    return '<li class="fab-popup-item"><span class="fpi-title">'+t.replace(/</g,'&lt;')+'</span><button class="fpi-show" data-show-id="'+id+'" type="button">{{t:footer.fab_popup_show}}</button></li>';
   }).join('');
 }
 function openFabPopup(){
@@ -4981,7 +4981,7 @@ window.addEventListener('popstate', function(){
   function npLastNum(a){ if(!a) return null; for(let i=a.length-1;i>=0;i--) if(npNum(a[i])) return a[i]; return null; }
   function npPrevNum(a){ if(!a) return null; let s=0; for(let i=a.length-1;i>=0;i--){ if(npNum(a[i])){ if(++s===2) return a[i]; } } return null; }
   function npDir(d){ return (!npNum(d)||d===0)?'flat':(d>0?'up':'down'); }
-  function npDeltaTxt(d,unit,frac){ if(!npNum(d)) return 's/d'; const s=d>0?'+':d<0?'−':''; return s+npFmt(Math.abs(d),frac)+unit; }
+  function npDeltaTxt(d,unit,frac){ if(!npNum(d)) return '{{t:ticker.no_data}}'; const s=d>0?'+':d<0?'−':''; return s+npFmt(Math.abs(d),frac)+unit; }
   function npInflVar12(fam){
     const inf=(typeof DATA!=='undefined')&&DATA.inflacion; if(!inf) return null;
     const u=inf.ultimo&&inf.ultimo[fam]; if(!u||!npNum(u.var_12m)) return null;
@@ -4999,10 +4999,10 @@ window.addEventListener('popstate', function(){
     // El oficial es el TCO diario (RD 88/2026); fallback al fijo 6.96 si aún no hay datos.
     const tcoLast=(typeof meta!=='undefined'&&npNum(meta.bcb_tco_last))?meta.bcb_tco_last:null;
     const bcb = tcoLast!=null ? tcoLast : ((typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null);
-    let primaSub='s/d', primaDir='flat';
-    if(npNum(p2p)&&npNum(bcb)&&bcb>0){ const pr=(p2p/bcb-1)*100; primaSub='prima '+(pr>=0?'+':'')+npFmt(pr,0)+'%'; primaDir=pr>0?'up':(pr<0?'down':'flat'); }
+    let primaSub='{{t:ticker.no_data}}', primaDir='flat';
+    if(npNum(p2p)&&npNum(bcb)&&bcb>0){ const pr=(p2p/bcb-1)*100; primaSub='{{t:ticker.sub_prima}}'+(pr>=0?'+':'')+npFmt(pr,0)+'%'; primaDir=pr>0?'up':(pr<0?'down':'flat'); }
     // Tile "BCB oficial": delta diario del TCO si hay historia; si no, sin cambios.
-    let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO':'sin cambios');
+    let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO':'{{t:ticker.sub_sin_cambios}}');
     if(tcoLast!=null){
       // Delta del TCO: solo contra valores PUBLICADOS (excluye el relleno sáb/dom
       // sintético 'bcb_tco_fin_semana', que duplica el valor → daría 0.00 Bs falso).
@@ -5017,10 +5017,10 @@ window.addEventListener('popstate', function(){
     if(es){ embi=npLastNum(es); const pv=npPrevNum(es); if(npNum(embi)&&npNum(pv)) embiD=embi-pv; }
     const ipc=npInflVar12('ipc');  // IPP retirado del ticker (frontend-only); DATA.inflacion.ipp queda latente
     return [
-      { lab:'Dólar P2P',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
-      { lab:'BCB oficial', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:bcbDir,                sub:bcbSub },
-      { lab:'Riesgo país', val:npNum(embi)?npFmt(embi,0):'—',unit:'pb',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,' pb',0):'EMBI Bolivia' },
-      { lab:'IPC interan.',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'s/d' }
+      { lab:'{{t:ticker.item_dolar_p2p}}',   val:npNum(p2p)?npFmt(p2p,2):'—',  unit:'Bs/USD', dir:primaDir,              sub:primaSub },
+      { lab:'{{t:ticker.item_bcb}}', val:npNum(bcb)?npFmt(bcb,2):'—',  unit:'Bs/USD', dir:bcbDir,                sub:bcbSub },
+      { lab:'{{t:ticker.item_riesgo}}', val:npNum(embi)?npFmt(embi,0):'—',unit:'{{t:ticker.unit_pb}}',     dir:npDir(embiD),          sub:npNum(embiD)?npDeltaTxt(embiD,'{{t:ticker.delta_pb}}',0):'EMBI Bolivia' },
+      { lab:'{{t:ticker.item_ipc}}',val:ipc?npFmt(ipc.val,1):'—',     unit:'%',      dir:npDir(ipc&&ipc.delta), sub:ipc?npDeltaTxt(ipc.delta,' pp',1):'{{t:ticker.no_data}}' }
     ];
   }
 
@@ -5627,11 +5627,11 @@ window.addEventListener('popstate', function(){
   }
   // ── Sesión en el masthead global (área 2; login reubicado desde la portada) ──
   // Anónimo = ícono discreto (sin texto), baja prominencia, fácil de pasar por alto.
-  var FB_LOGIN_BTN='<button class="fb-foot-login" type="button" data-np-login title="Acceso" aria-label="Iniciar sesión"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></button>';
+  var FB_LOGIN_BTN='<button class="fb-foot-login" type="button" data-np-login title="{{t:footer.login_title}}" aria-label="{{t:footer.login_aria}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></button>';
   function fbRenderSession(){
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
-      slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>Cerrar sesión</button></span>';
+      slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>{{t:footer.logout}}</button></span>';
     }else{
       slot.innerHTML=FB_LOGIN_BTN;
     }
