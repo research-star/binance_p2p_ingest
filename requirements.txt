@@ -19,3 +19,7 @@ scikit-learn>=1.8,<1.9
 cloudscraper>=1.2
 curl_cffi>=0.10
 googlenewsdecoder>=0.1.7
+
+# Módulo ASFI (asfi_ingest/parser.py): extracción de texto + fuentes del
+# Reporte Informativo RMV (PDF DevExpress).
+pypdf>=4.0
