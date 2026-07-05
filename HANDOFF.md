@@ -1284,10 +1284,16 @@ El `www` (Drupal/CDN) sí acepta cualquier IP, pero solo tiene el iframe.
 | `asfi_ingest/fetch.py` | Listado (`Gestion=YYYY`) + PDFs vía proxy `__cr.bo`, con reintentos (el pool rota exit y puede dar 502 transitorio). Fail-safe sin `PROXY_URL`. |
 | `asfi_ingest/resumen.py` | Titular telegráfico IA (Haiku, ≤90 chars estilo cable — prompt V2, `RESUMEN_V` versiona: `aplicar()` re-procesa solo items de versión vieja, bajo el cap). Mismo contrato que `resumen_ia.py`: candado `autorizado=True` + cap mensual propio en tabla `asfi_api_spend` (self-create; default $1/mes, decisión Diego: SIN override). Fallback extractivo = origen B con asterisco (taxonomía A/B). `ASFI_RESUMEN=0` lo apaga sin tocar noticias. |
 | `ingest_asfi.py` | Orquestador. Default = corrida diaria de cron (dedupe por FECHA del título del listado — robusto entre backfill sin guid y cron con guid). `--backfill DIR` parsea PDFs locales. `--resumir` re-pasa la IA sobre items no-A (idempotente, cap-bounded — backfill de resúmenes en tandas). `--sin-ia`. |
-| `asfi_ingest/extract.py` | Grupo + campos estructurados por item (regex sobre `texto` persistido): emisiones (emisor/instrumento/registro/pizarra), cupones (N°/instrumento/fecha/estado), préstamos (banco/monto), personal (persona/cargo/movimiento), compromisos (CAP/liquidez/cobertura). `ingest_asfi.py --reextraer` recomputa todo sobre la data existente sin re-bajar PDFs (para cuando evoluciona el extractor). |
+| `asfi_ingest/extract.py` | Grupo + campos estructurados por item (regex sobre `texto` persistido). Grupos V3: emisiones, cupones, préstamos, **directorio** (sale/entra/ratificado por persona — clasificación extraction-driven: sin cambios extraídos degrada a 'otros'), personal, dividendos (con monto Bs/USD, total o por acción), **uso_fondos** (emisión/destino/monto), **compromisos** (TODOS los pares indicador/umbral/valor con evaluación de cumplimiento, formatos tabla y verbal-BCP), **auditorias** (firma/gestión, extraction-driven), **juntas** (convocatorias: tipo/fecha/agenda — acá cae el caso 'distribución de resultados' en agenda, que NO es pago de dividendos), calificaciones, otros. `ingest_asfi.py --reextraer` recomputa todo sobre la data existente sin re-bajar PDFs. |
 | `static/asfi_YYYY-MM.json` + `static/asfi_index.json` | Data committeada al repo (patrón data-BCB). `publish_dashboard.py` ya copia los archivos sueltos de `static/` a la raíz de `gh-pages` — la publicación sale gratis en el ciclo normal (*/12). |
 | Tab "ASFI" del SPA (`template.html`) | Pestaña real del dashboard (slug `/asfi`, `ROUTE_MAP`/`TAB_PANELS`/`renderAsfi` lazy — misma convención que BBV). Tablitas por tema con los campos extraídos + lista "Otros comunicados", íconos por rubro de entidad, nav de fecha con deep-link `/asfi#YYYY-MM-DD`, filtros por tema/texto, fila expandible con texto completo. `static/asfi.html` quedó como REDIRECT a `/asfi` (no romper links compartidos). |
 | `scripts/test_asfi_parser.py` | Fixture real (03-jul) + tags + extracto + candado + cap. |
+
+**Nota operativa reextraer:** tras mergear un PR que cambie `extract.py`, correr
+en el VPS `.venv/bin/python ingest_asfi.py --reextraer` y luego el wrapper
+(`./scripts/asfi_scrape_and_commit.sh`) para recomputar y publicar la data
+histórica con el vocabulario nuevo (los PRs de extractor shippean solo código —
+la data la regenera el VPS, que es quien tiene los resúmenes IA frescos).
 
 **Deploy (pendiente al merge del PR):**
 1. `cd /opt/binance_p2p && .venv/bin/pip install pypdf` (única dependencia nueva).

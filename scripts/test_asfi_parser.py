@@ -144,6 +144,56 @@ def t_extract(errores: list):
         errores.append(f"extract: personal {it['grupo']} {c}")
 
 
+    # V3: grupos nuevos (feedback Diego 2026-07-05)
+    it = item("Hechos Relevantes",
+              "Comunica que, en reunión de Directorio de 2 de julio de 2026, se aprobó "
+              "la convocatoria a Junta General Ordinaria de Accionistas, a realizarse el "
+              "14 de julio de 2026 a Hrs. 09:30: 1. Distribución y tratamiento de "
+              "Resultados de la Gestión 2025.")
+    c = it.get("campos", {})
+    if it["grupo"] != "juntas" or c.get("tipo") != "Ordinaria" \
+            or c.get("fecha_junta") != "14 de julio de 2026" \
+            or "distribución de resultados" not in c.get("agenda", ""):
+        errores.append(f"extract: convocatoria MADISA {it['grupo']} {c}")
+
+    it = item("Hechos Relevantes",
+              "Ha comunicado que la Junta determinó: 1. La remoción de los señores: "
+              "Oscar Álvarez Daher y Stevo Ostoic Gonzales de sus cargos de Directores "
+              "Titulares. 2. Nombrar como Directores Titulares a los señores: Sergio "
+              "Antonio Gottret Valdez y Víctor Eduardo Durán Saavedra.")
+    cambios = it.get("campos", {}).get("cambios", [])
+    salen = [x["persona"] for x in cambios if x["tipo"] == "sale"]
+    entran = [x["persona"] for x in cambios if x["tipo"] == "entra"]
+    if it["grupo"] != "directorio" or len(salen) != 2 or len(entran) != 2 \
+            or "Oscar Álvarez Daher" not in salen:
+        errores.append(f"extract: directorio {it['grupo']} salen={salen} entran={entran}")
+
+    it = item("Noticias",
+              "Comunica que, los Compromisos Financieros son: Coeficiente de Adecuación "
+              "Patrimonial (CAP)(i) CAP>=11% 13.82% Índice de Liquidez (IL)(i) IL>= 50% "
+              "66.38% Coeficiente de Apalancamiento Financiero (CAF): CAF <=2,00 1,93")
+    inds = {x["sigla"]: x for x in it.get("campos", {}).get("indicadores", [])}
+    if it["grupo"] != "compromisos" or "CAP" not in inds or not inds["CAP"]["ok"] \
+            or "CAF" not in inds or not inds["CAF"]["ok"]:
+        errores.append(f"extract: indicadores {inds}")
+    it = item("Noticias",
+              "Ha comunicado que, los Compromisos Financieros son los siguientes: "
+              "Coeficiente de Adecuación Patrimonial mayor o igual al 11% Al 31/12/2025, "
+              "el promedio del Coeficiente de Adecuación Patrimonial fue de 13,07%.")
+    inds = it.get("campos", {}).get("indicadores", [])
+    if not any(x["sigla"] == "CAP" and x["ok"] for x in inds):
+        errores.append(f"extract: indicador verbal BCP {inds}")
+
+    it = item("Hechos Relevantes",
+              "Ha comunicado que en reunión de Directorio se determinó: Aprobar la "
+              "contratación de la firma BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA "
+              "S.R.L. para la realización de la Auditoría Externa correspondiente a la "
+              "gestión 2026.")
+    c = it.get("campos", {})
+    if it["grupo"] != "auditorias" or "BERTHINASSURANCE" not in c.get("firma", ""):
+        errores.append(f"extract: auditoría {it['grupo']} {c}")
+
+
 def t_candado(errores: list):
     prev = os.environ.pop("ANTHROPIC_API_KEY", None)
     try:
