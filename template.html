@@ -959,24 +959,24 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <div id="tab-asfi" style="display:none;">
   <div class="fb-subheader">
     <div>
-      <h1>ASFI &mdash; Mercado de Valores</h1>
-      <div class="fb-subtitle">Reporte Informativo diario del Registro del Mercado de Valores &middot; <span id="asfiFechaLabel">&mdash;</span> &middot; <span id="asfiMetaN">&mdash;</span></div>
+      <h1>{{t:asfi.h1}}</h1>
+      <div class="fb-subtitle">{{t:asfi.subtitle}} <span id="asfiFechaLabel">&mdash;</span> &middot; <span id="asfiMetaN">&mdash;</span></div>
     </div>
     <div class="asfi-nav">
-      <button id="asfiPrev" title="D&iacute;a anterior">&larr;</button>
+      <button id="asfiPrev" title="{{t:asfi.nav_prev_title}}">&larr;</button>
       <input type="date" id="asfiFecha">
-      <button id="asfiNext" title="D&iacute;a siguiente">&rarr;</button>
-      <button id="asfiUltimo" title="&Uacute;ltimo reporte">&Uacute;ltimo</button>
+      <button id="asfiNext" title="{{t:asfi.nav_next_title}}">&rarr;</button>
+      <button id="asfiUltimo" title="{{t:asfi.nav_ultimo_title}}">{{t:asfi.nav_ultimo_btn}}</button>
     </div>
   </div>
   <div class="content">
     <div class="asfi-filtros">
-      <input type="search" id="asfiBuscar" placeholder="Filtrar por entidad, persona o texto&hellip;">
-      <select id="asfiTema"><option value="">Todos los temas</option></select>
+      <input type="search" id="asfiBuscar" placeholder="{{t:asfi.buscar_placeholder}}">
+      <select id="asfiTema"><option value="">{{t:asfi.tema_todos}}</option></select>
       <span class="asfi-sec-chip" id="asfiPdfSlot"></span>
     </div>
-    <div id="asfiCuerpo"><div class="asfi-vacio">Cargando&hellip;</div></div>
-    <div class="asfi-fuente">Fuente: ASFI &mdash; Direcci&oacute;n de Supervisi&oacute;n de Valores, Reporte Informativo del RMV. Los titulares se generan autom&aacute;ticamente; los marcados con <span style="color:var(--np-accent)">*</span> son extractos del texto original. El contenido de los comunicados es de exclusiva responsabilidad de quien los presenta e inscribe en el RMV.</div>
+    <div id="asfiCuerpo"><div class="asfi-vacio">{{t:asfi.cargando_html}}</div></div>
+    <div class="asfi-fuente">{{t:asfi.fuente_pre}} <span style="color:var(--np-accent)">*</span> {{t:asfi.fuente_post}}</div>
   </div>
 </div><!-- /tab-asfi -->
 
@@ -5720,7 +5720,7 @@ function fmtFecha(iso){var pt=iso.split('-'),d=new Date(Date.UTC(+pt[0],+pt[1]-1
 function campo(it,k){return (it.campos&&it.campos[k])||'';}
 function celda(v){return v?esc(v):'<span style="color:var(--text-soft)">—</span>';}
 function resHtml(it){
-  var ast = it.resumen_origen==='ia' ? '' : ' <span class="asfi-ast" title="Extracto automático del texto original">*</span>';
+  var ast = it.resumen_origen==='ia' ? '' : ' <span class="asfi-ast" title="{{t:asfi.js_ast_title}}">*</span>';
   return '<span class="asfi-res">'+esc(it.resumen||'')+ast+'</span>';
 }
 function badgeMov(m){
@@ -5730,44 +5730,44 @@ function badgeMov(m){
 }
 
 /* Config de tablitas: columnas + extractor de celdas por item. */
-var TEMAS_LABEL={emisiones:'Emisiones',cupones:'Cupones y pagos',prestamos:'Préstamos',
-  directorio:'Directorios',personal:'Personal',dividendos:'Dividendos',uso_fondos:'Uso de recursos',
-  compromisos:'Compromisos financieros',auditorias:'Auditores externos',juntas:'Juntas convocadas',
-  calificaciones:'Calificaciones',otros:'Otros comunicados'};
+var TEMAS_LABEL={emisiones:'{{t:asfi.tema_emisiones}}',cupones:'{{t:asfi.tema_cupones}}',prestamos:'{{t:asfi.tema_prestamos}}',
+  directorio:'{{t:asfi.tema_directorio}}',personal:'{{t:asfi.tema_personal}}',dividendos:'{{t:asfi.tema_dividendos}}',uso_fondos:'{{t:asfi.tema_uso_fondos}}',
+  compromisos:'{{t:asfi.tema_compromisos}}',auditorias:'{{t:asfi.tema_auditorias}}',juntas:'{{t:asfi.tema_juntas}}',
+  calificaciones:'{{t:asfi.tema_calificaciones}}',otros:'{{t:asfi.tema_otros}}'};
 function badgeDir(t){
-  var map={sale:['neg','SALE'],entra:['pos','ENTRA'],ratificado:['','RATIFICADO']};
+  var map={sale:['neg','{{t:asfi.js_badge_sale}}'],entra:['pos','{{t:asfi.js_badge_entra}}'],ratificado:['','{{t:asfi.js_badge_ratificado}}']};
   var b=map[t]||['',esc(t)];
   return '<span class="asfi-badge '+b[0]+'">'+b[1]+'</span>';
 }
 /* Config de tablitas. `fila` devuelve UNA fila; `filas` devuelve VARIAS
    (directorio: una por persona; compromisos: una por indicador). */
 var GRUPOS=[
- {id:'emisiones',titulo:'Emisiones y programas autorizados',cols:['','Emisor','Instrumento','Registro'],
+ {id:'emisiones',titulo:'{{t:asfi.grupo_emisiones_titulo}}',cols:['','{{t:asfi.col_emisor}}','{{t:asfi.col_instrumento}}','{{t:asfi.col_registro}}'],
   fila:function(it){return [celda(campo(it,'emisor')||it.entidad),celda(campo(it,'instrumento')),
     celda(campo(it,'registro')+(campo(it,'pizarra')?' · '+campo(it,'pizarra'):''))];}},
- {id:'cupones',titulo:'Cupones y pagos de valores',cols:['','Pagador','Instrumento','Cupón','Fecha','Estado'],
+ {id:'cupones',titulo:'{{t:asfi.grupo_cupones_titulo}}',cols:['','{{t:asfi.col_pagador}}','{{t:asfi.col_instrumento}}','{{t:asfi.col_cupon}}','{{t:asfi.col_fecha}}','{{t:asfi.col_estado}}'],
   fila:function(it){var e=campo(it,'estado');
     return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',celda(campo(it,'instrumento')),
-      celda(campo(it,'cupon_n')&&('N° '+campo(it,'cupon_n')+(campo(it,'amortiza')?' + capital':''))),
+      celda(campo(it,'cupon_n')&&('{{t:asfi.js_cupon_numero}}'+campo(it,'cupon_n')+(campo(it,'amortiza')?'{{t:asfi.js_cupon_capital}}':''))),
       celda(campo(it,'fecha_pago')),
       '<span class="asfi-badge '+(e==='pagado'?'pos':'')+'">'+esc(e||'—')+'</span>'];}},
- {id:'prestamos',titulo:'Préstamos y desembolsos recibidos',cols:['','Empresa','Banco','Monto'],
+ {id:'prestamos',titulo:'{{t:asfi.grupo_prestamos_titulo}}',cols:['','{{t:asfi.col_empresa}}','{{t:asfi.col_banco}}','{{t:asfi.col_monto}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'banco')),celda(campo(it,'monto'))];}},
- {id:'directorio',titulo:'Cambios de directorio y sindicatura',cols:['','Entidad','Persona','Cargo','Movimiento'],
+ {id:'directorio',titulo:'{{t:asfi.grupo_directorio_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_persona}}','{{t:asfi.col_cargo}}','{{t:asfi.col_movimiento}}'],
   filas:function(it){
     var cambios=(it.campos&&it.campos.cambios)||[];
     return cambios.map(function(cb,i){
       return [i===0?'<span class="asfi-ent">'+esc(it.entidad)+'</span>':'',
         celda(cb.persona),celda(cb.cargo),badgeDir(cb.tipo)];
     });}},
- {id:'dividendos',titulo:'Pagos de dividendos',cols:['','Empresa','Monto','Pago desde'],
+ {id:'dividendos',titulo:'{{t:asfi.grupo_dividendos_titulo}}',cols:['','{{t:asfi.col_empresa}}','{{t:asfi.col_monto}}','{{t:asfi.col_pago_desde}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'monto')),celda(campo(it,'fecha_pago'))];}},
- {id:'uso_fondos',titulo:'Uso de recursos captados',cols:['','Empresa','Emisión','Destino','Monto'],
+ {id:'uso_fondos',titulo:'{{t:asfi.grupo_uso_fondos_titulo}}',cols:['','{{t:asfi.col_empresa}}','{{t:asfi.col_emision}}','{{t:asfi.col_destino}}','{{t:asfi.col_monto}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'instrumento')),celda(campo(it,'destino')),celda(campo(it,'monto'))];}},
- {id:'compromisos',titulo:'Compromisos financieros reportados',cols:['','Entidad','Indicador','Compromiso','Reportado'],
+ {id:'compromisos',titulo:'{{t:asfi.grupo_compromisos_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_indicador}}','{{t:asfi.col_compromiso}}','{{t:asfi.col_reportado}}'],
   filas:function(it){
     var inds=(it.campos&&it.campos.indicadores)||[];
     if(!inds.length){
@@ -5780,13 +5780,13 @@ var GRUPOS=[
       return [i===0?'<span class="asfi-ent">'+esc(it.entidad)+'</span>':'',
         celda(ind.sigla),celda(ind.op+' '+ind.req),v];
     });}},
- {id:'auditorias',titulo:'Auditores externos designados',cols:['','Entidad','Firma auditora','Gestión'],
+ {id:'auditorias',titulo:'{{t:asfi.grupo_auditorias_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_firma_auditora}}','{{t:asfi.col_gestion}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'firma')),celda(campo(it,'gestion'))];}},
- {id:'juntas',titulo:'Juntas y asambleas convocadas',cols:['','Entidad','Tipo','Fecha','Agenda destacada'],
+ {id:'juntas',titulo:'{{t:asfi.grupo_juntas_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_tipo}}','{{t:asfi.col_fecha}}','{{t:asfi.col_agenda}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'tipo')),celda(campo(it,'fecha_junta')),celda(campo(it,'agenda'))];}},
- {id:'calificaciones',titulo:'Calificaciones de riesgo',cols:['','Calificadora','Detalle'],
+ {id:'calificaciones',titulo:'{{t:asfi.grupo_calificaciones_titulo}}',cols:['','{{t:asfi.col_calificadora}}','{{t:asfi.col_detalle}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',resHtml(it)];}}
 ];
 
@@ -5821,14 +5821,14 @@ function irA(fecha){
 }
 function pintar(){
   var cuerpo=document.getElementById('asfiCuerpo');
-  cuerpo.innerHTML='<div class="asfi-vacio">Cargando…</div>';
+  cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_cargando}}</div>';
   cargarDia(st.fecha,function(err,dia){
     document.getElementById('asfiFechaLabel').textContent=fmtFecha(st.fecha);
-    if(err||!dia){cuerpo.innerHTML='<div class="asfi-vacio">Sin reporte para este día.</div>';
+    if(err||!dia){cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_sin_reporte}}</div>';
       document.getElementById('asfiMetaN').textContent='—';return;}
-    document.getElementById('asfiMetaN').textContent=dia.items.length+' comunicados';
+    document.getElementById('asfiMetaN').textContent=dia.items.length+'{{t:asfi.js_n_comunicados}}';
     var pdf=document.getElementById('asfiPdfSlot');
-    pdf.innerHTML=dia.guid?'<a href="'+VISOR+esc(dia.guid)+'" target="_blank" rel="noopener" style="color:var(--text-muted)">PDF original ↗</a>':'';
+    pdf.innerHTML=dia.guid?'<a href="'+VISOR+esc(dia.guid)+'" target="_blank" rel="noopener" style="color:var(--text-muted)">{{t:asfi.js_pdf_original}}</a>':'';
     var q=st.txt.toLowerCase();
     var items=dia.items.filter(function(it){
       if(st.tema && (it.grupo||'otros')!==st.tema) return false;
@@ -5836,7 +5836,7 @@ function pintar(){
       var blob=(it.entidad+' '+it.texto+' '+it.categoria+' '+JSON.stringify(it.campos||{})).toLowerCase();
       return blob.indexOf(q)!==-1;
     });
-    if(!items.length){cuerpo.innerHTML='<div class="asfi-vacio">Ningún comunicado matchea el filtro.</div>';return;}
+    if(!items.length){cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_sin_match}}</div>';return;}
     var html=[]; var usados={};
     GRUPOS.forEach(function(g){
       var arr=items.filter(function(it){return (it.grupo||'otros')===g.id;});
@@ -5850,7 +5850,7 @@ function pintar(){
         var filas=g.filas?g.filas(it):[g.fila(it)];
         if(!filas.length) filas=[['<span class="asfi-ent">'+esc(it.entidad)+'</span>']];
         filas.forEach(function(cells,fi){
-          html.push('<tr data-exp="'+idx+'" title="Click: texto completo">'+
+          html.push('<tr data-exp="'+idx+'" title="{{t:asfi.js_click_texto}}">'+
             '<td class="asfi-ico-td">'+(fi===0?icono(it.categoria):'')+'</td>');
           cells.forEach(function(c){
             // celda expandida (compromisos sin indicadores): ocupa el resto
@@ -5866,11 +5866,11 @@ function pintar(){
     });
     var otros=items.filter(function(it,i){return (it.grupo||'otros')==='otros';});
     if(otros.length){
-      html.push('<div class="asfi-card"><h3>Otros comunicados<span class="n">'+otros.length+'</span></h3>');
+      html.push('<div class="asfi-card"><h3>{{t:asfi.tema_otros}}<span class="n">'+otros.length+'</span></h3>');
       html.push('<table class="fb-data-table"><tbody>');
       otros.forEach(function(it){
         var idx=dia.items.indexOf(it);
-        html.push('<tr class="asfi-otros-row" data-exp="'+idx+'" title="Click: texto completo">'+
+        html.push('<tr class="asfi-otros-row" data-exp="'+idx+'" title="{{t:asfi.js_click_texto}}">'+
           '<td class="asfi-ico-td">'+icono(it.categoria)+'</td>'+
           '<td style="min-width:140px"><span class="asfi-ent">'+esc(it.entidad||'ASFI')+'</span></td>'+
           '<td>'+resHtml(it)+'</td>'+
@@ -5900,7 +5900,7 @@ function initAsfi(){
   });
   cargarIndice(function(err){
     if(err||!st.fechas.length){
-      document.getElementById('asfiCuerpo').innerHTML='<div class="asfi-vacio">No pude cargar los datos ASFI.</div>';
+      document.getElementById('asfiCuerpo').innerHTML='<div class="asfi-vacio">{{t:asfi.js_error_carga}}</div>';
       return;
     }
     var hash=window.location.hash.replace('#','');
