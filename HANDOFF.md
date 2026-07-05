@@ -28,6 +28,7 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
 | `ingest_noticias.py` | VPS cron user `binance` | `7 0,11-23 * * *` UTC (07:07–20:07 BO, horario 7/7 — 14 corridas/día; minuto :07 evita colisión con `ingest_embi` a :00 y los INE a :15/:30) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
 | `scripts/retencion_noticias.py` | VPS cron user `binance` | `40 4 * * *` UTC (00:40 BO, hueco nocturno) — backup 20d a JSONL append-only (`noticias_ingest/data/noticias_archive.jsonl`, gitignored) + borrado físico 30d de `noticias`; bajo flock, borrado con self-archive (nunca borra sin archivar) | — (sin HC aún) |
+| `ingest_asfi.py` (via `scripts/asfi_scrape_and_commit.sh`) | **PENDIENTE DEPLOY** (PR del módulo ASFI) — VPS cron user `binance` | propuesto `10 1,13,23 * * *` UTC (21:10 / 09:10 / 19:10 BO; idempotente, no-op si ASFI no publicó; minuto :10 evita colisiones con :00/:07/:15/:30). Requiere `pip install pypdf` en el venv del VPS | `HC_ASFI` (opcional, UUID pendiente) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -190,6 +191,9 @@ de las filas verdes.
 - **Pipeline crudo → SQLite**: `ingest.py` (Fase 1), `normalize.py` (Fase 2).
 - **Publish a Pages**: `scripts/publish_dashboard.py` + `.github/workflows/auto-publish.yml`.
 - **BCB scrape (referencial)**: `bcb_referencial.py` (lógica) + `scripts/bcb_scrape_and_commit.sh` (wrapper VPS).
+- **ASFI hechos relevantes RMV**: `asfi_ingest/` (parser PDF + fetch proxy + resumen IA) +
+  `ingest_asfi.py` (orquestador) + `scripts/asfi_scrape_and_commit.sh` (wrapper VPS) +
+  `static/asfi.html` (página). Detalle: § 9.
 - **BCB TCO (Tipo de Cambio Oficial, RD 88/2026)**: `ingest_bcb_tco.py` (lógica) +
   `scripts/bcb_tco_scrape_and_commit.sh` (wrapper VPS). **Dos fuentes** (`--via`):
   - **Portada** (`--via portada`, DEFAULT): `https://www.bcb.gob.bo/` trae un card
@@ -1252,3 +1256,60 @@ mismo token. Si ambos fallan → error claro.
   XLSX para comparar MD5. Si el ancho de banda llegara a ser problema, se
   puede agregar HEAD con `Range: bytes=0-0` + comparación de
   `Content-Length` (cambio implica contenido nuevo).
+
+---
+
+## 9. Módulo ASFI — Hechos Relevantes del Mercado de Valores
+
+**Qué es.** Cada día hábil la Dirección de Supervisión de Valores de ASFI
+publica un "Reporte Informativo" (PDF, 7-9 págs) con los hechos relevantes del
+RMV: comunicados de emisores/agencias/SAFIs (juntas, personal, préstamos),
+pagos de cupones, compromisos financieros de bancos emisores (CAP/liquidez),
+calificaciones de riesgo, resoluciones (emisiones autorizadas) y cartas.
+La sección `finanzasbo.com/asfi.html` lo muestra condensado, navegable por día.
+
+**Restricción de red (crítica).** El listado y los PDFs viven en
+`appweb2.asfi.gob.bo` (app ASP.NET aparte del Drupal `www.asfi.gob.bo`), que
+**geo-bloquea a nivel de red toda IP no boliviana** (validado 2026-07-05:
+directo desde Hetzner = connect timeout; DataImpulse exit default = 502 del
+gateway; DataImpulse con sufijo `__cr.bo` en el usuario = 200 vía exit
+residencial La Paz/Cobija). `asfi_ingest/fetch.py` deriva el proxy BO del
+mismo `PROXY_URL` del `.env` (PR #146) — sin tocar el flujo de noticias.
+El `www` (Drupal/CDN) sí acepta cualquier IP, pero solo tiene el iframe.
+
+**Piezas.**
+| Pieza | Qué hace |
+|---|---|
+| `asfi_ingest/parser.py` | PDF → items `{seccion, categoria, entidad, texto, tags}`. Clasificación por fuente bold (visitor pypdf) + vocabulario fijo de secciones/categorías + heurísticas anti-tabla (las tablas de calificadoras/compromisos también usan bold). Tags por keywords (emision/cupon/personal/junta/…). Validado contra los 122 reportes ene–jul 2026: 0 fallas, ~26 items/día. |
+| `asfi_ingest/fetch.py` | Listado (`Gestion=YYYY`) + PDFs vía proxy `__cr.bo`, con reintentos (el pool rota exit y puede dar 502 transitorio). Fail-safe sin `PROXY_URL`. |
+| `asfi_ingest/resumen.py` | Titular telegráfico IA (Haiku, ≤90 chars estilo cable — prompt V2, `RESUMEN_V` versiona: `aplicar()` re-procesa solo items de versión vieja, bajo el cap). Mismo contrato que `resumen_ia.py`: candado `autorizado=True` + cap mensual propio en tabla `asfi_api_spend` (self-create; default $1/mes, decisión Diego: SIN override). Fallback extractivo = origen B con asterisco (taxonomía A/B). `ASFI_RESUMEN=0` lo apaga sin tocar noticias. |
+| `ingest_asfi.py` | Orquestador. Default = corrida diaria de cron (dedupe por FECHA del título del listado — robusto entre backfill sin guid y cron con guid). `--backfill DIR` parsea PDFs locales. `--resumir` re-pasa la IA sobre items no-A (idempotente, cap-bounded — backfill de resúmenes en tandas). `--sin-ia`. |
+| `asfi_ingest/extract.py` | Grupo + campos estructurados por item (regex sobre `texto` persistido). Grupos V3: emisiones, cupones, préstamos, **directorio** (sale/entra/ratificado por persona — clasificación extraction-driven: sin cambios extraídos degrada a 'otros'), personal, dividendos (con monto Bs/USD, total o por acción), **uso_fondos** (emisión/destino/monto), **compromisos** (TODOS los pares indicador/umbral/valor con evaluación de cumplimiento, formatos tabla y verbal-BCP), **auditorias** (firma/gestión, extraction-driven), **juntas** (convocatorias: tipo/fecha/agenda — acá cae el caso 'distribución de resultados' en agenda, que NO es pago de dividendos), calificaciones, otros. `ingest_asfi.py --reextraer` recomputa todo sobre la data existente sin re-bajar PDFs. |
+| `static/asfi_YYYY-MM.json` + `static/asfi_index.json` | Data committeada al repo (patrón data-BCB). `publish_dashboard.py` ya copia los archivos sueltos de `static/` a la raíz de `gh-pages` — la publicación sale gratis en el ciclo normal (*/12). |
+| Tab "ASFI" del SPA (`template.html`) | Pestaña real del dashboard (slug `/asfi`, `ROUTE_MAP`/`TAB_PANELS`/`renderAsfi` lazy — misma convención que BBV). Tablitas por tema con los campos extraídos + lista "Otros comunicados", íconos por rubro de entidad, nav de fecha con deep-link `/asfi#YYYY-MM-DD`, filtros por tema/texto, fila expandible con texto completo. `static/asfi.html` quedó como REDIRECT a `/asfi` (no romper links compartidos). |
+| `scripts/test_asfi_parser.py` | Fixture real (03-jul) + tags + extracto + candado + cap. |
+
+**Nota operativa reextraer:** tras mergear un PR que cambie `extract.py`, correr
+en el VPS `.venv/bin/python ingest_asfi.py --reextraer` y luego el wrapper
+(`./scripts/asfi_scrape_and_commit.sh`) para recomputar y publicar la data
+histórica con el vocabulario nuevo (los PRs de extractor shippean solo código —
+la data la regenera el VPS, que es quien tiene los resúmenes IA frescos).
+
+**Deploy (pendiente al merge del PR):**
+1. `cd /opt/binance_p2p && .venv/bin/pip install pypdf` (única dependencia nueva).
+2. Backfill de resúmenes IA (la data JSON de los 122 días ya viene en el
+   repo con extractos; esto solo promueve B→A):
+   `.venv/bin/python ingest_asfi.py --resumir`
+   Bajo el cap de $1/mes la promoción es GRADUAL por diseño (decisión de
+   Diego 2026-07-05: cap $1 en todo, sin override): cada corrida promueve
+   hasta agotar el $1 del mes y frena sola; re-correr en meses siguientes
+   retoma donde quedó (~3.2k items ≈ $2.5 total ≈ 2-3 meses de tandas).
+   Mientras tanto esos días se ven con extracto + asterisco (origen B).
+3. Cron: `10 1,13,23 * * * cd /opt/binance_p2p && ./scripts/asfi_scrape_and_commit.sh >> /var/log/binance_p2p/asfi.log 2>&1`
+4. (Opcional) UUID healthchecks → `HC_ASFI` en `.env`.
+
+**Gasto API.** Autorizado por Diego (sesión 2026-07-05, brief del módulo:
+elección explícita "Extracción + resumen IA"). Cap confirmado por Diego en la
+misma sesión: **$1/mes, default del código, SIN override** (`ASFI_RESUMEN_CAP_USD`
+no debe estar en el `.env`). Techo total de IA del sitio = noticias $1 + ASFI $1
+= $2/mes. Corrida diaria ≈ 26 items ≈ $0.03/día — entra cómoda bajo el $1.
