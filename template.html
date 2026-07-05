@@ -809,6 +809,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab active" data-tab="noticias">Inicio</button>
     <button class="fb-tab" data-tab="dollar">D&oacute;lar</button>
     <button class="fb-tab" data-tab="macro">Macro</button>
+    <!-- ASFI es página aparte (asfi.html, estática en gh-pages), NO tab del SPA:
+         sin data-tab el wiring de activateTab la ignora y el <a> navega normal. -->
+    <a class="fb-tab" href="asfi.html" style="text-decoration:none;display:inline-block">ASFI</a>
     <button class="fb-tab" data-tab="dpf" hidden>Rendimientos DPF</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
     <button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button>

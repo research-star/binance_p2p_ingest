@@ -1,0 +1,156 @@
+#!/usr/bin/env python3
+"""
+test_asfi_parser.py — Tests del módulo ASFI (parser + resumen + candado).
+
+Sub-tests:
+  parser_fixture — PDF REAL del Reporte Informativo (03-jul-2026): fecha,
+                   secciones/categorías dentro del vocabulario, entidades
+                   pobladas, items con arranque canónico, tags coherentes.
+  tags           — clasificador de keywords: casos positivos + el falso
+                   positivo "cuenta designada" ≠ personal (regresión).
+  extracto       — fallback extractivo: primera oración, cap 200, corte limpio.
+  candado        — resumen.resumir_item SIN autorizado=True lanza RuntimeError
+                   (con key presente); sin key devuelve None sin llamar red.
+  cap            — con cap agotado no hay POST (fail-closed devuelve None).
+
+Uso:  python scripts/test_asfi_parser.py
+"""
+from __future__ import annotations
+
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from asfi_ingest import parser, resumen  # noqa: E402
+
+FIXTURE = ROOT / "scripts" / "fixtures" / "asfi_reporte_2026-07-03.pdf"
+
+
+def t_parser_fixture(errores: list):
+    rep = parser.extraer_reporte(str(FIXTURE))
+    if rep["fecha"] != "2026-07-03":
+        errores.append(f"fecha: {rep['fecha']!r} != 2026-07-03")
+    items = rep["items"]
+    if not (18 <= len(items) <= 30):
+        errores.append(f"items: {len(items)} fuera de rango esperado [18,30]")
+    secciones = {it["seccion"] for it in items}
+    if not secciones <= parser.SECCIONES:
+        errores.append(f"secciones fuera de vocabulario: {secciones - parser.SECCIONES}")
+    cats = {it["categoria"] for it in items if it["categoria"]}
+    if not cats <= parser.CATEGORIAS:
+        errores.append(f"categorías fuera de vocabulario: {cats - parser.CATEGORIAS}")
+    sin_entidad = [it for it in items if not it["entidad"]]
+    if sin_entidad:
+        errores.append(f"{len(sin_entidad)} items sin entidad en el fixture")
+    # Spot-checks de contenido conocido del reporte del 03-jul
+    ents = {it["entidad"] for it in items}
+    for esperado in ("Fortaleza Leasing S.A.", "Droguería INTI S.A.",
+                     "Banco Ganadero S.A."):
+        if esperado not in ents:
+            errores.append(f"entidad esperada ausente: {esperado}")
+    resol = [it for it in items if it["seccion"] == "Resoluciones Administrativas"]
+    if not any(it["entidad"].startswith("ASFI/549/2026") for it in resol):
+        errores.append("resolución ASFI/549/2026 no parseada como entidad")
+    ganadero = [it for it in items if it["entidad"] == "Banco Ganadero S.A."]
+    if not any("compromisos" in it["tags"] for it in ganadero):
+        errores.append("compromisos financieros de Banco Ganadero sin tag")
+    if not any("13.82%" in it["texto"] for it in ganadero):
+        errores.append("tabla de compromisos (CAP 13.82%) no quedó en el texto")
+
+
+def t_tags(errores: list):
+    casos = [
+        ("Autorizar la Oferta Pública e inscribir la Emisión de Bonos X", "emision", True),
+        ("procedió al pago del Cupón N° 9 de la Serie Única", "cupon", True),
+        ("presentó renuncia al cargo de Gerente", "personal", True),
+        ("la Junta General Ordinaria de Accionistas determinó", "junta", True),
+        ("los fondos disponibles en la cuenta designada", "personal", False),  # regresión
+        ("realizó un desembolso de Bs7.000.000,00", "prestamo", True),
+    ]
+    for texto, tag, debe in casos:
+        tiene = tag in parser.clasificar_tags(texto, "Noticias")
+        if tiene != debe:
+            errores.append(f"tags: {texto[:40]!r} → {tag} esperado={debe} obtuvo={tiene}")
+    if "resolucion" not in parser.clasificar_tags("RESUELVE: PRIMERO.-", "Resoluciones Administrativas"):
+        errores.append("tags: sección Resoluciones no aporta tag 'resolucion'")
+
+
+def t_extracto(errores: list):
+    r = resumen.extracto("Comunica que pagará dividendos el 3 de julio de 2026. "
+                         "Detalle adicional que no debería entrar.")
+    if r != "Comunica que pagará dividendos el 3 de julio de 2026.":
+        errores.append(f"extracto primera-oración: {r!r}")
+    largo = resumen.extracto("palabra " * 60)
+    if len(largo) > resumen.RESUMEN_MAX_CHARS or largo.endswith(" "):
+        errores.append(f"extracto cap/corte: len={len(largo)}")
+
+
+def t_candado(errores: list):
+    prev = os.environ.pop("ANTHROPIC_API_KEY", None)
+    try:
+        # Sin key → None sin red ni candado.
+        if resumen.resumir_item("X", "texto") is not None:
+            errores.append("candado: sin key debería devolver None")
+        # Con key pero sin autorizado → RuntimeError ANTES de cualquier POST.
+        os.environ["ANTHROPIC_API_KEY"] = "sk-ant-fake"
+        try:
+            resumen.resumir_item("X", "texto sustantivo de prueba")
+            errores.append("candado: sin autorizado=True debería lanzar RuntimeError")
+        except RuntimeError:
+            pass
+    finally:
+        if prev is None:
+            os.environ.pop("ANTHROPIC_API_KEY", None)
+        else:
+            os.environ["ANTHROPIC_API_KEY"] = prev
+
+
+def t_cap(errores: list):
+    import sqlite3
+    prev = os.environ.get("ANTHROPIC_API_KEY")
+    os.environ["ANTHROPIC_API_KEY"] = "sk-ant-fake"
+    conn = sqlite3.connect(":memory:")
+    try:
+        resumen.init_spend_schema(conn)
+        mes = resumen._mes_utc()
+        conn.execute("INSERT INTO asfi_api_spend (mes, est_usd) VALUES (?, ?)",
+                     (mes, 99.0))
+        conn.commit()
+        # Cap agotado → None (fail-closed, sin POST — con key fake, un POST real
+        # fallaría distinto: acá esperamos None limpio ANTES de tocar red).
+        r = resumen.resumir_item("X", "texto sustantivo", autorizado=True, conn=conn)
+        if r is not None:
+            errores.append(f"cap: agotado debería dar None, dio {r!r}")
+        # conn=None → cap ilegible → fail-closed None.
+        r2 = resumen.resumir_item("X", "texto sustantivo", autorizado=True, conn=None)
+        if r2 is not None:
+            errores.append("cap: conn=None debería fail-closear a None")
+    finally:
+        conn.close()
+        if prev is None:
+            os.environ.pop("ANTHROPIC_API_KEY", None)
+        else:
+            os.environ["ANTHROPIC_API_KEY"] = prev
+
+
+def run() -> int:
+    errores: list = []
+    for t in (t_parser_fixture, t_tags, t_extracto, t_candado, t_cap):
+        t(errores)
+    if errores:
+        print("FAIL test_asfi_parser:")
+        for e in errores:
+            print("  -", e)
+        return 1
+    print("OK test_asfi_parser: fixture real 03-jul parsea fecha/secciones/entidades/"
+          "tags (incl. tabla compromisos Banco Ganadero); clasificador sin falso "
+          "positivo 'designada'; extracto con cap 200; candado lanza sin autorizado; "
+          "cap agotado y conn=None fail-closean sin POST.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(run())
