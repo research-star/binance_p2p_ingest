@@ -133,8 +133,10 @@ frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de
   sticky `top:0; z-index:52`:
   - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs` con **6
     tabs** (Noticias [landing/active] · Macro · Dólar · Rendimientos DPF · BBV · Guía).
-  - Derecha (`.fb-navbar-right`): `#langToggle` (botón "ES", hoy sin lógica de
-    idioma) + `#themeToggle` (SVG luna/sol).
+  - Derecha (`.fb-navbar-right`): `#langToggle` (ES | EN, funcional desde
+    `feat/i18n-en` — navegación full-page a la ruta equivalente en el otro
+    idioma, ver § "Interfaz EN (i18n bake-time)" abajo) + `#themeToggle` (SVG
+    luna/sol).
 - **Sub-header por tab** (`.fb-subheader`, sticky `top:var(--nav-h); z-index:51`):
   `h1` + stats de visitas. Cada tab tiene el suyo.
 - **Botón de login — NO está en el header.** Vive en la barra admin de la tab
@@ -483,6 +485,60 @@ y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 + activa Noticias (landing).
+
+### Interfaz EN (i18n bake-time) — `feat/i18n-en`
+
+Doble bake desde el mismo `template.html`: `dashboard.py` emite `index.html`
+(ES) + `en/index.html` (EN) en una sola corrida. Mecanismo: tokens
+`{{t:clave}}` en el template, resueltos por `i18n_bake.py` contra
+`i18n/es.json` (texto ES verbatim) e `i18n/en.json` (497→465 claves tras
+descope de DPF, ver abajo). Clave faltante en un diccionario → el bake aborta
+ruidoso listando las claves (nunca se shippea un `{{t:...}}` crudo); el
+carril EN es fail-soft a nivel bake (si falla, `dashboard.py` omite el output
+EN con warn y el ES sigue intacto) y `publish_dashboard.py` degrada a
+warn + EN stale si el output EN falta o es demasiado chico (mismo espíritu
+que `_inject_riesgo`).
+
+- **Tabs Guía, BBV y DPF son ES-only** — no existen en el build EN (sin botón
+  de nav, sin panel, sin ruta). DPF se descopeó de la interfaz EN a media
+  implementación (decisión de Diego, enmienda la spec original del ticket
+  i18n-EN que sí incluía DPF); sus ~32 claves `dpf.*` se removieron de ambos
+  diccionarios. Mecanismo de exclusión: marcadores `<!-- i18n:es-only -->` /
+  `/* i18n:es-only */` alrededor de los botones de nav, los paneles, y las
+  entradas `ROUTE_MAP`/`TAB_TITLES` de las tres tabs — el motor los stripea
+  enteros en el bake EN y solo remueve los comentarios-marcador en el bake ES.
+- **Ruteo con prefijo**: `FB_BASE` baked (`''` en ES, `'/en'` en EN);
+  `ROUTE_MAP` sigue con slugs sin prefijo, un helper (`fbSlug`/`fbHref`)
+  normaliza `location.pathname` quitando `FB_BASE` antes de resolver, y todo
+  `pushState`/`replaceState` escribe `FB_BASE + slug`. `static/404.html` es
+  prefix-aware: si el path perdido empieza con `/en/`, rebota a
+  `/en/?path=<resto>` preservando el prefijo; si no, comportamiento de
+  siempre. Deep-links a `/en/riesgo`, `/en/dolar` etc. resuelven a la tab
+  correcta en inglés; `/en/guia`, `/en/bbv`, `/en/dpf` caen a home EN
+  (mismo patrón que un path desconocido).
+- **`#langToggle`** (ver arriba): calcula el slug sin prefijo actual y navega
+  full-page (no SPA) a `FB_BASE` + slug del otro idioma; si el slug actual es
+  una de las tres tabs ES-only, degrada a home del destino.
+- **Locale de fechas/números y Plotly**: condicionados a `FB_LANG` baked
+  (arrays de meses/días, `toLocaleString`, formateadores custom de fecha,
+  registro y aplicación del locale `es` de Plotly — todo gateado a
+  `FB_LANG==='es'`; EN usa el default en inglés de Plotly).
+- **SEO**: `<html lang="{{lang}}">`, `<link rel="canonical">` propio por
+  versión, `hreflang` cruzado (es/en/x-default) en ambos outputs.
+- **Noticias en EN**: el contenido (titulares/resúmenes) queda en español
+  (es data, no UI); el chrome (feed title, ranking rail, categorías, barra
+  admin) sí está en inglés. Nota discreta `.np-lang-note` bajo el subtítulo
+  del feed ("News content is in Spanish.") — vacía y colapsada (`:empty` +
+  `display:none`) en el bake ES.
+- Payload de datos: labels COICOP (IPC) y PIB que `dashboard.py` inyecta al
+  JSON se relabelan por idioma contra `i18n/*.json` (prefijo `data.*`) sin
+  reconstruir la data dos veces (deep-copy barato de la subtree
+  `inflacion` solamente).
+- Tests: `scripts/test_i18n_bake.py` (motor + cobertura de tokens template↔
+  dicts + slugs COICOP/PIB↔dicts). `scripts/conftest.py` allowlista qué
+  módulos de `scripts/` son recolectables por pytest (legacy con `sys.exit`
+  a nivel de módulo quedan excluidos de la colección, no de la ejecución
+  directa).
 
 **Frontend tab "Noticias"** (en `template.html`):
 - Variante D ("Terminal · tabla densa") del mockup de Claude Design
