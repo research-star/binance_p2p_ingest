@@ -968,6 +968,16 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .asfi-sec-chip{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-soft);white-space:nowrap}
 .asfi-vacio{margin:44px auto;text-align:center;color:var(--text-muted);font-size:13px}
 .asfi-fuente{margin-top:18px;font-size:10.5px;color:var(--text-muted);line-height:1.6}
+/* Barra de fechas unificada (Desde – Hasta; reusa .asfi-nav input[type=date]) */
+.asfi-rango-lbl{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+.asfi-rango-dash{color:var(--text-soft)}
+/* Columna de fecha de publicación (solo en la vista de rango) */
+.asfi-fecha-col{white-space:nowrap;font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+/* Categorías colapsables */
+.asfi-collapsible>h3{cursor:pointer;user-select:none}
+.asfi-caret{display:inline-block;width:12px;margin-right:2px;font-size:10px;color:var(--text-soft);transition:transform .15s}
+.asfi-card:not(.asfi-collapsed)>h3 .asfi-caret{transform:rotate(90deg)}
+.asfi-collapsed>.asfi-card-body{display:none}
 @media(max-width:640px){.asfi-card .fb-data-table{display:block;overflow-x:auto}}
 </style>
 <div id="tab-asfi" style="display:none;">
@@ -977,10 +987,10 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-subtitle">{{t:asfi.subtitle}} <span id="asfiFechaLabel">&mdash;</span> &middot; <span id="asfiMetaN">&mdash;</span></div>
     </div>
     <div class="asfi-nav">
-      <button id="asfiPrev" title="{{t:asfi.nav_prev_title}}">&larr;</button>
-      <input type="date" id="asfiFecha">
-      <button id="asfiNext" title="{{t:asfi.nav_next_title}}">&rarr;</button>
-      <button id="asfiUltimo" title="{{t:asfi.nav_ultimo_title}}">{{t:asfi.nav_ultimo_btn}}</button>
+      <span class="asfi-rango-lbl">{{t:asfi.rango_label}}</span>
+      <input type="date" id="asfiDesde" title="{{t:asfi.rango_desde_title}}">
+      <span class="asfi-rango-dash">&ndash;</span>
+      <input type="date" id="asfiHasta" title="{{t:asfi.rango_hasta_title}}">
     </div>
   </div>
   <div class="content">
@@ -5814,7 +5824,7 @@ window.addEventListener('popstate', function(){
    raíz de gh-pages (mismo origen; generados por ingest_asfi.py en el VPS). */
 (function(){
 'use strict';
-var st = {init:false, indice:null, fechas:[], cacheMes:{}, fecha:null, tema:'', txt:''};
+var st = {init:false, indice:null, fechas:[], cacheMes:{}, fecha:null, tema:'', txt:'', rango:null};
 var MESES_ES=FB_LANG==='es'?['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']:['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DIAS_ES=FB_LANG==='es'?['domingo','lunes','martes','miércoles','jueves','viernes','sábado']:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var VISOR='https://appweb2.asfi.gob.bo/PaginasPublicas2/VistaHechosRelevantes/VisorDocumentos.aspx?variable1=';
@@ -5845,6 +5855,9 @@ function fmtFecha(iso){var pt=iso.split('-'),d=new Date(Date.UTC(+pt[0],+pt[1]-1
   return FB_LANG==='es'
     ? (DIAS_ES[d.getUTCDay()]+' '+(+pt[2])+' de '+MESES_ES[+pt[1]-1]+' de '+pt[0])
     : (DIAS_ES[d.getUTCDay()]+', '+MESES_ES[+pt[1]-1]+' '+(+pt[2])+', '+pt[0]);}
+function fmtNum(iso){var p=iso.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+function pad2(n){return (n<10?'0':'')+n;}
+function hoyISO(){var d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
 function campo(it,k){return (it.campos&&it.campos[k])||'';}
 function celda(v){return v?esc(v):'<span style="color:var(--text-soft)">—</span>';}
 function resHtml(it){
@@ -5921,8 +5934,13 @@ var GRUPOS=[
 function cargarIndice(cb){
   fetch('/asfi_index.json',{cache:'no-cache'}).then(function(r){return r.json();}).then(function(idx){
     st.indice=idx; st.fechas=Object.keys(idx.dias||{}).sort();
-    var inp=document.getElementById('asfiFecha');
-    if(st.fechas.length){inp.min=st.fechas[0];inp.max=st.fechas[st.fechas.length-1];}
+    if(st.fechas.length){
+      // Barra unificada Desde–Hasta: min = primer reporte; max = hoy (aunque hoy
+      // no tenga reporte, el usuario puede fijarlo como extremo del rango).
+      var lo=st.fechas[0], hoy=hoyISO();
+      var d0=document.getElementById('asfiDesde'), d1=document.getElementById('asfiHasta');
+      d0.min=lo; d0.max=hoy; d1.min=lo; d1.max=hoy;
+    }
     cb(null);
   }).catch(function(e){cb(e);});
 }
@@ -5933,20 +5951,101 @@ function cargarDia(fecha,cb){
     st.cacheMes[mes]=d; cb(null,(d.dias||{})[fecha]||null);
   }).catch(function(e){cb(e,null);});
 }
-function irA(fecha){
+/* Barra de fechas unificada. desde==hasta → un solo día (vista clásica);
+   desde<hasta → rango agregado con columna de fecha. No se hace "snap" a un día
+   con reporte: si el día elegido no tiene reporte, se muestra el estado vacío. */
+function aplicarFiltro(desde, hasta){
   if(!st.fechas.length) return;
-  if(!st.indice.dias[fecha]){
-    var antes=st.fechas.filter(function(f){return f<=fecha;});
-    fecha=antes.length?antes[antes.length-1]:st.fechas[0];
+  desde = desde || hoyISO();
+  hasta = hasta || desde;
+  if(desde>hasta){var t=desde;desde=hasta;hasta=t;}
+  document.getElementById('asfiDesde').value=desde;
+  document.getElementById('asfiHasta').value=hasta;
+  var slug=(fbSlug(window.location.pathname)==='/asfi');
+  if(desde===hasta){
+    st.rango=null; st.fecha=desde;
+    if(slug){history.replaceState(null,'',fbHref('/asfi')+'#'+desde);}
+    pintar();
+  } else {
+    st.rango={desde:desde,hasta:hasta};
+    if(slug){history.replaceState(null,'',fbHref('/asfi')+'#'+desde+'..'+hasta);}
+    pintarRango();
   }
-  st.fecha=fecha;
-  document.getElementById('asfiFecha').value=fecha;
-  var i=st.fechas.indexOf(fecha);
-  document.getElementById('asfiPrev').disabled=(i<=0);
-  document.getElementById('asfiNext').disabled=(i>=st.fechas.length-1);
-  if(fbSlug(window.location.pathname)==='/asfi'){history.replaceState(null,'',fbHref('/asfi')+'#'+fecha);}
-  pintar();
 }
+function filtrarItems(dia){
+  var q=st.txt.toLowerCase();
+  return dia.items.filter(function(it){
+    if(st.tema && (it.grupo||'otros')!==st.tema) return false;
+    if(!q) return true;
+    var blob=(it.entidad+' '+it.texto+' '+it.categoria+' '+JSON.stringify(it.campos||{})).toLowerCase();
+    return blob.indexOf(q)!==-1;
+  });
+}
+function grupoDe(it){ return it.grupo||'otros'; }
+function entradasDia(dia, fecha){
+  return filtrarItems(dia).map(function(it){ return {it:it, fecha:fecha, idx:dia.items.indexOf(it)}; });
+}
+/* Render de las tarjetas por categoría. `entries` = [{it, fecha, idx}] (idx =
+   índice del item dentro de su día; la clave data-exp = "fecha:idx" es única aun
+   agregando varios días). `dateCol` añade la columna Fecha (vista de rango).
+   Sin filtro de tema, cada categoría se pinta colapsable y colapsada. */
+function renderGrupos(entries, dateCol){
+  var colaps = (st.tema===''); // solo colapsamos cuando NO hay filtro por tema
+  var html=[];
+  function abreCard(titulo, n){
+    return '<div class="asfi-card'+(colaps?' asfi-collapsible asfi-collapsed':'')+'">'+
+      '<h3'+(colaps?' data-toggle="card"':'')+'>'+(colaps?'<span class="asfi-caret">&#9656;</span>':'')+
+      titulo+'<span class="n">'+n+'</span></h3><div class="asfi-card-body">';
+  }
+  GRUPOS.forEach(function(g){
+    var arr=entries.filter(function(en){return grupoDe(en.it)===g.id;});
+    if(!arr.length) return;
+    html.push(abreCard(g.titulo, arr.length));
+    html.push('<table class="fb-data-table"><thead><tr>');
+    g.cols.forEach(function(c,ci){
+      html.push('<th'+(ci===0?' class="asfi-ico-td"':'')+'>'+c+'</th>');
+      if(ci===0 && dateCol) html.push('<th class="asfi-fecha-col">{{t:asfi.col_fecha}}</th>');
+    });
+    html.push('</tr></thead><tbody>');
+    arr.forEach(function(en){
+      var it=en.it, key=en.fecha+':'+en.idx;
+      var filas=g.filas?g.filas(it):[g.fila(it)];
+      if(!filas.length) filas=[['<span class="asfi-ent">'+esc(it.entidad)+'</span>']];
+      filas.forEach(function(cells,fi){
+        html.push('<tr data-exp="'+key+'" title="{{t:asfi.js_click_texto}}">'+
+          '<td class="asfi-ico-td">'+(fi===0?icono(it.categoria):'')+'</td>'+
+          (dateCol?'<td class="asfi-fecha-col">'+(fi===0?fmtNum(en.fecha):'')+'</td>':''));
+        cells.forEach(function(c){
+          // celda expandida (compromisos sin indicadores): ocupa el resto
+          if(c.indexOf('<td-span3>')===0){
+            html.push('<td colspan="'+(g.cols.length-2)+'">'+c.replace('<td-span3>','').replace('</td-span3>','')+'</td>');
+          } else { html.push('<td>'+c+'</td>'); }
+        });
+        html.push('</tr>');
+      });
+      html.push('<tr class="asfi-det" data-det="'+key+'" style="display:none"><td colspan="'+(g.cols.length+(dateCol?1:0))+'">'+esc(it.texto)+'</td></tr>');
+    });
+    html.push('</tbody></table></div></div>');
+  });
+  var otros=entries.filter(function(en){return grupoDe(en.it)==='otros';});
+  if(otros.length){
+    html.push(abreCard('{{t:asfi.tema_otros}}', otros.length));
+    html.push('<table class="fb-data-table"><tbody>');
+    otros.forEach(function(en){
+      var it=en.it, key=en.fecha+':'+en.idx;
+      html.push('<tr class="asfi-otros-row" data-exp="'+key+'" title="{{t:asfi.js_click_texto}}">'+
+        '<td class="asfi-ico-td">'+icono(it.categoria)+'</td>'+
+        (dateCol?'<td class="asfi-fecha-col">'+fmtNum(en.fecha)+'</td>':'')+
+        '<td style="min-width:140px"><span class="asfi-ent">'+esc(it.entidad||'ASFI')+'</span></td>'+
+        '<td>'+resHtml(it)+'</td>'+
+        '<td style="text-align:right"><span class="asfi-sec-chip">'+esc(it.seccion)+'</span></td></tr>');
+      html.push('<tr class="asfi-det" data-det="'+key+'" style="display:none"><td colspan="'+(dateCol?5:4)+'">'+esc(it.texto)+'</td></tr>');
+    });
+    html.push('</tbody></table></div></div>');
+  }
+  return html.join('');
+}
+/* Vista por día (default). */
 function pintar(){
   var cuerpo=document.getElementById('asfiCuerpo');
   cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_cargando}}</div>';
@@ -5957,70 +6056,63 @@ function pintar(){
     document.getElementById('asfiMetaN').textContent=dia.items.length+'{{t:asfi.js_n_comunicados}}';
     var pdf=document.getElementById('asfiPdfSlot');
     pdf.innerHTML=dia.guid?'<a href="'+VISOR+esc(dia.guid)+'" target="_blank" rel="noopener" style="color:var(--text-muted)">{{t:asfi.js_pdf_original}}</a>':'';
-    var q=st.txt.toLowerCase();
-    var items=dia.items.filter(function(it){
-      if(st.tema && (it.grupo||'otros')!==st.tema) return false;
-      if(!q) return true;
-      var blob=(it.entidad+' '+it.texto+' '+it.categoria+' '+JSON.stringify(it.campos||{})).toLowerCase();
-      return blob.indexOf(q)!==-1;
-    });
-    if(!items.length){cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_sin_match}}</div>';return;}
-    var html=[]; var usados={};
-    GRUPOS.forEach(function(g){
-      var arr=items.filter(function(it){return (it.grupo||'otros')===g.id;});
-      if(!arr.length) return;
-      html.push('<div class="asfi-card"><h3>'+g.titulo+'<span class="n">'+arr.length+'</span></h3>');
-      html.push('<table class="fb-data-table"><thead><tr>');
-      g.cols.forEach(function(c,ci){html.push('<th'+(ci===0?' class="asfi-ico-td"':'')+'>'+c+'</th>');});
-      html.push('</tr></thead><tbody>');
-      arr.forEach(function(it){
-        var idx=dia.items.indexOf(it);
-        var filas=g.filas?g.filas(it):[g.fila(it)];
-        if(!filas.length) filas=[['<span class="asfi-ent">'+esc(it.entidad)+'</span>']];
-        filas.forEach(function(cells,fi){
-          html.push('<tr data-exp="'+idx+'" title="{{t:asfi.js_click_texto}}">'+
-            '<td class="asfi-ico-td">'+(fi===0?icono(it.categoria):'')+'</td>');
-          cells.forEach(function(c){
-            // celda expandida (compromisos sin indicadores): ocupa el resto
-            if(c.indexOf('<td-span3>')===0){
-              html.push('<td colspan="'+(g.cols.length-2)+'">'+c.replace('<td-span3>','').replace('</td-span3>','')+'</td>');
-            } else { html.push('<td>'+c+'</td>'); }
-          });
-          html.push('</tr>');
-        });
-        html.push('<tr class="asfi-det" data-det="'+idx+'" style="display:none"><td colspan="'+g.cols.length+'">'+esc(it.texto)+'</td></tr>');
-      });
-      html.push('</tbody></table></div>');
-    });
-    var otros=items.filter(function(it,i){return (it.grupo||'otros')==='otros';});
-    if(otros.length){
-      html.push('<div class="asfi-card"><h3>{{t:asfi.tema_otros}}<span class="n">'+otros.length+'</span></h3>');
-      html.push('<table class="fb-data-table"><tbody>');
-      otros.forEach(function(it){
-        var idx=dia.items.indexOf(it);
-        html.push('<tr class="asfi-otros-row" data-exp="'+idx+'" title="{{t:asfi.js_click_texto}}">'+
-          '<td class="asfi-ico-td">'+icono(it.categoria)+'</td>'+
-          '<td style="min-width:140px"><span class="asfi-ent">'+esc(it.entidad||'ASFI')+'</span></td>'+
-          '<td>'+resHtml(it)+'</td>'+
-          '<td style="text-align:right"><span class="asfi-sec-chip">'+esc(it.seccion)+'</span></td></tr>');
-        html.push('<tr class="asfi-det" data-det="'+idx+'" style="display:none"><td colspan="4">'+esc(it.texto)+'</td></tr>');
-      });
-      html.push('</tbody></table></div>');
-    }
-    cuerpo.innerHTML=html.join('');
+    var entries=entradasDia(dia, st.fecha);
+    if(!entries.length){cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_sin_match}}</div>';return;}
+    cuerpo.innerHTML=renderGrupos(entries, false);
   });
 }
+/* Vista por rango [desde, hasta]: agrega TODOS los comunicados del índice en la
+   ventana dentro de las mismas tarjetas por categoría, con una columna de fecha
+   (más reciente primero). Precarga los meses necesarios (cargarDia cachea por
+   mes) y luego renderiza de una sola pasada. */
+function pintarRango(){
+  var cuerpo=document.getElementById('asfiCuerpo');
+  var d0=st.rango.desde, d1=st.rango.hasta;
+  document.getElementById('asfiPdfSlot').innerHTML='';
+  document.getElementById('asfiFechaLabel').textContent=fmtNum(d0)+' – '+fmtNum(d1);
+  var fechas=st.fechas.filter(function(f){return f>=d0 && f<=d1;});
+  if(!fechas.length){
+    cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_rango_sin}}</div>';
+    document.getElementById('asfiMetaN').textContent='—';return;
+  }
+  cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_cargando}}</div>';
+  var meses={}; fechas.forEach(function(f){meses[f.slice(0,7)]=1;});
+  var pend=Object.keys(meses).length;
+  Object.keys(meses).forEach(function(m){
+    cargarDia(m+'-01',function(){ if(--pend===0) pintarRangoRender(fechas); });
+  });
+}
+function pintarRangoRender(fechas){
+  var cuerpo=document.getElementById('asfiCuerpo');
+  var orden=fechas.slice().sort().reverse();   // más reciente primero
+  var entries=[], dias=0;
+  orden.forEach(function(f){
+    var d=st.cacheMes[f.slice(0,7)];
+    var dia=(d&&d.dias)?d.dias[f]:null;
+    if(!dia) return;
+    var ents=entradasDia(dia, f);
+    if(!ents.length) return;
+    dias++;
+    entries=entries.concat(ents);
+  });
+  document.getElementById('asfiMetaN').textContent=entries.length+'{{t:asfi.js_n_comunicados}} · '+dias+'{{t:asfi.js_rango_dias}}';
+  cuerpo.innerHTML=entries.length?renderGrupos(entries, true):'<div class="asfi-vacio">{{t:asfi.js_sin_match}}</div>';
+}
+function repintar(){ if(st.rango) pintarRango(); else pintar(); }
 function initAsfi(){
   st.init=true;
-  document.getElementById('asfiPrev').onclick=function(){var i=st.fechas.indexOf(st.fecha);if(i>0)irA(st.fechas[i-1]);};
-  document.getElementById('asfiNext').onclick=function(){var i=st.fechas.indexOf(st.fecha);if(i<st.fechas.length-1)irA(st.fechas[i+1]);};
-  document.getElementById('asfiUltimo').onclick=function(){irA(st.fechas[st.fechas.length-1]);};
-  document.getElementById('asfiFecha').onchange=function(e){irA(e.target.value);};
-  document.getElementById('asfiBuscar').oninput=function(e){st.txt=e.target.value.trim();pintar();};
+  document.getElementById('asfiBuscar').oninput=function(e){st.txt=e.target.value.trim();repintar();};
   var sel=document.getElementById('asfiTema');
   Object.keys(TEMAS_LABEL).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=TEMAS_LABEL[k];sel.appendChild(o);});
-  sel.onchange=function(e){st.tema=e.target.value;pintar();};
+  sel.onchange=function(e){st.tema=e.target.value;repintar();};
+  // Barra unificada: al cambiar Desde o Hasta se re-aplica el filtro.
+  function onFecha(){ aplicarFiltro(document.getElementById('asfiDesde').value, document.getElementById('asfiHasta').value); }
+  document.getElementById('asfiDesde').onchange=onFecha;
+  document.getElementById('asfiHasta').onchange=onFecha;
   document.getElementById('asfiCuerpo').addEventListener('click',function(e){
+    // Click en el encabezado de una categoría colapsable → plegar/desplegar.
+    var h=e.target.closest('h3[data-toggle="card"]');
+    if(h){ h.parentNode.classList.toggle('asfi-collapsed'); return; }
     var tr=e.target.closest('tr[data-exp]');
     if(!tr || e.target.closest('a')) return;
     var det=document.querySelector('tr.asfi-det[data-det="'+tr.getAttribute('data-exp')+'"]');
@@ -6032,7 +6124,14 @@ function initAsfi(){
       return;
     }
     var hash=window.location.hash.replace('#','');
-    irA(/^\d{4}-\d{2}-\d{2}$/.test(hash)?hash:st.fechas[st.fechas.length-1]);
+    var mr=hash.match(/^(\d{4}-\d{2}-\d{2})\.\.(\d{4}-\d{2}-\d{2})$/);
+    if(mr){
+      aplicarFiltro(mr[1], mr[2]);
+    } else if(/^\d{4}-\d{2}-\d{2}$/.test(hash)){
+      aplicarFiltro(hash, hash);
+    } else {
+      aplicarFiltro(hoyISO(), hoyISO());   // por defecto: hoy (aunque no tenga reporte)
+    }
   });
 }
 window.renderAsfi=function(){ if(!st.init) initAsfi(); };
