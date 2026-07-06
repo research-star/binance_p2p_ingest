@@ -987,10 +987,13 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <div class="fb-subtitle">{{t:asfi.subtitle}} <span id="asfiFechaLabel">&mdash;</span> &middot; <span id="asfiMetaN">&mdash;</span></div>
     </div>
     <div class="asfi-nav">
+      <button id="asfiPrev" title="{{t:asfi.nav_prev_title}}">&larr;</button>
       <span class="asfi-rango-lbl">{{t:asfi.rango_label}}</span>
       <input type="date" id="asfiDesde" title="{{t:asfi.rango_desde_title}}">
       <span class="asfi-rango-dash">&ndash;</span>
       <input type="date" id="asfiHasta" title="{{t:asfi.rango_hasta_title}}">
+      <button id="asfiNext" title="{{t:asfi.nav_next_title}}">&rarr;</button>
+      <button id="asfiUltimo" title="{{t:asfi.nav_ultimo_title}}">{{t:asfi.nav_ultimo_btn}}</button>
     </div>
   </div>
   <div class="content">
@@ -5951,6 +5954,19 @@ function cargarDia(fecha,cb){
     st.cacheMes[mes]=d; cb(null,(d.dias||{})[fecha]||null);
   }).catch(function(e){cb(e,null);});
 }
+/* Día de referencia para las flechas ←/→: el último reporte publicado en o antes
+   del extremo 'Hasta' actual. Siempre cae en st.fechas (o el primero). */
+function diaRef(){
+  var h=document.getElementById('asfiHasta').value;
+  var antes=st.fechas.filter(function(f){return f<=h;});
+  return antes.length?antes[antes.length-1]:st.fechas[0];
+}
+/* Habilita/deshabilita las flechas según haya reporte anterior/siguiente. */
+function actualizarNav(){
+  var i=st.fechas.indexOf(diaRef());
+  document.getElementById('asfiPrev').disabled=(i<=0);
+  document.getElementById('asfiNext').disabled=(i>=st.fechas.length-1);
+}
 /* Barra de fechas unificada. desde==hasta → un solo día (vista clásica);
    desde<hasta → rango agregado con columna de fecha. No se hace "snap" a un día
    con reporte: si el día elegido no tiene reporte, se muestra el estado vacío. */
@@ -5961,6 +5977,7 @@ function aplicarFiltro(desde, hasta){
   if(desde>hasta){var t=desde;desde=hasta;hasta=t;}
   document.getElementById('asfiDesde').value=desde;
   document.getElementById('asfiHasta').value=hasta;
+  actualizarNav();
   var slug=(fbSlug(window.location.pathname)==='/asfi');
   if(desde===hasta){
     st.rango=null; st.fecha=desde;
@@ -6109,6 +6126,11 @@ function initAsfi(){
   function onFecha(){ aplicarFiltro(document.getElementById('asfiDesde').value, document.getElementById('asfiHasta').value); }
   document.getElementById('asfiDesde').onchange=onFecha;
   document.getElementById('asfiHasta').onchange=onFecha;
+  // Navegación día-a-día: las flechas colapsan a un solo día (reporte anterior/
+  // siguiente respecto del extremo 'Hasta'); 'Último' salta al último reporte.
+  document.getElementById('asfiPrev').onclick=function(){var i=st.fechas.indexOf(diaRef());if(i>0){var f=st.fechas[i-1];aplicarFiltro(f,f);}};
+  document.getElementById('asfiNext').onclick=function(){var i=st.fechas.indexOf(diaRef());if(i<st.fechas.length-1){var f=st.fechas[i+1];aplicarFiltro(f,f);}};
+  document.getElementById('asfiUltimo').onclick=function(){var u=st.fechas[st.fechas.length-1];aplicarFiltro(u,u);};
   document.getElementById('asfiCuerpo').addEventListener('click',function(e){
     // Click en el encabezado de una categoría colapsable → plegar/desplegar.
     var h=e.target.closest('h3[data-toggle="card"]');
@@ -6130,7 +6152,10 @@ function initAsfi(){
     } else if(/^\d{4}-\d{2}-\d{2}$/.test(hash)){
       aplicarFiltro(hash, hash);
     } else {
-      aplicarFiltro(hoyISO(), hoyISO());   // por defecto: hoy (aunque no tenga reporte)
+      // Por defecto: el último reporte publicado (día hábil anterior que haya
+      // salido), no hoy — hoy casi nunca tiene reporte y caería en estado vacío.
+      var ult=st.fechas[st.fechas.length-1];
+      aplicarFiltro(ult, ult);
     }
   });
 }
