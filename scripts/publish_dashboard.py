@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """
 publish_dashboard.py — Genera index.html (ES) + en/index.html (EN) via
-dashboard.py y los pushea a gh-pages.
+dashboard.py, los pushea a gh-pages y hace dual-publish del mismo bake a
+Cloudflare Pages.
 
 Diseñado para correr vía cron cada 12 min en el VPS productivo. La rama
 `gh-pages` en el remoto es orphan (sin parent en main) y GH Pages la sirve
 desde root como https://research-star.github.io/binance_p2p_ingest/.
+
+Dual-publish (cutover 2026-07-06): tras el push OK a gh-pages, se deploya el
+mismo worktree a Cloudflare Pages vía wrangler Direct Upload — edge productivo
+de finanzasbo.com. Ese deploy es NO-FATAL (si falla, gh-pages ya quedó
+publicado como fallback) y está gateado por la env-var CF_DEPLOY_ENABLED
+(default "1"; "0" pausa el espejo CF sin tocar el push a gh-pages). Ver
+deploy_cf_pages() más abajo.
 
 Mecánica:
 - Lockfile cooperativo (PID-aware), mismo patrón que normalize.py / backup.py.
