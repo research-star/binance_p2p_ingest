@@ -32,12 +32,21 @@ de backups y, opcionalmente, dashboard local.
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
-| GitHub Pages | rama `gh-pages` | rebuild ~30-60 s tras push de `publish_dashboard.py` | — |
+| Hosting dashboard (edge) | **Cloudflare Pages** (Direct Upload) sirve `finanzasbo.com` + `www`; rama `gh-pages` = destino del push (dual-publish) + fallback caliente | rebuild ~30-60 s tras push de `publish_dashboard.py` | — |
 
 **Workflow `auto-publish.yml`:** dispara `publish_dashboard.py` en VPS en
 cada push a `main`, **excepto** cuando el único cambio es data BCB
 autocommiteada (`bcb_referencial.json` / `bcb_tco.json` / `bcb_tre.json`) — esos los recoge el
 cron `*/12` en su ciclo normal, no fuerzan publish.
+
+> **Estado de hosting (transitorio, cutover 2026-07-06).** El edge productivo/canónico
+> de `finanzasbo.com` (+ `www`) es **Cloudflare Pages** (Direct Upload desde el mismo
+> worktree que publica `gh-pages`). La rama **`gh-pages` NO se retiró**: sigue siendo el
+> destino del push del dual-publish y el **fallback caliente** (pendiente de retiro en una
+> fase posterior). El rollback DNS a GitHub Pages queda disponible mientras `gh-pages` viva.
+> Las menciones a "GitHub Pages" más abajo en este doc deben leerse bajo este marco: el
+> mecanismo (push a gh-pages, copiado de `static/`, truco 404, proxy de frescura `raw`)
+> sigue vigente; lo que cambió es qué edge sirve el HTML al público.
 
 ### Cerrado desde el último refresh (2026-06-10 → 2026-06-17)
 
@@ -253,7 +262,8 @@ pipeline completo con data fresca del VPS; esto es la versión manual mínima):
 2. **Servir**: `python -m http.server 8000 --directory <dir del build>`.
    NO abrir con `file://` — rompe el routing por History API.
 3. **Deep-links** (ej. `/noticias`, `/riesgo`): `http.server` no replica el
-   truco 404.html de GitHub Pages. Probar el mismo code-path con
+   truco 404.html del edge (Cloudflare Pages en prod; era GitHub Pages antes del
+   cutover — mecanismo idéntico, paridad verificada). Probar el mismo code-path con
    `http://localhost:8000/?path=%2Fnoticias` (es lo que el 404 redirige).
 4. **Validación automatizada** (opcional): Playwright vive en el cache de npx
    de esta máquina, no en `node_modules`. Desde un script Node:
@@ -276,9 +286,9 @@ colaborador fresco no las ve en un clone:
   normativo del PR #48 (tab Noticias). Pedírselo a Diego si un ticket lo
   referencia.
 - **`p2p_dashboard.html`** — alias local del build de inspección, ignorado
-  por git. Ojo: `index.html` SÍ está trackeado (es el archivo que sirve
-  GitHub Pages) — el build local solo lo ensucia en el working tree; no
-  commitearlo (ver § Preview local).
+  por git. Ojo: `index.html` SÍ está trackeado (es el archivo que se publica al
+  edge productivo —Cloudflare Pages— vía la rama `gh-pages`) — el build local solo
+  lo ensucia en el working tree; no commitearlo (ver § Preview local).
 
 ---
 
@@ -470,7 +480,8 @@ contenedor DOM), `TAB_TITLES` (título del documento) y `MACRO_SUBTABS`
 lazy). El `<title>` se actualiza junto con la activación.
 
 **Entrada directa a sub-paths** (ej. `finanzasbo.com/bbv` desde bookmark o
-link externo): GitHub Pages no encuentra el archivo y sirve `404.html`
+link externo): el edge (Cloudflare Pages en prod; GitHub Pages antes del cutover —
+mismo comportamiento, paridad verificada) no encuentra el archivo y sirve `404.html`
 (comiteado en `static/404.html`, copiado a la raíz de `gh-pages` por
 `publish_dashboard.py`). Ese 404 redirige a `/?path=%2Fbbv`. El init del SPA
 lee el `?path`, hace `history.replaceState` a `/bbv`, y activa la tab. UX:
@@ -731,8 +742,9 @@ Plotly.js, más la versión en inglés `en/index.html` (doble bake vía
 `i18n_bake.py` + `i18n/*.json`; misma data). El EN es fail-soft de punta a
 punta: si su bake falla, dashboard.py lo omite con warn (el ES no se
 bloquea) y `publish_dashboard.py` degrada a warn + EN stale.
-Publicado en `https://research-star.github.io/binance_p2p_ingest/`.
-Opcional `--csv` exporta métricas por snapshot.
+Publicado en `https://finanzasbo.com` (edge Cloudflare Pages; la URL del fallback
+`https://research-star.github.io/binance_p2p_ingest/` sigue existiendo pero no es el
+canal productivo). Opcional `--csv` exporta métricas por snapshot.
 
 11 paneles: VWAP por profundidad, Spread efectivo, Profundidad por lado,
 Curva de deciles ("tijera"), Ratio SELL/BUY, Concentración top-5 merchants,
@@ -853,10 +865,13 @@ jail `sshd` activa.
 
 Tras merge a `main`, el flujo automático es: workflow `auto-publish` → SSH al
 VPS → `git pull` → cache bust (`rm -f /var/log/binance_p2p/publish_dashboard.last_size`)
-→ `publish_dashboard.py` → push a `gh-pages` → GH Pages rebuild (~30-60 s).
+→ `publish_dashboard.py` → push a `gh-pages` → **dual-publish a Cloudflare Pages**
+(Direct Upload del mismo worktree, edge productivo desde el cutover 2026-07-06).
 Verificar contra `finanzasbo.com` directo puede devolver HTML viejo porque el
-CDN del custom domain cachea agresivamente — eso **no significa que el deploy
-falló**. La fuente de verdad post-deploy es la rama `gh-pages`.
+edge (Cloudflare Pages) también cachea — eso **no significa que el deploy falló**.
+La fuente de verdad de frescura sigue siendo el **`raw` de `gh-pages`** (sin CDN
+delante; el dual-publish sigue pusheando ahí, así que refleja el mismo bake que
+sube a CF).
 
 **1) Confirmar que el deploy completó**
 
@@ -871,21 +886,30 @@ falló**. La fuente de verdad post-deploy es la rama `gh-pages`.
     --jq '{sha,date:.commit.committer.date,msg:.commit.message,author:.commit.committer.name}'
   ```
   Debe tener `author: "binance VPS"` y `date` posterior al `mergedAt` del PR.
+- Edge productivo (opcional) — confirmar que `finanzasbo.com` sirve desde
+  Cloudflare Pages:
+  ```
+  curl -sI https://finanzasbo.com | grep -iE '^server:|^cf-ray:'
+  ```
+  Esperado: `server: cloudflare` + `cf-ray` presente. (El deploy CF es NO-FATAL
+  en `publish_dashboard.py`: si falla, `gh-pages` igual quedó publicado y el
+  fallback sigue vivo — ver el log `cf=ok/skip/error` en `dashboard.log`.)
 
 **2) Verificar el HTML en vivo evitando cache stale**
 
-- **Preferido** — bypassa el CDN del custom domain:
+- **Preferido** — `raw` de `gh-pages`, sin CDN delante (fuente de verdad de
+  frescura; refleja el mismo bake que el dual-publish sube a CF):
   ```
   curl -sL https://raw.githubusercontent.com/research-star/binance_p2p_ingest/gh-pages/index.html -o /tmp/raw.html
   ```
-- **Alternativa** — custom domain con cache-buster agresivo:
+- **Alternativa** — edge productivo (Cloudflare Pages) con cache-buster agresivo:
   ```
   curl -sL -H "Cache-Control: no-cache" -H "Pragma: no-cache" \
        "https://www.finanzasbo.com/?_cb=$(date +%s%N)" -o /tmp/live.html
   ```
   El cache-buster nanosegundo (`%s%N`) bustea casos donde `?_cb=<epoch>`
-  integer no fue suficiente — visto en verificación de PR #36 con CDN del
-  custom domain.
+  integer no fue suficiente — visto en verificación de PR #36 (entonces con CDN
+  del custom domain de GitHub Pages; el edge CF cachea con la misma lógica).
 
 **3) Campo a chequear**
 
@@ -898,11 +922,12 @@ publish post-merge aún no llegó al CDN).
 
 | Síntoma | Causa probable | Acción |
 |---|---|---|
-| Custom domain devuelve HTML viejo, raw `gh-pages` está fresco (`generated_at` posterior al merge) | Cache CDN stale | Esperar, o re-fetch con cache-buster nanosec + headers no-cache. **NO es deploy roto.** |
+| Edge (`finanzasbo.com`, Cloudflare Pages) devuelve HTML viejo, raw `gh-pages` está fresco (`generated_at` posterior al merge) | Cache del edge stale | Esperar, o re-fetch con cache-buster nanosec + headers no-cache. **NO es deploy roto.** |
 | Raw `gh-pages` también está viejo (`generated_at` anterior al merge) | Deploy roto o skipeado | Investigar `gh run view <run-id>` y `/var/log/binance_p2p/dashboard.log` en el VPS. |
 | Workflow dice `success` en ~5-10 s en lugar de ~20 s | Race-lock con cron `*/12` (publish salió limpio sin generar HTML porque el cron tenía el lock cooperativo) | Esperar al próximo tick del cron, o forzar manual: `ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 "cd /opt/binance_p2p && rm -f /var/log/binance_p2p/publish_dashboard.last_size && .venv/bin/python scripts/publish_dashboard.py"`. |
 
-> **Caveat histórico** (PR #36, 2026-05-25): un cache stale del CDN se
+> **Caveat histórico** (PR #36, 2026-05-25; host de entonces: GitHub Pages —
+> hoy `finanzasbo.com` es edge Cloudflare Pages): un cache stale del CDN se
 > diagnosticó inicialmente como race-lock entre cron y workflow. La race no
 > existió — el commit de `gh-pages` ya tenía timestamp posterior al merge,
 > confirmando que el workflow sí pusheó a tiempo. Antes de diagnosticar
@@ -1346,7 +1371,7 @@ El `www` (Drupal/CDN) sí acepta cualquier IP, pero solo tiene el iframe.
 | `asfi_ingest/resumen.py` | Titular telegráfico IA (Haiku, ≤90 chars estilo cable — prompt V2, `RESUMEN_V` versiona: `aplicar()` re-procesa solo items de versión vieja, bajo el cap). Mismo contrato que `resumen_ia.py`: candado `autorizado=True` + cap mensual propio en tabla `asfi_api_spend` (self-create; default $1/mes, decisión Diego: SIN override). Fallback extractivo = origen B con asterisco (taxonomía A/B). `ASFI_RESUMEN=0` lo apaga sin tocar noticias. |
 | `ingest_asfi.py` | Orquestador. Default = corrida diaria de cron (dedupe por FECHA del título del listado — robusto entre backfill sin guid y cron con guid). `--backfill DIR` parsea PDFs locales. `--resumir` re-pasa la IA sobre items no-A (idempotente, cap-bounded — backfill de resúmenes en tandas). `--sin-ia`. |
 | `asfi_ingest/extract.py` | Grupo + campos estructurados por item (regex sobre `texto` persistido). Grupos V3: emisiones, cupones, préstamos, **directorio** (sale/entra/ratificado por persona — clasificación extraction-driven: sin cambios extraídos degrada a 'otros'), personal, dividendos (con monto Bs/USD, total o por acción), **uso_fondos** (emisión/destino/monto), **compromisos** (TODOS los pares indicador/umbral/valor con evaluación de cumplimiento, formatos tabla y verbal-BCP), **auditorias** (firma/gestión, extraction-driven), **juntas** (convocatorias: tipo/fecha/agenda — acá cae el caso 'distribución de resultados' en agenda, que NO es pago de dividendos), calificaciones, otros. `ingest_asfi.py --reextraer` recomputa todo sobre la data existente sin re-bajar PDFs. |
-| `static/asfi_YYYY-MM.json` + `static/asfi_index.json` | Data committeada al repo (patrón data-BCB). `publish_dashboard.py` ya copia los archivos sueltos de `static/` a la raíz de `gh-pages` — la publicación sale gratis en el ciclo normal (*/12). |
+| `static/asfi_YYYY-MM.json` + `static/asfi_index.json` | Data committeada al repo (patrón data-BCB). `publish_dashboard.py` ya copia los archivos sueltos de `static/` a la raíz de `gh-pages` (y de ahí suben al edge Cloudflare Pages en el mismo dual-publish) — la publicación sale gratis en el ciclo normal (*/12). |
 | Tab "ASFI" del SPA (`template.html`) | Pestaña real del dashboard (slug `/asfi`, `ROUTE_MAP`/`TAB_PANELS`/`renderAsfi` lazy — misma convención que BBV). Tablitas por tema con los campos extraídos + lista "Otros comunicados", íconos por rubro de entidad, nav de fecha con deep-link `/asfi#YYYY-MM-DD`, filtros por tema/texto, fila expandible con texto completo. `static/asfi.html` quedó como REDIRECT a `/asfi` (no romper links compartidos). |
 | `scripts/test_asfi_parser.py` | Fixture real (03-jul) + tags + extracto + candado + cap. |
 

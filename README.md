@@ -114,10 +114,13 @@ puede cambiarlo o bloquearlo sin aviso. Si eso pasa:
    "adv/search" y copiar el request actualizado.
 3. Actualizar `BASE_PARAMS` y `HEADERS` en `ingest.py` con lo que uses.
 
-## Dashboard (GitHub Pages)
+## Dashboard (hosting)
 
 El dashboard HTML autocontenido se genera con `dashboard.py` y se llama
-`index.html` para que GitHub Pages lo sirva por defecto.
+`index.html`. Desde el cutover 2026-07-06 el edge productivo es **Cloudflare
+Pages** (sirve `finanzasbo.com` + `www`); la publicación llega ahí vía la rama
+`gh-pages`, que se **retiene como carril de push + fallback caliente** (los pasos
+"Activar GitHub Pages" de más abajo describen ese carril, que sigue vivo).
 
 ### Actualizar y publicar
 
@@ -128,7 +131,13 @@ git commit -m "update dashboard"
 git push
 ```
 
-El dashboard queda servido en:
+El dashboard productivo se sirve en:
+
+```
+https://finanzasbo.com/            # edge Cloudflare Pages (canónico)
+```
+
+La URL del fallback GitHub Pages sigue existiendo (no es el canal productivo):
 
 ```
 https://<tu-usuario>.github.io/binance_p2p_ingest/
@@ -136,7 +145,7 @@ https://<tu-usuario>.github.io/binance_p2p_ingest/
 
 (Reemplazá `<tu-usuario>` por tu handle de GitHub.)
 
-### Activar GitHub Pages (una sola vez)
+### Activar GitHub Pages (una sola vez) — carril fallback
 
 1. Abrí el repo en GitHub → **Settings**.
 2. En el sidebar izquierdo, click en **Pages**.

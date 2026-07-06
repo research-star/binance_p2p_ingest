@@ -198,6 +198,7 @@ es necesaria — vestigio que se puede limpiar.
 
 - [x] Hosting de la ingesta — VPS Hetzner desde 2026-05-07.
 - [x] GitHub Pages publicado en `research-star.github.io/binance_p2p_ingest/`.
+- [x] Cutover de hosting a **Cloudflare Pages** (Direct Upload) el 2026-07-06 — `finanzasbo.com` + `www` pasan a servirse desde el edge CF; `gh-pages` retenido como carril de push (dual-publish) + fallback caliente, retiro en fase posterior.
 - [x] Repo Git + `.gitignore` inicializado, historial saneado con `git filter-repo`.
 - [x] Watchdog operativo (laptop pre-cutover; ahora vive en VPS cron).
 - [x] Histórico BCB compra+venta scrapeado (~106 días iniciales del SVG).
