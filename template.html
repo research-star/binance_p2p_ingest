@@ -819,7 +819,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
-    <button class="fb-tab" data-tab="mercado247">{{t:nav.tab_mercado247}}</button>
+    <button class="fb-tab" data-tab="mercado247" data-admin-only hidden>{{t:nav.tab_mercado247}}</button>
     <!-- i18n:es-only -->
     <button class="fb-tab" data-tab="dpf" hidden>{{t:nav.tab_dpf}}</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
@@ -5709,6 +5709,12 @@ window.addEventListener('popstate', function(){
   // Anónimo = ícono discreto (sin texto), baja prominencia, fácil de pasar por alto.
   var FB_LOGIN_BTN='<button class="fb-foot-login" type="button" data-np-login title="{{t:footer.login_title}}" aria-label="{{t:footer.login_aria}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></button>';
   function fbRenderSession(){
+    // Tabs admin-only (ej. Mercado 24/7): visibles SOLO con sesión admin confirmada.
+    // Mismo gate anti-flash que el resto de la UI admin — ocultas por `hidden` en el
+    // markup (0 flash para el público) y reveladas acá cuando npCheckMe confirma
+    // admin=true. fbRenderSession corre en toda transición (init/login/logout/expire),
+    // así que el toggle sigue el estado de npAdmin.isAdmin sin tocar cada handler.
+    document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>{{t:footer.logout}}</button></span>';
