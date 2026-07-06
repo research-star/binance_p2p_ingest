@@ -926,7 +926,8 @@ publish post-merge aún no llegó al CDN).
 | Raw `gh-pages` también está viejo (`generated_at` anterior al merge) | Deploy roto o skipeado | Investigar `gh run view <run-id>` y `/var/log/binance_p2p/dashboard.log` en el VPS. |
 | Workflow dice `success` en ~5-10 s en lugar de ~20 s | Race-lock con cron `*/12` (publish salió limpio sin generar HTML porque el cron tenía el lock cooperativo) | Esperar al próximo tick del cron, o forzar manual: `ssh -i ~/.ssh/id_ed25519_hetzner binance@46.62.158.88 "cd /opt/binance_p2p && rm -f /var/log/binance_p2p/publish_dashboard.last_size && .venv/bin/python scripts/publish_dashboard.py"`. |
 
-> **Caveat histórico** (PR #36, 2026-05-25): un cache stale del CDN se
+> **Caveat histórico** (PR #36, 2026-05-25; host de entonces: GitHub Pages —
+> hoy `finanzasbo.com` es edge Cloudflare Pages): un cache stale del CDN se
 > diagnosticó inicialmente como race-lock entre cron y workflow. La race no
 > existió — el commit de `gh-pages` ya tenía timestamp posterior al merge,
 > confirmando que el workflow sí pusheó a tiempo. Antes de diagnosticar
