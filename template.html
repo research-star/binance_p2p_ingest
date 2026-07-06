@@ -6005,12 +6005,13 @@ function entradasDia(dia, fecha){
 /* Render de las tarjetas por categoría. `entries` = [{it, fecha, idx}] (idx =
    índice del item dentro de su día; la clave data-exp = "fecha:idx" es única aun
    agregando varios días). `dateCol` añade la columna Fecha (vista de rango).
-   Sin filtro de tema, cada categoría se pinta colapsable y colapsada. */
+   Sin filtro de tema, cada categoría se pinta colapsable pero EXPANDIDA por
+   defecto (el usuario puede plegarla con el caret). */
 function renderGrupos(entries, dateCol){
-  var colaps = (st.tema===''); // solo colapsamos cuando NO hay filtro por tema
+  var colaps = (st.tema===''); // solo colapsables cuando NO hay filtro por tema
   var html=[];
   function abreCard(titulo, n){
-    return '<div class="asfi-card'+(colaps?' asfi-collapsible asfi-collapsed':'')+'">'+
+    return '<div class="asfi-card'+(colaps?' asfi-collapsible':'')+'">'+
       '<h3'+(colaps?' data-toggle="card"':'')+'>'+(colaps?'<span class="asfi-caret">&#9656;</span>':'')+
       titulo+'<span class="n">'+n+'</span></h3><div class="asfi-card-body">';
   }
