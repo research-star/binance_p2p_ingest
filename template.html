@@ -819,9 +819,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
-    <!-- i18n:es-only -->
-    <button class="fb-tab" data-tab="mercado247">Mercado 24/7</button>
-    <!-- /i18n:es-only -->
+    <button class="fb-tab" data-tab="mercado247">{{t:nav.tab_mercado247}}</button>
     <!-- i18n:es-only -->
     <button class="fb-tab" data-tab="dpf" hidden>{{t:nav.tab_dpf}}</button>
     <button class="fb-tab" data-tab="bbv" hidden>BBV</button>
@@ -1454,9 +1452,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 <!-- Mercado 24/7: isla oscura autocontenida (bundle namespaceado .m247 en
      static/mercado247-tab.js). Lazy-render vía window.renderMercado247() en
      activateTab. data-mercado247 marca el contenedor de montaje. -->
-<!-- i18n:es-only -->
 <div id="tab-mercado247" style="display:none;" data-mercado247></div><!-- /tab-mercado247 -->
-<!-- /i18n:es-only -->
 
 <div id="tab-noticias">
 </div><!-- /tab-noticias -->
@@ -3099,9 +3095,7 @@ var ROUTE_MAP = {
   /* /i18n:es-only */
   '/dolar':     {tab:'dollar'},
   '/asfi':      {tab:'asfi'},
-  /* i18n:es-only */
   '/mercado247':{tab:'mercado247'},
-  /* /i18n:es-only */
   '/noticias':  {tab:'noticias', alias:true}
 };
 // Registro tabId → id del contenedor DOM. Resuelve el mismatch dollar↔tab-dolar
@@ -3461,9 +3455,7 @@ var TAB_TITLES = {
   /* /i18n:es-only */
   'noticias': '{{t:macro.doc_title_noticias}}',
   'asfi':     '{{t:macro.doc_title_asfi}}',
-  /* i18n:es-only */
-  'mercado247': 'FinanzasBo — Mercado 24/7'
-  /* /i18n:es-only */
+  'mercado247': '{{t:macro.doc_title_mercado247}}'
 };
 // Inverso para el pushState de los flat tabs (sin subtab). Macro pushea el
 // slug del subtab activo, no un slug de tab.
@@ -6011,9 +6003,9 @@ window.renderAsfi=function(){ if(!st.init) initAsfi(); };
 <!-- Mercado 24/7 — bundle autocontenido (copiado plano a la raíz por
      publish_dashboard.py, igual que favicon.svg). Expone window.renderMercado247(),
      invocado con lazy-render desde activateTab. defer: no bloquea el parse.
-     La tab es ES-only (ver marcadores i18n:es-only): EN no carga el bundle. -->
-<!-- i18n:es-only -->
-<script src="mercado247-tab.js" defer></script>
-<!-- /i18n:es-only -->
+     Bilingüe: el bundle trae su propio dict i18n y lee el global FB_LANG (es/en).
+     src ABSOLUTO para que /en/index.html cargue /mercado247-tab.js (relativo
+     resolvería a /en/mercado247-tab.js, inexistente) — igual que favicon/manifest. -->
+<script src="/mercado247-tab.js" defer></script>
 
 </body></html>

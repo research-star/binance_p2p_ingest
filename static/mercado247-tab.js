@@ -15,6 +15,179 @@
 (function () {
   "use strict";
 
+  /* ================= i18n interno (dict en el bundle, NO en i18n/*.json) =======
+     El bundle se copia plano a la raíz del sitio (publish_dashboard.py), no pasa
+     por el bake de dashboard.py, así que sus strings viven acá. template.html
+     declara un global `var FB_LANG` ('es'|'en') horneado ANTES de este script
+     (defer), así que podemos leerlo en runtime. Standalone (sin FB_LANG) → 'es'.
+     Los valores 'es' son EXACTAMENTE los strings originales: el render ES no
+     cambia de comportamiento. T(clave) lee LANG una vez; clave ausente → devuelve
+     la clave (nunca tira). */
+  const LANG = (typeof FB_LANG !== "undefined" ? FB_LANG
+    : (typeof window !== "undefined" && window.FB_LANG) || "es");
+  const M247_I18N = {
+    es: {
+      "header.title": "Mercado 24/7",
+      "header.subtitle": "Acciones, índices, commodities, forex y cripto en vivo 24/7 &middot; precios de perpetuos de la API pública de Hyperliquid",
+      "pill.nyse_label": "NYSE / Nasdaq",
+      "pill.hl_market": "Mercado HL",
+      "status.connecting": "conectando…",
+      "tab.fav": "Favoritos",
+      "tab.stocks": "Stocks",
+      "tab.indices": "Índices",
+      "tab.commodities": "Commodities",
+      "tab.forex": "Forex",
+      "tab.crypto": "Cripto",
+      "search.placeholder": "Buscar activo…",
+      "sort.volume": "Volumen",
+      "sort.gainers": "▲ Subas",
+      "sort.losers": "▼ Bajas",
+      "error.retry": "Reintentar",
+      "note.disclaimer_pre": "Precios mark de perpetuos de la API pública de",
+      "note.disclaimer_post": "(incl. mercados HIP-3 de acciones, índices, commodities y forex). No es asesoramiento financiero.",
+      "name.gold": "Oro",
+      "name.silver": "Plata",
+      "name.oil_wti": "Petróleo WTI",
+      "name.oil_brent": "Petróleo Brent",
+      "name.natgas": "Gas natural",
+      "name.copper": "Cobre",
+      "name.platinum": "Platino",
+      "name.palladium": "Paladio",
+      "name.uranium": "Uranio",
+      "name.cocoa": "Cacao",
+      "name.coffee": "Café",
+      "name.wheat": "Trigo",
+      "name.corn": "Maíz",
+      "name.sugar": "Azúcar",
+      "name.eur_usd": "Euro / USD",
+      "name.gbp_usd": "Libra / USD",
+      "name.usd_jpy": "USD / Yen",
+      "name.usd_chf": "USD / Franco",
+      "name.aud": "Dólar australiano",
+      "name.usd_cad": "USD / Dólar canadiense",
+      "name.nzd": "Dólar neozelandés",
+      "name.usd_cnh": "USD / Yuan",
+      "name.usd_mxn": "USD / Peso mexicano",
+      "name.dxy": "Índice dólar",
+      "name.paxg": "Oro tokenizado",
+      "api.error_for": "para",
+      "chart.hover_open": "A",
+      "chart.hover_high": "Máx",
+      "chart.hover_low": "Mín",
+      "chart.hover_close": "C",
+      "card.star_aria": "Fijar",
+      "card.star_title": "Fijar / quitar de la vista",
+      "chart.loading": "cargando…",
+      "card.dex_perp": "Perp",
+      "chart.no_candles": "sin datos de velas",
+      "card.vol_prefix": "Vol 24h",
+      "add.label": "Agregar activo",
+      "add.available_one": "disponible",
+      "add.available_many": "disponibles",
+      "picker.search_placeholder": "Buscar ticker o nombre…",
+      "picker.empty": "No hay más activos para agregar.",
+      "picker.more_pre": "＋ Agregar las ",
+      "picker.more_post": " de mayor volumen",
+      "picker.more_none": "No hay más para agregar",
+      "empty.no_match": "No hay activos que coincidan con la búsqueda en esta pestaña.",
+      "summary.up_word": "suben",
+      "summary.down_word": "bajan",
+      "summary.top_gainer": "Mayor suba",
+      "summary.top_loser": "Mayor baja",
+      "status.live_pre": "En vivo · actualizado ",
+      "status.polling_pre": "Sondeo (WS reconectando) · ",
+      "time.ago_pre": "hace ",
+      "time.ago_suf": "",
+      "nyse.open": "Abierto",
+      "nyse.closed": "Cerrado",
+      "error.api_pre": "No se pudo conectar a la API de Hyperliquid (",
+      "error.api_post": "). Revisá tu conexión o si un bloqueador está frenando api.hyperliquid.xyz.",
+    },
+    en: {
+      "header.title": "24/7 Market",
+      "header.subtitle": "Stocks, indices, commodities, forex and crypto live 24/7 &middot; perpetuals prices from the public Hyperliquid API",
+      "pill.nyse_label": "NYSE / Nasdaq",
+      "pill.hl_market": "HL Market",
+      "status.connecting": "connecting…",
+      "tab.fav": "Favorites",
+      "tab.stocks": "Stocks",
+      "tab.indices": "Indices",
+      "tab.commodities": "Commodities",
+      "tab.forex": "Forex",
+      "tab.crypto": "Crypto",
+      "search.placeholder": "Search asset…",
+      "sort.volume": "Volume",
+      "sort.gainers": "▲ Gainers",
+      "sort.losers": "▼ Losers",
+      "error.retry": "Retry",
+      "note.disclaimer_pre": "Mark prices of perpetuals from the public",
+      "note.disclaimer_post": "API (incl. HIP-3 markets for stocks, indices, commodities and forex). Not financial advice.",
+      "name.gold": "Gold",
+      "name.silver": "Silver",
+      "name.oil_wti": "WTI Crude",
+      "name.oil_brent": "Brent Crude",
+      "name.natgas": "Natural gas",
+      "name.copper": "Copper",
+      "name.platinum": "Platinum",
+      "name.palladium": "Palladium",
+      "name.uranium": "Uranium",
+      "name.cocoa": "Cocoa",
+      "name.coffee": "Coffee",
+      "name.wheat": "Wheat",
+      "name.corn": "Corn",
+      "name.sugar": "Sugar",
+      "name.eur_usd": "Euro / USD",
+      "name.gbp_usd": "Pound / USD",
+      "name.usd_jpy": "USD / Yen",
+      "name.usd_chf": "USD / Franc",
+      "name.aud": "Australian Dollar",
+      "name.usd_cad": "USD / Canadian Dollar",
+      "name.nzd": "New Zealand Dollar",
+      "name.usd_cnh": "USD / Yuan",
+      "name.usd_mxn": "USD / Mexican Peso",
+      "name.dxy": "Dollar Index",
+      "name.paxg": "Tokenized Gold",
+      "api.error_for": "for",
+      "chart.hover_open": "O",
+      "chart.hover_high": "High",
+      "chart.hover_low": "Low",
+      "chart.hover_close": "C",
+      "card.star_aria": "Pin",
+      "card.star_title": "Pin / unpin from view",
+      "chart.loading": "loading…",
+      "card.dex_perp": "Perp",
+      "chart.no_candles": "no candle data",
+      "card.vol_prefix": "24h Vol",
+      "add.label": "Add asset",
+      "add.available_one": "available",
+      "add.available_many": "available",
+      "picker.search_placeholder": "Search ticker or name…",
+      "picker.empty": "No more assets to add.",
+      "picker.more_pre": "＋ Add the top ",
+      "picker.more_post": " by volume",
+      "picker.more_none": "Nothing more to add",
+      "empty.no_match": "No assets match your search in this tab.",
+      "summary.up_word": "up",
+      "summary.down_word": "down",
+      "summary.top_gainer": "Top gainer",
+      "summary.top_loser": "Top loser",
+      "status.live_pre": "Live · updated ",
+      "status.polling_pre": "Polling (WS reconnecting) · ",
+      "time.ago_pre": "",
+      "time.ago_suf": " ago",
+      "nyse.open": "Open",
+      "nyse.closed": "Closed",
+      "error.api_pre": "Could not connect to the Hyperliquid API (",
+      "error.api_post": "). Check your connection or whether a blocker is stopping api.hyperliquid.xyz.",
+    },
+  };
+  function T(key) {
+    const d = M247_I18N[LANG] || M247_I18N.es;
+    if (d && Object.prototype.hasOwnProperty.call(d, key)) return d[key];
+    if (Object.prototype.hasOwnProperty.call(M247_I18N.es, key)) return M247_I18N.es[key];
+    return key;
+  }
+
   /* ================= estilos (todo namespaceado bajo .m247) ================= */
   const CSS = `
 .m247 {
@@ -228,30 +401,30 @@
   const HTML = `
 <div class="fb-subheader">
   <div>
-    <h1>Mercado 24/7</h1>
-    <div class="fb-subtitle">Acciones, índices, commodities, forex y cripto en vivo 24/7 &middot; precios de perpetuos de la API pública de Hyperliquid</div>
+    <h1>${T("header.title")}</h1>
+    <div class="fb-subtitle">${T("header.subtitle")}</div>
   </div>
 </div>
 <div class="content">
 <div class="m247-pills">
-  <span class="m247-pill" data-m247="nyse-pill"><span class="m247-dot is-off"></span>NYSE / Nasdaq <b data-m247="nyse">—</b></span>
-  <span class="m247-pill"><span class="m247-dot is-live"></span>Mercado HL <b>24/7</b></span>
-  <span class="m247-pill"><span class="m247-dot" data-m247="live-dot"></span><span data-m247="updated">conectando…</span></span>
+  <span class="m247-pill" data-m247="nyse-pill"><span class="m247-dot is-off"></span>${T("pill.nyse_label")} <b data-m247="nyse">—</b></span>
+  <span class="m247-pill"><span class="m247-dot is-live"></span>${T("pill.hl_market")} <b>24/7</b></span>
+  <span class="m247-pill"><span class="m247-dot" data-m247="live-dot"></span><span data-m247="updated">${T("status.connecting")}</span></span>
 </div>
 <div class="m247-tabs" data-m247="tabs">
-  <button type="button" class="m247-tab" data-cat="fav">Favoritos</button>
-  <button type="button" class="m247-tab" data-cat="stocks">Stocks</button>
-  <button type="button" class="m247-tab" data-cat="indices">Índices</button>
-  <button type="button" class="m247-tab" data-cat="commodities">Commodities</button>
-  <button type="button" class="m247-tab" data-cat="forex">Forex</button>
-  <button type="button" class="m247-tab" data-cat="crypto">Cripto</button>
+  <button type="button" class="m247-tab" data-cat="fav">${T("tab.fav")}</button>
+  <button type="button" class="m247-tab" data-cat="stocks">${T("tab.stocks")}</button>
+  <button type="button" class="m247-tab" data-cat="indices">${T("tab.indices")}</button>
+  <button type="button" class="m247-tab" data-cat="commodities">${T("tab.commodities")}</button>
+  <button type="button" class="m247-tab" data-cat="forex">${T("tab.forex")}</button>
+  <button type="button" class="m247-tab" data-cat="crypto">${T("tab.crypto")}</button>
 </div>
 <div class="m247-toolbar">
-  <input type="search" class="m247-search" data-m247="search" placeholder="Buscar activo…" autocomplete="off" spellcheck="false" />
+  <input type="search" class="m247-search" data-m247="search" placeholder="${T("search.placeholder")}" autocomplete="off" spellcheck="false" />
   <div class="m247-sorts" data-m247="sorts">
-    <button type="button" class="m247-sort" data-sort="volume">Volumen</button>
-    <button type="button" class="m247-sort" data-sort="gainers">▲ Subas</button>
-    <button type="button" class="m247-sort" data-sort="losers">▼ Bajas</button>
+    <button type="button" class="m247-sort" data-sort="volume">${T("sort.volume")}</button>
+    <button type="button" class="m247-sort" data-sort="gainers">${T("sort.gainers")}</button>
+    <button type="button" class="m247-sort" data-sort="losers">${T("sort.losers")}</button>
   </div>
 </div>
 <div class="m247-summary" data-m247="summary" hidden>
@@ -260,13 +433,13 @@
 </div>
 <div class="m247-error" data-m247="error" hidden>
   <span data-m247="error-text"></span>
-  <button type="button" data-m247="retry">Reintentar</button>
+  <button type="button" data-m247="retry">${T("error.retry")}</button>
 </div>
 <div class="m247-grid" data-m247="grid"></div>
 <p class="m247-empty" data-m247="empty" hidden></p>
-<p class="m247-note">Precios mark de perpetuos de la API pública de
+<p class="m247-note">${T("note.disclaimer_pre")}
   <a href="https://hyperliquid.xyz" target="_blank" rel="noopener">Hyperliquid</a>
-  (incl. mercados HIP-3 de acciones, índices, commodities y forex). No es asesoramiento financiero.</p>
+  ${T("note.disclaimer_post")}</p>
 </div>
 `;
 
@@ -295,17 +468,17 @@
     DJ30: "Dow Jones", US30: "Dow Jones", DIA: "Dow Jones ETF",
     RUT: "Russell 2000", IWM: "Russell 2000 ETF", VIX: "VIX",
     DAX: "DAX 40", FTSE: "FTSE 100", N225: "Nikkei 225", NIKKEI: "Nikkei 225",
-    GOLD: "Oro", XAU: "Oro", SILVER: "Plata", XAG: "Plata",
-    CL: "Petróleo WTI", WTI: "Petróleo WTI", OIL: "Petróleo WTI",
-    BRENT: "Petróleo Brent", NG: "Gas natural", NATGAS: "Gas natural",
-    HG: "Cobre", COPPER: "Cobre", PLATINUM: "Platino", PALLADIUM: "Paladio",
-    URANIUM: "Uranio", COCOA: "Cacao", COFFEE: "Café", WHEAT: "Trigo",
-    CORN: "Maíz", SUGAR: "Azúcar",
-    EUR: "Euro / USD", EURUSD: "Euro / USD", GBP: "Libra / USD",
-    GBPUSD: "Libra / USD", JPY: "USD / Yen", USDJPY: "USD / Yen",
-    CHF: "USD / Franco", AUD: "Dólar australiano", CAD: "USD / Dólar canadiense",
-    NZD: "Dólar neozelandés", CNH: "USD / Yuan", MXN: "USD / Peso mexicano",
-    DXY: "Índice dólar",
+    GOLD: T("name.gold"), XAU: T("name.gold"), SILVER: T("name.silver"), XAG: T("name.silver"),
+    CL: T("name.oil_wti"), WTI: T("name.oil_wti"), OIL: T("name.oil_wti"),
+    BRENT: T("name.oil_brent"), NG: T("name.natgas"), NATGAS: T("name.natgas"),
+    HG: T("name.copper"), COPPER: T("name.copper"), PLATINUM: T("name.platinum"), PALLADIUM: T("name.palladium"),
+    URANIUM: T("name.uranium"), COCOA: T("name.cocoa"), COFFEE: T("name.coffee"), WHEAT: T("name.wheat"),
+    CORN: T("name.corn"), SUGAR: T("name.sugar"),
+    EUR: T("name.eur_usd"), EURUSD: T("name.eur_usd"), GBP: T("name.gbp_usd"),
+    GBPUSD: T("name.gbp_usd"), JPY: T("name.usd_jpy"), USDJPY: T("name.usd_jpy"),
+    CHF: T("name.usd_chf"), AUD: T("name.aud"), CAD: T("name.usd_cad"),
+    NZD: T("name.nzd"), CNH: T("name.usd_cnh"), MXN: T("name.usd_mxn"),
+    DXY: T("name.dxy"),
     BTC: "Bitcoin", ETH: "Ethereum", SOL: "Solana", HYPE: "Hyperliquid",
     XRP: "XRP", DOGE: "Dogecoin", ADA: "Cardano", AVAX: "Avalanche",
     LINK: "Chainlink", BNB: "BNB", LTC: "Litecoin", SUI: "Sui",
@@ -313,7 +486,7 @@
     APT: "Aptos", ARB: "Arbitrum", OP: "Optimism", WLD: "Worldcoin",
     PEPE: "Pepe", WIF: "dogwifhat", FARTCOIN: "Fartcoin", ENA: "Ethena",
     AAVE: "Aave", UNI: "Uniswap", TAO: "Bittensor", SEI: "Sei",
-    TIA: "Celestia", JUP: "Jupiter", ONDO: "Ondo", PAXG: "Oro tokenizado",
+    TIA: "Celestia", JUP: "Jupiter", ONDO: "Ondo", PAXG: T("name.paxg"),
   };
   const INDICES = new Set(["SP500","SPX","US500","SPY","NDX","NAS100","US100","QQQ","DJ30","US30","DIA","RUT","IWM","VIX","DAX","FTSE","N225","NIKKEI","ES","NQ","YM"]);
   const COMMODITIES = new Set(["GOLD","XAU","SILVER","XAG","CL","WTI","OIL","BRENT","NG","NATGAS","HG","COPPER","PLATINUM","PALLADIUM","URANIUM","COCOA","COFFEE","WHEAT","CORN","SUGAR","PAXG"]);
@@ -346,7 +519,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(`API ${res.status} para ${body.type}`);
+    if (!res.ok) throw new Error(`API ${res.status} ${T("api.error_for")} ${body.type}`);
     return res.json();
   }
 
@@ -547,11 +720,11 @@
       if (idx !== hoverIdx) { hoverIdx = idx; drawChart(canvas, candles, prevDayPx, hoverIdx); }
       const c = candles[idx];
       const up = c.c >= c.o;
-      const when = new Date(c.t).toLocaleString("es-BO", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+      const when = new Date(c.t).toLocaleString(LANG === "es" ? "es-BO" : "en-US", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
       tooltipEl.innerHTML =
         `<span class="tt-time">${when}</span>` +
-        `A <b>${fmtPrice(c.o)}</b> · Máx <b>${fmtPrice(c.h)}</b><br>` +
-        `Mín <b>${fmtPrice(c.l)}</b> · C <b class="${up ? "up" : "down"}">${fmtPrice(c.c)}</b>`;
+        `${T("chart.hover_open")} <b>${fmtPrice(c.o)}</b> · ${T("chart.hover_high")} <b>${fmtPrice(c.h)}</b><br>` +
+        `${T("chart.hover_low")} <b>${fmtPrice(c.l)}</b> · ${T("chart.hover_close")} <b class="${up ? "up" : "down"}">${fmtPrice(c.c)}</b>`;
       tooltipEl.hidden = false;
       const ttw = tooltipEl.offsetWidth;
       let x = ev.clientX + 14;
@@ -629,18 +802,19 @@
       const dec = v >= 1000 ? 2 : v >= 1 ? 2 : v >= 0.01 ? 4 : 6;
       let f = fmtCache.get(dec);
       if (!f) {
-        f = new Intl.NumberFormat("es-BO", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+        f = new Intl.NumberFormat(LANG === "es" ? "es-BO" : "en-US", { minimumFractionDigits: dec, maximumFractionDigits: dec });
         fmtCache.set(dec, f);
       }
       return "US$ " + f.format(v);
     }
     function fmtPct(v) {
       if (!Number.isFinite(v)) return "—";
-      return (v > 0 ? "+" : "") + v.toFixed(2).replace(".", ",") + "%";
+      const s = LANG === "es" ? v.toFixed(2).replace(".", ",") : v.toFixed(2);
+      return (v > 0 ? "+" : "") + s + "%";
     }
     function fmtVol(v) {
       if (!Number.isFinite(v) || v <= 0) return "—";
-      if (v >= 1e9) return "US$ " + (v / 1e9).toFixed(1).replace(".", ",") + " B";
+      if (v >= 1e9) return "US$ " + (LANG === "es" ? (v / 1e9).toFixed(1).replace(".", ",") : (v / 1e9).toFixed(1)) + " B";
       if (v >= 1e6) return "US$ " + Math.round(v / 1e6) + " M";
       if (v >= 1e3) return "US$ " + Math.round(v / 1e3) + " K";
       return "US$ " + Math.round(v);
@@ -772,19 +946,19 @@
       el.innerHTML =
         '<div class="m247-card-top">' +
           '<div class="m247-card-left">' +
-            '<button type="button" class="m247-star" aria-label="Fijar" title="Fijar / quitar de la vista">★</button>' +
+            '<button type="button" class="m247-star" aria-label="' + T("card.star_aria") + '" title="' + T("card.star_title") + '">★</button>' +
             '<span class="m247-sym"></span>' +
           "</div>" +
           '<span class="m247-price"></span>' +
         "</div>" +
         '<div class="m247-card-sub"><span class="m247-name"></span><span class="m247-chg"></span></div>' +
-        '<div class="m247-chart"><canvas></canvas><div class="m247-chart-loading">cargando…</div></div>' +
+        '<div class="m247-chart"><canvas></canvas><div class="m247-chart-loading">' + T("chart.loading") + '</div></div>' +
         '<div class="m247-card-foot"><span class="m247-vol"></span><span class="m247-dex"></span></div>';
 
       el.querySelector(".m247-sym").textContent = a.symbol;
       el.querySelector(".m247-name").textContent = a.name;
       el.querySelector(".m247-name").title = a.dexName ? `${a.name} · dex ${a.dexName}` : a.name;
-      el.querySelector(".m247-dex").textContent = a.dex ? a.dexName : "Perp";
+      el.querySelector(".m247-dex").textContent = a.dex ? a.dexName : T("card.dex_perp");
       el.querySelector(".m247-star").addEventListener("click", () => toggleFav(a.key));
 
       attachHover(el.querySelector("canvas"), tooltip, () => ({
@@ -810,7 +984,7 @@
       const chgEl = el.querySelector(".m247-chg");
       chgEl.textContent = fmtPct(pct);
       chgEl.className = "m247-chg " + (pct > 0 ? "up" : pct < 0 ? "down" : "flat");
-      el.querySelector(".m247-vol").textContent = "Vol 24h " + fmtVol(a.volume24h);
+      el.querySelector(".m247-vol").textContent = T("card.vol_prefix") + " " + fmtVol(a.volume24h);
       el.querySelector(".m247-star").classList.toggle("is-fav", favs.has(a.key));
       if (a.candles.length && visibleKeys.has(a.key)) drawCard(el, a);
     }
@@ -819,7 +993,7 @@
       const loading = el.querySelector(".m247-chart-loading");
       if (loading && a.candlesAt) {
         if (a.candles.length) loading.remove();
-        else loading.textContent = "sin datos de velas";
+        else loading.textContent = T("chart.no_candles");
       }
       drawChart(el.querySelector("canvas"), a.candles, a.prevDayPx, null);
     }
@@ -905,8 +1079,8 @@
         addTileEl.className = "m247-add";
         addTileEl.innerHTML =
           '<span class="plus">+</span>' +
-          '<span class="lbl">Agregar activo</span>' +
-          `<span class="cnt">${canAdd} disponible${canAdd === 1 ? "" : "s"}</span>`;
+          '<span class="lbl">' + T("add.label") + '</span>' +
+          `<span class="cnt">${canAdd} ${T(canAdd === 1 ? "add.available_one" : "add.available_many")}</span>`;
         addTileEl.addEventListener("click", (ev) => {
           ev.stopPropagation();
           togglePicker(addTileEl);
@@ -919,7 +1093,7 @@
 
       els.empty.hidden = shown.length > 0 || canAdd > 0 || !loaded;
       if (loaded && !shown.length && !canAdd) {
-        els.empty.textContent = "No hay activos que coincidan con la búsqueda en esta pestaña.";
+        els.empty.textContent = T("empty.no_match");
       }
       updateSummary();
     }
@@ -941,8 +1115,8 @@
       pickerEl.className = "m247-picker";
       pickerEl.innerHTML =
         '<div class="m247-picker-head">' +
-          '<div class="t">Agregar activo</div>' +
-          '<input type="search" class="m247-picker-search" placeholder="Buscar ticker o nombre…" autocomplete="off" spellcheck="false" />' +
+          '<div class="t">' + T("add.label") + '</div>' +
+          '<input type="search" class="m247-picker-search" placeholder="' + T("picker.search_placeholder") + '" autocomplete="off" spellcheck="false" />' +
         "</div>" +
         '<div class="m247-picker-list"></div>' +
         '<div class="m247-picker-foot"><button type="button" class="m247-picker-more"></button></div>';
@@ -980,7 +1154,7 @@
       const cands = pickerCandidates(q);
       const listEl = pickerEl.querySelector(".m247-picker-list");
       if (!cands.length) {
-        listEl.innerHTML = '<div class="m247-picker-empty">No hay más activos para agregar.</div>';
+        listEl.innerHTML = '<div class="m247-picker-empty">' + T("picker.empty") + '</div>';
       } else {
         listEl.innerHTML = cands.slice(0, 60).map((a) =>
           `<button type="button" class="m247-picker-item" data-key="${a.key.replace(/"/g, "&quot;")}">` +
@@ -1000,7 +1174,7 @@
       const moreBtn = pickerEl.querySelector(".m247-picker-more");
       const rest = pickerCandidates("").length;
       const n = Math.min(ADD_BATCH, rest);
-      moreBtn.textContent = n > 0 ? `＋ Agregar las ${n} de mayor volumen` : "No hay más para agregar";
+      moreBtn.textContent = n > 0 ? T("picker.more_pre") + n + T("picker.more_post") : T("picker.more_none");
       moreBtn.disabled = n === 0;
       const anchor = addTileEl || (cardEls.size ? [...cardEls.values()].pop() : null);
       if (anchor) positionPicker(anchor);
@@ -1019,9 +1193,9 @@
         if (!best || p > chgPct(best)) best = a;
         if (!worst || p < chgPct(worst)) worst = a;
       }
-      let html = `<span><b>${ups}</b> suben · <b>${downs}</b> bajan</span>`;
-      if (best && chgPct(best) > 0) html += `<span>Mayor suba <b>${best.symbol}</b> <span class="up">${fmtPct(chgPct(best))}</span></span>`;
-      if (worst && chgPct(worst) < 0) html += `<span>Mayor baja <b>${worst.symbol}</b> <span class="down">${fmtPct(chgPct(worst))}</span></span>`;
+      let html = `<span><b>${ups}</b> ${T("summary.up_word")} · <b>${downs}</b> ${T("summary.down_word")}</span>`;
+      if (best && chgPct(best) > 0) html += `<span>${T("summary.top_gainer")} <b>${best.symbol}</b> <span class="up">${fmtPct(chgPct(best))}</span></span>`;
+      if (worst && chgPct(worst) < 0) html += `<span>${T("summary.top_loser")} <b>${worst.symbol}</b> <span class="down">${fmtPct(chgPct(worst))}</span></span>`;
       els.summaryText.innerHTML = html;
       const total = ups + downs || 1;
       els.meterUp.style.width = (ups / total * 100).toFixed(1) + "%";
@@ -1030,17 +1204,19 @@
 
     function tickStatus() {
       const secs = lastUpdate ? Math.max(0, Math.round((Date.now() - lastUpdate) / 1000)) : null;
-      const ago = secs == null ? "" : secs < 60 ? `hace ${secs}s` : `hace ${Math.floor(secs / 60)}m`;
+      const ago = secs == null ? ""
+        : secs < 60 ? `${T("time.ago_pre")}${secs}s${T("time.ago_suf")}`
+        : `${T("time.ago_pre")}${Math.floor(secs / 60)}m${T("time.ago_suf")}`;
       els.liveDot.className = "m247-dot";
       if (feedStatus === "live") {
         els.liveDot.classList.add("is-live");
-        els.updated.textContent = `En vivo · actualizado ${ago}`;
+        els.updated.textContent = T("status.live_pre") + ago;
       } else if (loaded) {
         els.liveDot.classList.add("is-poll");
-        els.updated.textContent = `Sondeo (WS reconectando) · ${ago}`;
+        els.updated.textContent = T("status.polling_pre") + ago;
       } else {
         els.liveDot.classList.add("is-off");
-        els.updated.textContent = "conectando…";
+        els.updated.textContent = T("status.connecting");
       }
       try {
         const parts = new Intl.DateTimeFormat("en-US", {
@@ -1049,7 +1225,7 @@
         const get = (t) => parts.find((p) => p.type === t).value;
         const mins = parseInt(get("hour"), 10) % 24 * 60 + parseInt(get("minute"), 10);
         const open = !["Sat", "Sun"].includes(get("weekday")) && mins >= 570 && mins < 960;
-        els.nyse.textContent = open ? "Abierto" : "Cerrado";
+        els.nyse.textContent = open ? T("nyse.open") : T("nyse.closed");
         els.nysePill.querySelector(".m247-dot").className = "m247-dot " + (open ? "is-live" : "is-off");
       } catch (_) { els.nyse.textContent = "—"; }
     }
@@ -1117,8 +1293,7 @@
         }
       } catch (err) {
         console.error(err);
-        showError("No se pudo conectar a la API de Hyperliquid (" + err.message + "). " +
-          "Revisá tu conexión o si un bloqueador está frenando api.hyperliquid.xyz.");
+        showError(T("error.api_pre") + err.message + T("error.api_post"));
       } finally {
         booting = false;
       }
