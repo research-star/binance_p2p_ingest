@@ -419,6 +419,7 @@
   "noticias.foot_explore": "Explorar el panel",
   "noticias.foot_method": "<b>Metodología.</b> FinanzasBo monitorea más de 20 fuentes. Las notas bolivianas se agregan automáticamente y se ordenan por relevancia económica (selección top ~10/día). El carril <b>Latam / Internacional</b> es una selección editorial de Bloomberg Línea, hasta 5 notas por día. Cada nota enlaza al original.",
   "noticias.foot_sources_label": "Fuentes monitoreadas",
+  "noticias.foot_tab_asfi": "ASFI",
   "noticias.foot_tab_dolar": "D&oacute;lar",
   "noticias.foot_tab_inicio": "Inicio",
   "noticias.foot_tab_macro": "Macro",
