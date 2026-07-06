@@ -6130,7 +6130,10 @@ function initAsfi(){
     } else if(/^\d{4}-\d{2}-\d{2}$/.test(hash)){
       aplicarFiltro(hash, hash);
     } else {
-      aplicarFiltro(hoyISO(), hoyISO());   // por defecto: hoy (aunque no tenga reporte)
+      // Por defecto: el último reporte publicado (día hábil anterior que haya
+      // salido), no hoy — hoy casi nunca tiene reporte y caería en estado vacío.
+      var ult=st.fechas[st.fechas.length-1];
+      aplicarFiltro(ult, ult);
     }
   });
 }
