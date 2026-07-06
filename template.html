@@ -5773,6 +5773,39 @@ window.addEventListener('popstate', function(){
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
   window.addEventListener('resize',measure);
 })();
+
+  // ── Auto-frescura (calibración 2026-07-06) ────────────────────────────────
+  // La página es ESTÁTICA y el navegador la cachea 10 min (GitHub Pages: max-age=600),
+  // así que una pestaña abierta muestra datos viejos aunque el ORIGEN esté fresco.
+  // Chequeo el Last-Modified del build cada 5 min (solo con la pestaña visible, HEAD
+  // liviano — no baja los 4 MB); si salió un build nuevo: recargo solo si el usuario
+  // está inactivo, y si está interactuando muestro un aviso clickeable.
+  (function(){
+    var baseLM=null, lastAct=Date.now(), PERIOD=300000, IDLE=45000;
+    ['scroll','pointerdown','keydown','mousemove','touchstart'].forEach(function(ev){
+      window.addEventListener(ev, function(){ lastAct=Date.now(); }, {passive:true});
+    });
+    function reloadFresh(){ try{ var u=new URL(location.href); u.searchParams.set('v', Date.now()); location.replace(u.toString()); }catch(e){ location.reload(); } }
+    function banner(){
+      if(document.getElementById('np-fresh-banner')) return;
+      var b=document.createElement('button'); b.id='np-fresh-banner'; b.type='button';
+      b.textContent='↻ Hay datos más nuevos · Actualizar';
+      b.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9999;border:none;'
+        +'background:var(--text-primary,#211E1B);color:var(--bg-secondary,#FFF7F0);padding:10px 16px;border-radius:999px;'
+        +'font:600 13px/1 var(--font-body,system-ui);box-shadow:0 4px 18px rgba(0,0,0,.28);cursor:pointer';
+      b.onclick=reloadFresh; document.body.appendChild(b);
+    }
+    function check(){
+      if(document.hidden) return;
+      fetch(location.pathname, {method:'HEAD', cache:'no-store'}).then(function(r){
+        var lm=r.headers.get('last-modified'); if(!lm) return;
+        if(baseLM===null){ baseLM=lm; return; }
+        if(lm!==baseLM){ (Date.now()-lastAct>IDLE) ? reloadFresh() : banner(); }
+      }).catch(function(){});
+    }
+    setTimeout(check, 3000);
+    setInterval(check, PERIOD);
+  })();
 </script>
 
 <script>
