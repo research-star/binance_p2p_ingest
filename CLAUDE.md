@@ -48,7 +48,7 @@ autorización de Diego en el brief (ver `CLAUDE.local.md` § Candado de gasto de
 
 **Convención recomendada**: si hay otro colaborador con PR abierto sobre archivos que toca tu trabajo, conviene coordinar antes de mergear. No es regla rígida — los colaboradores la manejan entre ellos.
 
-**Verificación post-deploy**: tras merge a `main`, fuente de verdad es la rama `gh-pages` — NO `finanzasbo.com`, porque el CDN del custom domain cachea y puede servir HTML viejo (eso NO es deploy roto). Verificá contra el raw de `gh-pages`, o el custom domain con cache-buster nanosegundo + headers `no-cache`. `meta.generated_at` debe ser posterior al `mergedAt` del PR. Detalle y comandos: `HANDOFF.md` § Verificación post-deploy.
+**Verificación post-deploy**: tras merge a `main`, `finanzasbo.com` sirve desde el edge **Cloudflare Pages** (cutover 2026-07-06; el dual-publish sigue pusheando a `gh-pages`, que queda como carril de push + fallback caliente). La fuente de verdad de frescura es el **raw de `gh-pages`** (sin CDN delante) — NO `finanzasbo.com` directo, porque el edge cachea y puede servir HTML viejo (eso NO es deploy roto). Verificá contra el raw de `gh-pages`, o el edge con cache-buster nanosegundo + headers `no-cache`. `meta.generated_at` debe ser posterior al `mergedAt` del PR. Detalle y comandos: `HANDOFF.md` § Verificación post-deploy.
 
 ## Política de merge
 
