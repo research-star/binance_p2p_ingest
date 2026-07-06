@@ -6,12 +6,16 @@ Uso:
     python3 dashboard.py                           # defaults
     python3 dashboard.py --db mi_base.db           # DB custom
     python3 dashboard.py --output dashboard.html   # output custom
+    python3 dashboard.py --output-en en.html       # output EN custom
     python3 dashboard.py --csv                     # también exporta CSV horario
 
-Produce un .html autocontenido que se abre en cualquier navegador.
+Produce .html autocontenidos que se abren en cualquier navegador: uno en
+español (--output) y uno en inglés (--output-en, default <dir>/en/index.html),
+horneados desde el mismo template vía i18n_bake (doble bake, misma data).
 """
 
 import argparse
+import copy
 import json
 import os
 import re
@@ -29,6 +33,7 @@ except ImportError:
 
 from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, BCB_TRE_JSON, TEMPLATE_HTML
 from scripts.fetch_umami_stats import fetch_visits
+import i18n_bake
 
 DEFAULT_DB = NORMALIZED_DB
 DEFAULT_OUTPUT = DASHBOARD_HTML
@@ -1275,14 +1280,15 @@ def _fmt_visits(n):
         return '—'
 
 
-def _inject_umami(html: str) -> str:
-    """Reemplaza __VISITS_TODAY__, __VISITS_MONTH__ y __UMAMI_SCRIPT__ en el
-    template. Si faltan env vars o la API falla, los counters quedan en '—' y
-    el <script> de tracking no se emite."""
+def _fetch_umami_stats() -> dict:
+    """Trae las visitas de la API de Umami UNA sola vez (llamada HTTP).
+
+    Separado de la inyección para que el doble bake (ES + EN) no duplique el
+    hit a la API. Si faltan env vars o la API falla, devuelve Nones (counters
+    en '—')."""
     api_key = os.environ.get('UMAMI_API_KEY', '').strip()
     website_id = os.environ.get('UMAMI_WEBSITE_ID', '').strip()
     host = os.environ.get('UMAMI_HOST', '').strip()
-    script_url = os.environ.get('UMAMI_SCRIPT_URL', '').strip()
     auth_header = os.environ.get('UMAMI_AUTH_HEADER', '').strip() or None
     path_prefix = os.environ.get('UMAMI_API_PATH_PREFIX', '').strip() or None
 
@@ -1290,9 +1296,17 @@ def _inject_umami(html: str) -> str:
         kwargs = {}
         if auth_header: kwargs['auth_header'] = auth_header
         if path_prefix: kwargs['path_prefix'] = path_prefix
-        stats = fetch_visits(api_key, website_id, host, **kwargs)
-    else:
-        stats = {'visits_today': None, 'visits_month': None}
+        return fetch_visits(api_key, website_id, host, **kwargs)
+    return {'visits_today': None, 'visits_month': None}
+
+
+def _inject_umami(html: str, stats: dict) -> str:
+    """Reemplaza __VISITS_TODAY__, __VISITS_MONTH__ y __UMAMI_SCRIPT__ en el
+    HTML ya horneado. `stats` viene de _fetch_umami_stats() (fetch único,
+    inyección por idioma). Sin env vars el <script> de tracking no se emite."""
+    website_id = os.environ.get('UMAMI_WEBSITE_ID', '').strip()
+    host = os.environ.get('UMAMI_HOST', '').strip()
+    script_url = os.environ.get('UMAMI_SCRIPT_URL', '').strip()
 
     html = html.replace('__VISITS_TODAY__', _fmt_visits(stats['visits_today']))
     html = html.replace('__VISITS_MONTH__', _fmt_visits(stats['visits_month']))
@@ -1307,6 +1321,42 @@ def _inject_umami(html: str) -> str:
     return html
 
 
+# ── Relabel por idioma (workstream f) ───────────────────────────────────────
+# `data` se construye UNA sola vez (ver SEAM más abajo) con labels en español
+# (INE_IPC_DIVISIONES / INE_IPP_GRUPOS). Para EN no se reconstruye la data:
+# se relabelan in-place las dos subtrees que cargan 'label' (payload de
+# inflación IPC/IPP), sobre un deep copy — el payload ES nunca se toca. Los
+# slugs desconocidos (futuros cambios del INE) preservan el mismo fallback
+# que process_data ya usa: slug.replace('_', ' ').capitalize().
+_RELABEL_PATHS = (
+    # (ruta dentro de data['inflacion'], prefijo de clave i18n)
+    (('ipc', 'divisiones'), 'data.coicop.'),
+    (('ipp', 'grupos'), 'data.pib.'),
+)
+
+
+def _relabel_inflacion_for_lang(data: dict, table: dict) -> dict:
+    """Devuelve `data` con los labels de divisiones/grupos de inflación
+    resueltos contra `table` (i18n_bake.load_lang(lang)) para el idioma dado.
+
+    No muta `data`: deep-copy solo de la subtree 'inflacion' (evita copiar
+    ts_metrics/merchants/etc., que son potencialmente grandes). El resto del
+    dict se comparte por referencia con el original.
+    """
+    out = dict(data)
+    inflacion = copy.deepcopy(data.get('inflacion'))
+    if inflacion:
+        for (familia, campo), prefix in _RELABEL_PATHS:
+            desglose = (inflacion.get(familia) or {}).get(campo)
+            if not desglose:
+                continue
+            for slug, entry in desglose.items():
+                entry['label'] = table.get(
+                    prefix + slug, slug.replace('_', ' ').capitalize())
+    out['inflacion'] = inflacion
+    return out
+
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1315,6 +1365,9 @@ def main():
                         help=f"Base SQLite (default: {DEFAULT_DB})")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
                         help=f"HTML de salida (default: {DEFAULT_OUTPUT})")
+    parser.add_argument("--output-en", type=Path, default=None,
+                        help="HTML de salida en inglés "
+                             "(default: <dir de --output>/en/index.html)")
     parser.add_argument("--csv", action="store_true",
                         help="También exportar CSV con métricas por snapshot")
     args = parser.parse_args()
@@ -1330,24 +1383,52 @@ def main():
           f"{data['meta']['total_ads']:,} anuncios")
 
     template = TEMPLATE_HTML.read_text(encoding='utf-8')
-    html = template.replace('__DATA_PLACEHOLDER__', json.dumps(data))
-    html = _inject_umami(html)
 
-    with open(args.output, 'w', encoding='utf-8') as f:
-        f.write(html)
-    print(f"Dashboard: {args.output} ({args.output.stat().st_size / 1024:.1f} KB)")
-    # Alias por compatibilidad (si el output default es index.html, también escribir p2p_dashboard.html)
-    if args.output.name == 'index.html':
-        alias = args.output.with_name('p2p_dashboard.html')
-        with open(alias, 'w', encoding='utf-8') as f:
+    # Data única para ambos idiomas (una sola pasada de process_data). Labels
+    # de inflación IPC/IPP (COICOP/PIB) sí varían por idioma: se resuelven acá
+    # ABAJO, dentro del loop, sobre un deep-copy barato de la subtree
+    # 'inflacion' (_relabel_inflacion_for_lang) — nunca se reconstruye `data`
+    # dos veces ni se muta el payload ES.
+    umami_stats = _fetch_umami_stats()  # fetch único (una sola llamada HTTP)
+
+    output_en = args.output_en or (args.output.parent / 'en' / 'index.html')
+    for lang, base, outpath in (('es', '', args.output),
+                                ('en', '/en', output_en)):
+        try:
+            lang_table = i18n_bake.load_lang(lang)
+            html = i18n_bake.bake(template, lang, base, lang_table)
+            data_lang = _relabel_inflacion_for_lang(data, lang_table)
+            data_json = json.dumps(data_lang)
+        except Exception as e:
+            if lang == 'es':
+                raise  # ES es el producto primario: abort ruidoso, sin output.
+            # EN fail-soft: un problema de en.json (clave faltante, JSON roto)
+            # NO puede frenar el publish del ES. Se omite el output EN — el
+            # publish degradará a warn + EN stale (validate_en output_missing).
+            print(f"[i18n] WARN: bake EN falló — se omite {outpath} "
+                  f"(el ES no se bloquea): {e}", file=sys.stderr)
+            continue
+        html = html.replace('__DATA_PLACEHOLDER__', data_json)
+        html = _inject_umami(html, umami_stats)
+
+        outpath.parent.mkdir(parents=True, exist_ok=True)
+        with open(outpath, 'w', encoding='utf-8') as f:
             f.write(html)
-        print(f"Alias:     {alias}")
+        print(f"Dashboard ({lang}): {outpath} "
+              f"({outpath.stat().st_size / 1024:.1f} KB)")
+        # Alias por compatibilidad (solo para el ES default index.html)
+        if lang == 'es' and outpath.name == 'index.html':
+            alias = outpath.with_name('p2p_dashboard.html')
+            with open(alias, 'w', encoding='utf-8') as f:
+                f.write(html)
+            print(f"Alias:     {alias}")
 
     if args.csv:
         csv_path = args.output.with_name('p2p_metrics.csv')
         export_hourly_csv(data, csv_path)
 
-    print("Abrí el .html en cualquier navegador para ver el dashboard.")
+    print("Abrí los .html en cualquier navegador para ver el dashboard "
+          f"(ES: {args.output} · EN: {output_en}).")
 
 
 if __name__ == "__main__":
