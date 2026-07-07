@@ -1814,6 +1814,382 @@
      "grupo": "otros"
     }
    ]
+  },
+  "2026-07-07": {
+   "guid": "f341f422-fbeb-443e-9b55-1ae72be1be53",
+   "titulo": "Reporte Informativo ASFI al 07/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Cervecería Boliviana Nacional S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 3 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 30 de julio de 2026 a Hrs. 10:00 de forma virtual, con el siguiente Orden del Día:\n1. Verificación del quórum de la Junta.\n2. Lectura de la convocatoria.\n3. Consideración de la Memoria correspondiente al ejercicio finalizado al 31 de marzo de 2026.\n4. Consideración de los Estados Financieros de la gestión finalizada al 31 de marzo de 2026.\n5. Informe de los auditores externos.\n6. Informe del Síndico.\n7. Tratamiento de resultados.\n8. Elección de Directores Titulares y Suplentes y fijación de sus remuneraciones y fianzas.\n9. Elección de Síndico Titular y Síndico Suplente y fijación de sus remuneraciones y fianzas.\n10. Elección de auditores externos.\n11. Designación de dos accionistas para la firma del Acta de la Junta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 3 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 30 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Granja Avícola Integral Sofía Ltda.",
+     "texto": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 06 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: I. Consideración de la Emisión de Bonos SOFIA IV, para su Oferta Pública y negociación en el Mercado de Valores por un monto de Bs100.000.000,00. II. Inscripción de la Emisión de Bonos SOFIA IV en el Registro del Mercado de Valores (RMV) de la Autoridad de Supervisión del Sistema Financiero (ASFI) y en la Bolsa Boliviana de Valores S.A. (BBV).",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 06 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: I.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Industrias de Aceite S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Modificación de Compromisos Financieros de los Programas de Emisiones \"Bonos IASA IV\", \"Bonos IASA V\" y \"Bonos IASA VI\" y de las Emisiones dentro de estos. Aprobar formalmente la modificación de los Compromisos Financieros de los Programas de Emisiones \"Bonos IASA IV\", \"Bonos IASA V\" y \"Bonos IASA VI\" y las Emisiones dentro de estos, en los términos aprobados por los Tenedores de Bonos. En consecuencia, la Junta aprobó la modificación de la Razón Corriente (RC) de =>1,15 a =>1,10; la Relación de Cobertura del Servicio de Deuda de =>2,50 a =>1,50; y la Relación de Deuda Sobre Patrimonio (RDP) de <=2,20 a <=3,20 de los Programas antes señalados.\n2. Otorgación de facultades para implementar las resoluciones de la presente Junta. Autorizar a los señores Mauricio Ariel Viscarra Azuga e Hipatia Samur Rivero para firmar la minuta correspondiente y protocolizar los documentos resultantes de las resoluciones de esta Acta.",
+     "tags": [
+      "compromisos",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Comunica que, el 7 de julio de 2026, obtuvo un desembolso por un monto total de Bs14.000.000,00 proveniente de 2 Pagarés Privados de la Emisión de Pagarés sin Oferta Pública JALASOFT III, adquiridos por Capital + SAFI S.A. - SEMBRAR EXPORTADOR FIC.",
+     "tags": [
+      "emision",
+      "prestamo"
+     ],
+     "resumen": "Comunica que, el 7 de julio de 2026, obtuvo un desembolso por un monto total de Bs14.000.000,00 proveniente de 2 Pagarés Privados de la Emisión de Pagarés sin Oferta Pública JALASOFT III, adquiridos",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "campos": {
+      "monto": "Bs 14,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Ganadero S.A.",
+     "texto": "Comunica que, la señora Mery Nancy Suarez Parada presentó su renuncia al cargo de Director Suplente, la cual, fue puesta en conocimiento y aceptada en Directorio el 2 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, la señora Mery Nancy Suarez Parada presentó su renuncia al cargo de Director Suplente, la cual, fue puesta en conocimiento y aceptada en Directorio el 2 de julio de 2026.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Mery Nancy Suarez Parada",
+      "cargo": "Director Suplente",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 82.16% de los accionistas, determinó lo siguiente: Aprobar las Modificaciones a la Emisión de Bonos Subordinados denominada “Bonos Subordinados BANCO FIE 6”, de acuerdo a lo siguiente:\n- Numeral 2.1. Características, términos y condiciones de la Emisión de Bonos Subordinados.\n- La sustitución del Sustento Técnico de la referida Emisión.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 82.16% de los accionistas, determinó lo siguiente: Aprobar las Modificaciones a la Emisión de",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 82.16% de los accionistas, determinó lo siguiente: Aprobar las Modificaciones a los términos y condiciones de la Sexta Emisión de Bonos comprendida dentro del Programa de Emisiones de Bonos denominado “Bonos BANCO FIE 4”, de acuerdo a lo siguiente:\n- Numeral 2.1. Antecedentes del Emisor.\n- Numeral 2.2. Características de la Emisión Bonos Banco FIE 4 - Emisión 6.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 82.16% de los accionistas, determinó lo siguiente: Aprobar las Modificaciones a los términos",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Ha comunicado que en reunión de Directorio de 06 de julio de 2026, se determinó lo siguiente: Habiendo tomado conocimiento de la carta ASFI/DSR/R-121573/2026 de 24 de junio de 2026, resuelve dar su no objeción para que la Asamblea General de Asociados apruebe la capitalización del 100% de las utilidades generadas en la gestión 2025, descontada los porcentajes establecidos para la Reserva Legal y el Fondo de Reserva.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 06 de julio de 2026, se determinó lo siguiente: Habiendo tomado conocimiento de la carta ASFI/DSR/R-121573/2026 de 24 de junio de 2026, resuelve dar su",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Comunica que, en reunión de Directorio de 6 de julio de 2026, de conformidad con los Artículos 36, 37, y 50 de los Estatutos, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 17 de julio de 2026 a Hrs. 10:30 de manera virtual, con el siguiente Orden del Día:\n1. Verificación del Quórum.\n2. Lectura de Acta Anterior.\n3. Tratamiento de la Reinversión de Utilidades registradas al 31 de diciembre de 2025.\n4. Nombramiento de dos representantes para firma de Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 6 de julio de 2026, de conformidad con los Artículos 36, 37, y 50 de los Estatutos, se determinó convocar a la Asamblea General Extraordinaria de Asociados",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Comunica que, el 6 de julio de 2026, concluyó el pago del Cupón Nº 71 y amortización de capital de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Serie B con Clave de Pizarra: PTL-TD-NB.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 6 de julio de 2026, concluyó el pago del Cupón Nº 71 y amortización de capital de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Serie B con Clave de Pizarra: PTL-TD-NB.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "71",
+      "instrumento": "VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049",
+      "estado": "pagado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el 7 de julio de 2026, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, la Gerente General a.i. autorizó el registro e inscripción de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles FARMACIA CHAVEZ I - Emisión 3” comprendida dentro del Programa de Emisiones de Pagarés Bursátiles denominado “Pagarés Bursátiles FARMACIA CHAVEZ I” en la Bolsa Boliviana de Valores S.A. para su negociación y cotización. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision",
+      "personal"
+     ],
+     "resumen": "Comunica que, el 7 de julio de 2026, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, la Gerente General a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs209.581,27 para compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs209.581,27 para compra de mercadería como capital de operaciones.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "INDUSTRIA TEXTIL TSM S.A.",
+     "texto": "Comunica que, el 6 de julio de 2026, realizó la provisión de fondos para el pago del Cupón N° 8, correspondiente a la Emisión de \"Bonos TSM Apparel 001\", con Clave de Pizarra: TSM-E1U-22, que se pagará el 8 de julio de 2026. El pago de capital e intereses, se realizará en las oficinas del agente pagador GanaValores Agencia de Bolsa S.A.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 6 de julio de 2026, realizó la provisión de fondos para el pago del Cupón N° 8, correspondiente a la Emisión de \"Bonos TSM Apparel 001\", con Clave de Pizarra: TSM-E1U-22, que se",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos TSM Apparel 001\"",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Industrias de Aceite S.A.",
+     "texto": "Comunica que, el 7 de julio de 2026, realizó la provisión de fondos del Cupón N° 8 de la Emisión denominada \"Bonos IASA V - Emisión 1\", al agente pagador Credibolsa S.A. Agencia de Bolsa, quién a partir del 8 de julio de 2026, procederá con el pago correspondiente al vencimiento.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 7 de julio de 2026, realizó la provisión de fondos del Cupón N° 8 de la Emisión denominada \"Bonos IASA V - Emisión 1\", al agente pagador Credibolsa S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos IASA V",
+      "fecha_pago": "8 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Procesadora de Oleaginosas PROLEGA S.A.",
+     "texto": "Comunica que, el 6 de julio de 2026, realizó la provisión de fondos por USD966.745,00 a BNB Valores S.A. Agencia de Bolsa, agente pagador, para el pago del Cupón N° 8 correspondiente a la emisión de Bonos PROLEGA III - Emisión 3, Serie Única, Clave de Pizarra: POL-3-E1U-22. El pago será realizado en las oficinas del agente pagador.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 6 de julio de 2026, realizó la provisión de fondos por USD966.745,00 a BNB Valores S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos PROLEGA III",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Comunica que, el 6 de julio de 2026, mediante Escritura Pública N° 1364/2026, revoca de forma total el Testimonio de Poder Tipo ¨B¨ N° 33/2025 de 7 de enero de 2025, conferido en favor del señor Edson Dagner Ruiz Lopez.",
+     "tags": [],
+     "resumen": "Comunica que, el 6 de julio de 2026, mediante Escritura Pública N° 1364/2026, revoca de forma total el Testimonio de Poder Tipo ¨B¨ N° 33/2025 de 7 de enero de 2025, conferido en favor del señor",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Desarrollo Productivo S.A.M.",
+     "texto": "Comunica que, en cumplimiento a lo indicado en el Prospecto Marco del Programa de Emisiones de Bonos Verdes, Sociales o Sostenibles BDP I “Bonos Verdes BDP I - Emisión 1”, los Compromisos Financieros al 30 de junio de 2026, según el siguiente detalle: COMPROMISO CUMPLIMIENTO Coeficiente de Adecuación Patrimonial (CAP) mayor o igual al 11% Promedio de los últimos tres meses al 30 de junio de 2026: 16,27% Índice de Liquidez: ((Disponibilidades + Inversiones Temporarias)/ (Obligaciones con el Publico a Plazo con Anotación en Cuenta + Obligaciones con Bancos y Entidades de Financiamiento + Obligaciones con Empresas Públicas)) mayor o igual al 10% Promedio de los últimos tres meses al 30 de junio de 2026: 14,12% Coeficiente de Previsión para Incobrabilidad: ((Previsión para incobrables de cartera + Previsión Genérica Cíclica + Previsiones Genéricas Voluntarias para Pérdidas Futuras aún no Identificadas)/(Cartera Vencida + Cartera en Ejecución + Cartera Reprogramada o Reestructurada Vencida + Cartera Reprogramada o Reestructurada en Ejecución)) mayor o igual al 100% Promedio de los últimos tres meses al 30 de junio de 2026: 125,89%",
+     "tags": [
+      "emision",
+      "compromisos"
+     ],
+     "resumen": "Comunica que, en cumplimiento a lo indicado en el Prospecto Marco del Programa de Emisiones de Bonos Verdes, Sociales o Sostenibles BDP I “Bonos Verdes BDP I - Emisión 1”, los Compromisos Financieros",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Comunica la designación temporal del señor Carlos Andres Moscoso Huaylla en el cargo de Gerente Regional - Sur a.i., a partir del 13 de julio de 2026 y será efectivo hasta el 17 de julio de 2026, periodo en el que la señora Ivonne Del Carmen Ferreira Reyes se encontrará de vacaciones. La misma retornará a sus funciones habituales en el cargo de Gerente Regional - Sur, a partir del 18 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica la designación temporal del señor Carlos Andres Moscoso Huaylla en el cargo de Gerente Regional - Sur a.i., a partir del 13 de julio de 2026 y será efectivo hasta el 17 de julio de 2026",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Carlos Andres Moscoso Huaylla",
+      "cargo": "Gerente Regional - Sur",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Entidades de Depósito de Valores",
+     "entidad": "Entidad de Depósito de Valores de Bolivia S.A.",
+     "texto": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 6 de julio de 2026, procedió con el registro de la Emisión de Bonos denominada “BONOS INCOTEC II” en el Sistema de Registro de Anotaciones en Cuenta de la Entidad. Asimismo, informa que GanaValores Agencia de Bolsa S.A., es la agencia colocadora.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 6 de julio de 2026, procedió con el registro",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, el 6 de julio de 2026, procedió al pago del último Cupón de la Serie \"B\" con Clave de Pizarra: PAT-TD-NB, de acuerdo con el Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para fines de Titularización, Administración y Representación contenido en la Escritura Pública N° 2938/2023 de 6 de julio de 2023 y al Cronograma de Pago de Capital e Intereses que se encuentra en el Prospecto de Emisión.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, el 6 de julio de 2026, procedió al pago del último Cupón de la Serie \"B\" con Clave de Pizarra: PAT-TD-NB, de",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/564/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE:\nPRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES CRECER IFD I” de CRECER IFD, bajo el siguiente Número de Registro: NÚMERO DE REGISTRO DENOMINACIÓN DEL PROGRAMA ASFI/DSV-PED-CRE-010/2026 Pagarés Bursátiles CRECER IFD I\nSEGUNDO.- Instruir que, para la inscripción y autorización de Oferta Pública de cada Emisión dentro del Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES CRECER IFD I”, el Emisor deberá dar estricto cumplimiento a lo dispuesto por la Ley N° 1834 del Mercado de Valores, el Reglamento del Registro del Mercado de Valores y el Reglamento de Oferta Pública, contenidos en los Libros 1° y 2°, respectivamente, de la Recopilación de Normas para el Mercado de Valores.\nTERCERO.- Establecer que verificado el cumplimiento de los requisitos exigidos por la normativa vigente, la Autoridad de Supervisión del Sistema Financiero, autorizará e inscribirá cada una de las Emisiones comprendidas en el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES CRECER IFD I”, para su Oferta Pública, previo cumplimiento de los requisitos normativos exigidos al efecto.\nCUARTO.- Disponer que, de conformidad a normas legales y regulatorias vigentes, CRECER IFD deberá cumplir con la presentación oportuna de toda la información requerida por la Autoridad de Supervisión del Sistema Financiero, para el control y vigilancia de cada una de las Emisiones que conformen el Programa autorizado, así como las obligaciones establecidas normativamente.\nQUINTO.- Establecer que, la Autoridad de Supervisión del Sistema Financiero no se pronuncia sobre la calidad de los Valores ofrecidos como inversión de cada una de las Emisiones dentro del Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES CRECER IFD I”. La información presentada a esta Autoridad de Supervisión es de exclusiva responsabilidad del Emisor o de los responsables que hayan participado en su elaboración.",
+     "tags": [
+      "emision",
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "campos": {
+      "instrumento": "PAGARÉS BURSÁTILES CRECER IFD I",
+      "registro": "ASFI/DSV-PED-CRE-010/2026"
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/565/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE:\nPRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI” de PROLEGA S.A., bajo el siguiente Número de Registro: NÚMERO DE REGISTRO DENOMINACIÓN DEL PROGRAMA ASFI/DSV-PEB-POL-008/2026 BONOS PROLEGA VI\nSEGUNDO.- Instruir que para la inscripción y autorización de Oferta Pública de cada Emisión dentro del Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI”, PROLEGA S.A. deberá dar estricto cumplimiento a lo dispuesto por la Ley N° 1834 del Mercado de Valores, el Reglamento del Registro del Mercado de Valores, el Reglamento de Oferta Pública y el Manual de Prospectos, contenidos en los Títulos I y II de los Libros 1° y 2°, respectivamente, de la Recopilación de Normas para el Mercado de Valores y demás disposiciones vigentes.\nTERCERO.- Determinar que en cumplimiento a lo dispuesto por el Artículo 650 del Código de Comercio, el Emisor deberá presentar a la Autoridad de Supervisión del Sistema Financiero, la Escritura Pública de Declaración Unilateral de Voluntad para cada Emisión comprendida en el Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI”, dentro del trámite de aprobación de la misma.\nCUARTO.- Establecer que verificado el cumplimiento de los requisitos exigidos por la\nCUARTO.- Establecer que verificado el cumplimiento de los requisitos exigidos por la normativa vigente, la Autoridad de Supervisión del Sistema Financiero autorizará e inscribirá cada una de las Emisiones comprendidas dentro del Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI”, para su Oferta Pública, previo cumplimiento de los requisitos normativos exigidos al efecto.\nQUINTO.- Disponer que de conformidad a las disposiciones legales y regulatorias vigentes, PROLEGA S.A. deberá cumplir con la presentación oportuna de toda la información requerida por la Autoridad de Supervisión del Sistema Financiero, para el control y vigilancia de las Emisiones que conformen el Programa autorizado, así como con las obligaciones establecidas normativamente.\nSEXTO.- Establecer que la Autoridad de Supervisión del Sistema Financiero no se pronuncia sobre la calidad de los Valores ofrecidos como inversión de cada una de las Emisiones dentro del Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI”. La información presentada a esta Autoridad de Supervisión es de exclusiva responsabilidad del Emisor o de los responsables que hayan participado en su elaboración.",
+     "tags": [
+      "emision",
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS PROLEGA VI”",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "campos": {
+      "instrumento": "BONOS PROLEGA VI",
+      "emisor": "PROLEGA S.A.",
+      "registro": "ASFI/DSV-PEB-POL-008/2026"
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/560/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE: Sancionar a CREDIFONDO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por el cargo de la Nota de Cargo ASFI/DSV/R- 103699/2026 de 27 de mayo de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores, Inciso h), Artículo 1º, Sección 2, Capítulo V del Reglamento para Sociedades Administradoras de Fondos de Inversión y de los Fondos de Inversión, contenido en el Título I, Libro 5° de la Recopilación de Normas para el Mercado de Valores, Carta Circular ASFI/DGSC/CC- 15656/2022 de 22 de diciembre de 2022 y Carta Circular ASFI/DSC/CC-4378/2024 de 26 de marzo de 2024, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a CREDIFONDO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por el cargo de la Nota de Cargo ASFI/DSV/R- 103699/2026 de 27 de mayo de 2026, al haber incumplido lo",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/552/2026 de 29 de junio de 2026",
+     "texto": "RESUELVE: Sancionar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 4 de la Nota de Cargos ASFI/DSV/R-97592/2026 de 18 de mayo de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores, Numeral 6., Inciso a., Artículo 2°, Primer Párrafo del Artículo 3°, Sección 4, Capítulo VI del Reglamento del Registro del Mercado de Valores, contenido en el Título I, Libro 1°, Artículo 7°, Sección 4 del Reglamento de Control Interno y Auditores Internos, contenido en el Capítulo I, Título II, Artículo 5°, Sección 4 del Reglamento para la Gestión Integral de Riesgos, contenido en el Capítulo I, Título III y Numeral 1 del apartado Periodicidad de envío de informe de resultados del Anexo 1: Actividades Programadas de la Unidad de Auditoría Interna del Reglamento de Control Interno y Auditores Internos contenido en el Capítulo I, Título II, todos del Libro 11° de la Recopilación de Normas para el Mercado de Valores, Carta Circular ASFI/DSVSC/CC- 3953/2015 de 11 de agosto de 2015 y Carta Circular ASFI/DSV/CC-1060/2025 de 14 de abril de 2025, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 4 de la Nota de Cargos ASFI/DSV/R-97592/2026 de 18 de mayo de 2026, al haber",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/562/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE Sancionar a PANAMERICAN SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 3 de la Nota de Cargos ASFI/DSV/R-104369/2026 de 28 de mayo de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores, Inciso c., Artículo 1°, Sección 3, Capítulo VI del Reglamento del Registro del Mercado de Valores, contenido en el Título I, Libro 1°, Inciso h), Artículo 1º, Sección 2, Capítulo V del Reglamento para Sociedades Administradoras de Fondos de Inversión y de los Fondos de Inversión, contenido en el Título I, Libro 5° de la de la Recopilación de Normas para el Mercado de Valores, Carta Circular ASFI/DGSC/CC-15656/2022 de 22 de diciembre de 2022, Carta Circular ASFI/DSC/CC-4378/2024 de 26 de marzo de 2024, Carta Circular ASFI/DSV/CC-14526/2024 de 2 de octubre de 2024 y Carta Circular ASFI/DSV/CC-17639/2024 de 6 de diciembre de 2024, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE Sancionar a PANAMERICAN SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 3 de la Nota de Cargos ASFI/DSV/R-104369/2026 de 28 de mayo de 2026, al haber",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/561/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE: Sancionar a SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN MERCANTIL SANTA CRUZ S.A., con multa, por el cargo de la Nota de Cargo ASFI/DSV/R-103790/2026 de 27 de mayo de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores, Inciso h), Artículo 1º, Sección 2, Capítulo V del Reglamento para Sociedades Administradoras de Fondos de Inversión y de los Fondos de Inversión, contenido en el Título I, Libro 5° de la Recopilación de Normas para el Mercado de Valores, Carta Circular ASFI/DSV/CC- 14526/2024 de 2 de octubre de 2024 y Carta Circular ASFI/DSV/CC-17639/2024 de 6 de diciembre de 2024, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN MERCANTIL SANTA CRUZ S.A., con multa, por el cargo de la Nota de Cargo ASFI/DSV/R-103790/2026 de 27 de mayo de 2026, al haber",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    }
+   ]
   }
  }
 }
