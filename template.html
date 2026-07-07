@@ -844,7 +844,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">{{t:dolar.toggle_snapshot}}</button><button class="ds-chip" data-view="daily" type="button">{{t:dolar.toggle_daily}}</button></div></div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog inactive" data-trace="venta" style="--fb-trace-color:#990F3D"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#990F3D"></span><span class="fb-stog-label">{{t:dolar.stog_venta}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button><button type="button" class="fb-stog inactive" data-trace="tcoref" style="--fb-trace-color:#38BDF8"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#38BDF8"></span><span class="fb-stog-label">{{t:dolar.stog_tcoref}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_offer_h2}} <span class="help-tip" tabindex="0" aria-label="{{t:dolar.offer_help_aria}}"><span class="help-icon">i</span><span class="help-pop">{{t:dolar.offer_help_pop}}</span></span></h2><p>{{t:dolar.offer_sub}}</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="{{t:dolar.side_filter_aria}}"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_buy}}</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_sell}}</span></label></div><p class="snap-stamp">{{t:dolar.offer_snap_label}} <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
     <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vol_h2}}</h2><p>{{t:dolar.panel_vol_sub}}</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
   </div><!-- /panel-grid -->
@@ -1171,7 +1171,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
         <ul>
           <li><strong>USDT Compra / USDT Venta</strong> (KPIs arriba) &mdash; precio VWAP 10% de profundidad. Compra = d&oacute;nde compr&aacute;s USDT; Venta = d&oacute;nde lo vend&eacute;s.</li>
           <li><strong>Prima P2P</strong> &mdash; cu&aacute;nto por encima (o por debajo) del tipo de cambio oficial (TCO) est&aacute; el mercado P2P.</li>
-          <li><strong>BCB Ref</strong> &mdash; las dos tasas referenciales que publica el BCB (compra y venta). La venta referencial = TCO + 0,10 Bs; m&aacute;s cercanas al P2P.</li>
+          <li><strong>TCO BCB</strong> &mdash; el Tipo de Cambio Oficial del BCB en sus dos patas: compra (= TCO) y venta referencial (= TCO + 0,10 Bs; m&aacute;s cercana al P2P).</li>
           <li><strong>Spread</strong>, <strong>Profundidad</strong> &mdash; m&eacute;tricas del libro.</li>
           <li><strong>VWAP por nivel de profundidad</strong> &mdash; el gr&aacute;fico principal. Bandas 5/25/50% muestran el deterioro del precio si comprar&iacute;as m&aacute;s vol.</li>
         </ul>
@@ -1231,12 +1231,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           <li><strong>TCO &mdash; Tipo de Cambio Oficial</strong>: desde la RD 88/2026 (jun-2026) el oficial es din&aacute;mico. El BCB lo publica cada d&iacute;a h&aacute;bil a las 20:00 como promedio ponderado de las compras de USD de los bancos, y rige al d&iacute;a siguiente. Reemplaz&oacute; al tipo de cambio fijo (6,86 compra / 6,96 venta) que rigi&oacute; de 2011 a 2026.</li>
           <li><strong>BCB Ref Compra / Venta</strong>: tasas referenciales que publica el BCB (compra y venta separadas). La de venta referencial es el TCO + 0,10 Bs. Sirven como benchmark intermedio frente al P2P.</li>
         </ul>
-        <p>El gap entre el oficial y el P2P es lo que llamamos <strong>Prima P2P</strong>; ahora se mide contra el TCO.</p>
+        <p>El gap entre el oficial y el P2P es lo que llamamos <strong>Prima P2P</strong>; ahora se mide contra la venta referencial del BCB (TCO + 0,10 Bs).</p>
       </details>
 
       <details>
         <summary><strong>Prima P2P</strong></summary>
-        <p>F&oacute;rmula: <code>Prima = (P2P_compra_VWAP10 / TCO - 1) &times; 100</code>. Mide cu&aacute;nto m&aacute;s caro est&aacute; el USDT en el mercado P2P comparado con el tipo de cambio oficial (TCO). Indicador clave del nivel de estr&eacute;s cambiario.</p>
+        <p>F&oacute;rmula: <code>Prima = (P2P_compra_VWAP10 / Venta_ref - 1) &times; 100</code>, con <code>Venta_ref = TCO + 0,10 Bs</code>. Mide cu&aacute;nto m&aacute;s caro est&aacute; el USDT en el mercado P2P comparado con la venta referencial del BCB. Indicador clave del nivel de estr&eacute;s cambiario.</p>
       </details>
 
       <details>
@@ -1956,13 +1956,17 @@ function xaxisForView(base, v){
 }
 
 // VWAP series toggle state (default: Compra + TCO oficial)
-const vwapToggle={compra:true,tco:true};
+const vwapToggle={compra:true,venta:false,tco:true,tcoref:false};
 function applyVwapToggle(){
   const el=document.getElementById('chartVwap');
   if(!el||!el.data) return;
   const keyFor=function(tr){
-    if(tr.name==='Compra') return 'compra';
-    if(tr.name==='TCO') return 'tco';
+    // Match por token i18n (baked por-idioma) → estable en ES y EN; evita el bug
+    // viejo de comparar contra literales 'Compra'/'TCO' (rompía en EN).
+    if(tr.name==='{{t:dolar.trace_vwap_compra}}') return 'compra';
+    if(tr.name==='{{t:dolar.trace_vwap_venta}}')  return 'venta';
+    if(tr.name==='{{t:dolar.trace_tco}}')         return 'tco';
+    if(tr.name==='{{t:dolar.trace_tco_ref}}')     return 'tcoref';
     return null;
   };
   const updates={};
@@ -2045,15 +2049,29 @@ function rVwap(c,v){
       // ni fecha futura: tramo no-hover → no aparece "01 Jul" en el tooltip.
       traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco, lastP.tco],
         name:'{{t:dolar.trace_tco}}', mode:'lines', line:{color:c.bcbTco,width:2}, hoverinfo:'skip', showlegend:false});
-      // Rango Y por defecto: SOLO P2P (Compra) + TCO dinámico (≥26-jun). El 6.91 queda
-      // en los datos pero NO empuja el piso — cae bajo la vista por defecto (visible en
-      // el hover unificado, que es x-based). Decisión de producto vigente de Diego.
-      const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat(pts.map(e=>e.tco));
+      // TCO Venta referencial (= TCO + 0,10 Bs, RD 88/2026): celeste (#38BDF8),
+      // MISMO peso/opacidad que la TCO, PUNTEADA. Solo era dinámica (pts), sin el
+      // relleno 6.91 pre-régimen. hoverinfo skip: no compite por el ancla del
+      // tooltip unificado. Toggle 'tcoref'. (#4)
+      const REF_OFF=0.10, REF_COL='#38BDF8';
+      traces.push({x:pts.map(e=>e.fecha+' 00:00:00'), y:pts.map(e=>e.tco+REF_OFF),
+        name:'{{t:dolar.trace_tco_ref}}', mode:'lines', line:{color:REF_COL,width:2,shape:'hv',dash:'dash'},
+        connectgaps:true, hoverinfo:'skip'});
+      traces.push({x:[lastP.fecha+' 00:00:00', termFecha+' 00:00:00'], y:[lastP.tco+REF_OFF, lastP.tco+REF_OFF],
+        name:'{{t:dolar.trace_tco_ref}}', mode:'lines', line:{color:REF_COL,width:2,dash:'dash'}, hoverinfo:'skip', showlegend:false});
+      // Rango Y por defecto: P2P (Compra+Venta) + TCO dinámico + venta ref (≥26-jun).
+      // El 6.91 queda en los datos pero NO empuja el piso — cae bajo la vista por
+      // defecto (visible en el hover unificado, que es x-based). Decisión de Diego.
+      const yPool=(v.vb10||[]).filter(n=>n!=null&&isFinite(n)).concat((v.vs10||[]).filter(n=>n!=null&&isFinite(n))).concat(pts.map(e=>e.tco)).concat(pts.map(e=>e.tco+REF_OFF));
       if(yPool.length){ const lo=Math.min(...yPool), hi=Math.max(...yPool), pad=Math.max((hi-lo)*0.06,0.03); yRange=[lo-pad, hi+pad]; }
     }
   }
   traces.push({_side:'buy', x:x,y:v.vb10,name:'{{t:dolar.trace_vwap_compra}}',line:{color:c.buy,width:2},mode:'lines+markers',marker:{size:2,color:c.buy},
     hovertemplate:'{{t:dolar.hover_vwap_compra}} %{y:.2f}<extra></extra>'});
+  // Venta USDT (VWAP 10% del lado venta): rojo (c.sell=#990F3D). Serie direccional
+  // (_side:'sell') como Compra; toggle 'venta'. (#4)
+  traces.push({_side:'sell', x:x,y:v.vs10,name:'{{t:dolar.trace_vwap_venta}}',line:{color:c.sell,width:2},mode:'lines+markers',marker:{size:2,color:c.sell},
+    hovertemplate:'{{t:dolar.hover_vwap_venta}} %{y:.2f}<extra></extra>'});
   // Compañera de hover de la TCO: el valor VIGENTE por fecha, muestreado sobre la
   // MISMA grilla x que Compra. Así el hover unificado le dibuja su renglón NATIVO
   // (glifo naranja alineado, misma tipografía) sin competir por el ancla — sus
@@ -2413,14 +2431,17 @@ function updateKpis(){
   if(!tcoHoy && meta.bcb_tco_last!=null) tcoHoy={tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha};
   const tco=tcoHoy;
   const oficial=(tco&&tco.tco!=null)?tco.tco:meta.bcb_rate;
-  const premium=(last.vb10/oficial-1)*100;
   const ref=bcbRefAt(new Date(TS_ARR[i]).getTime());
   // Referencia oficial del BCB (RD 88/2026): compra = TCO; venta referencial =
   // TCO + 0,10 Bs. Fail-soft: si aún no hay TCO, cae a la referencial vieja
-  // (bcb_referencial). Se usa para la tarjeta "BCB Ref" y los sublabels de prima.
+  // (bcb_referencial). Se usa para la tarjeta "TCO BCB" y la prima.
   const hasTco = !!(tco && tco.tco != null);
   const refCompra = hasTco ? tco.tco : ref.compra;
   const refVenta  = hasTco ? (tco.tco + 0.10) : ref.venta;
+  // Prima P2P: medida contra la VENTA REFERENCIAL del BCB (TCO + 0,10 Bs), no el
+  // TCO base — es el precio comparable al lado compra del P2P. (#3)
+  const primaRef = (refVenta!=null) ? refVenta : oficial;
+  const premium = (last.vb10/primaRef-1)*100;
   const bcbSub = !hasTco ? '{{t:dolar.kpi_bcb_sub_no_tco}}'
     : (tcoManana
         ? ('{{t:dolar.kpi_bcb_sub_hoy_manana}}'+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
@@ -2430,10 +2451,10 @@ function updateKpis(){
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid">'+
     kpi('{{t:dolar.kpi_bcb_ref}}', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null)+
-    kpi('{{t:dolar.kpi_usdt_compra}}', fmt2(last.vb10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.compra, 'buy')+
-    kpi('{{t:dolar.kpi_usdt_venta}}', fmt2(last.vs10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.venta, 'sell')+
+    kpi('{{t:dolar.kpi_usdt_compra}}', fmt2(last.vb10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.venta, 'buy')+
+    kpi('{{t:dolar.kpi_usdt_venta}}', fmt2(last.vs10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.compra, 'sell')+
     kpi('{{t:dolar.kpi_spread}}', fmt4(last.sp10)+' <span style="font-size:.7em;font-weight:400">BOB</span>', fmt2(last.sp10/last.vb10*100)+'{{t:dolar.kpi_spread_sub}}', ICONS.spread, null)+
-    kpi('{{t:dolar.kpi_prima}}', (premium>=0?'+':'')+fmt2(premium)+'%', ((tco&&tco.tco!=null)?'{{t:dolar.kpi_prima_sub_tco}}':'{{t:dolar.kpi_prima_sub_oficial}}')+fmt2(oficial), ICONS.bcb, null)+
+    kpi('{{t:dolar.kpi_prima}}', (premium>=0?'+':'')+fmt2(premium)+'%', '{{t:dolar.kpi_prima_sub_ref}}'+fmt2(primaRef), ICONS.bcb, null)+
     kpi('{{t:dolar.kpi_profundidad}}', buyDepth+' / '+sellDepth, '{{t:dolar.kpi_prof_sub}}', ICONS.profundidad, null)+
     '</div></div>';
 }
