@@ -600,6 +600,17 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     msg = f"dashboard: {ts} snapshots={n_snap} rows={n_rows}"
 
+    # version.json: señal de frescura barata para el poller del front. El edge
+    # (Cloudflare Pages) NO expone Last-Modified/ETag en el HTML, así que el poller
+    # compara este valor, que cambia en cada publish. Best-effort: un fallo acá NO
+    # rompe el publish (git add -A lo recoge si se escribió; si no, el poller degrada
+    # a no-op y la pestaña simplemente no se auto-refresca).
+    try:
+        (WORKTREE_PATH / "version.json").write_text(
+            '{"generated_at": "' + ts + '"}\n', encoding="utf-8")
+    except Exception as e:
+        emit(f"[publish] mode=warn stage=version_json detail={type(e).__name__}")
+
     try:
         run(["git", "add", "-A"], cwd=str(WORKTREE_PATH))
         run(["git",
