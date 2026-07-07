@@ -6039,7 +6039,13 @@ function renderGrupos(entries, dateCol){
   GRUPOS.forEach(function(g){
     var arr=entries.filter(function(en){return grupoDe(en.it)===g.id;});
     if(!arr.length) return;
-    html.push(abreCard(g.titulo, arr.length));
+    // El número del tema cuenta FILAS renderizadas (sub-eventos), no hechos: los
+    // temas que expanden (directorio → 1 fila por persona; compromisos → 1 por
+    // indicador) mostraban un conteo de comunicados que no cuadraba con las filas
+    // visibles. Debe coincidir con la lógica de `filas` del render de abajo
+    // (mismo guard min-1 por hecho).
+    var nFilas=arr.reduce(function(s,en){var f=g.filas?g.filas(en.it):null;return s+(f?(f.length||1):1);},0);
+    html.push(abreCard(g.titulo, nFilas));
     html.push('<table class="fb-data-table"><thead><tr>');
     g.cols.forEach(function(c,ci){
       html.push('<th'+(ci===0?' class="asfi-ico-td"':'')+'>'+c+'</th>');
