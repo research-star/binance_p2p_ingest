@@ -5806,14 +5806,14 @@ window.addEventListener('popstate', function(){
   window.addEventListener('resize',measure);
 })();
 
-  // ── Auto-frescura (calibración 2026-07-06) ────────────────────────────────
-  // La página es ESTÁTICA y el navegador la cachea 10 min (GitHub Pages: max-age=600),
-  // así que una pestaña abierta muestra datos viejos aunque el ORIGEN esté fresco.
-  // Chequeo el Last-Modified del build cada 5 min (solo con la pestaña visible, HEAD
-  // liviano — no baja los 4 MB); si salió un build nuevo: recargo solo si el usuario
-  // está inactivo, y si está interactuando muestro un aviso clickeable.
+  // ── Auto-frescura (calibración 2026-07-06; señal → version.json 2026-07-07) ──
+  // La página es ESTÁTICA con la data horneada, así que una pestaña abierta muestra
+  // datos viejos aunque el ORIGEN esté fresco. El edge (Cloudflare Pages) NO expone
+  // Last-Modified/ETag en el HTML, así que polleo /version.json (tiny; lo escribe
+  // publish_dashboard.py en cada publish) cada 5 min con la pestaña visible; si el
+  // build cambió: recargo si el usuario está inactivo, o muestro un aviso clickeable.
   (function(){
-    var baseLM=null, lastAct=Date.now(), PERIOD=300000, IDLE=45000;
+    var baseVer=null, lastAct=Date.now(), PERIOD=300000, IDLE=45000;
     ['scroll','pointerdown','keydown','mousemove','touchstart'].forEach(function(ev){
       window.addEventListener(ev, function(){ lastAct=Date.now(); }, {passive:true});
     });
@@ -5829,10 +5829,12 @@ window.addEventListener('popstate', function(){
     }
     function check(){
       if(document.hidden) return;
-      fetch(location.pathname, {method:'HEAD', cache:'no-store'}).then(function(r){
-        var lm=r.headers.get('last-modified'); if(!lm) return;
-        if(baseLM===null){ baseLM=lm; return; }
-        if(lm!==baseLM){ (Date.now()-lastAct>IDLE) ? reloadFresh() : banner(); }
+      fetch('/version.json?_='+Date.now(), {cache:'no-store'}).then(function(r){
+        return r.ok ? r.json() : null;
+      }).then(function(j){
+        var ver=j&&j.generated_at; if(!ver) return;
+        if(baseVer===null){ baseVer=ver; return; }
+        if(ver!==baseVer){ (Date.now()-lastAct>IDLE) ? reloadFresh() : banner(); }
       }).catch(function(){});
     }
     setTimeout(check, 3000);
