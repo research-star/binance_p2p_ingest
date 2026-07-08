@@ -973,6 +973,13 @@ ENTIDADES_ECONOMICAS = {
     # 'General'. NO están en ENTIDADES_BOLIVIANAS (no anclan geográficamente).
     "Cacao", "Quinua", "Castana", "Cafe", "Girasol", "Chia",
 }
+# Subconjunto COMMODITY de las entidades. El rescate de dedup POR ENTIDAD (título ≥0.50
+# + entidad compartida) se restringe a estas: un commodity compartido es señal fuerte de
+# mismo-evento. Las institucionales (BCB/Gobierno/…) recurren demasiado a lo largo de 7
+# días como para deducir mismo-evento inter-día → se quedan en el piso de título 0.70.
+# Lo usa es_repetida (dedup inter-día en ingest_noticias); agrupar_eventos (intra-corrida)
+# sigue usando CUALQUIER entidad (mismo run = riesgo de sobre-merge mucho menor).
+ENTIDADES_COMMODITY = frozenset({"Cacao", "Quinua", "Castana", "Cafe", "Girasol", "Chia"})
 
 
 def detectar_entidades(titulo: str, descripcion: str = "") -> list:
