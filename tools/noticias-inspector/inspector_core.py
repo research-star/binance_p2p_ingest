@@ -64,7 +64,12 @@ def harness(sandbox_cache_path, snapshot=None, model_available=True):
         save(scraper, "get_modelo")
     try:
         scraper.CACHE_DB_PATH = Path(sandbox_cache_path)
-        resumen_ia.aplicar = lambda finales: 0
+        # *a,**k: el stub es un no-op deliberado (sin API, determinista); NO debe
+        # depender de la firma real. El call vivo pasa (finales, autorizado=, conn=)
+        # desde el candado de API + captura de usage; con la firma vieja `lambda finales`
+        # la lane real crashea con TypeError y tumba parity_test/baseline_replay. Igual
+        # que los stubs hermanos (escribir_csv_debug / correr_scraper) de este bloque.
+        resumen_ia.aplicar = lambda *a, **k: 0
         if has_csv:
             ing.escribir_csv_debug = lambda *a, **k: None
         if snapshot is not None:
