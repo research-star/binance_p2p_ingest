@@ -39,6 +39,11 @@ WPJSON = ("https://www.ine.gob.bo/index.php/wp-json/wp/v2/posts"
           "&per_page=30&_fields=date,link,title,content")
 HEADERS = {"User-Agent": "Mozilla/5.0 (binance_p2p_ingest/ine)"}
 TIMEOUT_S = 40
+# Skip-state de publish_dashboard.py: si entra un mes nuevo lo borramos para que
+# el próximo publish */12 lo recoja (la cache-key del publish mira ine_ipc/Excel,
+# NO esta tabla). Mismo "cache bust" que hace el workflow auto-publish. VPS-only:
+# si el archivo no existe (corrida local) es no-op.
+PUBLISH_SKIP_STATE = "/var/log/binance_p2p/publish_dashboard.last_size"
 HC_INE_COMUNICADO = os.environ.get("HC_INE_COMUNICADO", "").strip()
 
 MESES = {m: i for i, m in enumerate(
@@ -185,6 +190,14 @@ def main():
            f"{counts['igual']} sin cambio (último: {parsed[0]['periodo']} "
            f"mensual={parsed[0]['var_mensual']})")
     print(f"[ine-com] {msg}")
+    if counts["nuevo"] > 0:
+        try:
+            os.remove(PUBLISH_SKIP_STATE)
+            print("[ine-com] cache-bust: skip-state del publish invalidado (mes nuevo)")
+        except FileNotFoundError:
+            pass
+        except OSError as ex:
+            print(f"[ine-com] WARN no pude bustear publish state: {ex}", file=sys.stderr)
     hc_ping("", msg)
 
 
