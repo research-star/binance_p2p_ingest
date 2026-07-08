@@ -744,7 +744,10 @@ _TEMA_SPEC = {
                    "s&p", "fmi", "banco mundial",
                    "bono soberano", "bonos soberanos", "prestamo del fmi", "prestamo del bid",
                    "prestamo de la caf", "desembolso del bid", "desembolso de la caf",
-                   "sistema financiero", "banca boliviana"],
+                   "sistema financiero", "banca boliviana",
+                   # Endeudarse: el weak 'deuda' no matchea 'endeud*' por word-boundary;
+                   # 'endeudamiento' es inequívoco (score solo, sin context).
+                   "endeudamiento", "endeudarse"],
         "weak": ["deuda", "credito", "creditos", "bono", "bonos", "prestamo", "prestamos",
                  "impuesto", "impuestos", "bid", "caf"],
         "context": ["fiscal", "externa", "interna", "publica", "soberan", "financ", "crediticia",
@@ -771,21 +774,46 @@ _TEMA_SPEC = {
         "strong": ["balanza comercial", "ibce", "cainco", "exportaciones bolivianas",
                    "importaciones bolivianas", "aduana nacional", "superavit comercial",
                    "deficit comercial", "comercio exterior"],
+        # Formas VERBALES de exportar (exportó/exporta/exportaron): el titular boliviano
+        # suele venir en verbo ("Bolivia exportó $us N en cacao"), no en sustantivo. Sin
+        # esto la nota caía a General→Otros mientras su gemela con "Exportaciones"
+        # (sustantivo) sí clasificaba (par cacao El Deber/El Mundo 2026-07-08). El verbo NO
+        # se agrega para importar: colisiona con "importar = tener importancia" (ver 'importac').
         "weak": ["exportacion", "exportaciones", "importacion", "importaciones", "aduana", "arancel",
-                 "contrabando"],
-        "context": ["exporta", "importa", "comercio", "balanza", "arancel", "aduana", "mercado externo",
+                 "contrabando", "exporto", "exporta", "exportan", "exportaron"],
+        # 'export' (stem) gatea todas las conjugaciones/derivados de exportar (exporta,
+        # exportó, exportaron, exportación). 'importac' (NO 'import') evita gatear
+        # "importante"/"importancia"/"importa=tener importancia" — corrige un over-gateo
+        # pre-existente y solo conserva importación/importaciones.
+        "context": ["export", "importac", "comercio", "balanza", "arancel", "aduana", "mercado externo",
                     "fob", "superavit", "deficit comercial", "contenedor", "frontera"],
-        "exclude": ["comercio sexual", "comercio de personas", "aduana del cielo"],
+        # Guardas de la auto-gatera del verbo (context 'export' + weak 'exporta' matchean el
+        # mismo token): metáforas no-comerciales de "exportar". Acotada, no exhaustiva.
+        "exclude": ["comercio sexual", "comercio de personas", "aduana del cielo",
+                    "exporta cultura", "exporto cultura", "exporta talento", "exporto talento",
+                    "exporta violencia", "exporto violencia", "exporta su modelo",
+                    "exporta democracia", "exporta valores", "exporta pobreza",
+                    "exporta inseguridad", "exporta crisis", "exporta miedo"],
     },
     "Inversión / Infraestructura": {
         "strong": ["obra publica", "licitacion", "contratacion directa", "ds 5600", "doble via",
                    "megaproyecto", "infraestructura vial", "inversion publica",
                    "inversion extranjera directa", "construccion de la carretera"],
-        "weak": ["inversion", "carretera", "obra", "proyecto", "construccion", "puente", "contrato"],
+        # Formas verbales de invertir (invirtió/invierte/invierten): gap análogo al de
+        # exportar. Acá NO hay auto-gatera (el context es amplio: millones/obra/carretera),
+        # así que el verbo puntúa solo si co-ocurre con contexto real de inversión; el
+        # sentido "invertir=revertir" (curva/tendencia) no trae ese context → no puntúa. Las
+        # metáforas noun ("inversión de tiempo/roles", "invierte en ti") ya están en exclude.
+        "weak": ["inversion", "carretera", "obra", "proyecto", "construccion", "puente", "contrato",
+                 "invirtio", "invierte", "invierten", "invirtieron"],
         "context": ["construccion", "obra", "proyecto", "carretera", "puente", "millones", "financiar",
                     "ejecuta", "infraestructura", "planta", "tramo", "licitacion", "via", "megaproyecto"],
+        # Guardas del verbo (invirtió/invierte es también "invertir=revertir"): metáforas
+        # de marcador/tendencia/roles que con el context amplio ('millones') caerían acá.
         "exclude": ["inversion de tiempo", "inversion emocional", "inversion de roles",
-                    "inversion social", "invierte en ti"],
+                    "inversion social", "invierte en ti",
+                    "invirtio el marcador", "invierte el marcador", "invirtio la tendencia",
+                    "invierte la tendencia", "invirtio los roles", "invierte los roles"],
     },
     "Elecciones / Política económica": {
         "strong": ["segunda vuelta", "balotaje", "ministro de economia", "ministerio de economia",
@@ -905,6 +933,23 @@ _ENTIDAD_SPEC = {
     "Fisco": ["fisco"],
     "Bs": ["bs"],
     "Figuras BO": ["rodrigo paz", "doria medina", "edman lara", "edmand lara", "evo morales"],
+    # ── Commodities de exportación (B2: anclas de evento para el rescate de capa B) ──
+    # Se detectan como entidad para que dos notas del MISMO commodity (mismo evento,
+    # framing distinto) compartan entidad y agrupen vía _mismo_evento (título ≥0.50 +
+    # entidad compartida) — el caso del par cacao El Deber/El Mundo. NO son ancla
+    # geográfica: un commodity es global (cacao de Ecuador/Ghana), así que quedan FUERA de
+    # ENTIDADES_BOLIVIANAS (no anclarían notas extranjeras). Set acotado a cultivos de
+    # exportación (bajo riesgo de falso-merge). Se OMITEN azúcar (solapa con
+    # EMAPA/Alimentos) y soya/litio (ya son tema). Girasol/chía SÍ entran: su colisión con
+    # nombre propio (marcas 'Girasol', topónimo 'Chía') es marginal frente al valor de
+    # dedup (decisión de Diego), y el piso de título 0.50 del rescate contiene el over-merge.
+    "Cacao": ["cacao", "cacaos"],
+    "Quinua": ["quinua", "quinuas", "quinoa"],
+    "Castana": ["castana", "castanas", "nuez amazonica", "nueces amazonicas",
+                "almendra amazonica", "almendra chiquitana"],
+    "Cafe": ["cafetalero", "cafetaleros", "cafetalera", "cafetaleras"],
+    "Girasol": ["girasol", "girasoles"],
+    "Chia": ["chia", "chias"],
 }
 _ENTIDADES = {canon: [_wb(a) for a in aliases] for canon, aliases in _ENTIDAD_SPEC.items()}
 
@@ -924,6 +969,9 @@ ENTIDADES_ECONOMICAS = {
     "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "ASFI", "ASOBAN", "INE", "Aduana",
     "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "MEFP",
     "FMI", "Banco Mundial", "BID", "CAF", "Fitch", "Moody's", "S&P",
+    # Commodities de exportación (B2): evidencia económica para conservar una nota
+    # 'General'. NO están en ENTIDADES_BOLIVIANAS (no anclan geográficamente).
+    "Cacao", "Quinua", "Castana", "Cafe", "Girasol", "Chia",
 }
 
 
@@ -1350,10 +1398,26 @@ def scrape_titulos(fuente: dict) -> list:
 # ---------------------------------------------------------------------------
 UMBRAL_DEDUP = 0.70 if TIENE_RAPIDFUZZ else 0.55
 
+# Dominios de publisher que Google News RSS puede estampar como "fuente" al final del
+# título ("Titular - elmundo.com.bo") cuando el outlet no tiene display-name humano
+# registrado, en vez de "- El Mundo". El nombre humano nunca matchea el dominio, así que
+# sin esto la cola de dominio sobrevive a _titulo_limpio() y ensucia la similitud de dedup
+# (par cacao El Mundo/El Deber 2026-07-08: 0.619 con la cola vs 0.697 sin ella). Allow-list
+# EXPLÍCITA (no patrón TLD genérico) para no recortar dominios ajenos citados en un titular.
+_DOMINIOS_PORTAL = [
+    "eldeber.com.bo", "correodelsur.com", "unitel.bo", "larazon.bo",
+    "bloomberglinea.com", "eju.tv", "eldia.com.bo", "brujuladigital.net",
+    "noticiasfides.com", "erbol.com.bo", "urgente.bo", "opinion.com.bo",
+    "lostiempos.com", "lapatriaenlinea.com", "elmundo.com.bo",
+    "bcb.gob.bo", "ine.gob.bo", "economiayfinanzas.gob.bo", "asfi.gob.bo",
+    "aduana.gob.bo", "cainco.org.bo", "ibce.org.bo", "cepb.org.bo", "cni.org.bo",
+]
+
 # Regex para limpiar sufijos de portal antes de comparar títulos
 _SUFIJOS_PORTAL = re.compile(
     r"\s*[-–—|]\s*("
     + "|".join(re.escape(f["portal"]) for f in FUENTES)
+    + "|" + "|".join(re.escape(d) for d in _DOMINIOS_PORTAL)
     + r"|ANF Agencia de Noticias Fides Bolivia|Bolivia"
     r")\s*$",
     re.IGNORECASE,
