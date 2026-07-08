@@ -327,6 +327,8 @@
   "macro.infl_matrix_cursor_js": "último dato",
   "macro.infl_mensual_hover": "%{x|%b %Y}<br>%{y:.2f}% mensual<extra></extra>",
   "macro.infl_ranking_hover": "%{y}<br>%{customdata} interanual<extra></extra>",
+  "macro.infl_provisional_tag": "provisional",
+  "macro.infl_provisional_title": "Dato del comunicado de prensa del INE (2 decimales). Se reemplaza automáticamente cuando el INE publica el cuadro oficial.",
   "macro.infl_ranking_sub_mid": ", comparada contra ",
   "macro.infl_ranking_sub_prefix": "Inflación interanual (variación a 12 meses) al cierre de ",
   "macro.infl_ranking_sub_suffix": ". Negativos entre paréntesis.",
