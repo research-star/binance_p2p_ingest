@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from noticias_ingest import scraper
-from ingest_noticias import _mismo_evento
+from ingest_noticias import _mismo_evento, es_repetida
 
 # Par cacao real (prod 2026-07-08). Con acentos como llegan del feed.
 DEBER_T = "Bolivia exportó $us 11 millones en cacao durante 2025 - El Deber"
@@ -147,6 +147,24 @@ def run() -> int:
     for c in ("Cacao", "Quinua", "Castana", "Cafe", "Girasol", "Chia"):
         ok(f"{c} es entidad", c in scraper._ENTIDADES)
     ok("Cacao NO en geo-gate (no ancla extranjero)", "Cacao" not in scraper.ENTIDADES_BOLIVIANAS)
+
+    # ── Dedup inter-día (es_repetida): rescate por COMMODITY compartido ──
+    # El par cacao (0.697 título) reaparecía al re-scrapearse tras borrar su fila gemela,
+    # porque es_repetida usaba solo título >=0.70. Ahora rescata por commodity compartido.
+    deber_ents = {"Cacao", "IBCE", "INE"}
+    ok("es_repetida: rescate commodity (Cacao) atrapa el par 0.697",
+       es_repetida(MUNDO_T, ["Cacao", "IBCE", "INE"], [(DEBER_T, deber_ents)]) is True)
+    ok("es_repetida: título >=0.70 sigue atrapando (near-dup exacto)",
+       es_repetida("Bolivia exportó $us 11 millones en cacao durante 2025",
+                   [], [(DEBER_T, set())]) is True)
+    # Entidad INSTITUCIONAL (BCB) NO rescata inter-día: mismos títulos (0.697<0.70) pero
+    # BCB no es commodity → se queda en el piso de título → NO repite (anti sobre-supresión).
+    ok("es_repetida: entidad institucional (BCB) NO rescata a 0.697",
+       es_repetida(MUNDO_T, ["BCB"], [(DEBER_T, {"BCB"})]) is False)
+    # Commodity compartido pero título <0.50 → NO repite (el piso de título sigue mandando).
+    ok("es_repetida: commodity pero título <0.50 NO repite",
+       es_repetida("Cacaoteros del Alto Beni bloquean la vía exigiendo mejor precio",
+                   ["Cacao"], [(DEBER_T, {"Cacao"})]) is False)
 
     if err:
         print("FAIL test_noticias_dedup_tema:")

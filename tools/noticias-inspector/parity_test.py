@@ -66,7 +66,7 @@ def run():
     connA, dbA, cacheA = _fresh_db()
     pre_ids = {r[0] for r in connA.execute("SELECT id FROM noticias").fetchall()}
     with core.harness(cacheA, snapshot=snap):
-        resA = ing.lane_bolivia(connA, args, ahora, fecha_bo, previos=[DUP])
+        resA = ing.lane_bolivia(connA, args, ahora, fecha_bo, previos=[(DUP, set())])
     real_ids = {r[0] for r in connA.execute("SELECT id FROM noticias").fetchall()} - pre_ids
     real_titles = {r[0] for r in connA.execute(
         "SELECT title FROM noticias WHERE id IN ({})".format(
@@ -76,7 +76,7 @@ def run():
     # ── (b) inspector mirror ─────────────────────────────────────────────────
     connB, dbB, cacheB = _fresh_db()
     with core.harness(cacheB, snapshot=snap):
-        previosB = [DUP]
+        previosB = [(DUP, set())]
         mir = core.mirror_bolivia(snap, connB, args, ahora, fecha_bo, previosB)
     connB.close()
     mir_ids = {n["id"] for n in mir["finales"]}

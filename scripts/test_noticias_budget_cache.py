@@ -69,7 +69,7 @@ def run():
     # califica pero pierde budget; la 4.0 no califica.
     args = SimpleNamespace(umbral=6.7, top=2, top_latam=8, dry_run=False)
 
-    res = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[DUP_TITLE])
+    res = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[(DUP_TITLE, set())])
     conn.close()
 
     # ── Asserts ──

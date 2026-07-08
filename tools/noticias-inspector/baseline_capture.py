@@ -275,8 +275,11 @@ def freeze_fixture(snap, funnel, ahora_utc, fecha_bo, canonical_res, metrics, pr
     # Ventana de dedup inter-día CONGELADA: independiza el embudo del reloj del sistema
     # (titulos_recientes usa SQLite date('now'), no ahora_utc) → replay byte-estable a
     # cualquier fecha futura, no solo dentro de los 7d de la captura.
+    # previos_frozen = [(título, entidades:set)]; los sets no son JSON-serializables →
+    # se persisten como [título, [entidades]] (baseline_replay reconstruye el set).
     (FIXTURE_DIR / "previos.json").write_text(
-        json.dumps(previos_frozen, ensure_ascii=False), encoding="utf-8")
+        json.dumps([[t, sorted(e)] for t, e in previos_frozen], ensure_ascii=False),
+        encoding="utf-8")
     meta = {
         "fixture": FIXTURE_NAME,
         "captured_at_utc": ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),

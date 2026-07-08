@@ -40,7 +40,10 @@ def _load_fixture():
     cfg.SANDBOX_DIR.mkdir(parents=True, exist_ok=True)
     (cfg.SANDBOX_DIR / "vps-seed.json").write_text(seed_txt, encoding="utf-8")
     # Ventana de dedup congelada — inyectada para no depender de date('now') del sistema.
-    previos = json.loads((fdir / "previos.json").read_text(encoding="utf-8"))
+    # (título, entidades:set) para es_repetida. Compat: fixture viejo = lista de títulos
+    # (str, dedup solo por título); nuevo = [título, [entidades]] (habilita rescate commodity).
+    _prev_raw = json.loads((fdir / "previos.json").read_text(encoding="utf-8"))
+    previos = [(p, set()) if isinstance(p, str) else (p[0], set(p[1])) for p in _prev_raw]
     ahora_utc = datetime.strptime(meta["ahora_utc_pinned"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
     return fdir, meta, snap, expected, ahora_utc, previos
 

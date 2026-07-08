@@ -183,19 +183,30 @@ def init_schema(conn: sqlite3.Connection):
 # ── Dedupe inter-día ──────────────────────────────────────────────────────
 
 def titulos_recientes(conn: sqlite3.Connection, dias: int = DEDUPE_DIAS) -> list:
-    """Títulos de los últimos `dias` días de la tabla noticias (ambos
-    carriles) para dedupe fuzzy. [] si la tabla está vacía."""
+    """(título, entidades:set) de los últimos `dias` días de la tabla noticias (ambos
+    carriles) para el dedupe fuzzy: por título (≥0.70) o por commodity compartido
+    (≥0.50). [] si la tabla está vacía."""
     rows = conn.execute(
-        "SELECT title FROM noticias WHERE date >= date('now', '-4 hours', ?)",
+        "SELECT title, entidades FROM noticias WHERE date >= date('now', '-4 hours', ?)",
         (f"-{dias} days",)
     ).fetchall()
-    return [r[0] for r in rows]
+    return [(r[0], set(json.loads(r[1] or "[]"))) for r in rows]
 
 
-def es_repetida(titulo: str, titulos_previos: list) -> bool:
+def es_repetida(titulo: str, entidades, previos: list) -> bool:
+    """¿`titulo` repite una nota de los últimos DEDUPE_DIAS días? Título ≥0.70
+    (UMBRAL_DEDUP_DB), O título ≥0.50 (UMBRAL_EVENTO_ENT) + COMMODITY compartido — el
+    mismo rescate de agrupar_eventos, pero inter-día y SOLO por commodity (par cacao
+    El Deber/El Mundo: 0.697 < 0.70 título, pero comparten 'Cacao'; sin esto el gemelo
+    de una nota ya publicada se re-insertaba al re-scrapearse si se borró su fila).
+    `previos` = [(título, entidades:set)] de titulos_recientes + appends de la corrida."""
     limpio = scraper._titulo_limpio(titulo)
-    for previo in titulos_previos:
-        if scraper.similitud(limpio, scraper._titulo_limpio(previo)) >= UMBRAL_DEDUP_DB:
+    com = set(entidades or []) & scraper.ENTIDADES_COMMODITY
+    for ptitulo, pents in previos:
+        sim = scraper.similitud(limpio, scraper._titulo_limpio(ptitulo))
+        if sim >= UMBRAL_DEDUP_DB:
+            return True
+        if com and sim >= UMBRAL_EVENTO_ENT and (com & pents):
             return True
     return False
 
@@ -428,14 +439,14 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 # re-insertar ni evictar por ella (cierra el net-negativo del INSERT OR IGNORE).
                 colisiones.append(n)
                 continue
-            if es_repetida(n["title"], previos):
+            if es_repetida(n["title"], n.get("entidades"), previos):
                 res["dedupe"] += 1
                 dedupe_losers.append(n)  # gemelo de una nota ya publicada (no insertable ~7d)
                 continue
             if len(hoy) < cap:
                 # Cupo con lugar: inserción aditiva (idéntico al comportamiento < cupo).
                 finales.append(n)
-                previos.append(n["title"])
+                previos.append((n["title"], set(n.get("entidades") or [])))
                 hoy.append(dict(id=n["id"], puntaje=n["puntaje"], url=n["url"], portal=n["portal"], title=n["title"]))
                 hoy_ids.add(n["id"])
                 continue
@@ -448,10 +459,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
                 # El título de la evictada sale de `previos`: si en ESTA misma corrida llega
                 # una near-dup mejor cubierta del mismo evento, que NO quede bloqueada por el
                 # título de una fila que ya no existe (yield perdido).
-                if peor.get("title") in previos:
-                    previos.remove(peor["title"])
+                previos[:] = [p for p in previos if p[0] != peor.get("title")]
                 finales.append(n)
-                previos.append(n["title"])
+                previos.append((n["title"], set(n.get("entidades") or [])))
                 hoy.append(dict(id=n["id"], puntaje=n["puntaje"], url=n["url"], portal=n["portal"], title=n["title"]))
                 hoy_ids.add(n["id"])
             else:
@@ -599,11 +609,11 @@ def lane_latam(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         for n in notas:
             if len(finales) >= budget:
                 break
-            if es_repetida(n["title"], previos):
+            if es_repetida(n["title"], n.get("entidades"), previos):
                 res["dedupe"] += 1
                 continue
             finales.append(n)
-            previos.append(n["title"])
+            previos.append((n["title"], set(n.get("entidades") or [])))
 
         if args.dry_run:
             for n in finales:

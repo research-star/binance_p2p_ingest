@@ -64,7 +64,12 @@ def harness(sandbox_cache_path, snapshot=None, model_available=True):
         save(scraper, "get_modelo")
     try:
         scraper.CACHE_DB_PATH = Path(sandbox_cache_path)
-        resumen_ia.aplicar = lambda finales: 0
+        # *a,**k: el stub es un no-op deliberado (sin API, determinista); NO debe
+        # depender de la firma real. El call vivo pasa (finales, autorizado=, conn=)
+        # desde el candado de API + captura de usage; con la firma vieja `lambda finales`
+        # la lane real crashea con TypeError y tumba parity_test/baseline_replay. Igual
+        # que los stubs hermanos (escribir_csv_debug / correr_scraper) de este bloque.
+        resumen_ia.aplicar = lambda *a, **k: 0
         if has_csv:
             ing.escribir_csv_debug = lambda *a, **k: None
         if snapshot is not None:
@@ -188,11 +193,11 @@ def mirror_bolivia(snapshot, conn, args, ahora_utc, fecha_bo, previos):
         if len(finales) >= budget:
             budget_losers = grouped[idx:]
             break
-        if ing.es_repetida(n["title"], previos):
+        if ing.es_repetida(n["title"], n.get("entidades"), previos):
             dedupe_losers.append(n)
             continue
         finales.append(n)
-        previos.append(n["title"])  # mutate shared previos (cross-lane coupling, like prod)
+        previos.append((n["title"], set(n.get("entidades") or [])))  # mutate shared previos (cross-lane coupling, like prod)
     stages[14]["out"] = len(grouped) - len(budget_losers)
     stages[14]["killed"] = [_nota_brief(n, "budget") for n in budget_losers]
     stages[15]["out"] = len(finales)
@@ -243,11 +248,11 @@ def mirror_latam(conn, args, ahora_utc, fecha_bo, previos, entries=None):
         if len(finales) >= budget:
             budget_losers = notas[idx:]
             break
-        if ing.es_repetida(n["title"], previos):
+        if ing.es_repetida(n["title"], n.get("entidades"), previos):
             dedupe_losers.append(n)
             continue
         finales.append(n)
-        previos.append(n["title"])
+        previos.append((n["title"], set(n.get("entidades") or [])))
     stages[4]["out"] = len(notas) - len(budget_losers)
     stages[4]["killed"] = [_nota_brief(n, "budget") for n in budget_losers]
     stages[5]["out"] = len(finales)
