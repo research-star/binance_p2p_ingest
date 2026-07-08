@@ -2190,6 +2190,379 @@
      "grupo": "otros"
     }
    ]
+  },
+  "2026-07-08": {
+   "guid": "6ccb33ae-7044-4327-8590-9b46f5334922",
+   "titulo": "Reporte Informativo ASFI al 08/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Comunica que, el 7 de julio de 2026, emitió la siguiente disposición interna: Comunicación Organizativa Interna N° 055/2026, a partir de la fecha, el señor Mauricio Erasmo Cáceres Antelo (Gerente Nacional de Tecnología), dejó de prestar servicios a la compañía.",
+     "tags": [],
+     "resumen": "Comunica que, el 7 de julio de 2026, emitió la siguiente disposición interna: Comunicación Organizativa Interna N° 055/2026, a partir de la fecha, el señor Mauricio Erasmo Cáceres Antelo (Gerente",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Comunica que, el 8 de julio de 2026, emitió la siguiente disposición interna: Orden de Servicio N° 087/2026, a partir de la fecha, la Gerencia Nacional de Tecnología, queda bajo la responsabilidad interina del señor Roberto Pablo Rocabado Rojas.",
+     "tags": [],
+     "resumen": "Comunica que, el 8 de julio de 2026, emitió la siguiente disposición interna: Orden de Servicio N° 087/2026, a partir de la fecha, la Gerencia Nacional de Tecnología, queda bajo la responsabilidad",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Granja Avícola Integral Sofía Ltda.",
+     "texto": "Comunica que, el 8 de julio de 2026, el Banco BISA S.A., procedió al desembolso por un monto de Bs10.000.000,00 en calidad de préstamo de dinero.",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Comunica que, el 8 de julio de 2026, el Banco BISA S.A., procedió al desembolso por un monto de Bs10.000.000,00 en calidad de préstamo de dinero.",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "campos": {
+      "banco": "Banco BISA S.A.",
+      "monto": "Bs 10,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Procesadora de Oleaginosas PROLEGA S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 08 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Consideración y Aprobación de una Emisión de Pagarés bajo la Modalidad sin Oferta Pública. Autorizar la emisión de un Pagaré por un monto de Bs14.000.000,00 a favor de MSC Productivo FIC, administrado por SAFI Mercantil Santa Cruz S.A.\n2. Designación de representante para la suscripción de los valores emitidos.",
+     "tags": [
+      "emision",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 08 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Económico S.A.",
+     "texto": "Comunica que, el señor José Luis Lijeron Justiniano presentó, el 7 de julio de 2026, su renuncia voluntaria al cargo de Gerente Nacional de Tecnologías de la Información. Al respecto, la Gerencia General, dispuso la aceptación de dicha renuncia, la cual, se hizo efectiva a partir de la citada fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el señor José Luis Lijeron Justiniano presentó, el 7 de julio de 2026, su renuncia voluntaria al cargo de Gerente Nacional de Tecnologías de la Información.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "José Luis Lijeron Justiniano",
+      "cargo": "Gerente Nacional de Tecnologías de la Información",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Ganadero S.A.",
+     "texto": "Comunica que, el 3 de julio de 2026, aceptó la renuncia del señor Arias Paz William, quien se desempeñaba como Gerente de Pequeñas y Medianas Empresas, siendo su último día laboral en la citada fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 3 de julio de 2026, aceptó la renuncia del señor Arias Paz William, quien se desempeñaba como Gerente de Pequeñas y Medianas Empresas, siendo su último día laboral en la citada fecha.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Arias Paz William",
+      "cargo": "Gerente de Pequeñas y Medianas Empresas",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 94.40% de los accionistas, determinó lo siguiente:\n1. Aprobar las modificaciones a los términos y condiciones de la Emisión de Bonos Subordinados denominada “BONOS SUBORDINADOS BANCOSOL IV”, comprendiendo: la modificación del texto correspondiente a la característica “Rescate Anticipado”, así como de los numerales 3.4. “Modificación a las Condiciones y Características de la Emisión” y 3.6. “Restricciones, Obligaciones y Compromisos Financieros a cumplir durante la vigencia de los Bonos Subordinados emitidos”, incorporándose en estos últimos la previsión de que las modificaciones a las condiciones y/o características de la presente Emisión no podrán realizarse durante el período de colocación de los Bonos Subordinados ni durante cualquier ampliación de dicho período, (si hubiere).\n2. Aprobar la reasignación del destino de donaciones 2026, en lo que respecta las partidas presupuestarias para la ejecución del nuevo destino denominado Campaña Ayuda Humanitaria.",
+     "tags": [
+      "emision",
+      "compromisos",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de julio de 2026, realizada con el 94.40% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de marzo de 2026 COMITÉ/EMISOR INSTRUMENTO CALIFICADO EQUIVALENCIA ASFI PCR PERSPECTIVA Comité N°049/2026 celebrado el 6 de mayo de 2026 CAMSA Industria y Comercio S.A. Bonos CAMSA III – Emisión 1 Serie Única: Monto: Bs 105,00 millones. Plazo: 1.800 días. AA3 BAA- Estable Comité N°063/2026 celebrado el 9 de junio de 2026 CAMSA Industria y Comercio S.A. Bonos CAMSA III – Emisión 1 Serie Única: Monto: Bs 105,00 millones. Plazo: 1.800 días. AA3 BAA- Estable",
+     "tags": [
+      "calificacion"
+     ],
+     "resumen": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de",
+     "resumen_origen": "extractivo",
+     "grupo": "calificaciones"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Fondos de Inversión",
+     "entidad": "Inclusión Empresarial Fondo de Inversión Cerrado",
+     "texto": "Comunica que, aprueba la propuesta de modificación de la fecha de corte de la reducción de capital del Fondo, cumpliendo el quorum calificado mínimo, fijando como nueva fecha el 18 de diciembre de 2026.",
+     "tags": [],
+     "resumen": "Comunica que, aprueba la propuesta de modificación de la fecha de corte de la reducción de capital del Fondo, cumpliendo el quorum calificado mínimo, fijando como nueva fecha el 18 de diciembre de",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "IDEPRO Desarrollo Empresarial - IDEPRO IFD",
+     "texto": "Comunica que, a partir del 7 de julio de 2026, designa a Roberto Carlos Reque Mejia como Gerente Nacional de Proyectos, Canales, Servicios Digitales y Marketing.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, a partir del 7 de julio de 2026, designa a Roberto Carlos Reque Mejia como Gerente Nacional de Proyectos, Canales, Servicios Digitales y Marketing.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerente Nacional de Proyectos",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "MULTIFONDOS Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Aprobar la modificación de la Escritura Pública de Constitución de Reactivalores Fondo de Inversión Cerrado, que será administrado por Multifondos SAFI S.A.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Aprobar la modificación de la Escritura Pública de Constitución de Reactivalores Fondo de Inversión",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Sociedad Administradora de Fondos de Inversión Unión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente:\n- Aprobar el cambio de denominación en las Escrituras de Constitución de los siguientes Fondos de Inversión Abiertos administrados por la Sociedad: Global Unión $us Fondo de Inversión Abierto - Largo Plazo a Global Unión $us Fondo de Inversión Abierto - Mediano Plazo. Fondo de Inversión Mutuo Unión - Mediano Plazo a Fondo de Inversión Mutuo Unión - Corto Plazo. Xtravalor Unión FIA - Mediano Plazo a Xtravalor Unión FIA - Corto Plazo.\n- Aprobar las modificaciones a los Reglamentos Internos de los Fondos: Global Unión Fondo de Inversión Abierto -Largo Plazo, Fondo de Inversión Mutuo Unión - Mediano Plazo y Xtravalor Unión Fondo de Inversión Abierto - Mediano Plazo.\n- Designar a la señora Raquel Andrea Amado Lordemann como Subgerente de Negocios a.i. a partir del 7 de julio de 2026.\n- Revocar todos los Poderes otorgados en favor del señor Alan Guillermo Moscoso de las Muñecas.\n- Reconformar el Comité de Inversiones de los Fondos de Inversión Abiertos - FIAs de la siguiente manera: Tatiana Virreira Monroy - Presidente Rubén Mario Ferrufino Goitia - Miembro Leonor Hermoja Lozada Bernal - Miembro Varinia Susan Tindal Felipez - Miembro Raquel Andrea Amado Lordemann - Secretaria",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: - Aprobar el cambio de denominación en las Escrituras de Constitución de los siguientes Fondos de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Raquel Andrea Amado Lordemann",
+      "cargo": "Subgerente de Negocios",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Multiplika Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Tomar conocimiento de la renuncia presentada el 7 de julio de 2026, por la señora Heydi Judith Choque Calle al cargo de Auditor Interno de la Sociedad, fijando como último día de trabajo la citada fecha. Aprobar la designación de la señora Marines Perez Montero como Auditora Interna Interina de la Sociedad, quien ejercerá sus funciones desde el 8 hasta el 12 de julio de 2026. Nombrar a la señora Vania Jimena Macoño como Auditora Interna de la Sociedad, quien asumiría sus funciones a partir del 13 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Tomar conocimiento de la renuncia presentada el 7 de julio de 2026, por la señora Heydi Judith Choque",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Heydi Judith Choque Calle",
+      "cargo": "Auditor Interno de la Sociedad",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Multivalores Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Designar a la señora Laura Claudia Uzquiano Monzon como Gerente General a.i., durante la ausencia de la señora Patricia García de Caballero Gerente General, a partir del 13 hasta el 24 de julio 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de julio de 2026, se determinó lo siguiente: Designar a la señora Laura Claudia Uzquiano Monzon como Gerente General a.i., durante la ausencia de la",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Laura Claudia Uzquiano Monzon",
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 8 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “Bonos JALASOFT V”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, JALASOFT S.R.L. deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 8 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “Bonos JALASOFT V”, en la Bolsa Boliviana",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos por Bs1.102.430,69 para compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos por Bs1.102.430,69 para compra de mercadería como capital de operaciones.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Gas y Electricidad S.A.",
+     "texto": "Comunica que, en el trimestre concluido al 30 de junio de 2026, el destino de los fondos correspondientes a la Emisión de “Bonos Gas & Electricidad III - Emisión 2”, emitidos el 27 de abril de 2026, fue el siguiente: CONCEPTO MONTO Bs Recambio de Pasivos Banco Bisa (Línea de Crédito 6333) 24.008.666,70 Recambio de Pasivos Banco Bisa (Línea de Crédito 23790) 3.500.000,00 Recambio de Pasivos Banco Bisa (Créditos de Capital de Inversión) 388.172,87 Capital de Operaciones 14.500.242,16 TOTAL USO DE FONDOS 42.397.081,73 Asimismo, informa que, al 30 de junio de 2026, el saldo pendiente de uso es de Bs602.918,27.",
+     "tags": [
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, en el trimestre concluido al 30 de junio de 2026, el destino de los fondos correspondientes a la Emisión de “Bonos Gas & Electricidad III - Emisión 2”, emitidos el 27 de abril de 2026",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Fortaleza S.A.",
+     "texto": "Comunica que, en su calidad de agente pagador, el 6 de julio de 2026, realizó el pago de Bs1.725.000,00 correspondiente a la finalización del pago de intereses del Cupón Nº 9 a todos los Tenedores de los “Bonos Subordinados Banco Fortaleza 2021”.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, en su calidad de agente pagador, el 6 de julio de 2026, realizó el pago de Bs1.725.000,00 correspondiente a la finalización del pago de intereses del Cupón Nº 9 a todos los Tenedores de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "9",
+      "instrumento": "Bonos Subordinados Banco Fortaleza 2021”",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Fortaleza S.A.",
+     "texto": "Comunica que, los resultados del cálculo de los Compromisos Financieros al 30 de junio de 2026, asumidos en el Prospecto de Bonos Subordinados Banco Fortaleza 2021, son los siguientes: Indicadores Financieros Compromiso Cálculo a junio 2026 Coeficiente de Adecuación Patrimonial (CAP) (i) CAP >= 11% 13,20% Índice de Liquidez (IL) (i) IL >= 50% 69,61% Índice de Cobertura (IC) (i) IC >= 100% 109,20% (i) Promedio de los últimos tres meses",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los resultados del cálculo de los Compromisos Financieros al 30 de junio de 2026, asumidos en el Prospecto de Bonos Subordinados Banco Fortaleza 2021, son los siguientes: Indicadores",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.2%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "69.61%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "109.2%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Comunica que, el señor Ronal Luis Vargas Ramos fungirá como Gerente Nacional de Marketing Estratégico a.i., del 8 al 17 de julio de 2026, debido a la ausencia de la Gerenta Nacional de Marketing Estratégico titular, señora Karoline Katherine Terán, en el periodo señalado.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el señor Ronal Luis Vargas Ramos fungirá como Gerente Nacional de Marketing Estratégico a.i., del 8 al 17 de julio de 2026, debido a la ausencia de la Gerenta Nacional de Marketing",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "persona": "Ronal Luis Vargas Ramos",
+      "cargo": "Gerente Nacional de Marketing Estratégico",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "IDEPRO Desarrollo Empresarial - IDEPRO IFD",
+     "texto": "Comunica que, el 7 de julio de 2026, Rodolfo Marcelo Medrano Cabrera, Gerente General determinó lo siguiente:\n- Revocar el Testimonio de Poder N° 133/2026 de 6 de febrero de 2026, otorgado a favor de Marcelo Norman Nava Burgoa.",
+     "tags": [],
+     "resumen": "Comunica que, el 7 de julio de 2026, Rodolfo Marcelo Medrano Cabrera, Gerente General determinó lo siguiente: - Revocar el Testimonio de Poder N° 133/2026 de 6 de febrero de 2026, otorgado a favor de",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del Patrimonio Autónomo NUEVATEL - BDP ST 049, el 8 de julio de 2026, procedió con la publicación de la convocatoria a la ASAMBLEA GENERAL DE TENEDORES DE VALORES DE TITULARIZACIÓN, a realizarse el 31 de julio de 2026 a Hrs. 09:30 mediante una plataforma virtual, para tratar el siguiente Orden del Día:\n1. Explicación de la Empresa de Telecomunicaciones Nuevatel PCS de Bolivia S.A. de los aspectos financieros, operativos, legales y de gobierno corporativo más significativos de su Institución.\n2. Presentación del Informe por parte del Representante Común de Tenedores de Valores de Titularización.\n3. Presentación de BDP Sociedad Titularización S.A. de los aspectos financieros y operativos del Patrimonio Autónomo.\n4. Designación de Tenedores de Valores para la firma del Acta.",
+     "tags": [
+      "junta",
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo NUEVATEL - BDP ST 049, el 8 de julio de 2026, procedió con la publicación de la convocatoria a la ASAMBLEA GENERAL DE TENEDORES DE",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, el 8 de julio de 2026, procedió con la publicación de la convocatoria a la ASAMBLEA GENERAL DE TENEDORES DE VALORES DE TITULARIZACIÓN, a realizarse el 24 de julio de 2026 a Hrs. 09:30, mediante una plataforma virtual, para tratar el siguiente Orden del Día:\n1. Explicación de UNIPARTES S.R.L. de los aspectos financieros, operativos, legales y de gobierno corporativo más significativos de su Institución.\n2. Presentación del Informe por parte del Representante Común de Tenedores de Valores de Titularización.\n3. Presentación de BDP Sociedad Titularización S.A. de los aspectos financieros y operativos del Patrimonio Autónomo\n4. Designación de Tenedores de Valores para la firma del Acta.",
+     "tags": [
+      "junta",
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, el 8 de julio de 2026, procedió con la publicación de la convocatoria a la ASAMBLEA GENERAL DE TENEDORES DE",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1428 de 24 de junio de 2026",
+     "texto": "HECHOS RELEVANTES (Ver Adjunto)",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "HECHOS RELEVANTES (Ver Adjunto)",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1484 de 30 de junio de 2026",
+     "texto": "PAGOS POR TASAS DE REGULACIÓN Y POR SANCIONES (Ver Adjunto).",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "PAGOS POR TASAS DE REGULACIÓN Y POR SANCIONES (Ver Adjunto).",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    }
+   ]
   }
  }
 }
