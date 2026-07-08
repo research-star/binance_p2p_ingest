@@ -7,6 +7,17 @@ Orden cronológico inverso (más reciente arriba).
 
 ---
 
+## 2026-07-08: Sincronización de docs post-#223
+
+`HANDOFF.md`/`README.md`/`CLAUDE.md` re-sincronizados contra el repo real (la doc
+estaba congelada ~2026-07-06). Se incorporaron al inventario los módulos productivos
+ASFI, Mercado 24/7 y los subtabs de Macro Bloqueos y Tasas; se documentó la
+partición de schema (migrations vs tablas creadas en runtime), el inventario
+completo de crons (14 jobs) y se reconfirmaron las anclas de línea corridas.
+Regla del ciclo: sincronizar, no arreglar.
+
+---
+
 ## 2026-05-12: Workflow `auto-publish.yml` agregado
 
 `.github/workflows/auto-publish.yml` (commit `a0b6c2f`) dispara
