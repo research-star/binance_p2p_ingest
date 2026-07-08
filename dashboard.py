@@ -1036,7 +1036,8 @@ def process_data(db_path: Path) -> dict:
     # nacional (verificado idéntico en data real) — se omite del payload;
     # el frontend usa `general` donde necesita el total.
     def _inflacion_familia(table: str, cuadro_nacional: str,
-                           cuadro_desglose: str, labels: dict) -> dict | None:
+                           cuadro_desglose: str, labels: dict,
+                           overlay: dict | None = None) -> dict | None:
         metricas_nac = ('var_12m', 'var_mensual', 'var_acumulada')
         metricas_des = ('var_12m', 'var_mensual')
         nac_rows = conn.execute(
@@ -1071,6 +1072,20 @@ def process_data(db_path: Path) -> dict:
                     if slug != 'total':
                         des.append((p, m, slug, val))
                     break
+        # Overlay PROVISIONAL (comunicado de prensa del INE): rellena SOLO los
+        # periodos que el Excel (nac) aún no tiene. El Excel manda — cuando llega
+        # su cuadro, ese periodo deja de estar en el overlay y pisa al provisional.
+        prov_periodos = set()
+        if overlay:
+            excel_periodos = {p for p, _, _ in nac}
+            for per, vals in overlay.items():
+                if per in excel_periodos:
+                    continue
+                for ind in ('var_12m', 'var_mensual', 'var_acumulada'):
+                    v = vals.get(ind)
+                    if v is not None:
+                        nac.append((per, ind, v))
+                        prov_periodos.add(per)
         if not nac:
             return None
         periodos = sorted({p for p, _, _ in nac} | {p for p, _, _, _ in des})
@@ -1107,14 +1122,28 @@ def process_data(db_path: Path) -> dict:
         if ultimo_p is not None:
             i = p_idx[ultimo_p]
             ultimo = {'periodo': ultimo_p,
-                      **{m: general[m][i] for m in metricas_nac}}
+                      **{m: general[m][i] for m in metricas_nac},
+                      'provisional': ultimo_p in prov_periodos}
         return {'periodos': periodos, 'general': general,
-                'desglose': desglose, 'ultimo': ultimo}
+                'desglose': desglose, 'ultimo': ultimo,
+                'provisional': sorted(prov_periodos)}
 
     inflacion_data = {'ipc': None, 'ipp': None, 'ultimo': {'ipc': None, 'ipp': None}}
+    # Overlay provisional del comunicado (tabla ine_ipc_comunicado, poblada por
+    # ingest_ine_comunicado.py). Solo IPC; el Excel tiene prioridad.
+    ipc_overlay = {}
+    try:
+        for r in conn.execute("SELECT periodo, var_mensual, var_acumulada, var_12m "
+                              "FROM ine_ipc_comunicado"):
+            ipc_overlay[r['periodo']] = {'var_mensual': r['var_mensual'],
+                                         'var_acumulada': r['var_acumulada'],
+                                         'var_12m': r['var_12m']}
+    except Exception:
+        pass  # tabla aún no existe → sin overlay
     try:
         ipc = _inflacion_familia('ine_ipc', 'ipc_nacional_general',
-                                 'ipc_division_coicop', INE_IPC_DIVISIONES)
+                                 'ipc_division_coicop', INE_IPC_DIVISIONES,
+                                 overlay=ipc_overlay)
         if ipc:
             inflacion_data['ultimo']['ipc'] = ipc.pop('ultimo')
             ipc['divisiones'] = ipc.pop('desglose')

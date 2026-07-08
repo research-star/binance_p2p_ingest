@@ -327,6 +327,8 @@
   "macro.infl_matrix_cursor_js": "latest reading",
   "macro.infl_mensual_hover": "%{x|%b %Y}<br>%{y:.2f}% month on month<extra></extra>",
   "macro.infl_ranking_hover": "%{y}<br>%{customdata} year on year<extra></extra>",
+  "macro.infl_provisional_tag": "provisional",
+  "macro.infl_provisional_title": "From the INE press release (2 decimals). Auto-replaced when INE publishes the official table.",
   "macro.infl_ranking_sub_mid": ", compared against ",
   "macro.infl_ranking_sub_prefix": "Year-on-year inflation (12-month change) at the close of ",
   "macro.infl_ranking_sub_suffix": ". Negative values in parentheses.",

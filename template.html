@@ -4910,7 +4910,8 @@ window.addEventListener('popstate', function(){
     var empty=document.getElementById('inflEmpty');
     if(!hasIpc){ if(empty) empty.style.display=''; return; }
     if(empty) empty.style.display='none';
-    var dd=document.getElementById('inflDate'); if(dd) dd.textContent=(ULT&&ULT.periodo)?periodoLabel(ULT.periodo):'—';
+    var dd=document.getElementById('inflDate');
+    if(dd) dd.innerHTML=(ULT&&ULT.periodo)?(periodoLabel(ULT.periodo)+(ULT.provisional?' &middot; <span style="color:var(--orange);font-weight:600" title="{{t:macro.infl_provisional_title}}">{{t:macro.infl_provisional_tag}}</span>':'')):'—';
     renderKpis(); plotInteranual(); plotMensual(); plotAcum(); plotMatrix(); plotRanking();
   };
 })();
