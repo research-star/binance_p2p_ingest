@@ -30,6 +30,29 @@ BCB_TCO_JSON = Path("bcb_tco.json")  # Tipo de Cambio Oficial diario (RD 88/2026
 BCB_TRE_JSON = Path("bcb_tre.json")  # Tasa de Referencia mensual (Actas 026/2018 y 040/2023)
 TEMPLATE_HTML = Path(__file__).parent / "template.html"
 
+# ── Módulos desbakeados (opción B: presentes en repo, NO servidos en prod) ──
+# Punto de control ÚNICO del desbake. Un módulo listado aquí NO se inyecta en
+# index.html (dashboard.py lo strippea vía marcadores `bake:optional:<mod>` +
+# omite su payload) NI se sirve su asset estático (publish_dashboard.py lo
+# excluye del copiado de static/). Su código fuente PERMANECE en el repo.
+#
+# Revertir (re-bakear un módulo) = quitarlo de este set y rebakear. Es la ÚNICA
+# edición necesaria — nada de arqueología. (Nota de acoplamiento: `guide`
+# depende de datasets/helpers de `bbv`; re-bakear `guide` requiere `bbv` también
+# bakeado. Ver HANDOFF.md § Módulos desbakeados.)
+MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247"}
+
+# Assets en static/ que pertenecen a un módulo. publish_dashboard.py no copia a
+# prod los de módulos desbakeados (derivado de MODULOS_NO_BAKEADOS, no lista
+# paralela). Solo mercado247 sirve un asset propio; dpf/bbv/guide viven inline.
+MODULO_ASSETS = {"mercado247": ("mercado247-tab.js",)}
+
+
+def assets_no_publicados() -> set:
+    """Nombres de archivos de static/ que NO deben copiarse a prod porque su
+    módulo está desbakeado. Único derivado de MODULOS_NO_BAKEADOS + MODULO_ASSETS."""
+    return {a for m in MODULOS_NO_BAKEADOS for a in MODULO_ASSETS.get(m, ())}
+
 # Backup opcional de snapshots (env var P2P_BACKUP_DIR). Si no está definida
 # o la ruta no existe, normalize.py la ignora silenciosamente.
 _backup_env = os.environ.get("P2P_BACKUP_DIR", "").strip()

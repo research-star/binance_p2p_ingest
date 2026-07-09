@@ -106,11 +106,12 @@ def _validate_es_only_pairing(text: str) -> None:
                                         'cerrar al final del template)')
 
 
-def _raise_marker_error(text: str, m: 're.Match', motivo: str) -> None:
+def _raise_marker_error(text: str, m: 're.Match', motivo: str,
+                        tipo: str = 'es-only') -> None:
     linea = text.count('\n', 0, m.start()) + 1
     snippet = text[max(0, m.start() - 40):m.end() + 40]
     raise ValueError(
-        f"i18n: marcadores es-only desbalanceados — {motivo} "
+        f"i18n: marcadores {tipo} desbalanceados — {motivo} "
         f"(línea {linea}): ...{snippet!r}...")
 
 
@@ -129,6 +130,82 @@ def strip_es_only(text: str, keep_content: bool) -> str:
     if keep_content:
         return _ES_ONLY_MARKER_RE.sub('', text)
     return _ES_ONLY_SPAN_RE.sub('', text)
+
+
+# ── Módulos opcionales (desbake, opción B) ──────────────────────────────────
+# Marcadores análogos a es-only pero por MÓDULO: envuelven cada punto de contacto
+# de un módulo desbakeable con su nombre. Mismo par de estilos de comentario
+# (HTML <!-- --> / JS-CSS /* */) y misma técnica de span lazy+DOTALL.
+#   <!-- bake:optional:dpf --> ... <!-- /bake:optional:dpf -->
+#   /* bake:optional:dpf */    ... /* /bake:optional:dpf */
+# Semántica (gobernada por el set `excluidos` = config.MODULOS_NO_BAKEADOS):
+#   módulo EN excluidos     → se elimina el span completo (contenido + marcadores).
+#   módulo NO en excluidos  → se eliminan solo los marcadores (el contenido queda),
+#                             de modo que re-bakear = quitarlo del set, sin más.
+_OPT_OPEN_TMPL = r'(?:<!--|/\*)\s*bake:optional:{name}\s*(?:-->|\*/)'
+_OPT_CLOSE_TMPL = r'(?:<!--|/\*)\s*/bake:optional:{name}\s*(?:-->|\*/)'
+# Descubre los nombres de módulo presentes (solo aperturas; el `/` del cierre
+# impide que esta regex matchee un marcador de cierre).
+_OPT_NAME_RE = re.compile(r'(?:<!--|/\*)\s*bake:optional:(?P<mod>[\w-]+)\s*(?:-->|\*/)')
+
+
+def _opt_open_re(name: str) -> 're.Pattern':
+    return re.compile(_OPT_OPEN_TMPL.format(name=re.escape(name)))
+
+
+def _opt_close_re(name: str) -> 're.Pattern':
+    return re.compile(_OPT_CLOSE_TMPL.format(name=re.escape(name)))
+
+
+def _opt_span_re(name: str) -> 're.Pattern':
+    return re.compile(
+        _OPT_OPEN_TMPL.format(name=re.escape(name)) + r'.*?'
+        + _OPT_CLOSE_TMPL.format(name=re.escape(name)), re.DOTALL)
+
+
+def _validate_optional_pairing(text: str, name: str) -> None:
+    """Como _validate_es_only_pairing pero por módulo: los marcadores de `name`
+    deben alternar open→close. Un huérfano degradaría en silencio (span lazy se
+    come contenido compartido, o marcador crudo shippeado)."""
+    any_re = re.compile(
+        r'(?:<!--|/\*)\s*(?P<close>/)?bake:optional:' + re.escape(name)
+        + r'\s*(?:-->|\*/)')
+    expecting_open = True
+    last = None
+    for m in any_re.finditer(text):
+        is_open = not m.group('close')
+        if is_open != expecting_open:
+            _raise_marker_error(
+                text, m,
+                f"módulo {name!r}: apertura duplicada (falta cierre)" if is_open
+                else f"módulo {name!r}: cierre sin apertura previa",
+                tipo='bake:optional')
+        expecting_open = not expecting_open
+        last = m
+    if not expecting_open:
+        _raise_marker_error(text, last,
+                            f"módulo {name!r}: apertura sin cierre",
+                            tipo='bake:optional')
+
+
+def strip_optional_modules(text: str, excluidos) -> str:
+    """Procesa los marcadores bake:optional según `excluidos` (iterable de
+    nombres de módulo). Ver el bloque de docs de arriba para la semántica.
+
+    Valida el apareamiento de TODOS los módulos presentes ANTES de mutar (los
+    spans de módulos distintos no se anidan entre sí, así que el orden de strip
+    es indiferente; validar sobre el texto original evita falsos positivos)."""
+    excluidos = set(excluidos or ())
+    nombres = sorted({m.group('mod') for m in _OPT_NAME_RE.finditer(text)})
+    for name in nombres:
+        _validate_optional_pairing(text, name)
+    for name in nombres:
+        if name in excluidos:
+            text = _opt_span_re(name).sub('', text)
+        else:
+            text = _opt_open_re(name).sub('', text)
+            text = _opt_close_re(name).sub('', text)
+    return text
 
 
 def resolve_tokens(text: str, table: dict, lang: str) -> str:
@@ -161,12 +238,19 @@ def resolve_tokens(text: str, table: dict, lang: str) -> str:
     return text
 
 
-def bake(template_text: str, lang: str, base: str, table: dict) -> str:
-    """Hornea el template para un idioma: strip ES-only → tokens → constantes.
+def bake(template_text: str, lang: str, base: str, table: dict,
+         excluidos=None) -> str:
+    """Hornea el template para un idioma: strip ES-only → strip módulos
+    desbakeados → tokens → constantes.
 
     `base` es el prefijo de paths del deploy ('' para ES, '/en' para EN).
+    `excluidos` es el set de módulos a NO bakear (config.MODULOS_NO_BAKEADOS);
+    None/vacío = bakear todo. El strip de módulos va tras es-only y antes de
+    resolver tokens (para no exigir en el diccionario tokens que viven solo en
+    un módulo desbakeado), misma razón que el orden de es-only.
     """
     html = strip_es_only(template_text, keep_content=(lang == 'es'))
+    html = strip_optional_modules(html, excluidos)
     html = resolve_tokens(html, table, lang)
     html = html.replace('{{lang}}', lang)
     html = html.replace('{{base}}', base)

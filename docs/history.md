@@ -7,6 +7,19 @@ Orden cronológico inverso (más reciente arriba).
 
 ---
 
+## 2026-07-09: Desbake de 4 módulos (mercado247, dpf, bbv, guide)
+
+Opción B: los 4 dejan de inyectarse en `index.html` y de servirse en prod; su
+código fuente permanece en el repo (no es retiro). Mecanismo: marcadores
+`bake:optional:<mod>` en `template.html` + `i18n_bake.strip_optional_modules`,
+gobernados por el punto de control único `config.MODULOS_NO_BAKEADOS`;
+`dashboard.py` omite el payload `dpf_data` y `publish_dashboard.py` deja de copiar
+`mercado247-tab.js`. Revertir = quitar del set y rebakear. Efecto colateral: la
+ruta `/mercado247` desaparece de prod → el leak del gate cosmético se resuelve solo.
+Detalle en `HANDOFF.md` § Módulos desbakeados.
+
+---
+
 ## 2026-07-08: Sincronización de docs post-#223
 
 `HANDOFF.md`/`README.md`/`CLAUDE.md` re-sincronizados contra el repo real (la doc

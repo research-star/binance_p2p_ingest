@@ -141,10 +141,12 @@ frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de
 
 - **Header global = `<nav class="fb-navbar">`** ([template.html:812](template.html#L812)),
   sticky `top:0; z-index:52`:
-  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs` con **8
-    tabs** (Noticias [landing/active] · Dólar · Macro · ASFI · Mercado 24/7
-    [admin-only, gate cosmético] · DPF · BBV · Guía; los últimos tres `hidden`).
-    Inventario completo y estado por tab en § 2 "Routing por paths".
+  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs`. En el
+    template hay 8 botones de tab, pero **prod hornea solo 4** (Noticias
+    [landing/active] · Dólar · Macro · ASFI); los otros 4 (Mercado 24/7 · DPF ·
+    BBV · Guía) están **DESBAKEADOS** (existen en el source, no se inyectan a
+    prod). Inventario completo, estado por tab y mecánica del desbake en § 2
+    "Routing por paths" y "Módulos desbakeados".
   - Derecha (`.fb-navbar-right`): `#langToggle` (ES | EN, funcional desde
     `feat/i18n-en` — navegación full-page a la ruta equivalente en el otro
     idioma, ver § "Interfaz EN (i18n bake-time)" abajo) + `#themeToggle` (SVG
@@ -516,32 +518,62 @@ dentro de Macro):
 URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
 Dólar tiene slug propio `/dolar`.
 
-**Tabs reales hoy** (8, orden del nav en `template.html`, botones `.fb-tab`):
+**Tabs — 4 visibles en prod, 4 DESBAKEADOS** (existen en `template.html` pero
+NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 
-| # | `data-tab` | Label | Slug | Estado |
+| # | `data-tab` | Label | Slug | Estado en prod |
 |---|---|---|---|---|
 | 1 | `noticias` | Inicio | `/` (+ alias `/noticias`) | **visible, landing/active** |
 | 2 | `dollar` | Dólar | `/dolar` | visible |
 | 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
 | 4 | `asfi` | ASFI | `/asfi` | visible |
-| 5 | `mercado247` | Mercado 24/7 | `/mercado247` | **`data-admin-only hidden` — gate COSMÉTICO** (ver abajo) |
-| 6 | `dpf` | DPF | `/dpf` | **`hidden`** (ES-only) |
-| 7 | `bbv` | BBV | `/bbv` | **`hidden`** (ES-only) |
-| 8 | `guide` | Guía | `/guia` | **`hidden`** (ES-only) |
+| 5 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
+| 6 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 7 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 8 | `guide` | Guía | ~~`/guia`~~ | **DESBAKEADO** (antes hidden, ES-only) |
 
 **Subnav de Macro** (4 subtabs, botones `.fb-macro-tab`, array `MACRO_SUBTABS`):
 `riesgo` (default) · `inflacion` (IPC/IPP INE) · `bloqueos` (mapa vial + KPIs) ·
 `tasas` (TRE mensual del BCB). El primero de la lista es el default al entrar a
-`/macro` bare.
+`/macro` bare. (Macro y sus 4 subtabs NO están afectados por el desbake.)
 
-**Gate de `mercado247` = COSMÉTICO, no barrera.** El atributo `data-admin-only`
-solo togglea `el.hidden` del **botón del nav** vía JS al hidratar
-(`querySelectorAll('[data-admin-only]')` → `el.hidden = !npAdmin.isAdmin`).
-`activateTab()` **no chequea `isAdmin`** y `/mercado247` está en `ROUTE_MAP`
-sin condición → un anónimo que navegue directo a `finanzasbo.com/mercado247`
-(o pegue la URL) dispara el render igual. El bundle (`static/mercado247-tab.js`,
-precios Hyperliquid en vivo) es público. Documentado torcido a propósito: no se
-arregla en este ciclo.
+**Gate de `mercado247` — leak resuelto por el desbake.** El gate `data-admin-only`
+era COSMÉTICO (solo ocultaba el botón; `activateTab` no chequea `isAdmin`, así que
+`/mercado247` por URL directa renderizaba igual para anónimos). Al desbakear el
+módulo, la ruta `/mercado247` **ya no existe en prod** (cae al 404-trick → landing)
+y el bundle `mercado247-tab.js` ya no se sirve → el leak **desapareció de facto**.
+El gate cosmético NO se arregló (decisión); se volvió moot al retirar la superficie.
+
+### Módulos desbakeados (opción B — presentes en repo, NO servidos en prod)
+
+Cuatro módulos (`mercado247`, `dpf`, `bbv`, `guide`) se **desbakearon** (opción B,
+2026-07-09): su código fuente PERMANECE en el repo pero NO se inyecta al `index.html`
+publicado ni se sirve su asset. No es un retiro (C) — nada se borró.
+
+**Punto de control ÚNICO:** el set `config.MODULOS_NO_BAKEADOS` ([config.py](config.py)).
+Un módulo listado ahí:
+- se strippea del bake — cada punto de contacto (botón nav, entrada `ROUTE_MAP`/
+  `TAB_PANELS`, rama de `activateTab`, markup del panel, CSS, JS, datasets) está
+  envuelto en marcadores `bake:optional:<mod>` que `i18n_bake.strip_optional_modules`
+  elimina (misma maquinaria que los `i18n:es-only`, pero por módulo);
+- omite su payload — `dashboard.py` no emite `dpf_data` si `dpf` está desbakeado;
+- no publica su asset — `publish_dashboard.py` excluye los archivos de
+  `config.MODULO_ASSETS` (hoy `mercado247-tab.js`) del copiado de `static/`.
+
+**Revertir (re-bakear) = quitar el módulo de `MODULOS_NO_BAKEADOS` y rebakear.** Es
+la ÚNICA edición necesaria; los marcadores quedan en el template y el contenido
+vuelve intacto. (Verificado en local con `bbv`.)
+
+**Acoplamiento a tener en cuenta:** `guide` NO es independiente de `bbv` — sus
+funciones JS (`renderGuide`, `renderGuideIssuers`) viven DENTRO del IIFE de `bbv`
+y usan sus datasets/`renderGlossarySection`. Re-bakear `guide` requiere `bbv`
+también bakeado. `dpf`, `bbv` y `mercado247` sí son independientes.
+
+Ahorro de superficie: ~85 KB en `index.html` (markup/JS/CSS de los 4 + payload
+`dpf_data` ~26 KB) + 58 KB del asset `mercado247-tab.js` que deja de servirse.
+`.fb-data-table` y `.fb-pill`/`.fb-pills` se PRESERVAN (los usan ASFI y Dólar/Macro).
+El pipeline de ingesta de DPF (`ingest_bcb_dpf.py`) sigue igual (frío: nadie lo
+corre) — el desbake solo dejó de emitir el payload; la tabla `bcb_dpf_rates` intacta.
 
 **Tabla de slugs** (`ROUTE_MAP` en el JS de `template.html`):
 
