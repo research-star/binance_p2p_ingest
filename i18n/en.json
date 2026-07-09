@@ -122,6 +122,7 @@
   "dolar.hm_label_vwap_compra": "10% Buy VWAP",
   "dolar.hm_label_vwap_venta": "10% Sell VWAP",
   "dolar.hover_tco": "TCO",
+  "dolar.hover_tco_ref": "Ref. sell TCO",
   "dolar.hover_vwap_compra": "Buy",
   "dolar.hover_vwap_venta": "Sell",
   "dolar.kpi_bcb_ref": "BCB TCO",
