@@ -2111,6 +2111,20 @@ function rVwap(c,v){
     traces.push({x:tcoXX, y:tcoYY, name:'{{t:dolar.trace_tco}}', mode:'lines',
       line:{color:c.bcbTco,width:2,shape:'hv'}, connectgaps:false, showlegend:false,
       hovertemplate:'{{t:dolar.hover_tco}} %{y:.2f} BOB/USD<extra></extra>'});
+  // Compañera de hover de la TCO Venta referencial (= TCO + 0,10 Bs, RD 88/2026):
+  // MISMO truco de puntos aislados entre gaps null que la TCO — hovereable en ambas
+  // vistas sin dibujar la línea desfasada. Valor = vigente por fecha + REF_OFF; celeste
+  // punteado para que el glifo del tooltip herede el estilo de la serie ref. tcoAtDay es
+  // null pre-régimen (el 6.91 es constante de render, no vive en history) → sin renglón
+  // antes del primer TCO dinámico, donde la ref tampoco existe. name igual al de la
+  // línea celeste → el toggle 'tcoref' apaga companion + línea juntas.
+  const REF_OFF_HOVER=0.10, REF_COL_HOVER='#38BDF8';
+  const refXX=[], refYY=[];
+  x.forEach(function(s){ const t=tcoAtDay(s.slice(0,10)); refXX.push(s, s); refYY.push(t==null?null:t+REF_OFF_HOVER, null); });
+  if(refYY.some(function(t){return t!=null;}))
+    traces.push({x:refXX, y:refYY, name:'{{t:dolar.trace_tco_ref}}', mode:'lines',
+      line:{color:REF_COL_HOVER,width:2,shape:'hv',dash:'dash'}, connectgaps:false, showlegend:false,
+      hovertemplate:'{{t:dolar.hover_tco_ref}} %{y:.2f} BOB/USD<extra></extra>'});
   const filtered=filterDirectionalTraces(traces, 'vwap');
   const xaVwap=xaWithSlider(xaxisForView(L.xaxis,v));
   // Extender el borde derecho del eje para incluir el TCO adelantado (si no, el
