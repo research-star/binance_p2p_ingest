@@ -124,12 +124,28 @@ Pages** (sirve `finanzasbo.com` + `www`); la publicación llega ahí vía la ram
 
 ### Actualizar y publicar
 
-```bash
-scripts\update.bat                                   # bcb + normalize + dashboard
-git add index.html bcb_referencial.json      # o: git add .
-git commit -m "update dashboard"
-git push
-```
+La publicación es **automática**; no se corre a mano. Dos carriles convergen en
+`scripts/publish_dashboard.py`, que regenera `index.html` (ES) + `en/index.html`
+(EN) desde `dashboard.py` sobre la DB del VPS y hace **dual-publish**:
+
+1. **Carril principal — GitHub Actions (`.github/workflows/auto-publish.yml`).**
+   En cada push/merge a `main` (con `paths-ignore` de la data BCB autocommiteada),
+   el workflow hace SSH al VPS, `git pull`, y ejecuta `publish_dashboard.py`
+   (~35 s). Es el camino por el que tus merges llegan a producción.
+2. **Carril de red de seguridad — cron `*/12` del VPS.** El mismo
+   `publish_dashboard.py` corre cada 12 min; sirve de respaldo si el workflow
+   falla y de **recolector de los autocommits BCB** (que el GHA ignora por
+   `paths-ignore`). Hace *skip* rápido si el dataset no avanzó.
+
+**Dual-publish** (dentro de `publish_dashboard.py`): (a) push del bake a la rama
+`gh-pages` (carril de push + fallback caliente), y (b) `wrangler pages deploy` a
+**Cloudflare Pages** (Direct Upload — el edge productivo de `finanzasbo.com`). El
+deploy a CF es **NO-FATAL** (si falla, `gh-pages` ya quedó publicado) y está
+gateado por la env-var `CF_DEPLOY_ENABLED` (default `"1"`; `"0"` pausa el espejo
+CF sin tocar el push a `gh-pages`).
+
+> Para regenerar el dashboard **local** (inspección, sin publicar), corré
+> `dashboard.py` directamente — no toca producción.
 
 El dashboard productivo se sirve en:
 

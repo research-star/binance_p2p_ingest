@@ -28,7 +28,8 @@ de backups y, opcionalmente, dashboard local.
 | `ingest_ine_ipp.py` | VPS cron user `binance` | `30 5,11,17,23 1-10 * *` UTC (offset 15 min vs IPC) | `HC_INE_IPP` |
 | `ingest_noticias.py` | VPS cron user `binance` | `7 0,11-23 * * *` UTC (07:07–20:07 BO, horario 7/7 — 14 corridas/día; minuto :07 evita colisión con `ingest_embi` a :00 y los INE a :15/:30) | `HC_NOTICIAS` (ping desde código: start/success-body/fail-body) |
 | `scripts/retencion_noticias.py` | VPS cron user `binance` | `40 4 * * *` UTC (00:40 BO, hueco nocturno) — backup 20d a JSONL append-only (`noticias_ingest/data/noticias_archive.jsonl`, gitignored) + borrado físico 30d de `noticias`; bajo flock, borrado con self-archive (nunca borra sin archivar) | — (sin HC aún) |
-| `ingest_asfi.py` (via `scripts/asfi_scrape_and_commit.sh`) | **PENDIENTE DEPLOY** (PR del módulo ASFI) — VPS cron user `binance` | propuesto `10 1,13,23 * * *` UTC (21:10 / 09:10 / 19:10 BO; idempotente, no-op si ASFI no publicó; minuto :10 evita colisiones con :00/:07/:15/:30). Requiere `pip install pypdf` en el venv del VPS | `HC_ASFI` (opcional, UUID pendiente) |
+| `ingest_asfi.py` (via `scripts/asfi_scrape_and_commit.sh`) | **DEPLOYADO** — VPS cron user `binance` (módulo ASFI en prod, PRs #200–#217) | `10 1,13,23 * * *` UTC (21:10 / 09:10 / 19:10 BO; idempotente, no-op si ASFI no publicó) + `30 12 2 * *` mensual para `ingest_asfi.py --resumir` (promueve resúmenes IA bajo el cap). Detalle en § 9 | — (sin HC; `HC_ASFI` opcional, UUID pendiente) |
+| `ingest_ine_comunicado.py` | VPS cron user `binance` | `45 5,11,17,23 1-15 * *` UTC (días 1-15, 4×/día) — overlay provisional del IPC del comunicado INE antes del XLSX (#221) | — (sin HC) |
 | `scripts/publish_dashboard.py` | VPS cron user `binance` + GitHub Actions | `*/12 * * * *` + workflow on push a `main` | `HC_DASHBOARD` |
 | Laptop ingest | ❌ desactivado | — | — |
 | Laptop backup pull | local Task Scheduler (opcional) | diario 04:00 hora local | — |
@@ -67,8 +68,8 @@ de Cloudflare**, NO la DB (la tabla local es solo cache para el filtro de build)
 | Worker Cloudflare | `api.finanzasbo.com` (Worker `finanzasbo-spike`, dir `worker/`; **deploy `wrangler` manual**) | Rutas `GET /v1/hidden` (público `{ids,v}`), `GET /v1/me`, `GET /v1/hidden/admin`, `POST /v1/hide`, `POST /v1/unhide`, + bounces de auth `GET /v1/login` y `GET /v1/logout` (ver "Auth admin" abajo). KV (1 key `index`) = verdad de los ocultos. (Name `finanzasbo-spike` es legacy engañoso — tech-debt P3, ver Notion.) |
 | Auth = Cloudflare Access | edge + gate JWT del Worker | Access (team `finanzasbo.cloudflareaccess.com`) protege en el **edge** `/v1/me`, `/v1/hide` y `/v1/login` (302 al login); `/v1/unhide` y `/v1/hidden/admin` dependen **solo del gate JWT del Worker** (401) — cobertura edge **asimétrica**. `ALLOWED_EMAILS` = 7 admins @ddrcapitalpartners.com (secret en el Worker, NO en el repo). **Mapa de gating completo + flujos login/logout: subsección "Auth admin" abajo.** |
 | Admin UI | `template.html`, tab Noticias, **gated tras `#admin`** | Sin `#admin` en la URL → markup idéntico a hoy, cero requests. Con `#admin`: barra admin con login / "Editar ocultas" + acciones inline por nota (PR-C2, #70). PR-C1 (#69) = filtro instant client-side de los ocultos. |
-| Tabla `noticias_hidden` | `p2p_normalized.db` (migración `0003_noticias_hidden.sql`) | Cache local de ids para el filtro de build; `dashboard.py` la self-crea idempotente y filtra `AND id NOT IN (...)` ([dashboard.py:744](dashboard.py#L744), [753](dashboard.py#L753)). Migraciones se aplican a mano en el VPS (sin runner). |
-| `publish_dashboard.py` | VPS (PR-B′, #68) | Antes de publicar hace `GET /v1/hidden` (UA propio — CF da 403 al UA default de urllib) y sincroniza la mirror `noticias_hidden` transaccionalmente, fail-toward-stale estricto ([publish_dashboard.py:53](scripts/publish_dashboard.py#L53), [215](scripts/publish_dashboard.py#L215)). |
+| Tabla `noticias_hidden` | `p2p_normalized.db` (migración `0003_noticias_hidden.sql`) | Cache local de ids para el filtro de build; `dashboard.py` la self-crea idempotente y filtra `AND id NOT IN (...)` (`CREATE TABLE` en [dashboard.py:1174](dashboard.py#L1174); filtro `NOT IN` en [dashboard.py:1207](dashboard.py#L1207)). Migraciones se aplican a mano en el VPS (sin runner). |
+| `publish_dashboard.py` | VPS (PR-B′, #68) | Antes de publicar hace `GET /v1/hidden` (UA propio — CF da 403 al UA default de urllib) y sincroniza la mirror `noticias_hidden` transaccionalmente, fail-toward-stale estricto (funciones `fetch_hidden` / `sync_hidden_mirror` en `scripts/publish_dashboard.py`; const `HIDDEN_API_URL`). |
 
 ### Auth admin — login/logout (saga login/logout, cerrada 2026-06-18)
 
@@ -138,10 +139,12 @@ frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de
 
 ### Anatomía del header / top-UI (recon 2026-06-17, base para el rediseño del top)
 
-- **Header global = `<nav class="fb-navbar">`** ([template.html:604](template.html#L604)),
+- **Header global = `<nav class="fb-navbar">`** ([template.html:812](template.html#L812)),
   sticky `top:0; z-index:52`:
-  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs` con **6
-    tabs** (Noticias [landing/active] · Macro · Dólar · Rendimientos DPF · BBV · Guía).
+  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs` con **8
+    tabs** (Noticias [landing/active] · Dólar · Macro · ASFI · Mercado 24/7
+    [admin-only, gate cosmético] · DPF · BBV · Guía; los últimos tres `hidden`).
+    Inventario completo y estado por tab en § 2 "Routing por paths".
   - Derecha (`.fb-navbar-right`): `#langToggle` (ES | EN, funcional desde
     `feat/i18n-en` — navegación full-page a la ruta equivalente en el otro
     idioma, ver § "Interfaz EN (i18n bake-time)" abajo) + `#themeToggle` (SVG
@@ -149,7 +152,7 @@ frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de
 - **Sub-header por tab** (`.fb-subheader`, sticky `top:var(--nav-h); z-index:51`):
   `h1` + stats de visitas. Cada tab tiene el suyo.
 - **Botón de login — NO está en el header.** Vive en la barra admin de la tab
-  Noticias (`npAdminBar()`, [template.html:4740](template.html#L4740)), generada
+  Noticias (`npAdminBar()`, [template.html:5483](template.html#L5483)), generada
   por JS y **solo presente con `#admin` en la URL**. Sin sesión muestra "Iniciar
   sesión" (`data-np-login`) → `npLogin()` navega full-page al **bounce `/v1/login`
   del Worker** (que el edge gatea → login de Cloudflare Access; flujo completo en
@@ -330,6 +333,60 @@ Optimizaciones SQLite: WAL, `synchronous=NORMAL`, `cache_size=-65536`,
 `temp_store=MEMORY`, índice covering `idx_ads_flow (snapshot_ts_utc, side,
 advertiser_id)`, una transacción por batch.
 
+### Schema SQLite — partición migrations vs runtime
+
+`scripts/migrations/` **NO es el schema canónico completo.** Es solo una parte:
+las migraciones INE/noticias/gasto. El resto de las tablas se crean **en runtime**
+por el propio script que las usa (`CREATE TABLE IF NOT EXISTS` al arrancar). Al
+tocar schema hay que mirar **ambos lugares**.
+
+**Declaradas en `scripts/migrations/` (9 archivos, `0001`–`0009`):**
+
+| Migración | Tablas / cambio |
+|---|---|
+| `0001_ine_tables.sql` | `ine_pib`, `ine_ipc`, `ine_ipp`, `ine_ingest_state` |
+| `0002_noticias.sql` | `noticias` |
+| `0003_noticias_hidden.sql` | `noticias_hidden` |
+| `0004`–`0008` | **`ALTER TABLE` sobre `noticias`** (image_url `0004`, clasificacion_v1 `0005`, tambien_en `0006`, summary_origen `0007`, reresumen: extract_len + resumen_reintentos `0008`) — no crean tablas |
+| `0009_api_spend.sql` | `api_spend` (contador de gasto IA de noticias) |
+
+**Creadas en RUNTIME, fuera de `migrations/` (7 tablas):**
+
+| Tabla | Origen | DB |
+|---|---|---|
+| `ads` | `normalize.py` (`init_schema`) | `p2p_normalized.db` |
+| `normalize_state` | `normalize.py` | `p2p_normalized.db` |
+| `embi_spreads` | `ingest_embi.py` | `p2p_normalized.db` |
+| `bcb_dpf_rates` | `ingest_bcb_dpf.py` | `p2p_normalized.db` |
+| `ine_ipc_comunicado` | `ingest_ine_comunicado.py` | `p2p_normalized.db` — **NUEVA vía #221, SIN `.sql`** (rompe la convención; no se crea migración 0010 por decisión de este ciclo) |
+| `urls_vistas` | `noticias_ingest/scraper.py` (`CacheURLs`) | `noticias_ingest/data/cache_urls.db` (gitignored, aparte de la DB principal) |
+| `asfi_api_spend` | `asfi_ingest/resumen.py` | `p2p_normalized.db` (contador de gasto IA de ASFI) |
+
+Nota: `noticias_hidden` (0003) y `api_spend` (0009) también se auto-crean en
+runtime (`dashboard.py`/`publish_dashboard.py` y `resumen_ia.py` respectivamente)
+— belt-and-suspenders, redundante con su migración. Lo mismo las 4 tablas INE
+(auto-create en cada `ingest_ine_*.py`).
+
+**Módulos SIN tabla SQLite** (persisten en JSON committeado o no persisten):
+ASFI datos (`static/asfi_YYYY-MM.json` + `asfi_index.json`) · bloqueos
+(`bloqueos.json`) · tasas/TRE (`bcb_tre.json`) · mercado247 (Hyperliquid en vivo,
+sin persistencia server-side) · BBV (dataset JS estático embebido en `template.html`).
+
+### Gasto API Anthropic — 2 carriles, 2 contadores
+
+Hay **exactamente 2 carriles productivos** que llaman a la API de Anthropic
+(Haiku), ambos con el candado `autorizado=True` pasado por su pipeline/cron:
+
+| Carril | Entrypoint | Módulo POST | Contador (cap $1/mes) |
+|---|---|---|---|
+| Noticias | `ingest_noticias.py` (cron noticias) → `resumen_ia.aplicar(...)` | `noticias_ingest/resumen_ia.py` | tabla `api_spend` |
+| ASFI | `ingest_asfi.py --resumir` (cron mensual) → `resumen.aplicar(...)` | `asfi_ingest/resumen.py` | tabla `asfi_api_spend` |
+
+No hay un tercer carril. El resto de menciones a `resumir(`/`aplicar(` en el repo
+son docstrings, el pipeline interno de `resumen_ia.py`, o el **stub no-op del
+Noticias Inspector** (`inspector_core.py` reemplaza `resumen_ia.aplicar` por
+`lambda: 0`, sin API). Techo total de IA del sitio = noticias $1 + ASFI $1 = $2/mes.
+
 ### Fase 2.5 — EMBI / Riesgo País (lateral)
 
 `ingest_embi.py` descarga diariamente el Excel del BCRD ("Serie Histórica
@@ -456,20 +513,52 @@ dentro de Macro):
 
 ### Routing por paths (SPA + 404 trick)
 
-URLs limpias por tab via HTML5 History API. Estado post navbar reordenada
-(Noticias · Macro · Dólar · DPF · BBV · Guía) con **Noticias como landing en
-`/`** y Dólar migrado a slug propio `/dolar`:
+URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
+Dólar tiene slug propio `/dolar`.
+
+**Tabs reales hoy** (8, orden del nav en `template.html`, botones `.fb-tab`):
+
+| # | `data-tab` | Label | Slug | Estado |
+|---|---|---|---|---|
+| 1 | `noticias` | Inicio | `/` (+ alias `/noticias`) | **visible, landing/active** |
+| 2 | `dollar` | Dólar | `/dolar` | visible |
+| 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
+| 4 | `asfi` | ASFI | `/asfi` | visible |
+| 5 | `mercado247` | Mercado 24/7 | `/mercado247` | **`data-admin-only hidden` — gate COSMÉTICO** (ver abajo) |
+| 6 | `dpf` | DPF | `/dpf` | **`hidden`** (ES-only) |
+| 7 | `bbv` | BBV | `/bbv` | **`hidden`** (ES-only) |
+| 8 | `guide` | Guía | `/guia` | **`hidden`** (ES-only) |
+
+**Subnav de Macro** (4 subtabs, botones `.fb-macro-tab`, array `MACRO_SUBTABS`):
+`riesgo` (default) · `inflacion` (IPC/IPP INE) · `bloqueos` (mapa vial + KPIs) ·
+`tasas` (TRE mensual del BCB). El primero de la lista es el default al entrar a
+`/macro` bare.
+
+**Gate de `mercado247` = COSMÉTICO, no barrera.** El atributo `data-admin-only`
+solo togglea `el.hidden` del **botón del nav** vía JS al hidratar
+(`querySelectorAll('[data-admin-only]')` → `el.hidden = !npAdmin.isAdmin`).
+`activateTab()` **no chequea `isAdmin`** y `/mercado247` está en `ROUTE_MAP`
+sin condición → un anónimo que navegue directo a `finanzasbo.com/mercado247`
+(o pegue la URL) dispara el render igual. El bundle (`static/mercado247-tab.js`,
+precios Hyperliquid en vivo) es público. Documentado torcido a propósito: no se
+arregla en este ciclo.
+
+**Tabla de slugs** (`ROUTE_MAP` en el JS de `template.html`):
 
 | Slug | Resuelve a | Título |
 |---|---|---|
 | `/` | tab `noticias` (landing) | FinanzasBo — Noticias |
+| `/dolar` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
 | `/macro` | tab `macro`, subtab default (`riesgo`) | FinanzasBo — Riesgo País EMBI |
 | `/riesgo` | tab `macro`, subtab `riesgo` | FinanzasBo — Riesgo País EMBI |
 | `/inflacion` | tab `macro`, subtab `inflacion` (IPC/IPP INE) | FinanzasBo — Inflación |
-| `/dpf` | tab `dpf` | FinanzasBo — Rendimientos DPF |
-| `/bbv` | tab `bbv` | FinanzasBo — Bolsa Boliviana de Valores |
-| `/guia` | tab `guide` | FinanzasBo — Guía del dashboard |
-| `/dolar` | tab `dollar` | FinanzasBo — Mercado P2P USDT/BOB |
+| `/bloqueos` | tab `macro`, subtab `bloqueos` | FinanzasBo — Bloqueos en carreteras |
+| `/tasas` | tab `macro`, subtab `tasas` | FinanzasBo — Tasa de Referencia BCB |
+| `/asfi` | tab `asfi` | FinanzasBo — Hechos Relevantes ASFI |
+| `/mercado247` | tab `mercado247` (gate cosmético) | FinanzasBo — Mercado 24/7 |
+| `/dpf` | tab `dpf` (ES-only) | FinanzasBo — Rendimientos DPF |
+| `/bbv` | tab `bbv` (ES-only) | FinanzasBo — Bolsa Boliviana de Valores |
+| `/guia` | tab `guide` (ES-only) | FinanzasBo — Guía del dashboard |
 | `/noticias` | alias → tab `noticias`; la barra canonicaliza a `/` (entry `alias:true`, excluido de `TAB_TO_SLUG`) | FinanzasBo — Noticias |
 
 El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
@@ -486,6 +575,12 @@ mismo comportamiento, paridad verificada) no encuentra el archivo y sirve `404.h
 `publish_dashboard.py`). Ese 404 redirige a `/?path=%2Fbbv`. El init del SPA
 lee el `?path`, hace `history.replaceState` a `/bbv`, y activa la tab. UX:
 una sola redirección casi imperceptible.
+
+**NO existe archivo `_redirects`.** El deep-linking se resuelve exclusivamente
+por el truco `static/404.html` descrito arriba — no hay `_redirects` (ni en raíz,
+ni en `static/`, ni emitido por `publish_dashboard.py`/`dashboard.py`). Si algún
+día se migra a redirects nativos de Cloudflare Pages habría que crearlo; hoy no
+está y el 404-trick basta.
 
 **Navegación interna**: click en tab dispara `history.pushState(slug)`. Back
 y forward del browser disparan `popstate` que re-activa la tab sin recargar.
@@ -561,9 +656,8 @@ que `_inject_riesgo`).
   corrida de `ingest_noticias.py` (un cron, un HC; fail-safe por
   carril — si uno falla el otro corre, y cualquier carril en error
   pingea fail):
-  - **Bolivia**: scrape de 24 portales (`scraper.FUENTES`,
-    [scraper.py:260](noticias_ingest/scraper.py#L260)) → geo-gate **ancla Bolivia
-    OR tema≠General** (funnel-v2 #130, [scraper.py:977](noticias_ingest/scraper.py#L977):
+  - **Bolivia**: scrape de 24 portales (`scraper.FUENTES`) → geo-gate **ancla Bolivia
+    OR tema≠General** (funnel-v2 #130, en `scraper.evaluar` → descarte `falta_bolivia`:
     pasa si ANCLA en Bolivia —término geográfico/adjetivo o entidad boliviana, la
     lógica del gate viejo— **o** clasifica en un tema económico no-General; rescata
     economía boliviana sin ancla geográfica, ej. real "el dólar referencial baja a
@@ -572,7 +666,7 @@ que `_inject_riesgo`).
     conteniendo el corte 6.7 + el budget top-N) →
     scoring TF-IDF 0-10 de RELEVANCIA (**modo DEGRADADO por keywords si falta el
     modelo**, calibración 2026-06-21; antes fail-closed) **+ penalización opinión
-    ×0.7** (funnel-v2 #130, [scraper.py:1064](noticias_ingest/scraper.py#L1064):
+    ×0.7** (funnel-v2 #130, `scraper.es_opinion` + ajuste editorial en `evaluar`:
     columna/editorial NO se mata —va con `category='opinion'`— pero se penaliza el
     score y no recibe bonos de portal/FX/instituciones) **· piso Bloomberg-Bolivia ≥9**
     (M1: Bloomberg Línea que pasa los gates duros —exclusión + geo-gate— queda ≥9,
@@ -621,7 +715,7 @@ que `_inject_riesgo`).
   - **Instrumentación de embudo** (funnel-v2 #130, WS6): `scraper.LAST_FUNNEL`
     (entran/cache_skip/evaluados/sobreviven/unicos) + el desglose de kills por razón
     se unifican en `lane_bolivia` → `res["funnel"]` de **15 llaves** (entran…insertadas,
-    [ingest_noticias.py:404](ingest_noticias.py#L404)), que va al log y al ping
+    [ingest_noticias.py:545](ingest_noticias.py#L545)), que va al log y al ping
     `HC_NOTICIAS`. El **Noticias Inspector** lo mide etapa-por-etapa (parity FIEL
     post-#130; `parity_test.py` verde). Baseline congelado replay-byte-estable en
     `tools/noticias-inspector/fixtures/baseline-2026-06-24/` (criterio-iteración-2):
@@ -817,22 +911,43 @@ Features clave:
 **systemd unit:** `binance-ingest.service` (`Type=simple`, `Restart=on-failure`,
 `RestartSec=30`). Append a `ingest.log`/`ingest.err`.
 
-**Cron del user `binance`** (sincronizado con `crontab -l` real el 2026-06-11;
-los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`):
+**Cron del user `binance`** (sincronizado con `crontab -l` real el 2026-07-08;
+los UUIDs `HC_*` viven como env vars arriba del crontab y en `.env`). **14 jobs**;
+la columna HC anota la cobertura de healthcheck real:
+
 ```
-*/5  * * * *        cd /opt/binance_p2p && .venv/bin/python normalize.py   (+ curl $HC_NORMALIZE)
-*/5  * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/watchdog.py
-*/12 * * * *        cd /opt/binance_p2p && .venv/bin/python scripts/publish_dashboard.py   (+ curl $HC_DASHBOARD)
-5,35 12-15 * * 1-5  cd /opt/binance_p2p && bash scripts/bcb_scrape_and_commit.sh
-*/5  0-3 * * 2-6    cd /opt/binance_p2p && bash scripts/bcb_tco_scrape_and_commit.sh   (TCO cada 5 min, 20:00–23:55 BO, hasta capturar)
-15   12 * * *       cd /opt/binance_p2p && bash scripts/bcb_tre_scrape_and_commit.sh   (TRE diario 08:15 BO; no-op si el mes ya está)
-0    10,22 * * *    cd /opt/binance_p2p && .venv/bin/python ingest_embi.py
-15   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipc.py   (+ curl $HC_INE_IPC)
-30   5,11,17,23 1-10 * *  cd /opt/binance_p2p && .venv/bin/python ingest_ine_ipp.py   (+ curl $HC_INE_IPP)
-7    0,11-23 * * *  cd /opt/binance_p2p && .venv/bin/python ingest_noticias.py
-40   4 * * *        cd /opt/binance_p2p && .venv/bin/python scripts/retencion_noticias.py   (backup 20d + borrado 30d de `noticias`; 00:40 BO)
+# job                    schedule (UTC)          healthcheck
+normalize.py             */5  * * * *            + curl $HC_NORMALIZE
+scripts/watchdog.py      */5  * * * *            pingea HC_INGEST si snapshot reciente
+publish_dashboard.py     */12 * * * *            + curl $HC_DASHBOARD
+bcb_scrape_and_commit.sh 5,35 12-15 * * 1-5      — SIN HC
+ingest_embi.py           0    10,22 * * *        pingea HC_EMBI desde código (sin curl en cron)
+ingest_ine_ipc.py        15   5,11,17,23 1-10 * *  + curl $HC_INE_IPC
+ingest_ine_ipp.py        30   5,11,17,23 1-10 * *  + curl $HC_INE_IPP
+ingest_noticias.py       7    0,11-23 * * *       pingea HC_NOTICIAS desde código (start/éxito/fail)
+bcb_tco_scrape_and_commit.sh  */5 0-3 * * 2-6    — SIN HC (HC_BCB_TCO no está en .env)
+scripts/retencion_noticias.py 40 4 * * *         — SIN HC (backup 20d + borrado 30d de `noticias`)
+bcb_tre_scrape_and_commit.sh  15 12 * * *        — SIN HC (HC_BCB_TRE no está en .env; TRE mensual, no-op si el mes ya está)
+asfi_scrape_and_commit.sh 10  1,13,23 * * *       — SIN HC
+ingest_asfi.py --resumir 30   12 2 * *           — SIN HC (mensual: promueve resúmenes IA bajo el cap)
+ingest_ine_comunicado.py 45   5,11,17,23 1-15 * *  — SIN HC (overlay provisional IPC, #221)
 ```
 (Todos con `>> /var/log/binance_p2p/<nombre>.log 2>&1`.)
+
+**Cobertura HC — 7 jobs SIN healthcheck:** `bcb_scrape`, `bcb_tco`,
+`retencion_noticias`, `bcb_tre`, `asfi_scrape`, `ingest_asfi --resumir`,
+`ingest_ine_comunicado`. (Los wrappers `bcb_tco`/`bcb_tre` *pingearían* si
+`HC_BCB_TCO`/`HC_BCB_TRE` estuvieran en `.env`, pero no lo están → sin ping.)
+
+**Desincronía crontab↔.env (benigna):** las cabeceras del crontab todavía
+comentan `HC_EMBI` y `HC_NOTICIAS` como `<pending>`, pero **ambos ya existen en
+`.env`** y sus scripts los pingean desde código. El comentario del crontab quedó
+stale; el ping funciona. El cron de `ingest_embi.py` **no tiene `curl` de ping en
+la línea** — el ping ocurre dentro del script.
+
+**Ausentes:** `HC_BCB` (los scrapers BCB de referencial no tienen HC) y
+`HC_INE_PIB` (no hay cron de PIB — el ingest de PIB está PAUSADO por decisión,
+ver § 0 y § 8).
 
 **Auto-publish workflow** (`.github/workflows/auto-publish.yml`):
 - Dispara en cada push a `main`, con `paths-ignore: bcb_referencial.json` + `bcb_tco.json`.
@@ -1083,15 +1198,16 @@ capa de tokens al principio del `<style>`.
 
 - **Migración de colores hardcodeados en CSS/HTML (fuera de Plotly JS)**:
   literales hex `#1e4d7a`, `#6b7d92`, `#5589c0`, `#8c8c8c` aparecen en
-  `style="--fb-trace-color:..."` inline en los 5 toggles del panel VWAP
-  ([template.html:497](template.html#L497)), y hex hardcodeados en CSS puro
+  `style="--fb-trace-color:..."` inline en los toggles del panel VWAP
+  ([template.html:847](template.html#L847); los hex concretos rotaron con el
+  recoloreo del panel — el patrón inline-hardcodeado persiste), y hex en CSS puro
   (`.fb-pill.active`, `.fb-dpf-bar`, `.pill-yellow/.pill-red`, `.fb-stog*`,
   `.error-banner`). No bloqueante — los valores coinciden con tokens
   semánticos existentes (`color-buy/sell/bcb-*`), pero la migración requiere
   o reescribir HTML generado por `dashboard.py` (para inline) o refactor de
   las reglas CSS para que consuman `var(--token)`.
 - **Heatmap per-cell text en la frontera value≈0.6**: el threshold de
-  `heatmapTextColors()` ([template.html:1318](template.html#L1318)) clasifica cada celda como
+  `heatmapTextColors()` ([template.html:1878](template.html#L1878)) clasifica cada celda como
   high/low según valor normalizado ≥0.6. En la frontera exacta, el texto
   de "low" sobre celda de luminosidad mid-alta (y el de "high" sobre celda
   mid-baja en su lado) da contraste ~3:1, sub-WCAG-AA 4.5:1 para texto. El
