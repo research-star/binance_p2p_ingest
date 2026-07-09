@@ -55,6 +55,13 @@ DB_PATH = REPO_ROOT / "p2p_normalized.db"
 STATIC_DIR = REPO_ROOT / "static"
 RIESGO_DIR = REPO_ROOT / "riesgo_propio"   # own-math riesgo-país calculator + panels
 
+# Punto de control del desbake vive en config.py (raíz del repo). Este script
+# corre desde scripts/, así que REPO_ROOT va a sys.path para importarlo. Mismo
+# set que usa dashboard.py para strippear el markup → sin lista paralela.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from config import assets_no_publicados  # noqa: E402
+
 WORKTREE_PATH = Path("/tmp/gh-pages-publish-wt")
 TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
 TMP_INDEX_EN_PATH = Path("/tmp/publish_dashboard_index_en.html")
@@ -584,8 +591,11 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
         emit("[publish] mode=warn stage=commit_en detail=stale_en_preserved")
 
     if STATIC_DIR.exists():
+        # Assets de módulos desbakeados (ej. mercado247-tab.js) NO se copian a
+        # prod mientras el módulo esté en config.MODULOS_NO_BAKEADOS.
+        no_publicar = assets_no_publicados()
         for asset in STATIC_DIR.iterdir():
-            if asset.is_file():
+            if asset.is_file() and asset.name not in no_publicar:
                 shutil.copyfile(asset, WORKTREE_PATH / asset.name)
 
     # Feeds de datos riesgo-país (servidos como /riesgo_propio_live.json etc.).
