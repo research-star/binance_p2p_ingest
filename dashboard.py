@@ -31,7 +31,7 @@ try:
 except ImportError:
     pass  # graceful: sin dotenv, env vars deben venir del entorno (counter → "—")
 
-from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, BCB_TRE_JSON, TEMPLATE_HTML
+from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, BCB_TRE_JSON, TEMPLATE_HTML, MODULOS_NO_BAKEADOS
 from scripts.fetch_umami_stats import fetch_visits
 import i18n_bake
 
@@ -1242,7 +1242,7 @@ def process_data(db_path: Path) -> dict:
 
     conn.close()
 
-    return {
+    payload = {
         # Schema columnar (commit 12 → único schema desde commit 17).
         'ts_metrics': ts_metrics,
         'merchants_last': merchants_last,
@@ -1269,6 +1269,12 @@ def process_data(db_path: Path) -> dict:
             **load_bcb_tco(first_date=timestamps[0][:10] if timestamps else None),
         }
     }
+    # DPF desbakeado (config.MODULOS_NO_BAKEADOS): su panel/JS no se inyectan, así
+    # que dpf_data es peso muerto en el DATA embebido — se omite. NO se toca la
+    # tabla bcb_dpf_rates ni el ingest; solo se deja de emitir el payload.
+    if 'dpf' in MODULOS_NO_BAKEADOS:
+        payload.pop('dpf_data', None)
+    return payload
 
 
 # ── CSV horario ────────────────────────────────────────────────────────────
@@ -1425,7 +1431,8 @@ def main():
                                 ('en', '/en', output_en)):
         try:
             lang_table = i18n_bake.load_lang(lang)
-            html = i18n_bake.bake(template, lang, base, lang_table)
+            html = i18n_bake.bake(template, lang, base, lang_table,
+                                  excluidos=MODULOS_NO_BAKEADOS)
             data_lang = _relabel_inflacion_for_lang(data, lang_table)
             data_json = json.dumps(data_lang)
         except Exception as e:
