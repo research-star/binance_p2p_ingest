@@ -9,8 +9,8 @@ Cubre la aceptación de la adenda del brief:
                      "0,0%" ni placeholder).
   - delta_cero     — un delta que redondea a cero también se omite (no "0,0%").
   - falta_base     — falta un valor base → build lanza BoletinDataError (no parcial).
-  - runtime_ts     — el timestamp deriva de runtime (dos now_utc distintos → dos
-                     encabezados distintos; NO está fijo).
+  - runtime_ts     — la fecha del encabezado deriva de runtime (cambia día a día);
+                     el HTML además cambia bake-a-bake por el generated_at. NO fijo.
   - copy_identico  — el texto del <pre> (textContent, HTML-unescaped) es
                      byte-idéntico al que devuelve render_texto.
   - delta_calendario — el delta usa el ÚLTIMO valor del día anterior (BOT), no
@@ -62,24 +62,36 @@ def run() -> int:
               10.10, [423.7, 428.9])
     txt = m.render_texto(d, NOW)
     esperado = (
-        "*FinanzasBo* — 9 jul 2026, 14:35\n"
+        "*FinanzasBo* — 9 jul 2026\n"
         "\n"
-        "*Si compras dólares* (lo que pagas)\n"
+        "*Si compras dólares*\n"
         "Oficial: Bs 10,20\n"
         "USDT: Bs 10,40  (+1,0% vs ayer)\n"
         "\n"
-        "*Si vendes dólares* (lo que recibes)\n"
+        "*Si vendes dólares*\n"
         "Oficial: Bs 10,10\n"
         "USDT: Bs 10,10  (-1,0% vs ayer)\n"
         "\n"
-        "*Riesgo país*: 429 puntos  (+5 pbs)\n"
+        "*Riesgo país*\n"
+        "429 puntos  (+5 pbs vs ayer)\n"
         "\n"
-        "Oficial: BCB. USDT: mediana P2P.\n"
+        "Fuente: BCB, P2P binance, JP Morgan EMBI\n"
         "finanzasbo.com"
     )
     if txt != esperado:
         err.append("copy/formato: texto no coincide.\n--- got ---\n"
                     + txt + "\n--- exp ---\n" + esperado)
+
+    # el encabezado NO lleva hora (solo fecha)
+    if ":" in txt.splitlines()[0]:
+        err.append("copy/formato: el encabezado no debería llevar hora (':')")
+    # headers de sección sin paréntesis
+    if "(lo que pagas)" in txt or "(lo que recibes)" in txt:
+        err.append("copy/formato: los headers de sección no deberían llevar paréntesis")
+    # footer nuevo, sin el 'mediana' viejo
+    if "Fuente: BCB, P2P binance, JP Morgan EMBI" not in txt or "mediana" in txt:
+        err.append("copy/formato: footer incorrecto "
+                   "(esperaba 'Fuente: BCB, P2P binance, JP Morgan EMBI')")
 
     # menos ASCII, nunca U+2212
     if "−" in txt:
@@ -148,10 +160,13 @@ def run() -> int:
             if (Path(td) / m.BOLETIN_DIRNAME / "index.html").exists():
                 err.append("falta_base: quedó un index.html parcial en disco")
 
-    # ── runtime_ts: dos now_utc → dos encabezados (NO fijo) ───────────────────
-    NOW2 = datetime(2026, 7, 9, 18, 42, 0, tzinfo=timezone.utc)  # 14:42 BOT
-    if m.render_texto(d, NOW).splitlines()[0] == m.render_texto(d, NOW2).splitlines()[0]:
-        err.append("runtime_ts: el encabezado no cambió con distinto now_utc (fijo)")
+    # ── runtime_ts: el encabezado (fecha) deriva de runtime → cambia de día a
+    # día. El HTML además cambia bake-a-bake por el generated_at (UTC, segundos),
+    # aunque el mismo día el encabezado de texto no varíe (ya no lleva hora).
+    NOW_MANANA = datetime(2026, 7, 10, 18, 35, 0, tzinfo=timezone.utc)  # 10 jul BOT
+    if m.render_texto(d, NOW).splitlines()[0] == m.render_texto(d, NOW_MANANA).splitlines()[0]:
+        err.append("runtime_ts: el encabezado no cambió de día a día (fijo)")
+    NOW2 = datetime(2026, 7, 9, 18, 42, 0, tzinfo=timezone.utc)  # mismo día, otra hora
     h1 = m.render_html(d, NOW)
     h2 = m.render_html(d, NOW2)
     if h1 == h2:
