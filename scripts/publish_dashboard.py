@@ -61,6 +61,7 @@ RIESGO_DIR = REPO_ROOT / "riesgo_propio"   # own-math riesgo-país calculator + 
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 from config import assets_no_publicados  # noqa: E402
+import boletin  # noqa: E402  (solo para BOLETIN_DIRNAME; top-level no importa dashboard)
 
 WORKTREE_PATH = Path("/tmp/gh-pages-publish-wt")
 TMP_INDEX_PATH = Path("/tmp/publish_dashboard_index.html")
@@ -589,6 +590,21 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
         shutil.copyfile(TMP_INDEX_EN_PATH, en_dir / "index.html")
     else:
         emit("[publish] mode=warn stage=commit_en detail=stale_en_preserved")
+
+    # Boletín diario standalone (/boletin-4k9x/index.html). dashboard.py lo
+    # escribió junto al index temporal (TMP_INDEX_PATH.parent). Se copia al
+    # worktree → git add -A lo sube a gh-pages y deploy_cf_pages() (que despliega
+    # el worktree completo) lo espeja a CF Pages, sin tocar el dual-publish ni el
+    # guard de tamaño (que valida SOLO el index.html, no este archivo). Condicional:
+    # si el boletín no se generó (build falló → dashboard.py omitió la escritura),
+    # NO hay fuente y se preserva el boletín anterior del worktree (fail-toward-stale).
+    boletin_src = TMP_INDEX_PATH.parent / boletin.BOLETIN_DIRNAME / "index.html"
+    if boletin_src.exists():
+        boletin_dst_dir = WORKTREE_PATH / boletin.BOLETIN_DIRNAME
+        boletin_dst_dir.mkdir(exist_ok=True)
+        shutil.copyfile(boletin_src, boletin_dst_dir / "index.html")
+    else:
+        emit("[publish] mode=warn stage=boletin detail=source_missing_stale_preserved")
 
     if STATIC_DIR.exists():
         # Assets de módulos desbakeados (ej. mercado247-tab.js) NO se copian a

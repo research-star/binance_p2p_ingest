@@ -33,6 +33,7 @@ except ImportError:
 
 from config import BCB_RATE, NORMALIZED_DB, DASHBOARD_HTML, BCB_REF_JSON, BCB_TCO_JSON, BCB_TRE_JSON, TEMPLATE_HTML, MODULOS_NO_BAKEADOS
 from scripts.fetch_umami_stats import fetch_visits
+import boletin
 import i18n_bake
 
 DEFAULT_DB = NORMALIZED_DB
@@ -1458,6 +1459,23 @@ def main():
             with open(alias, 'w', encoding='utf-8') as f:
                 f.write(html)
             print(f"Alias:     {alias}")
+
+    # Boletín diario (texto plano copy-paste, ES only) → <dir de index.html>/
+    # boletin-4k9x/index.html. Reusa el `data` ya computado (no re-corre
+    # process_data). Fail-SAFE con matiz: si falta un valor base, boletin.write_boletin
+    # lanza BoletinDataError y acá se loguea RUIDOSO y se OMITE la escritura — el
+    # archivo anterior queda intacto (un boletín con hueco es peor que uno viejo).
+    # Un fallo del boletín NUNCA bloquea el publish del index.html (mismo espíritu
+    # fail-safe que _inject_riesgo / el EN fail-soft).
+    try:
+        bpath = boletin.write_boletin(data, args.output.parent)
+        print(f"Boletín:   {bpath} ({bpath.stat().st_size / 1024:.1f} KB)")
+    except boletin.BoletinDataError as e:
+        print(f"[boletin] ERROR: {e} — se preserva el boletín anterior "
+              f"(no se emite parcial).", file=sys.stderr)
+    except Exception as e:
+        print(f"[boletin] WARN: fallo inesperado ({type(e).__name__}: {e}) — "
+              f"se preserva el boletín anterior.", file=sys.stderr)
 
     if args.csv:
         csv_path = args.output.with_name('p2p_metrics.csv')
