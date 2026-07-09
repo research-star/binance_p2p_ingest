@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Boletín FinanzasBo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- boletin generated_at (UTC): 2026-07-09T20:57:08Z -->
+<style>
+:root{--bg-primary:#FBEDE3;--card:#FFF7F0;--text:#211E1B;--muted:#6B6256;--border:rgba(33,30,27,0.14);--accent:#2c4a6b;--ok:#2C6E49}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg-primary);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;display:flex;align-items:flex-start;justify-content:center;padding:32px 16px}
+.wrap{width:100%;max-width:440px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 22px 18px;box-shadow:0 6px 22px rgba(33,30,27,.07)}
+pre#boletin{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-size:15px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.actions{display:flex;justify-content:flex-end;margin-top:16px}
+button#copy{font-family:inherit;font-size:14px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:9px;padding:10px 20px;cursor:pointer;transition:background .15s}
+button#copy:hover{background:#22405f}
+button#copy.ok{background:var(--ok)}
+.foot{margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+<pre id="boletin">*FinanzasBo* — 9 jul 2026, 16:57
+
+*Si compras dólares* (lo que pagas)
+Oficial: Bs 10,20
+USDT: Bs 10,50  (+1,4% vs ayer)
+
+*Si vendes dólares* (lo que recibes)
+Oficial: Bs 10,10
+USDT: Bs 10,45  (+1,4% vs ayer)
+
+*Riesgo país*: 428 puntos  (-4 pbs)
+
+Oficial: BCB. USDT: mediana P2P.
+finanzasbo.com</pre>
+<div class="actions"><button id="copy" type="button">Copiar</button></div>
+</div>
+<div class="foot">Uso interno — pegar en el canal.</div>
+</div>
+<script>
+(function(){
+  var pre=document.getElementById('boletin'),btn=document.getElementById('copy');
+  function flash(){var o=btn.textContent;btn.textContent='Copiado';btn.classList.add('ok');
+    setTimeout(function(){btn.textContent=o;btn.classList.remove('ok');},1000);}
+  btn.addEventListener('click',function(){
+    var txt=pre.textContent;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(flash).catch(fallback);
+    }else{fallback();}
+    function fallback(){
+      var r=document.createRange();r.selectNode(pre);
+      var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+      try{document.execCommand('copy');}catch(e){}
+      s.removeAllRanges();flash();
+    }
+  });
+})();
+</script>
+</body>
+</html>
