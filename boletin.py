@@ -162,7 +162,6 @@ def render_texto(data: dict, now_utc: datetime | None = None) -> str:
     oficial_venta = tco + VENTA_REF_SPREAD_BS  # lo que pagás comprando USD
 
     fecha = f"{now_bot.day} {MESES_ABREV[now_bot.month - 1]} {now_bot.year}"
-    hhmm = now_bot.strftime("%H:%M")
 
     def _paren_pct(d):
         # Se omite si no hay dato de ayer o si redondea a cero (evita "0,0%").
@@ -173,22 +172,23 @@ def render_texto(data: dict, now_utc: datetime | None = None) -> str:
     def _paren_pbs(d):
         if d is None or round(d) == 0:
             return ""
-        return f"  ({_fmt_pbs(d)})"
+        return f"  ({_fmt_pbs(d)} vs ayer)"
 
     lineas = [
-        f"*FinanzasBo* — {fecha}, {hhmm}",
+        f"*FinanzasBo* — {fecha}",
         "",
-        "*Si compras dólares* (lo que pagas)",
+        "*Si compras dólares*",
         f"Oficial: Bs {_fmt_num(oficial_venta, 2)}",
         f"USDT: Bs {_fmt_num(usdt_compra, 2)}{_paren_pct(d_compra)}",
         "",
-        "*Si vendes dólares* (lo que recibes)",
+        "*Si vendes dólares*",
         f"Oficial: Bs {_fmt_num(oficial_compra, 2)}",
         f"USDT: Bs {_fmt_num(usdt_venta, 2)}{_paren_pct(d_venta)}",
         "",
-        f"*Riesgo país*: {_fmt_num(embi, 0)} puntos{_paren_pbs(d_embi)}",
+        "*Riesgo país*",
+        f"{_fmt_num(embi, 0)} puntos{_paren_pbs(d_embi)}",
         "",
-        "Oficial: BCB. USDT: mediana P2P.",
+        "Fuente: BCB, P2P binance, JP Morgan EMBI",
         "finanzasbo.com",
     ]
     return "\n".join(lineas)
