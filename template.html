@@ -492,6 +492,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-controls{display:flex;gap:14px 26px;flex-wrap:wrap;align-items:flex-end;margin:0 0 14px}
 .agro-ctl{display:flex;flex-direction:column;gap:6px}
 .agro-select{font-family:inherit;font-size:var(--text-sm);color:var(--text-primary);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:7px 10px;min-width:230px;max-width:100%;cursor:pointer}
+/* Cadena mono-producto (girasol/azúcar): el select se congela como etiqueta
+   estática — sin flecha ni affordance de cambio (lo deshabilita preciosSetup). */
+.agro-select-solo{appearance:none;-webkit-appearance:none;background:var(--bg-tertiary);color:var(--text-secondary);border-style:dashed;cursor:default;opacity:1}
 .agro-mapa{min-height:400px}
 .agro-status{padding:56px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5}
 /* Slider de años: thumb grande (26px ≥ 24px) para uso táctil. */
@@ -500,12 +503,44 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-slider input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;margin:12px 0 4px;border-radius:3px;background:var(--bg-tertiary);border:1px solid var(--border-color);outline:none;cursor:pointer}
 .agro-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
 .agro-slider input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
-.agro-slider-marks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)}
+/* margin-top despega los extremos de año del thumb (26px desborda el track). */
+.agro-slider-marks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);margin-top:12px}
 .agro-badge-ytd{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:#7a4a12;background:rgba(180,83,9,.12);border:1px solid rgba(180,83,9,.30);border-radius:var(--radius-sm);padding:2px 8px;margin-left:10px;vertical-align:3px}
 .agro-pill-parcial{display:inline-block;font-size:var(--text-xs);font-weight:600;color:var(--text-muted);background:var(--bg-tertiary);border:1px dashed var(--border-color);border-radius:var(--radius-md);padding:4px 10px;white-space:nowrap}
 /* [hidden] debe ganarle al display de las clases de arriba (misma especificidad → orden). */
 .agro-badge-ytd[hidden],.agro-pill-parcial[hidden]{display:none}
-@media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}}
+/* ── Rediseño por cadenas: dashboard dual main (mapa+slider) | side (KPIs+ranking+sparklines) ── */
+.agro-dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.agro-dash-main{min-width:0}
+.agro-dash-side{min-width:0;display:flex;flex-direction:column;gap:14px}
+/* Expo APILADO (forma cuadrada): controles → fila de KPIs → mapa mundial
+   full-width → slider → abajo ranking | sparkline FOB + estacionalidad.
+   Producción mantiene el dual 1fr/1fr. display:flex pisa el grid de
+   .agro-dash (misma especificidad → orden). */
+/* align-items:stretch pisa el align-items:start heredado de .agro-dash — sin
+   él, slider/mapa colapsan a ancho-contenido en el flex column. */
+.agro-dash--expo{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.agro-dash--expo>.agro-controls{margin:0}
+.agro-dash--expo>.agro-kpis{display:flex;flex-wrap:wrap;gap:10px}
+.agro-dash--expo>.agro-kpis:empty{display:none}
+.agro-dash--expo>.agro-kpis .agro-kpi{flex:1 1 150px;max-width:260px}
+.agro-dash-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.agro-dash-bottom>.agro-estado{grid-column:1/-1}
+.agro-dash-series{display:flex;flex-direction:column;gap:12px;min-width:0}
+/* KPIs: fila de tiles chicos, extensible (tiles nuevos = hermanos en la grilla). */
+.agro-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.agro-kpis:empty{display:none}
+.agro-kpi{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:10px 12px;min-width:0}
+.agro-kpi-label{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px}
+/* 20px + overflow-wrap: el valor nunca desborda el tile (guarda anti-solape). */
+.agro-kpi-valor{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.agro-kpi-unidad{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-soft);margin-top:2px}
+/* Estados por zona (loading/error/empty): hidden por default; el render los puebla. */
+.agro-estado{padding:32px 14px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5;background:var(--bg-secondary);border:1px dashed var(--border-color);border-radius:var(--radius-sm)}
+.agro-estado[hidden]{display:none}
+.agro-estado .agro-retry{margin-top:10px}
+@media(max-width:900px){.agro-dash{grid-template-columns:1fr}.agro-kpis{grid-template-columns:repeat(2,1fr)}.agro-dash-bottom{grid-template-columns:1fr}}
+@media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}.agro-kpi-valor{font-size:18px}.agro-dash{gap:12px}}
 /* /bake:optional:agro */
 /* bake:optional:dpf */
 /* ── DPF Tab ── */
@@ -857,7 +892,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab active" data-tab="noticias">{{t:nav.tab_inicio}}</button>
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
-    <!-- bake:optional:agro --><button class="fb-tab" data-tab="agro">{{t:nav.tab_agro}}</button><!-- /bake:optional:agro -->
+    <!-- bake:optional:agro --><button class="fb-tab" data-tab="agro" data-admin-only hidden>{{t:nav.tab_agro}}</button><!-- /bake:optional:agro -->
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
     <!-- bake:optional:mercado247 --><button class="fb-tab" data-tab="mercado247" data-admin-only hidden>{{t:nav.tab_mercado247}}</button><!-- /bake:optional:mercado247 -->
     <!-- i18n:es-only -->
@@ -1521,50 +1556,97 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     </div>
   </div>
   <nav class="fb-macro-subnav" id="agroSubnav" aria-label="{{t:agro.subnav_aria}}">
-    <button class="fb-macro-tab active" data-subtab="produccion" type="button">{{t:agro.subtab_produccion}}</button>
-    <button class="fb-macro-tab" data-subtab="exportaciones" type="button">{{t:agro.subtab_exportaciones}}</button>
+    <button class="fb-macro-tab active" data-subtab="soya" type="button">{{t:agro.subtab_soya}}</button>
+    <button class="fb-macro-tab" data-subtab="girasol" type="button">{{t:agro.subtab_girasol}}</button>
+    <button class="fb-macro-tab" data-subtab="azucar" type="button">{{t:agro.subtab_azucar}}</button>
+    <button class="fb-macro-tab" data-subtab="otros" type="button">{{t:agro.subtab_otros}}</button>
   </nav>
-  <!-- Sub-panel default: Producción (SIIP). Render lazy: window.renderAgroProduccion. -->
-  <div id="subtab-agro-produccion">
+  <!-- Paneles por CADENA (soya default · girasol · azucar · otros). Cada panel:
+       dashboard PRODUCCIÓN (SIIP) + dashboard EXPORTACIÓN (INE Comex) + card
+       PRECIOS. Ids parametrizados agro<Pieza>-<cadena>-<dash>; el render se
+       cablea en la fase siguiente contra estos ids. 'otros' agrega selects de
+       cultivo/producto (las demás cadenas vienen fijas por AGRO_CADENAS). -->
+  <div id="subtab-agro-soya">
     <div class="content">
+      <!-- Dashboard PRODUCCIÓN -->
       <div class="fb-chart-card fb-chart-card--elevated">
         <div class="fb-chart-head agro-head">
           <div>
-            <div class="fb-chart-title">{{t:agro.prod_map_title}}</div>
-            <div class="fb-chart-sub">{{t:agro.prod_map_sub}}</div>
+            <div class="fb-chart-title">{{t:agro.dash_prod_titulo}}</div>
+            <div class="fb-chart-sub">{{t:agro.dash_prod_sub}}</div>
           </div>
-          <span class="agro-pill-parcial" id="agroProdParcial" hidden>{{t:agro.pill_parcial}}</span>
+          <span class="agro-pill-parcial" id="agroParcial-soya-prod" hidden>{{t:agro.pill_parcial}}</span>
         </div>
-        <div class="agro-controls">
-          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_cultivo}}</span>
-            <select id="agroProdCultivo" class="agro-select" aria-label="{{t:agro.ctl_cultivo}}"></select></label>
-          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-            <div class="fb-pills" id="agroProdMetrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-              <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
-              <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
-              <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
-            </div></div>
-          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
-            <div class="fb-pills" id="agroProdNivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
-              <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
-              <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
-            </div></div>
-        </div>
-        <div id="agroProdMapa" class="agro-mapa"></div>
-        <div class="agro-slider">
-          <div class="agro-anio" id="agroProdAnioLabel">&mdash;</div>
-          <input type="range" id="agroProdAnio" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
-          <div class="agro-slider-marks"><span id="agroProdAnioMin">2013</span><span id="agroProdAnioMax">2024</span></div>
+        <div class="agro-dash">
+          <div class="agro-dash-main">
+            <div class="agro-controls">
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+                <div class="fb-pills" id="agroCtl-soya-prod-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                  <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
+                  <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
+                  <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
+                </div></div>
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
+                <div class="fb-pills" id="agroCtl-soya-prod-nivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
+                  <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
+                  <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
+                </div></div>
+            </div>
+            <div id="agroMapa-soya-prod" style="height:520px"></div>
+            <div class="agro-estado" id="agroEstado-soya-prod-mapa" hidden></div>
+            <div class="agro-slider">
+              <div class="agro-anio" id="agroAnioLabel-soya-prod">&mdash;</div>
+              <input type="range" id="agroAnio-soya-prod" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
+              <div class="agro-slider-marks"><span id="agroAnioMin-soya-prod">2013</span><span id="agroAnioMax-soya-prod">2024</span></div>
+            </div>
+          </div>
+          <div class="agro-dash-side">
+            <div class="agro-kpis" id="agroKpis-soya-prod"></div>
+            <div id="agroRank-soya-prod" style="height:300px"></div>
+            <div id="agroSpark-soya-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-soya-prod" style="height:90px"></div>
+            <div class="agro-estado" id="agroEstado-soya-prod-side" hidden></div>
+          </div>
         </div>
         <div class="fb-chart-source">{{t:agro.prod_source}}</div>
       </div>
+      <!-- Dashboard EXPORTACIÓN -->
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">{{t:agro.prod_rank_title}}</div>
-          <div class="fb-chart-sub">{{t:agro.prod_rank_sub}}</div>
+          <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
+          <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div id="agroProdRank" style="min-height:200px"></div>
-        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-soya-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-soya-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
+          </div>
+          <div class="agro-kpis" id="agroKpis-soya-expo"></div>
+          <div id="agroMapa-soya-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-soya-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-soya-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-soya-expo" hidden></span></div>
+            <input type="range" id="agroAnio-soya-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-soya-expo">2017</span><span id="agroAnioMax-soya-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
+            <div id="agroRank-soya-expo" style="height:300px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-soya-expo" style="height:90px"></div>
+              <div id="agroHeat-soya-expo" style="height:220px"></div>
+            </div>
+            <div class="agro-estado" id="agroEstado-soya-expo-side" hidden></div>
+          </div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
         <div class="fb-chart-head agro-head">
@@ -1573,45 +1655,94 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
           </div>
           <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
-            <select id="agroPreciosSelProd" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+            <select id="agroPreciosSel-soya" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
         </div>
-        <div id="agroPreciosChartProd" style="height:360px"></div>
-        <div class="fb-chart-source" id="agroPreciosFuenteProd"></div>
+        <div id="agroPreciosChart-soya" style="height:360px"></div>
+        <div class="agro-estado" id="agroEstado-soya-precios" hidden></div>
+        <div class="fb-chart-source" id="agroPreciosFuente-soya"></div>
       </div>
     </div>
   </div>
-  <!-- Sub-panel: Exportaciones (INE Comex, partidas NANDINA 10 dígitos).
-       Render lazy: window.renderAgroExportaciones. -->
-  <div id="subtab-agro-exportaciones" style="display:none;">
+  <div id="subtab-agro-girasol" style="display:none;">
     <div class="content">
+      <!-- Dashboard PRODUCCIÓN -->
       <div class="fb-chart-card fb-chart-card--elevated">
-        <div class="fb-chart-head">
-          <div class="fb-chart-title">{{t:agro.expo_map_title}}</div>
-          <div class="fb-chart-sub">{{t:agro.expo_map_sub}}</div>
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.dash_prod_titulo}}</div>
+            <div class="fb-chart-sub">{{t:agro.dash_prod_sub}}</div>
+          </div>
+          <span class="agro-pill-parcial" id="agroParcial-girasol-prod" hidden>{{t:agro.pill_parcial}}</span>
         </div>
-        <div class="agro-controls">
-          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
-            <select id="agroExpoProducto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
-          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-            <div class="fb-pills" id="agroExpoMetrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-              <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
-              <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
-            </div></div>
+        <div class="agro-dash">
+          <div class="agro-dash-main">
+            <div class="agro-controls">
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+                <div class="fb-pills" id="agroCtl-girasol-prod-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                  <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
+                  <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
+                  <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
+                </div></div>
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
+                <div class="fb-pills" id="agroCtl-girasol-prod-nivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
+                  <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
+                  <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
+                </div></div>
+            </div>
+            <div id="agroMapa-girasol-prod" style="height:520px"></div>
+            <div class="agro-estado" id="agroEstado-girasol-prod-mapa" hidden></div>
+            <div class="agro-slider">
+              <div class="agro-anio" id="agroAnioLabel-girasol-prod">&mdash;</div>
+              <input type="range" id="agroAnio-girasol-prod" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
+              <div class="agro-slider-marks"><span id="agroAnioMin-girasol-prod">2013</span><span id="agroAnioMax-girasol-prod">2024</span></div>
+            </div>
+          </div>
+          <div class="agro-dash-side">
+            <div class="agro-kpis" id="agroKpis-girasol-prod"></div>
+            <div id="agroRank-girasol-prod" style="height:300px"></div>
+            <div id="agroSpark-girasol-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-girasol-prod" style="height:90px"></div>
+            <div class="agro-estado" id="agroEstado-girasol-prod-side" hidden></div>
+          </div>
         </div>
-        <div id="agroExpoMapa" class="agro-mapa"></div>
-        <div class="agro-slider">
-          <div class="agro-anio"><span id="agroExpoAnioLabel">&mdash;</span><span class="agro-badge-ytd" id="agroExpoYtd" hidden></span></div>
-          <input type="range" id="agroExpoAnio" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
-          <div class="agro-slider-marks"><span id="agroExpoAnioMin">2017</span><span id="agroExpoAnioMax">2026</span></div>
-        </div>
-        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
+        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
       </div>
+      <!-- Dashboard EXPORTACIÓN -->
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
         <div class="fb-chart-head">
-          <div class="fb-chart-title">{{t:agro.expo_rank_title}}</div>
-          <div class="fb-chart-sub">{{t:agro.expo_rank_sub}}</div>
+          <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
+          <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div id="agroExpoRank" style="min-height:200px"></div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-girasol-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-girasol-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
+          </div>
+          <div class="agro-kpis" id="agroKpis-girasol-expo"></div>
+          <div id="agroMapa-girasol-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-girasol-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-girasol-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-girasol-expo" hidden></span></div>
+            <input type="range" id="agroAnio-girasol-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-girasol-expo">2017</span><span id="agroAnioMax-girasol-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
+            <div id="agroRank-girasol-expo" style="height:300px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-girasol-expo" style="height:90px"></div>
+              <div id="agroHeat-girasol-expo" style="height:220px"></div>
+            </div>
+            <div class="agro-estado" id="agroEstado-girasol-expo-side" hidden></div>
+          </div>
+        </div>
         <div class="fb-chart-source">{{t:agro.expo_source}}</div>
       </div>
       <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
@@ -1621,10 +1752,208 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
           </div>
           <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
-            <select id="agroPreciosSelExpo" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+            <select id="agroPreciosSel-girasol" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
         </div>
-        <div id="agroPreciosChartExpo" style="height:360px"></div>
-        <div class="fb-chart-source" id="agroPreciosFuenteExpo"></div>
+        <div id="agroPreciosChart-girasol" style="height:360px"></div>
+        <div class="agro-estado" id="agroEstado-girasol-precios" hidden></div>
+        <div class="fb-chart-source" id="agroPreciosFuente-girasol"></div>
+      </div>
+    </div>
+  </div>
+  <div id="subtab-agro-azucar" style="display:none;">
+    <div class="content">
+      <!-- Dashboard PRODUCCIÓN -->
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.dash_prod_titulo}}</div>
+            <div class="fb-chart-sub">{{t:agro.dash_prod_sub}}</div>
+          </div>
+          <span class="agro-pill-parcial" id="agroParcial-azucar-prod" hidden>{{t:agro.pill_parcial}}</span>
+        </div>
+        <div class="agro-dash">
+          <div class="agro-dash-main">
+            <div class="agro-controls">
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+                <div class="fb-pills" id="agroCtl-azucar-prod-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                  <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
+                  <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
+                  <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
+                </div></div>
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
+                <div class="fb-pills" id="agroCtl-azucar-prod-nivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
+                  <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
+                  <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
+                </div></div>
+            </div>
+            <div id="agroMapa-azucar-prod" style="height:520px"></div>
+            <div class="agro-estado" id="agroEstado-azucar-prod-mapa" hidden></div>
+            <div class="agro-slider">
+              <div class="agro-anio" id="agroAnioLabel-azucar-prod">&mdash;</div>
+              <input type="range" id="agroAnio-azucar-prod" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
+              <div class="agro-slider-marks"><span id="agroAnioMin-azucar-prod">2013</span><span id="agroAnioMax-azucar-prod">2024</span></div>
+            </div>
+          </div>
+          <div class="agro-dash-side">
+            <div class="agro-kpis" id="agroKpis-azucar-prod"></div>
+            <div id="agroRank-azucar-prod" style="height:300px"></div>
+            <div id="agroSpark-azucar-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-azucar-prod" style="height:90px"></div>
+            <div class="agro-estado" id="agroEstado-azucar-prod-side" hidden></div>
+          </div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
+      </div>
+      <!-- Dashboard EXPORTACIÓN -->
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
+          <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
+        </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-azucar-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-azucar-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
+          </div>
+          <div class="agro-kpis" id="agroKpis-azucar-expo"></div>
+          <div id="agroMapa-azucar-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-azucar-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-azucar-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-azucar-expo" hidden></span></div>
+            <input type="range" id="agroAnio-azucar-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-azucar-expo">2017</span><span id="agroAnioMax-azucar-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
+            <div id="agroRank-azucar-expo" style="height:300px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-azucar-expo" style="height:90px"></div>
+              <div id="agroHeat-azucar-expo" style="height:220px"></div>
+            </div>
+            <div class="agro-estado" id="agroEstado-azucar-expo-side" hidden></div>
+          </div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.precios_title}}</div>
+            <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
+          </div>
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+            <select id="agroPreciosSel-azucar" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+        </div>
+        <div id="agroPreciosChart-azucar" style="height:360px"></div>
+        <div class="agro-estado" id="agroEstado-azucar-precios" hidden></div>
+        <div class="fb-chart-source" id="agroPreciosFuente-azucar"></div>
+      </div>
+    </div>
+  </div>
+  <div id="subtab-agro-otros" style="display:none;">
+    <div class="content">
+      <!-- Dashboard PRODUCCIÓN -->
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.dash_prod_titulo}}</div>
+            <div class="fb-chart-sub">{{t:agro.dash_prod_sub}}</div>
+          </div>
+          <span class="agro-pill-parcial" id="agroParcial-otros-prod" hidden>{{t:agro.pill_parcial}}</span>
+        </div>
+        <div class="agro-dash">
+          <div class="agro-dash-main">
+            <div class="agro-controls">
+              <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_cultivo}}</span>
+                <select id="agroSel-otros-prod-cultivo" class="agro-select" aria-label="{{t:agro.ctl_cultivo}}"></select></label>
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+                <div class="fb-pills" id="agroCtl-otros-prod-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                  <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
+                  <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
+                  <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
+                </div></div>
+              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
+                <div class="fb-pills" id="agroCtl-otros-prod-nivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
+                  <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
+                  <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
+                </div></div>
+            </div>
+            <div id="agroMapa-otros-prod" style="height:520px"></div>
+            <div class="agro-estado" id="agroEstado-otros-prod-mapa" hidden></div>
+            <div class="agro-slider">
+              <div class="agro-anio" id="agroAnioLabel-otros-prod">&mdash;</div>
+              <input type="range" id="agroAnio-otros-prod" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
+              <div class="agro-slider-marks"><span id="agroAnioMin-otros-prod">2013</span><span id="agroAnioMax-otros-prod">2024</span></div>
+            </div>
+          </div>
+          <div class="agro-dash-side">
+            <div class="agro-kpis" id="agroKpis-otros-prod"></div>
+            <div id="agroRank-otros-prod" style="height:300px"></div>
+            <div id="agroSpark-otros-prod" style="height:90px"></div>
+            <div class="agro-estado" id="agroEstado-otros-prod-side" hidden></div>
+          </div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
+      </div>
+      <!-- Dashboard EXPORTACIÓN -->
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
+          <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
+        </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+              <select id="agroSel-otros-expo-producto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-otros-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-otros-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
+          </div>
+          <div class="agro-kpis" id="agroKpis-otros-expo"></div>
+          <div id="agroMapa-otros-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-otros-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-otros-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-otros-expo" hidden></span></div>
+            <input type="range" id="agroAnio-otros-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-otros-expo">2017</span><span id="agroAnioMax-otros-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
+            <div id="agroRank-otros-expo" style="height:300px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-otros-expo" style="height:90px"></div>
+              <div id="agroHeat-otros-expo" style="height:220px"></div>
+            </div>
+            <div class="agro-estado" id="agroEstado-otros-expo-side" hidden></div>
+          </div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.precios_title}}</div>
+            <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
+          </div>
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+            <select id="agroPreciosSel-otros" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+        </div>
+        <div id="agroPreciosChart-otros" style="height:360px"></div>
+        <div class="agro-estado" id="agroEstado-otros-precios" hidden></div>
+        <div class="fb-chart-source" id="agroPreciosFuente-otros"></div>
       </div>
     </div>
   </div>
@@ -3307,9 +3636,14 @@ var ROUTE_MAP = {
   '/inflacion': {tab:'macro', subtab:'inflacion'},
   '/bloqueos':  {tab:'macro', subtab:'bloqueos'},
   '/tasas':     {tab:'macro', subtab:'tasas'},
-  /* bake:optional:agro */'/agro':      {tab:'agro', subtab:'produccion'},
-  '/agro/produccion':    {tab:'agro', subtab:'produccion'},
-  '/agro/exportaciones': {tab:'agro', subtab:'exportaciones'},/* /bake:optional:agro */
+  /* bake:optional:agro */'/agro':      {tab:'agro', subtab:'soya'},
+  '/agro/soya':    {tab:'agro', subtab:'soya'},
+  '/agro/girasol': {tab:'agro', subtab:'girasol'},
+  '/agro/azucar':  {tab:'agro', subtab:'azucar'},
+  '/agro/otros':   {tab:'agro', subtab:'otros'},
+  // Redirects de los slugs v1 (produccion/exportaciones) → cadena default.
+  '/agro/produccion':    {tab:'agro', subtab:'soya'},
+  '/agro/exportaciones': {tab:'agro', subtab:'soya'},/* /bake:optional:agro */
   /* i18n:es-only */
   /* bake:optional:dpf */'/dpf':       {tab:'dpf'},/* /bake:optional:dpf */
   /* bake:optional:bbv */'/bbv':       {tab:'bbv'},/* /bake:optional:bbv */
@@ -3811,14 +4145,32 @@ document.addEventListener('click', function(e){
 // AGRO_SUBTABS + agroState + activateAgroSubtab + #agroSubnav/#agroSubtitle +
 // paneles subtab-agro-<id>). Los render* viven en el script AGRO TAB LOGIC del
 // final (lazy-fetch de /agro_*.json); guardas typeof por orden de parseo.
-var AGRO_SUBTABS = [
-  { id:'produccion', slug:'/agro/produccion', title:'{{t:agro.doc_title_produccion}}',
-    subtitle:'{{t:agro.prod_subtitle}}',
-    render:function(){ if(typeof window.renderAgroProduccion==='function') window.renderAgroProduccion(); } },
-  { id:'exportaciones', slug:'/agro/exportaciones', title:'{{t:agro.doc_title_exportaciones}}',
-    subtitle:'{{t:agro.expo_subtitle}}',
-    render:function(){ if(typeof window.renderAgroExportaciones==='function') window.renderAgroExportaciones(); } }
+// ── Config de CADENAS (rediseño subnav por cadena) ──
+// Registrar una cadena nueva = 1 entrada acá + claves i18n (agro.subtab_<id>,
+// doc_title/subtitle) + entradas en ROUTE_MAP + panel subtab-agro-<id>.
+// cultivo_siip = código en agro_produccion.cultivos; productos_comex = keys en
+// agro_exportaciones.meta.semillas; precios_default = slug en agro_precios.productos.
+// 'otros' no fija cadena: selector:true → selects agroSel-otros-* en su panel.
+var AGRO_CADENAS = [
+  {id:'soya',    slug:'/agro/soya',    cultivo_siip:61, productos_comex:['soya','torta_soya','aceite_soya'], precios_default:'soya'},
+  {id:'girasol', slug:'/agro/girasol', cultivo_siip:58, productos_comex:['girasol','aceite_girasol'],        precios_default:'aceite_girasol'},
+  {id:'azucar',  slug:'/agro/azucar',  cultivo_siip:57, productos_comex:['azucar','etanol'],                 precios_default:'azucar'},
+  {id:'otros',   slug:'/agro/otros',   selector:true}
 ];
+// AGRO_SUBTABS derivado 1:1 de AGRO_CADENAS: un subtab por cadena. Títulos y
+// subtítulos via tokens i18n por id; el render delega en
+// window.renderAgroCadena(id) (script AGRO TAB LOGIC del final del body).
+var AGRO_TITULOS = {
+  soya:    {title:'{{t:agro.doc_title_soya}}',    subtitle:'{{t:agro.subtitle_soya}}'},
+  girasol: {title:'{{t:agro.doc_title_girasol}}', subtitle:'{{t:agro.subtitle_girasol}}'},
+  azucar:  {title:'{{t:agro.doc_title_azucar}}',  subtitle:'{{t:agro.subtitle_azucar}}'},
+  otros:   {title:'{{t:agro.doc_title_otros}}',   subtitle:'{{t:agro.subtitle_otros}}'}
+};
+var AGRO_SUBTABS = AGRO_CADENAS.map(function(cd){
+  var tt = AGRO_TITULOS[cd.id] || {};
+  return { id:cd.id, slug:cd.slug, title:tt.title || '', subtitle:tt.subtitle || '',
+    render:function(){ if(typeof window.renderAgroCadena==='function') window.renderAgroCadena(cd.id); } };
+});
 var agroState = { current: null };
 
 function activateAgroSubtab(subId){
@@ -3838,6 +4190,14 @@ function activateAgroSubtab(subId){
   var st = document.getElementById('agroSubtitle');
   if(st) st.innerHTML = sub.subtitle || '';
   if(sub.title) document.title = sub.title;
+  // Canonicalización de slugs legacy v1: si la barra quedó en /agro/produccion
+  // o /agro/exportaciones (redirects de ROUTE_MAP), reescribir al slug de la
+  // cadena activa. replaceState (no pushState): no agrega entrada de historia,
+  // back/forward no loopea.
+  var legacySlug = fbSlug(window.location.pathname);
+  if((legacySlug==='/agro/produccion' || legacySlug==='/agro/exportaciones') && sub.slug){
+    history.replaceState({tab:'agro', subtab:sub.id}, '', fbHref(sub.slug));
+  }
   if(typeof sub.render === 'function') sub.render();
   // Cinturón anti-700px: si un primer render cayó con el panel oculto, Plotly
   // pintó a width default y react() no recomputa autosize al volver. Tras
@@ -6464,25 +6824,113 @@ window.renderAsfi=function(){ if(!st.init) initAsfi(); };
 
 <!-- bake:optional:agro -->
 <script>
-/* ═══ AGRO TAB LOGIC ═══
-   Lazy (patrón Bloqueos/ASFI): activateAgroSubtab llama window.renderAgro* en
-   cada activate; el primer call fetchea los datasets estáticos en paralelo y
-   cachea module-level (compartido entre subtabs). Paths ABSOLUTOS /agro_*.json
-   para que /en/ resuelva a la raíz (mismo motivo que mercado247-tab.js).
-   Estados VISIBLES: "Cargando datos…" y error con botón Reintentar — nada
-   silencioso. Datos: agro_produccion.json (SIIP, soporta meta.shards),
-   agro_exportaciones.json (INE Comex), agro_precios.json (FPMA/Pink/UV),
-   agro_geo_municipal.json (geoBoundaries/GeoBolivia, 339 municipios) + agro_geo_departamental.json. */
+/* ═══ AGRO TAB LOGIC (v2 · cadenas) ═══
+   Un subtab por CADENA (soya/girasol/azucar/otros); cada panel apila un
+   dashboard de PRODUCCIÓN (SIIP) + uno de EXPORTACIÓN (INE Comex) + card de
+   PRECIOS. Las instancias (cadena × tipo) se crean lazy vía makeProd/makeExpo
+   cuando el subtab renderiza por primera vez; window.renderAgroCadena(id) es
+   el hook que llama AGRO_SUBTABS en cada activate.
+   Datos lazy con paths ABSOLUTOS /agro_*.json (en /en/ resuelven a la raíz),
+   cache module-level + dedupe de fetches en vuelo. Estados de carga/error
+   VISIBLES por panel (.agro-estado con Reintentar granular). Escala de color
+   FIJA por (cultivo|productos × métrica × nivel): zmin/zmax computados sobre
+   TODOS los años y cacheados — el tope NO cambia al mover el slider. */
 (function(){
 'use strict';
 
-// ── Caches module-level ──
+// ── Caches module-level (compartidos entre cadenas) ──
 var _cache = { prod:null, expo:null, precios:null, geoMun:null, geoDep:null };
 var _inflight = {};
 var _shards = {};   // shards de producción por archivo (meta.shards, soporte preventivo)
+var _zr = {};       // rangos fijos de color por clave (ver zrProdMun/zrProdDep/zrExpo)
 var PATHS = { prod:'/agro_produccion.json', expo:'/agro_exportaciones.json',
               precios:'/agro_precios.json', geoMun:'/agro_geo_municipal.json',
               geoDep:'/agro_geo_departamental.json' };
+
+// Geografía de países destino (clave = nombre CRUDO del INE en agro_exportaciones.json dest).
+// {n: display name, lat, lon, iso}. lat/lon = centroide para los arcos (vista Flujos);
+// iso = ISO-3 para el choropleth mundial (vista Países). sinArco:true = se cuenta en
+// totales/participación pero NO se dibuja arco ni país (OTROS = agregado sin geografía;
+// ZONA FRANCA DE BOLIVIA = doméstico). BELGICA-LUXEMBURGO ≈ BEL (agregado INE de dos
+// países: se pinta Bélgica; el hover lleva el nombre compuesto).
+var AGRO_DEST_GEO = {
+  'COLOMBIA':                    {n:'Colombia',            lat:4.57,   lon:-74.30, iso:'COL'},
+  'PERU':                        {n:'Perú',                lat:-9.19,  lon:-75.02, iso:'PER'},
+  'ECUADOR':                     {n:'Ecuador',             lat:-1.83,  lon:-78.18, iso:'ECU'},
+  'CHINA':                       {n:'China',               lat:35.86,  lon:104.20, iso:'CHN'},
+  'ARGENTINA':                   {n:'Argentina',           lat:-38.42, lon:-63.62, iso:'ARG'},
+  'CHILE':                       {n:'Chile',               lat:-35.68, lon:-71.54, iso:'CHL'},
+  'ESTADOS UNIDOS':              {n:'Estados Unidos',      lat:39.78,  lon:-98.50, iso:'USA'},
+  'PAISES BAJOS':                {n:'Países Bajos',        lat:52.13,  lon:5.29,   iso:'NLD'},
+  'ALEMANIA':                    {n:'Alemania',            lat:51.17,  lon:10.45,  iso:'DEU'},
+  'REINO UNIDO':                 {n:'Reino Unido',         lat:54.24,  lon:-2.90,  iso:'GBR'},
+  'OTROS':                       {n:'Otros',               sinArco:true},
+  'ESPAÑA':                      {n:'España',              lat:40.46,  lon:-3.75,  iso:'ESP'},
+  'TURQUIA':                     {n:'Turquía',             lat:38.96,  lon:35.24,  iso:'TUR'},
+  'CANADA':                      {n:'Canadá',              lat:56.13,  lon:-106.35, iso:'CAN'},
+  'FRANCIA':                     {n:'Francia',             lat:46.23,  lon:2.21,   iso:'FRA'},
+  'BRASIL.':                     {n:'Brasil',              lat:-14.24, lon:-51.93, iso:'BRA'},
+  'AUSTRALIA':                   {n:'Australia',           lat:-25.27, lon:133.78, iso:'AUS'},
+  'MEXICO':                      {n:'México',              lat:23.63,  lon:-102.55, iso:'MEX'},
+  'MYANMAR':                     {n:'Myanmar',             lat:21.91,  lon:95.96,  iso:'MMR'},
+  'BELGICA-LUXEMBURGO':          {n:'Bélgica-Luxemburgo',  lat:50.50,  lon:4.47,   iso:'BEL'},
+  'JAPON':                       {n:'Japón',               lat:36.20,  lon:138.25, iso:'JPN'},
+  'ITALIA':                      {n:'Italia',              lat:41.87,  lon:12.57,  iso:'ITA'},
+  'ANGOLA':                      {n:'Angola',              lat:-11.20, lon:17.87,  iso:'AGO'},
+  'SUIZA':                       {n:'Suiza',               lat:46.82,  lon:8.23,   iso:'CHE'},
+  'URUGUAY':                     {n:'Uruguay',             lat:-32.52, lon:-55.77, iso:'URY'},
+  'COREA (SUR). REPUBLICA DE':   {n:'Corea del Sur',       lat:35.91,  lon:127.77, iso:'KOR'},
+  'HONG KONG':                   {n:'Hong Kong',           lat:22.32,  lon:114.17, iso:'HKG'},
+  'ISRAEL':                      {n:'Israel',              lat:31.05,  lon:34.85,  iso:'ISR'},
+  'REPUBLICA DOMINICANA':        {n:'Rep. Dominicana',     lat:18.74,  lon:-70.16, iso:'DOM'},
+  'LITUANIA':                    {n:'Lituania',            lat:55.17,  lon:23.88,  iso:'LTU'},
+  'PARAGUAY':                    {n:'Paraguay',            lat:-23.44, lon:-58.44, iso:'PRY'},
+  'POLONIA':                     {n:'Polonia',             lat:51.92,  lon:19.15,  iso:'POL'},
+  'COSTA RICA':                  {n:'Costa Rica',          lat:9.75,   lon:-83.75, iso:'CRI'},
+  'VENEZUELA':                   {n:'Venezuela',           lat:6.42,   lon:-66.59, iso:'VEN'},
+  'GUATEMALA':                   {n:'Guatemala',           lat:15.78,  lon:-90.23, iso:'GTM'},
+  'EMIRATOS ARABES UNIDOS':      {n:'Emiratos Árabes',     lat:23.42,  lon:53.85,  iso:'ARE'},
+  'YEMEN':                       {n:'Yemen',               lat:15.55,  lon:48.52,  iso:'YEM'},
+  'VIET-NAM':                    {n:'Vietnam',             lat:14.06,  lon:108.28, iso:'VNM'},
+  'TAIWAN':                      {n:'Taiwán',              lat:23.70,  lon:120.96, iso:'TWN'},
+  'JAMAICA':                     {n:'Jamaica',             lat:18.11,  lon:-77.30, iso:'JAM'},
+  'RUSIA, FEDERACION DE':        {n:'Rusia',               lat:61.52,  lon:105.32, iso:'RUS'},
+  'GHANA':                       {n:'Ghana',               lat:7.95,   lon:-1.02,  iso:'GHA'},
+  'ESLOVENIA':                   {n:'Eslovenia',           lat:46.15,  lon:14.99,  iso:'SVN'},
+  'MALASIA':                     {n:'Malasia',             lat:4.21,   lon:101.98, iso:'MYS'},
+  'PANAMA':                      {n:'Panamá',              lat:8.54,   lon:-80.78, iso:'PAN'},
+  'NUEVA ZELANDIA':              {n:'Nueva Zelanda',       lat:-40.90, lon:174.89, iso:'NZL'},
+  'EL SALVADOR':                 {n:'El Salvador',         lat:13.79,  lon:-88.90, iso:'SLV'},
+  'LETONIA':                     {n:'Letonia',             lat:56.88,  lon:24.60,  iso:'LVA'},
+  'INDONESIA':                   {n:'Indonesia',           lat:-0.79,  lon:113.92, iso:'IDN'},
+  'MARRUECOS':                   {n:'Marruecos',           lat:31.79,  lon:-7.09,  iso:'MAR'},
+  'FILIPINAS':                   {n:'Filipinas',           lat:12.88,  lon:121.77, iso:'PHL'},
+  'SALOMON, ISLAS':              {n:'Islas Salomón',       lat:-9.65,  lon:160.16, iso:'SLB'},
+  'UCRANIA':                     {n:'Ucrania',             lat:48.38,  lon:31.17,  iso:'UKR'},
+  'BAHREIN':                     {n:'Baréin',              lat:26.07,  lon:50.56,  iso:'BHR'},
+  'TAILANDIA':                   {n:'Tailandia',           lat:15.87,  lon:100.99, iso:'THA'},
+  'LIBANO':                      {n:'Líbano',              lat:33.85,  lon:35.86,  iso:'LBN'},
+  'CONGO, REPUBLICA DEL':        {n:'Rep. del Congo',      lat:-0.23,  lon:15.83,  iso:'COG'},
+  'ARGELIA':                     {n:'Argelia',              lat:28.03,  lon:1.66,  iso:'DZA'},
+  'LIBIA':                       {n:'Libia',               lat:26.34,  lon:17.23,  iso:'LBY'},
+  'QATAR':                       {n:'Catar',               lat:25.35,  lon:51.18,  iso:'QAT'},
+  'SURINAM':                     {n:'Surinam',             lat:3.92,   lon:-56.03, iso:'SUR'},
+  'FINLANDIA':                   {n:'Finlandia',           lat:61.92,  lon:25.75,  iso:'FIN'},
+  'INDIA':                       {n:'India',               lat:20.59,  lon:78.96,  iso:'IND'},
+  'REPUBLICA CHECA':             {n:'Chequia',             lat:49.82,  lon:15.47,  iso:'CZE'},
+  'TUNICIA':                     {n:'Túnez',               lat:33.89,  lon:9.54,   iso:'TUN'},
+  'CAMERUN, REPUBLICA UNIDA DEL':{n:'Camerún',             lat:7.37,   lon:12.35,  iso:'CMR'},
+  'GAMBIA':                      {n:'Gambia',              lat:13.44,  lon:-15.31, iso:'GMB'},
+  'GUINEA ECUATORIAL':           {n:'Guinea Ecuatorial',   lat:1.65,   lon:10.27,  iso:'GNQ'},
+  'ZONA FRANCA DE BOLIVIA':      {n:'Zona Franca (Bolivia)', sinArco:true},
+  'JORDANIA':                    {n:'Jordania',            lat:30.59,  lon:36.24,  iso:'JOR'},
+  'GRECIA':                      {n:'Grecia',              lat:39.07,  lon:21.82,  iso:'GRC'},
+  'CUBA':                        {n:'Cuba',                lat:21.52,  lon:-77.78, iso:'CUB'},
+  'DINAMARCA':                   {n:'Dinamarca',           lat:56.26,  lon:9.50,   iso:'DNK'},
+  'GABON':                       {n:'Gabón',               lat:-0.80,  lon:11.61,  iso:'GAB'},
+  'SUECIA':                      {n:'Suecia',              lat:60.13,  lon:18.64,  iso:'SWE'}
+};
+var AGRO_BOLIVIA_GEO = {lat:-16.29, lon:-63.59};  // origen de los arcos
 
 function agroGet(key){
   if(_cache[key]) return Promise.resolve(_cache[key]);
@@ -6498,10 +6946,12 @@ function agroGet(key){
 // ── Formateo con el locale del deploy ──
 var LOC = FB_LANG==='es' ? 'es-BO' : 'en-US';
 var NF0A = new Intl.NumberFormat(LOC,{maximumFractionDigits:0});
+var NF1A = new Intl.NumberFormat(LOC,{minimumFractionDigits:1,maximumFractionDigits:1});
 var NF2A = new Intl.NumberFormat(LOC,{minimumFractionDigits:2,maximumFractionDigits:2});
 function f0(n){ return n==null?'—':NF0A.format(n); }
+function f1(n){ return n==null?'—':NF1A.format(n); }
 function f2(n){ return n==null?'—':NF2A.format(n); }
-function fUsd(n){ // compacto para barras; el hover del mapa lleva el entero completo
+function fUsd(n){ // compacto para barras/KPIs; el hover del mapa lleva el entero completo
   if(n==null) return '—';
   if(Math.abs(n)>=1e6) return NF2A.format(n/1e6)+' M';
   if(Math.abs(n)>=1e3) return NF0A.format(n/1e3)+' K';
@@ -6511,45 +6961,67 @@ var MES_L = FB_LANG==='es'
   ? ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
   : ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── Estados visibles (cargando / error / vacío) ──
-function status(el, html){
-  if(!el) return;
-  if(el.data && window.Plotly) Plotly.purge(el);  // el.data solo existe si el div ya fue ploteado
-  el.innerHTML = '<div class="agro-status">'+html+'</div>';
+// ── Estados visibles POR PANEL ──
+// Cada dashboard trae divs .agro-estado propios (agroEstado-<cadena>-<dash>-mapa
+// / -side / -precios). Un "panel" es {plots:[ids], extra?:id, estadoId}: al
+// mostrar un estado se purgan y ocultan sus plots (sin gaps de height inline)
+// y el mensaje aparece en el .agro-estado; al dibujar, plotInto los restaura.
+function hidePlot(id){
+  var el = document.getElementById(id); if(!el) return;
+  if(el.data && window.Plotly){ try{ Plotly.purge(el); }catch(e){} }
+  el.style.display = 'none';
 }
-// Plotly.react NO limpia hijos ajenos: un .agro-status previo quedaría como
-// hermano del plot (texto suelto bajo el chart). Limpiar antes de plotear.
-// Además fija la altura inline del div al height del layout: el resize
-// responsive de Plotly relayoutea con autosize (toma el tamaño del div) y sin
-// altura explícita el contenedor colapsa en móvil (patrón del repo: div con
-// height inline + height en layout).
-function plotInto(el, traces, layout, config){
-  if(!el) return;
-  if(el.querySelector('.agro-status')) el.innerHTML = '';
-  if(layout && layout.height) el.style.height = layout.height+'px';
-  Plotly.react(el, traces, layout, config);
+function panelEstado(p, html){
+  p.plots.forEach(function(id){
+    if(html){ hidePlot(id); }
+    else { var el=document.getElementById(id); if(el) el.style.display=''; }
+  });
+  if(p.extra){ var x=document.getElementById(p.extra); if(x) x.style.display = html ? 'none' : ''; }
+  var est = document.getElementById(p.estadoId); if(!est) return null;
+  est.hidden = !html;
+  est.innerHTML = html || '';
+  return est;
 }
+function panelLoading(p){ panelEstado(p, '{{t:agro.cargando}}'); }
+function panelError(p, retryFn){
+  var est = panelEstado(p, '{{t:agro.error_carga}}<br><button type="button" class="fb-pill agro-retry">{{t:agro.reintentar}}</button>');
+  if(est){ var b = est.querySelector('.agro-retry'); if(b) b.onclick = retryFn; }
+}
+function panelOk(p){ panelEstado(p, null); }
 function sinDatos(label, anio){
   return '{{t:agro.sin_datos_de}}'+label+'{{t:agro.sin_datos_en}}'+anio;
 }
-function showLoading(ids){
-  ids.forEach(function(id){ status(document.getElementById(id), '{{t:agro.cargando}}'); });
+// Plotly.react toma el tamaño del div (autosize): fijar la altura inline al
+// height del layout para que el contenedor no colapse en móvil (patrón del
+// repo) y restaurar display por si un estado previo lo ocultó.
+function plotInto(el, traces, layout, config){
+  if(!el) return;
+  el.style.display = '';
+  if(layout && layout.height) el.style.height = layout.height+'px';
+  Plotly.react(el, traces, layout, config);
 }
-function showError(ids, retryFn){
-  ids.forEach(function(id){
-    var el = document.getElementById(id); if(!el) return;
-    status(el, '{{t:agro.error_carga}}<br><button type="button" class="fb-pill agro-retry" style="margin-top:10px">{{t:agro.reintentar}}</button>');
-    var b = el.querySelector('.agro-retry');
-    if(b) b.onclick = retryFn;
-  });
+// Tiles de KPI dentro de .agro-kpis (items: [{label, valor, unidad}]).
+// Opcionales por item: tip (tooltip nativo title= — los valores i18n no traen
+// comillas rectas, invariante del dict) y color (CSS para el valor, tokens
+// delta en los VAs con signo).
+function kpisHtml(items){
+  return items.map(function(it){
+    return '<div class="agro-kpi"'+(it.tip ? ' title="'+it.tip+'"' : '')+'>'
+         + '<div class="agro-kpi-label">'+it.label+'</div>'
+         + '<div class="agro-kpi-valor"'+(it.color ? ' style="color:'+it.color+'"' : '')+'>'+it.valor+'</div>'
+         + '<div class="agro-kpi-unidad">'+(it.unidad||'')+'</div></div>';
+  }).join('');
 }
 
 // ── Plotly compartido (geo estilo Bloqueos + choropleth secuencial verde) ──
-function mapH(){ return (window.innerWidth<=600) ? 400 : 520; }
-function geoLayout(c){
+function mapH(){ return (window.innerWidth<=600) ? 400 : 460; }
+// Mapas de PRODUCCIÓN más altos que el resto: Bolivia es ~cuadrada y aprovecha
+// el alto; el mundo expo (aspecto ancho) con más alto solo gana aire muerto.
+function mapHProd(){ return (window.innerWidth<=600) ? 420 : 520; }
+function geoLayout(c, h){
   return { paper_bgcolor:'rgba(0,0,0,0)',
     font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
-    margin:{l:0, r:0, t:0, b:0}, showlegend:false, height:mapH(),
+    margin:{l:0, r:0, t:0, b:0}, showlegend:false, height:h||mapH(),
     hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
     geo:{ resolution:50, projection:{type:'mercator'}, showland:false, showcountries:false, showcoastlines:false,
       showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
@@ -6558,10 +7030,12 @@ function geoLayout(c){
 function seqScale(){
   return [[0, cssVar('--chart-agro-seq-0')],[0.5, cssVar('--chart-agro-seq-1')],[1, cssVar('--chart-agro-seq-2')]];
 }
+// Colorbar de ESCALA FIJA: el tope es el máximo histórico de la combinación
+// (no el del año en pantalla) — la nota lo hace explícito.
 function colorbar(c, unidad){
   return { thickness:10, len:0.72, outlinewidth:0,
     tickfont:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted},
-    title:{text:unidad, font:{size:10, color:c.textMuted}, side:'right'} };
+    title:{text:unidad+'<br>{{t:agro.cb_max_hist}}', font:{size:10, color:c.textMuted}, side:'right'} };
 }
 // Trace base debajo del choropleth con dato: TODAS las unidades en relleno
 // neutro suave, para que el país se vea completo; hover = solo el nombre.
@@ -6576,32 +7050,78 @@ function baseTrace(geo, idkey, nameProp, c){
 }
 function drawRank(elId, labels, vals, texts, unidad){
   var el = document.getElementById(elId); if(!el) return;
+  if(!labels.length){ hidePlot(elId); return; }
   var c=getC(), L=BL(c);
-  var hRank = Math.max(220, 30*labels.length+80);
+  var hRank = Math.max(220, 24*labels.length+70);
+  // Margen izquierdo MEDIDO (~6.3 px/char de la tickfont mono): el automargin
+  // de Plotly capea su expansión y recorta la etiqueta más larga del ranking
+  // (ej. 'Fernández Alonso (Santa Cruz)' perdía la F). Cap al 45% del card.
+  var maxChars = 0;
+  labels.forEach(function(s){ if(s.length>maxChars) maxChars=s.length; });
+  var lPad = Math.min(12+Math.round(maxChars*6.3), Math.round((el.clientWidth||420)*0.45));
   plotInto(el, [{ type:'bar', orientation:'h',
     x:vals, y:labels, marker:{color:cssVar('--chart-agro-accent')},
     text:texts, textposition:'outside', cliponaxis:false,
     textfont:{family:'IBM Plex Mono,monospace', size:10, color:c.textMuted},
     hovertemplate:'<b>%{y}</b>: %{text} '+unidad+'<extra></extra>' }],
    {...L, height:hRank, showlegend:false, hovermode:'closest',
-    margin:{l:8, r:84, t:8, b:36},
+    margin:{l:lPad, r:84, t:8, b:36},
     xaxis:{...L.xaxis, tickangle:0, showgrid:true, automargin:true,
       title:{text:unidad, font:{size:10, color:c.textMuted}}},
     yaxis:{...L.yaxis, autorange:'reversed', automargin:true}},
    {...PC, locale:FB_LANG});
 }
+// Sparkline: mini-línea anual sin ejes (~90px) con el último punto marcado y
+// una etiqueta chica arriba a la izquierda.
+function drawSpark(elId, anios, vals, unidad, fmt, titulo){
+  var el = document.getElementById(elId); if(!el) return;
+  var hay = vals.some(function(v){ return v!=null && v>0; });
+  if(!hay){ hidePlot(elId); return; }
+  var c=getC(), n=vals.length;
+  // Etiqueta larga (cadenas con varios productos): si no entra en el card se
+  // recorta al tramo genérico después del último ' — '.
+  var tW = el.clientWidth;
+  if(tW && titulo.length*6.2 > tW){
+    var cut = titulo.lastIndexOf(' — ');
+    if(cut>0) titulo = titulo.slice(cut+3);
+  }
+  plotInto(el, [
+    { type:'scatter', mode:'lines', x:anios, y:vals,
+      line:{color:cssVar('--chart-agro-accent'), width:1.6},
+      text:vals.map(fmt), hovertemplate:'<b>%{x}</b>: %{text} '+unidad+'<extra></extra>' },
+    { type:'scatter', mode:'markers', x:[anios[n-1]], y:[vals[n-1]],
+      marker:{size:6, color:cssVar('--chart-agro-accent')}, hoverinfo:'skip' }
+  ], { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', height:90,
+    showlegend:false, margin:{l:6, r:6, t:20, b:4},
+    hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
+    xaxis:{visible:false, fixedrange:true}, yaxis:{visible:false, fixedrange:true},
+    annotations:[{text:titulo, xref:'paper', yref:'paper', x:0.01, y:1.28,
+      xanchor:'left', showarrow:false,
+      font:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted}}]
+  }, {...PC, locale:FB_LANG});
+}
 
-// ═══ PRODUCCIÓN (SIIP) ═══
-var stP = { ready:false, wired:false, loading:false, pending:false, cultivo:'7', met:'prod', niv:'mun', anio:2024, tok:0 };
+// ── Controles compartidos ──
+function wireChips(id, attr, onSet){
+  var box = document.getElementById(id); if(!box) return;
+  box.addEventListener('click', function(e){
+    var b = e.target.closest('button['+attr+']');
+    if(!b || b.classList.contains('active')) return;
+    box.querySelectorAll('button').forEach(function(x){ x.classList.toggle('active', x===b); });
+    onSet(b.getAttribute(attr));
+  });
+}
 
+// ── Producción: helpers de cultivo/métrica ──
 function cultivoDe(cod){
-  var cs = _cache.prod.cultivos || [];
+  var cs = (_cache.prod && _cache.prod.cultivos) || [];
   for(var i=0;i<cs.length;i++){ if(String(cs[i].codigo)===String(cod)) return cs[i]; }
   return null;
 }
 // series_mun del cultivo — soporta meta.shards: si existe, el índice viene con
-// series_mun vacío y cada shard (fetch lazy por grupo, cache module-level) trae
-// solo los cultivos de ese grupo. series_dep SIEMPRE viaja completo en el índice.
+// series_mun vacío y cada shard (fetch lazy por LABEL de grupo, cache
+// module-level, shape {series_mun:{...}}) trae solo los cultivos de ese grupo.
+// series_dep SIEMPRE viaja completo en el índice.
 function seriesMun(cod, cb){
   var d=_cache.prod, shards = d.meta && d.meta.shards;
   var propio = (d.series_mun||{})[String(cod)];
@@ -6625,114 +7145,213 @@ function valorMet(sup, prod, met){
 }
 function fmtMet(v, met){ return met==='rend' ? f2(v) : f0(v); }
 
-function wireChips(id, attr, onSet){
-  var box = document.getElementById(id); if(!box) return;
-  box.addEventListener('click', function(e){
-    var b = e.target.closest('button['+attr+']');
-    if(!b || b.classList.contains('active')) return;
-    box.querySelectorAll('button').forEach(function(x){ x.classList.toggle('active', x===b); });
-    onSet(b.getAttribute(attr));
+// ── Rangos FIJOS de color (zmin/zmax sobre TODOS los años, cache por clave) ──
+function zrProdMun(cod, met, ser){
+  var key='pm|'+cod+'|'+met;
+  if(_zr[key]) return _zr[key];
+  var mx=0;
+  Object.keys(ser||{}).forEach(function(anio){
+    (ser[anio]||[]).forEach(function(r){
+      var v=valorMet(r[1], r[2], met);
+      if(v!=null && v>mx) mx=v;
+    });
   });
+  return (_zr[key]={zmin:0, zmax:mx||1});
+}
+function zrProdDep(cod, met){
+  var key='pd|'+cod+'|'+met;
+  if(_zr[key]) return _zr[key];
+  var mx=0, sd=(_cache.prod.series_dep||{})[String(cod)]||{};
+  Object.keys(sd).forEach(function(anio){
+    var byDep=sd[anio];
+    Object.keys(byDep).forEach(function(dep){
+      var v=valorMet(byDep[dep][0], byDep[dep][1], met);
+      if(v!=null && v>mx) mx=v;
+    });
+  });
+  return (_zr[key]={zmin:0, zmax:mx||1});
+}
+// ── Exportaciones: agregación de productos de la cadena ──
+// keys = array de keys de meta.semillas (cadena) o '__todos__' (total agro).
+// Serie anual NACIONAL agregada (suma de nacional[k]; '__todos__' = suma de
+// origTotal sobre los 9 deptos).
+function expoNacArr(keys, f){
+  var E=_cache.expo, years=E.meta.years||[];
+  var arr=years.map(function(){ return 0; });
+  if(keys==='__todos__'){
+    Object.keys(E.origTotal).forEach(function(dep){
+      ((E.origTotal[dep]||{})[f]||[]).forEach(function(v,i){ arr[i]+=v||0; });
+    });
+  } else {
+    keys.forEach(function(k){
+      var s=E.nacional[k];
+      ((s && s[f])||[]).forEach(function(v,i){ arr[i]+=v||0; });
+    });
+  }
+  return arr;
+}
+// Rango FIJO del choropleth de destinos: zmax = máximo país-año histórico de
+// la combinación (keys × métrica) — paridad con zrProdMun/zrProdDep.
+function zrExpoDest(keys, met){
+  var key='exd|'+(keys==='__todos__'?'__todos__':keys.join('+'))+'|'+met;
+  if(_zr[key]) return _zr[key];
+  var agg=destAgg(keys), f=(met==='fob')?'fA':'tA', mx=0;
+  Object.keys(agg).forEach(function(p){
+    (agg[p][f]||[]).forEach(function(v){ if(v>mx) mx=v; });
+  });
+  return (_zr[key]={zmin:0, zmax:mx||1});
 }
 
-function prodWire(){
-  if(stP.wired) return; stP.wired=true;
-  var d=_cache.prod;
-  // Select de cultivo con optgroup por grupo (orden de aparición del dataset).
-  var sel = document.getElementById('agroProdCultivo');
-  var grupos={}, orden=[];
-  (d.cultivos||[]).forEach(function(cu){
-    if(!grupos[cu.grupo]){ grupos[cu.grupo]=[]; orden.push(cu.grupo); }
-    grupos[cu.grupo].push(cu);
-  });
-  orden.forEach(function(g){
-    var og=document.createElement('optgroup'); og.label=g;
-    grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(cu){
-      var o=document.createElement('option'); o.value=String(cu.codigo); o.textContent=cu.label; og.appendChild(o);
-    });
-    sel.appendChild(og);
-  });
-  if(!cultivoDe(stP.cultivo) && d.cultivos && d.cultivos.length) stP.cultivo=String(d.cultivos[0].codigo);
-  sel.value = stP.cultivo;
-  sel.onchange = function(){ stP.cultivo=sel.value; prodDraw(); };
-  wireChips('agroProdMetrica','data-met', function(v){ stP.met=v; prodDraw(); });
-  wireChips('agroProdNivel','data-niv', function(v){ stP.niv=v; prodDraw(); });
+// ── FACTORY de dashboards: una instancia por (cadena × tipo), lazy ──
+var _dashes = {};   // 'soya-prod' → instancia (estado propio por dashboard)
+function cadenaDe(id){
+  for(var i=0;i<AGRO_CADENAS.length;i++){ if(AGRO_CADENAS[i].id===id) return AGRO_CADENAS[i]; }
+  return null;
+}
+function dashDe(cadId, tipo){
+  var k=cadId+'-'+tipo;
+  if(!_dashes[k]) _dashes[k] = (tipo==='prod') ? makeProd(cadId) : makeExpo(cadId);
+  return _dashes[k];
+}
+// Visible sólo si la tab Agro + el subtab están ambos display:'' —
+// offsetParent===null cuando cualquier ancestro está display:none.
+function agroVisible(cadId){
+  var p = document.getElementById('subtab-agro-'+cadId);
+  return !!(p && p.offsetParent!==null);
+}
+function idsDash(cadId, tipo){
+  var sfx = cadId+'-'+tipo;
+  return { mapa:'agroMapa-'+sfx, rank:'agroRank-'+sfx, spark:'agroSpark-'+sfx,
+    sparkVa1:'agroSparkVa1-'+sfx, heat:'agroHeat-'+sfx,
+    kpis:'agroKpis-'+sfx, anio:'agroAnio-'+sfx, anioLabel:'agroAnioLabel-'+sfx,
+    anioMin:'agroAnioMin-'+sfx, anioMax:'agroAnioMax-'+sfx,
+    metrica:'agroCtl-'+sfx+'-metrica' };
+}
+function panelesDash(cadId, tipo, ids){
+  // sparkVa1 (VA-1, solo prod de cadenas con cultivo fijo) y heat (VA-3, solo
+  // expo) no existen en todos los DOM: hidePlot/panelEstado toleran id ausente.
+  var plots = [ids.rank, ids.spark].concat(tipo==='prod' ? [ids.sparkVa1] : [ids.heat]);
+  return {
+    mapa: { plots:[ids.mapa], estadoId:'agroEstado-'+cadId+'-'+tipo+'-mapa' },
+    side: { plots:plots, extra:ids.kpis, estadoId:'agroEstado-'+cadId+'-'+tipo+'-side' }
+  };
+}
+
+// ═══ PRODUCCIÓN (SIIP) — instancia por cadena ═══
+function makeProd(cadId){
+  var cfg = cadenaDe(cadId) || {};
+  var ids = idsDash(cadId, 'prod');
+  return { cad:cadId, tipo:'prod', ids:ids, paneles:panelesDash(cadId,'prod',ids),
+    // cultivo fijo por cadena (cultivo_siip); en 'otros' lo elige el select.
+    cultivo: (cfg.cultivo_siip!=null) ? String(cfg.cultivo_siip) : null,
+    selector: !!cfg.selector,
+    met:'prod', niv:'mun', anio:2024,
+    ready:false, wired:false, loading:false, pending:false, tok:0 };
+}
+function prodWire(d){
+  if(d.wired) return; d.wired=true;
+  var meta=_cache.prod.meta;
+  if(d.selector){
+    // Select de cultivo con optgroup por grupo (solo cadena 'otros').
+    var sel = document.getElementById('agroSel-'+d.cad+'-prod-cultivo');
+    if(sel){
+      var grupos={}, orden=[];
+      (_cache.prod.cultivos||[]).forEach(function(cu){
+        if(!grupos[cu.grupo]){ grupos[cu.grupo]=[]; orden.push(cu.grupo); }
+        grupos[cu.grupo].push(cu);
+      });
+      orden.forEach(function(g){
+        var og=document.createElement('optgroup'); og.label=g;
+        grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(cu){
+          var o=document.createElement('option'); o.value=String(cu.codigo); o.textContent=cu.label; og.appendChild(o);
+        });
+        sel.appendChild(og);
+      });
+      if(!cultivoDe(d.cultivo) && sel.options.length) d.cultivo = sel.options[0].value;
+      sel.value = d.cultivo;
+      sel.onchange = function(){ d.cultivo=sel.value; prodDraw(d); };
+    }
+  }
+  wireChips(d.ids.metrica, 'data-met', function(v){ d.met=v; prodDraw(d); });
+  wireChips('agroCtl-'+d.cad+'-prod-nivel', 'data-niv', function(v){ d.niv=v; prodDraw(d); });
   // Slider de años desde meta.anios (extremos reales del dataset).
-  var anios = d.meta.anios || [];
-  var rng = document.getElementById('agroProdAnio');
+  var anios = meta.anios || [];
+  var rng = document.getElementById(d.ids.anio);
   var lo = anios[0], hi = anios[anios.length-1];
   rng.min=lo; rng.max=hi;
-  stP.anio = Math.min(Math.max(stP.anio, lo), hi);
-  rng.value = stP.anio;
-  document.getElementById('agroProdAnioMin').textContent = lo;
-  document.getElementById('agroProdAnioMax').textContent = hi;
-  document.getElementById('agroProdAnioLabel').textContent = stP.anio;
+  d.anio = Math.min(Math.max(d.anio, lo), hi);
+  rng.value = d.anio;
+  document.getElementById(d.ids.anioMin).textContent = lo;
+  document.getElementById(d.ids.anioMax).textContent = hi;
+  document.getElementById(d.ids.anioLabel).textContent = d.anio;
   rng.oninput = function(){
-    stP.anio = +rng.value;
-    document.getElementById('agroProdAnioLabel').textContent = stP.anio;
-    prodDraw();
+    d.anio = +rng.value;
+    document.getElementById(d.ids.anioLabel).textContent = d.anio;
+    prodDraw(d);
   };
   // Pill "dataset parcial" (harvest SIIP en curso).
-  if(d.meta.parcial===true){
-    var pp = document.getElementById('agroProdParcial'); if(pp) pp.hidden=false;
+  if(meta.parcial===true){
+    var pp = document.getElementById('agroParcial-'+d.cad+'-prod'); if(pp) pp.hidden=false;
   }
 }
 
-function prodDraw(){
-  if(!stP.ready) return;
-  // Guard anti-stale AL INICIO: CUALQUIER redraw (incluido el branch
-  // departamental) invalida callbacks de shards todavía en vuelo — sin esto
-  // un shard lento pisaría el render departamental más nuevo.
-  var tok = ++stP.tok;
-  var cult = cultivoDe(stP.cultivo);
-  var label = cult ? cult.label : ('#'+stP.cultivo);
-  if(stP.niv==='dep'){
-    var byDep = ((_cache.prod.series_dep||{})[String(stP.cultivo)]||{})[String(stP.anio)] || null;
-    prodRenderDep(byDep, label);
+function prodDraw(d){
+  if(!d.ready) return;
+  // Guard anti-stale AL INICIO: CUALQUIER redraw invalida callbacks de shards
+  // todavía en vuelo — sin esto un shard lento pisaría un render más nuevo.
+  var tok = ++d.tok;
+  // Panel oculto: diferir (Plotly pintaría a width default en display:none).
+  if(!agroVisible(d.cad)){ d.pending=true; return; }
+  d.pending=false;
+  var cult = cultivoDe(d.cultivo);
+  var label = cult ? cult.label : ('#'+d.cultivo);
+  prodSide(d, label);
+  if(d.niv==='dep'){
+    var byDep = ((_cache.prod.series_dep||{})[String(d.cultivo)]||{})[String(d.anio)] || null;
+    prodRenderDep(d, byDep, label);
     return;
   }
-  seriesMun(stP.cultivo, function(err, ser){
-    if(tok!==stP.tok) return;   // estado viejo: ni render ni showError
-    if(err){ showError(['agroProdMapa','agroProdRank'], prodDraw); return; }
-    var rows = (ser||{})[String(stP.anio)] || null;
-    prodRenderMun(rows, label);
+  seriesMun(d.cultivo, function(err, ser){
+    if(tok!==d.tok) return;   // estado viejo: ni render ni showError
+    if(err){ panelError(d.paneles.mapa, function(){ prodDraw(d); }); return; }
+    prodRenderMun(d, ser, label);
   });
 }
-
-function prodRenderMun(rows, label){
-  var elM=document.getElementById('agroProdMapa'), elR=document.getElementById('agroProdRank');
-  var d=_cache.prod, met=stP.met, unidad=unidadMet(met);
+function prodRenderMun(d, ser, label){
+  var dd=_cache.prod, met=d.met, unidad=unidadMet(met);
+  var rows = (ser||{})[String(d.anio)] || null;
   var items=[];
   (rows||[]).forEach(function(r){          // fila = [munIdx, superficie, produccion]
-    var m = d.municipios[r[0]]; if(!m) return;
+    var m = dd.municipios[r[0]]; if(!m) return;
     var v = valorMet(r[1], r[2], met);
     if(v==null) return;
     items.push({gid:m.gid, nombre:m.nombre, depto:m.depto, sup:r[1], prod:r[2], v:v});
   });
   if(!items.length){
-    status(elM, sinDatos(label, stP.anio)); status(elR, sinDatos(label, stP.anio));
+    panelEstado(d.paneles.mapa, sinDatos(label, d.anio));
+    hidePlot(d.ids.rank);
     return;
   }
-  var c=getC(), geo=_cache.geoMun;
+  panelOk(d.paneles.mapa);
+  var c=getC(), geo=_cache.geoMun, zr=zrProdMun(d.cultivo, met, ser);
   var data = { type:'choropleth', geojson:geo, featureidkey:'properties.gid',
     locations:items.map(function(it){ return it.gid; }),
     z:items.map(function(it){ return it.v; }),
+    zmin:zr.zmin, zmax:zr.zmax,
     colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.4}},
     customdata:items.map(function(it){ return [it.nombre, it.depto, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
     hovertemplate:'{{t:agro.hover_mun}}', colorbar:colorbar(c, unidad) };
-  plotInto(elM, [baseTrace(geo,'gid','nombre',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'gid','nombre',c), data], geoLayout(c, mapHProd()), {...PC, locale:FB_LANG});
   items.sort(function(a,b){ return b.v-a.v; });
   var top = items.slice(0,15);
-  drawRank('agroProdRank',
+  drawRank(d.ids.rank,
     top.map(function(it){ return it.nombre+' ('+it.depto+')'; }),
     top.map(function(it){ return it.v; }),
     top.map(function(it){ return fmtMet(it.v, met); }),
     unidad);
 }
-
-function prodRenderDep(byDep, label){
-  var elM=document.getElementById('agroProdMapa'), elR=document.getElementById('agroProdRank');
-  var met=stP.met, unidad=unidadMet(met);
+function prodRenderDep(d, byDep, label){
+  var met=d.met, unidad=unidadMet(met);
   var items=[];
   Object.keys(byDep||{}).forEach(function(dep){
     var sd = byDep[dep];                   // [superficie, produccion]
@@ -6741,198 +7360,440 @@ function prodRenderDep(byDep, label){
     items.push({dep:dep, sup:sd[0], prod:sd[1], v:v});
   });
   if(!items.length){
-    status(elM, sinDatos(label, stP.anio)); status(elR, sinDatos(label, stP.anio));
+    panelEstado(d.paneles.mapa, sinDatos(label, d.anio));
+    hidePlot(d.ids.rank);
     return;
   }
-  var c=getC(), geo=_cache.geoDep;
+  panelOk(d.paneles.mapa);
+  var c=getC(), geo=_cache.geoDep, zr=zrProdDep(d.cultivo, met);
   var data = { type:'choropleth', geojson:geo, featureidkey:'properties.name',
     locations:items.map(function(it){ return it.dep; }),
     z:items.map(function(it){ return it.v; }),
+    zmin:zr.zmin, zmax:zr.zmax,
     colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
     customdata:items.map(function(it){ return [it.dep, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
     hovertemplate:'{{t:agro.hover_dep}}', colorbar:colorbar(c, unidad) };
-  plotInto(elM, [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'name','name',c), data], geoLayout(c, mapHProd()), {...PC, locale:FB_LANG});
   items.sort(function(a,b){ return b.v-a.v; });
-  drawRank('agroProdRank',
+  drawRank(d.ids.rank,
     items.map(function(it){ return it.dep; }),
     items.map(function(it){ return it.v; }),
     items.map(function(it){ return fmtMet(it.v, met); }),
     unidad);
 }
 
+// ── VA-1: balance producción↔exportación (solo cadenas con cultivo_siip) ──
+// %exportado(año) = t exportadas de la cadena (suma tonA de productos_comex,
+// INE) / t producidas del cultivo SIIP (suma series_dep) × 100. Años
+// intersectados de ambos datasets (2017–2024; los YTD de expo quedan fuera).
+// Aproximación campaña agrícola vs año calendario — tooltip obligatorio.
+// En 'otros' NO se computa (el cultivo SIIP elegido no mapea 1:1 a un producto
+// comex elegible): sin cfg.cultivo_siip devuelve null y el tile se omite.
+function va1Serie(cad){
+  var cfg = cadenaDe(cad);
+  if(!cfg || cfg.cultivo_siip==null || !cfg.productos_comex || !_cache.expo || !_cache.prod) return null;
+  var E=_cache.expo, years=E.meta.years||[];
+  var sd=(_cache.prod.series_dep||{})[String(cfg.cultivo_siip)]||{};
+  var anios=[], vals=[];
+  years.forEach(function(a, yi){
+    if((E.meta.ytdYears||[]).indexOf(a)!==-1) return;   // año expo incompleto
+    var byDep=sd[String(a)]; if(!byDep) return;          // sin campaña SIIP
+    var prod=0;
+    Object.keys(byDep).forEach(function(dep){ prod+=byDep[dep][1]||0; });
+    if(prod<=0) return;
+    var expo=0;
+    cfg.productos_comex.forEach(function(k){
+      var s=E.nacional[k]; expo+=((s&&s.tonA)||[])[yi]||0;
+    });
+    anios.push(a); vals.push(expo/prod*100);
+  });
+  return anios.length ? {anios:anios, vals:vals} : null;
+}
+// KPIs + sparkline de producción: NACIONAL (suma de series_dep sobre los 9
+// deptos) — independientes del nivel del mapa. Rendimiento medio = prod/sup.
+function prodSide(d, label){
+  panelOk(d.paneles.side);
+  var sd=(_cache.prod.series_dep||{})[String(d.cultivo)]||{};
+  var anios=_cache.prod.meta.anios||[];
+  var serie=anios.map(function(a){
+    var byDep=sd[String(a)]||{}, sup=0, prod=0, hay=false;
+    Object.keys(byDep).forEach(function(dep){ hay=true; sup+=byDep[dep][0]||0; prod+=byDep[dep][1]||0; });
+    return {a:a, sup:sup, prod:prod, hay:hay};
+  });
+  var cur=null;
+  serie.forEach(function(p){ if(p.a===d.anio) cur=p; });
+  // VA-1: requiere expo cacheado. Si aún no bajó (el fetch del dashboard expo
+  // corre en paralelo), se pide y se redibuja al resolver (tok anti-stale);
+  // si falla, el tile simplemente se omite — nada ficticio.
+  var cfgVa1 = cadenaDe(d.cad);
+  var v1 = null;
+  if(cfgVa1 && cfgVa1.cultivo_siip!=null && cfgVa1.productos_comex){
+    if(_cache.expo){ v1 = va1Serie(d.cad); }
+    else {
+      var tokVa1 = d.tok;
+      agroGet('expo').then(function(){ if(tokVa1===d.tok) prodDraw(d); }).catch(function(){});
+    }
+  }
+  var items = (cur && cur.hay) ? [
+    {label:'{{t:agro.kpi_superficie}}', valor:f0(cur.sup), unidad:'ha'},
+    {label:'{{t:agro.kpi_produccion}}', valor:f0(cur.prod), unidad:'t'},
+    {label:'{{t:agro.kpi_rendimiento}}', valor:(cur.sup>0)?f2(cur.prod/cur.sup):'—', unidad:'t/ha'}
+  ] : [];
+  if(v1 && items.length){
+    var iVa1 = v1.anios.indexOf(d.anio);
+    if(iVa1>=0){
+      var tipVa1 = '{{t:agro.va1_tip}}'
+                 + (d.cad==='azucar' ? ' {{t:agro.va1_tip_azucar}}' : '');
+      items.push({label:'{{t:agro.va1_kpi}}', valor:f1(v1.vals[iVa1])+'%',
+        unidad:'{{t:agro.va1_u}}', tip:tipVa1});
+    }
+  }
+  var k=document.getElementById(d.ids.kpis);
+  if(k) k.innerHTML = items.length ? kpisHtml(items) : '';
+  drawSpark(d.ids.spark, serie.map(function(p){ return p.a; }),
+    serie.map(function(p){ return p.hay ? p.prod : null; }), 't', f0,
+    label+' — {{t:agro.spark_prod}}');
+  // Minigráfica VA-1 (slot propio; solo existe en cadenas con cultivo fijo).
+  if(document.getElementById(d.ids.sparkVa1)){
+    if(v1) drawSpark(d.ids.sparkVa1, v1.anios, v1.vals, '%', f1, '{{t:agro.va1_spark}}');
+    else hidePlot(d.ids.sparkVa1);
+  }
+}
 // Carga por dependencias REALES, con error/carga independiente por panel:
-// mapa+ranking dependen de produccion+geos; el chart de precios SOLO de
-// precios.json. Un fallo en uno no tumba al otro, y Reintentar recarga solo
-// lo faltante (agroGet cachea/dedupe: lo ya bajado no se re-fetchea).
-function prodLoadCore(){
-  if(stP.ready){ stP.pending=false; prodDraw(); return; }
-  if(stP.loading) return;
-  stP.loading = true;
-  showLoading(['agroProdMapa','agroProdRank']);
+// mapa+ranking+KPIs dependen de produccion+geos; precios va aparte. Reintentar
+// recarga solo lo faltante (agroGet cachea/dedupe).
+function prodLoad(d){
+  if(d.ready){ d.pending=false; prodDraw(d); return; }
+  if(d.loading) return;
+  d.loading = true;
+  panelLoading(d.paneles.mapa); panelLoading(d.paneles.side);
   Promise.all([agroGet('prod'), agroGet('geoMun'), agroGet('geoDep')])
     .then(function(){
-      stP.loading = false;
-      stP.ready = true;
-      prodWire();
+      d.loading = false;
+      d.ready = true;
+      prodWire(d);
       installObserver();
-      // Panel oculto al resolver (usuario cambió de subtab/tab durante el
-      // fetch): diferir el draw — Plotly pintaría a width default (700px)
-      // en un contenedor display:none. activateAgroSubtab re-llama render
-      // al mostrar el panel y consume el pending.
-      var elM = document.getElementById('agroProdMapa');
-      if(elM && elM.offsetParent===null){ stP.pending=true; return; }
-      prodDraw();
+      prodDraw(d);   // si el panel quedó oculto durante el fetch, marca pending
     })
-    .catch(function(){ stP.loading=false; showError(['agroProdMapa','agroProdRank'], prodLoadCore); });
-}
-function preciosLoad(pc){
-  if(_cache.precios){ pc.pending=false; preciosSetup(pc); preciosDraw(pc); return; }
-  if(pc.loading) return;
-  pc.loading = true;
-  showLoading([pc.chartId]);
-  agroGet('precios')
-    .then(function(){
-      pc.loading = false;
-      preciosSetup(pc);
-      installObserver();
-      var el = document.getElementById(pc.chartId);
-      if(el && el.offsetParent===null){ pc.pending=true; return; }
-      preciosDraw(pc);
-    })
-    .catch(function(){ pc.loading=false; showError([pc.chartId], function(){ preciosLoad(pc); }); });
-}
-
-window.renderAgroProduccion = function(){
-  prodLoadCore();
-  preciosLoad(pcProd);
-};
-
-// ═══ EXPORTACIONES (INE Comex) ═══
-var stE = { ready:false, wired:false, loading:false, pending:false, prod:'__todos__', met:'fob', anio:2025 };
-
-function expoWire(){
-  if(stE.wired) return; stE.wired=true;
-  var E=_cache.expo, meta=E.meta;
-  var sel = document.getElementById('agroExpoProducto');
-  // Primera opción: total agro por depto de origen (origTotal).
-  var o0=document.createElement('option'); o0.value='__todos__'; o0.textContent='{{t:agro.expo_todos}}'; sel.appendChild(o0);
-  // Solo semillas presentes (las 5 con estado ausente traen series en cero — fuera del selector).
-  var grupos={}, orden=[];
-  (meta.semillas||[]).forEach(function(s){
-    if(s.estado!=='presente') return;
-    if(!grupos[s.grupo]){ grupos[s.grupo]=[]; orden.push(s.grupo); }
-    grupos[s.grupo].push(s);
-  });
-  orden.forEach(function(g){
-    var og=document.createElement('optgroup'); og.label=g;
-    grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(s){
-      var o=document.createElement('option'); o.value=s.key; o.textContent=s.label; og.appendChild(o);
+    .catch(function(){
+      d.loading=false;
+      var r=function(){ prodLoad(d); };
+      panelError(d.paneles.mapa, r); panelError(d.paneles.side, r);
     });
-    sel.appendChild(og);
-  });
-  sel.value = stE.prod;
-  sel.onchange = function(){ stE.prod=sel.value; expoDraw(); };
-  wireChips('agroExpoMetrica','data-met', function(v){ stE.met=v; expoDraw(); });
+}
+
+// ═══ EXPORTACIONES (INE Comex) — instancia por cadena ═══
+function makeExpo(cadId){
+  var cfg = cadenaDe(cadId) || {};
+  var ids = idsDash(cadId, 'expo');
+  return { cad:cadId, tipo:'expo', ids:ids, paneles:panelesDash(cadId,'expo',ids),
+    // keys = productos_comex de la cadena (agregados); en 'otros' el select
+    // elige un producto (o '__todos__' = total agro por depto de origen).
+    keys: cfg.productos_comex ? cfg.productos_comex.slice() : '__todos__',
+    selector: !!cfg.selector,
+    vista:'paises', met:'fob', anio:2025,
+    ready:false, wired:false, loading:false, pending:false, tok:0 };
+}
+function expoWire(d){
+  if(d.wired) return; d.wired=true;
+  var meta=_cache.expo.meta;
+  if(d.selector){
+    var sel = document.getElementById('agroSel-'+d.cad+'-expo-producto');
+    if(sel){
+      // Primera opción: total agro por depto de origen (origTotal). Después,
+      // solo semillas presentes (las ausentes traen series en cero).
+      var o0=document.createElement('option'); o0.value='__todos__'; o0.textContent='{{t:agro.expo_todos}}'; sel.appendChild(o0);
+      var grupos={}, orden=[];
+      (meta.semillas||[]).forEach(function(s){
+        if(s.estado!=='presente') return;
+        if(!grupos[s.grupo]){ grupos[s.grupo]=[]; orden.push(s.grupo); }
+        grupos[s.grupo].push(s);
+      });
+      orden.forEach(function(g){
+        var og=document.createElement('optgroup'); og.label=g;
+        grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(s){
+          var o=document.createElement('option'); o.value=s.key; o.textContent=s.label; og.appendChild(o);
+        });
+        sel.appendChild(og);
+      });
+      sel.value = '__todos__';
+      sel.onchange = function(){
+        d.keys = (sel.value==='__todos__') ? '__todos__' : [sel.value];
+        expoDraw(d);
+      };
+    }
+  }
+  wireChips('agroVista-'+d.cad+'-expo', 'data-v', function(v){ d.vista=v; expoDraw(d); });
+  wireChips(d.ids.metrica, 'data-met', function(v){ d.met=v; expoDraw(d); });
   var years = meta.years || [];
-  var rng = document.getElementById('agroExpoAnio');
+  var rng = document.getElementById(d.ids.anio);
   rng.min = years[0]; rng.max = years[years.length-1];
-  stE.anio = meta.baseYear || years[years.length-1];
-  rng.value = stE.anio;
-  document.getElementById('agroExpoAnioMin').textContent = years[0];
-  document.getElementById('agroExpoAnioMax').textContent = years[years.length-1];
-  document.getElementById('agroExpoAnioLabel').textContent = stE.anio;
+  d.anio = meta.baseYear || years[years.length-1];
+  rng.value = d.anio;
+  document.getElementById(d.ids.anioMin).textContent = years[0];
+  document.getElementById(d.ids.anioMax).textContent = years[years.length-1];
+  document.getElementById(d.ids.anioLabel).textContent = d.anio;
   rng.oninput = function(){
-    stE.anio = +rng.value;
-    document.getElementById('agroExpoAnioLabel').textContent = stE.anio;
-    expoDraw();
+    d.anio = +rng.value;
+    document.getElementById(d.ids.anioLabel).textContent = d.anio;
+    expoDraw(d);
   };
 }
-function expoSerie(depto){
-  var E=_cache.expo;
-  if(stE.prod==='__todos__') return E.origTotal[depto] || null;
-  var pd = E.porDepto[depto];
-  return (pd && pd[stE.prod]) || null;   // fallback: sin actividad en el depto → cero
+// Badge YTD junto al año (solo años de meta.ytdYears; rango de meses
+// data-driven desde meta.mesesPorAnio).
+function ytdBadge(d){
+  var badge = document.getElementById('agroYtd-'+d.cad+'-expo');
+  if(!badge) return;
+  var meta=_cache.expo.meta;
+  var esYtd = (meta.ytdYears||[]).indexOf(d.anio)!==-1;
+  if(esYtd){
+    var nm = (meta.mesesPorAnio||{})[String(d.anio)] || 12;
+    badge.textContent = 'YTD ('+MES_L[0]+'–'+MES_L[nm-1]+')';
+    badge.hidden = false;
+  } else badge.hidden = true;
 }
-function productoLabelE(){
-  if(stE.prod==='__todos__') return '{{t:agro.expo_todos}}';
-  var ss = _cache.expo.meta.semillas || [];
-  for(var i=0;i<ss.length;i++){ if(ss[i].key===stE.prod) return ss[i].label; }
-  return stE.prod;
-}
-function expoDraw(){
-  if(!stE.ready) return;
-  var E=_cache.expo, meta=E.meta;
-  var yi = (meta.years||[]).indexOf(stE.anio);
-  var deptos = Object.keys(E.origTotal).sort();
-  var locs=[], z=[], cd=[], maxv=0;
-  deptos.forEach(function(dep){
-    var s = expoSerie(dep);
-    var fob = (s && s.fobA && s.fobA[yi]) || 0;
-    var ton = (s && s.tonA && s.tonA[yi]) || 0;
-    var v = (stE.met==='fob') ? fob : ton;
-    if(v>maxv) maxv=v;
-    locs.push(dep); z.push(v); cd.push([dep, f0(fob), f0(ton)]);
+
+function expoLabel(d){
+  if(d.keys==='__todos__') return '{{t:agro.expo_todos}}';
+  var ss = _cache.expo.meta.semillas || [], out=[];
+  d.keys.forEach(function(k){
+    for(var i=0;i<ss.length;i++){ if(ss[i].key===k){ out.push(ss[i].label); return; } }
+    out.push(k);
   });
-  // Badge YTD junto al año (rango de meses data-driven: mesesPorAnio).
-  var badge = document.getElementById('agroExpoYtd');
-  if(badge){
-    var esYtd = (meta.ytdYears||[]).indexOf(stE.anio)!==-1;
-    if(esYtd){
-      var nm = (meta.mesesPorAnio||{})[String(stE.anio)] || 12;
-      badge.textContent = 'YTD ('+MES_L[0]+'–'+MES_L[nm-1]+')';
-      badge.hidden = false;
-    } else badge.hidden = true;
-  }
-  var elM=document.getElementById('agroExpoMapa'), elR=document.getElementById('agroExpoRank');
-  var label = productoLabelE();
-  if(maxv<=0){
-    status(elM, sinDatos(label, stE.anio)); status(elR, sinDatos(label, stE.anio));
+  return out.join(' + ');
+}
+function expoDraw(d){
+  if(!d.ready) return;
+  ++d.tok;   // guard anti-stale AL INICIO (paridad con prodDraw; hoy sin async)
+  if(!agroVisible(d.cad)){ d.pending=true; return; }
+  d.pending=false;
+  ytdBadge(d);
+  expoSide(d);
+  if(d.vista==='destinos'){
+    // Vista Flujos (D2, valor interno 'destinos'): delega la instancia entera
+    // + el dataset expo ya cacheado (nacional[k].dest trae {pais:{fA,tA}}). El
+    // typeof queda como fallback defensivo del contrato del stub de fase 1.
+    if(typeof window.renderAgroDestinos==='function'){ window.renderAgroDestinos(d, _cache.expo); return; }
+    panelEstado(d.paneles.mapa, '{{t:agro.destinos_pronto}}');
     return;
   }
-  var c=getC(), geo=_cache.geoDep;
-  var unidad = (stE.met==='fob') ? 'USD' : 't';
-  var data = { type:'choropleth', geojson:geo, featureidkey:'properties.name',
-    locations:locs, z:z,
-    colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
-    customdata:cd, hovertemplate:'{{t:agro.hover_expo}}', colorbar:colorbar(c, unidad) };
-  plotInto(elM, [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
-  var items = deptos.map(function(dep,i){ return {dep:dep, v:z[i]}; })
-    .sort(function(a,b){ return b.v-a.v; });
-  drawRank('agroExpoRank',
-    items.map(function(it){ return it.dep; }),
-    items.map(function(it){ return it.v; }),
-    items.map(function(it){ return stE.met==='fob' ? fUsd(it.v) : f0(it.v); }),
+  destStop(d.cad);   // al salir de flujos: cancelar rAF + observer de los arcos
+  expoRenderPaises(d);
+}
+// Vista PAÍSES (default): choropleth MUNDIAL de destinos — dónde termina la
+// exportación de la cadena. Solo países con valor >0 en la métrica del año
+// llevan color; el resto queda en el gris neutro del land (paridad con el
+// tratamiento de las unidades sin dato en producción). El hover lleva FOB +
+// volumen + participación. OTROS/Zona Franca (sin iso) no se pintan pero sí
+// cuentan en ranking y totales (nota al pie del mapa).
+function expoRenderPaises(d){
+  var E=_cache.expo;
+  var yi = (E.meta.years||[]).indexOf(d.anio);
+  var res = destItems(destAgg(d.keys), yi, d.met);
+  var unidad = (d.met==='fob') ? 'USD' : 't';
+  if(!res.items.length){
+    panelEstado(d.paneles.mapa, sinDatos(expoLabel(d), d.anio));
+    hidePlot(d.ids.rank);
+    return;
+  }
+  panelOk(d.paneles.mapa);
+  var c=getC(), zr=zrExpoDest(d.keys, d.met);
+  var conIso = res.items.filter(function(it){ return !!it.iso; });
+  var traces = [boliviaTrace(c)];
+  if(conIso.length){
+    traces.push({ type:'choropleth', locationmode:'ISO-3',
+      locations:conIso.map(function(it){ return it.iso; }),
+      z:conIso.map(function(it){ return it.v; }),
+      zmin:zr.zmin, zmax:zr.zmax,
+      colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.4}},
+      customdata:conIso.map(function(it){
+        return [it.n, f0(it.fob), f0(it.ton), (res.total>0)?f1(it.v/res.total*100):'—'];
+      }),
+      hovertemplate:'{{t:agro.hover_dest}}', colorbar:colorbar(c, unidad) });
+  }
+  // resolution 50: a 110 los destinos chicos (Hong Kong, Baréin) no existen
+  // en el topojson y quedarían sin polígono que hoverear.
+  var lay = geoLayoutMundo(c);
+  lay.geo.resolution = 50;
+  if(res.items.some(function(it){ return !it.iso; })){
+    // xshift en px: con x paper la primera letra caía en el borde del
+    // container y se recortaba (observado en la verificación browser).
+    lay.annotations = [{text:'{{t:agro.paises_nota_singeo}}', xref:'paper', yref:'paper',
+      x:0, y:0.02, xanchor:'left', yanchor:'bottom', xshift:16, showarrow:false,
+      font:{family:'IBM Plex Mono,monospace', size:(window.innerWidth<=600?8:9), color:c.textMuted}}];
+  }
+  plotInto(document.getElementById(d.ids.mapa), traces, lay, {...PC, locale:FB_LANG});
+  var top = res.items.slice(0,10);
+  drawRank(d.ids.rank,
+    top.map(function(it){ return it.n; }),
+    top.map(function(it){ return it.v; }),
+    top.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
     unidad);
 }
-
-// Mismo split que Producción: mapa+ranking (expo+geo) y precios por separado.
-function expoLoadCore(){
-  if(stE.ready){ stE.pending=false; expoDraw(); return; }
-  if(stE.loading) return;
-  stE.loading = true;
-  showLoading(['agroExpoMapa','agroExpoRank']);
-  Promise.all([agroGet('expo'), agroGet('geoDep')])
+// ── VA-2: brecha del valor unitario FOB implícito vs benchmark Pink Sheet ──
+// SOLO para los productos mono-partida whitelisteados con benchmark (regla de
+// Diego): soya (grano, key 'soya' — NO la cadena agregada) y azúcar. PROHIBIDO
+// computarlo para grupos mixtos o cadenas sin benchmark — girasol/otros no
+// tienen entrada acá y el tile se omite limpio.
+var VA2_BENCH = { soya:{key:'soya', pink:'pink_soya'}, azucar:{key:'azucar', pink:'pink_azucar'} };
+function va2Bench(pinkId, anio){
+  var P=_cache.precios;
+  var s=P && P.series && P.series[pinkId]; if(!s) return null;
+  var pref=String(anio)+'-', sum=0, n=0;
+  (s.fechas||[]).forEach(function(f, i){
+    if(String(f).indexOf(pref)===0 && s.valores[i]!=null){ sum+=s.valores[i]; n++; }
+  });
+  return n>0 ? sum/n : null;   // promedio anual de la serie mensual USD/t
+}
+function va2Item(d){
+  var cfg=VA2_BENCH[d.cad]; if(!cfg) return null;
+  var E=_cache.expo, years=E.meta.years||[], yi=years.indexOf(d.anio);
+  if(yi<0) return null;
+  if((E.meta.ytdYears||[]).indexOf(d.anio)!==-1) return null;   // YTD: omitido
+  var s=E.nacional[cfg.key]; if(!s) return null;
+  var fob=(s.fobA||[])[yi]||0, ton=(s.tonA||[])[yi]||0;
+  if(!(fob>0 && ton>0)) return null;
+  if(!_cache.precios){
+    // precios baja en paralelo (card Precios): pedirlo y redibujar al resolver.
+    var tokVa2=d.tok;
+    agroGet('precios').then(function(){ if(tokVa2===d.tok) expoDraw(d); }).catch(function(){});
+    return null;
+  }
+  var bench=va2Bench(cfg.pink, d.anio);
+  if(bench==null || bench<=0) return null;
+  var pct=(fob/ton/bench - 1)*100;
+  var pinkLabel=_cache.precios.series[cfg.pink].label;
+  return {label:'{{t:agro.va2_kpi}}',
+    valor:(pct>=0?'+':'')+f1(pct)+'%',
+    unidad:'{{t:agro.va2_u}}',
+    color:(pct>=0) ? 'var(--delta-down)' : 'var(--delta-up)',   // premio verde / descuento rojo
+    tip:'{{t:agro.va2_tip}}'+pinkLabel+'{{t:agro.va2_tip_fin}}'};
+}
+// KPIs + sparkline de exportación: NACIONAL agregado de la cadena. Var
+// interanual solo entre años completos; en años YTD se muestra el FOB con
+// nota y sin var (comparación parcial-vs-completo sería engañosa).
+function expoSide(d){
+  panelOk(d.paneles.side);
+  var meta=_cache.expo.meta, years=meta.years||[];
+  var yi = years.indexOf(d.anio);
+  var fobA = expoNacArr(d.keys, 'fobA'), tonA = expoNacArr(d.keys, 'tonA');
+  var fob = fobA[yi]||0, ton = tonA[yi]||0;
+  var esYtd = (meta.ytdYears||[]).indexOf(d.anio)!==-1;
+  var kpis = [
+    {label:'{{t:agro.kpi_fob}}', valor:fUsd(fob), unidad:'USD'},
+    {label:'{{t:agro.kpi_volumen}}', valor:f0(ton), unidad:'t'}
+  ];
+  if(esYtd){
+    kpis.push({label:'{{t:agro.kpi_var_fob}}', valor:'—', unidad:'{{t:agro.kpi_ytd_nota}}'});
+  } else {
+    var prev = (yi>0) ? (fobA[yi-1]||0) : 0;
+    var pct = (prev>0) ? ((fob-prev)/prev*100) : null;
+    kpis.push({label:'{{t:agro.kpi_var_fob}}',
+      valor:(pct==null)?'—':((pct>=0?'+':'')+f1(pct)+'%'),
+      unidad:'{{t:agro.kpi_vs_prev}}'});
+  }
+  // VA-2 (solo soya/azúcar; null = omisión limpia).
+  var v2=va2Item(d);
+  if(v2) kpis.push(v2);
+  // VA-4: concentración de destinos — MISMOS helpers que la vista destinos
+  // (kpiMercadosActivos/kpiTop3Fob) con los mismos inputs, para que ambas
+  // vistas muestren valores idénticos.
+  var aggVa4=destAgg(d.keys);
+  var resVa4=destItems(aggVa4, yi, d.met);
+  // Años YTD: sin tendencia top-3 (parcial-vs-completo engañaría) + nota YTD.
+  var resVa4Prev=(yi>0 && !esYtd) ? destItems(aggVa4, yi-1, d.met) : null;
+  kpis.push(kpiMercadosActivos(resVa4, esYtd));
+  kpis.push(kpiTop3Fob(resVa4, resVa4Prev));
+  var k=document.getElementById(d.ids.kpis);
+  if(k) k.innerHTML = kpisHtml(kpis);
+  drawSpark(d.ids.spark, years, fobA, 'USD', fUsd,
+    expoLabel(d)+' — {{t:agro.spark_fob}}');
+  drawHeat(d);   // VA-3 (ambas vistas: expoSide corre en cada redraw)
+}
+// ── VA-3: estacionalidad — heatmap mes(1-12)×año del FOB mensual agregado ──
+// Suma fobM sobre las keys de la cadena ('__todos__' = todas las semillas de
+// nacional, mismo criterio que destAgg) y reshapea por meta.ym. Celdas de
+// meses aún no publicados (2026 abr+) quedan en null (sin pintar, sin hover).
+function va3Fobm(keys){
+  var E=_cache.expo, ym=E.meta.ym||[];
+  var ks=(keys==='__todos__') ? Object.keys(E.nacional) : keys;
+  var arr=ym.map(function(){ return 0; });
+  ks.forEach(function(k){
+    ((E.nacional[k]||{}).fobM||[]).forEach(function(v, i){ arr[i]+=v||0; });
+  });
+  return arr;
+}
+function drawHeat(d){
+  var el=document.getElementById(d.ids.heat); if(!el) return;
+  var E=_cache.expo, years=E.meta.years||[], ym=E.meta.ym||[];
+  var fobM=va3Fobm(d.keys);
+  if(!fobM.some(function(v){ return v>0; })){ hidePlot(d.ids.heat); return; }
+  var c=getC();
+  var z=[], txt=[];
+  for(var m=0; m<12; m++){
+    z.push(years.map(function(){ return null; }));
+    txt.push(years.map(function(){ return ''; }));
+  }
+  ym.forEach(function(s, i){
+    var col=years.indexOf(+s.slice(0,4)), fila=(+s.slice(5,7))-1;
+    if(col<0) return;
+    z[fila][col]=fobM[i]; txt[fila][col]=fUsd(fobM[i]);
+  });
+  var tickf={family:'IBM Plex Mono,monospace', size:9, color:c.textMuted};
+  plotInto(el, [{ type:'heatmap', x:years.map(String),
+    y:MES_L.map(function(mn){ return mn.slice(0,3); }), z:z, customdata:txt,
+    colorscale:seqScale(), showscale:false, hoverongaps:false, xgap:1, ygap:1,
+    hovertemplate:'{{t:agro.va3_hover}}' }],
+   { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', height:220,
+     margin:{l:34, r:6, t:36, b:22},
+     hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
+     xaxis:{type:'category', tickfont:tickf, fixedrange:true},
+     yaxis:{type:'category', tickfont:tickf, fixedrange:true, autorange:'reversed'},
+     annotations:[{text:'{{t:agro.va3_titulo}}', xref:'paper', yref:'paper',
+       x:0, y:1.08, xanchor:'left', yanchor:'bottom', showarrow:false,
+       font:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted}}]
+   }, {...PC, locale:FB_LANG});
+}
+function expoLoad(d){
+  if(d.ready){ d.pending=false; expoDraw(d); return; }
+  if(d.loading) return;
+  d.loading = true;
+  panelLoading(d.paneles.mapa); panelLoading(d.paneles.side);
+  // Solo el dataset expo: ambas vistas (países/flujos) usan la geometría
+  // mundial built-in de Plotly — geoDep quedó exclusivo de producción.
+  Promise.all([agroGet('expo')])
     .then(function(){
-      stE.loading = false;
-      stE.ready = true;
-      expoWire();
+      d.loading = false;
+      d.ready = true;
+      expoWire(d);
       installObserver();
-      var elM = document.getElementById('agroExpoMapa');
-      if(elM && elM.offsetParent===null){ stE.pending=true; return; }
-      expoDraw();
+      expoDraw(d);   // si el panel quedó oculto durante el fetch, marca pending
     })
-    .catch(function(){ stE.loading=false; showError(['agroExpoMapa','agroExpoRank'], expoLoadCore); });
+    .catch(function(){
+      d.loading=false;
+      var r=function(){ expoLoad(d); };
+      panelError(d.paneles.mapa, r); panelError(d.paneles.side, r);
+    });
 }
 
-window.renderAgroExportaciones = function(){
-  expoLoadCore();
-  preciosLoad(pcExpo);
-};
-
-// ═══ PRECIOS (componente compartido, una instancia por subtab) ═══
-var pcProd = { selId:'agroPreciosSelProd', chartId:'agroPreciosChartProd', fuenteId:'agroPreciosFuenteProd', sel:'quinua', wired:false, loading:false, pending:false };
-var pcExpo = { selId:'agroPreciosSelExpo', chartId:'agroPreciosChartExpo', fuenteId:'agroPreciosFuenteExpo', sel:'soya', wired:false, loading:false, pending:false };
-
+// ═══ PRECIOS (una instancia por cadena; whitelist = productos de la cadena
+// presentes en agro_precios.json; en 'otros' entra todo el catálogo) ═══
+var _pcs = {};
+function pcDe(cadId){
+  if(_pcs[cadId]) return _pcs[cadId];
+  var cfg = cadenaDe(cadId) || {};
+  var wl = null;   // null → todos (cadena 'otros')
+  if(!cfg.selector){
+    wl = (cfg.productos_comex||[]).slice();
+    if(cfg.precios_default && wl.indexOf(cfg.precios_default)<0) wl.push(cfg.precios_default);
+  }
+  _pcs[cadId] = { cad:cadId, selId:'agroPreciosSel-'+cadId, chartId:'agroPreciosChart-'+cadId,
+    fuenteId:'agroPreciosFuente-'+cadId, whitelist:wl,
+    panel:{ plots:['agroPreciosChart-'+cadId], estadoId:'agroEstado-'+cadId+'-precios' },
+    sel: cfg.precios_default || 'soya',
+    wired:false, loading:false, pending:false };
+  return _pcs[cadId];
+}
 function srcTag(f){
   return f==='fpma' ? '{{t:agro.src_fpma}}' : (f==='pink' ? '{{t:agro.src_pink}}' : '{{t:agro.src_uv}}');
 }
@@ -6941,13 +7802,25 @@ function preciosSetup(pc){
   var sel = document.getElementById(pc.selId), P=_cache.precios;
   if(!sel || !P) return;
   pc.wired = true;
-  Object.keys(P.productos).map(function(k){ return {k:k, label:P.productos[k].label}; })
+  Object.keys(P.productos)
+    .filter(function(k){ return !pc.whitelist || pc.whitelist.indexOf(k)>=0; })
+    .map(function(k){ return {k:k, label:P.productos[k].label}; })
     .sort(function(a,b){ return a.label.localeCompare(b.label,'es'); })
     .forEach(function(it){
       var o=document.createElement('option'); o.value=it.k; o.textContent=it.label; sel.appendChild(o);
     });
-  if(!P.productos[pc.sel] && sel.options.length) pc.sel = sel.options[0].value;
+  if((!P.productos[pc.sel] || (pc.whitelist && pc.whitelist.indexOf(pc.sel)<0)) && sel.options.length){
+    pc.sel = sel.options[0].value;
+  }
   sel.value = pc.sel;
+  // Cadena mono-producto (hoy girasol/azúcar): no hay alternativa que elegir —
+  // el select se congela como etiqueta estática para no sugerir un cambio que
+  // no existe (.agro-select-solo quita flecha y affordance).
+  if(sel.options.length<=1){
+    sel.disabled = true;
+    sel.classList.add('agro-select-solo');
+    sel.title = '{{t:agro.producto_unico}}';
+  }
   sel.onchange = function(){ pc.sel=sel.value; preciosDraw(pc); };
 }
 function preciosDraw(pc){
@@ -6957,10 +7830,11 @@ function preciosDraw(pc){
   var prod = P.productos[pc.sel];
   var series = ((prod&&prod.series)||[]).map(function(id){ return P.series[id]; }).filter(Boolean);
   if(!series.length){
-    status(el, '{{t:agro.sin_series}}');
+    panelEstado(pc.panel, '{{t:agro.sin_series}}');
     if(fEl) fEl.textContent='';
     return;
   }
+  panelOk(pc.panel);
   var c=getC(), L=BL(c);
   var cols=[cssVar('--chart-agro-p0'),cssVar('--chart-agro-p1'),cssVar('--chart-agro-p2'),
             cssVar('--chart-agro-p3'),cssVar('--chart-agro-p4'),cssVar('--chart-agro-p5')];
@@ -7020,25 +7894,361 @@ function preciosDraw(pc){
     fEl.textContent = '{{t:agro.precios_fuente_prefix}}'+fu.join(' · ');
   }
 }
+function preciosLoad(pc){
+  if(_cache.precios){
+    pc.pending=false;
+    preciosSetup(pc);
+    if(!agroVisible(pc.cad)){ pc.pending=true; return; }
+    preciosDraw(pc);
+    return;
+  }
+  if(pc.loading) return;
+  pc.loading = true;
+  panelLoading(pc.panel);
+  agroGet('precios')
+    .then(function(){
+      pc.loading = false;
+      preciosSetup(pc);
+      installObserver();
+      if(!agroVisible(pc.cad)){ pc.pending=true; return; }
+      preciosDraw(pc);
+    })
+    .catch(function(){ pc.loading=false; panelError(pc.panel, function(){ preciosLoad(pc); }); });
+}
+
+// ═══ VISTA DESTINOS (D2): mapa mundial + arcos animados Bolivia→destino ═══
+// dest NO viene agregado por cadena: se suma nacional[k].dest sobre las keys
+// de la cadena ('__todos__' = todas las semillas presentes en nacional),
+// con fallback 0 (no todos los productos exportan a todos los países).
+function destAgg(keys){
+  var E=_cache.expo, years=E.meta.years||[];
+  var ks=(keys==='__todos__') ? Object.keys(E.nacional) : keys;
+  var out={};
+  ks.forEach(function(k){
+    var dest=(E.nacional[k]||{}).dest||{};
+    Object.keys(dest).forEach(function(p){
+      var o=out[p];
+      if(!o) o=out[p]={fA:years.map(function(){ return 0; }), tA:years.map(function(){ return 0; })};
+      (dest[p].fA||[]).forEach(function(v,i){ o.fA[i]+=v||0; });
+      (dest[p].tA||[]).forEach(function(v,i){ o.tA[i]+=v||0; });
+    });
+  });
+  return out;
+}
+var _destWarned = {};
+// Items del año ordenados desc por la métrica elegida. Los sinArco (OTROS,
+// Zona Franca) cuentan en totales/participación y ranking pero van con
+// geo:null (sin arco). País futuro sin centroide: degradación suave sin
+// romper (sin arco) + console.warn una sola vez.
+function destItems(agg, yi, met){
+  var f=(met==='fob')?'fA':'tA', items=[], total=0, totalFob=0;
+  Object.keys(agg).forEach(function(p){
+    var v=(agg[p][f]||[])[yi]||0;
+    var fob=(agg[p].fA||[])[yi]||0, ton=(agg[p].tA||[])[yi]||0;
+    total+=v; totalFob+=fob;
+    if(v<=0) return;
+    var g=AGRO_DEST_GEO[p];
+    if(!g && !_destWarned[p]){ _destWarned[p]=true; console.warn('[agro] destino sin centroide en AGRO_DEST_GEO: '+p); }
+    items.push({p:p, n:(g&&g.n)||p, v:v, fob:fob, ton:ton, iso:(g&&g.iso)||null,
+      geo:(g && !g.sinArco && g.lat!=null) ? g : null});
+  });
+  items.sort(function(a,b){ return b.v-a.v; });
+  return {items:items, total:total, totalFob:totalFob};
+}
+// ── KPIs de destinos (ADELANTO de VA-4 — funciones reutilizables tal cual) ──
+// Reciben el resultado de destItems(agg, yi, met) y devuelven un item para
+// kpisHtml. kpiMercadosActivos cuenta destinos con valor >0 en la métrica del
+// año; kpiTop3Fob = participación de los 3 mayores destinos en el FOB del año.
+function kpiMercadosActivos(res, esYtd){
+  var unidad='{{t:agro.kpi_mercados_u}}';
+  if(esYtd) unidad+=' · {{t:agro.kpi_ytd_nota}}';   // año parcial: misma nota que Var FOB
+  return {label:'{{t:agro.kpi_mercados}}', valor:f0(res.items.length),
+    unidad:unidad, tip:'{{t:agro.va4_mercados_tip}}'};
+}
+function top3Pct(res){
+  var top=res.items.slice().sort(function(a,b){ return b.fob-a.fob; }).slice(0,3);
+  var s=0; top.forEach(function(it){ s+=it.fob; });
+  return (res.totalFob>0) ? s/res.totalFob*100 : null;
+}
+// resPrev opcional (año anterior): agrega tendencia ▲/▼/— con delta en puntos
+// porcentuales en la línea de unidad. La flecha sigue el delta REDONDEADO a
+// 1 decimal (el que se muestra): ±0,0 pp va con —.
+function kpiTop3Fob(res, resPrev){
+  var pct=top3Pct(res);
+  var unidad='{{t:agro.kpi_top3_u}}';
+  if(pct!=null && resPrev){
+    var prev=top3Pct(resPrev);
+    if(prev!=null){
+      var dpp=Math.round((pct-prev)*10)/10;
+      if(Object.is(dpp,-0)) dpp=0;   // deltas en [-0,05, 0) → evita '+-0,0 pp'
+      var fl=(dpp>0) ? '▲' : (dpp<0 ? '▼' : '—');
+      unidad=fl+' '+(dpp>=0?'+':'')+f1(dpp)+' pp {{t:agro.kpi_vs_prev}}';
+    }
+  }
+  return {label:'{{t:agro.kpi_top3}}', valor:(pct==null)?'—':(f1(pct)+'%'),
+    unidad:unidad, tip:'{{t:agro.va4_top3_tip}}'};
+}
+
+// ── Geometría: great-circle por slerp cartesiano + rumbo por segmento ──
+function destRumbo(lat1, lon1, lat2, lon2){
+  var R=Math.PI/180;
+  var y=Math.sin((lon2-lon1)*R)*Math.cos(lat2*R);
+  var x=Math.cos(lat1*R)*Math.sin(lat2*R)-Math.sin(lat1*R)*Math.cos(lat2*R)*Math.cos((lon2-lon1)*R);
+  return Math.atan2(y, x)*180/Math.PI;   // grados clockwise desde el norte (= marker.angle)
+}
+function arcoPuntos(lat1, lon1, lat2, lon2, n){
+  var R=Math.PI/180, D=180/Math.PI;
+  var x1=Math.cos(lat1*R)*Math.cos(lon1*R), y1=Math.cos(lat1*R)*Math.sin(lon1*R), z1=Math.sin(lat1*R);
+  var x2=Math.cos(lat2*R)*Math.cos(lon2*R), y2=Math.cos(lat2*R)*Math.sin(lon2*R), z2=Math.sin(lat2*R);
+  var w=Math.acos(Math.max(-1, Math.min(1, x1*x2+y1*y2+z1*z2)));
+  var lat=[], lon=[], brg=[];
+  for(var i=0;i<=n;i++){
+    var t=i/n;
+    var A=(w<1e-9)?(1-t):(Math.sin((1-t)*w)/Math.sin(w));
+    var B=(w<1e-9)?t:(Math.sin(t*w)/Math.sin(w));
+    var x=A*x1+B*x2, y=A*y1+B*y2, z=A*z1+B*z2;
+    lat.push(Math.atan2(z, Math.sqrt(x*x+y*y))*D);
+    lon.push(Math.atan2(y, x)*D);
+  }
+  for(var j=0;j<lat.length;j++){
+    brg.push((j<lat.length-1) ? destRumbo(lat[j], lon[j], lat[j+1], lon[j+1]) : brg[j-1]);
+  }
+  return {lat:lat, lon:lon, brg:brg};
+}
+function mixHex(a, b, t){   // ramp entre dos tokens hex #rrggbb; fallback: b
+  if(!/^#[0-9a-fA-F]{6}$/.test(a) || !/^#[0-9a-fA-F]{6}$/.test(b)) return b;
+  function ch(h, i){ return parseInt(h.slice(i, i+2), 16); }
+  var o=[1,3,5].map(function(i){ return Math.round(ch(a,i)+(ch(b,i)-ch(a,i))*t); });
+  return 'rgb('+o[0]+','+o[1]+','+o[2]+')';
+}
+// Layout geo MUNDO (natural earth, land tenue con tokens paper, sin frame);
+// reusa geoLayout (font/hoverlabel/height) y solo reemplaza el bloque geo.
+function geoLayoutMundo(c){
+  var L=geoLayout(c);
+  L.geo={ resolution:110, projection:{type:'natural earth'},
+    showland:true, landcolor:cssVar('--chart-agro-neutral'),
+    showcountries:true, countrycolor:hexToRgba(c.textPrimary, 0.14),
+    showcoastlines:false, showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
+    lonaxis:{range:[-135,180], showgrid:false}, lataxis:{range:[-58,80], showgrid:false} };
+  return L;
+}
+// Bolivia destacada: choropleth country names con acento suave (patrón Bloqueos).
+function boliviaTrace(c){
+  var a=cssVar('--chart-agro-accent');
+  return {type:'choropleth', locationmode:'country names', locations:['Bolivia'], z:[0],
+    showscale:false, hovertemplate:'<b>Bolivia</b><extra></extra>',
+    colorscale:[[0, hexToRgba(a, 0.35)],[1, hexToRgba(a, 0.35)]],
+    marker:{line:{color:a, width:1.2}}};
+}
+
+// ── Motor de animación: partículas viajando por los arcos ──
+// UNA trace de partículas por mapa, actualizada con Plotly.restyle (solo
+// lon/lat/angle) en rAF throttleado a ~20 fps. Estado por cadena en _dan;
+// destStop = salida limpia (cancelAnimationFrame + observer.disconnect) y el
+// tok de la instancia invalida callbacks viejos. window.__agroDestFrames
+// cuenta frames aplicados (instrumentación de verificación, costo cero).
+var _dan = {};
+var _destPerfStatic = false;   // decisión mobile pegajosa: degradado una vez → estático
+var _destAngleOK = null;       // soporte de marker.angle en scattergeo (detect una vez)
+var DEST_DUR=4200, DEST_MS=50, DEST_BUDGET=12;
+function destReduced(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+function destMobile(){ return !!(window.matchMedia && (matchMedia('(max-width:600px)').matches || matchMedia('(pointer: coarse)').matches)); }
+function destStop(cad){
+  var A=_dan[cad]; if(!A) return;
+  if(A.raf) cancelAnimationFrame(A.raf);
+  if(A.obs){ try{ A.obs.disconnect(); }catch(e){} }
+  delete _dan[cad];
+}
+// Posiciones de las partículas: fase global + offset determinista por arco
+// (fixed!=null ⇒ todas a ese punto del arco, para el modo estático).
+function destArrays(arcs, phase, fixed){
+  var lon=[], lat=[], ang=[];
+  arcs.forEach(function(a){
+    var np=a.pts.lat.length;
+    var t=(fixed!=null) ? fixed : ((phase+a.off)%1);
+    var i=Math.min(np-1, Math.floor(t*(np-1)));
+    lon.push(a.pts.lon[i]); lat.push(a.pts.lat[i]); ang.push(a.pts.brg[i]);
+  });
+  return {lon:lon, lat:lat, ang:ang};
+}
+function destRestyle(gd, arr, pIdx){
+  var u={lon:[arr.lon], lat:[arr.lat]};
+  if(_destAngleOK) u['marker.angle']=[arr.ang];
+  Plotly.restyle(gd, u, [pIdx]);
+  window.__agroDestFrames=(window.__agroDestFrames||0)+1;
+}
+// marker.angle en scattergeo: detect una vez contra _fullData; sin soporte,
+// triángulos fijos apuntando al norte serían engañosos → círculo chico.
+function destAngleDetect(gd, pIdx, arr){
+  if(_destAngleOK!==null) return;
+  try{
+    Plotly.restyle(gd, {'marker.angle':[arr.ang]}, [pIdx]);
+    var fd=gd._fullData && gd._fullData[pIdx];
+    _destAngleOK=!!(fd && fd.marker && fd.marker.angle!==undefined);
+  }catch(e){ _destAngleOK=false; }
+  if(!_destAngleOK){ try{ Plotly.restyle(gd, {'marker.symbol':'circle','marker.size':6}, [pIdx]); }catch(e2){} }
+}
+// Flechas ESTÁTICAS a ~60% del arco (reduced-motion / mobile degradado).
+function destStatic(gd, arcs, pIdx, tag){
+  try{ destRestyle(gd, destArrays(arcs, 0, 0.6), pIdx); }catch(e){}
+  gd.setAttribute('data-agro-dest-anim', tag);
+}
+function destAnim(d, gd, arcs, pIdx){
+  var A=_dan[d.cad]={raf:0, obs:null, vis:true, last:0, t0:performance.now(),
+    tok:d.tok, medir:destMobile(), muestras:[]};
+  function frame(now){
+    A.raf=0;
+    if(d.tok!==A.tok || _dan[d.cad]!==A){ destStop(d.cad); return; }
+    if(!A.vis) return;   // pausa real: el observer re-arma al reentrar al viewport
+    if(now-A.last<DEST_MS){ A.raf=requestAnimationFrame(frame); return; }
+    A.last=now;
+    var m0=performance.now();
+    try{ destRestyle(gd, destArrays(arcs, (now-A.t0)/DEST_DUR, null), pIdx); }
+    catch(e){ destStop(d.cad); return; }
+    // Presupuesto mobile: medir el restyle real los primeros ~2s; si el
+    // promedio supera DEST_BUDGET ms se degrada a estático (decisión pegajosa).
+    if(A.medir && !_destPerfStatic){
+      A.muestras.push(performance.now()-m0);
+      if(now-A.t0>2000 && A.muestras.length>=10){
+        var avg=A.muestras.reduce(function(s,x){ return s+x; }, 0)/A.muestras.length;
+        A.medir=false;
+        if(avg>DEST_BUDGET){
+          _destPerfStatic=true;
+          destStop(d.cad);
+          destStatic(gd, arcs, pIdx, 'static-mobile');
+          return;
+        }
+      }
+    }
+    A.raf=requestAnimationFrame(frame);
+  }
+  A.obs=new IntersectionObserver(function(es){
+    var v=es[es.length-1].isIntersecting;
+    if(v===A.vis) return;
+    A.vis=v;
+    if(v){ if(!A.raf) A.raf=requestAnimationFrame(frame); }
+    else if(A.raf){ cancelAnimationFrame(A.raf); A.raf=0; }
+  });
+  A.obs.observe(gd);
+  A.raf=requestAnimationFrame(frame);
+}
+
+// Render principal de la vista destinos (contrato del stub de fase 1:
+// expoDraw lo invoca en CADA redraw con la instancia d + expo cacheado).
+function renderAgroDestinos(d, E){
+  destStop(d.cad);
+  var gd=document.getElementById(d.ids.mapa); if(!gd) return;
+  var years=E.meta.years||[], yi=years.indexOf(d.anio);
+  var agg=destAgg(d.keys);
+  var res=destItems(agg, yi, d.met);
+  var unidad=(d.met==='fob')?'USD':'t';
+  // KPIs: NO se tocan — la fila superior queda como la dejó expoSide (corre
+  // en cada redraw e incluye VA-4 con estos mismos inputs), así alternar
+  // Países/Flujos no reacomoda el layout. Acá solo mapa + ranking top-10.
+  var top=res.items.slice(0,10);
+  drawRank(d.ids.rank,
+    top.map(function(it){ return it.n; }),
+    top.map(function(it){ return it.v; }),
+    top.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
+    unidad);
+  if(!res.items.length){
+    panelEstado(d.paneles.mapa, sinDatos(expoLabel(d), d.anio));
+    return;
+  }
+  panelOk(d.paneles.mapa);
+  var c=getC(), s1=cssVar('--chart-agro-seq-1'), s2=cssVar('--chart-agro-seq-2');
+  var vmax=res.items[0].v;
+  var conGeo=res.items.filter(function(it){ return !!it.geo; });
+  var traces=[boliviaTrace(c)], arcs=[];
+  conGeo.forEach(function(it, i){
+    var r=Math.sqrt(it.v/vmax), col=mixHex(s1, s2, 0.2+0.8*r);
+    var pts=arcoPuntos(AGRO_BOLIVIA_GEO.lat, AGRO_BOLIVIA_GEO.lon, it.geo.lat, it.geo.lon, 40);
+    arcs.push({pts:pts, off:((i*37)%100)/100, col:col});
+    var llon=[], llat=[];   // split en el antimeridiano (evita la línea fantasma)
+    for(var j=0;j<pts.lon.length;j++){
+      if(j>0 && Math.abs(pts.lon[j]-pts.lon[j-1])>180){ llon.push(null); llat.push(null); }
+      llon.push(pts.lon[j]); llat.push(pts.lat[j]);
+    }
+    traces.push({type:'scattergeo', mode:'lines', lon:llon, lat:llat, opacity:0.75,
+      line:{width:1+5*r, color:col}, hoverinfo:'skip', showlegend:false});
+  });
+  // Marcadores destino: acá vive el hover (nombre + montos + participación).
+  traces.push({type:'scattergeo', mode:'markers',
+    lon:conGeo.map(function(it){ return it.geo.lon; }),
+    lat:conGeo.map(function(it){ return it.geo.lat; }),
+    marker:{ size:conGeo.map(function(it){ return 6+7*Math.sqrt(it.v/vmax); }),
+      color:conGeo.map(function(it){ return mixHex(s1, s2, 0.2+0.8*Math.sqrt(it.v/vmax)); }),
+      line:{width:1, color:hexToRgba(c.textPrimary, 0.35)} },
+    customdata:conGeo.map(function(it){
+      return [it.n, f0(it.fob), f0(it.ton), (res.total>0)?f1(it.v/res.total*100):'—'];
+    }),
+    hovertemplate:'{{t:agro.hover_dest}}', showlegend:false});
+  // Partículas (última trace): posiciones iniciales en fase 0.
+  var pIdx=traces.length;
+  var p0=destArrays(arcs, 0, null);
+  // Sin soporte de marker.angle (detect one-shot): círculo chico en CADA
+  // render — no solo en el gd de la primera detección (destAngleDetect).
+  traces.push({type:'scattergeo', mode:'markers', lon:p0.lon, lat:p0.lat,
+    marker:{size:(_destAngleOK===false)?6:8,
+      symbol:(_destAngleOK===false)?'circle':'triangle-up',
+      color:arcs.map(function(a){ return a.col; }),
+      line:{width:0.5, color:hexToRgba(c.textPrimary, 0.4)}},
+    hoverinfo:'skip', showlegend:false});
+  var lay=geoLayoutMundo(c);
+  var nota=(d.met==='fob') ? '{{t:agro.dest_nota_fob}}' : '{{t:agro.dest_nota_ton}}';
+  // Mobile (mismo breakpoint que mapH/destMobile): disclaimer en 2ª línea +
+  // font menor para que 'sin geografía (sin arco)' se lea completo en 390px.
+  var notaMovil=window.innerWidth<=600;
+  if(res.items.some(function(it){ return !it.geo; })){
+    nota+=(notaMovil?'<br>':' · ')+'{{t:agro.dest_nota_singeo}}';
+  }
+  lay.annotations=[{text:nota, xref:'paper', yref:'paper', x:0.01, y:0.02,
+    xanchor:'left', yanchor:'bottom', showarrow:false,
+    font:{family:'IBM Plex Mono,monospace', size:(notaMovil?8:9), color:c.textMuted}}];
+  // Como plotInto, pero capturando el promise: el mundo (scope world) baja su
+  // topojson async del CDN de Plotly — un restyle ANTES de que termine revienta
+  // dentro de plotly (uncaught async). La animación arranca recién al resolver.
+  gd.style.display='';
+  if(lay.height) gd.style.height=lay.height+'px';
+  var tok=d.tok;
+  Plotly.react(gd, traces, lay, {...PC, locale:FB_LANG}).then(function(){
+    if(tok!==d.tok) return;   // redraw más nuevo ya corrió: no pisar su animación
+    if(!arcs.length){ gd.setAttribute('data-agro-dest-anim','none'); return; }
+    destAngleDetect(gd, pIdx, p0);
+    if(destReduced()){ destStatic(gd, arcs, pIdx, 'static-rm'); return; }
+    if(_destPerfStatic){ destStatic(gd, arcs, pIdx, 'static-mobile'); return; }
+    gd.setAttribute('data-agro-dest-anim','animada');
+    destAnim(d, gd, arcs, pIdx);
+  }).catch(function(){});
+}
+window.renderAgroDestinos = renderAgroDestinos;
+
+// ═══ Entry point: hook de AGRO_SUBTABS (un activate = una cadena) ═══
+// Idempotente: instancia lazy los 2 dashboards + precios de la cadena, carga
+// lo que falte (cache/dedupe en agroGet) y consume pendings de draws diferidos.
+window.renderAgroCadena = function(cadId){
+  prodLoad(dashDe(cadId, 'prod'));
+  expoLoad(dashDe(cadId, 'expo'));
+  preciosLoad(pcDe(cadId));
+};
 
 // ═══ Re-render theme-aware (patrón exacto de renderRiesgoPais) ═══
 var _obs = false;
 function installObserver(){
   if(_obs) return; _obs = true;
   new MutationObserver(function(){
-    // Visible sólo si la tab Agro + el subtab están ambos display:''.
-    // offsetParent==null cuando cualquier ancestro está display:none.
-    // Precios redibuja independiente del core (F8: estados por panel).
-    var m = document.getElementById('agroProdMapa');
-    if(m && m.offsetParent !== null){
-      if(stP.ready) prodDraw();
-      if(pcProd.wired) preciosDraw(pcProd);
-    }
-    var e = document.getElementById('agroExpoMapa');
-    if(e && e.offsetParent !== null){
-      if(stE.ready) expoDraw();
-      if(pcExpo.wired) preciosDraw(pcExpo);
-    }
+    // Redibuja SOLO instancias existentes cuyo subtab está visible
+    // (offsetParent guard vía agroVisible); el resto queda para su activate.
+    Object.keys(_dashes).forEach(function(k){
+      var d=_dashes[k];
+      if(!d.ready || !agroVisible(d.cad)) return;
+      if(d.tipo==='prod') prodDraw(d); else expoDraw(d);
+    });
+    Object.keys(_pcs).forEach(function(k){
+      var pc=_pcs[k];
+      if(!pc.wired || !agroVisible(pc.cad)) return;
+      preciosDraw(pc);
+    });
   }).observe(document.body, {attributes:true, attributeFilter:['class']});
 }
 })();

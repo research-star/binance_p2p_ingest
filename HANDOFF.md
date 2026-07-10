@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-07-09.
+Última actualización: 2026-07-10.
 
 ---
 
@@ -523,8 +523,8 @@ dentro de Macro):
 URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
 Dólar tiene slug propio `/dolar`.
 
-**Tabs — 4 visibles en prod, 5 DESBAKEADOS** (existen en `template.html` pero
-NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
+**Tabs — 4 públicas + Agro (admin-only) en prod, 4 DESBAKEADOS** (existen en
+`template.html` pero NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 
 | # | `data-tab` | Label | Slug | Estado en prod |
 |---|---|---|---|---|
@@ -532,7 +532,7 @@ NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 | 2 | `dollar` | Dólar | `/dolar` | visible |
 | 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
 | 4 | `asfi` | ASFI | `/asfi` | visible |
-| 5 | `agro` | Agro | ~~`/agro`~~ (+ subtabs) | **DESBAKEADO** (nació desbakeado 2026-07-09, nunca bakeado; ver § Tab Agro) |
+| 5 | `agro` | Agro | `/agro` (+ subtabs) | **BAKEADO admin-only** (2026-07-10: botón nav `data-admin-only hidden`, patrón Mercado 24/7; público no ve el botón, `/agro` por URL directa SÍ renderiza — gate cosmético, ver § Tab Agro) |
 | 6 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
 | 7 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
 | 8 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
@@ -543,21 +543,25 @@ NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 `tasas` (TRE mensual del BCB). El primero de la lista es el default al entrar a
 `/macro` bare. (Macro y sus 4 subtabs NO están afectados por el desbake.)
 
-**Gate de `mercado247` — leak resuelto por el desbake.** El gate `data-admin-only`
-era COSMÉTICO (solo ocultaba el botón; `activateTab` no chequea `isAdmin`, así que
-`/mercado247` por URL directa renderizaba igual para anónimos). Al desbakear el
-módulo, la ruta `/mercado247` **ya no existe en prod** (cae al 404-trick → landing)
-y el bundle `mercado247-tab.js` ya no se sirve → el leak **desapareció de facto**.
-El gate cosmético NO se arregló (decisión); se volvió moot al retirar la superficie.
+**Gate `data-admin-only` — COSMÉTICO (aplica a `agro` en prod y a `mercado247`
+cuando se bakee).** El gate solo oculta el botón de nav (`fbRenderSession` togglea
+`el.hidden = !npAdmin.isAdmin` en cada transición de sesión); `activateTab` NO
+chequea `isAdmin`, así que la URL directa del tab renderiza igual para anónimos.
+Para `agro` (bakeado admin-only 2026-07-10) esto significa: el público no ve el
+botón, pero `finanzasbo.com/agro` por URL directa SÍ muestra el tab, y los
+`agro_*.json` se sirven públicos. **Leak aceptado por decisión de Diego** (mismo
+estándar de la casa que mercado247; los datos ya son públicos y el HTML también).
+Para `mercado247` el leak es moot: sigue desbakeado, la ruta `/mercado247` no
+existe en prod (404-trick → landing) y su bundle no se sirve.
 
 ### Módulos desbakeados (opción B — presentes en repo, NO servidos en prod)
 
-Cinco módulos en el set. Cuatro (`mercado247`, `dpf`, `bbv`, `guide`) se
-**desbakearon** (opción B, 2026-07-09): su código fuente PERMANECE en el repo pero
-NO se inyecta al `index.html` publicado ni se sirve su asset. No es un retiro (C) —
-nada se borró. El quinto, `agro`, **nació desbakeado** el mismo 2026-07-09 (nunca
-estuvo bakeado): tab nueva completa en `template.html`, pendiente de harvest SIIP
-completo + validación visual de Diego para bakear (ver § Tab Agro).
+Cuatro módulos en el set (`mercado247`, `dpf`, `bbv`, `guide`), **desbakeados**
+(opción B, 2026-07-09): su código fuente PERMANECE en el repo pero NO se inyecta al
+`index.html` publicado ni se sirve su asset. No es un retiro (C) — nada se borró.
+`agro` nació desbakeado el 2026-07-09 y **salió del set el 2026-07-10** (OK de
+Diego): ahora se bakea y sus assets se publican, pero con visibilidad **admin-only**
+vía `data-admin-only` en el botón de nav (ver § Tab Agro y § Gate `data-admin-only`).
 
 **Punto de control ÚNICO:** el set `config.MODULOS_NO_BAKEADOS` ([config.py](config.py)).
 Un módulo listado ahí:
@@ -567,17 +571,18 @@ Un módulo listado ahí:
   elimina (misma maquinaria que los `i18n:es-only`, pero por módulo);
 - omite su payload — `dashboard.py` no emite `dpf_data` si `dpf` está desbakeado;
 - no publica su asset — `publish_dashboard.py` excluye los archivos de
-  `config.MODULO_ASSETS` (`mercado247-tab.js` para mercado247; para `agro`,
-  5 datasets `agro_*.json` + 7 shards preventivos `agro_prod_g1..g7.json` —
-  estos últimos HOY no existen en `static/`, listarlos es inocuo y future-proof
-  para cuando el harvest completo los genere) del copiado de `static/`.
+  `config.MODULO_ASSETS` de los módulos EN el set (hoy solo `mercado247-tab.js`).
+  La entrada `agro` en `MODULO_ASSETS` (5 datasets `agro_*.json` + 7 shards
+  preventivos `agro_prod_g1..g7.json`) quedó **dormida** al salir agro del set:
+  sus assets SÍ se publican; la entrada se conserva por si se re-desbakea.
 
 **Revertir (re-bakear) = quitar el módulo de `MODULOS_NO_BAKEADOS` y rebakear.** Es
 la ÚNICA edición necesaria en config/código; los marcadores quedan en el template y
-el contenido vuelve intacto. (Verificado en local con `bbv`.) Para módulos con
-assets en `MODULO_ASSETS` (`mercado247`, `agro`), re-bakear implica además que el
-próximo publish copie sus assets al edge — automático al salir del set (el publish
-los excluye solo mientras el módulo esté desbakeado).
+el contenido vuelve intacto. (Verificado en local con `bbv`, y con `agro` el
+2026-07-10.) Para módulos con assets en `MODULO_ASSETS` (hoy `mercado247`;
+`agro` ya salió), re-bakear implica además que el próximo publish copie sus assets
+al edge — automático al salir del set (el publish los excluye solo mientras el
+módulo esté desbakeado).
 
 **Acoplamiento a tener en cuenta:** `guide` NO es independiente de `bbv` — sus
 funciones JS (`renderGuide`, `renderGuideIssuers`) viven DENTRO del IIFE de `bbv`
@@ -602,14 +607,22 @@ corre) — el desbake solo dejó de emitir el payload; la tabla `bcb_dpf_rates` 
 | `/bloqueos` | tab `macro`, subtab `bloqueos` | FinanzasBo — Bloqueos en carreteras |
 | `/tasas` | tab `macro`, subtab `tasas` | FinanzasBo — Tasa de Referencia BCB |
 | `/asfi` | tab `asfi` | FinanzasBo — Hechos Relevantes ASFI |
-| ~~`/agro`~~ | tab `agro`, subtab default (`produccion`) — **DESBAKEADA** | FinanzasBo — Agro · Producción |
-| ~~`/agro/produccion`~~ | tab `agro`, subtab `produccion` — **DESBAKEADA** | FinanzasBo — Agro · Producción |
-| ~~`/agro/exportaciones`~~ | tab `agro`, subtab `exportaciones` — **DESBAKEADA** | FinanzasBo — Agro · Exportaciones |
+| `/agro` | tab `agro`, subtab default (`soya`) — **admin-only** (gate cosmético) | FinanzasBo — Agro · Soya |
+| `/agro/soya` | tab `agro`, subtab `soya` — **admin-only** | FinanzasBo — Agro · Soya |
+| `/agro/girasol` | tab `agro`, subtab `girasol` — **admin-only** | FinanzasBo — Agro · Girasol |
+| `/agro/azucar` | tab `agro`, subtab `azucar` — **admin-only** | FinanzasBo — Agro · Azúcar |
+| `/agro/otros` | tab `agro`, subtab `otros` — **admin-only** | FinanzasBo — Agro · Otros cultivos |
 | `/mercado247` | tab `mercado247` (gate cosmético) | FinanzasBo — Mercado 24/7 |
 | `/dpf` | tab `dpf` (ES-only) | FinanzasBo — Rendimientos DPF |
 | `/bbv` | tab `bbv` (ES-only) | FinanzasBo — Bolsa Boliviana de Valores |
 | `/guia` | tab `guide` (ES-only) | FinanzasBo — Guía del dashboard |
 | `/noticias` | alias → tab `noticias`; la barra canonicaliza a `/` (entry `alias:true`, excluido de `TAB_TO_SLUG`) | FinanzasBo — Noticias |
+
+Los slugs Agro v1 (`/agro/produccion`, `/agro/exportaciones`) quedan en
+`ROUTE_MAP` como **redirects** a la cadena default (subtab `soya`): renderizan
+soya al entrar; la barra de URL se canonicaliza al slug nuevo recién al primer
+click de subnav (`pushState`) — el init NO los reescribe con `replaceState`
+(eso solo pasa con entradas `alias:true`, hoy solo `/noticias`).
 
 El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
 `// ═══ TAB SWITCHING + ROUTING ═══`); cada entrada resuelve a
@@ -642,16 +655,66 @@ y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 + activa Noticias (landing).
 
-### Tab Agro (desbakeada, 2026-07-09)
+### Tab Agro (BAKEADA admin-only desde 2026-07-10; rediseño por cadenas 2026-07-10)
 
-Tab con subnav propio (patrón Macro, plumbing `AGRO_SUBTABS`/`activateAgroSubtab`):
-**Producción** (SIIP municipal 2013–2024, 73 cultivos en 7 grupos, choropleth
-municipal/departamental Plotly + ranking) y **Exportaciones** (INE IneComex
-2017–2026, 2026 YTD marzo; 35 productos NANDINA 10 dígitos, FOB USD + toneladas),
-más una gráfica de **precios compartida** entre subtabs (FAO GIEWS FPMA doméstico
-en Bs + WB Pink Sheet internacional USD/t + valor unitario FOB/t; 25 series).
-Botón nav entre Macro y ASFI. Nació desbakeada: todo bajo `bake:optional:agro`,
-cero bytes en prod.
+Tab con subnav propio (patrón Macro; `AGRO_SUBTABS` se deriva 1:1 de la config
+`AGRO_CADENAS` + `activateAgroSubtab`), organizado por **CADENAS DE VALOR**:
+**Soya · Girasol · Azúcar · Otros**. Config extensible: cadena nueva = 1 entrada
+en `AGRO_CADENAS` + claves i18n (`agro.subtab_<id>`, `doc_title/subtitle_<id>`)
++ entradas en `ROUTE_MAP` + panel `subtab-agro-<id>`. Mapeo actual: Soya =
+grano+torta+aceite / cultivo SIIP 61; Girasol = grano+aceite / 58; Azúcar =
+azúcar+etanol / caña 57; Otros no fija cadena (`selector:true` → selects de
+cultivo SIIP y producto Comex en su panel).
+
+Cada cadena apila **dos dashboards duales**: Producción (SIIP municipal
+2013–2024, 73 cultivos, choropleth municipal/departamental, mapa de 520 px)
+arriba y Exportación (INE IneComex 2017–2026, 2026 YTD marzo; 35 productos
+NANDINA 10 dígitos, FOB USD + toneladas) abajo. Layout: producción = DUAL
+(mapa izq + KPIs/ranking/sparklines der, `.agro-dash` grid `1fr/1fr`; pedido
+2026-07-10: KPIs nunca desbordan); exportación = APILADO en forma cuadrada
+(`.agro-dash--expo`, pedido 2026-07-10 tarde: controles → fila de KPIs →
+mapa mundial full-width → slider → abajo ranking | sparkline FOB +
+estacionalidad en `.agro-dash-bottom` 1fr/1fr; los KPIs no cambian al
+alternar vistas — expoSide es el único que los escribe). **Escala de color
+FIJA por serie completa** (`_zr` — `zrProdMun`/`zrProdDep`/`zrExpoDest`:
+zmin/zmax computados sobre TODOS los años por clave cultivo|productos ×
+métrica × nivel), así el slider compara colores entre años. El dashboard de
+exportación tiene dos vistas MUNDIALES (el mapa Bolivia-por-depto de origen se
+retiró 2026-07-10; `porDepto`/`origTotal` siguen en el JSON — `origTotal`
+alimenta `expoNacArr('__todos__')`): **Países** (default) = choropleth de
+destinos por ISO-3 (`AGRO_DEST_GEO[].iso`), países sin venta en el año quedan
+en gris neutro (paridad con producción) y el hover lleva FOB + t +
+participación; y **Flujos** (valor interno `destinos`) = arcos Bolivia→destino
+con partículas animadas, con guards de performance — pausa vía
+`IntersectionObserver` fuera de viewport, `prefers-reduced-motion` → flechas
+estáticas, presupuesto runtime mobile (promedio del restyle > `DEST_BUDGET`
+12 ms → degrada a estático, decisión pegajosa) — e instrumentación del modo en
+el atributo `data-agro-dest-anim`. La card de precios congela el select como
+etiqueta estática (`.agro-select-solo`) en cadenas mono-producto
+(girasol/azúcar hoy).
+
+**Valor agregado — 4 VAs con matriz por cadena:** VA-1 balance
+producción↔exportación (% exportado = ton Comex de la cadena / ton SIIP del
+cultivo; solo cadenas con `cultivo_siip` fijo, en Otros se omite); VA-2 brecha
+del valor unitario FOB implícito vs benchmark Pink Sheet (**SOLO soya-grano y
+azúcar** — extensión autorizada de la REGLA DE PRECIOS, ver abajo;
+girasol/otros omitidos limpio); VA-3 estacionalidad (heatmap mes×año del FOB
+mensual agregado); VA-4 concentración de destinos (mercados activos + top-3
+FOB, mismos helpers `destAgg`/`destItems` que las vistas Países y Flujos). La card de **precios** (FAO GIEWS
+FPMA doméstico Bs + WB Pink Sheet USD/t + valor unitario FOB/t; 25 series) va
+al fondo de cada cadena, con whitelist propia (productos de la cadena +
+`precios_default`; en Otros, catálogo completo).
+
+**Rutas:** `/agro` → soya; `/agro/{soya,girasol,azucar,otros}`; los slugs v1
+`/agro/produccion|exportaciones` quedan como redirects → soya (detalle en
+§ Tabla de slugs). Botón nav entre Macro y ASFI, con `data-admin-only hidden`
+(patrón Mercado 24/7): `fbRenderSession` lo revela solo con `npAdmin.isAdmin`
+confirmado vía `/v1/me`. Nació desbakeada (cero bytes) el 2026-07-09; salió del
+set el 2026-07-10 → hoy se bakea y sus assets se publican, pero el botón es
+admin-only. El código sigue envuelto en `bake:optional:agro` (marcadores inertes
+mientras agro NO esté en el set; re-desbakear = re-agregarlo). Gate cosmético: el
+público no ve el botón pero `/agro` por URL directa renderiza igual (ver § Gate
+`data-admin-only`).
 
 **Piezas:**
 - `ingest_agro.py` — harvester SIIP (endpoint `JsonAjaxAgricolaMdryt.php`), cache
@@ -683,15 +746,21 @@ cero bytes en prod.
 productos mono-partida homogéneos — whitelist EXACTA `[sesamo, chia, quinua,
 mani, castana, cafe]`. **PROHIBIDO** derivar precio de grupos mixtos (ej. soya y
 derivados = aceite+torta+grano: sesgado, no representativo). Toda serie de precio
-lleva etiqueta de fuente visible en el chart.
+lleva etiqueta de fuente visible en el chart. **Excepción acotada (autorizada
+explícitamente en el brief del rediseño, 2026-07-10):** la comparación VA-2
+—brecha del valor unitario FOB implícito vs benchmark Pink Sheet— para
+soya-grano (key mono-partida `soya`, NO la cadena agregada) y azúcar
+(`VA2_BENCH` en el template). El resto de la whitelist no cambia; girasol/otros
+no computan VA-2.
 
 **Datos lazy:** nada pasa por `DATA`/`dashboard.py` — el frontend fetchea
 `/agro_*.json` (paths absolutos) al activar la subtab, con cache module-level y
 estados de carga/error visibles (patrón Bloqueos/ASFI).
 
-**Preview local:** `python dashboard.py --incluir-modulo agro --output <tmp>`
-(flag nuevo, repetible; bakea el módulo SOLO en esa corrida, no muta la config ni
-afecta el publish productivo).
+**Preview local:** `python dashboard.py --output <tmp>` — agro ya se bakea por
+default (salió de `MODULOS_NO_BAKEADOS`). OJO: `--incluir-modulo agro` **ahora
+falla** (solo acepta módulos EN el set); el flag sigue vigente para dpf/bbv/
+guide/mercado247.
 
 **Fuentes / atribución:**
 - Producción: SIIP–MDPyEP (endpoint JSON interno sin API formal — puede cambiar
