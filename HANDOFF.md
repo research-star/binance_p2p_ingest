@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-07-09.
+Última actualización: 2026-07-10.
 
 ---
 
@@ -602,14 +602,22 @@ corre) — el desbake solo dejó de emitir el payload; la tabla `bcb_dpf_rates` 
 | `/bloqueos` | tab `macro`, subtab `bloqueos` | FinanzasBo — Bloqueos en carreteras |
 | `/tasas` | tab `macro`, subtab `tasas` | FinanzasBo — Tasa de Referencia BCB |
 | `/asfi` | tab `asfi` | FinanzasBo — Hechos Relevantes ASFI |
-| ~~`/agro`~~ | tab `agro`, subtab default (`produccion`) — **DESBAKEADA** | FinanzasBo — Agro · Producción |
-| ~~`/agro/produccion`~~ | tab `agro`, subtab `produccion` — **DESBAKEADA** | FinanzasBo — Agro · Producción |
-| ~~`/agro/exportaciones`~~ | tab `agro`, subtab `exportaciones` — **DESBAKEADA** | FinanzasBo — Agro · Exportaciones |
+| ~~`/agro`~~ | tab `agro`, subtab default (`soya`) — **DESBAKEADA** | FinanzasBo — Agro · Soya |
+| ~~`/agro/soya`~~ | tab `agro`, subtab `soya` — **DESBAKEADA** | FinanzasBo — Agro · Soya |
+| ~~`/agro/girasol`~~ | tab `agro`, subtab `girasol` — **DESBAKEADA** | FinanzasBo — Agro · Girasol |
+| ~~`/agro/azucar`~~ | tab `agro`, subtab `azucar` — **DESBAKEADA** | FinanzasBo — Agro · Azúcar |
+| ~~`/agro/otros`~~ | tab `agro`, subtab `otros` — **DESBAKEADA** | FinanzasBo — Agro · Otros cultivos |
 | `/mercado247` | tab `mercado247` (gate cosmético) | FinanzasBo — Mercado 24/7 |
 | `/dpf` | tab `dpf` (ES-only) | FinanzasBo — Rendimientos DPF |
 | `/bbv` | tab `bbv` (ES-only) | FinanzasBo — Bolsa Boliviana de Valores |
 | `/guia` | tab `guide` (ES-only) | FinanzasBo — Guía del dashboard |
 | `/noticias` | alias → tab `noticias`; la barra canonicaliza a `/` (entry `alias:true`, excluido de `TAB_TO_SLUG`) | FinanzasBo — Noticias |
+
+Los slugs Agro v1 (`/agro/produccion`, `/agro/exportaciones`) quedan en
+`ROUTE_MAP` como **redirects** a la cadena default (subtab `soya`): renderizan
+soya al entrar; la barra de URL se canonicaliza al slug nuevo recién al primer
+click de subnav (`pushState`) — el init NO los reescribe con `replaceState`
+(eso solo pasa con entradas `alias:true`, hoy solo `/noticias`).
 
 El mapeo `ROUTE_MAP` vive en el JS del template.html (sección
 `// ═══ TAB SWITCHING + ROUTING ═══`); cada entrada resuelve a
@@ -642,16 +650,48 @@ y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 + activa Noticias (landing).
 
-### Tab Agro (desbakeada, 2026-07-09)
+### Tab Agro (desbakeada, 2026-07-09; rediseño por cadenas 2026-07-10)
 
-Tab con subnav propio (patrón Macro, plumbing `AGRO_SUBTABS`/`activateAgroSubtab`):
-**Producción** (SIIP municipal 2013–2024, 73 cultivos en 7 grupos, choropleth
-municipal/departamental Plotly + ranking) y **Exportaciones** (INE IneComex
-2017–2026, 2026 YTD marzo; 35 productos NANDINA 10 dígitos, FOB USD + toneladas),
-más una gráfica de **precios compartida** entre subtabs (FAO GIEWS FPMA doméstico
-en Bs + WB Pink Sheet internacional USD/t + valor unitario FOB/t; 25 series).
-Botón nav entre Macro y ASFI. Nació desbakeada: todo bajo `bake:optional:agro`,
-cero bytes en prod.
+Tab con subnav propio (patrón Macro; `AGRO_SUBTABS` se deriva 1:1 de la config
+`AGRO_CADENAS` + `activateAgroSubtab`), organizado por **CADENAS DE VALOR**:
+**Soya · Girasol · Azúcar · Otros**. Config extensible: cadena nueva = 1 entrada
+en `AGRO_CADENAS` + claves i18n (`agro.subtab_<id>`, `doc_title/subtitle_<id>`)
++ entradas en `ROUTE_MAP` + panel `subtab-agro-<id>`. Mapeo actual: Soya =
+grano+torta+aceite / cultivo SIIP 61; Girasol = grano+aceite / 58; Azúcar =
+azúcar+etanol / caña 57; Otros no fija cadena (`selector:true` → selects de
+cultivo SIIP y producto Comex en su panel).
+
+Cada cadena apila **dos dashboards duales**: Producción (SIIP municipal
+2013–2024, 73 cultivos, choropleth municipal/departamental) arriba y
+Exportación (INE IneComex 2017–2026, 2026 YTD marzo; 35 productos NANDINA 10
+dígitos, FOB USD + toneladas) abajo. Layout por dashboard: mapa a la izquierda
+(60%: `.agro-dash` grid `3fr/2fr`) + KPIs/ranking/sparklines a la derecha,
+slider de año bajo el mapa. **Escala de color FIJA por serie completa**
+(`_zr` — `zrProdMun`/`zrProdDep`/`zrExpo`: zmin/zmax computados sobre TODOS
+los años por clave cultivo|productos × métrica × nivel), así el slider compara
+colores entre años. El dashboard de exportación agrega la vista **Destinos**:
+mapa mundial con arcos Bolivia→destino y partículas animadas, con guards de
+performance — pausa vía `IntersectionObserver` fuera de viewport,
+`prefers-reduced-motion` → flechas estáticas, presupuesto runtime mobile
+(promedio del restyle > `DEST_BUDGET` 12 ms → degrada a estático, decisión
+pegajosa) — e instrumentación del modo en el atributo `data-agro-dest-anim`.
+
+**Valor agregado — 4 VAs con matriz por cadena:** VA-1 balance
+producción↔exportación (% exportado = ton Comex de la cadena / ton SIIP del
+cultivo; solo cadenas con `cultivo_siip` fijo, en Otros se omite); VA-2 brecha
+del valor unitario FOB implícito vs benchmark Pink Sheet (**SOLO soya-grano y
+azúcar** — extensión autorizada de la REGLA DE PRECIOS, ver abajo;
+girasol/otros omitidos limpio); VA-3 estacionalidad (heatmap mes×año del FOB
+mensual agregado); VA-4 concentración de destinos (mercados activos + top-3
+FOB, mismos helpers que la vista Destinos). La card de **precios** (FAO GIEWS
+FPMA doméstico Bs + WB Pink Sheet USD/t + valor unitario FOB/t; 25 series) va
+al fondo de cada cadena, con whitelist propia (productos de la cadena +
+`precios_default`; en Otros, catálogo completo).
+
+**Rutas:** `/agro` → soya; `/agro/{soya,girasol,azucar,otros}`; los slugs v1
+`/agro/produccion|exportaciones` quedan como redirects → soya (detalle en
+§ Tabla de slugs). Botón nav entre Macro y ASFI. Nació desbakeada: todo bajo
+`bake:optional:agro`, cero bytes en prod.
 
 **Piezas:**
 - `ingest_agro.py` — harvester SIIP (endpoint `JsonAjaxAgricolaMdryt.php`), cache
@@ -683,7 +723,12 @@ cero bytes en prod.
 productos mono-partida homogéneos — whitelist EXACTA `[sesamo, chia, quinua,
 mani, castana, cafe]`. **PROHIBIDO** derivar precio de grupos mixtos (ej. soya y
 derivados = aceite+torta+grano: sesgado, no representativo). Toda serie de precio
-lleva etiqueta de fuente visible en el chart.
+lleva etiqueta de fuente visible en el chart. **Excepción acotada (autorizada
+explícitamente en el brief del rediseño, 2026-07-10):** la comparación VA-2
+—brecha del valor unitario FOB implícito vs benchmark Pink Sheet— para
+soya-grano (key mono-partida `soya`, NO la cadena agregada) y azúcar
+(`VA2_BENCH` en el template). El resto de la whitelist no cambia; girasol/otros
+no computan VA-2.
 
 **Datos lazy:** nada pasa por `DATA`/`dashboard.py` — el frontend fetchea
 `/agro_*.json` (paths absolutos) al activar la subtab, con cache module-level y
