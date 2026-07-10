@@ -81,7 +81,7 @@ W, H = 1200, 630
 # la composición previa (bg durazno + 3 barras negras + wordmark + 3 líneas).
 els = [
     ("#211E1B", text_to_paths(NEWS, "FinanzasBo", 100, 380, 295, letter_spacing=-1.0)),
-    ("#211E1B", text_to_paths(INTER, "Inteligencia económica de Bolivia", 32, 380, 350)),
+    ("#211E1B", text_to_paths(INTER, "Información económica y financiera de Bolivia", 32, 380, 350)),
     ("#6B6256", text_to_paths(INTER, "Noticias económicas · Datos macro · Análisis financiero", 22, 380, 392)),
     ("#6B6256", text_to_paths(INTER, "finanzasbo.com", 24, 1100, 580, anchor="end")),
 ]
