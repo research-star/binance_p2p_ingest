@@ -2962,6 +2962,476 @@
      "grupo": "otros"
     }
    ]
+  },
+  "2026-07-10": {
+   "guid": "af7b4d25-14e3-4ebc-b43b-8874164140b1",
+   "titulo": "Reporte Informativo ASFI al 10/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "BISA Seguros y Reaseguros S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente:\n- Aprobar el Organigrama de la Compañía, en el cual, se incluye la Gerencia Nacional Técnico Comercial, ratificando su creación y la designación de Sabrina Laura Bergamaschi Bergamaschi como Gerente Nacional Técnico Comercial. Asimismo, aprobar la designación de Ana María Arévalo Weichert como Gerente Nacional de Negocios interina.\n- Aprobar el cierre de la Agencia El Alto, autorizada mediante Resolución APS/DJ/DS/N° 1584/2018 de 22 de noviembre de 2018, y mediante Resolución Administrativa APS/DJ/N° 204/2022 de 22 de febrero de 2022, se autorizó su traslado al interior de la Sucursal El Alto de La Vitalicia Seguros y Reaseguros de Vida S.A., Av. Juan Pablo II N° 100 esquina Calle Lisboa, Zona Villa Tunari El Alto. Asimismo, el Directorio delegó a la Administración proceder con los trámites legales correspondientes.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: - Aprobar el Organigrama de la Compañía, en el cual, se incluye la Gerencia Nacional Técnico Comercial",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerente Nacional Técnico Comercial",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Económico S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Dar por bien recibida y aceptada la renuncia de Jorge Percy Boland España al cargo de Director Suplente. Cabe mencionar que, Jorge Percy Boland España, el 9 de julio de 2026, presentó su carta de renuncia al cargo de Director Suplente.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Dar por bien recibida y aceptada la renuncia de Jorge Percy Boland España al cargo de Director Suplente.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Director Suplente",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de marzo de 2026 COMITÉ/EMISOR INSTRUMENTO CALIFICADO EQUIVALENCIA ASFI PCR PERSPECTIVA Comité N°050/2026 celebrado el 7 de mayo de 2026 TIENDA AMIGA ER S.A. BONOS TIENDA AMIGA II Serie Única: Monto: Bs 100,00 millones. Plazo: 1.800 días. AA3 BAA- Estable Comité N°065/2026 celebrado el 9 de junio de 2026 TIENDA AMIGA ER S.A. BONOS TIENDA AMIGA II Serie Única: Monto: Bs 100,00 millones. Plazo: 1.800 días. AA3 BAA- Estable Comité N°055/2026 celebrado el 15 de mayo de 2026 INGENIERÍA Y CONSTRUCCIONES TÉCNICAS INCOTEC S.A. Bonos INCOTEC II Serie Única: Monto: Bs 70,00 millones. Plazo: 1.440 días. AA3 BAA- Estable Comité N°067/2026 celebrado el 10 de junio de 2026 INGENIERÍA Y CONSTRUCCIONES TÉCNICAS INCOTEC S.A. Bonos INCOTEC II Serie Única: Monto: Bs 70,00 millones. Plazo: 1.440 días. AA3 BAA- Estable",
+     "tags": [
+      "calificacion"
+     ],
+     "resumen": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de",
+     "resumen_origen": "extractivo",
+     "grupo": "calificaciones"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Comunica que, el 9 de julio de 2026, emitió Pagarés sin Oferta Pública por un monto total de Bs13.500.000,00 a favor de FORTALEZA SAFI, quien administra y actúa por cuenta de su Fondo de Inversión Cerrado MIPyME FIC.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el 9 de julio de 2026, emitió Pagarés sin Oferta Pública por un monto total de Bs13.500.000,00 a favor de FORTALEZA SAFI, quien administra y actúa por cuenta de su Fondo de Inversión",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Alianza SAFI S.A. Sociedad Administradora de Fondos de Inversión",
+     "texto": "Comunica que, debido al efecto de la variación en la cotización del Tipo de Cambio Oficial del dólar estadounidense, el requerimiento de Capital Social Mínimo aplicable a la Sociedad se incrementó por encima del Capital vigente. Al respecto, en cumplimiento a la normativa, la Sociedad se encuentra gestionando las acciones necesarias para regularizar y restablecer el importe exigido dentro de los plazos establecidos.",
+     "tags": [],
+     "resumen": "Comunica que, debido al efecto de la variación en la cotización del Tipo de Cambio Oficial del dólar estadounidense, el requerimiento de Capital Social Mínimo aplicable a la Sociedad se incrementó",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Fortaleza Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 25 de junio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, delegándose al Presidente del Directorio la determinación de la fecha y hora de la misma, para tratar el Orden del Día aprobado en la mencionada reunión. En este sentido, informa que el Presidente del Directorio, mediante nota recepcionada el 10 de julio 2026, comunicó que la Junta General Extraordinaria de Accionistas, se realizará el 13 de julio de 2026 a Hrs. 08:00, para tratar el siguiente Orden del Día:\n1. Consideración del aumento de Capital Autorizado y del Capital Pagado.\n2. Modificación de Estatutos y de la Escritura de Constitución.\n3. Designación de dos Accionistas para la firma del Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 25 de junio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, delegándose al Presidente del Directorio la determinación de la",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "MULTIFONDOS Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 09 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Aprobar la aclaración al Incremento del Capital Pagado.\n2. Aprobar la corrección a la Modificación a la Escritura Pública de Constitución de la Sociedad, establecida en el Acta de la Junta General Extraordinaria de Accionistas de 19 de junio de 2026.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 09 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de administrador del Patrimonio Autónomo, INOLSA S.R.L. Originador del Patrimonio Autónomo INOLSA - BDP ST 062, cumplió con la recaudación del Flujo Cedido correspondiente a este mes, en tal sentido, dando cumplimiento a lo establecido en el Artículo Decimonoveno del Contrato de Cesión y al numeral 3.7 (Coeficiente de Cobertura Cupón) del Prospecto de Emisión, el 9 de julio de 2026, procedió con el cálculo del Coeficiente de Cobertura Cupón y respectiva devolución de excedentes a las cuentas administrativas del Originador.",
+     "tags": [
+      "compromisos",
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de administrador del Patrimonio Autónomo, INOLSA S.R.L.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de los PAGARÉS BURSÁTILES DISMATEC I - EMISIÓN 4, Serie Única, con Clave de Pizarra: DMT-PB1-N4U, el pago se efectuará, a partir del 13 de julio del presente.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de los PAGARÉS BURSÁTILES DISMATEC I - EMISIÓN 4, Serie Única, con Clave de Pizarra: DMT-PB1-N4U, el pago se",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Valores Unión S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 6 de los BONOS SUBORDINADOS BANCO UNIÓN II, Serie Única, con Clave de Pizarra: BUN-N1U-23, el pago se efectuará, a partir del 10 de julio de 2026.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 6 de los BONOS SUBORDINADOS BANCO UNIÓN II, Serie Única, con Clave de Pizarra: BUN-N1U-23, el pago se",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "6",
+      "instrumento": "BONOS SUBORDINADOS BANCO UNIÓN II",
+      "fecha_pago": "10 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas de Seguros de Personas",
+     "entidad": "Crediseguro S.A. Seguros Personales",
+     "texto": "Comunica que, traslada su Sucursal de Santa Cruz, por lo que, desde el 13 de julio de 2026, atenderá en la siguiente dirección: Av. Ramblas N° 100, zona Nor Oeste, UV. 58, Mza.23, Cond. ITC Tower, Torre Mayor, Oficina 102 - Piso 1° de la Ciudad de Santa Cruz de la Sierra.",
+     "tags": [],
+     "resumen": "Comunica que, traslada su Sucursal de Santa Cruz, por lo que, desde el 13 de julio de 2026, atenderá en la siguiente dirección: Av.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas de Seguros de Personas",
+     "entidad": "La Vitalicia Seguros y Reaseguros de Vida S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente:\n1. Autorizar al Directorio la otorgación de nuevos Poderes a favor del Gerente General, Hugo Alfredo Meneses Marquez, Gerente de Operaciones y Contabilidad, Grover Calani Gabriel y del Gerente Técnico, Diego Eduardo Villareal Flores.\n2. Revocar los Testimonios de Poder: 245/2022, 246/2022, 247/2022, 278/2022, 280/2022, 282/2022, 283/2022, 284/2022, 279/2022, 315/2022 316/2022, 325/2022, 326/2022, 116/2023, 383/2023, 385/2023, 408/2023, 143/2024, 235/2024, 310/2024, 180/2025, 174/2025, 275/2025, 460/2025, 461/2025 y 103/2026.\n3. Aprobación de la nueva composición del Comité Directivo de Cumplimiento LGI/FT y FPADM Hugo Sarmiento Kohlenberger Hugo Meneses Marquez Grover Calani Gabriel Diego Villarreal Flores Raul Ballón Fernández Paola Monje Rodriguez",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A. Ver Adjunto",
+     "texto": "Comunica que, el 10 de julio de 2026, emitió la siguiente disposición interna: Disposición Organizativa N° 006/2026, a partir de la fecha, en el marco de la Disposición Organizativa N° 004/2026 y como parte del proceso de fortalecimiento de la estructura organizacional de ENTEL S.A., informa la reorganización de la Estructura Organizativa de la Subgerencia de Recursos Humanos, con el propósito de optimizar la gestión del Talento Humano de la institución y alinearla a la estrategia institucional, empoderando cada una de las funciones especializadas de Talento Humano. La presente reorganización contempla la formalización de las funciones de Gestión Normativa y Organizacional, Gestión del Talento Humano y Administración del Talento Humano a nivel de Coordinación, con la finalidad de gestionar los procesos de gestión normativa y de dotación, desarrollo y bienestar del personal. De igual manera, quedan aprobados todos los cambios que deriven de esta modificación.",
+     "tags": [],
+     "resumen": "Comunica que, el 10 de julio de 2026, emitió la siguiente disposición interna: Disposición Organizativa N° 006/2026, a partir de la fecha, en el marco de la Disposición Organizativa N° 004/2026 y",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Comunica que, el 10 de julio de 2026, procedió con la cancelación de capital e intereses de tres Pagarés Privados correspondientes a la emisión privada: “Pagarés sin Oferta Pública JALASOFT III”, por un total de Bs22.420.066,68 a favor de Capital + SAFI S.A. - SEMBRAR EXPORTADOR FIC, cumpliendo a cabalidad con el plan de pagos establecido.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el 10 de julio de 2026, procedió con la cancelación de capital e intereses de tres Pagarés Privados correspondientes a la emisión privada: “Pagarés sin Oferta Pública JALASOFT III”, por",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco BISA S.A.",
+     "texto": "Comunica que, provisionó los fondos para el pago del Cupón N° 20 de la Emisión de Bonos Subordinados Banco BISA - Emisión 2 (Serie C), dentro el Programa de Emisiones de Bonos Subordinados Banco BISA, a partir del 27 de julio de 2026, en las oficinas del agente pagador BISA S.A. Agencia de Bolsa.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, provisionó los fondos para el pago del Cupón N° 20 de la Emisión de Bonos Subordinados Banco BISA - Emisión 2 (Serie C), dentro el Programa de Emisiones de Bonos Subordinados Banco",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "cupon_n": "20",
+      "instrumento": "Bonos Subordinados Banco BISA",
+      "fecha_pago": "27 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Comunica que, los Compromisos Financieros a junio de 2026, asumidos mediante la “EMISIÓN DE BONOS SUBORDINADOS - BANCO DE CRÉDITO DE BOLIVIA S.A. - EMISIÓN I”, “BONOS SUBORDINADOS BCP - EMISIÓN III”, “BONOS SUBORDINADOS BCP - EMISIÓN IV” y “BONOS BCP 1”, son los siguientes: Compromiso Cumplimiento Coeficiente de Adecuación Patrimonial mayor o igual al 11% Al 30/06/2026, el promedio de los últimos 3 meses (calculados cada fin de mes) del Coeficiente de Adecuación Patrimonial fue de 13,70%. Ratio de Liquidez: ((Disponibilidades + Inv. Temporarias) /Obligaciones a CP) mayor o igual al 30% Al 30/06/2026, el Ratio de Liquidez fue de 60,55%. Ratio de Cobertura de Cartera Morosa: (Previsiones/Cartera en Mora) mayor o igual a 100% Al 30/06/2026, el Ratio de Cobertura de Cartera Morosa fue de 160,78%.",
+     "tags": [
+      "emision",
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los Compromisos Financieros a junio de 2026, asumidos mediante la “EMISIÓN DE BONOS SUBORDINADOS - BANCO DE CRÉDITO DE BOLIVIA S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.7%",
+        "ok": true
+       },
+       {
+        "sigla": "Liquidez",
+        "op": ">=",
+        "req": "30%",
+        "valor": "60.55%",
+        "ok": true
+       },
+       {
+        "sigla": "Cobertura",
+        "op": ">=",
+        "req": "100%",
+        "valor": "160.78%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Económico S.A.",
+     "texto": "Comunica que, los Compromisos Financieros asumidos al 30 de junio de 2026, en el marco de las siguientes Emisiones vigentes de Bonos: * Bonos Subordinados BEC IV - Emisión 1 * Bonos Subordinados BEC V - Emisión 1 y Emisión 2 * Bonos Subordinados BEC VI * Bonos Banco Económico I - Emisión 1 Son los indicadores financieros y su cumplimiento al cierre del segundo trimestre de 2026, de acuerdo al siguiente detalle: Indicadores Financieros Compromiso Trimestre II-2026 Coeficiente de Adecuación Patrimonial (CAP) CAP >= 11% 13,95% Índice de Liquidez (IL) IL >= 50% 81,75% Índice de Cobertura (IC) IC >= 100% 164,73%",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los Compromisos Financieros asumidos al 30 de junio de 2026, en el marco de las siguientes Emisiones vigentes de Bonos: * Bonos Subordinados BEC IV - Emisión 1 * Bonos Subordinados BEC",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.95%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "81.75%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "164.73%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Económico S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Aprobar las vacaciones de Sergio Mauricio Asbun Saba - Gerente General, del 13 al 17 de julio de 2026. En ese sentido se designó a Pablo Ignacio Romero Mercado como Gerente General Interino, por el periodo citado.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Aprobar las vacaciones de Sergio Mauricio Asbun Saba - Gerente General, del 13 al 17 de julio de 2026.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerente General Interino",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Mercantil Santa Cruz S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Designar a Maria Yrene Azogue Talamas como Gerente de Auditoría Interna a.i., ante la ausencia temporal de Maria Teresa Salazar Fuentes, sustitución a ser efectiva, a partir del 15 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Designar a Maria Yrene Azogue Talamas como Gerente de Auditoría Interna a.i., ante la ausencia temporal",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerente de Auditoría Interna",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Nacional de Bolivia S.A.",
+     "texto": "Comunica que, el cálculo de los Compromisos Financieros al 30 de junio de 2026, mismos que fueron establecidos dentro de todas las Emisiones de Bonos Subordinados realizadas y a los cuales se sujetará la institución en tanto exista un saldo pendiente de amortización de capital de los Bonos Subordinados BNB IV emitidos, son los siguientes: Indicadores financieros Al 30 de junio de 2026 El promedio de los últimos tres meses del Coeficiente de Adecuación Patrimonial debe ser en todo momento igual o superior al once por ciento (11%) 13,49% El promedio de los últimos tres meses del Indicador de liquidez debe ser igual o superior al cuarenta por ciento (40%) 75,01% El promedio de los últimos tres meses del índice de Cobertura debe ser igual o superior al cien por ciento (100%) 188,53%",
+     "tags": [
+      "cupon",
+      "compromisos"
+     ],
+     "resumen": "Comunica que, el cálculo de los Compromisos Financieros al 30 de junio de 2026, mismos que fueron establecidos dentro de todas las Emisiones de Bonos Subordinados realizadas y a los cuales se",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "campos": {
+      "instrumento": "Bonos Subordinados BNB IV emitidos",
+      "estado": "programado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Comunica que, Marcela Adriana Ugarte Barroso fungirá como Gerenta Nacional de Experiencia de la Clientela y Operaciones a.i., del 13 al 31 de julio de 2026, debido a la ausencia de la Gerenta Nacional de Experiencia de la Clientela y Operaciones, Liliana Riveros Haydar, en el periodo señalado.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Marcela Adriana Ugarte Barroso fungirá como Gerenta Nacional de Experiencia de la Clientela y Operaciones a.i., del 13 al 31 de julio de 2026, debido a la ausencia de la Gerenta",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerenta Nacional de Experiencia de la Clientela y Operaciones",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Comunica que, al 30 de junio de 2026, se encuentra en cumplimiento de los Compromisos Financieros asumidos en los Prospectos del “Programa de Emisiones de Bonos Subordinados BancoSol 2” y “Programa de Emisiones de Bonos Subordinados BancoSol III”, así como en las Emisiones vigentes que los conforman, además de los “Bonos Sociales Avanza Mujer BancoSol 1” y “Bonos Sociales Avanza Mujer BancoSol 2”, de acuerdo al siguiente detalle: Indicadores Financieros Compromiso Trimestre II-2026 Coeficiente de Adecuación Patrimonial (CAP) * CAP >= 11,00% 14,84% Indicador de Liquidez (IL) * IL >= 50,00% 81,81% Indicador de Cobertura (IC) * IC >= 100,00% 302,22% * Promedio de los últimos tres meses",
+     "tags": [
+      "emision",
+      "compromisos"
+     ],
+     "resumen": "Comunica que, al 30 de junio de 2026, se encuentra en cumplimiento de los Compromisos Financieros asumidos en los Prospectos del “Programa de Emisiones de Bonos Subordinados BancoSol 2” y “Programa",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "14.84%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "81.81%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "302.22%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Otorgar Poder de Representación Legal, en favor de los siguientes funcionarios:\n- Rafael Oscar Cuellar Trigo en su calidad de Gerente Nacional de Finanzas y Comercio Exterior.\n- Marcelo Walter Melgarejo Duran en su calidad de Gerente Nacional de Productos, Segmentos y Canales.\n- Gustavo Alberto Garcia Ugarte en su calidad de Gerente Banca Minorista (Occidente).",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 09 de julio de 2026, se determinó lo siguiente: Otorgar Poder de Representación Legal, en favor de los siguientes funcionarios: - Rafael Oscar Cuellar",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, el 9 de julio de 2026, amplía la designación de Alejandro Ernesto Garcia Parra como Gerente Nacional de Operaciones a.i. en Oficina Nacional, quien ocupará el cargo hasta el 23 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 9 de julio de 2026, amplía la designación de Alejandro Ernesto Garcia Parra como Gerente Nacional de Operaciones a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "campos": {
+      "cargo": "Gerente Nacional de Operaciones",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Entidades de Depósito de Valores",
+     "entidad": "Entidad de Depósito de Valores de Bolivia S.A.",
+     "texto": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 9 de julio de 2026, procedió con el registro de la Emisión de Bonos denominada \"Bonos CAMSA III - Emisión 1\", estructurada bajo el Programa de Emisiones denominado \"Bonos CAMSA III”, en el Sistema de Registro de Anotaciones en Cuenta de la Entidad. Asimismo, informa que BISA S.A. Agencia de Bolsa, es la agencia colocadora.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 9 de julio de 2026, procedió con el registro",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Crédito con Educación Rural - CRECER IFD",
+     "texto": "Comunica que, a partir del 1 de agosto de 2026, Diego Chui Choque queda designado como Gerente de Sucursal Oruro.",
+     "tags": [],
+     "resumen": "Comunica que, a partir del 1 de agosto de 2026, Diego Chui Choque queda designado como Gerente de Sucursal Oruro.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/566/2026 de 30 de junio de 2026",
+     "texto": "RESUELVE:\nPRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “Pagarés Bursátiles FERROVIARIA ORIENTAL II” de FERROVIARIA ORIENTAL S.A., bajo el siguiente Número de Registro: NÚMERO DE REGISTRO DENOMINACIÓN DEL PROGRAMA ASFI/DSV-PED-EFO-011/2026 PAGARÉS BURSÁTILES FERROVIARIA ORIENTAL II\nSEGUNDO.- Instruir que, para la inscripción y autorización de Oferta Pública de cada Emisión dentro del Programa de Pagarés Bursátiles denominado “Pagarés Bursátiles FERROVIARIA ORIENTAL II”, el Emisor deberá dar estricto cumplimiento a lo dispuesto por la Ley N° 1834 del Mercado de Valores, el Reglamento del Registro del Mercado de Valores y el Reglamento de Oferta Pública, contenidos en los Libros 1° y 2°, respectivamente, de la Recopilación de Normas para el Mercado de Valores.\nTERCERO.- Establecer que verificado el cumplimiento de los requisitos exigidos por la normativa vigente, la Autoridad de Supervisión del Sistema Financiero, autorizará e inscribirá cada una de las Emisiones comprendidas en el Programa de Pagarés Bursátiles denominado “Pagarés Bursátiles FERROVIARIA ORIENTAL II”, para su Oferta Pública, previo cumplimiento de los requisitos normativos exigidos al efecto.\nCUARTO.- Disponer que, de conformidad a normas legales y regulatorias vigentes, FERROVIARIA ORIENTAL S.A. deberá cumplir con la presentación oportuna de toda la información requerida por la Autoridad de Supervisión del Sistema Financiero, para el control y vigilancia de cada una de las Emisiones que conformen el Programa control y vigilancia de cada una de las Emisiones que conformen el Programa autorizado, así como las obligaciones establecidas normativamente.\nQUINTO.- Establecer que, la Autoridad de Supervisión del Sistema Financiero no se pronuncia sobre la calidad de los Valores ofrecidos como inversión de cada una de las Emisiones dentro del Programa de Pagarés Bursátiles denominado “Pagarés Bursátiles FERROVIARIA ORIENTAL II”. La información presentada a esta Autoridad de Supervisión es de exclusiva responsabilidad del Emisor o de los responsables que hayan participado en su elaboración.",
+     "tags": [
+      "emision",
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “Pagarés Bursátiles",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles FERROVIARIA ORIENTAL II",
+      "emisor": "FERROVIARIA ORIENTAL S.A.",
+      "registro": "ASFI/DSV-PED-EFO-011/2026"
+     }
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1428 de 24 de junio de 2026",
+     "texto": "HECHOS RELEVANTES (Ver Adjunto)",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "HECHOS RELEVANTES (Ver Adjunto)",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1484 de 30 de junio de 2026",
+     "texto": "PAGOS POR TASAS DE REGULACIÓN Y POR SANCIONES (Ver Adjunto).",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "PAGOS POR TASAS DE REGULACIÓN Y POR SANCIONES (Ver Adjunto).",
+     "resumen_origen": "extractivo",
+     "grupo": "otros"
+    }
+   ]
   }
  }
 }
