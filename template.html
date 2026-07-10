@@ -3839,6 +3839,19 @@ function activateAgroSubtab(subId){
   if(st) st.innerHTML = sub.subtitle || '';
   if(sub.title) document.title = sub.title;
   if(typeof sub.render === 'function') sub.render();
+  // Cinturón anti-700px: si un primer render cayó con el panel oculto, Plotly
+  // pintó a width default y react() no recomputa autosize al volver. Tras
+  // mostrar el panel, re-dimensionar cada plot visible.
+  if(window.requestAnimationFrame){
+    requestAnimationFrame(function(){
+      var panel = document.getElementById('subtab-agro-'+sub.id);
+      if(!panel || !window.Plotly || !Plotly.Plots || !Plotly.Plots.resize) return;
+      panel.querySelectorAll('.js-plotly-plot').forEach(function(g){
+        if(g.offsetParent===null) return;
+        try{ Plotly.Plots.resize(g); }catch(err){}
+      });
+    });
+  }
 }
 
 // Subnav de Agro: switch de subtab + pushState al slug plano (patrón macroSubnav).
@@ -6579,8 +6592,7 @@ function drawRank(elId, labels, vals, texts, unidad){
 }
 
 // ═══ PRODUCCIÓN (SIIP) ═══
-var stP = { ready:false, wired:false, cultivo:'7', met:'prod', niv:'mun', anio:2024, tok:0 };
-var P_IDS = ['agroProdMapa','agroProdRank','agroPreciosChartProd'];
+var stP = { ready:false, wired:false, loading:false, pending:false, cultivo:'7', met:'prod', niv:'mun', anio:2024, tok:0 };
 
 function cultivoDe(cod){
   var cs = _cache.prod.cultivos || [];
@@ -6668,6 +6680,10 @@ function prodWire(){
 
 function prodDraw(){
   if(!stP.ready) return;
+  // Guard anti-stale AL INICIO: CUALQUIER redraw (incluido el branch
+  // departamental) invalida callbacks de shards todavía en vuelo — sin esto
+  // un shard lento pisaría el render departamental más nuevo.
+  var tok = ++stP.tok;
   var cult = cultivoDe(stP.cultivo);
   var label = cult ? cult.label : ('#'+stP.cultivo);
   if(stP.niv==='dep'){
@@ -6675,9 +6691,8 @@ function prodDraw(){
     prodRenderDep(byDep, label);
     return;
   }
-  var tok = ++stP.tok;   // guard anti-stale: descarta callbacks de un estado viejo
   seriesMun(stP.cultivo, function(err, ser){
-    if(tok!==stP.tok) return;
+    if(tok!==stP.tok) return;   // estado viejo: ni render ni showError
     if(err){ showError(['agroProdMapa','agroProdRank'], prodDraw); return; }
     var rows = (ser||{})[String(stP.anio)] || null;
     prodRenderMun(rows, label);
@@ -6745,24 +6760,55 @@ function prodRenderDep(byDep, label){
     unidad);
 }
 
-window.renderAgroProduccion = function(){
-  if(stP.ready){ prodDraw(); preciosDraw(pcProd); return; }
-  showLoading(P_IDS);
-  Promise.all([agroGet('prod'), agroGet('geoMun'), agroGet('geoDep'), agroGet('precios')])
+// Carga por dependencias REALES, con error/carga independiente por panel:
+// mapa+ranking dependen de produccion+geos; el chart de precios SOLO de
+// precios.json. Un fallo en uno no tumba al otro, y Reintentar recarga solo
+// lo faltante (agroGet cachea/dedupe: lo ya bajado no se re-fetchea).
+function prodLoadCore(){
+  if(stP.ready){ stP.pending=false; prodDraw(); return; }
+  if(stP.loading) return;
+  stP.loading = true;
+  showLoading(['agroProdMapa','agroProdRank']);
+  Promise.all([agroGet('prod'), agroGet('geoMun'), agroGet('geoDep')])
     .then(function(){
+      stP.loading = false;
       stP.ready = true;
       prodWire();
-      preciosSetup(pcProd);
       installObserver();
+      // Panel oculto al resolver (usuario cambió de subtab/tab durante el
+      // fetch): diferir el draw — Plotly pintaría a width default (700px)
+      // en un contenedor display:none. activateAgroSubtab re-llama render
+      // al mostrar el panel y consume el pending.
+      var elM = document.getElementById('agroProdMapa');
+      if(elM && elM.offsetParent===null){ stP.pending=true; return; }
       prodDraw();
-      preciosDraw(pcProd);
     })
-    .catch(function(){ showError(P_IDS, window.renderAgroProduccion); });
+    .catch(function(){ stP.loading=false; showError(['agroProdMapa','agroProdRank'], prodLoadCore); });
+}
+function preciosLoad(pc){
+  if(_cache.precios){ pc.pending=false; preciosSetup(pc); preciosDraw(pc); return; }
+  if(pc.loading) return;
+  pc.loading = true;
+  showLoading([pc.chartId]);
+  agroGet('precios')
+    .then(function(){
+      pc.loading = false;
+      preciosSetup(pc);
+      installObserver();
+      var el = document.getElementById(pc.chartId);
+      if(el && el.offsetParent===null){ pc.pending=true; return; }
+      preciosDraw(pc);
+    })
+    .catch(function(){ pc.loading=false; showError([pc.chartId], function(){ preciosLoad(pc); }); });
+}
+
+window.renderAgroProduccion = function(){
+  prodLoadCore();
+  preciosLoad(pcProd);
 };
 
 // ═══ EXPORTACIONES (INE Comex) ═══
-var stE = { ready:false, wired:false, prod:'__todos__', met:'fob', anio:2025 };
-var E_IDS = ['agroExpoMapa','agroExpoRank','agroPreciosChartExpo'];
+var stE = { ready:false, wired:false, loading:false, pending:false, prod:'__todos__', met:'fob', anio:2025 };
 
 function expoWire(){
   if(stE.wired) return; stE.wired=true;
@@ -6859,24 +6905,33 @@ function expoDraw(){
     unidad);
 }
 
-window.renderAgroExportaciones = function(){
-  if(stE.ready){ expoDraw(); preciosDraw(pcExpo); return; }
-  showLoading(E_IDS);
-  Promise.all([agroGet('expo'), agroGet('geoDep'), agroGet('precios')])
+// Mismo split que Producción: mapa+ranking (expo+geo) y precios por separado.
+function expoLoadCore(){
+  if(stE.ready){ stE.pending=false; expoDraw(); return; }
+  if(stE.loading) return;
+  stE.loading = true;
+  showLoading(['agroExpoMapa','agroExpoRank']);
+  Promise.all([agroGet('expo'), agroGet('geoDep')])
     .then(function(){
+      stE.loading = false;
       stE.ready = true;
       expoWire();
-      preciosSetup(pcExpo);
       installObserver();
+      var elM = document.getElementById('agroExpoMapa');
+      if(elM && elM.offsetParent===null){ stE.pending=true; return; }
       expoDraw();
-      preciosDraw(pcExpo);
     })
-    .catch(function(){ showError(E_IDS, window.renderAgroExportaciones); });
+    .catch(function(){ stE.loading=false; showError(['agroExpoMapa','agroExpoRank'], expoLoadCore); });
+}
+
+window.renderAgroExportaciones = function(){
+  expoLoadCore();
+  preciosLoad(pcExpo);
 };
 
 // ═══ PRECIOS (componente compartido, una instancia por subtab) ═══
-var pcProd = { selId:'agroPreciosSelProd', chartId:'agroPreciosChartProd', fuenteId:'agroPreciosFuenteProd', sel:'quinua', wired:false };
-var pcExpo = { selId:'agroPreciosSelExpo', chartId:'agroPreciosChartExpo', fuenteId:'agroPreciosFuenteExpo', sel:'soya', wired:false };
+var pcProd = { selId:'agroPreciosSelProd', chartId:'agroPreciosChartProd', fuenteId:'agroPreciosFuenteProd', sel:'quinua', wired:false, loading:false, pending:false };
+var pcExpo = { selId:'agroPreciosSelExpo', chartId:'agroPreciosChartExpo', fuenteId:'agroPreciosFuenteExpo', sel:'soya', wired:false, loading:false, pending:false };
 
 function srcTag(f){
   return f==='fpma' ? '{{t:agro.src_fpma}}' : (f==='pink' ? '{{t:agro.src_pink}}' : '{{t:agro.src_uv}}');
@@ -6920,9 +6975,19 @@ function preciosDraw(pc){
     if(s.freq==='M'){ anyM=true; x=s.fechas.map(function(f){ return f+'-01'; }); }
     else { x=s.fechas.map(function(a){ return a+'-01-01'; }); }  // freq A: valor unitario anual
     var n=s.valores.length;
+    // Leyenda horizontal: Plotly NO wrapea el texto de un item — un nombre
+    // más ancho que el card clipea. En cards angostos (móvil) se parte el
+    // nombre en dos líneas (en el paréntesis si lo hay, si no antes del tag).
+    var nm = s.label+' ['+srcTag(s.fuente)+']';
+    var elW = el.clientWidth;
+    if(elW && (nm.length*7+46) > elW){
+      var ip = s.label.indexOf(' (');
+      nm = (ip>0) ? s.label.slice(0,ip)+'<br>'+s.label.slice(ip+1)+' ['+srcTag(s.fuente)+']'
+                  : s.label+'<br>['+srcTag(s.fuente)+']';
+    }
     var t = { x:x, y:s.valores, type:'scatter',
       mode:(s.freq==='A') ? 'lines+markers' : 'lines',
-      name:s.label+' ['+srcTag(s.fuente)+']',
+      name:nm,
       line:{color:cols[i%cols.length], width:1.8},
       yaxis:der ? 'y2' : 'y',
       text:s.valores.map(function(_,j){ return (s.ytd_ultimo && j===n-1) ? ' (YTD)' : ''; }),
@@ -6963,10 +7028,17 @@ function installObserver(){
   new MutationObserver(function(){
     // Visible sólo si la tab Agro + el subtab están ambos display:''.
     // offsetParent==null cuando cualquier ancestro está display:none.
+    // Precios redibuja independiente del core (F8: estados por panel).
     var m = document.getElementById('agroProdMapa');
-    if(m && m.offsetParent !== null && stP.ready){ prodDraw(); preciosDraw(pcProd); }
+    if(m && m.offsetParent !== null){
+      if(stP.ready) prodDraw();
+      if(pcProd.wired) preciosDraw(pcProd);
+    }
     var e = document.getElementById('agroExpoMapa');
-    if(e && e.offsetParent !== null && stE.ready){ expoDraw(); preciosDraw(pcExpo); }
+    if(e && e.offsetParent !== null){
+      if(stE.ready) expoDraw();
+      if(pcExpo.wired) preciosDraw(pcExpo);
+    }
   }).observe(document.body, {attributes:true, attributeFilter:['class']});
 }
 })();

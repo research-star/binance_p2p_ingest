@@ -49,6 +49,7 @@ preserva lo avanzado y la próxima corrida resume desde ahí.
 import argparse
 import csv
 import json
+import os
 import re
 import sys
 import time
@@ -153,36 +154,60 @@ class SiipClient:
         self.n_http = 0
         self.n_cache = 0
 
-    def _post(self, data: dict) -> str:
+    @staticmethod
+    def _parse(texto: str):
+        """Valida y parsea un body del SIIP. 'null' literal Y body VACÍO son
+        VÁLIDOS (→ None): el endpoint responde 200 sin body como "sin datos"
+        normal (~15% del cache real, verificado contra el endpoint vivo).
+        Body no-JSON no vacío (p.ej. HTML de error con 200) → ValueError."""
+        texto = texto.strip()
+        if not texto:
+            return None
+        return json.loads(texto)  # JSONDecodeError es subclase de ValueError
+
+    def _post(self, nombre: str, data: dict) -> str:
+        """POST con reintentos. Solo devuelve bodies que validan (_parse):
+        un 200 con HTML de error cuenta como intento fallido (así el cache
+        NUNCA se escribe con basura — anti-envenenamiento)."""
         ultimo = None
         for intento in range(self.reintentos):
             try:
                 r = self.session.post(SIIP_URL, data=data,
                                       timeout=self.timeout_s)
                 if r.status_code == 200:
-                    return r.text
-                ultimo = f"http={r.status_code}"
+                    try:
+                        self._parse(r.text)
+                        return r.text
+                    except ValueError as e:
+                        ultimo = f"200 con body no-JSON ({e})"
+                else:
+                    ultimo = f"http={r.status_code}"
             except requests.RequestException as e:
                 ultimo = repr(e)
             time.sleep(2 ** intento)  # backoff exponencial 1,2,4...
-        raise FetchError(f"POST {data} agotó {self.reintentos} reintentos "
-                         f"(último error: {ultimo})")
+        raise FetchError(f"POST {nombre} {data} agotó {self.reintentos} "
+                         f"reintentos (último error: {ultimo})")
 
     def get(self, nombre: str, data: dict):
-        """Devuelve el JSON parseado ('null' → None), usando cache."""
+        """Devuelve el JSON parseado ('null' → None), usando cache.
+
+        Cache envenenado (archivo viejo que no parsea, p.ej. HTML de error
+        cacheado por una versión anterior) → se borra y se re-fetchea."""
         path = self.cache_dir / f"{nombre}.json"
         if path.exists():
-            self.n_cache += 1
-            texto = path.read_text(encoding="utf-8")
-        else:
-            texto = self._post(data)
-            path.write_text(texto, encoding="utf-8")
-            self.n_http += 1
-            time.sleep(self.sleep_s)
-        texto = texto.strip()
-        if not texto:
-            return None
-        return json.loads(texto)
+            try:
+                parsed = self._parse(path.read_text(encoding="utf-8"))
+                self.n_cache += 1
+                return parsed
+            except ValueError as e:
+                print(f"[agro] cache envenenado {path.name} ({e}) — se borra "
+                      f"y re-fetchea", file=sys.stderr)
+                path.unlink()
+        texto = self._post(nombre, data)  # solo devuelve JSON válido
+        path.write_text(texto, encoding="utf-8")
+        self.n_http += 1
+        time.sleep(self.sleep_s)
+        return self._parse(texto)
 
 
 # ── Catálogo ──────────────────────────────────────────────────────────────
@@ -498,29 +523,106 @@ def emitir(out_path: Path, catalogo, seleccion, anios,
     def _dumps(o):
         return json.dumps(o, separators=(",", ":"), ensure_ascii=False)
 
+    # CONTRATO con el frontend (template.html seriesMun()): meta.shards está
+    # keyed por el LABEL del grupo (el mismo string que cultivos[].grupo) y
+    # cada shard envuelve su mapa en {"series_mun": {...}}. Se emite un shard
+    # por CADA grupo presente en cultivos (aunque quede vacío) para que todo
+    # cultivo.grupo del índice tenga key en meta.shards.
     shards = {}
     cuerpo = _dumps(doc)
     if len(cuerpo.encode("utf-8")) > MAX_BYTES_INDICE:
         # Particionar series_mun por grupo → static/agro_prod_g<n>.json.
-        por_grupo: dict[int, dict] = defaultdict(dict)
+        por_grupo: dict[int, dict] = {cu["grupo"]: {} for cu in seleccion}
         for cod_str, series in series_mun.items():
             por_grupo[grupo_por_codigo[int(cod_str)]][cod_str] = series
         for g, sub in sorted(por_grupo.items()):
-            shard_name = f"agro_prod_g{g}.json"
-            shard_path = out_path.parent / shard_name
-            shard_path.write_text(_dumps(sub), encoding="utf-8")
-            shards[str(g)] = shard_name
+            shards[GRUPOS[g]] = f"agro_prod_g{g}.json"
         doc["meta"]["shards"] = shards
         doc["series_mun"] = {}
         cuerpo = _dumps(doc)
+        escrituras = [(out_path.parent / f"agro_prod_g{g}.json",
+                       _dumps({"series_mun": sub}))
+                      for g, sub in sorted(por_grupo.items())]
+    else:
+        escrituras = []
+    escrituras.append((out_path, cuerpo))
 
+    # Emisión ATÓMICA: todo a .tmp primero y os.replace de TODOS al final
+    # (patrón ingest_agro_precios.py) — nunca queda índice nuevo con shard
+    # viejo/faltante a medio escribir.
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(cuerpo, encoding="utf-8")
+    tmps = []
+    for destino, contenido in escrituras:
+        tmp = destino.with_suffix(destino.suffix + ".tmp")
+        tmp.write_text(contenido, encoding="utf-8")
+        tmps.append((tmp, destino))
+    for tmp, destino in tmps:
+        os.replace(tmp, destino)
+
+    # Shards huérfanos de corridas previas (el dataset dejó de shardear o un
+    # grupo desapareció): se borran para que el frontend no lea data vieja.
+    vigentes = set(shards.values())
+    for f in sorted(out_path.parent.glob("agro_prod_g*.json")):
+        if f.name not in vigentes:
+            print(f"[agro] shard huérfano de corrida previa — se borra: {f}")
+            f.unlink()
 
     n_sin = sum(len(v) for c in sin_georef.values() for v in c.values())
     return {"filas_mun": len(rows_mun), "matcheadas": len(resueltas),
             "sin_georef": n_sin, "bytes": len(cuerpo.encode("utf-8")),
             "shards": shards, "municipios": len(municipios)}
+
+
+def validar_contrato(out_path: Path) -> None:
+    """Autovalidación post-emisión: re-lee el índice (+shards si hay) y
+    asserta el contrato EXACTO que consume el frontend (template.html
+    seriesMun/prodRenderMun). Falla ruidoso (RuntimeError) si algo no cuadra:
+
+      - índice sharded ⇒ series_mun del índice vacío;
+      - todo cultivos[].grupo del índice tiene key en meta.shards;
+      - cada shard existe, parsea y trae la key series_mun;
+      - todo munIdx de toda fila municipal es int y < len(municipios).
+    """
+    doc = json.loads(out_path.read_text(encoding="utf-8"))
+    problemas: list[str] = []
+    n_mun = len(doc.get("municipios", []))
+    shards = (doc.get("meta") or {}).get("shards")
+
+    def _check_series(series_mun, origen):
+        for cod, por_anio in (series_mun or {}).items():
+            for anio, filas in por_anio.items():
+                for fila in filas:
+                    if not (isinstance(fila[0], int)
+                            and 0 <= fila[0] < n_mun):
+                        problemas.append(
+                            f"{origen}: cultivo {cod} año {anio} munIdx "
+                            f"{fila[0]!r} fuera de rango (municipios={n_mun})")
+
+    if shards:
+        if doc.get("series_mun"):
+            problemas.append("índice sharded con series_mun NO vacío")
+        grupos_idx = {cu["grupo"] for cu in doc.get("cultivos", [])}
+        faltantes = grupos_idx - set(shards)
+        if faltantes:
+            problemas.append(f"grupos del índice sin key en meta.shards: "
+                             f"{sorted(faltantes)}")
+        for label, fname in sorted(shards.items()):
+            p = out_path.parent / fname
+            try:
+                shard = json.loads(p.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as e:
+                problemas.append(f"shard {fname} ({label}) ilegible: {e}")
+                continue
+            if not isinstance(shard, dict) or "series_mun" not in shard:
+                problemas.append(f"shard {fname} sin key series_mun")
+                continue
+            _check_series(shard["series_mun"], f"shard {fname}")
+    else:
+        _check_series(doc.get("series_mun"), "índice")
+
+    if problemas:
+        raise RuntimeError("contrato de emisión roto: "
+                           + " | ".join(problemas))
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────
@@ -595,6 +697,13 @@ def main() -> int:
     mapa = cargar_mapa(args.mapa)
     stats = emitir(args.out, catalogo, seleccion, anios,
                    rows_dep, rows_mun, mapa)
+
+    try:
+        validar_contrato(args.out)
+    except RuntimeError as e:
+        print(f"[agro] mode=error stage=validacion detail={e}",
+              file=sys.stderr)
+        return 1
 
     print(f"[agro] mode=ok cultivos={len(seleccion)}/{len(catalogo)} "
           f"anios={anios[0]}-{anios[-1]} "

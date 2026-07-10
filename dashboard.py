@@ -1414,6 +1414,14 @@ def main():
                              "afecta el publish productivo.")
     args = parser.parse_args()
 
+    # --incluir-modulo solo acepta módulos desbakeados conocidos: un typo
+    # silencioso produciría un preview SIN el módulo pedido, sin aviso.
+    desconocidos = set(args.incluir_modulo or []) - MODULOS_NO_BAKEADOS
+    if desconocidos:
+        parser.error(
+            f"--incluir-modulo desconocido(s): {', '.join(sorted(desconocidos))}. "
+            f"Válidos: {', '.join(sorted(MODULOS_NO_BAKEADOS))}")
+
     if not args.db.exists():
         print(f"No se encontró {args.db}. Corré normalize.py primero.", file=sys.stderr)
         sys.exit(1)
