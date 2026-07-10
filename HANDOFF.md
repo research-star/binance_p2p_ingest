@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-06-27.
+Última actualización: 2026-07-09.
 
 ---
 
@@ -372,7 +372,12 @@ runtime (`dashboard.py`/`publish_dashboard.py` y `resumen_ia.py` respectivamente
 **Módulos SIN tabla SQLite** (persisten en JSON committeado o no persisten):
 ASFI datos (`static/asfi_YYYY-MM.json` + `asfi_index.json`) · bloqueos
 (`bloqueos.json`) · tasas/TRE (`bcb_tre.json`) · mercado247 (Hyperliquid en vivo,
-sin persistencia server-side) · BBV (dataset JS estático embebido en `template.html`).
+sin persistencia server-side) · BBV (dataset JS estático embebido en `template.html`) ·
+Agro (datasets JSON en `static/`: producción SIIP `agro_produccion.json`,
+exportaciones INE-Comex snapshot `agro_exportaciones.json`, precios
+FPMA/Pink Sheet/valor unitario `agro_precios.json`, 2 geojson
+`agro_geo_municipal.json`/`agro_geo_departamental.json`; sin tabla — ver
+§ Tab Agro).
 
 ### Gasto API Anthropic — 2 carriles, 2 contadores
 
@@ -518,7 +523,7 @@ dentro de Macro):
 URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
 Dólar tiene slug propio `/dolar`.
 
-**Tabs — 4 visibles en prod, 4 DESBAKEADOS** (existen en `template.html` pero
+**Tabs — 4 visibles en prod, 5 DESBAKEADOS** (existen en `template.html` pero
 NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 
 | # | `data-tab` | Label | Slug | Estado en prod |
@@ -527,10 +532,11 @@ NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 | 2 | `dollar` | Dólar | `/dolar` | visible |
 | 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
 | 4 | `asfi` | ASFI | `/asfi` | visible |
-| 5 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
-| 6 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
-| 7 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
-| 8 | `guide` | Guía | ~~`/guia`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 5 | `agro` | Agro | ~~`/agro`~~ (+ subtabs) | **DESBAKEADO** (nació desbakeado 2026-07-09, nunca bakeado; ver § Tab Agro) |
+| 6 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
+| 7 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 8 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 9 | `guide` | Guía | ~~`/guia`~~ | **DESBAKEADO** (antes hidden, ES-only) |
 
 **Subnav de Macro** (4 subtabs, botones `.fb-macro-tab`, array `MACRO_SUBTABS`):
 `riesgo` (default) · `inflacion` (IPC/IPP INE) · `bloqueos` (mapa vial + KPIs) ·
@@ -546,9 +552,12 @@ El gate cosmético NO se arregló (decisión); se volvió moot al retirar la sup
 
 ### Módulos desbakeados (opción B — presentes en repo, NO servidos en prod)
 
-Cuatro módulos (`mercado247`, `dpf`, `bbv`, `guide`) se **desbakearon** (opción B,
-2026-07-09): su código fuente PERMANECE en el repo pero NO se inyecta al `index.html`
-publicado ni se sirve su asset. No es un retiro (C) — nada se borró.
+Cinco módulos en el set. Cuatro (`mercado247`, `dpf`, `bbv`, `guide`) se
+**desbakearon** (opción B, 2026-07-09): su código fuente PERMANECE en el repo pero
+NO se inyecta al `index.html` publicado ni se sirve su asset. No es un retiro (C) —
+nada se borró. El quinto, `agro`, **nació desbakeado** el mismo 2026-07-09 (nunca
+estuvo bakeado): tab nueva completa en `template.html`, pendiente de harvest SIIP
+completo + validación visual de Diego para bakear (ver § Tab Agro).
 
 **Punto de control ÚNICO:** el set `config.MODULOS_NO_BAKEADOS` ([config.py](config.py)).
 Un módulo listado ahí:
@@ -558,11 +567,17 @@ Un módulo listado ahí:
   elimina (misma maquinaria que los `i18n:es-only`, pero por módulo);
 - omite su payload — `dashboard.py` no emite `dpf_data` si `dpf` está desbakeado;
 - no publica su asset — `publish_dashboard.py` excluye los archivos de
-  `config.MODULO_ASSETS` (hoy `mercado247-tab.js`) del copiado de `static/`.
+  `config.MODULO_ASSETS` (`mercado247-tab.js` para mercado247; para `agro`,
+  5 datasets `agro_*.json` + 7 shards preventivos `agro_prod_g1..g7.json` —
+  estos últimos HOY no existen en `static/`, listarlos es inocuo y future-proof
+  para cuando el harvest completo los genere) del copiado de `static/`.
 
 **Revertir (re-bakear) = quitar el módulo de `MODULOS_NO_BAKEADOS` y rebakear.** Es
-la ÚNICA edición necesaria; los marcadores quedan en el template y el contenido
-vuelve intacto. (Verificado en local con `bbv`.)
+la ÚNICA edición necesaria en config/código; los marcadores quedan en el template y
+el contenido vuelve intacto. (Verificado en local con `bbv`.) Para módulos con
+assets en `MODULO_ASSETS` (`mercado247`, `agro`), re-bakear implica además que el
+próximo publish copie sus assets al edge — automático al salir del set (el publish
+los excluye solo mientras el módulo esté desbakeado).
 
 **Acoplamiento a tener en cuenta:** `guide` NO es independiente de `bbv` — sus
 funciones JS (`renderGuide`, `renderGuideIssuers`) viven DENTRO del IIFE de `bbv`
@@ -587,6 +602,9 @@ corre) — el desbake solo dejó de emitir el payload; la tabla `bcb_dpf_rates` 
 | `/bloqueos` | tab `macro`, subtab `bloqueos` | FinanzasBo — Bloqueos en carreteras |
 | `/tasas` | tab `macro`, subtab `tasas` | FinanzasBo — Tasa de Referencia BCB |
 | `/asfi` | tab `asfi` | FinanzasBo — Hechos Relevantes ASFI |
+| ~~`/agro`~~ | tab `agro`, subtab default (`produccion`) — **DESBAKEADA** | FinanzasBo — Agro · Producción |
+| ~~`/agro/produccion`~~ | tab `agro`, subtab `produccion` — **DESBAKEADA** | FinanzasBo — Agro · Producción |
+| ~~`/agro/exportaciones`~~ | tab `agro`, subtab `exportaciones` — **DESBAKEADA** | FinanzasBo — Agro · Exportaciones |
 | `/mercado247` | tab `mercado247` (gate cosmético) | FinanzasBo — Mercado 24/7 |
 | `/dpf` | tab `dpf` (ES-only) | FinanzasBo — Rendimientos DPF |
 | `/bbv` | tab `bbv` (ES-only) | FinanzasBo — Bolsa Boliviana de Valores |
@@ -623,6 +641,71 @@ y forward del browser disparan `popstate` que re-activa la tab sin recargar.
 
 Paths no reconocidos caen en fallback silencioso: `history.replaceState('/')`
 + activa Noticias (landing).
+
+### Tab Agro (desbakeada, 2026-07-09)
+
+Tab con subnav propio (patrón Macro, plumbing `AGRO_SUBTABS`/`activateAgroSubtab`):
+**Producción** (SIIP municipal 2013–2024, 73 cultivos en 7 grupos, choropleth
+municipal/departamental Plotly + ranking) y **Exportaciones** (INE IneComex
+2017–2026, 2026 YTD marzo; 35 productos NANDINA 10 dígitos, FOB USD + toneladas),
+más una gráfica de **precios compartida** entre subtabs (FAO GIEWS FPMA doméstico
+en Bs + WB Pink Sheet internacional USD/t + valor unitario FOB/t; 25 series).
+Botón nav entre Macro y ASFI. Nació desbakeada: todo bajo `bake:optional:agro`,
+cero bytes en prod.
+
+**Piezas:**
+- `ingest_agro.py` — harvester SIIP (endpoint `JsonAjaxAgricolaMdryt.php`), cache
+  en disco resumible/idempotente (5xx aborta ruidoso, la próxima corrida resume),
+  `--rebuild-mapa` reconstruye el CSV de mapeo, emisión con sharding por grupo si
+  el índice supera 1.3 MB (`agro_prod_g<n>.json` + `meta.shards`).
+- `ingest_agro_precios.py` — 3 fuentes (FPMA/Pink Sheet/valor unitario),
+  fail-closed por fuente: si UNA falla entera, aborta SIN escribir output parcial.
+- `scripts/build_agro_geojson.py` — GADM 4.1 nivel 3 (344 municipios) simplificado
+  con shapely → `static/agro_geo_municipal.json` (494 KB).
+- `scripts/agro/` — builder Comex portado (`granos_ingest.py`) + `granos_config.json`
+  (35 semillas NANDINA) + README con provenance/regeneración/atribución.
+- `scripts/data/agro_municipios.csv` — mapa códigos INE del SIIP → GID GADM 4.1
+  (344 gids).
+- Los 5 `static/agro_*.json`: `agro_produccion.json` (~81 KB, HOY emisión PARCIAL
+  de 3 cultivos), `agro_exportaciones.json` (~288 KB), `agro_precios.json` (~69 KB),
+  `agro_geo_municipal.json` (~494 KB), `agro_geo_departamental.json` (~310 KB).
+- Frontend en `template.html`: markup, CSS, JS y rutas, todo envuelto en
+  `bake:optional:agro`.
+
+**REGLA DE PRECIOS (de Diego, crítica):** valor unitario FOB/ton SOLO para
+productos mono-partida homogéneos — whitelist EXACTA `[sesamo, chia, quinua,
+mani, castana, cafe]`. **PROHIBIDO** derivar precio de grupos mixtos (ej. soya y
+derivados = aceite+torta+grano: sesgado, no representativo). Toda serie de precio
+lleva etiqueta de fuente visible en el chart.
+
+**Datos lazy:** nada pasa por `DATA`/`dashboard.py` — el frontend fetchea
+`/agro_*.json` (paths absolutos) al activar la subtab, con cache module-level y
+estados de carga/error visibles (patrón Bloqueos/ASFI).
+
+**Preview local:** `python dashboard.py --incluir-modulo agro --output <tmp>`
+(flag nuevo, repetible; bakea el módulo SOLO en esa corrida, no muta la config ni
+afecta el publish productivo).
+
+**Fuentes / atribución:**
+- Producción: SIIP–MDPyEP (endpoint JSON interno sin API formal — puede cambiar
+  sin aviso).
+- Exportaciones: INE IneComex vía snapshot del build COMEX-Bolivia; los crudos
+  (`expYYYY.txt`, ~26 MB) NO se versionan en este repo (viven en el working tree
+  de COMEX-Bolivia en la laptop de Diego; ver `scripts/agro/README.md`).
+- Precios: FAO GIEWS FPMA (`price_value` BOB nominal, NUNCA el dólar al TC
+  oficial) + WB Pink Sheet (URL con GUID anual rotativo: discovery en la página
+  de commodity markets + fallback hardcodeado).
+- Geometrías: GADM 4.1. **Nota de licencia (flag para revisión):** GADM es de
+  uso libre no comercial; la redistribución de derivados requiere permiso.
+
+**Pendientes:**
+- Harvest SIIP completo (la emisión actual es parcial: Quínua/Papa/Chia) y
+  bakear tras validación visual de Diego.
+- Cron VPS de refresco (sesión 2 — requiere autorización).
+- Códigos SIIP `225`/`226` (La Paz, `desc_mun` NULL upstream) sin
+  georreferenciar: ~30 filas en `sin_georef`; asignación manual pendiente vía
+  seeds del CSV.
+- Candidatos NANDINA adicionales propuestos — decisión de Diego (ver PR).
 
 ### Interfaz EN (i18n bake-time) — `feat/i18n-en`
 
