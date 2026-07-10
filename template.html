@@ -4171,6 +4171,14 @@ function activateAgroSubtab(subId){
   var st = document.getElementById('agroSubtitle');
   if(st) st.innerHTML = sub.subtitle || '';
   if(sub.title) document.title = sub.title;
+  // Canonicalización de slugs legacy v1: si la barra quedó en /agro/produccion
+  // o /agro/exportaciones (redirects de ROUTE_MAP), reescribir al slug de la
+  // cadena activa. replaceState (no pushState): no agrega entrada de historia,
+  // back/forward no loopea.
+  var legacySlug = fbSlug(window.location.pathname);
+  if((legacySlug==='/agro/produccion' || legacySlug==='/agro/exportaciones') && sub.slug){
+    history.replaceState({tab:'agro', subtab:sub.id}, '', fbHref(sub.slug));
+  }
   if(typeof sub.render === 'function') sub.render();
   // Cinturón anti-700px: si un primer render cayó con el panel oculto, Plotly
   // pintó a width default y react() no recomputa autosize al volver. Tras
@@ -7656,8 +7664,9 @@ function expoSide(d){
   // vistas muestren valores idénticos.
   var aggVa4=destAgg(d.keys);
   var resVa4=destItems(aggVa4, yi, d.met);
-  var resVa4Prev=(yi>0) ? destItems(aggVa4, yi-1, d.met) : null;
-  kpis.push(kpiMercadosActivos(resVa4));
+  // Años YTD: sin tendencia top-3 (parcial-vs-completo engañaría) + nota YTD.
+  var resVa4Prev=(yi>0 && !esYtd) ? destItems(aggVa4, yi-1, d.met) : null;
+  kpis.push(kpiMercadosActivos(resVa4, esYtd));
   kpis.push(kpiTop3Fob(resVa4, resVa4Prev));
   var k=document.getElementById(d.ids.kpis);
   if(k) k.innerHTML = kpisHtml(kpis);
@@ -7700,12 +7709,12 @@ function drawHeat(d){
     colorscale:seqScale(), showscale:false, hoverongaps:false, xgap:1, ygap:1,
     hovertemplate:'{{t:agro.va3_hover}}' }],
    { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', height:220,
-     margin:{l:34, r:6, t:24, b:22},
+     margin:{l:34, r:6, t:36, b:22},
      hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
      xaxis:{type:'category', tickfont:tickf, fixedrange:true},
      yaxis:{type:'category', tickfont:tickf, fixedrange:true, autorange:'reversed'},
      annotations:[{text:'{{t:agro.va3_titulo}}', xref:'paper', yref:'paper',
-       x:0, y:1.18, xanchor:'left', showarrow:false,
+       x:0, y:1.08, xanchor:'left', yanchor:'bottom', showarrow:false,
        font:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted}}]
    }, {...PC, locale:FB_LANG});
 }
@@ -7904,9 +7913,11 @@ function destItems(agg, yi, met){
 // Reciben el resultado de destItems(agg, yi, met) y devuelven un item para
 // kpisHtml. kpiMercadosActivos cuenta destinos con valor >0 en la métrica del
 // año; kpiTop3Fob = participación de los 3 mayores destinos en el FOB del año.
-function kpiMercadosActivos(res){
+function kpiMercadosActivos(res, esYtd){
+  var unidad='{{t:agro.kpi_mercados_u}}';
+  if(esYtd) unidad+=' · {{t:agro.kpi_ytd_nota}}';   // año parcial: misma nota que Var FOB
   return {label:'{{t:agro.kpi_mercados}}', valor:f0(res.items.length),
-    unidad:'{{t:agro.kpi_mercados_u}}', tip:'{{t:agro.va4_mercados_tip}}'};
+    unidad:unidad, tip:'{{t:agro.va4_mercados_tip}}'};
 }
 function top3Pct(res){
   var top=res.items.slice().sort(function(a,b){ return b.fob-a.fob; }).slice(0,3);
@@ -7923,6 +7934,7 @@ function kpiTop3Fob(res, resPrev){
     var prev=top3Pct(resPrev);
     if(prev!=null){
       var dpp=Math.round((pct-prev)*10)/10;
+      if(Object.is(dpp,-0)) dpp=0;   // deltas en [-0,05, 0) → evita '+-0,0 pp'
       var fl=(dpp>0) ? '▲' : (dpp<0 ? '▼' : '—');
       unidad=fl+' '+(dpp>=0?'+':'')+f1(dpp)+' pp {{t:agro.kpi_vs_prev}}';
     }
@@ -8083,13 +8095,15 @@ function renderAgroDestinos(d, E){
   var years=E.meta.years||[], yi=years.indexOf(d.anio);
   var agg=destAgg(d.keys);
   var res=destItems(agg, yi, d.met);
-  var resPrev=(yi>0) ? destItems(agg, yi-1, d.met) : null;
+  // Años YTD: sin tendencia top-3 + nota YTD (mismo criterio que expoSide).
+  var esYtd=(E.meta.ytdYears||[]).indexOf(d.anio)!==-1;
+  var resPrev=(yi>0 && !esYtd) ? destItems(agg, yi-1, d.met) : null;
   var unidad=(d.met==='fob')?'USD':'t';
   // Side: KPIs de destinos (VA-4, mismos helpers e inputs que expoSide en
   // origen → valores idénticos en ambas vistas) + top-10 destinos (el
   // sparkline FOB y el heatmap VA-3 quedan tal como los dibujó expoSide).
   var k=document.getElementById(d.ids.kpis);
-  if(k) k.innerHTML=kpisHtml([kpiMercadosActivos(res), kpiTop3Fob(res, resPrev)]);
+  if(k) k.innerHTML=kpisHtml([kpiMercadosActivos(res, esYtd), kpiTop3Fob(res, resPrev)]);
   var top=res.items.slice(0,10);
   drawRank(d.ids.rank,
     top.map(function(it){ return it.n; }),
@@ -8131,16 +8145,25 @@ function renderAgroDestinos(d, E){
   // Partículas (última trace): posiciones iniciales en fase 0.
   var pIdx=traces.length;
   var p0=destArrays(arcs, 0, null);
+  // Sin soporte de marker.angle (detect one-shot): círculo chico en CADA
+  // render — no solo en el gd de la primera detección (destAngleDetect).
   traces.push({type:'scattergeo', mode:'markers', lon:p0.lon, lat:p0.lat,
-    marker:{size:8, symbol:'triangle-up', color:arcs.map(function(a){ return a.col; }),
+    marker:{size:(_destAngleOK===false)?6:8,
+      symbol:(_destAngleOK===false)?'circle':'triangle-up',
+      color:arcs.map(function(a){ return a.col; }),
       line:{width:0.5, color:hexToRgba(c.textPrimary, 0.4)}},
     hoverinfo:'skip', showlegend:false});
   var lay=geoLayoutMundo(c);
   var nota=(d.met==='fob') ? '{{t:agro.dest_nota_fob}}' : '{{t:agro.dest_nota_ton}}';
-  if(res.items.some(function(it){ return !it.geo; })) nota+=' · {{t:agro.dest_nota_singeo}}';
+  // Mobile (mismo breakpoint que mapH/destMobile): disclaimer en 2ª línea +
+  // font menor para que 'sin geografía (sin arco)' se lea completo en 390px.
+  var notaMovil=window.innerWidth<=600;
+  if(res.items.some(function(it){ return !it.geo; })){
+    nota+=(notaMovil?'<br>':' · ')+'{{t:agro.dest_nota_singeo}}';
+  }
   lay.annotations=[{text:nota, xref:'paper', yref:'paper', x:0.01, y:0.02,
     xanchor:'left', yanchor:'bottom', showarrow:false,
-    font:{family:'IBM Plex Mono,monospace', size:9, color:c.textMuted}}];
+    font:{family:'IBM Plex Mono,monospace', size:(notaMovil?8:9), color:c.textMuted}}];
   // Como plotInto, pero capturando el promise: el mundo (scope world) baja su
   // topojson async del CDN de Plotly — un restyle ANTES de que termine revienta
   // dentro de plotly (uncaught async). La animación arranca recién al resolver.
