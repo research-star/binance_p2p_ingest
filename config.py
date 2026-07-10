@@ -40,20 +40,23 @@ TEMPLATE_HTML = Path(__file__).parent / "template.html"
 # edición necesaria — nada de arqueología. (Nota de acoplamiento: `guide`
 # depende de datasets/helpers de `bbv`; re-bakear `guide` requiere `bbv` también
 # bakeado. Ver HANDOFF.md § Módulos desbakeados.)
-# `agro` nace desbakeado: tab Producción/Exportaciones/Precios completa en el
-# template, pendiente de harvest SIIP completo + OK de Diego para bakear.
-MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247", "agro"}
+# `agro` BAKEADO en prod pero con visibilidad ADMIN-ONLY (OK de Diego 2026-07-10):
+# el tab + assets se sirven, pero el botón de nav lleva `data-admin-only hidden`
+# (patrón Mercado 24/7) → solo visible con sesión admin confirmada (npAdmin.isAdmin).
+MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247"}
 
 # Assets en static/ que pertenecen a un módulo. publish_dashboard.py no copia a
 # prod los de módulos desbakeados (derivado de MODULOS_NO_BAKEADOS, no lista
 # paralela). Solo mercado247 sirve un asset propio; dpf/bbv/guide viven inline.
 MODULO_ASSETS = {
     "mercado247": ("mercado247-tab.js",),
-    # agro: datasets lazy del front (fetch absoluto /agro_*.json). Se listan
-    # también los shards preventivos agro_prod_g1..g7 del harvest completo:
-    # HOY no existen en static/ (el índice parcial trae series_mun inline) y
-    # listar nombres inexistentes es inocuo (publish solo filtra archivos
-    # presentes) — future-proof para cuando el harvest los genere.
+    # agro: datasets lazy del front (fetch absoluto /agro_*.json). Entrada
+    # DORMIDA desde 2026-07-10 (agro salió de MODULOS_NO_BAKEADOS → sus assets
+    # SÍ se publican); se conserva para re-desbakear con solo re-agregar "agro"
+    # al set. Se listan también los shards preventivos agro_prod_g1..g7 del
+    # harvest completo: HOY no existen en static/ (el índice parcial trae
+    # series_mun inline) y listar nombres inexistentes es inocuo (publish solo
+    # filtra archivos presentes) — future-proof para cuando el harvest los genere.
     "agro": (
         "agro_produccion.json", "agro_exportaciones.json", "agro_precios.json",
         "agro_geo_municipal.json", "agro_geo_departamental.json",
