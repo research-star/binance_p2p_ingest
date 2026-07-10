@@ -35,9 +35,9 @@ import boletin as m  # noqa: E402
 # Dos días calendario BOT (08 y 09) con dos snapshots el 09 (gana el último).
 
 def _data(vb_series, vs_series, ts_series, tco, embi_series,
-          embi_fechas=None):
+          embi_fechas=None, tco_history=None):
     return {
-        "meta": {"bcb_tco_last": tco},
+        "meta": {"bcb_tco_last": tco, "bcb_tco_history": tco_history or []},
         "ts_metrics": {"ts": ts_series, "vb10": vb_series, "vs10": vs_series},
         "embi_data": {
             "fechas": embi_fechas or [],
@@ -56,20 +56,23 @@ def run() -> int:
     # ── copy/formato: caso completo con deltas ───────────────────────────────
     # vb10: ayer(08) 10.30 → hoy(09) último 10.40  → +0,97% → "+1,0"
     # vs10: ayer(08) 10.20 → hoy(09) último 10.10  → -0,98% → "-1,0"
-    # tco 10.10 → oficial_venta 10.20 / oficial_compra 10.10
+    # tco ayer(08) 10.05 → hoy(09) 10.10  → oficial +0,5% en ambas patas
+    #   (venta 10.20 vs 10.15 ; compra 10.10 vs 10.05)
     # embi: ...423.7 → 428.9 (última) → delta +5 pbs
     d = _data([10.30, 10.35, 10.40], [10.20, 10.15, 10.10], TS_2D,
-              10.10, [423.7, 428.9])
+              10.10, [423.7, 428.9],
+              tco_history=[{"fecha": "2026-07-08", "tco": 10.05},
+                           {"fecha": "2026-07-09", "tco": 10.10}])
     txt = m.render_texto(d, NOW)
     esperado = (
         "*FinanzasBo* — 9 jul 2026\n"
         "\n"
         "*Si compras dólares*\n"
-        "Oficial: Bs 10,20\n"
+        "Oficial: Bs 10,20  (+0,5% vs ayer)\n"
         "USDT: Bs 10,40  (+1,0% vs ayer)\n"
         "\n"
         "*Si vendes dólares*\n"
-        "Oficial: Bs 10,10\n"
+        "Oficial: Bs 10,10  (+0,5% vs ayer)\n"
         "USDT: Bs 10,10  (-1,0% vs ayer)\n"
         "\n"
         "*Riesgo país*\n"
@@ -132,6 +135,40 @@ def run() -> int:
     # EMBI sin cambio (428.9 → 428.9) → sin paréntesis pbs
     if "pbs" in txtz:
         err.append("delta_cero: EMBI sin cambio no debería mostrar '(... pbs)'")
+
+    # ── oficial_delta: el TCO también lleva (+x% vs ayer) en ambas patas ──────
+    # tco ayer 10.05 → hoy 10.10 → venta 10.20 vs 10.15 y compra 10.10 vs 10.05,
+    # ambas +0,5% (mismo helper/omisión que el P2P). USDT/EMBI planos → sin delta,
+    # así que el único paréntesis del caso es el del oficial.
+    dof = _data([10.40, 10.40], [10.10, 10.10],
+                ["2026-07-08T12:00:00Z", "2026-07-09T12:00:00Z"], 10.10, [428.9, 428.9],
+                tco_history=[{"fecha": "2026-07-08", "tco": 10.05},
+                             {"fecha": "2026-07-09", "tco": 10.10}])
+    txtof = m.render_texto(dof, NOW)
+    if "Oficial: Bs 10,20  (+0,5% vs ayer)" not in txtof:
+        err.append("oficial_delta: la pata compra (oficial venta) debería llevar '(+0,5% vs ayer)'")
+    if "Oficial: Bs 10,10  (+0,5% vs ayer)" not in txtof:
+        err.append("oficial_delta: la pata vende (oficial compra) debería llevar '(+0,5% vs ayer)'")
+
+    # oficial sin histórico previo (un solo día con TCO) → línea Oficial sin paréntesis
+    dof1 = _data([10.40, 10.40], [10.10, 10.10],
+                 ["2026-07-08T12:00:00Z", "2026-07-09T12:00:00Z"], 10.10, [428.9, 428.9],
+                 tco_history=[{"fecha": "2026-07-09", "tco": 10.10}])
+    for ln in m.render_texto(dof1, NOW).splitlines():
+        if ln.startswith("Oficial:") and "vs ayer" in ln:
+            err.append("oficial_delta: sin día previo la línea Oficial no debería llevar delta")
+
+    # oficial sin cambio (TCO igual a ayer) → se omite el paréntesis (no '0,0%')
+    dof0 = _data([10.40, 10.40], [10.10, 10.10],
+                 ["2026-07-08T12:00:00Z", "2026-07-09T12:00:00Z"], 10.10, [428.9, 428.9],
+                 tco_history=[{"fecha": "2026-07-08", "tco": 10.10},
+                              {"fecha": "2026-07-09", "tco": 10.10}])
+    txtof0 = m.render_texto(dof0, NOW)
+    if "0,0%" in txtof0:
+        err.append("oficial_delta: apareció '0,0%' con TCO sin cambio (debe omitirse)")
+    for ln in txtof0.splitlines():
+        if ln.startswith("Oficial:") and "vs ayer" in ln:
+            err.append("oficial_delta: TCO sin cambio no debería mostrar paréntesis")
 
     # ── falta_base: cada valor base ausente aborta (no parcial) ───────────────
     faltas = [

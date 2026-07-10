@@ -12,6 +12,8 @@ no línea). De ahí salen:
   - oficial (BCB): `meta.bcb_tco_last` = TCO = pata COMPRA del oficial (RD 88/2026;
     template.html "compra (= TCO)"). La pata VENTA se deriva TCO + 0,10 Bs
     (`VENTA_REF_SPREAD_BS`, regla RD 88/2026: venta referencial = TCO + 0,10).
+    El delta "vs ayer" del oficial sale de `meta.bcb_tco_history` (penúltimo día
+    con dato); misma regla de omisión que el P2P (sin ayer / cero → sin paréntesis).
   - USDT compra/venta: último `vb10`/`vs10` de `ts_metrics` (VWAP 10% de
     profundidad, el mismo número que las KPIs "USDT Compra/Venta" del dashboard).
     `vb10` (lado BUY = donde el taker COMPRA USDT) = lo que pagás; `vs10`
@@ -118,6 +120,19 @@ def _usdt_side(ts_metrics: dict, key: str):
     return latest, (latest / prev - 1) * 100.0
 
 
+def _oficial_prev_tco(bcb_tco_history):
+    """TCO del día con dato anterior en el histórico BCB (para el delta 'vs ayer'
+    del oficial). `bcb_tco_history` (de load_bcb_tco) viene 1 fila/día — publicados
+    + fines de semana rellenos con el valor del próximo hábil (RD 88/2026) — y
+    ordenado por fecha asc, así que la penúltima fila es el día anterior (misma
+    regla 'día calendario anterior' que el P2P). None si no hay al menos dos días
+    con TCO."""
+    hist = [h for h in (bcb_tco_history or []) if h.get("tco") is not None]
+    if len(hist) < 2:
+        return None
+    return hist[-2].get("tco")
+
+
 def _embi_bolivia(embi_data: dict):
     """(valor_latest_bps, delta_bps_vs_obs_previa). delta None si no hay previa."""
     series = (embi_data or {}).get("series", {}).get("bolivia")
@@ -146,6 +161,7 @@ def render_texto(data: dict, now_utc: datetime | None = None) -> str:
     ts_metrics = data.get("ts_metrics", {})
 
     tco = meta.get("bcb_tco_last")          # pata COMPRA del oficial
+    tco_prev = _oficial_prev_tco(meta.get("bcb_tco_history"))
     usdt_compra, d_compra = _usdt_side(ts_metrics, "vb10")
     usdt_venta, d_venta = _usdt_side(ts_metrics, "vs10")
     embi, d_embi = _embi_bolivia(data.get("embi_data", {}))
@@ -160,6 +176,20 @@ def render_texto(data: dict, now_utc: datetime | None = None) -> str:
 
     oficial_compra = tco                       # lo que recibís vendiendo USD
     oficial_venta = tco + VENTA_REF_SPREAD_BS  # lo que pagás comprando USD
+
+    # Delta oficial vs ayer, por pata: cada línea contra su equivalente del día
+    # anterior (compra = TCO ; venta = TCO + spread fijo). Con spread constante
+    # ambos % son casi idénticos, pero se computan por línea para que el paréntesis
+    # refleje el número mostrado. Sin TCO de ayer → None → _paren_pct lo omite.
+    def _delta_pct(hoy, ayer):
+        if ayer is None or ayer == 0:
+            return None
+        return (hoy / ayer - 1) * 100.0
+
+    d_of_compra = _delta_pct(oficial_compra, tco_prev)
+    d_of_venta = _delta_pct(
+        oficial_venta,
+        tco_prev + VENTA_REF_SPREAD_BS if tco_prev is not None else None)
 
     fecha = f"{now_bot.day} {MESES_ABREV[now_bot.month - 1]} {now_bot.year}"
 
@@ -178,11 +208,11 @@ def render_texto(data: dict, now_utc: datetime | None = None) -> str:
         f"*FinanzasBo* — {fecha}",
         "",
         "*Si compras dólares*",
-        f"Oficial: Bs {_fmt_num(oficial_venta, 2)}",
+        f"Oficial: Bs {_fmt_num(oficial_venta, 2)}{_paren_pct(d_of_venta)}",
         f"USDT: Bs {_fmt_num(usdt_compra, 2)}{_paren_pct(d_compra)}",
         "",
         "*Si vendes dólares*",
-        f"Oficial: Bs {_fmt_num(oficial_compra, 2)}",
+        f"Oficial: Bs {_fmt_num(oficial_compra, 2)}{_paren_pct(d_of_compra)}",
         f"USDT: Bs {_fmt_num(usdt_venta, 2)}{_paren_pct(d_venta)}",
         "",
         "*Riesgo país*",
