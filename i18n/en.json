@@ -33,7 +33,7 @@
   "agro.prod_map_title": "Crop production map",
   "agro.prod_rank_sub": "Top 15 by the selected metric, level and year",
   "agro.prod_rank_title": "Top producers",
-  "agro.prod_source": "Source: SIIP — Ministry of Productive Development and Plural Economy. Area in ha, production in t.",
+  "agro.prod_source": "Source: SIIP — Ministry of Productive Development and Plural Economy. Area in ha, production in t. Municipal boundaries: geoBoundaries / GeoBolivia (public domain).",
   "agro.prod_subtitle": "Crop production by municipality and department · SIIP, 2013–2024 seasons",
   "agro.reintentar": "Retry",
   "agro.sin_datos_de": "No data for ",

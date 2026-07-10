@@ -33,7 +33,7 @@
   "agro.prod_map_title": "Mapa de producción agrícola",
   "agro.prod_rank_sub": "Top 15 según la métrica, el nivel y el año elegidos",
   "agro.prod_rank_title": "Principales productores",
-  "agro.prod_source": "Fuente: SIIP — Ministerio de Desarrollo Productivo y Economía Plural. Superficie en ha, producción en t.",
+  "agro.prod_source": "Fuente: SIIP — Ministerio de Desarrollo Productivo y Economía Plural. Superficie en ha, producción en t. Límites municipales: geoBoundaries / GeoBolivia (dominio público).",
   "agro.prod_subtitle": "Producción agrícola por municipio y departamento · SIIP, campañas 2013–2024",
   "agro.reintentar": "Reintentar",
   "agro.sin_datos_de": "Sin datos de ",

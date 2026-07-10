@@ -660,15 +660,22 @@ cero bytes en prod.
   el índice supera 1.3 MB (`agro_prod_g<n>.json` + `meta.shards`).
 - `ingest_agro_precios.py` — 3 fuentes (FPMA/Pink Sheet/valor unitario),
   fail-closed por fuente: si UNA falla entera, aborta SIN escribir output parcial.
-- `scripts/build_agro_geojson.py` — GADM 4.1 nivel 3 (344 municipios) simplificado
-  con shapely → `static/agro_geo_municipal.json` (494 KB).
+- `scripts/build_agro_geojson.py` — geoBoundaries gbOpen BOL ADM3 (**Public
+  Domain**, upstream GeoBolivia; 339 municipios) simplificado con shapely →
+  `static/agro_geo_municipal.json` (~496 KB). El depto se asigna por spatial
+  join contra el ADM1; crosswalk a nuestros gid por nombre+depto. (Reemplazó
+  al derivado GADM el 2026-07-10 por licencia; el archivo GADM quedó en la
+  historia git de la branch del PR #230 — residuo aceptado a decisión.)
 - `scripts/agro/` — builder Comex portado (`granos_ingest.py`) + `granos_config.json`
   (35 semillas NANDINA) + README con provenance/regeneración/atribución.
-- `scripts/data/agro_municipios.csv` — mapa códigos INE del SIIP → GID GADM 4.1
-  (344 gids).
-- Los 5 `static/agro_*.json`: `agro_produccion.json` (~81 KB, HOY emisión PARCIAL
-  de 3 cultivos), `agro_exportaciones.json` (~288 KB), `agro_precios.json` (~69 KB),
-  `agro_geo_municipal.json` (~494 KB), `agro_geo_departamental.json` (~310 KB).
+- `scripts/data/agro_municipios.csv` — mapa códigos INE del SIIP → gid (344
+  registros; los gid son claves OPACAS del join, formato GADM-oide legado del
+  fixture — la geometría ya NO es GADM). 5 registros `Lago Titicaca` son
+  pseudo-unidades de agua sin código INE: quedan fuera del geojson.
+- Los 5 `static/agro_*.json`: `agro_produccion.json` (~763 KB, harvest COMPLETO
+  73 cultivos × 2013-2024), `agro_exportaciones.json` (~288 KB), `agro_precios.json`
+  (~69 KB), `agro_geo_municipal.json` (~496 KB, 339 features),
+  `agro_geo_departamental.json` (~310 KB).
 - Frontend en `template.html`: markup, CSS, JS y rutas, todo envuelto en
   `bake:optional:agro`.
 
@@ -695,15 +702,19 @@ afecta el publish productivo).
 - Precios: FAO GIEWS FPMA (`price_value` BOB nominal, NUNCA el dólar al TC
   oficial) + WB Pink Sheet (URL con GUID anual rotativo: discovery en la página
   de commodity markets + fallback hardcodeado).
-- Geometrías: GADM 4.1. **Nota de licencia (flag para revisión):** GADM es de
-  uso libre no comercial; la redistribución de derivados requiere permiso.
+- Geometrías: geoBoundaries gbOpen BOL ADM3/ADM1, licencia textual **"Public
+  Domain; free use and access to information"** (fuente primaria: GeoBolivia,
+  geo.gob.bo, límites municipales oficiales). Apta para redistribución.
+  Atribución en el pie del mapa municipal y en `/creditos-imagenes.html`
+  (sección "Datos geográficos"). El flag de licencia GADM quedó resuelto con
+  este swap (2026-07-10).
 
 **Pendientes:**
-- Harvest SIIP completo (la emisión actual es parcial: Quínua/Papa/Chia) y
-  bakear tras validación visual de Diego.
+- Bakear tras validación visual de Diego (el harvest SIIP completo ya corrió:
+  73 cultivos × 2013-2024, 49.537 filas municipales, 99,8% georreferenciadas).
 - Cron VPS de refresco (sesión 2 — requiere autorización).
 - Códigos SIIP `225`/`226` (La Paz, `desc_mun` NULL upstream) sin
-  georreferenciar: ~30 filas en `sin_georef`; asignación manual pendiente vía
+  georreferenciar: ~101 filas en `sin_georef`; asignación manual pendiente vía
   seeds del CSV.
 - Candidatos NANDINA adicionales propuestos — decisión de Diego (ver PR).
 

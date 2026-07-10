@@ -2,31 +2,49 @@
 """
 build_agro_geojson.py — GeoJSON municipal liviano para la tab Agro.
 
-Toma el nivel 3 de GADM 4.1 para Bolivia (344 municipios, MultiPolygon),
-lo simplifica con shapely (preserve_topology) y redondea coordenadas para
-bajar de ~1.9 MB a <800 KB crudo, manteniendo las 344 features válidas.
+FUENTE: geoBoundaries gbOpen BOL ADM3 (339 municipios, licencia **Public
+Domain** — "Public Domain; free use and access to information"), cuyo
+upstream es GeoBolivia (geo.gob.bo, límites municipales oficiales,
+metadata aeeb85a9-23df-48d4-a4e5-dd19e8b206db). Reemplaza al derivado de
+GADM 4.1 (licencia no comercial / sin redistribución) desde 2026-07-10.
 
-Las propiedades de salida son {gid, nombre, depto} — nombre/depto salen de
-scripts/data/agro_municipios.csv (nombres bonitos con espacios/acentos y
-depto en canon ASCII), NO del GADM .json (que trae nombres sin espacios,
-artefacto del export).
+El ADM3 de geoBoundaries trae solo `shapeName` (sin departamento), así que
+el depto se asigna por SPATIAL JOIN contra el ADM1 de la misma fuente
+(representative_point ∈ polígono departamental) — necesario porque hay 15
+nombres de municipio duplicados entre departamentos.
+
+CROSSWALK a nuestros gid: cada feature se matchea contra
+scripts/data/agro_municipios.csv por (nombre normalizado, depto), con
+fallback a los alias del CSV y a prefijo-único (el shapeName de
+"La (Marka) San Andrés de Machaca" viene truncado en origen). Los gid se
+conservan como CLAVES OPACAS del join con agro_produccion.json — su formato
+GADM-oide es legado del fixture, no implica geometría GADM.
+
+EXCLUSIÓN DOCUMENTADA: los 5 registros "Lago Titicaca" del CSV son
+pseudo-unidades de agua heredadas de la tabla GADM (sin código INE, sin
+data SIIP posible); geoBoundaries no las trae como municipios y la salida
+tampoco. Features de salida esperadas: 344 - 5 = 339.
+
+Las propiedades de salida son {gid, nombre, depto} — nombre/depto salen del
+CSV (nombres bonitos, depto en canon ASCII), NO del shapeName.
 
 Calibración: si no se pasa --tolerancia, prueba 0.002 / 0.005 / 0.01 y se
 queda con la MENOR tolerancia (mayor calidad) cuyo output pese <--max-kb.
 
 Uso:
-    python scripts/build_agro_geojson.py --gadm <path o URL del .json[.zip]>
-    python scripts/build_agro_geojson.py --gadm gadm41_BOL_3.json \
-        --departamental "<path>/bolivia_departamentos.geojson"
+    python scripts/build_agro_geojson.py                     # descarga la fuente
+    python scripts/build_agro_geojson.py --fuente gb_ADM3.geojson --adm1 gb_ADM1.geojson
+    python scripts/build_agro_geojson.py --departamental "<path>/bolivia_departamentos.geojson"
         # además copia VERBATIM el geojson departamental (Comex) a
         # static/agro_geo_departamental.json y lo verifica (9 features).
 """
 
 import argparse
-import io
+import csv
 import json
+import re
 import sys
-import zipfile
+import unicodedata
 from pathlib import Path
 
 import requests
@@ -39,44 +57,132 @@ MAPA_DEFAULT = REPO_ROOT / "scripts" / "data" / "agro_municipios.csv"
 OUT_DEFAULT = REPO_ROOT / "static" / "agro_geo_municipal.json"
 DEP_OUT_DEFAULT = REPO_ROOT / "static" / "agro_geo_departamental.json"
 
-GADM_URL = ("https://geodata.ucdavis.edu/gadm/gadm4.1/json/"
-            "gadm41_BOL_3.json.zip")
+# Release pineado de geoBoundaries (commit 9469f09; ver
+# https://www.geoboundaries.org/api/current/gbOpen/BOL/ADM3/).
+GB_ADM3_URL = ("https://github.com/wmgeolab/geoBoundaries/raw/9469f09/"
+               "releaseData/gbOpen/BOL/ADM3/geoBoundaries-BOL-ADM3.geojson")
+GB_ADM1_URL = ("https://github.com/wmgeolab/geoBoundaries/raw/9469f09/"
+               "releaseData/gbOpen/BOL/ADM1/geoBoundaries-BOL-ADM1.geojson")
 
 TOLERANCIAS_CANDIDATAS = [0.002, 0.005, 0.01]
 
 DEPTOS_CANON = ["Chuquisaca", "La Paz", "Cochabamba", "Oruro", "Potosi",
                 "Tarija", "Santa Cruz", "Beni", "Pando"]
 
+# Registros del CSV sin municipio real detrás (ver docstring).
+NOMBRE_EXCLUIDO = "Lago Titicaca"
+EXCLUIDOS_ESPERADOS = 5
 
-def cargar_gadm(origen: str) -> dict:
-    """Lee el FeatureCollection GADM desde path local o URL (.json o .zip)."""
+
+def _norm(s: str) -> str:
+    """lower + sin acentos + solo [a-z0-9] — misma normalización que el
+    mapeo INE→gid de ingest_agro.py."""
+    s = unicodedata.normalize("NFD", s.lower())
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9]", "", s)
+
+
+def cargar_geojson(origen: str) -> dict:
+    """FeatureCollection desde path local o URL."""
     if origen.startswith("http://") or origen.startswith("https://"):
-        r = requests.get(origen, timeout=120)
+        r = requests.get(origen, timeout=180)
         r.raise_for_status()
-        contenido = r.content
-        if origen.endswith(".zip"):
-            with zipfile.ZipFile(io.BytesIO(contenido)) as z:
-                nombre = next(n for n in z.namelist() if n.endswith(".json"))
-                contenido = z.read(nombre)
-        return json.loads(contenido.decode("utf-8"))
-    path = Path(origen)
-    if path.suffix == ".zip":
-        with zipfile.ZipFile(path) as z:
-            nombre = next(n for n in z.namelist() if n.endswith(".json"))
-            return json.loads(z.read(nombre).decode("utf-8"))
-    return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(r.content.decode("utf-8"))
+    return json.loads(Path(origen).read_text(encoding="utf-8"))
 
 
-def cargar_mapa(path: Path) -> dict:
-    """agro_municipios.csv → {gid: (nombre, depto)}."""
-    import csv
-    out = {}
+def cargar_mapa(path: Path) -> tuple[dict, set]:
+    """agro_municipios.csv → ({gid: (nombre, depto, [alias])}, gids_excluidos).
+
+    Los registros 'Lago Titicaca' (pseudo-unidades de agua sin INE) se
+    devuelven aparte como exclusión documentada.
+    """
+    mapa, excluidos = {}, set()
     with open(path, encoding="utf-8", newline="") as fh:
         for row in csv.DictReader(fh):
-            out[row["gid"]] = (row["nombre"], row["depto"])
-    if not out:
+            if row["nombre"] == NOMBRE_EXCLUIDO:
+                if row.get("ine_codes"):
+                    raise RuntimeError(
+                        f"{row['gid']} '{NOMBRE_EXCLUIDO}' tiene ine_codes — "
+                        "la exclusión asume que es pseudo-unidad sin data")
+                excluidos.add(row["gid"])
+                continue
+            alias = [a for a in (row.get("alias") or "").split(";") if a]
+            mapa[row["gid"]] = (row["nombre"], row["depto"], alias)
+    if not mapa:
         raise RuntimeError(f"Mapa {path} vacío")
+    if len(excluidos) != EXCLUIDOS_ESPERADOS:
+        raise RuntimeError(f"Excluidos '{NOMBRE_EXCLUIDO}'={len(excluidos)} "
+                           f"!= {EXCLUIDOS_ESPERADOS} esperados — revisar CSV")
+    return mapa, excluidos
+
+
+def asignar_deptos(features: list, adm1: dict) -> list:
+    """Depto canon por spatial join (representative_point ∈ ADM1)."""
+    depts = []
+    for ft in adm1["features"]:
+        nm = _norm(ft["properties"]["shapeName"])
+        canon = next((c for c in DEPTOS_CANON if _norm(c) == nm
+                      or nm.startswith(_norm(c))), None)
+        if canon is None:
+            raise RuntimeError(f"ADM1 no mapea a canon: "
+                               f"{ft['properties']['shapeName']}")
+        depts.append((canon, shape(ft["geometry"])))
+    if len(depts) != 9:
+        raise RuntimeError(f"ADM1 features={len(depts)} != 9")
+    out = []
+    for ft in features:
+        geom = shape(ft["geometry"])
+        rp = geom.representative_point()
+        dep = next((d for d, poly in depts if poly.contains(rp)), None)
+        if dep is None:
+            raise RuntimeError(f"Sin depto: {ft['properties']['shapeName']}")
+        out.append({"nombre_gb": ft["properties"]["shapeName"],
+                    "dep": dep, "geom": geom})
     return out
+
+
+def crosswalk(gb_feats: list, mapa: dict) -> dict:
+    """{gid: geometría} matcheando (nombre normalizado, depto).
+
+    Orden de resolución: exacto → alias del CSV → prefijo único (shapeName
+    truncado en origen, ej. 'La (Marka) San Andrés de Mach'). Falla ruidoso
+    si un feature no matchea, matchea ambiguo, o un gid queda con dos
+    geometrías.
+    """
+    idx = {}
+    for gid, (nombre, depto, alias) in mapa.items():
+        for n in [nombre] + alias:
+            idx.setdefault((_norm(n), depto), set()).add(gid)
+
+    asignado, sin_match = {}, []
+    for f in gb_feats:
+        key = (_norm(f["nombre_gb"]), f["dep"])
+        gids = idx.get(key)
+        if not gids:  # fallback: prefijo único dentro del depto
+            cand = {g for (n, d), gs in idx.items() if d == f["dep"]
+                    and n.startswith(key[0]) for g in gs}
+            if len(cand) == 1:
+                gids = cand
+                print(f"[agro-geo] prefijo-único: '{f['nombre_gb']}' "
+                      f"({f['dep']}) → {next(iter(cand))}")
+        if not gids:
+            sin_match.append((f["nombre_gb"], f["dep"]))
+            continue
+        if len(gids) > 1:
+            raise RuntimeError(f"Ambiguo: {f['nombre_gb']} ({f['dep']}) "
+                               f"→ {sorted(gids)}")
+        gid = next(iter(gids))
+        if gid in asignado:
+            raise RuntimeError(f"gid {gid} con dos geometrías "
+                               f"({f['nombre_gb']})")
+        asignado[gid] = f["geom"]
+    if sin_match:
+        raise RuntimeError(f"Features de la fuente sin match: {sin_match}")
+    faltan = set(mapa) - set(asignado)
+    if faltan:
+        raise RuntimeError(f"GIDs del CSV sin geometría: {sorted(faltan)}")
+    return asignado
 
 
 def _contar_vertices(geom_json: dict) -> int:
@@ -114,18 +220,15 @@ def simplificar_feature(geom, tolerancia: float, dec: int):
     return ajustada
 
 
-def construir(features: list, mapa: dict, tolerancia: float, dec: int):
+def construir(asignado: dict, mapa: dict, tolerancia: float, dec: int):
     """FeatureCollection de salida + stats (vertices in/out, bbox)."""
     out_features = []
     v_in = v_out = 0
     bbox = [180.0, 90.0, -180.0, -90.0]
-    for f in features:
-        gid = f["properties"]["GID_3"]
-        if gid not in mapa:
-            raise RuntimeError(f"GID {gid} del GADM no está en el mapa CSV")
-        nombre, depto = mapa[gid]
-        geom_in = shape(f["geometry"])
-        v_in += _contar_vertices(f["geometry"])
+    for gid in sorted(asignado):
+        nombre, depto, _ = mapa[gid]
+        geom_in = asignado[gid]
+        v_in += _contar_vertices(mapping(geom_in))
         geom = simplificar_feature(geom_in, tolerancia, dec)
         gj = mapping(geom)
         gj = {"type": gj["type"],
@@ -148,7 +251,8 @@ def construir(features: list, mapa: dict, tolerancia: float, dec: int):
 
 
 def validar(fc: dict, mapa: dict):
-    """Asserts post-build: 344 features, gids completos, geometrías sanas."""
+    """Asserts post-build: features == gids del mapa (sin excluidos),
+    gids completos, geometrías sanas."""
     feats = fc["features"]
     if len(feats) != len(mapa):
         raise RuntimeError(f"features={len(feats)} != mapa={len(mapa)}")
@@ -182,10 +286,14 @@ def copiar_departamental(src: Path, dst: Path):
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="GeoJSON municipal simplificado para la tab Agro")
-    parser.add_argument("--gadm", required=True,
-                        help=f"Path local o URL del GADM nivel 3 "
-                             f"(.json o .json.zip; ej. {GADM_URL})")
+        description="GeoJSON municipal simplificado para la tab Agro "
+                    "(fuente geoBoundaries/GeoBolivia, Public Domain)")
+    parser.add_argument("--fuente", default=GB_ADM3_URL,
+                        help="Path local o URL del ADM3 de geoBoundaries "
+                             f"(default: {GB_ADM3_URL})")
+    parser.add_argument("--adm1", default=GB_ADM1_URL,
+                        help="Path local o URL del ADM1 (spatial join de "
+                             f"deptos; default: {GB_ADM1_URL})")
     parser.add_argument("--mapa", type=Path, default=MAPA_DEFAULT,
                         help=f"CSV de nombres bonitos (default {MAPA_DEFAULT})")
     parser.add_argument("--out", type=Path, default=OUT_DEFAULT,
@@ -203,16 +311,23 @@ def main() -> int:
                              f"{DEP_OUT_DEFAULT} y lo verifica")
     args = parser.parse_args()
 
-    gadm = cargar_gadm(args.gadm)
-    features = gadm["features"]
-    mapa = cargar_mapa(args.mapa)
-    print(f"[agro-geo] GADM features={len(features)} mapa gids={len(mapa)}")
+    adm3 = cargar_geojson(args.fuente)
+    adm1 = cargar_geojson(args.adm1)
+    mapa, excluidos = cargar_mapa(args.mapa)
+    print(f"[agro-geo] fuente ADM3 features={len(adm3['features'])} "
+          f"mapa gids={len(mapa)} (+{len(excluidos)} excluidos "
+          f"'{NOMBRE_EXCLUIDO}')")
+
+    gb_feats = asignar_deptos(adm3["features"], adm1)
+    asignado = crosswalk(gb_feats, mapa)
+    print(f"[agro-geo] crosswalk: {len(asignado)}/{len(mapa)} gids con "
+          f"geometría")
 
     candidatas = ([args.tolerancia] if args.tolerancia is not None
                   else TOLERANCIAS_CANDIDATAS)
     elegido = None
     for tol in candidatas:
-        fc, stats = construir(features, mapa, tol, args.decimales)
+        fc, stats = construir(asignado, mapa, tol, args.decimales)
         cuerpo = json.dumps(fc, separators=(",", ":"), ensure_ascii=False)
         peso = len(cuerpo.encode("utf-8"))
         print(f"[agro-geo] tolerancia={tol} vertices={stats['v_in']}→"
