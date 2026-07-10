@@ -1406,6 +1406,12 @@ def main():
                              "(default: <dir de --output>/en/index.html)")
     parser.add_argument("--csv", action="store_true",
                         help="También exportar CSV con métricas por snapshot")
+    parser.add_argument("--incluir-modulo", action="append", metavar="MOD",
+                        help="Bakear también este módulo desbakeado SOLO en esta "
+                             "corrida (repetible; ej. --incluir-modulo agro). "
+                             "Pensado para previews locales de módulos de "
+                             "config.MODULOS_NO_BAKEADOS — no muta la config ni "
+                             "afecta el publish productivo.")
     args = parser.parse_args()
 
     if not args.db.exists():
@@ -1427,13 +1433,19 @@ def main():
     # dos veces ni se muta el payload ES.
     umami_stats = _fetch_umami_stats()  # fetch único (una sola llamada HTTP)
 
+    # Módulos excluidos del bake: los desbakeados MENOS los pedidos por CLI
+    # (--incluir-modulo, preview local). Set nuevo — la config no se muta y
+    # process_data sigue gobernada por MODULOS_NO_BAKEADOS (los payloads de
+    # módulos con data en DATA, ej. dpf, no se re-emiten por este flag).
+    excluidos = MODULOS_NO_BAKEADOS - set(args.incluir_modulo or [])
+
     output_en = args.output_en or (args.output.parent / 'en' / 'index.html')
     for lang, base, outpath in (('es', '', args.output),
                                 ('en', '/en', output_en)):
         try:
             lang_table = i18n_bake.load_lang(lang)
             html = i18n_bake.bake(template, lang, base, lang_table,
-                                  excluidos=MODULOS_NO_BAKEADOS)
+                                  excluidos=excluidos)
             data_lang = _relabel_inflacion_for_lang(data, lang_table)
             data_json = json.dumps(data_lang)
         except Exception as e:

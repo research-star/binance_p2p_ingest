@@ -40,12 +40,28 @@ TEMPLATE_HTML = Path(__file__).parent / "template.html"
 # edición necesaria — nada de arqueología. (Nota de acoplamiento: `guide`
 # depende de datasets/helpers de `bbv`; re-bakear `guide` requiere `bbv` también
 # bakeado. Ver HANDOFF.md § Módulos desbakeados.)
-MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247"}
+# `agro` nace desbakeado: tab Producción/Exportaciones/Precios completa en el
+# template, pendiente de harvest SIIP completo + OK de Diego para bakear.
+MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247", "agro"}
 
 # Assets en static/ que pertenecen a un módulo. publish_dashboard.py no copia a
 # prod los de módulos desbakeados (derivado de MODULOS_NO_BAKEADOS, no lista
 # paralela). Solo mercado247 sirve un asset propio; dpf/bbv/guide viven inline.
-MODULO_ASSETS = {"mercado247": ("mercado247-tab.js",)}
+MODULO_ASSETS = {
+    "mercado247": ("mercado247-tab.js",),
+    # agro: datasets lazy del front (fetch absoluto /agro_*.json). Se listan
+    # también los shards preventivos agro_prod_g1..g7 del harvest completo:
+    # HOY no existen en static/ (el índice parcial trae series_mun inline) y
+    # listar nombres inexistentes es inocuo (publish solo filtra archivos
+    # presentes) — future-proof para cuando el harvest los genere.
+    "agro": (
+        "agro_produccion.json", "agro_exportaciones.json", "agro_precios.json",
+        "agro_geo_municipal.json", "agro_geo_departamental.json",
+        "agro_prod_g1.json", "agro_prod_g2.json", "agro_prod_g3.json",
+        "agro_prod_g4.json", "agro_prod_g5.json", "agro_prod_g6.json",
+        "agro_prod_g7.json",
+    ),
+}
 
 
 def assets_no_publicados() -> set:

@@ -478,6 +478,35 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
    Paleta por bandera nacional: Bolivia ámbar (protagónica), Colombia
    azul (no amarillo), México verde oscuro (no rojo) — evita choques
    con Bolivia/Ecuador/Chile. */
+/* bake:optional:agro */
+/* ── Tab Agro (producción SIIP + exportaciones INE + precios) ──
+   Réplica del tratamiento editorial de Macro (subheader estático + cards
+   generosos), scopeada a #tab-agro. El subnav reusa .fb-macro-subnav/.fb-macro-tab
+   por clase (genéricas). */
+#tab-agro .fb-subheader{position:static;border-bottom:none;padding:10px 18px 12px}
+#tab-agro .fb-chart-card{padding:20px 22px}
+#tab-agro .fb-chart-head{margin-bottom:16px;border-bottom:1px solid var(--border-color);padding-bottom:13px}
+#tab-agro .fb-chart-title{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:600;letter-spacing:-.01em}
+#tab-agro .fb-chart-sub{margin-top:6px;line-height:1.45}
+.agro-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.agro-controls{display:flex;gap:14px 26px;flex-wrap:wrap;align-items:flex-end;margin:0 0 14px}
+.agro-ctl{display:flex;flex-direction:column;gap:6px}
+.agro-select{font-family:inherit;font-size:var(--text-sm);color:var(--text-primary);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:7px 10px;min-width:230px;max-width:100%;cursor:pointer}
+.agro-mapa{min-height:400px}
+.agro-status{padding:56px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5}
+/* Slider de años: thumb grande (26px ≥ 24px) para uso táctil. */
+.agro-slider{margin:12px 6px 2px}
+.agro-anio{font-family:var(--font-display);font-size:28px;font-weight:600;color:var(--text-primary);text-align:center;line-height:1.15}
+.agro-slider input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;margin:12px 0 4px;border-radius:3px;background:var(--bg-tertiary);border:1px solid var(--border-color);outline:none;cursor:pointer}
+.agro-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
+.agro-slider input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
+.agro-slider-marks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)}
+.agro-badge-ytd{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:#7a4a12;background:rgba(180,83,9,.12);border:1px solid rgba(180,83,9,.30);border-radius:var(--radius-sm);padding:2px 8px;margin-left:10px;vertical-align:3px}
+.agro-pill-parcial{display:inline-block;font-size:var(--text-xs);font-weight:600;color:var(--text-muted);background:var(--bg-tertiary);border:1px dashed var(--border-color);border-radius:var(--radius-md);padding:4px 10px;white-space:nowrap}
+/* [hidden] debe ganarle al display de las clases de arriba (misma especificidad → orden). */
+.agro-badge-ytd[hidden],.agro-pill-parcial[hidden]{display:none}
+@media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}}
+/* /bake:optional:agro */
 /* bake:optional:dpf */
 /* ── DPF Tab ── */
 .fb-dpf-filters{display:flex;gap:24px;flex-wrap:wrap;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:14px 18px;margin-bottom:14px}
@@ -828,6 +857,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
     <button class="fb-tab active" data-tab="noticias">{{t:nav.tab_inicio}}</button>
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
+    <!-- bake:optional:agro --><button class="fb-tab" data-tab="agro">{{t:nav.tab_agro}}</button><!-- /bake:optional:agro -->
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button>
     <!-- bake:optional:mercado247 --><button class="fb-tab" data-tab="mercado247" data-admin-only hidden>{{t:nav.tab_mercado247}}</button><!-- /bake:optional:mercado247 -->
     <!-- i18n:es-only -->
@@ -1478,6 +1508,129 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   </div>
 </div><!-- /tab-macro -->
 
+<!-- bake:optional:agro -->
+<!-- Agro: producción SIIP (municipal/departamental) + exportaciones INE Comex +
+     precios (FPMA / Pink Sheet / valor unitario FOB). Subnav estilo Macro
+     (clases .fb-macro-* reusadas; plumbing propio AGRO_SUBTABS). Data lazy
+     desde /agro_*.json (static/) — nada pasa por DATA/dashboard.py. -->
+<div id="tab-agro" style="display:none;">
+  <div class="fb-subheader">
+    <div>
+      <h1>{{t:agro.h1}}</h1>
+      <div class="fb-subtitle" id="agroSubtitle">&mdash;</div>
+    </div>
+  </div>
+  <nav class="fb-macro-subnav" id="agroSubnav" aria-label="{{t:agro.subnav_aria}}">
+    <button class="fb-macro-tab active" data-subtab="produccion" type="button">{{t:agro.subtab_produccion}}</button>
+    <button class="fb-macro-tab" data-subtab="exportaciones" type="button">{{t:agro.subtab_exportaciones}}</button>
+  </nav>
+  <!-- Sub-panel default: Producción (SIIP). Render lazy: window.renderAgroProduccion. -->
+  <div id="subtab-agro-produccion">
+    <div class="content">
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.prod_map_title}}</div>
+            <div class="fb-chart-sub">{{t:agro.prod_map_sub}}</div>
+          </div>
+          <span class="agro-pill-parcial" id="agroProdParcial" hidden>{{t:agro.pill_parcial}}</span>
+        </div>
+        <div class="agro-controls">
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_cultivo}}</span>
+            <select id="agroProdCultivo" class="agro-select" aria-label="{{t:agro.ctl_cultivo}}"></select></label>
+          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+            <div class="fb-pills" id="agroProdMetrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+              <button class="fb-pill" data-met="sup" type="button">{{t:agro.met_superficie}}</button>
+              <button class="fb-pill active" data-met="prod" type="button">{{t:agro.met_produccion}}</button>
+              <button class="fb-pill" data-met="rend" type="button">{{t:agro.met_rendimiento}}</button>
+            </div></div>
+          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_nivel}}</span>
+            <div class="fb-pills" id="agroProdNivel" role="group" aria-label="{{t:agro.ctl_nivel}}">
+              <button class="fb-pill active" data-niv="mun" type="button">{{t:agro.nivel_municipal}}</button>
+              <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
+            </div></div>
+        </div>
+        <div id="agroProdMapa" class="agro-mapa"></div>
+        <div class="agro-slider">
+          <div class="agro-anio" id="agroProdAnioLabel">&mdash;</div>
+          <input type="range" id="agroProdAnio" min="2013" max="2024" step="1" value="2024" aria-label="{{t:agro.slider_aria}}">
+          <div class="agro-slider-marks"><span id="agroProdAnioMin">2013</span><span id="agroProdAnioMax">2024</span></div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">{{t:agro.prod_rank_title}}</div>
+          <div class="fb-chart-sub">{{t:agro.prod_rank_sub}}</div>
+        </div>
+        <div id="agroProdRank" style="min-height:200px"></div>
+        <div class="fb-chart-source">{{t:agro.prod_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.precios_title}}</div>
+            <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
+          </div>
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+            <select id="agroPreciosSelProd" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+        </div>
+        <div id="agroPreciosChartProd" style="height:360px"></div>
+        <div class="fb-chart-source" id="agroPreciosFuenteProd"></div>
+      </div>
+    </div>
+  </div>
+  <!-- Sub-panel: Exportaciones (INE Comex, partidas NANDINA 10 dígitos).
+       Render lazy: window.renderAgroExportaciones. -->
+  <div id="subtab-agro-exportaciones" style="display:none;">
+    <div class="content">
+      <div class="fb-chart-card fb-chart-card--elevated">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">{{t:agro.expo_map_title}}</div>
+          <div class="fb-chart-sub">{{t:agro.expo_map_sub}}</div>
+        </div>
+        <div class="agro-controls">
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+            <select id="agroExpoProducto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+          <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+            <div class="fb-pills" id="agroExpoMetrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+              <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+              <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+            </div></div>
+        </div>
+        <div id="agroExpoMapa" class="agro-mapa"></div>
+        <div class="agro-slider">
+          <div class="agro-anio"><span id="agroExpoAnioLabel">&mdash;</span><span class="agro-badge-ytd" id="agroExpoYtd" hidden></span></div>
+          <input type="range" id="agroExpoAnio" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+          <div class="agro-slider-marks"><span id="agroExpoAnioMin">2017</span><span id="agroExpoAnioMax">2026</span></div>
+        </div>
+        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head">
+          <div class="fb-chart-title">{{t:agro.expo_rank_title}}</div>
+          <div class="fb-chart-sub">{{t:agro.expo_rank_sub}}</div>
+        </div>
+        <div id="agroExpoRank" style="min-height:200px"></div>
+        <div class="fb-chart-source">{{t:agro.expo_source}}</div>
+      </div>
+      <div class="fb-chart-card fb-chart-card--elevated" style="margin-top:16px">
+        <div class="fb-chart-head agro-head">
+          <div>
+            <div class="fb-chart-title">{{t:agro.precios_title}}</div>
+            <div class="fb-chart-sub">{{t:agro.precios_sub}}</div>
+          </div>
+          <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+            <select id="agroPreciosSelExpo" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+        </div>
+        <div id="agroPreciosChartExpo" style="height:360px"></div>
+        <div class="fb-chart-source" id="agroPreciosFuenteExpo"></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /tab-agro -->
+<!-- /bake:optional:agro -->
+
 <!-- bake:optional:mercado247 -->
 <!-- Mercado 24/7: isla oscura autocontenida (bundle namespaceado .m247 en
      static/mercado247-tab.js). Lazy-render vía window.renderMercado247() en
@@ -1538,7 +1691,7 @@ let last = null;
 //   series muteadas colapsan la distinguibilidad (ΔE≈.03) — se conserva la
 //   paleta cromática actual. Para retunear cualquier serie: editar su hex.
 const THEMES = {
-  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-bcb-tco':'#B45309','color-neutral':'#0D7680','color-accent-warm':'#FF8833','delta-up':'#A8322A','delta-down':'#2C6E49','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'},
+  paper:{'bg-primary':'#FBEDE3','bg-secondary':'#FFF7F0','bg-tertiary':'#F3E0D2','tooltip-bg':'#F3E0D2','border-color':'rgba(33,30,27,0.12)','line-strong':'rgba(33,30,27,0.24)','up':'#688470','down':'#A57067','text-primary':'#211E1B','text-secondary':'#6B6256','text-muted':'#766C5C','text-soft':'#9E927C','green':'#1e4d7a','green-muted':'rgba(30,77,122,0.10)','orange':'#6b7d92','orange-muted':'rgba(107,125,146,0.10)','blue-accent':'#2c4a6b','kpi-value-size':'28px','color-buy':'#0F5499','color-sell':'#990F3D','color-bcb-oficial':'#8c8c8c','color-bcb-ref-compra':'#0D7680','color-bcb-ref-venta':'#0D7680','color-bcb-tco':'#B45309','color-neutral':'#0D7680','color-accent-warm':'#FF8833','delta-up':'#A8322A','delta-down':'#2C6E49','chart-grid':'rgba(120,120,120,0.10)','chart-axis-text':'#576471','chart-spike':'rgba(44,74,107,0.25)','chart-color-bolivia':'#990F3D','chart-color-latino':'#0F5499','chart-color-global':'#9E948A','chart-color-argentina':'#0D7680','chart-color-brasil':'#2C7A48','chart-color-chile':'#FF8833','chart-color-colombia':'#6E2C6B','chart-color-ecuador':'#B08900','chart-color-mexico':'#4A6FA5','chart-color-peru':'#C8385C','chart-heatmap-0':'#dde8ef','chart-heatmap-25':'#a8c8e0','chart-heatmap-50':'#5589c0','chart-heatmap-75':'#2c4a6b','chart-heatmap-100':'#162844','chart-heatmap-text-high':'#ffffff','chart-heatmap-text-low':'#162844','chart-spread-line':'#2c4a6b','chart-dpf-bancos-multiples':'#284d83','chart-dpf-microfinanzas':'#327a41','chart-dpf-bancos-pyme':'#a14b46','chart-dpf-ent-vivienda':'#856300','chart-dpf-cooperativas':'#07787d','chart-dpf-ifd':'#8d4e88','chart-marker-outline':'rgba(255,255,255,0.6)','src-eldeber':'#1b6539','src-correosur':'#b26100','src-unitel':'#a21c1e','src-larazon':'#bb2637','src-bloomberg':'#26873e','src-eju':'#008131','src-eldia':'#2676d8','src-brujula':'#1226aa','src-fides':'#1e6eb4','src-erbol':'#eb003d','src-urgente':'#e9111b','src-opinion':'#0e6cb6','src-lostiempos':'#996c0e','chart-ipc-general':'#d97706','chart-ipp-general':'#1e4d7a','chart-infl-total':'#2c4a6b','chart-ipc-alimentos_y_bebidas_no_alcoholicas':'#2c6e49','chart-ipc-bebidas_alcoholicas_y_tabaco':'#8a4a62','chart-ipc-prendas_de_vestir_y_calzado':'#5e548e','chart-ipc-vivienda_y_servicios_basicos':'#1e4d7a','chart-ipc-muebles_bienes_y_servicios_domesticos':'#8a6d3b','chart-ipc-salud':'#b3473b','chart-ipc-transporte':'#c2410c','chart-ipc-comunicaciones':'#0e7490','chart-ipc-recreacion_y_cultura':'#4d7c0f','chart-ipc-educacion':'#6d28d9','chart-ipc-alimentos_y_bebidas_consumidos_fuera_del_hogar':'#a16207','chart-ipc-bienes_y_servicios_diversos':'#6b7d92','chart-ipp-agricolas':'#2c6e49','chart-ipp-pecuaria':'#b3473b','chart-ipp-pesca':'#0e7490','chart-ipp-otros_minerales_y_gas_natural':'#8a6d3b','chart-ipp-industria_manufacturera':'#c2410c','chart-ipp-servicios':'#5e548e','chart-debt-em2017':'#0F5499','chart-debt-em2022':'#0D7680','chart-debt-em2026':'#990F3D','chart-band-low':'rgba(44,110,73,0.07)','chart-band-mid':'rgba(217,119,6,0.06)','chart-band-high':'rgba(179,71,59,0.07)','chart-band-label-low':'rgba(44,110,73,0.60)','chart-band-label-mid':'rgba(146,64,14,0.60)','chart-band-label-high':'rgba(141,53,44,0.65)'/* bake:optional:agro */,'chart-agro-seq-0':'#EAF0E0','chart-agro-seq-1':'#8CAC77','chart-agro-seq-2':'#274D33','chart-agro-neutral':'rgba(33,30,27,0.05)','chart-agro-accent':'#3E6B4A','chart-agro-p0':'#2F5D3A','chart-agro-p1':'#B45309','chart-agro-p2':'#1E4D7A','chart-agro-p3':'#8A4A62','chart-agro-p4':'#0E7490','chart-agro-p5':'#5E548E'/* /bake:optional:agro */},
 };
 const SEMANTIC_VAR_FALLBACKS = {
   'color-buy':'green','color-sell':'orange',
@@ -3154,6 +3307,9 @@ var ROUTE_MAP = {
   '/inflacion': {tab:'macro', subtab:'inflacion'},
   '/bloqueos':  {tab:'macro', subtab:'bloqueos'},
   '/tasas':     {tab:'macro', subtab:'tasas'},
+  /* bake:optional:agro */'/agro':      {tab:'agro', subtab:'produccion'},
+  '/agro/produccion':    {tab:'agro', subtab:'produccion'},
+  '/agro/exportaciones': {tab:'agro', subtab:'exportaciones'},/* /bake:optional:agro */
   /* i18n:es-only */
   /* bake:optional:dpf */'/dpf':       {tab:'dpf'},/* /bake:optional:dpf */
   /* bake:optional:bbv */'/bbv':       {tab:'bbv'},/* /bake:optional:bbv */
@@ -3169,6 +3325,7 @@ var ROUTE_MAP = {
 var TAB_PANELS = {
   dollar:   'tab-dolar',
   macro:    'tab-macro',
+  /* bake:optional:agro */agro:     'tab-agro',/* /bake:optional:agro */
   /* bake:optional:dpf */dpf:      'tab-dpf',/* /bake:optional:dpf */
   /* bake:optional:bbv */bbv:      'tab-bbv',/* /bake:optional:bbv */
   /* bake:optional:guide */guide:    'tab-guide',/* /bake:optional:guide */
@@ -3581,10 +3738,12 @@ function activateTab(target, subtab){
   // Dólar es lazy como el resto: render idempotente en el primer activate, con
   // #tab-dolar ya visible (loop de arriba) → Plotly dimensiona bien sin resize manual.
   if(target==='dollar' && typeof window.renderDollar==='function'){window.renderDollar();}
-  // Macro delega en su subtab (que pone su propio título); el resto usa TAB_TITLES.
+  // Macro (y Agro) delegan en su subtab (que pone su propio título); el resto usa TAB_TITLES.
   if(target==='macro'){
     activateMacroSubtab(subtab);
-  } else if(TAB_TITLES[target]){
+  } /* bake:optional:agro */else if(target==='agro'){
+    activateAgroSubtab(subtab);
+  } /* /bake:optional:agro */else if(TAB_TITLES[target]){
     document.title = TAB_TITLES[target];
   }
   if(window.__fbMeasure) window.__fbMeasure();  // re-mide --nav-h/--sub-h: el subheader visible cambió con la tab
@@ -3601,7 +3760,12 @@ document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
       var cur = macroState.current || MACRO_SUBTABS[0].id;
       var s = MACRO_SUBTABS.find(function(x){return x.id===cur;});
       slug = s && s.slug;
-    } else {
+    } else /* bake:optional:agro */if(target==='agro'){
+      // Agro pushea el slug del subtab activo (mismo patrón que Macro).
+      var curAgro = agroState.current || AGRO_SUBTABS[0].id;
+      var sAgro = AGRO_SUBTABS.find(function(x){return x.id===curAgro;});
+      slug = sAgro && sAgro.slug;
+    } else /* /bake:optional:agro */{
       slug = TAB_TO_SLUG[target];
     }
     if(slug && window.location.pathname !== fbHref(slug)){
@@ -3640,6 +3804,59 @@ document.addEventListener('click', function(e){
     }
   });
 })();
+
+/* bake:optional:agro */
+// ═══ AGRO: subnav propio (patrón MACRO_SUBTABS duplicado — los identificadores
+// de macro están hardcodeados a esa tab, así que Agro trae su plumbing gemelo:
+// AGRO_SUBTABS + agroState + activateAgroSubtab + #agroSubnav/#agroSubtitle +
+// paneles subtab-agro-<id>). Los render* viven en el script AGRO TAB LOGIC del
+// final (lazy-fetch de /agro_*.json); guardas typeof por orden de parseo.
+var AGRO_SUBTABS = [
+  { id:'produccion', slug:'/agro/produccion', title:'{{t:agro.doc_title_produccion}}',
+    subtitle:'{{t:agro.prod_subtitle}}',
+    render:function(){ if(typeof window.renderAgroProduccion==='function') window.renderAgroProduccion(); } },
+  { id:'exportaciones', slug:'/agro/exportaciones', title:'{{t:agro.doc_title_exportaciones}}',
+    subtitle:'{{t:agro.expo_subtitle}}',
+    render:function(){ if(typeof window.renderAgroExportaciones==='function') window.renderAgroExportaciones(); } }
+];
+var agroState = { current: null };
+
+function activateAgroSubtab(subId){
+  // Resolver: pedido → último activo → primero de la lista (default: Producción).
+  var sub = AGRO_SUBTABS.find(function(s){return s.id===subId;})
+        ||  AGRO_SUBTABS.find(function(s){return s.id===agroState.current;})
+        ||  AGRO_SUBTABS[0];
+  agroState.current = sub.id;
+  document.querySelectorAll('#agroSubnav [data-subtab]').forEach(function(c){
+    c.classList.toggle('active', c.dataset.subtab === sub.id);
+  });
+  // Panel visible ANTES del render (Plotly necesita el contenedor visible).
+  AGRO_SUBTABS.forEach(function(s){
+    var p = document.getElementById('subtab-agro-'+s.id);
+    if(p) p.style.display = (s.id===sub.id) ? '' : 'none';
+  });
+  var st = document.getElementById('agroSubtitle');
+  if(st) st.innerHTML = sub.subtitle || '';
+  if(sub.title) document.title = sub.title;
+  if(typeof sub.render === 'function') sub.render();
+}
+
+// Subnav de Agro: switch de subtab + pushState al slug plano (patrón macroSubnav).
+(function(){
+  var nav = document.getElementById('agroSubnav');
+  if(!nav) return;
+  nav.addEventListener('click', function(e){
+    var chip = e.target.closest('[data-subtab]');
+    if(!chip || chip.disabled || chip.classList.contains('active')) return;
+    var subId = chip.dataset.subtab;
+    activateAgroSubtab(subId);
+    var sub = AGRO_SUBTABS.find(function(s){return s.id===subId;});
+    if(sub && sub.slug && window.location.pathname !== fbHref(sub.slug)){
+      history.pushState({tab:'agro', subtab:subId}, '', fbHref(sub.slug));
+    }
+  });
+})();
+/* /bake:optional:agro */
 
 // Back/forward del browser
 window.addEventListener('popstate', function(){
@@ -6231,6 +6448,530 @@ function initAsfi(){
 window.renderAsfi=function(){ if(!st.init) initAsfi(); };
 })();
 </script>
+
+<!-- bake:optional:agro -->
+<script>
+/* ═══ AGRO TAB LOGIC ═══
+   Lazy (patrón Bloqueos/ASFI): activateAgroSubtab llama window.renderAgro* en
+   cada activate; el primer call fetchea los datasets estáticos en paralelo y
+   cachea module-level (compartido entre subtabs). Paths ABSOLUTOS /agro_*.json
+   para que /en/ resuelva a la raíz (mismo motivo que mercado247-tab.js).
+   Estados VISIBLES: "Cargando datos…" y error con botón Reintentar — nada
+   silencioso. Datos: agro_produccion.json (SIIP, soporta meta.shards),
+   agro_exportaciones.json (INE Comex), agro_precios.json (FPMA/Pink/UV),
+   agro_geo_municipal.json (GADM, 344 municipios) + agro_geo_departamental.json. */
+(function(){
+'use strict';
+
+// ── Caches module-level ──
+var _cache = { prod:null, expo:null, precios:null, geoMun:null, geoDep:null };
+var _inflight = {};
+var _shards = {};   // shards de producción por archivo (meta.shards, soporte preventivo)
+var PATHS = { prod:'/agro_produccion.json', expo:'/agro_exportaciones.json',
+              precios:'/agro_precios.json', geoMun:'/agro_geo_municipal.json',
+              geoDep:'/agro_geo_departamental.json' };
+
+function agroGet(key){
+  if(_cache[key]) return Promise.resolve(_cache[key]);
+  if(_inflight[key]) return _inflight[key];
+  _inflight[key] = fetch(PATHS[key]).then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status+' en '+PATHS[key]);
+    return r.json();
+  }).then(function(j){ _cache[key]=j; delete _inflight[key]; return j; })
+    .catch(function(e){ delete _inflight[key]; throw e; });
+  return _inflight[key];
+}
+
+// ── Formateo con el locale del deploy ──
+var LOC = FB_LANG==='es' ? 'es-BO' : 'en-US';
+var NF0A = new Intl.NumberFormat(LOC,{maximumFractionDigits:0});
+var NF2A = new Intl.NumberFormat(LOC,{minimumFractionDigits:2,maximumFractionDigits:2});
+function f0(n){ return n==null?'—':NF0A.format(n); }
+function f2(n){ return n==null?'—':NF2A.format(n); }
+function fUsd(n){ // compacto para barras; el hover del mapa lleva el entero completo
+  if(n==null) return '—';
+  if(Math.abs(n)>=1e6) return NF2A.format(n/1e6)+' M';
+  if(Math.abs(n)>=1e3) return NF0A.format(n/1e3)+' K';
+  return NF0A.format(n);
+}
+var MES_L = FB_LANG==='es'
+  ? ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+  : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ── Estados visibles (cargando / error / vacío) ──
+function status(el, html){
+  if(!el) return;
+  if(el.data && window.Plotly) Plotly.purge(el);  // el.data solo existe si el div ya fue ploteado
+  el.innerHTML = '<div class="agro-status">'+html+'</div>';
+}
+// Plotly.react NO limpia hijos ajenos: un .agro-status previo quedaría como
+// hermano del plot (texto suelto bajo el chart). Limpiar antes de plotear.
+// Además fija la altura inline del div al height del layout: el resize
+// responsive de Plotly relayoutea con autosize (toma el tamaño del div) y sin
+// altura explícita el contenedor colapsa en móvil (patrón del repo: div con
+// height inline + height en layout).
+function plotInto(el, traces, layout, config){
+  if(!el) return;
+  if(el.querySelector('.agro-status')) el.innerHTML = '';
+  if(layout && layout.height) el.style.height = layout.height+'px';
+  Plotly.react(el, traces, layout, config);
+}
+function sinDatos(label, anio){
+  return '{{t:agro.sin_datos_de}}'+label+'{{t:agro.sin_datos_en}}'+anio;
+}
+function showLoading(ids){
+  ids.forEach(function(id){ status(document.getElementById(id), '{{t:agro.cargando}}'); });
+}
+function showError(ids, retryFn){
+  ids.forEach(function(id){
+    var el = document.getElementById(id); if(!el) return;
+    status(el, '{{t:agro.error_carga}}<br><button type="button" class="fb-pill agro-retry" style="margin-top:10px">{{t:agro.reintentar}}</button>');
+    var b = el.querySelector('.agro-retry');
+    if(b) b.onclick = retryFn;
+  });
+}
+
+// ── Plotly compartido (geo estilo Bloqueos + choropleth secuencial verde) ──
+function mapH(){ return (window.innerWidth<=600) ? 400 : 520; }
+function geoLayout(c){
+  return { paper_bgcolor:'rgba(0,0,0,0)',
+    font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
+    margin:{l:0, r:0, t:0, b:0}, showlegend:false, height:mapH(),
+    hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
+    geo:{ resolution:50, projection:{type:'mercator'}, showland:false, showcountries:false, showcoastlines:false,
+      showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
+      lonaxis:{range:[-70.5,-56.5], showgrid:false}, lataxis:{range:[-24,-9], showgrid:false} } };
+}
+function seqScale(){
+  return [[0, cssVar('--chart-agro-seq-0')],[0.5, cssVar('--chart-agro-seq-1')],[1, cssVar('--chart-agro-seq-2')]];
+}
+function colorbar(c, unidad){
+  return { thickness:10, len:0.72, outlinewidth:0,
+    tickfont:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted},
+    title:{text:unidad, font:{size:10, color:c.textMuted}, side:'right'} };
+}
+// Trace base debajo del choropleth con dato: TODAS las unidades en relleno
+// neutro suave, para que el país se vea completo; hover = solo el nombre.
+function baseTrace(geo, idkey, nameProp, c){
+  var locs=[], txt=[];
+  geo.features.forEach(function(f){ locs.push(f.properties[idkey]); txt.push(f.properties[nameProp]); });
+  return { type:'choropleth', geojson:geo, locations:locs, featureidkey:'properties.'+idkey,
+    z:locs.map(function(){ return 0; }), showscale:false, text:txt,
+    hovertemplate:'<b>%{text}</b><extra></extra>',
+    colorscale:[[0, cssVar('--chart-agro-neutral')],[1, cssVar('--chart-agro-neutral')]],
+    marker:{line:{color:hexToRgba(c.textPrimary,0.28), width:0.4}} };
+}
+function drawRank(elId, labels, vals, texts, unidad){
+  var el = document.getElementById(elId); if(!el) return;
+  var c=getC(), L=BL(c);
+  var hRank = Math.max(220, 30*labels.length+80);
+  plotInto(el, [{ type:'bar', orientation:'h',
+    x:vals, y:labels, marker:{color:cssVar('--chart-agro-accent')},
+    text:texts, textposition:'outside', cliponaxis:false,
+    textfont:{family:'IBM Plex Mono,monospace', size:10, color:c.textMuted},
+    hovertemplate:'<b>%{y}</b>: %{text} '+unidad+'<extra></extra>' }],
+   {...L, height:hRank, showlegend:false, hovermode:'closest',
+    margin:{l:8, r:84, t:8, b:36},
+    xaxis:{...L.xaxis, tickangle:0, showgrid:true, automargin:true,
+      title:{text:unidad, font:{size:10, color:c.textMuted}}},
+    yaxis:{...L.yaxis, autorange:'reversed', automargin:true}},
+   {...PC, locale:FB_LANG});
+}
+
+// ═══ PRODUCCIÓN (SIIP) ═══
+var stP = { ready:false, wired:false, cultivo:'7', met:'prod', niv:'mun', anio:2024, tok:0 };
+var P_IDS = ['agroProdMapa','agroProdRank','agroPreciosChartProd'];
+
+function cultivoDe(cod){
+  var cs = _cache.prod.cultivos || [];
+  for(var i=0;i<cs.length;i++){ if(String(cs[i].codigo)===String(cod)) return cs[i]; }
+  return null;
+}
+// series_mun del cultivo — soporta meta.shards: si existe, el índice viene con
+// series_mun vacío y cada shard (fetch lazy por grupo, cache module-level) trae
+// solo los cultivos de ese grupo. series_dep SIEMPRE viaja completo en el índice.
+function seriesMun(cod, cb){
+  var d=_cache.prod, shards = d.meta && d.meta.shards;
+  var propio = (d.series_mun||{})[String(cod)];
+  if(!shards || propio){ cb(null, propio||null); return; }
+  var cult = cultivoDe(cod);
+  var file = cult && shards[cult.grupo];
+  if(!file){ cb(null, null); return; }
+  if(_shards[file]){ cb(null, (_shards[file].series_mun||{})[String(cod)]||null); return; }
+  fetch('/'+file).then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status+' en /'+file);
+    return r.json();
+  }).then(function(j){ _shards[file]=j; cb(null, (j.series_mun||{})[String(cod)]||null); })
+    .catch(function(e){ cb(e, null); });
+}
+function unidadMet(met){ return met==='sup' ? 'ha' : (met==='rend' ? 't/ha' : 't'); }
+// Rendimiento = prod/sup client-side, con guard sup>0 (no viene precalculado).
+function valorMet(sup, prod, met){
+  if(met==='sup') return sup;
+  if(met==='prod') return prod;
+  return (sup>0) ? prod/sup : null;
+}
+function fmtMet(v, met){ return met==='rend' ? f2(v) : f0(v); }
+
+function wireChips(id, attr, onSet){
+  var box = document.getElementById(id); if(!box) return;
+  box.addEventListener('click', function(e){
+    var b = e.target.closest('button['+attr+']');
+    if(!b || b.classList.contains('active')) return;
+    box.querySelectorAll('button').forEach(function(x){ x.classList.toggle('active', x===b); });
+    onSet(b.getAttribute(attr));
+  });
+}
+
+function prodWire(){
+  if(stP.wired) return; stP.wired=true;
+  var d=_cache.prod;
+  // Select de cultivo con optgroup por grupo (orden de aparición del dataset).
+  var sel = document.getElementById('agroProdCultivo');
+  var grupos={}, orden=[];
+  (d.cultivos||[]).forEach(function(cu){
+    if(!grupos[cu.grupo]){ grupos[cu.grupo]=[]; orden.push(cu.grupo); }
+    grupos[cu.grupo].push(cu);
+  });
+  orden.forEach(function(g){
+    var og=document.createElement('optgroup'); og.label=g;
+    grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(cu){
+      var o=document.createElement('option'); o.value=String(cu.codigo); o.textContent=cu.label; og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+  if(!cultivoDe(stP.cultivo) && d.cultivos && d.cultivos.length) stP.cultivo=String(d.cultivos[0].codigo);
+  sel.value = stP.cultivo;
+  sel.onchange = function(){ stP.cultivo=sel.value; prodDraw(); };
+  wireChips('agroProdMetrica','data-met', function(v){ stP.met=v; prodDraw(); });
+  wireChips('agroProdNivel','data-niv', function(v){ stP.niv=v; prodDraw(); });
+  // Slider de años desde meta.anios (extremos reales del dataset).
+  var anios = d.meta.anios || [];
+  var rng = document.getElementById('agroProdAnio');
+  var lo = anios[0], hi = anios[anios.length-1];
+  rng.min=lo; rng.max=hi;
+  stP.anio = Math.min(Math.max(stP.anio, lo), hi);
+  rng.value = stP.anio;
+  document.getElementById('agroProdAnioMin').textContent = lo;
+  document.getElementById('agroProdAnioMax').textContent = hi;
+  document.getElementById('agroProdAnioLabel').textContent = stP.anio;
+  rng.oninput = function(){
+    stP.anio = +rng.value;
+    document.getElementById('agroProdAnioLabel').textContent = stP.anio;
+    prodDraw();
+  };
+  // Pill "dataset parcial" (harvest SIIP en curso).
+  if(d.meta.parcial===true){
+    var pp = document.getElementById('agroProdParcial'); if(pp) pp.hidden=false;
+  }
+}
+
+function prodDraw(){
+  if(!stP.ready) return;
+  var cult = cultivoDe(stP.cultivo);
+  var label = cult ? cult.label : ('#'+stP.cultivo);
+  if(stP.niv==='dep'){
+    var byDep = ((_cache.prod.series_dep||{})[String(stP.cultivo)]||{})[String(stP.anio)] || null;
+    prodRenderDep(byDep, label);
+    return;
+  }
+  var tok = ++stP.tok;   // guard anti-stale: descarta callbacks de un estado viejo
+  seriesMun(stP.cultivo, function(err, ser){
+    if(tok!==stP.tok) return;
+    if(err){ showError(['agroProdMapa','agroProdRank'], prodDraw); return; }
+    var rows = (ser||{})[String(stP.anio)] || null;
+    prodRenderMun(rows, label);
+  });
+}
+
+function prodRenderMun(rows, label){
+  var elM=document.getElementById('agroProdMapa'), elR=document.getElementById('agroProdRank');
+  var d=_cache.prod, met=stP.met, unidad=unidadMet(met);
+  var items=[];
+  (rows||[]).forEach(function(r){          // fila = [munIdx, superficie, produccion]
+    var m = d.municipios[r[0]]; if(!m) return;
+    var v = valorMet(r[1], r[2], met);
+    if(v==null) return;
+    items.push({gid:m.gid, nombre:m.nombre, depto:m.depto, sup:r[1], prod:r[2], v:v});
+  });
+  if(!items.length){
+    status(elM, sinDatos(label, stP.anio)); status(elR, sinDatos(label, stP.anio));
+    return;
+  }
+  var c=getC(), geo=_cache.geoMun;
+  var data = { type:'choropleth', geojson:geo, featureidkey:'properties.gid',
+    locations:items.map(function(it){ return it.gid; }),
+    z:items.map(function(it){ return it.v; }),
+    colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.4}},
+    customdata:items.map(function(it){ return [it.nombre, it.depto, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
+    hovertemplate:'{{t:agro.hover_mun}}', colorbar:colorbar(c, unidad) };
+  plotInto(elM, [baseTrace(geo,'gid','nombre',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  items.sort(function(a,b){ return b.v-a.v; });
+  var top = items.slice(0,15);
+  drawRank('agroProdRank',
+    top.map(function(it){ return it.nombre+' ('+it.depto+')'; }),
+    top.map(function(it){ return it.v; }),
+    top.map(function(it){ return fmtMet(it.v, met); }),
+    unidad);
+}
+
+function prodRenderDep(byDep, label){
+  var elM=document.getElementById('agroProdMapa'), elR=document.getElementById('agroProdRank');
+  var met=stP.met, unidad=unidadMet(met);
+  var items=[];
+  Object.keys(byDep||{}).forEach(function(dep){
+    var sd = byDep[dep];                   // [superficie, produccion]
+    var v = valorMet(sd[0], sd[1], met);
+    if(v==null) return;
+    items.push({dep:dep, sup:sd[0], prod:sd[1], v:v});
+  });
+  if(!items.length){
+    status(elM, sinDatos(label, stP.anio)); status(elR, sinDatos(label, stP.anio));
+    return;
+  }
+  var c=getC(), geo=_cache.geoDep;
+  var data = { type:'choropleth', geojson:geo, featureidkey:'properties.name',
+    locations:items.map(function(it){ return it.dep; }),
+    z:items.map(function(it){ return it.v; }),
+    colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
+    customdata:items.map(function(it){ return [it.dep, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
+    hovertemplate:'{{t:agro.hover_dep}}', colorbar:colorbar(c, unidad) };
+  plotInto(elM, [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  items.sort(function(a,b){ return b.v-a.v; });
+  drawRank('agroProdRank',
+    items.map(function(it){ return it.dep; }),
+    items.map(function(it){ return it.v; }),
+    items.map(function(it){ return fmtMet(it.v, met); }),
+    unidad);
+}
+
+window.renderAgroProduccion = function(){
+  if(stP.ready){ prodDraw(); preciosDraw(pcProd); return; }
+  showLoading(P_IDS);
+  Promise.all([agroGet('prod'), agroGet('geoMun'), agroGet('geoDep'), agroGet('precios')])
+    .then(function(){
+      stP.ready = true;
+      prodWire();
+      preciosSetup(pcProd);
+      installObserver();
+      prodDraw();
+      preciosDraw(pcProd);
+    })
+    .catch(function(){ showError(P_IDS, window.renderAgroProduccion); });
+};
+
+// ═══ EXPORTACIONES (INE Comex) ═══
+var stE = { ready:false, wired:false, prod:'__todos__', met:'fob', anio:2025 };
+var E_IDS = ['agroExpoMapa','agroExpoRank','agroPreciosChartExpo'];
+
+function expoWire(){
+  if(stE.wired) return; stE.wired=true;
+  var E=_cache.expo, meta=E.meta;
+  var sel = document.getElementById('agroExpoProducto');
+  // Primera opción: total agro por depto de origen (origTotal).
+  var o0=document.createElement('option'); o0.value='__todos__'; o0.textContent='{{t:agro.expo_todos}}'; sel.appendChild(o0);
+  // Solo semillas presentes (las 5 con estado ausente traen series en cero — fuera del selector).
+  var grupos={}, orden=[];
+  (meta.semillas||[]).forEach(function(s){
+    if(s.estado!=='presente') return;
+    if(!grupos[s.grupo]){ grupos[s.grupo]=[]; orden.push(s.grupo); }
+    grupos[s.grupo].push(s);
+  });
+  orden.forEach(function(g){
+    var og=document.createElement('optgroup'); og.label=g;
+    grupos[g].sort(function(a,b){ return a.label.localeCompare(b.label,'es'); }).forEach(function(s){
+      var o=document.createElement('option'); o.value=s.key; o.textContent=s.label; og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+  sel.value = stE.prod;
+  sel.onchange = function(){ stE.prod=sel.value; expoDraw(); };
+  wireChips('agroExpoMetrica','data-met', function(v){ stE.met=v; expoDraw(); });
+  var years = meta.years || [];
+  var rng = document.getElementById('agroExpoAnio');
+  rng.min = years[0]; rng.max = years[years.length-1];
+  stE.anio = meta.baseYear || years[years.length-1];
+  rng.value = stE.anio;
+  document.getElementById('agroExpoAnioMin').textContent = years[0];
+  document.getElementById('agroExpoAnioMax').textContent = years[years.length-1];
+  document.getElementById('agroExpoAnioLabel').textContent = stE.anio;
+  rng.oninput = function(){
+    stE.anio = +rng.value;
+    document.getElementById('agroExpoAnioLabel').textContent = stE.anio;
+    expoDraw();
+  };
+}
+function expoSerie(depto){
+  var E=_cache.expo;
+  if(stE.prod==='__todos__') return E.origTotal[depto] || null;
+  var pd = E.porDepto[depto];
+  return (pd && pd[stE.prod]) || null;   // fallback: sin actividad en el depto → cero
+}
+function productoLabelE(){
+  if(stE.prod==='__todos__') return '{{t:agro.expo_todos}}';
+  var ss = _cache.expo.meta.semillas || [];
+  for(var i=0;i<ss.length;i++){ if(ss[i].key===stE.prod) return ss[i].label; }
+  return stE.prod;
+}
+function expoDraw(){
+  if(!stE.ready) return;
+  var E=_cache.expo, meta=E.meta;
+  var yi = (meta.years||[]).indexOf(stE.anio);
+  var deptos = Object.keys(E.origTotal).sort();
+  var locs=[], z=[], cd=[], maxv=0;
+  deptos.forEach(function(dep){
+    var s = expoSerie(dep);
+    var fob = (s && s.fobA && s.fobA[yi]) || 0;
+    var ton = (s && s.tonA && s.tonA[yi]) || 0;
+    var v = (stE.met==='fob') ? fob : ton;
+    if(v>maxv) maxv=v;
+    locs.push(dep); z.push(v); cd.push([dep, f0(fob), f0(ton)]);
+  });
+  // Badge YTD junto al año (rango de meses data-driven: mesesPorAnio).
+  var badge = document.getElementById('agroExpoYtd');
+  if(badge){
+    var esYtd = (meta.ytdYears||[]).indexOf(stE.anio)!==-1;
+    if(esYtd){
+      var nm = (meta.mesesPorAnio||{})[String(stE.anio)] || 12;
+      badge.textContent = 'YTD ('+MES_L[0]+'–'+MES_L[nm-1]+')';
+      badge.hidden = false;
+    } else badge.hidden = true;
+  }
+  var elM=document.getElementById('agroExpoMapa'), elR=document.getElementById('agroExpoRank');
+  var label = productoLabelE();
+  if(maxv<=0){
+    status(elM, sinDatos(label, stE.anio)); status(elR, sinDatos(label, stE.anio));
+    return;
+  }
+  var c=getC(), geo=_cache.geoDep;
+  var unidad = (stE.met==='fob') ? 'USD' : 't';
+  var data = { type:'choropleth', geojson:geo, featureidkey:'properties.name',
+    locations:locs, z:z,
+    colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
+    customdata:cd, hovertemplate:'{{t:agro.hover_expo}}', colorbar:colorbar(c, unidad) };
+  plotInto(elM, [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  var items = deptos.map(function(dep,i){ return {dep:dep, v:z[i]}; })
+    .sort(function(a,b){ return b.v-a.v; });
+  drawRank('agroExpoRank',
+    items.map(function(it){ return it.dep; }),
+    items.map(function(it){ return it.v; }),
+    items.map(function(it){ return stE.met==='fob' ? fUsd(it.v) : f0(it.v); }),
+    unidad);
+}
+
+window.renderAgroExportaciones = function(){
+  if(stE.ready){ expoDraw(); preciosDraw(pcExpo); return; }
+  showLoading(E_IDS);
+  Promise.all([agroGet('expo'), agroGet('geoDep'), agroGet('precios')])
+    .then(function(){
+      stE.ready = true;
+      expoWire();
+      preciosSetup(pcExpo);
+      installObserver();
+      expoDraw();
+      preciosDraw(pcExpo);
+    })
+    .catch(function(){ showError(E_IDS, window.renderAgroExportaciones); });
+};
+
+// ═══ PRECIOS (componente compartido, una instancia por subtab) ═══
+var pcProd = { selId:'agroPreciosSelProd', chartId:'agroPreciosChartProd', fuenteId:'agroPreciosFuenteProd', sel:'quinua', wired:false };
+var pcExpo = { selId:'agroPreciosSelExpo', chartId:'agroPreciosChartExpo', fuenteId:'agroPreciosFuenteExpo', sel:'soya', wired:false };
+
+function srcTag(f){
+  return f==='fpma' ? '{{t:agro.src_fpma}}' : (f==='pink' ? '{{t:agro.src_pink}}' : '{{t:agro.src_uv}}');
+}
+function preciosSetup(pc){
+  if(pc.wired) return;
+  var sel = document.getElementById(pc.selId), P=_cache.precios;
+  if(!sel || !P) return;
+  pc.wired = true;
+  Object.keys(P.productos).map(function(k){ return {k:k, label:P.productos[k].label}; })
+    .sort(function(a,b){ return a.label.localeCompare(b.label,'es'); })
+    .forEach(function(it){
+      var o=document.createElement('option'); o.value=it.k; o.textContent=it.label; sel.appendChild(o);
+    });
+  if(!P.productos[pc.sel] && sel.options.length) pc.sel = sel.options[0].value;
+  sel.value = pc.sel;
+  sel.onchange = function(){ pc.sel=sel.value; preciosDraw(pc); };
+}
+function preciosDraw(pc){
+  var P=_cache.precios; if(!P) return;
+  var el = document.getElementById(pc.chartId); if(!el) return;
+  var fEl = document.getElementById(pc.fuenteId);
+  var prod = P.productos[pc.sel];
+  var series = ((prod&&prod.series)||[]).map(function(id){ return P.series[id]; }).filter(Boolean);
+  if(!series.length){
+    status(el, '{{t:agro.sin_series}}');
+    if(fEl) fEl.textContent='';
+    return;
+  }
+  var c=getC(), L=BL(c);
+  var cols=[cssVar('--chart-agro-p0'),cssVar('--chart-agro-p1'),cssVar('--chart-agro-p2'),
+            cssVar('--chart-agro-p3'),cssVar('--chart-agro-p4'),cssVar('--chart-agro-p5')];
+  // Unidades mixtas NUNCA en un mismo eje: Bs/* al eje izquierdo, USD/t al y2
+  // derecho. Si el producto solo trae USD/t (ej. Soya), USD/t ocupa el izquierdo.
+  var hayBs = series.some(function(s){ return s.unidad.indexOf('Bs')===0; });
+  var unidadesIzq=[], usaDer=false, anyM=false;
+  var traces = series.map(function(s,i){
+    var der = hayBs && s.unidad==='USD/t';
+    if(der) usaDer=true; else if(unidadesIzq.indexOf(s.unidad)<0) unidadesIzq.push(s.unidad);
+    var x;
+    if(s.freq==='M'){ anyM=true; x=s.fechas.map(function(f){ return f+'-01'; }); }
+    else { x=s.fechas.map(function(a){ return a+'-01-01'; }); }  // freq A: valor unitario anual
+    var n=s.valores.length;
+    var t = { x:x, y:s.valores, type:'scatter',
+      mode:(s.freq==='A') ? 'lines+markers' : 'lines',
+      name:s.label+' ['+srcTag(s.fuente)+']',
+      line:{color:cols[i%cols.length], width:1.8},
+      yaxis:der ? 'y2' : 'y',
+      text:s.valores.map(function(_,j){ return (s.ytd_ultimo && j===n-1) ? ' (YTD)' : ''; }),
+      hovertemplate:'%{y:,.2f} '+s.unidad+'%{text}' };
+    if(s.freq==='A'){
+      t.marker = {size:7, color:cols[i%cols.length]};
+      if(s.ytd_ultimo){
+        // Último punto YTD: marker hueco + "(YTD)" en el hover.
+        t.marker.symbol = s.valores.map(function(_,j){ return j===n-1 ? 'circle-open' : 'circle'; });
+        t.marker.line = {width:1.8, color:cols[i%cols.length]};
+      }
+    }
+    return t;
+  });
+  var lay = {...L, height:360, showlegend:true,
+    margin:{l:54, r:usaDer?54:18, t:36, b:40},
+    xaxis:{...L.xaxis, tickformat:anyM?'%b %Y':'%Y', hoverformat:anyM?'%b %Y':'%Y', nticks:9},
+    yaxis:{...L.yaxis, rangemode:'tozero', automargin:true,
+      title:{text:(unidadesIzq.length ? unidadesIzq.join(' · ') : 'USD/t'), font:{size:10, color:c.textMuted}}}};
+  if(usaDer){
+    lay.yaxis2 = { overlaying:'y', side:'right', rangemode:'tozero', fixedrange:true, automargin:true,
+      tickfont:L.yaxis.tickfont, showgrid:false, zeroline:false,
+      title:{text:'USD/t', font:{size:10, color:c.textMuted}} };
+  }
+  plotInto(el, traces, lay, {...PC, locale:FB_LANG});
+  // Pie: fuente_label completos de las series visibles (etiquetado obligatorio).
+  if(fEl){
+    var fu=[];
+    series.forEach(function(s){ if(fu.indexOf(s.fuente_label)<0) fu.push(s.fuente_label); });
+    fEl.textContent = '{{t:agro.precios_fuente_prefix}}'+fu.join(' · ');
+  }
+}
+
+// ═══ Re-render theme-aware (patrón exacto de renderRiesgoPais) ═══
+var _obs = false;
+function installObserver(){
+  if(_obs) return; _obs = true;
+  new MutationObserver(function(){
+    // Visible sólo si la tab Agro + el subtab están ambos display:''.
+    // offsetParent==null cuando cualquier ancestro está display:none.
+    var m = document.getElementById('agroProdMapa');
+    if(m && m.offsetParent !== null && stP.ready){ prodDraw(); preciosDraw(pcProd); }
+    var e = document.getElementById('agroExpoMapa');
+    if(e && e.offsetParent !== null && stE.ready){ expoDraw(); preciosDraw(pcExpo); }
+  }).observe(document.body, {attributes:true, attributeFilter:['class']});
+}
+})();
+</script>
+<!-- /bake:optional:agro -->
 
 <!-- bake:optional:mercado247 -->
 <!-- Mercado 24/7 — bundle autocontenido (copiado plano a la raíz por
