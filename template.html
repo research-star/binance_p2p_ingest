@@ -1585,6 +1585,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-soya-prod"></div>
             <div id="agroRank-soya-prod" style="height:300px"></div>
             <div id="agroSpark-soya-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-soya-prod" style="height:90px"></div>
             <div class="agro-estado" id="agroEstado-soya-prod-side" hidden></div>
           </div>
         </div>
@@ -1622,6 +1623,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-soya-expo"></div>
             <div id="agroRank-soya-expo" style="height:300px"></div>
             <div id="agroSpark-soya-expo" style="height:90px"></div>
+            <div id="agroHeat-soya-expo" style="height:220px"></div>
             <div class="agro-estado" id="agroEstado-soya-expo-side" hidden></div>
           </div>
         </div>
@@ -1680,6 +1682,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-girasol-prod"></div>
             <div id="agroRank-girasol-prod" style="height:300px"></div>
             <div id="agroSpark-girasol-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-girasol-prod" style="height:90px"></div>
             <div class="agro-estado" id="agroEstado-girasol-prod-side" hidden></div>
           </div>
         </div>
@@ -1717,6 +1720,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-girasol-expo"></div>
             <div id="agroRank-girasol-expo" style="height:300px"></div>
             <div id="agroSpark-girasol-expo" style="height:90px"></div>
+            <div id="agroHeat-girasol-expo" style="height:220px"></div>
             <div class="agro-estado" id="agroEstado-girasol-expo-side" hidden></div>
           </div>
         </div>
@@ -1775,6 +1779,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-azucar-prod"></div>
             <div id="agroRank-azucar-prod" style="height:300px"></div>
             <div id="agroSpark-azucar-prod" style="height:90px"></div>
+            <div id="agroSparkVa1-azucar-prod" style="height:90px"></div>
             <div class="agro-estado" id="agroEstado-azucar-prod-side" hidden></div>
           </div>
         </div>
@@ -1812,6 +1817,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-azucar-expo"></div>
             <div id="agroRank-azucar-expo" style="height:300px"></div>
             <div id="agroSpark-azucar-expo" style="height:90px"></div>
+            <div id="agroHeat-azucar-expo" style="height:220px"></div>
             <div class="agro-estado" id="agroEstado-azucar-expo-side" hidden></div>
           </div>
         </div>
@@ -1911,6 +1917,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-kpis" id="agroKpis-otros-expo"></div>
             <div id="agroRank-otros-expo" style="height:300px"></div>
             <div id="agroSpark-otros-expo" style="height:90px"></div>
+            <div id="agroHeat-otros-expo" style="height:220px"></div>
             <div class="agro-estado" id="agroEstado-otros-expo-side" hidden></div>
           </div>
         </div>
@@ -6813,6 +6820,88 @@ var PATHS = { prod:'/agro_produccion.json', expo:'/agro_exportaciones.json',
               precios:'/agro_precios.json', geoMun:'/agro_geo_municipal.json',
               geoDep:'/agro_geo_departamental.json' };
 
+// Centroides de países destino (clave = nombre CRUDO del INE en agro_exportaciones.json dest).
+// {n: display name, lat, lon}. sinArco:true = se cuenta en totales/participación pero NO se dibuja arco
+// (OTROS = agregado sin geografía; ZONA FRANCA DE BOLIVIA = doméstico).
+var AGRO_DEST_GEO = {
+  'COLOMBIA':                    {n:'Colombia',            lat:4.57,   lon:-74.30},
+  'PERU':                        {n:'Perú',                lat:-9.19,  lon:-75.02},
+  'ECUADOR':                     {n:'Ecuador',             lat:-1.83,  lon:-78.18},
+  'CHINA':                       {n:'China',               lat:35.86,  lon:104.20},
+  'ARGENTINA':                   {n:'Argentina',           lat:-38.42, lon:-63.62},
+  'CHILE':                       {n:'Chile',               lat:-35.68, lon:-71.54},
+  'ESTADOS UNIDOS':              {n:'Estados Unidos',      lat:39.78,  lon:-98.50},
+  'PAISES BAJOS':                {n:'Países Bajos',        lat:52.13,  lon:5.29},
+  'ALEMANIA':                    {n:'Alemania',            lat:51.17,  lon:10.45},
+  'REINO UNIDO':                 {n:'Reino Unido',         lat:54.24,  lon:-2.90},
+  'OTROS':                       {n:'Otros',               sinArco:true},
+  'ESPAÑA':                      {n:'España',              lat:40.46,  lon:-3.75},
+  'TURQUIA':                     {n:'Turquía',             lat:38.96,  lon:35.24},
+  'CANADA':                      {n:'Canadá',              lat:56.13,  lon:-106.35},
+  'FRANCIA':                     {n:'Francia',             lat:46.23,  lon:2.21},
+  'BRASIL.':                     {n:'Brasil',              lat:-14.24, lon:-51.93},
+  'AUSTRALIA':                   {n:'Australia',           lat:-25.27, lon:133.78},
+  'MEXICO':                      {n:'México',              lat:23.63,  lon:-102.55},
+  'MYANMAR':                     {n:'Myanmar',             lat:21.91,  lon:95.96},
+  'BELGICA-LUXEMBURGO':          {n:'Bélgica-Luxemburgo',  lat:50.50,  lon:4.47},
+  'JAPON':                       {n:'Japón',               lat:36.20,  lon:138.25},
+  'ITALIA':                      {n:'Italia',              lat:41.87,  lon:12.57},
+  'ANGOLA':                      {n:'Angola',              lat:-11.20, lon:17.87},
+  'SUIZA':                       {n:'Suiza',               lat:46.82,  lon:8.23},
+  'URUGUAY':                     {n:'Uruguay',             lat:-32.52, lon:-55.77},
+  'COREA (SUR). REPUBLICA DE':   {n:'Corea del Sur',       lat:35.91,  lon:127.77},
+  'HONG KONG':                   {n:'Hong Kong',           lat:22.32,  lon:114.17},
+  'ISRAEL':                      {n:'Israel',              lat:31.05,  lon:34.85},
+  'REPUBLICA DOMINICANA':        {n:'Rep. Dominicana',     lat:18.74,  lon:-70.16},
+  'LITUANIA':                    {n:'Lituania',            lat:55.17,  lon:23.88},
+  'PARAGUAY':                    {n:'Paraguay',            lat:-23.44, lon:-58.44},
+  'POLONIA':                     {n:'Polonia',             lat:51.92,  lon:19.15},
+  'COSTA RICA':                  {n:'Costa Rica',          lat:9.75,   lon:-83.75},
+  'VENEZUELA':                   {n:'Venezuela',           lat:6.42,   lon:-66.59},
+  'GUATEMALA':                   {n:'Guatemala',           lat:15.78,  lon:-90.23},
+  'EMIRATOS ARABES UNIDOS':      {n:'Emiratos Árabes',     lat:23.42,  lon:53.85},
+  'YEMEN':                       {n:'Yemen',               lat:15.55,  lon:48.52},
+  'VIET-NAM':                    {n:'Vietnam',             lat:14.06,  lon:108.28},
+  'TAIWAN':                      {n:'Taiwán',              lat:23.70,  lon:120.96},
+  'JAMAICA':                     {n:'Jamaica',             lat:18.11,  lon:-77.30},
+  'RUSIA, FEDERACION DE':        {n:'Rusia',               lat:61.52,  lon:105.32},
+  'GHANA':                       {n:'Ghana',               lat:7.95,   lon:-1.02},
+  'ESLOVENIA':                   {n:'Eslovenia',           lat:46.15,  lon:14.99},
+  'MALASIA':                     {n:'Malasia',             lat:4.21,   lon:101.98},
+  'PANAMA':                      {n:'Panamá',              lat:8.54,   lon:-80.78},
+  'NUEVA ZELANDIA':              {n:'Nueva Zelanda',       lat:-40.90, lon:174.89},
+  'EL SALVADOR':                 {n:'El Salvador',         lat:13.79,  lon:-88.90},
+  'LETONIA':                     {n:'Letonia',             lat:56.88,  lon:24.60},
+  'INDONESIA':                   {n:'Indonesia',           lat:-0.79,  lon:113.92},
+  'MARRUECOS':                   {n:'Marruecos',           lat:31.79,  lon:-7.09},
+  'FILIPINAS':                   {n:'Filipinas',           lat:12.88,  lon:121.77},
+  'SALOMON, ISLAS':              {n:'Islas Salomón',       lat:-9.65,  lon:160.16},
+  'UCRANIA':                     {n:'Ucrania',             lat:48.38,  lon:31.17},
+  'BAHREIN':                     {n:'Baréin',              lat:26.07,  lon:50.56},
+  'TAILANDIA':                   {n:'Tailandia',           lat:15.87,  lon:100.99},
+  'LIBANO':                      {n:'Líbano',              lat:33.85,  lon:35.86},
+  'CONGO, REPUBLICA DEL':        {n:'Rep. del Congo',      lat:-0.23,  lon:15.83},
+  'ARGELIA':                     {n:'Argelia',              lat:28.03,  lon:1.66},
+  'LIBIA':                       {n:'Libia',               lat:26.34,  lon:17.23},
+  'QATAR':                       {n:'Catar',               lat:25.35,  lon:51.18},
+  'SURINAM':                     {n:'Surinam',             lat:3.92,   lon:-56.03},
+  'FINLANDIA':                   {n:'Finlandia',           lat:61.92,  lon:25.75},
+  'INDIA':                       {n:'India',               lat:20.59,  lon:78.96},
+  'REPUBLICA CHECA':             {n:'Chequia',             lat:49.82,  lon:15.47},
+  'TUNICIA':                     {n:'Túnez',               lat:33.89,  lon:9.54},
+  'CAMERUN, REPUBLICA UNIDA DEL':{n:'Camerún',             lat:7.37,   lon:12.35},
+  'GAMBIA':                      {n:'Gambia',              lat:13.44,  lon:-15.31},
+  'GUINEA ECUATORIAL':           {n:'Guinea Ecuatorial',   lat:1.65,   lon:10.27},
+  'ZONA FRANCA DE BOLIVIA':      {n:'Zona Franca (Bolivia)', sinArco:true},
+  'JORDANIA':                    {n:'Jordania',            lat:30.59,  lon:36.24},
+  'GRECIA':                      {n:'Grecia',              lat:39.07,  lon:21.82},
+  'CUBA':                        {n:'Cuba',                lat:21.52,  lon:-77.78},
+  'DINAMARCA':                   {n:'Dinamarca',           lat:56.26,  lon:9.50},
+  'GABON':                       {n:'Gabón',               lat:-0.80,  lon:11.61},
+  'SUECIA':                      {n:'Suecia',              lat:60.13,  lon:18.64}
+};
+var AGRO_BOLIVIA_GEO = {lat:-16.29, lon:-63.59};  // origen de los arcos
+
 function agroGet(key){
   if(_cache[key]) return Promise.resolve(_cache[key]);
   if(_inflight[key]) return _inflight[key];
@@ -6882,10 +6971,14 @@ function plotInto(el, traces, layout, config){
   Plotly.react(el, traces, layout, config);
 }
 // Tiles de KPI dentro de .agro-kpis (items: [{label, valor, unidad}]).
+// Opcionales por item: tip (tooltip nativo title= — los valores i18n no traen
+// comillas rectas, invariante del dict) y color (CSS para el valor, tokens
+// delta en los VAs con signo).
 function kpisHtml(items){
   return items.map(function(it){
-    return '<div class="agro-kpi"><div class="agro-kpi-label">'+it.label+'</div>'
-         + '<div class="agro-kpi-valor">'+it.valor+'</div>'
+    return '<div class="agro-kpi"'+(it.tip ? ' title="'+it.tip+'"' : '')+'>'
+         + '<div class="agro-kpi-label">'+it.label+'</div>'
+         + '<div class="agro-kpi-valor"'+(it.color ? ' style="color:'+it.color+'"' : '')+'>'+it.valor+'</div>'
          + '<div class="agro-kpi-unidad">'+(it.unidad||'')+'</div></div>';
   }).join('');
 }
@@ -7102,14 +7195,18 @@ function agroVisible(cadId){
 function idsDash(cadId, tipo){
   var sfx = cadId+'-'+tipo;
   return { mapa:'agroMapa-'+sfx, rank:'agroRank-'+sfx, spark:'agroSpark-'+sfx,
+    sparkVa1:'agroSparkVa1-'+sfx, heat:'agroHeat-'+sfx,
     kpis:'agroKpis-'+sfx, anio:'agroAnio-'+sfx, anioLabel:'agroAnioLabel-'+sfx,
     anioMin:'agroAnioMin-'+sfx, anioMax:'agroAnioMax-'+sfx,
     metrica:'agroCtl-'+sfx+'-metrica' };
 }
 function panelesDash(cadId, tipo, ids){
+  // sparkVa1 (VA-1, solo prod de cadenas con cultivo fijo) y heat (VA-3, solo
+  // expo) no existen en todos los DOM: hidePlot/panelEstado toleran id ausente.
+  var plots = [ids.rank, ids.spark].concat(tipo==='prod' ? [ids.sparkVa1] : [ids.heat]);
   return {
     mapa: { plots:[ids.mapa], estadoId:'agroEstado-'+cadId+'-'+tipo+'-mapa' },
-    side: { plots:[ids.rank, ids.spark], extra:ids.kpis, estadoId:'agroEstado-'+cadId+'-'+tipo+'-side' }
+    side: { plots:plots, extra:ids.kpis, estadoId:'agroEstado-'+cadId+'-'+tipo+'-side' }
   };
 }
 
@@ -7258,6 +7355,33 @@ function prodRenderDep(d, byDep, label){
     unidad);
 }
 
+// ── VA-1: balance producción↔exportación (solo cadenas con cultivo_siip) ──
+// %exportado(año) = t exportadas de la cadena (suma tonA de productos_comex,
+// INE) / t producidas del cultivo SIIP (suma series_dep) × 100. Años
+// intersectados de ambos datasets (2017–2024; los YTD de expo quedan fuera).
+// Aproximación campaña agrícola vs año calendario — tooltip obligatorio.
+// En 'otros' NO se computa (el cultivo SIIP elegido no mapea 1:1 a un producto
+// comex elegible): sin cfg.cultivo_siip devuelve null y el tile se omite.
+function va1Serie(cad){
+  var cfg = cadenaDe(cad);
+  if(!cfg || cfg.cultivo_siip==null || !cfg.productos_comex || !_cache.expo || !_cache.prod) return null;
+  var E=_cache.expo, years=E.meta.years||[];
+  var sd=(_cache.prod.series_dep||{})[String(cfg.cultivo_siip)]||{};
+  var anios=[], vals=[];
+  years.forEach(function(a, yi){
+    if((E.meta.ytdYears||[]).indexOf(a)!==-1) return;   // año expo incompleto
+    var byDep=sd[String(a)]; if(!byDep) return;          // sin campaña SIIP
+    var prod=0;
+    Object.keys(byDep).forEach(function(dep){ prod+=byDep[dep][1]||0; });
+    if(prod<=0) return;
+    var expo=0;
+    cfg.productos_comex.forEach(function(k){
+      var s=E.nacional[k]; expo+=((s&&s.tonA)||[])[yi]||0;
+    });
+    anios.push(a); vals.push(expo/prod*100);
+  });
+  return anios.length ? {anios:anios, vals:vals} : null;
+}
 // KPIs + sparkline de producción: NACIONAL (suma de series_dep sobre los 9
 // deptos) — independientes del nivel del mapa. Rendimiento medio = prod/sup.
 function prodSide(d, label){
@@ -7271,17 +7395,42 @@ function prodSide(d, label){
   });
   var cur=null;
   serie.forEach(function(p){ if(p.a===d.anio) cur=p; });
-  var k=document.getElementById(d.ids.kpis);
-  if(k){
-    k.innerHTML = (cur && cur.hay) ? kpisHtml([
-      {label:'{{t:agro.kpi_superficie}}', valor:f0(cur.sup), unidad:'ha'},
-      {label:'{{t:agro.kpi_produccion}}', valor:f0(cur.prod), unidad:'t'},
-      {label:'{{t:agro.kpi_rendimiento}}', valor:(cur.sup>0)?f2(cur.prod/cur.sup):'—', unidad:'t/ha'}
-    ]) : '';
+  // VA-1: requiere expo cacheado. Si aún no bajó (el fetch del dashboard expo
+  // corre en paralelo), se pide y se redibuja al resolver (tok anti-stale);
+  // si falla, el tile simplemente se omite — nada ficticio.
+  var cfgVa1 = cadenaDe(d.cad);
+  var v1 = null;
+  if(cfgVa1 && cfgVa1.cultivo_siip!=null && cfgVa1.productos_comex){
+    if(_cache.expo){ v1 = va1Serie(d.cad); }
+    else {
+      var tokVa1 = d.tok;
+      agroGet('expo').then(function(){ if(tokVa1===d.tok) prodDraw(d); }).catch(function(){});
+    }
   }
+  var items = (cur && cur.hay) ? [
+    {label:'{{t:agro.kpi_superficie}}', valor:f0(cur.sup), unidad:'ha'},
+    {label:'{{t:agro.kpi_produccion}}', valor:f0(cur.prod), unidad:'t'},
+    {label:'{{t:agro.kpi_rendimiento}}', valor:(cur.sup>0)?f2(cur.prod/cur.sup):'—', unidad:'t/ha'}
+  ] : [];
+  if(v1 && items.length){
+    var iVa1 = v1.anios.indexOf(d.anio);
+    if(iVa1>=0){
+      var tipVa1 = '{{t:agro.va1_tip}}'
+                 + (d.cad==='azucar' ? ' {{t:agro.va1_tip_azucar}}' : '');
+      items.push({label:'{{t:agro.va1_kpi}}', valor:f1(v1.vals[iVa1])+'%',
+        unidad:'{{t:agro.va1_u}}', tip:tipVa1});
+    }
+  }
+  var k=document.getElementById(d.ids.kpis);
+  if(k) k.innerHTML = items.length ? kpisHtml(items) : '';
   drawSpark(d.ids.spark, serie.map(function(p){ return p.a; }),
     serie.map(function(p){ return p.hay ? p.prod : null; }), 't', f0,
     label+' — {{t:agro.spark_prod}}');
+  // Minigráfica VA-1 (slot propio; solo existe en cadenas con cultivo fijo).
+  if(document.getElementById(d.ids.sparkVa1)){
+    if(v1) drawSpark(d.ids.sparkVa1, v1.anios, v1.vals, '%', f1, '{{t:agro.va1_spark}}');
+    else hidePlot(d.ids.sparkVa1);
+  }
 }
 // Carga por dependencias REALES, con error/carga independiente por panel:
 // mapa+ranking+KPIs dependen de produccion+geos; precios va aparte. Reintentar
@@ -7394,13 +7543,14 @@ function expoDraw(d){
   ytdBadge(d);
   expoSide(d);
   if(d.vista==='destinos'){
-    // STUB fase 2: si la fase Destinos ya cargó su render, delegamos la
-    // instancia entera + el dataset expo ya cacheado (nacional[k].dest trae
-    // {pais:{fA,tA}}); si no, placeholder limpio en el panel del mapa.
+    // Vista Destinos (D2): delega la instancia entera + el dataset expo ya
+    // cacheado (nacional[k].dest trae {pais:{fA,tA}}). El typeof queda como
+    // fallback defensivo del contrato del stub de fase 1.
     if(typeof window.renderAgroDestinos==='function'){ window.renderAgroDestinos(d, _cache.expo); return; }
     panelEstado(d.paneles.mapa, '{{t:agro.destinos_pronto}}');
     return;
   }
+  destStop(d.cad);   // al salir de destinos: cancelar rAF + observer de los arcos
   expoRenderOrigen(d);
 }
 function expoRenderOrigen(d){
@@ -7436,6 +7586,45 @@ function expoRenderOrigen(d){
     items.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
     unidad);
 }
+// ── VA-2: brecha del valor unitario FOB implícito vs benchmark Pink Sheet ──
+// SOLO para los productos mono-partida whitelisteados con benchmark (regla de
+// Diego): soya (grano, key 'soya' — NO la cadena agregada) y azúcar. PROHIBIDO
+// computarlo para grupos mixtos o cadenas sin benchmark — girasol/otros no
+// tienen entrada acá y el tile se omite limpio.
+var VA2_BENCH = { soya:{key:'soya', pink:'pink_soya'}, azucar:{key:'azucar', pink:'pink_azucar'} };
+function va2Bench(pinkId, anio){
+  var P=_cache.precios;
+  var s=P && P.series && P.series[pinkId]; if(!s) return null;
+  var pref=String(anio)+'-', sum=0, n=0;
+  (s.fechas||[]).forEach(function(f, i){
+    if(String(f).indexOf(pref)===0 && s.valores[i]!=null){ sum+=s.valores[i]; n++; }
+  });
+  return n>0 ? sum/n : null;   // promedio anual de la serie mensual USD/t
+}
+function va2Item(d){
+  var cfg=VA2_BENCH[d.cad]; if(!cfg) return null;
+  var E=_cache.expo, years=E.meta.years||[], yi=years.indexOf(d.anio);
+  if(yi<0) return null;
+  if((E.meta.ytdYears||[]).indexOf(d.anio)!==-1) return null;   // YTD: omitido
+  var s=E.nacional[cfg.key]; if(!s) return null;
+  var fob=(s.fobA||[])[yi]||0, ton=(s.tonA||[])[yi]||0;
+  if(!(fob>0 && ton>0)) return null;
+  if(!_cache.precios){
+    // precios baja en paralelo (card Precios): pedirlo y redibujar al resolver.
+    var tokVa2=d.tok;
+    agroGet('precios').then(function(){ if(tokVa2===d.tok) expoDraw(d); }).catch(function(){});
+    return null;
+  }
+  var bench=va2Bench(cfg.pink, d.anio);
+  if(bench==null || bench<=0) return null;
+  var pct=(fob/ton/bench - 1)*100;
+  var pinkLabel=_cache.precios.series[cfg.pink].label;
+  return {label:'{{t:agro.va2_kpi}}',
+    valor:(pct>=0?'+':'')+f1(pct)+'%',
+    unidad:'{{t:agro.va2_u}}',
+    color:(pct>=0) ? 'var(--delta-down)' : 'var(--delta-up)',   // premio verde / descuento rojo
+    tip:'{{t:agro.va2_tip}}'+pinkLabel+'{{t:agro.va2_tip_fin}}'};
+}
 // KPIs + sparkline de exportación: NACIONAL agregado de la cadena. Var
 // interanual solo entre años completos; en años YTD se muestra el FOB con
 // nota y sin var (comparación parcial-vs-completo sería engañosa).
@@ -7459,10 +7648,66 @@ function expoSide(d){
       valor:(pct==null)?'—':((pct>=0?'+':'')+f1(pct)+'%'),
       unidad:'{{t:agro.kpi_vs_prev}}'});
   }
+  // VA-2 (solo soya/azúcar; null = omisión limpia).
+  var v2=va2Item(d);
+  if(v2) kpis.push(v2);
+  // VA-4: concentración de destinos — MISMOS helpers que la vista destinos
+  // (kpiMercadosActivos/kpiTop3Fob) con los mismos inputs, para que ambas
+  // vistas muestren valores idénticos.
+  var aggVa4=destAgg(d.keys);
+  var resVa4=destItems(aggVa4, yi, d.met);
+  var resVa4Prev=(yi>0) ? destItems(aggVa4, yi-1, d.met) : null;
+  kpis.push(kpiMercadosActivos(resVa4));
+  kpis.push(kpiTop3Fob(resVa4, resVa4Prev));
   var k=document.getElementById(d.ids.kpis);
   if(k) k.innerHTML = kpisHtml(kpis);
   drawSpark(d.ids.spark, years, fobA, 'USD', fUsd,
     expoLabel(d)+' — {{t:agro.spark_fob}}');
+  drawHeat(d);   // VA-3 (ambas vistas: expoSide corre en cada redraw)
+}
+// ── VA-3: estacionalidad — heatmap mes(1-12)×año del FOB mensual agregado ──
+// Suma fobM sobre las keys de la cadena ('__todos__' = todas las semillas de
+// nacional, mismo criterio que destAgg) y reshapea por meta.ym. Celdas de
+// meses aún no publicados (2026 abr+) quedan en null (sin pintar, sin hover).
+function va3Fobm(keys){
+  var E=_cache.expo, ym=E.meta.ym||[];
+  var ks=(keys==='__todos__') ? Object.keys(E.nacional) : keys;
+  var arr=ym.map(function(){ return 0; });
+  ks.forEach(function(k){
+    ((E.nacional[k]||{}).fobM||[]).forEach(function(v, i){ arr[i]+=v||0; });
+  });
+  return arr;
+}
+function drawHeat(d){
+  var el=document.getElementById(d.ids.heat); if(!el) return;
+  var E=_cache.expo, years=E.meta.years||[], ym=E.meta.ym||[];
+  var fobM=va3Fobm(d.keys);
+  if(!fobM.some(function(v){ return v>0; })){ hidePlot(d.ids.heat); return; }
+  var c=getC();
+  var z=[], txt=[];
+  for(var m=0; m<12; m++){
+    z.push(years.map(function(){ return null; }));
+    txt.push(years.map(function(){ return ''; }));
+  }
+  ym.forEach(function(s, i){
+    var col=years.indexOf(+s.slice(0,4)), fila=(+s.slice(5,7))-1;
+    if(col<0) return;
+    z[fila][col]=fobM[i]; txt[fila][col]=fUsd(fobM[i]);
+  });
+  var tickf={family:'IBM Plex Mono,monospace', size:9, color:c.textMuted};
+  plotInto(el, [{ type:'heatmap', x:years.map(String),
+    y:MES_L.map(function(mn){ return mn.slice(0,3); }), z:z, customdata:txt,
+    colorscale:seqScale(), showscale:false, hoverongaps:false, xgap:1, ygap:1,
+    hovertemplate:'{{t:agro.va3_hover}}' }],
+   { paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', height:220,
+     margin:{l:34, r:6, t:24, b:22},
+     hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
+     xaxis:{type:'category', tickfont:tickf, fixedrange:true},
+     yaxis:{type:'category', tickfont:tickf, fixedrange:true, autorange:'reversed'},
+     annotations:[{text:'{{t:agro.va3_titulo}}', xref:'paper', yref:'paper',
+       x:0, y:1.18, xanchor:'left', showarrow:false,
+       font:{family:'IBM Plex Mono,monospace', size:9.5, color:c.textMuted}}]
+   }, {...PC, locale:FB_LANG});
 }
 function expoLoad(d){
   if(d.ready){ d.pending=false; expoDraw(d); return; }
@@ -7615,6 +7860,304 @@ function preciosLoad(pc){
     })
     .catch(function(){ pc.loading=false; panelError(pc.panel, function(){ preciosLoad(pc); }); });
 }
+
+// ═══ VISTA DESTINOS (D2): mapa mundial + arcos animados Bolivia→destino ═══
+// dest NO viene agregado por cadena: se suma nacional[k].dest sobre las keys
+// de la cadena ('__todos__' = todas las semillas presentes en nacional),
+// con fallback 0 (no todos los productos exportan a todos los países).
+function destAgg(keys){
+  var E=_cache.expo, years=E.meta.years||[];
+  var ks=(keys==='__todos__') ? Object.keys(E.nacional) : keys;
+  var out={};
+  ks.forEach(function(k){
+    var dest=(E.nacional[k]||{}).dest||{};
+    Object.keys(dest).forEach(function(p){
+      var o=out[p];
+      if(!o) o=out[p]={fA:years.map(function(){ return 0; }), tA:years.map(function(){ return 0; })};
+      (dest[p].fA||[]).forEach(function(v,i){ o.fA[i]+=v||0; });
+      (dest[p].tA||[]).forEach(function(v,i){ o.tA[i]+=v||0; });
+    });
+  });
+  return out;
+}
+var _destWarned = {};
+// Items del año ordenados desc por la métrica elegida. Los sinArco (OTROS,
+// Zona Franca) cuentan en totales/participación y ranking pero van con
+// geo:null (sin arco). País futuro sin centroide: degradación suave sin
+// romper (sin arco) + console.warn una sola vez.
+function destItems(agg, yi, met){
+  var f=(met==='fob')?'fA':'tA', items=[], total=0, totalFob=0;
+  Object.keys(agg).forEach(function(p){
+    var v=(agg[p][f]||[])[yi]||0;
+    var fob=(agg[p].fA||[])[yi]||0, ton=(agg[p].tA||[])[yi]||0;
+    total+=v; totalFob+=fob;
+    if(v<=0) return;
+    var g=AGRO_DEST_GEO[p];
+    if(!g && !_destWarned[p]){ _destWarned[p]=true; console.warn('[agro] destino sin centroide en AGRO_DEST_GEO: '+p); }
+    items.push({p:p, n:(g&&g.n)||p, v:v, fob:fob, ton:ton,
+      geo:(g && !g.sinArco && g.lat!=null) ? g : null});
+  });
+  items.sort(function(a,b){ return b.v-a.v; });
+  return {items:items, total:total, totalFob:totalFob};
+}
+// ── KPIs de destinos (ADELANTO de VA-4 — funciones reutilizables tal cual) ──
+// Reciben el resultado de destItems(agg, yi, met) y devuelven un item para
+// kpisHtml. kpiMercadosActivos cuenta destinos con valor >0 en la métrica del
+// año; kpiTop3Fob = participación de los 3 mayores destinos en el FOB del año.
+function kpiMercadosActivos(res){
+  return {label:'{{t:agro.kpi_mercados}}', valor:f0(res.items.length),
+    unidad:'{{t:agro.kpi_mercados_u}}', tip:'{{t:agro.va4_mercados_tip}}'};
+}
+function top3Pct(res){
+  var top=res.items.slice().sort(function(a,b){ return b.fob-a.fob; }).slice(0,3);
+  var s=0; top.forEach(function(it){ s+=it.fob; });
+  return (res.totalFob>0) ? s/res.totalFob*100 : null;
+}
+// resPrev opcional (año anterior): agrega tendencia ▲/▼/— con delta en puntos
+// porcentuales en la línea de unidad. La flecha sigue el delta REDONDEADO a
+// 1 decimal (el que se muestra): ±0,0 pp va con —.
+function kpiTop3Fob(res, resPrev){
+  var pct=top3Pct(res);
+  var unidad='{{t:agro.kpi_top3_u}}';
+  if(pct!=null && resPrev){
+    var prev=top3Pct(resPrev);
+    if(prev!=null){
+      var dpp=Math.round((pct-prev)*10)/10;
+      var fl=(dpp>0) ? '▲' : (dpp<0 ? '▼' : '—');
+      unidad=fl+' '+(dpp>=0?'+':'')+f1(dpp)+' pp {{t:agro.kpi_vs_prev}}';
+    }
+  }
+  return {label:'{{t:agro.kpi_top3}}', valor:(pct==null)?'—':(f1(pct)+'%'),
+    unidad:unidad, tip:'{{t:agro.va4_top3_tip}}'};
+}
+
+// ── Geometría: great-circle por slerp cartesiano + rumbo por segmento ──
+function destRumbo(lat1, lon1, lat2, lon2){
+  var R=Math.PI/180;
+  var y=Math.sin((lon2-lon1)*R)*Math.cos(lat2*R);
+  var x=Math.cos(lat1*R)*Math.sin(lat2*R)-Math.sin(lat1*R)*Math.cos(lat2*R)*Math.cos((lon2-lon1)*R);
+  return Math.atan2(y, x)*180/Math.PI;   // grados clockwise desde el norte (= marker.angle)
+}
+function arcoPuntos(lat1, lon1, lat2, lon2, n){
+  var R=Math.PI/180, D=180/Math.PI;
+  var x1=Math.cos(lat1*R)*Math.cos(lon1*R), y1=Math.cos(lat1*R)*Math.sin(lon1*R), z1=Math.sin(lat1*R);
+  var x2=Math.cos(lat2*R)*Math.cos(lon2*R), y2=Math.cos(lat2*R)*Math.sin(lon2*R), z2=Math.sin(lat2*R);
+  var w=Math.acos(Math.max(-1, Math.min(1, x1*x2+y1*y2+z1*z2)));
+  var lat=[], lon=[], brg=[];
+  for(var i=0;i<=n;i++){
+    var t=i/n;
+    var A=(w<1e-9)?(1-t):(Math.sin((1-t)*w)/Math.sin(w));
+    var B=(w<1e-9)?t:(Math.sin(t*w)/Math.sin(w));
+    var x=A*x1+B*x2, y=A*y1+B*y2, z=A*z1+B*z2;
+    lat.push(Math.atan2(z, Math.sqrt(x*x+y*y))*D);
+    lon.push(Math.atan2(y, x)*D);
+  }
+  for(var j=0;j<lat.length;j++){
+    brg.push((j<lat.length-1) ? destRumbo(lat[j], lon[j], lat[j+1], lon[j+1]) : brg[j-1]);
+  }
+  return {lat:lat, lon:lon, brg:brg};
+}
+function mixHex(a, b, t){   // ramp entre dos tokens hex #rrggbb; fallback: b
+  if(!/^#[0-9a-fA-F]{6}$/.test(a) || !/^#[0-9a-fA-F]{6}$/.test(b)) return b;
+  function ch(h, i){ return parseInt(h.slice(i, i+2), 16); }
+  var o=[1,3,5].map(function(i){ return Math.round(ch(a,i)+(ch(b,i)-ch(a,i))*t); });
+  return 'rgb('+o[0]+','+o[1]+','+o[2]+')';
+}
+// Layout geo MUNDO (natural earth, land tenue con tokens paper, sin frame);
+// reusa geoLayout (font/hoverlabel/height) y solo reemplaza el bloque geo.
+function geoLayoutMundo(c){
+  var L=geoLayout(c);
+  L.geo={ resolution:110, projection:{type:'natural earth'},
+    showland:true, landcolor:cssVar('--chart-agro-neutral'),
+    showcountries:true, countrycolor:hexToRgba(c.textPrimary, 0.14),
+    showcoastlines:false, showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
+    lonaxis:{range:[-135,180], showgrid:false}, lataxis:{range:[-58,80], showgrid:false} };
+  return L;
+}
+// Bolivia destacada: choropleth country names con acento suave (patrón Bloqueos).
+function boliviaTrace(c){
+  var a=cssVar('--chart-agro-accent');
+  return {type:'choropleth', locationmode:'country names', locations:['Bolivia'], z:[0],
+    showscale:false, hovertemplate:'<b>Bolivia</b><extra></extra>',
+    colorscale:[[0, hexToRgba(a, 0.35)],[1, hexToRgba(a, 0.35)]],
+    marker:{line:{color:a, width:1.2}}};
+}
+
+// ── Motor de animación: partículas viajando por los arcos ──
+// UNA trace de partículas por mapa, actualizada con Plotly.restyle (solo
+// lon/lat/angle) en rAF throttleado a ~20 fps. Estado por cadena en _dan;
+// destStop = salida limpia (cancelAnimationFrame + observer.disconnect) y el
+// tok de la instancia invalida callbacks viejos. window.__agroDestFrames
+// cuenta frames aplicados (instrumentación de verificación, costo cero).
+var _dan = {};
+var _destPerfStatic = false;   // decisión mobile pegajosa: degradado una vez → estático
+var _destAngleOK = null;       // soporte de marker.angle en scattergeo (detect una vez)
+var DEST_DUR=4200, DEST_MS=50, DEST_BUDGET=12;
+function destReduced(){ return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+function destMobile(){ return !!(window.matchMedia && (matchMedia('(max-width:600px)').matches || matchMedia('(pointer: coarse)').matches)); }
+function destStop(cad){
+  var A=_dan[cad]; if(!A) return;
+  if(A.raf) cancelAnimationFrame(A.raf);
+  if(A.obs){ try{ A.obs.disconnect(); }catch(e){} }
+  delete _dan[cad];
+}
+// Posiciones de las partículas: fase global + offset determinista por arco
+// (fixed!=null ⇒ todas a ese punto del arco, para el modo estático).
+function destArrays(arcs, phase, fixed){
+  var lon=[], lat=[], ang=[];
+  arcs.forEach(function(a){
+    var np=a.pts.lat.length;
+    var t=(fixed!=null) ? fixed : ((phase+a.off)%1);
+    var i=Math.min(np-1, Math.floor(t*(np-1)));
+    lon.push(a.pts.lon[i]); lat.push(a.pts.lat[i]); ang.push(a.pts.brg[i]);
+  });
+  return {lon:lon, lat:lat, ang:ang};
+}
+function destRestyle(gd, arr, pIdx){
+  var u={lon:[arr.lon], lat:[arr.lat]};
+  if(_destAngleOK) u['marker.angle']=[arr.ang];
+  Plotly.restyle(gd, u, [pIdx]);
+  window.__agroDestFrames=(window.__agroDestFrames||0)+1;
+}
+// marker.angle en scattergeo: detect una vez contra _fullData; sin soporte,
+// triángulos fijos apuntando al norte serían engañosos → círculo chico.
+function destAngleDetect(gd, pIdx, arr){
+  if(_destAngleOK!==null) return;
+  try{
+    Plotly.restyle(gd, {'marker.angle':[arr.ang]}, [pIdx]);
+    var fd=gd._fullData && gd._fullData[pIdx];
+    _destAngleOK=!!(fd && fd.marker && fd.marker.angle!==undefined);
+  }catch(e){ _destAngleOK=false; }
+  if(!_destAngleOK){ try{ Plotly.restyle(gd, {'marker.symbol':'circle','marker.size':6}, [pIdx]); }catch(e2){} }
+}
+// Flechas ESTÁTICAS a ~60% del arco (reduced-motion / mobile degradado).
+function destStatic(gd, arcs, pIdx, tag){
+  try{ destRestyle(gd, destArrays(arcs, 0, 0.6), pIdx); }catch(e){}
+  gd.setAttribute('data-agro-dest-anim', tag);
+}
+function destAnim(d, gd, arcs, pIdx){
+  var A=_dan[d.cad]={raf:0, obs:null, vis:true, last:0, t0:performance.now(),
+    tok:d.tok, medir:destMobile(), muestras:[]};
+  function frame(now){
+    A.raf=0;
+    if(d.tok!==A.tok || _dan[d.cad]!==A){ destStop(d.cad); return; }
+    if(!A.vis) return;   // pausa real: el observer re-arma al reentrar al viewport
+    if(now-A.last<DEST_MS){ A.raf=requestAnimationFrame(frame); return; }
+    A.last=now;
+    var m0=performance.now();
+    try{ destRestyle(gd, destArrays(arcs, (now-A.t0)/DEST_DUR, null), pIdx); }
+    catch(e){ destStop(d.cad); return; }
+    // Presupuesto mobile: medir el restyle real los primeros ~2s; si el
+    // promedio supera DEST_BUDGET ms se degrada a estático (decisión pegajosa).
+    if(A.medir && !_destPerfStatic){
+      A.muestras.push(performance.now()-m0);
+      if(now-A.t0>2000 && A.muestras.length>=10){
+        var avg=A.muestras.reduce(function(s,x){ return s+x; }, 0)/A.muestras.length;
+        A.medir=false;
+        if(avg>DEST_BUDGET){
+          _destPerfStatic=true;
+          destStop(d.cad);
+          destStatic(gd, arcs, pIdx, 'static-mobile');
+          return;
+        }
+      }
+    }
+    A.raf=requestAnimationFrame(frame);
+  }
+  A.obs=new IntersectionObserver(function(es){
+    var v=es[es.length-1].isIntersecting;
+    if(v===A.vis) return;
+    A.vis=v;
+    if(v){ if(!A.raf) A.raf=requestAnimationFrame(frame); }
+    else if(A.raf){ cancelAnimationFrame(A.raf); A.raf=0; }
+  });
+  A.obs.observe(gd);
+  A.raf=requestAnimationFrame(frame);
+}
+
+// Render principal de la vista destinos (contrato del stub de fase 1:
+// expoDraw lo invoca en CADA redraw con la instancia d + expo cacheado).
+function renderAgroDestinos(d, E){
+  destStop(d.cad);
+  var gd=document.getElementById(d.ids.mapa); if(!gd) return;
+  var years=E.meta.years||[], yi=years.indexOf(d.anio);
+  var agg=destAgg(d.keys);
+  var res=destItems(agg, yi, d.met);
+  var resPrev=(yi>0) ? destItems(agg, yi-1, d.met) : null;
+  var unidad=(d.met==='fob')?'USD':'t';
+  // Side: KPIs de destinos (VA-4, mismos helpers e inputs que expoSide en
+  // origen → valores idénticos en ambas vistas) + top-10 destinos (el
+  // sparkline FOB y el heatmap VA-3 quedan tal como los dibujó expoSide).
+  var k=document.getElementById(d.ids.kpis);
+  if(k) k.innerHTML=kpisHtml([kpiMercadosActivos(res), kpiTop3Fob(res, resPrev)]);
+  var top=res.items.slice(0,10);
+  drawRank(d.ids.rank,
+    top.map(function(it){ return it.n; }),
+    top.map(function(it){ return it.v; }),
+    top.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
+    unidad);
+  if(!res.items.length){
+    panelEstado(d.paneles.mapa, sinDatos(expoLabel(d), d.anio));
+    return;
+  }
+  panelOk(d.paneles.mapa);
+  var c=getC(), s1=cssVar('--chart-agro-seq-1'), s2=cssVar('--chart-agro-seq-2');
+  var vmax=res.items[0].v;
+  var conGeo=res.items.filter(function(it){ return !!it.geo; });
+  var traces=[boliviaTrace(c)], arcs=[];
+  conGeo.forEach(function(it, i){
+    var r=Math.sqrt(it.v/vmax), col=mixHex(s1, s2, 0.2+0.8*r);
+    var pts=arcoPuntos(AGRO_BOLIVIA_GEO.lat, AGRO_BOLIVIA_GEO.lon, it.geo.lat, it.geo.lon, 40);
+    arcs.push({pts:pts, off:((i*37)%100)/100, col:col});
+    var llon=[], llat=[];   // split en el antimeridiano (evita la línea fantasma)
+    for(var j=0;j<pts.lon.length;j++){
+      if(j>0 && Math.abs(pts.lon[j]-pts.lon[j-1])>180){ llon.push(null); llat.push(null); }
+      llon.push(pts.lon[j]); llat.push(pts.lat[j]);
+    }
+    traces.push({type:'scattergeo', mode:'lines', lon:llon, lat:llat, opacity:0.75,
+      line:{width:1+5*r, color:col}, hoverinfo:'skip', showlegend:false});
+  });
+  // Marcadores destino: acá vive el hover (nombre + montos + participación).
+  traces.push({type:'scattergeo', mode:'markers',
+    lon:conGeo.map(function(it){ return it.geo.lon; }),
+    lat:conGeo.map(function(it){ return it.geo.lat; }),
+    marker:{ size:conGeo.map(function(it){ return 6+7*Math.sqrt(it.v/vmax); }),
+      color:conGeo.map(function(it){ return mixHex(s1, s2, 0.2+0.8*Math.sqrt(it.v/vmax)); }),
+      line:{width:1, color:hexToRgba(c.textPrimary, 0.35)} },
+    customdata:conGeo.map(function(it){
+      return [it.n, f0(it.fob), f0(it.ton), (res.total>0)?f1(it.v/res.total*100):'—'];
+    }),
+    hovertemplate:'{{t:agro.hover_dest}}', showlegend:false});
+  // Partículas (última trace): posiciones iniciales en fase 0.
+  var pIdx=traces.length;
+  var p0=destArrays(arcs, 0, null);
+  traces.push({type:'scattergeo', mode:'markers', lon:p0.lon, lat:p0.lat,
+    marker:{size:8, symbol:'triangle-up', color:arcs.map(function(a){ return a.col; }),
+      line:{width:0.5, color:hexToRgba(c.textPrimary, 0.4)}},
+    hoverinfo:'skip', showlegend:false});
+  var lay=geoLayoutMundo(c);
+  var nota=(d.met==='fob') ? '{{t:agro.dest_nota_fob}}' : '{{t:agro.dest_nota_ton}}';
+  if(res.items.some(function(it){ return !it.geo; })) nota+=' · {{t:agro.dest_nota_singeo}}';
+  lay.annotations=[{text:nota, xref:'paper', yref:'paper', x:0.01, y:0.02,
+    xanchor:'left', yanchor:'bottom', showarrow:false,
+    font:{family:'IBM Plex Mono,monospace', size:9, color:c.textMuted}}];
+  // Como plotInto, pero capturando el promise: el mundo (scope world) baja su
+  // topojson async del CDN de Plotly — un restyle ANTES de que termine revienta
+  // dentro de plotly (uncaught async). La animación arranca recién al resolver.
+  gd.style.display='';
+  if(lay.height) gd.style.height=lay.height+'px';
+  var tok=d.tok;
+  Plotly.react(gd, traces, lay, {...PC, locale:FB_LANG}).then(function(){
+    if(tok!==d.tok) return;   // redraw más nuevo ya corrió: no pisar su animación
+    if(!arcs.length){ gd.setAttribute('data-agro-dest-anim','none'); return; }
+    destAngleDetect(gd, pIdx, p0);
+    if(destReduced()){ destStatic(gd, arcs, pIdx, 'static-rm'); return; }
+    if(_destPerfStatic){ destStatic(gd, arcs, pIdx, 'static-mobile'); return; }
+    gd.setAttribute('data-agro-dest-anim','animada');
+    destAnim(d, gd, arcs, pIdx);
+  }).catch(function(){});
+}
+window.renderAgroDestinos = renderAgroDestinos;
 
 // ═══ Entry point: hook de AGRO_SUBTABS (un activate = una cadena) ═══
 // Idempotente: instancia lazy los 2 dashboards + precios de la cadena, carga
