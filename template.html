@@ -513,6 +513,20 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
 .agro-dash-main{min-width:0}
 .agro-dash-side{min-width:0;display:flex;flex-direction:column;gap:14px}
+/* Expo APILADO (forma cuadrada): controles → fila de KPIs → mapa mundial
+   full-width → slider → abajo ranking | sparkline FOB + estacionalidad.
+   Producción mantiene el dual 1fr/1fr. display:flex pisa el grid de
+   .agro-dash (misma especificidad → orden). */
+/* align-items:stretch pisa el align-items:start heredado de .agro-dash — sin
+   él, slider/mapa colapsan a ancho-contenido en el flex column. */
+.agro-dash--expo{display:flex;flex-direction:column;gap:14px;align-items:stretch}
+.agro-dash--expo>.agro-controls{margin:0}
+.agro-dash--expo>.agro-kpis{display:flex;flex-wrap:wrap;gap:10px}
+.agro-dash--expo>.agro-kpis:empty{display:none}
+.agro-dash--expo>.agro-kpis .agro-kpi{flex:1 1 150px;max-width:260px}
+.agro-dash-bottom{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.agro-dash-bottom>.agro-estado{grid-column:1/-1}
+.agro-dash-series{display:flex;flex-direction:column;gap:12px;min-width:0}
 /* KPIs: fila de tiles chicos, extensible (tiles nuevos = hermanos en la grilla). */
 .agro-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .agro-kpis:empty{display:none}
@@ -525,7 +539,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-estado{padding:32px 14px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5;background:var(--bg-secondary);border:1px dashed var(--border-color);border-radius:var(--radius-sm)}
 .agro-estado[hidden]{display:none}
 .agro-estado .agro-retry{margin-top:10px}
-@media(max-width:900px){.agro-dash{grid-template-columns:1fr}.agro-kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.agro-dash{grid-template-columns:1fr}.agro-kpis{grid-template-columns:repeat(2,1fr)}.agro-dash-bottom{grid-template-columns:1fr}}
 @media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}.agro-kpi-valor{font-size:18px}.agro-dash{gap:12px}}
 /* /bake:optional:agro */
 /* bake:optional:dpf */
@@ -1602,33 +1616,33 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
           <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div class="agro-dash">
-          <div class="agro-dash-main">
-            <div class="agro-controls">
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
-                <div class="fb-pills" id="agroVista-soya-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
-                </div></div>
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-                <div class="fb-pills" id="agroCtl-soya-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-                  <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
-                  <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
-                </div></div>
-            </div>
-            <div id="agroMapa-soya-expo" style="height:460px"></div>
-            <div class="agro-estado" id="agroEstado-soya-expo-mapa" hidden></div>
-            <div class="agro-slider">
-              <div class="agro-anio"><span id="agroAnioLabel-soya-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-soya-expo" hidden></span></div>
-              <input type="range" id="agroAnio-soya-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
-              <div class="agro-slider-marks"><span id="agroAnioMin-soya-expo">2017</span><span id="agroAnioMax-soya-expo">2026</span></div>
-            </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-soya-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-soya-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
           </div>
-          <div class="agro-dash-side">
-            <div class="agro-kpis" id="agroKpis-soya-expo"></div>
+          <div class="agro-kpis" id="agroKpis-soya-expo"></div>
+          <div id="agroMapa-soya-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-soya-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-soya-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-soya-expo" hidden></span></div>
+            <input type="range" id="agroAnio-soya-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-soya-expo">2017</span><span id="agroAnioMax-soya-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
             <div id="agroRank-soya-expo" style="height:300px"></div>
-            <div id="agroSpark-soya-expo" style="height:90px"></div>
-            <div id="agroHeat-soya-expo" style="height:220px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-soya-expo" style="height:90px"></div>
+              <div id="agroHeat-soya-expo" style="height:220px"></div>
+            </div>
             <div class="agro-estado" id="agroEstado-soya-expo-side" hidden></div>
           </div>
         </div>
@@ -1699,33 +1713,33 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
           <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div class="agro-dash">
-          <div class="agro-dash-main">
-            <div class="agro-controls">
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
-                <div class="fb-pills" id="agroVista-girasol-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
-                </div></div>
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-                <div class="fb-pills" id="agroCtl-girasol-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-                  <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
-                  <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
-                </div></div>
-            </div>
-            <div id="agroMapa-girasol-expo" style="height:460px"></div>
-            <div class="agro-estado" id="agroEstado-girasol-expo-mapa" hidden></div>
-            <div class="agro-slider">
-              <div class="agro-anio"><span id="agroAnioLabel-girasol-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-girasol-expo" hidden></span></div>
-              <input type="range" id="agroAnio-girasol-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
-              <div class="agro-slider-marks"><span id="agroAnioMin-girasol-expo">2017</span><span id="agroAnioMax-girasol-expo">2026</span></div>
-            </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-girasol-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-girasol-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
           </div>
-          <div class="agro-dash-side">
-            <div class="agro-kpis" id="agroKpis-girasol-expo"></div>
+          <div class="agro-kpis" id="agroKpis-girasol-expo"></div>
+          <div id="agroMapa-girasol-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-girasol-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-girasol-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-girasol-expo" hidden></span></div>
+            <input type="range" id="agroAnio-girasol-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-girasol-expo">2017</span><span id="agroAnioMax-girasol-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
             <div id="agroRank-girasol-expo" style="height:300px"></div>
-            <div id="agroSpark-girasol-expo" style="height:90px"></div>
-            <div id="agroHeat-girasol-expo" style="height:220px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-girasol-expo" style="height:90px"></div>
+              <div id="agroHeat-girasol-expo" style="height:220px"></div>
+            </div>
             <div class="agro-estado" id="agroEstado-girasol-expo-side" hidden></div>
           </div>
         </div>
@@ -1796,33 +1810,33 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
           <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div class="agro-dash">
-          <div class="agro-dash-main">
-            <div class="agro-controls">
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
-                <div class="fb-pills" id="agroVista-azucar-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
-                </div></div>
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-                <div class="fb-pills" id="agroCtl-azucar-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-                  <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
-                  <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
-                </div></div>
-            </div>
-            <div id="agroMapa-azucar-expo" style="height:460px"></div>
-            <div class="agro-estado" id="agroEstado-azucar-expo-mapa" hidden></div>
-            <div class="agro-slider">
-              <div class="agro-anio"><span id="agroAnioLabel-azucar-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-azucar-expo" hidden></span></div>
-              <input type="range" id="agroAnio-azucar-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
-              <div class="agro-slider-marks"><span id="agroAnioMin-azucar-expo">2017</span><span id="agroAnioMax-azucar-expo">2026</span></div>
-            </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-azucar-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-azucar-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
           </div>
-          <div class="agro-dash-side">
-            <div class="agro-kpis" id="agroKpis-azucar-expo"></div>
+          <div class="agro-kpis" id="agroKpis-azucar-expo"></div>
+          <div id="agroMapa-azucar-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-azucar-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-azucar-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-azucar-expo" hidden></span></div>
+            <input type="range" id="agroAnio-azucar-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-azucar-expo">2017</span><span id="agroAnioMax-azucar-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
             <div id="agroRank-azucar-expo" style="height:300px"></div>
-            <div id="agroSpark-azucar-expo" style="height:90px"></div>
-            <div id="agroHeat-azucar-expo" style="height:220px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-azucar-expo" style="height:90px"></div>
+              <div id="agroHeat-azucar-expo" style="height:220px"></div>
+            </div>
             <div class="agro-estado" id="agroEstado-azucar-expo-side" hidden></div>
           </div>
         </div>
@@ -1894,35 +1908,35 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
           <div class="fb-chart-title">{{t:agro.dash_expo_titulo}}</div>
           <div class="fb-chart-sub">{{t:agro.dash_expo_sub}}</div>
         </div>
-        <div class="agro-dash">
-          <div class="agro-dash-main">
-            <div class="agro-controls">
-              <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
-                <select id="agroSel-otros-expo-producto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
-                <div class="fb-pills" id="agroVista-otros-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
-                </div></div>
-              <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
-                <div class="fb-pills" id="agroCtl-otros-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
-                  <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
-                  <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
-                </div></div>
-            </div>
-            <div id="agroMapa-otros-expo" style="height:460px"></div>
-            <div class="agro-estado" id="agroEstado-otros-expo-mapa" hidden></div>
-            <div class="agro-slider">
-              <div class="agro-anio"><span id="agroAnioLabel-otros-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-otros-expo" hidden></span></div>
-              <input type="range" id="agroAnio-otros-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
-              <div class="agro-slider-marks"><span id="agroAnioMin-otros-expo">2017</span><span id="agroAnioMax-otros-expo">2026</span></div>
-            </div>
+        <div class="agro-dash agro-dash--expo">
+          <div class="agro-controls">
+            <label class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_producto}}</span>
+              <select id="agroSel-otros-expo-producto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
+              <div class="fb-pills" id="agroVista-otros-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
+                <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
+              </div></div>
+            <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
+              <div class="fb-pills" id="agroCtl-otros-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
+                <button class="fb-pill active" data-met="fob" type="button">{{t:agro.met_fob}}</button>
+                <button class="fb-pill" data-met="ton" type="button">{{t:agro.met_ton}}</button>
+              </div></div>
           </div>
-          <div class="agro-dash-side">
-            <div class="agro-kpis" id="agroKpis-otros-expo"></div>
+          <div class="agro-kpis" id="agroKpis-otros-expo"></div>
+          <div id="agroMapa-otros-expo" style="height:460px"></div>
+          <div class="agro-estado" id="agroEstado-otros-expo-mapa" hidden></div>
+          <div class="agro-slider">
+            <div class="agro-anio"><span id="agroAnioLabel-otros-expo">&mdash;</span><span class="agro-badge-ytd" id="agroYtd-otros-expo" hidden></span></div>
+            <input type="range" id="agroAnio-otros-expo" min="2017" max="2026" step="1" value="2025" aria-label="{{t:agro.slider_aria}}">
+            <div class="agro-slider-marks"><span id="agroAnioMin-otros-expo">2017</span><span id="agroAnioMax-otros-expo">2026</span></div>
+          </div>
+          <div class="agro-dash-bottom">
             <div id="agroRank-otros-expo" style="height:300px"></div>
-            <div id="agroSpark-otros-expo" style="height:90px"></div>
-            <div id="agroHeat-otros-expo" style="height:220px"></div>
+            <div class="agro-dash-series">
+              <div id="agroSpark-otros-expo" style="height:90px"></div>
+              <div id="agroHeat-otros-expo" style="height:220px"></div>
+            </div>
             <div class="agro-estado" id="agroEstado-otros-expo-side" hidden></div>
           </div>
         </div>
@@ -8127,15 +8141,10 @@ function renderAgroDestinos(d, E){
   var years=E.meta.years||[], yi=years.indexOf(d.anio);
   var agg=destAgg(d.keys);
   var res=destItems(agg, yi, d.met);
-  // Años YTD: sin tendencia top-3 + nota YTD (mismo criterio que expoSide).
-  var esYtd=(E.meta.ytdYears||[]).indexOf(d.anio)!==-1;
-  var resPrev=(yi>0 && !esYtd) ? destItems(agg, yi-1, d.met) : null;
   var unidad=(d.met==='fob')?'USD':'t';
-  // Side: KPIs de destinos (VA-4, mismos helpers e inputs que expoSide en
-  // origen → valores idénticos en ambas vistas) + top-10 destinos (el
-  // sparkline FOB y el heatmap VA-3 quedan tal como los dibujó expoSide).
-  var k=document.getElementById(d.ids.kpis);
-  if(k) k.innerHTML=kpisHtml([kpiMercadosActivos(res, esYtd), kpiTop3Fob(res, resPrev)]);
+  // KPIs: NO se tocan — la fila superior queda como la dejó expoSide (corre
+  // en cada redraw e incluye VA-4 con estos mismos inputs), así alternar
+  // Países/Flujos no reacomoda el layout. Acá solo mapa + ranking top-10.
   var top=res.items.slice(0,10);
   drawRank(d.ids.rank,
     top.map(function(it){ return it.n; }),

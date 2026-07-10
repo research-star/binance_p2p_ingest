@@ -664,10 +664,13 @@ cultivo SIIP y producto Comex en su panel).
 Cada cadena apila **dos dashboards duales**: Producción (SIIP municipal
 2013–2024, 73 cultivos, choropleth municipal/departamental, mapa de 520 px)
 arriba y Exportación (INE IneComex 2017–2026, 2026 YTD marzo; 35 productos
-NANDINA 10 dígitos, FOB USD + toneladas) abajo. Layout por dashboard: mapa a
-la izquierda + KPIs/ranking/sparklines a la derecha en mitades iguales
-(`.agro-dash` grid `1fr/1fr`, pedido 2026-07-10: lado derecho más ancho para
-que los KPIs nunca desborden), slider de año bajo el mapa. **Escala de color
+NANDINA 10 dígitos, FOB USD + toneladas) abajo. Layout: producción = DUAL
+(mapa izq + KPIs/ranking/sparklines der, `.agro-dash` grid `1fr/1fr`; pedido
+2026-07-10: KPIs nunca desbordan); exportación = APILADO en forma cuadrada
+(`.agro-dash--expo`, pedido 2026-07-10 tarde: controles → fila de KPIs →
+mapa mundial full-width → slider → abajo ranking | sparkline FOB +
+estacionalidad en `.agro-dash-bottom` 1fr/1fr; los KPIs no cambian al
+alternar vistas — expoSide es el único que los escribe). **Escala de color
 FIJA por serie completa** (`_zr` — `zrProdMun`/`zrProdDep`/`zrExpoDest`:
 zmin/zmax computados sobre TODOS los años por clave cultivo|productos ×
 métrica × nivel), así el slider compara colores entre años. El dashboard de
