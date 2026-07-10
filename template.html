@@ -492,6 +492,9 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-controls{display:flex;gap:14px 26px;flex-wrap:wrap;align-items:flex-end;margin:0 0 14px}
 .agro-ctl{display:flex;flex-direction:column;gap:6px}
 .agro-select{font-family:inherit;font-size:var(--text-sm);color:var(--text-primary);background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:7px 10px;min-width:230px;max-width:100%;cursor:pointer}
+/* Cadena mono-producto (girasol/azúcar): el select se congela como etiqueta
+   estática — sin flecha ni affordance de cambio (lo deshabilita preciosSetup). */
+.agro-select-solo{appearance:none;-webkit-appearance:none;background:var(--bg-tertiary);color:var(--text-secondary);border-style:dashed;cursor:default;opacity:1}
 .agro-mapa{min-height:400px}
 .agro-status{padding:56px 16px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5}
 /* Slider de años: thumb grande (26px ≥ 24px) para uso táctil. */
@@ -500,28 +503,30 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .agro-slider input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;margin:12px 0 4px;border-radius:3px;background:var(--bg-tertiary);border:1px solid var(--border-color);outline:none;cursor:pointer}
 .agro-slider input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
 .agro-slider input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--blue-accent);border:3px solid var(--bg-secondary);box-shadow:0 1px 3px rgba(33,30,27,.35);cursor:pointer}
-.agro-slider-marks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)}
+/* margin-top despega los extremos de año del thumb (26px desborda el track). */
+.agro-slider-marks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted);margin-top:12px}
 .agro-badge-ytd{display:inline-block;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600;color:#7a4a12;background:rgba(180,83,9,.12);border:1px solid rgba(180,83,9,.30);border-radius:var(--radius-sm);padding:2px 8px;margin-left:10px;vertical-align:3px}
 .agro-pill-parcial{display:inline-block;font-size:var(--text-xs);font-weight:600;color:var(--text-muted);background:var(--bg-tertiary);border:1px dashed var(--border-color);border-radius:var(--radius-md);padding:4px 10px;white-space:nowrap}
 /* [hidden] debe ganarle al display de las clases de arriba (misma especificidad → orden). */
 .agro-badge-ytd[hidden],.agro-pill-parcial[hidden]{display:none}
 /* ── Rediseño por cadenas: dashboard dual main (mapa+slider) | side (KPIs+ranking+sparklines) ── */
-.agro-dash{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:16px;align-items:start}
+.agro-dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
 .agro-dash-main{min-width:0}
 .agro-dash-side{min-width:0;display:flex;flex-direction:column;gap:14px}
 /* KPIs: fila de tiles chicos, extensible (tiles nuevos = hermanos en la grilla). */
-.agro-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
+.agro-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
 .agro-kpis:empty{display:none}
 .agro-kpi{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:10px 12px;min-width:0}
 .agro-kpi-label{font-family:var(--font-mono);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:4px}
-.agro-kpi-valor{font-family:var(--font-display);font-size:24px;font-weight:600;color:var(--text-primary);line-height:1.1;font-variant-numeric:tabular-nums}
+/* 20px + overflow-wrap: el valor nunca desborda el tile (guarda anti-solape). */
+.agro-kpi-valor{font-family:var(--font-display);font-size:20px;font-weight:600;color:var(--text-primary);line-height:1.1;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .agro-kpi-unidad{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-soft);margin-top:2px}
 /* Estados por zona (loading/error/empty): hidden por default; el render los puebla. */
 .agro-estado{padding:32px 14px;text-align:center;color:var(--text-muted);font-size:var(--text-sm);line-height:1.5;background:var(--bg-secondary);border:1px dashed var(--border-color);border-radius:var(--radius-sm)}
 .agro-estado[hidden]{display:none}
 .agro-estado .agro-retry{margin-top:10px}
 @media(max-width:900px){.agro-dash{grid-template-columns:1fr}.agro-kpis{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}.agro-kpi-valor{font-size:20px}.agro-dash{gap:12px}}
+@media(max-width:600px){.agro-controls{flex-direction:column;align-items:stretch;gap:12px}.agro-select{min-width:0;width:100%}.agro-anio{font-size:24px}.agro-kpi-valor{font-size:18px}.agro-dash{gap:12px}}
 /* /bake:optional:agro */
 /* bake:optional:dpf */
 /* ── DPF Tab ── */
@@ -1573,7 +1578,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
                   <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
                 </div></div>
             </div>
-            <div id="agroMapa-soya-prod" style="height:460px"></div>
+            <div id="agroMapa-soya-prod" style="height:520px"></div>
             <div class="agro-estado" id="agroEstado-soya-prod-mapa" hidden></div>
             <div class="agro-slider">
               <div class="agro-anio" id="agroAnioLabel-soya-prod">&mdash;</div>
@@ -1602,8 +1607,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-controls">
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
                 <div class="fb-pills" id="agroVista-soya-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="origen" type="button">{{t:agro.vista_origen}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_destinos}}</button>
+                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
                 </div></div>
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
                 <div class="fb-pills" id="agroCtl-soya-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
@@ -1670,7 +1675,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
                   <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
                 </div></div>
             </div>
-            <div id="agroMapa-girasol-prod" style="height:460px"></div>
+            <div id="agroMapa-girasol-prod" style="height:520px"></div>
             <div class="agro-estado" id="agroEstado-girasol-prod-mapa" hidden></div>
             <div class="agro-slider">
               <div class="agro-anio" id="agroAnioLabel-girasol-prod">&mdash;</div>
@@ -1699,8 +1704,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-controls">
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
                 <div class="fb-pills" id="agroVista-girasol-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="origen" type="button">{{t:agro.vista_origen}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_destinos}}</button>
+                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
                 </div></div>
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
                 <div class="fb-pills" id="agroCtl-girasol-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
@@ -1767,7 +1772,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
                   <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
                 </div></div>
             </div>
-            <div id="agroMapa-azucar-prod" style="height:460px"></div>
+            <div id="agroMapa-azucar-prod" style="height:520px"></div>
             <div class="agro-estado" id="agroEstado-azucar-prod-mapa" hidden></div>
             <div class="agro-slider">
               <div class="agro-anio" id="agroAnioLabel-azucar-prod">&mdash;</div>
@@ -1796,8 +1801,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
             <div class="agro-controls">
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
                 <div class="fb-pills" id="agroVista-azucar-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="origen" type="button">{{t:agro.vista_origen}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_destinos}}</button>
+                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
                 </div></div>
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
                 <div class="fb-pills" id="agroCtl-azucar-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
@@ -1866,7 +1871,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
                   <button class="fb-pill" data-niv="dep" type="button">{{t:agro.nivel_departamental}}</button>
                 </div></div>
             </div>
-            <div id="agroMapa-otros-prod" style="height:460px"></div>
+            <div id="agroMapa-otros-prod" style="height:520px"></div>
             <div class="agro-estado" id="agroEstado-otros-prod-mapa" hidden></div>
             <div class="agro-slider">
               <div class="agro-anio" id="agroAnioLabel-otros-prod">&mdash;</div>
@@ -1896,8 +1901,8 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
                 <select id="agroSel-otros-expo-producto" class="agro-select" aria-label="{{t:agro.ctl_producto}}"></select></label>
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_vista}}</span>
                 <div class="fb-pills" id="agroVista-otros-expo" role="group" aria-label="{{t:agro.ctl_vista}}">
-                  <button class="fb-pill active" data-v="origen" type="button">{{t:agro.vista_origen}}</button>
-                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_destinos}}</button>
+                  <button class="fb-pill active" data-v="paises" type="button">{{t:agro.vista_paises}}</button>
+                  <button class="fb-pill" data-v="destinos" type="button">{{t:agro.vista_flujos}}</button>
                 </div></div>
               <div class="agro-ctl"><span class="fb-flab">{{t:agro.ctl_metrica}}</span>
                 <div class="fb-pills" id="agroCtl-otros-expo-metrica" role="group" aria-label="{{t:agro.ctl_metrica}}">
@@ -6828,85 +6833,88 @@ var PATHS = { prod:'/agro_produccion.json', expo:'/agro_exportaciones.json',
               precios:'/agro_precios.json', geoMun:'/agro_geo_municipal.json',
               geoDep:'/agro_geo_departamental.json' };
 
-// Centroides de países destino (clave = nombre CRUDO del INE en agro_exportaciones.json dest).
-// {n: display name, lat, lon}. sinArco:true = se cuenta en totales/participación pero NO se dibuja arco
-// (OTROS = agregado sin geografía; ZONA FRANCA DE BOLIVIA = doméstico).
+// Geografía de países destino (clave = nombre CRUDO del INE en agro_exportaciones.json dest).
+// {n: display name, lat, lon, iso}. lat/lon = centroide para los arcos (vista Flujos);
+// iso = ISO-3 para el choropleth mundial (vista Países). sinArco:true = se cuenta en
+// totales/participación pero NO se dibuja arco ni país (OTROS = agregado sin geografía;
+// ZONA FRANCA DE BOLIVIA = doméstico). BELGICA-LUXEMBURGO ≈ BEL (agregado INE de dos
+// países: se pinta Bélgica; el hover lleva el nombre compuesto).
 var AGRO_DEST_GEO = {
-  'COLOMBIA':                    {n:'Colombia',            lat:4.57,   lon:-74.30},
-  'PERU':                        {n:'Perú',                lat:-9.19,  lon:-75.02},
-  'ECUADOR':                     {n:'Ecuador',             lat:-1.83,  lon:-78.18},
-  'CHINA':                       {n:'China',               lat:35.86,  lon:104.20},
-  'ARGENTINA':                   {n:'Argentina',           lat:-38.42, lon:-63.62},
-  'CHILE':                       {n:'Chile',               lat:-35.68, lon:-71.54},
-  'ESTADOS UNIDOS':              {n:'Estados Unidos',      lat:39.78,  lon:-98.50},
-  'PAISES BAJOS':                {n:'Países Bajos',        lat:52.13,  lon:5.29},
-  'ALEMANIA':                    {n:'Alemania',            lat:51.17,  lon:10.45},
-  'REINO UNIDO':                 {n:'Reino Unido',         lat:54.24,  lon:-2.90},
+  'COLOMBIA':                    {n:'Colombia',            lat:4.57,   lon:-74.30, iso:'COL'},
+  'PERU':                        {n:'Perú',                lat:-9.19,  lon:-75.02, iso:'PER'},
+  'ECUADOR':                     {n:'Ecuador',             lat:-1.83,  lon:-78.18, iso:'ECU'},
+  'CHINA':                       {n:'China',               lat:35.86,  lon:104.20, iso:'CHN'},
+  'ARGENTINA':                   {n:'Argentina',           lat:-38.42, lon:-63.62, iso:'ARG'},
+  'CHILE':                       {n:'Chile',               lat:-35.68, lon:-71.54, iso:'CHL'},
+  'ESTADOS UNIDOS':              {n:'Estados Unidos',      lat:39.78,  lon:-98.50, iso:'USA'},
+  'PAISES BAJOS':                {n:'Países Bajos',        lat:52.13,  lon:5.29,   iso:'NLD'},
+  'ALEMANIA':                    {n:'Alemania',            lat:51.17,  lon:10.45,  iso:'DEU'},
+  'REINO UNIDO':                 {n:'Reino Unido',         lat:54.24,  lon:-2.90,  iso:'GBR'},
   'OTROS':                       {n:'Otros',               sinArco:true},
-  'ESPAÑA':                      {n:'España',              lat:40.46,  lon:-3.75},
-  'TURQUIA':                     {n:'Turquía',             lat:38.96,  lon:35.24},
-  'CANADA':                      {n:'Canadá',              lat:56.13,  lon:-106.35},
-  'FRANCIA':                     {n:'Francia',             lat:46.23,  lon:2.21},
-  'BRASIL.':                     {n:'Brasil',              lat:-14.24, lon:-51.93},
-  'AUSTRALIA':                   {n:'Australia',           lat:-25.27, lon:133.78},
-  'MEXICO':                      {n:'México',              lat:23.63,  lon:-102.55},
-  'MYANMAR':                     {n:'Myanmar',             lat:21.91,  lon:95.96},
-  'BELGICA-LUXEMBURGO':          {n:'Bélgica-Luxemburgo',  lat:50.50,  lon:4.47},
-  'JAPON':                       {n:'Japón',               lat:36.20,  lon:138.25},
-  'ITALIA':                      {n:'Italia',              lat:41.87,  lon:12.57},
-  'ANGOLA':                      {n:'Angola',              lat:-11.20, lon:17.87},
-  'SUIZA':                       {n:'Suiza',               lat:46.82,  lon:8.23},
-  'URUGUAY':                     {n:'Uruguay',             lat:-32.52, lon:-55.77},
-  'COREA (SUR). REPUBLICA DE':   {n:'Corea del Sur',       lat:35.91,  lon:127.77},
-  'HONG KONG':                   {n:'Hong Kong',           lat:22.32,  lon:114.17},
-  'ISRAEL':                      {n:'Israel',              lat:31.05,  lon:34.85},
-  'REPUBLICA DOMINICANA':        {n:'Rep. Dominicana',     lat:18.74,  lon:-70.16},
-  'LITUANIA':                    {n:'Lituania',            lat:55.17,  lon:23.88},
-  'PARAGUAY':                    {n:'Paraguay',            lat:-23.44, lon:-58.44},
-  'POLONIA':                     {n:'Polonia',             lat:51.92,  lon:19.15},
-  'COSTA RICA':                  {n:'Costa Rica',          lat:9.75,   lon:-83.75},
-  'VENEZUELA':                   {n:'Venezuela',           lat:6.42,   lon:-66.59},
-  'GUATEMALA':                   {n:'Guatemala',           lat:15.78,  lon:-90.23},
-  'EMIRATOS ARABES UNIDOS':      {n:'Emiratos Árabes',     lat:23.42,  lon:53.85},
-  'YEMEN':                       {n:'Yemen',               lat:15.55,  lon:48.52},
-  'VIET-NAM':                    {n:'Vietnam',             lat:14.06,  lon:108.28},
-  'TAIWAN':                      {n:'Taiwán',              lat:23.70,  lon:120.96},
-  'JAMAICA':                     {n:'Jamaica',             lat:18.11,  lon:-77.30},
-  'RUSIA, FEDERACION DE':        {n:'Rusia',               lat:61.52,  lon:105.32},
-  'GHANA':                       {n:'Ghana',               lat:7.95,   lon:-1.02},
-  'ESLOVENIA':                   {n:'Eslovenia',           lat:46.15,  lon:14.99},
-  'MALASIA':                     {n:'Malasia',             lat:4.21,   lon:101.98},
-  'PANAMA':                      {n:'Panamá',              lat:8.54,   lon:-80.78},
-  'NUEVA ZELANDIA':              {n:'Nueva Zelanda',       lat:-40.90, lon:174.89},
-  'EL SALVADOR':                 {n:'El Salvador',         lat:13.79,  lon:-88.90},
-  'LETONIA':                     {n:'Letonia',             lat:56.88,  lon:24.60},
-  'INDONESIA':                   {n:'Indonesia',           lat:-0.79,  lon:113.92},
-  'MARRUECOS':                   {n:'Marruecos',           lat:31.79,  lon:-7.09},
-  'FILIPINAS':                   {n:'Filipinas',           lat:12.88,  lon:121.77},
-  'SALOMON, ISLAS':              {n:'Islas Salomón',       lat:-9.65,  lon:160.16},
-  'UCRANIA':                     {n:'Ucrania',             lat:48.38,  lon:31.17},
-  'BAHREIN':                     {n:'Baréin',              lat:26.07,  lon:50.56},
-  'TAILANDIA':                   {n:'Tailandia',           lat:15.87,  lon:100.99},
-  'LIBANO':                      {n:'Líbano',              lat:33.85,  lon:35.86},
-  'CONGO, REPUBLICA DEL':        {n:'Rep. del Congo',      lat:-0.23,  lon:15.83},
-  'ARGELIA':                     {n:'Argelia',              lat:28.03,  lon:1.66},
-  'LIBIA':                       {n:'Libia',               lat:26.34,  lon:17.23},
-  'QATAR':                       {n:'Catar',               lat:25.35,  lon:51.18},
-  'SURINAM':                     {n:'Surinam',             lat:3.92,   lon:-56.03},
-  'FINLANDIA':                   {n:'Finlandia',           lat:61.92,  lon:25.75},
-  'INDIA':                       {n:'India',               lat:20.59,  lon:78.96},
-  'REPUBLICA CHECA':             {n:'Chequia',             lat:49.82,  lon:15.47},
-  'TUNICIA':                     {n:'Túnez',               lat:33.89,  lon:9.54},
-  'CAMERUN, REPUBLICA UNIDA DEL':{n:'Camerún',             lat:7.37,   lon:12.35},
-  'GAMBIA':                      {n:'Gambia',              lat:13.44,  lon:-15.31},
-  'GUINEA ECUATORIAL':           {n:'Guinea Ecuatorial',   lat:1.65,   lon:10.27},
+  'ESPAÑA':                      {n:'España',              lat:40.46,  lon:-3.75,  iso:'ESP'},
+  'TURQUIA':                     {n:'Turquía',             lat:38.96,  lon:35.24,  iso:'TUR'},
+  'CANADA':                      {n:'Canadá',              lat:56.13,  lon:-106.35, iso:'CAN'},
+  'FRANCIA':                     {n:'Francia',             lat:46.23,  lon:2.21,   iso:'FRA'},
+  'BRASIL.':                     {n:'Brasil',              lat:-14.24, lon:-51.93, iso:'BRA'},
+  'AUSTRALIA':                   {n:'Australia',           lat:-25.27, lon:133.78, iso:'AUS'},
+  'MEXICO':                      {n:'México',              lat:23.63,  lon:-102.55, iso:'MEX'},
+  'MYANMAR':                     {n:'Myanmar',             lat:21.91,  lon:95.96,  iso:'MMR'},
+  'BELGICA-LUXEMBURGO':          {n:'Bélgica-Luxemburgo',  lat:50.50,  lon:4.47,   iso:'BEL'},
+  'JAPON':                       {n:'Japón',               lat:36.20,  lon:138.25, iso:'JPN'},
+  'ITALIA':                      {n:'Italia',              lat:41.87,  lon:12.57,  iso:'ITA'},
+  'ANGOLA':                      {n:'Angola',              lat:-11.20, lon:17.87,  iso:'AGO'},
+  'SUIZA':                       {n:'Suiza',               lat:46.82,  lon:8.23,   iso:'CHE'},
+  'URUGUAY':                     {n:'Uruguay',             lat:-32.52, lon:-55.77, iso:'URY'},
+  'COREA (SUR). REPUBLICA DE':   {n:'Corea del Sur',       lat:35.91,  lon:127.77, iso:'KOR'},
+  'HONG KONG':                   {n:'Hong Kong',           lat:22.32,  lon:114.17, iso:'HKG'},
+  'ISRAEL':                      {n:'Israel',              lat:31.05,  lon:34.85,  iso:'ISR'},
+  'REPUBLICA DOMINICANA':        {n:'Rep. Dominicana',     lat:18.74,  lon:-70.16, iso:'DOM'},
+  'LITUANIA':                    {n:'Lituania',            lat:55.17,  lon:23.88,  iso:'LTU'},
+  'PARAGUAY':                    {n:'Paraguay',            lat:-23.44, lon:-58.44, iso:'PRY'},
+  'POLONIA':                     {n:'Polonia',             lat:51.92,  lon:19.15,  iso:'POL'},
+  'COSTA RICA':                  {n:'Costa Rica',          lat:9.75,   lon:-83.75, iso:'CRI'},
+  'VENEZUELA':                   {n:'Venezuela',           lat:6.42,   lon:-66.59, iso:'VEN'},
+  'GUATEMALA':                   {n:'Guatemala',           lat:15.78,  lon:-90.23, iso:'GTM'},
+  'EMIRATOS ARABES UNIDOS':      {n:'Emiratos Árabes',     lat:23.42,  lon:53.85,  iso:'ARE'},
+  'YEMEN':                       {n:'Yemen',               lat:15.55,  lon:48.52,  iso:'YEM'},
+  'VIET-NAM':                    {n:'Vietnam',             lat:14.06,  lon:108.28, iso:'VNM'},
+  'TAIWAN':                      {n:'Taiwán',              lat:23.70,  lon:120.96, iso:'TWN'},
+  'JAMAICA':                     {n:'Jamaica',             lat:18.11,  lon:-77.30, iso:'JAM'},
+  'RUSIA, FEDERACION DE':        {n:'Rusia',               lat:61.52,  lon:105.32, iso:'RUS'},
+  'GHANA':                       {n:'Ghana',               lat:7.95,   lon:-1.02,  iso:'GHA'},
+  'ESLOVENIA':                   {n:'Eslovenia',           lat:46.15,  lon:14.99,  iso:'SVN'},
+  'MALASIA':                     {n:'Malasia',             lat:4.21,   lon:101.98, iso:'MYS'},
+  'PANAMA':                      {n:'Panamá',              lat:8.54,   lon:-80.78, iso:'PAN'},
+  'NUEVA ZELANDIA':              {n:'Nueva Zelanda',       lat:-40.90, lon:174.89, iso:'NZL'},
+  'EL SALVADOR':                 {n:'El Salvador',         lat:13.79,  lon:-88.90, iso:'SLV'},
+  'LETONIA':                     {n:'Letonia',             lat:56.88,  lon:24.60,  iso:'LVA'},
+  'INDONESIA':                   {n:'Indonesia',           lat:-0.79,  lon:113.92, iso:'IDN'},
+  'MARRUECOS':                   {n:'Marruecos',           lat:31.79,  lon:-7.09,  iso:'MAR'},
+  'FILIPINAS':                   {n:'Filipinas',           lat:12.88,  lon:121.77, iso:'PHL'},
+  'SALOMON, ISLAS':              {n:'Islas Salomón',       lat:-9.65,  lon:160.16, iso:'SLB'},
+  'UCRANIA':                     {n:'Ucrania',             lat:48.38,  lon:31.17,  iso:'UKR'},
+  'BAHREIN':                     {n:'Baréin',              lat:26.07,  lon:50.56,  iso:'BHR'},
+  'TAILANDIA':                   {n:'Tailandia',           lat:15.87,  lon:100.99, iso:'THA'},
+  'LIBANO':                      {n:'Líbano',              lat:33.85,  lon:35.86,  iso:'LBN'},
+  'CONGO, REPUBLICA DEL':        {n:'Rep. del Congo',      lat:-0.23,  lon:15.83,  iso:'COG'},
+  'ARGELIA':                     {n:'Argelia',              lat:28.03,  lon:1.66,  iso:'DZA'},
+  'LIBIA':                       {n:'Libia',               lat:26.34,  lon:17.23,  iso:'LBY'},
+  'QATAR':                       {n:'Catar',               lat:25.35,  lon:51.18,  iso:'QAT'},
+  'SURINAM':                     {n:'Surinam',             lat:3.92,   lon:-56.03, iso:'SUR'},
+  'FINLANDIA':                   {n:'Finlandia',           lat:61.92,  lon:25.75,  iso:'FIN'},
+  'INDIA':                       {n:'India',               lat:20.59,  lon:78.96,  iso:'IND'},
+  'REPUBLICA CHECA':             {n:'Chequia',             lat:49.82,  lon:15.47,  iso:'CZE'},
+  'TUNICIA':                     {n:'Túnez',               lat:33.89,  lon:9.54,   iso:'TUN'},
+  'CAMERUN, REPUBLICA UNIDA DEL':{n:'Camerún',             lat:7.37,   lon:12.35,  iso:'CMR'},
+  'GAMBIA':                      {n:'Gambia',              lat:13.44,  lon:-15.31, iso:'GMB'},
+  'GUINEA ECUATORIAL':           {n:'Guinea Ecuatorial',   lat:1.65,   lon:10.27,  iso:'GNQ'},
   'ZONA FRANCA DE BOLIVIA':      {n:'Zona Franca (Bolivia)', sinArco:true},
-  'JORDANIA':                    {n:'Jordania',            lat:30.59,  lon:36.24},
-  'GRECIA':                      {n:'Grecia',              lat:39.07,  lon:21.82},
-  'CUBA':                        {n:'Cuba',                lat:21.52,  lon:-77.78},
-  'DINAMARCA':                   {n:'Dinamarca',           lat:56.26,  lon:9.50},
-  'GABON':                       {n:'Gabón',               lat:-0.80,  lon:11.61},
-  'SUECIA':                      {n:'Suecia',              lat:60.13,  lon:18.64}
+  'JORDANIA':                    {n:'Jordania',            lat:30.59,  lon:36.24,  iso:'JOR'},
+  'GRECIA':                      {n:'Grecia',              lat:39.07,  lon:21.82,  iso:'GRC'},
+  'CUBA':                        {n:'Cuba',                lat:21.52,  lon:-77.78, iso:'CUB'},
+  'DINAMARCA':                   {n:'Dinamarca',           lat:56.26,  lon:9.50,   iso:'DNK'},
+  'GABON':                       {n:'Gabón',               lat:-0.80,  lon:11.61,  iso:'GAB'},
+  'SUECIA':                      {n:'Suecia',              lat:60.13,  lon:18.64,  iso:'SWE'}
 };
 var AGRO_BOLIVIA_GEO = {lat:-16.29, lon:-63.59};  // origen de los arcos
 
@@ -6993,10 +7001,13 @@ function kpisHtml(items){
 
 // ── Plotly compartido (geo estilo Bloqueos + choropleth secuencial verde) ──
 function mapH(){ return (window.innerWidth<=600) ? 400 : 460; }
-function geoLayout(c){
+// Mapas de PRODUCCIÓN más altos que el resto: Bolivia es ~cuadrada y aprovecha
+// el alto; el mundo expo (aspecto ancho) con más alto solo gana aire muerto.
+function mapHProd(){ return (window.innerWidth<=600) ? 420 : 520; }
+function geoLayout(c, h){
   return { paper_bgcolor:'rgba(0,0,0,0)',
     font:{family:'Outfit,sans-serif', color:c.fontcolor, size:10.5},
-    margin:{l:0, r:0, t:0, b:0}, showlegend:false, height:mapH(),
+    margin:{l:0, r:0, t:0, b:0}, showlegend:false, height:h||mapH(),
     hoverlabel:{font:{family:cssVar('--tooltip-font'), size:11, color:cssVar('--tooltip-text')}, bgcolor:cssVar('--tooltip-bg'), bordercolor:cssVar('--tooltip-border')},
     geo:{ resolution:50, projection:{type:'mercator'}, showland:false, showcountries:false, showcoastlines:false,
       showframe:false, showlakes:false, bgcolor:'rgba(0,0,0,0)',
@@ -7028,13 +7039,19 @@ function drawRank(elId, labels, vals, texts, unidad){
   if(!labels.length){ hidePlot(elId); return; }
   var c=getC(), L=BL(c);
   var hRank = Math.max(220, 24*labels.length+70);
+  // Margen izquierdo MEDIDO (~6.3 px/char de la tickfont mono): el automargin
+  // de Plotly capea su expansión y recorta la etiqueta más larga del ranking
+  // (ej. 'Fernández Alonso (Santa Cruz)' perdía la F). Cap al 45% del card.
+  var maxChars = 0;
+  labels.forEach(function(s){ if(s.length>maxChars) maxChars=s.length; });
+  var lPad = Math.min(12+Math.round(maxChars*6.3), Math.round((el.clientWidth||420)*0.45));
   plotInto(el, [{ type:'bar', orientation:'h',
     x:vals, y:labels, marker:{color:cssVar('--chart-agro-accent')},
     text:texts, textposition:'outside', cliponaxis:false,
     textfont:{family:'IBM Plex Mono,monospace', size:10, color:c.textMuted},
     hovertemplate:'<b>%{y}</b>: %{text} '+unidad+'<extra></extra>' }],
    {...L, height:hRank, showlegend:false, hovermode:'closest',
-    margin:{l:8, r:84, t:8, b:36},
+    margin:{l:lPad, r:84, t:8, b:36},
     xaxis:{...L.xaxis, tickangle:0, showgrid:true, automargin:true,
       title:{text:unidad, font:{size:10, color:c.textMuted}}},
     yaxis:{...L.yaxis, autorange:'reversed', automargin:true}},
@@ -7141,18 +7158,7 @@ function zrProdDep(cod, met){
   return (_zr[key]={zmin:0, zmax:mx||1});
 }
 // ── Exportaciones: agregación de productos de la cadena ──
-// keys = array de keys de meta.semillas (cadena) o '__todos__' (total agro,
-// origTotal). porDepto solo trae productos con actividad → fallback 0.
-function expoVal(dep, keys, yi, met){
-  var E=_cache.expo, f=(met==='fob')?'fobA':'tonA';
-  if(keys==='__todos__'){
-    var s=E.origTotal[dep];
-    return (s && s[f] && s[f][yi]) || 0;
-  }
-  var pd=E.porDepto[dep]||{}, tot=0;
-  keys.forEach(function(k){ var s=pd[k]; tot += (s && s[f] && s[f][yi]) || 0; });
-  return tot;
-}
+// keys = array de keys de meta.semillas (cadena) o '__todos__' (total agro).
 // Serie anual NACIONAL agregada (suma de nacional[k]; '__todos__' = suma de
 // origTotal sobre los 9 deptos).
 function expoNacArr(keys, f){
@@ -7170,15 +7176,14 @@ function expoNacArr(keys, f){
   }
   return arr;
 }
-function zrExpo(keys, met){
-  var key='ex|'+(keys==='__todos__'?'__todos__':keys.join('+'))+'|'+met;
+// Rango FIJO del choropleth de destinos: zmax = máximo país-año histórico de
+// la combinación (keys × métrica) — paridad con zrProdMun/zrProdDep.
+function zrExpoDest(keys, met){
+  var key='exd|'+(keys==='__todos__'?'__todos__':keys.join('+'))+'|'+met;
   if(_zr[key]) return _zr[key];
-  var E=_cache.expo, years=E.meta.years||[], mx=0;
-  Object.keys(E.origTotal).forEach(function(dep){
-    for(var yi=0; yi<years.length; yi++){
-      var v=expoVal(dep, keys, yi, met);
-      if(v>mx) mx=v;
-    }
+  var agg=destAgg(keys), f=(met==='fob')?'fA':'tA', mx=0;
+  Object.keys(agg).forEach(function(p){
+    (agg[p][f]||[]).forEach(function(v){ if(v>mx) mx=v; });
   });
   return (_zr[key]={zmin:0, zmax:mx||1});
 }
@@ -7322,7 +7327,7 @@ function prodRenderMun(d, ser, label){
     colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.4}},
     customdata:items.map(function(it){ return [it.nombre, it.depto, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
     hovertemplate:'{{t:agro.hover_mun}}', colorbar:colorbar(c, unidad) };
-  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'gid','nombre',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'gid','nombre',c), data], geoLayout(c, mapHProd()), {...PC, locale:FB_LANG});
   items.sort(function(a,b){ return b.v-a.v; });
   var top = items.slice(0,15);
   drawRank(d.ids.rank,
@@ -7354,7 +7359,7 @@ function prodRenderDep(d, byDep, label){
     colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
     customdata:items.map(function(it){ return [it.dep, f0(it.sup), f0(it.prod), it.sup>0?f2(it.prod/it.sup):'—']; }),
     hovertemplate:'{{t:agro.hover_dep}}', colorbar:colorbar(c, unidad) };
-  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
+  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'name','name',c), data], geoLayout(c, mapHProd()), {...PC, locale:FB_LANG});
   items.sort(function(a,b){ return b.v-a.v; });
   drawRank(d.ids.rank,
     items.map(function(it){ return it.dep; }),
@@ -7472,7 +7477,7 @@ function makeExpo(cadId){
     // elige un producto (o '__todos__' = total agro por depto de origen).
     keys: cfg.productos_comex ? cfg.productos_comex.slice() : '__todos__',
     selector: !!cfg.selector,
-    vista:'origen', met:'fob', anio:2025,
+    vista:'paises', met:'fob', anio:2025,
     ready:false, wired:false, loading:false, pending:false, tok:0 };
 }
 function expoWire(d){
@@ -7551,47 +7556,64 @@ function expoDraw(d){
   ytdBadge(d);
   expoSide(d);
   if(d.vista==='destinos'){
-    // Vista Destinos (D2): delega la instancia entera + el dataset expo ya
-    // cacheado (nacional[k].dest trae {pais:{fA,tA}}). El typeof queda como
-    // fallback defensivo del contrato del stub de fase 1.
+    // Vista Flujos (D2, valor interno 'destinos'): delega la instancia entera
+    // + el dataset expo ya cacheado (nacional[k].dest trae {pais:{fA,tA}}). El
+    // typeof queda como fallback defensivo del contrato del stub de fase 1.
     if(typeof window.renderAgroDestinos==='function'){ window.renderAgroDestinos(d, _cache.expo); return; }
     panelEstado(d.paneles.mapa, '{{t:agro.destinos_pronto}}');
     return;
   }
-  destStop(d.cad);   // al salir de destinos: cancelar rAF + observer de los arcos
-  expoRenderOrigen(d);
+  destStop(d.cad);   // al salir de flujos: cancelar rAF + observer de los arcos
+  expoRenderPaises(d);
 }
-function expoRenderOrigen(d){
-  var E=_cache.expo, meta=E.meta;
-  var yi = (meta.years||[]).indexOf(d.anio);
-  var deptos = Object.keys(E.origTotal).sort();
-  var locs=[], z=[], cd=[], maxv=0;
-  deptos.forEach(function(dep){
-    var fob = expoVal(dep, d.keys, yi, 'fob');
-    var ton = expoVal(dep, d.keys, yi, 'ton');
-    var v = (d.met==='fob') ? fob : ton;
-    if(v>maxv) maxv=v;
-    locs.push(dep); z.push(v); cd.push([dep, f0(fob), f0(ton)]);
-  });
-  if(maxv<=0){
+// Vista PAÍSES (default): choropleth MUNDIAL de destinos — dónde termina la
+// exportación de la cadena. Solo países con valor >0 en la métrica del año
+// llevan color; el resto queda en el gris neutro del land (paridad con el
+// tratamiento de las unidades sin dato en producción). El hover lleva FOB +
+// volumen + participación. OTROS/Zona Franca (sin iso) no se pintan pero sí
+// cuentan en ranking y totales (nota al pie del mapa).
+function expoRenderPaises(d){
+  var E=_cache.expo;
+  var yi = (E.meta.years||[]).indexOf(d.anio);
+  var res = destItems(destAgg(d.keys), yi, d.met);
+  var unidad = (d.met==='fob') ? 'USD' : 't';
+  if(!res.items.length){
     panelEstado(d.paneles.mapa, sinDatos(expoLabel(d), d.anio));
     hidePlot(d.ids.rank);
     return;
   }
   panelOk(d.paneles.mapa);
-  var c=getC(), geo=_cache.geoDep, zr=zrExpo(d.keys, d.met);
-  var unidad = (d.met==='fob') ? 'USD' : 't';
-  var data = { type:'choropleth', geojson:geo, featureidkey:'properties.name',
-    locations:locs, z:z, zmin:zr.zmin, zmax:zr.zmax,
-    colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.6}},
-    customdata:cd, hovertemplate:'{{t:agro.hover_expo}}', colorbar:colorbar(c, unidad) };
-  plotInto(document.getElementById(d.ids.mapa), [baseTrace(geo,'name','name',c), data], geoLayout(c), {...PC, locale:FB_LANG});
-  var items = deptos.map(function(dep,i){ return {dep:dep, v:z[i]}; })
-    .sort(function(a,b){ return b.v-a.v; });
+  var c=getC(), zr=zrExpoDest(d.keys, d.met);
+  var conIso = res.items.filter(function(it){ return !!it.iso; });
+  var traces = [boliviaTrace(c)];
+  if(conIso.length){
+    traces.push({ type:'choropleth', locationmode:'ISO-3',
+      locations:conIso.map(function(it){ return it.iso; }),
+      z:conIso.map(function(it){ return it.v; }),
+      zmin:zr.zmin, zmax:zr.zmax,
+      colorscale:seqScale(), marker:{line:{color:hexToRgba(c.textPrimary,0.35), width:0.4}},
+      customdata:conIso.map(function(it){
+        return [it.n, f0(it.fob), f0(it.ton), (res.total>0)?f1(it.v/res.total*100):'—'];
+      }),
+      hovertemplate:'{{t:agro.hover_dest}}', colorbar:colorbar(c, unidad) });
+  }
+  // resolution 50: a 110 los destinos chicos (Hong Kong, Baréin) no existen
+  // en el topojson y quedarían sin polígono que hoverear.
+  var lay = geoLayoutMundo(c);
+  lay.geo.resolution = 50;
+  if(res.items.some(function(it){ return !it.iso; })){
+    // xshift en px: con x paper la primera letra caía en el borde del
+    // container y se recortaba (observado en la verificación browser).
+    lay.annotations = [{text:'{{t:agro.paises_nota_singeo}}', xref:'paper', yref:'paper',
+      x:0, y:0.02, xanchor:'left', yanchor:'bottom', xshift:16, showarrow:false,
+      font:{family:'IBM Plex Mono,monospace', size:(window.innerWidth<=600?8:9), color:c.textMuted}}];
+  }
+  plotInto(document.getElementById(d.ids.mapa), traces, lay, {...PC, locale:FB_LANG});
+  var top = res.items.slice(0,10);
   drawRank(d.ids.rank,
-    items.map(function(it){ return it.dep; }),
-    items.map(function(it){ return it.v; }),
-    items.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
+    top.map(function(it){ return it.n; }),
+    top.map(function(it){ return it.v; }),
+    top.map(function(it){ return d.met==='fob' ? fUsd(it.v) : f0(it.v); }),
     unidad);
 }
 // ── VA-2: brecha del valor unitario FOB implícito vs benchmark Pink Sheet ──
@@ -7723,7 +7745,9 @@ function expoLoad(d){
   if(d.loading) return;
   d.loading = true;
   panelLoading(d.paneles.mapa); panelLoading(d.paneles.side);
-  Promise.all([agroGet('expo'), agroGet('geoDep')])
+  // Solo el dataset expo: ambas vistas (países/flujos) usan la geometría
+  // mundial built-in de Plotly — geoDep quedó exclusivo de producción.
+  Promise.all([agroGet('expo')])
     .then(function(){
       d.loading = false;
       d.ready = true;
@@ -7775,6 +7799,14 @@ function preciosSetup(pc){
     pc.sel = sel.options[0].value;
   }
   sel.value = pc.sel;
+  // Cadena mono-producto (hoy girasol/azúcar): no hay alternativa que elegir —
+  // el select se congela como etiqueta estática para no sugerir un cambio que
+  // no existe (.agro-select-solo quita flecha y affordance).
+  if(sel.options.length<=1){
+    sel.disabled = true;
+    sel.classList.add('agro-select-solo');
+    sel.title = '{{t:agro.producto_unico}}';
+  }
   sel.onchange = function(){ pc.sel=sel.value; preciosDraw(pc); };
 }
 function preciosDraw(pc){
@@ -7903,7 +7935,7 @@ function destItems(agg, yi, met){
     if(v<=0) return;
     var g=AGRO_DEST_GEO[p];
     if(!g && !_destWarned[p]){ _destWarned[p]=true; console.warn('[agro] destino sin centroide en AGRO_DEST_GEO: '+p); }
-    items.push({p:p, n:(g&&g.n)||p, v:v, fob:fob, ton:ton,
+    items.push({p:p, n:(g&&g.n)||p, v:v, fob:fob, ton:ton, iso:(g&&g.iso)||null,
       geo:(g && !g.sinArco && g.lat!=null) ? g : null});
   });
   items.sort(function(a,b){ return b.v-a.v; });

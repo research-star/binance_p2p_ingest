@@ -662,19 +662,28 @@ azúcar+etanol / caña 57; Otros no fija cadena (`selector:true` → selects de
 cultivo SIIP y producto Comex en su panel).
 
 Cada cadena apila **dos dashboards duales**: Producción (SIIP municipal
-2013–2024, 73 cultivos, choropleth municipal/departamental) arriba y
-Exportación (INE IneComex 2017–2026, 2026 YTD marzo; 35 productos NANDINA 10
-dígitos, FOB USD + toneladas) abajo. Layout por dashboard: mapa a la izquierda
-(60%: `.agro-dash` grid `3fr/2fr`) + KPIs/ranking/sparklines a la derecha,
-slider de año bajo el mapa. **Escala de color FIJA por serie completa**
-(`_zr` — `zrProdMun`/`zrProdDep`/`zrExpo`: zmin/zmax computados sobre TODOS
-los años por clave cultivo|productos × métrica × nivel), así el slider compara
-colores entre años. El dashboard de exportación agrega la vista **Destinos**:
-mapa mundial con arcos Bolivia→destino y partículas animadas, con guards de
-performance — pausa vía `IntersectionObserver` fuera de viewport,
-`prefers-reduced-motion` → flechas estáticas, presupuesto runtime mobile
-(promedio del restyle > `DEST_BUDGET` 12 ms → degrada a estático, decisión
-pegajosa) — e instrumentación del modo en el atributo `data-agro-dest-anim`.
+2013–2024, 73 cultivos, choropleth municipal/departamental, mapa de 520 px)
+arriba y Exportación (INE IneComex 2017–2026, 2026 YTD marzo; 35 productos
+NANDINA 10 dígitos, FOB USD + toneladas) abajo. Layout por dashboard: mapa a
+la izquierda + KPIs/ranking/sparklines a la derecha en mitades iguales
+(`.agro-dash` grid `1fr/1fr`, pedido 2026-07-10: lado derecho más ancho para
+que los KPIs nunca desborden), slider de año bajo el mapa. **Escala de color
+FIJA por serie completa** (`_zr` — `zrProdMun`/`zrProdDep`/`zrExpoDest`:
+zmin/zmax computados sobre TODOS los años por clave cultivo|productos ×
+métrica × nivel), así el slider compara colores entre años. El dashboard de
+exportación tiene dos vistas MUNDIALES (el mapa Bolivia-por-depto de origen se
+retiró 2026-07-10; `porDepto`/`origTotal` siguen en el JSON — `origTotal`
+alimenta `expoNacArr('__todos__')`): **Países** (default) = choropleth de
+destinos por ISO-3 (`AGRO_DEST_GEO[].iso`), países sin venta en el año quedan
+en gris neutro (paridad con producción) y el hover lleva FOB + t +
+participación; y **Flujos** (valor interno `destinos`) = arcos Bolivia→destino
+con partículas animadas, con guards de performance — pausa vía
+`IntersectionObserver` fuera de viewport, `prefers-reduced-motion` → flechas
+estáticas, presupuesto runtime mobile (promedio del restyle > `DEST_BUDGET`
+12 ms → degrada a estático, decisión pegajosa) — e instrumentación del modo en
+el atributo `data-agro-dest-anim`. La card de precios congela el select como
+etiqueta estática (`.agro-select-solo`) en cadenas mono-producto
+(girasol/azúcar hoy).
 
 **Valor agregado — 4 VAs con matriz por cadena:** VA-1 balance
 producción↔exportación (% exportado = ton Comex de la cadena / ton SIIP del
@@ -683,7 +692,7 @@ del valor unitario FOB implícito vs benchmark Pink Sheet (**SOLO soya-grano y
 azúcar** — extensión autorizada de la REGLA DE PRECIOS, ver abajo;
 girasol/otros omitidos limpio); VA-3 estacionalidad (heatmap mes×año del FOB
 mensual agregado); VA-4 concentración de destinos (mercados activos + top-3
-FOB, mismos helpers que la vista Destinos). La card de **precios** (FAO GIEWS
+FOB, mismos helpers `destAgg`/`destItems` que las vistas Países y Flujos). La card de **precios** (FAO GIEWS
 FPMA doméstico Bs + WB Pink Sheet USD/t + valor unitario FOB/t; 25 series) va
 al fondo de cada cadena, con whitelist propia (productos de la cadena +
 `precios_default`; en Otros, catálogo completo).
