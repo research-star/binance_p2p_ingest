@@ -125,3 +125,56 @@ recupere. NO se intentó re-parsear acá (fuera de scope).
   colocaciones) fuera del scope de 2a, o heurísticas de menor precisión. Se priorizó
   precisión sobre el número (instrucción del brief).
 - **28 `tabla_no_parseada`** esperando el re-parseo de tablas del P2.
+
+---
+
+## 2026-07-13 — Fase 2a.1: extracción firma_auditora / gestión (grupo auditorias)
+
+**Disparador.** En el grupo `auditorias`, `firma_auditora` (y varias `gestión`) mostraba
+"—" aunque el nombre de la firma estaba en `texto`. Clasificación OK; el defecto era la
+EXTRACCIÓN (`_RE_AUDITORA` / `_RE_GESTION` en `extract.py`, branch `auditorias` de
+`extraer_campos`). Métrica: de 25 auditorias, **firma vacía 9 → 1**, **gestión vacía 9 → 0**,
+cero falsos-positivos, cero capturas sucias. El único residual de firma es ausencia
+genuina (Compañía Boliviana de Energía: "designación de la firma … para la gestión 2026"
+— delegada, sin firma elegida).
+
+**Learn-loop (3 intentos, el patrón anotado ANTES de reintentar):**
+
+1. **Causa raíz — case-sensitivity.** `_RE_AUDITORA` era case-sensitive y el texto real
+   alterna "firma de **A**uditoría **E**xterna" (mayúsculas). La rama "de auditoría
+   externa" no matcheaba → la captura no arrancaba. Fix: trigger case-insensitive scoped
+   `(?i:…)`, manteniendo la captura del nombre case-SENSITIVE (arranque en mayúscula).
+   Además faltaban disparadores: "firma auditora", "empresa de auditoría externa",
+   "con la empresa X". *Generalización:* separar la sensibilidad a mayúsculas del
+   disparador (variable) de la del dato capturado (nombre propio, siempre mayúscula) es
+   un patrón reusable para "entidad + sufijo legal" de cualquier fuente.
+
+2. **FN nuevo — el nombre puede seguir DIRECTO al verbo-acto.** Al soltar los triggers de
+   verbo ("elección/contratación/designación de X"), se perdieron AESA ("elección de
+   PricewaterhouseCoopers S.R.L.") y 3 BNB ("contratación de BERTHINASSURANCE … S.R.L."):
+   el firm sigue al verbo sin sustantivo "firma/empresa" intermedio. Fix: re-agregar el
+   verbo-acto a la alternación (`(?:elección|contratación|designación)\s+de(?:\s+la)?
+   (?:\s+(?:firma|empresa|consultora))?`).
+
+3. **FP nuevo — captura sucia arrancando en la palabra-trigger.** El verbo-acto permitía
+   que la captura arrancara en "**F**irma de Auditoría Externa Ruizmier… S.R.L." (mayúscula
+   inicial) → arrastraba el prefijo (GRUPO FINANCIERO BISA). Fix: lookahead negativo
+   `(?!(?:Firma|Empresa|Consultora|Auditoría)\b)` justo antes de la captura → fuerza el
+   backtrack hasta que el trigger-sustantivo consuma el prefijo y la captura arranque en el
+   nombre real. *Generalización:* cuando un trigger y el dato comparten vocabulario, un
+   lookahead anti-trigger en el arranque de la captura evita el arrastre.
+
+**Corte del nombre.** La captura corta en el sufijo legal (S.R.L./S.A./S.A.M./Ltda./LTDA)
+o en coma/comilla — así no arrastra "para auditar los EEFF…" ni captura la entidad
+auditada (que aparece después, con su propio sufijo). Firmas reales verificadas: Ruizmier
+Pelaez, BerthinAssurance Group Auditoría & Consultoría, PricewaterhouseCoopers, Ernst &
+Young (Auditoría y Asesoría) Ltda., Summa Consulting Group, Tudela & TH Consulting Group.
+
+**Gestión.** Fallback `_RE_GESTION_FECHA` = "al 31 de diciembre de YYYY" (cierre fiscal =
+gestión auditada) cuando no hay "gestión YYYY" explícito. Restringido a 31-dic para no
+capturar fechas sueltas (dictamen, reunión). Explícita tiene prioridad.
+
+**Punto 5 (promociones).** Escaneé `otros` por designaciones de auditor genuinas (firma
+detectable + "auditoría externa" + acto, sin tag `junta`): **0 candidatos**. La mejora de
+extracción no destapó ningún auditor mal clasificado → cero promociones, `auditorias`
+sigue en 25 (distribución de grupos SIN cambios).
