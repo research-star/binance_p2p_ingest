@@ -127,13 +127,14 @@ def t_extract(errores: list):
             or c.get("registro") != "ASFI/DSV-ED-TAE-030/2026":
         errores.append(f"extract: emisión {it['grupo']} {c}")
 
-    # Desembolso de patrimonio autónomo NO es préstamo bancario (regresión iBolsa)
+    # Desembolso de patrimonio autónomo NO es préstamo bancario (regresión iBolsa);
+    # V3: cae en el grupo `titularizacion`.
     it = item("Noticias",
               "Comunica que, en calidad de Administrador del Patrimonio Autónomo LAS "
               "LOMAS, se efectuó el desembolso correspondiente al capital de operaciones "
               "del Originador.")
-    if it["grupo"] == "prestamos":
-        errores.append("extract: desembolso de patrimonio autónomo cayó en préstamos")
+    if it["grupo"] != "titularizacion":
+        errores.append(f"extract: desembolso de patrimonio autónomo → grupo {it['grupo']} (esperado titularizacion)")
 
     it = item("Noticias",
               "Comunica que, la señora Dennise Karina Nistahuz Ibañez, presentó renuncia "
@@ -173,9 +174,10 @@ def t_extract(errores: list):
               "Patrimonial (CAP)(i) CAP>=11% 13.82% Índice de Liquidez (IL)(i) IL>= 50% "
               "66.38% Coeficiente de Apalancamiento Financiero (CAF): CAF <=2,00 1,93")
     inds = {x["sigla"]: x for x in it.get("campos", {}).get("indicadores", [])}
-    if it["grupo"] != "compromisos" or "CAP" not in inds or not inds["CAP"]["ok"] \
+    # V3: con indicadores parseados → compromisos_reportados.
+    if it["grupo"] != "compromisos_reportados" or "CAP" not in inds or not inds["CAP"]["ok"] \
             or "CAF" not in inds or not inds["CAF"]["ok"]:
-        errores.append(f"extract: indicadores {inds}")
+        errores.append(f"extract: indicadores {it['grupo']} {inds}")
     it = item("Noticias",
               "Ha comunicado que, los Compromisos Financieros son los siguientes: "
               "Coeficiente de Adecuación Patrimonial mayor o igual al 11% Al 31/12/2025, "
@@ -192,6 +194,29 @@ def t_extract(errores: list):
     c = it.get("campos", {})
     if it["grupo"] != "auditorias" or "BERTHINASSURANCE" not in c.get("firma", ""):
         errores.append(f"extract: auditoría {it['grupo']} {c}")
+
+    # V3: compromisos SIN indicadores parseables → compromisos_anunciados, y como la
+    # tabla está presente (rota por el aplanado pypdf) → marcado tabla_no_parseada.
+    it = item("Noticias",
+              "Ha comunicado que, los Compromisos Financieros asumidos para el Programa "
+              "de Emisiones de Bonos BISA LEASING IV fueron cumplidos al 31 de diciembre "
+              "de 2025, conforme el siguiente detalle: Indicadores Financieros Compromiso "
+              "Diciembre 2025 (celdas de la tabla que el aplanado pypdf no separa)")
+    c = it.get("campos", {})
+    if it["grupo"] != "compromisos_anunciados" or not c.get("tabla_no_parseada"):
+        errores.append(f"extract: compromisos anunciados {it['grupo']} {c}")
+
+    # V3: schema — todo item enriquecido lleva grupo_v y revisado='provisional'.
+    if it.get("grupo_v") != extract.TAXONOMIA_V or it.get("revisado") != "provisional":
+        errores.append(f"extract: schema grupo_v/revisado {it.get('grupo_v')} {it.get('revisado')}")
+    # revisado previo ('revisado') se preserva (no lo pisa una re-corrida).
+    curado = {"seccion": "Hechos Relevantes", "categoria": "", "entidad": "Y",
+              "texto": "Comunica que pagó dividendos por Bs1.000.000,00.",
+              "tags": parser.clasificar_tags("dividendos", "Hechos Relevantes"),
+              "revisado": "revisado"}
+    extract.enriquecer(curado)
+    if curado.get("revisado") != "revisado":
+        errores.append("extract: revisado='revisado' no se preservó")
 
 
 def t_candado(errores: list):

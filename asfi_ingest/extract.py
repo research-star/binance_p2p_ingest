@@ -23,13 +23,35 @@ donde cae el caso MADISA "distribución de resultados"), `uso_fondos`,
 `auditorias`; dividendos con monto (Bs/USD, total o por acción); compromisos
 generalizado a TODOS los pares indicador/compromiso/valor con evaluación de
 cumplimiento (incluye CDD/CCC/CAF de titularizadoras — caso iBolsa).
+
+V3 (fase 2a, 2026-07-12): re-taxonomía para desinflar `otros` (1.836→~750 sobre
+la data de ene–jul 2026) promoviendo señal que ya existía en tags/texto:
+  - `juntas` ahora captura asambleas/actas REALIZADAS (multi-decisión
+    "determinó lo siguiente: 1… 2…"), no solo convocatorias.
+  - `emisiones` capta inscripción vía Comité/Bolsa y autorizaciones formales
+    (Resolución/Carta) sin depender del tag `emision`.
+  - `personal`/`prestamos`/`dividendos` amplían por verbo textual.
+  - `titularizacion` (GRUPO NUEVO): desembolsos/convocatorias/reportes de
+    patrimonios autónomos (BDP ST, iBolsa ST y símiles).
+  - `compromisos` se PARTE en `compromisos_reportados` (con indicadores
+    parseados) y `compromisos_anunciados` (fecha+texto; los que traen tabla
+    rota por el aplanado pypdf quedan marcados `tabla_no_parseada` para el P2).
+Cada item gana además `grupo_v` (versión de taxonomía = TAXONOMIA_V) y
+`revisado` ('provisional' hasta curación humana). El detalle de calibración,
+falsos positivos y decisiones de prioridad vive en
+`asfi_ingest/CUADERNO_HECHOS_RELEVANTES.md`.
 """
 from __future__ import annotations
 
 import re
 
+# Versión de la taxonomía. Se estampa en cada item (`grupo_v`) para que un pase
+# futuro pueda re-clasificar selectivamente. V1 = implícito (items sin el campo).
+TAXONOMIA_V = 2
+
 GRUPOS = ("emisiones", "cupones", "prestamos", "directorio", "personal",
-          "dividendos", "uso_fondos", "compromisos", "auditorias", "juntas",
+          "dividendos", "uso_fondos", "compromisos_reportados",
+          "compromisos_anunciados", "titularizacion", "auditorias", "juntas",
           "calificaciones", "otros")
 
 # ── Regex compartidos ────────────────────────────────────────────────────────
@@ -184,52 +206,109 @@ def _split_nombres(raw: str) -> list[str]:
     return out
 
 
-def clasificar_grupo(item: dict) -> str:
-    """Tablita destino. Prioridad pensada para la lectura del día."""
+# ── Regex de clasificación V3 (fase 2a) ─────────────────────────────────────
+# Inscripción de valores vía Comité de Inscripciones / autorizar la inscripción
+# en la Bolsa/RMV — señal inequívoca de emisión (no depende del tag `emision`).
+_RE_INSCRIPCION = re.compile(
+    r"[Cc]omit[ée] de Inscripci|[Aa]utoriz(?:ar|ó) la inscripci[óo]n|"
+    r"inscri(?:bir|pci[óo]n).{0,40}(?:Bolsa Boliviana|Registro del Mercado|RMV)", re.I)
+# Objeto de emisión: distingue una autorización/inscripción de valores de un acto
+# administrativo cualquiera (cambio de denominación de un fondo, tasas, etc.).
+_RE_EMISION_OBJ = re.compile(
+    r"[Bb]onos|[Pp]agar[ée]s|[Vv]alores de [Tt]itularizaci[óo]n|[Pp]rograma de [Ee]misiones|"
+    r"[Oo]ferta [Pp][úu]blica|emisi[óo]n de (?:bonos|pagar|valores|acciones|cuotas)", re.I)
+_RE_AUTORIZA_INSCRIBE = re.compile(r"[Aa]utoriza|[Ii]nscrib", re.I)
+# Acta de reunión/asamblea REALIZADA con decisiones (multi-tema): el frame
+# "Junta/Asamblea/reunión de Directorio … determinó/aprobó/Orden del Día".
+_RE_REUNION_ACTA = re.compile(
+    r"(?:Junta General|Asamblea General|reuni[óo]n de Directorio|sesi[óo]n de Directorio|"
+    r"Asamblea de Tenedores|Asamblea General de Tenedores)"
+    r"[\s\S]{0,400}?(?:determin[óo]|resolvi[óo]|acord[óo]|Orden del D[íi]a|se aprob|"
+    r"aprob[óo]|se procedi[óo])", re.I)
+# Verbo claro de cambio de UNA persona (standalone; NO la infinitiva "Designar a",
+# que es típica de agenda de junta multi-tema y se rutea por el frame de junta).
+_RE_PERSONAL_VERBO = re.compile(
+    r"asume el cargo|asumi[óo] el cargo|fue ascendid|culmin[óo][^.]{0,40}relaci[óo]n laboral|"
+    r"acept[óo] la renuncia|present[óo] su renuncia|fue posesionad|se incorpora(?:r[áa])?|"
+    r"design[óo] (?:a|al|como)|fue design", re.I)
+# Préstamo/desembolso recibido, por verbo textual (el tag `prestamo` solo capta
+# "desembolso"/"préstamo de dinero" y se pierde "obtuvo/suscribió un préstamo").
+_RE_PRESTAMO_TXT = re.compile(
+    r"obtuvo un pr[ée]stamo|suscrib\w+[^.]{0,60}(?:contrato de pr[ée]stamo|l[íi]nea de cr[ée]dito)|"
+    r"desembolso|pr[ée]stamo de dinero|otorg[óo][^.]{0,20}pr[ée]stamo", re.I)
+# Compromiso financiero cuya TABLA de indicadores existe pero el aplanado pypdf la
+# rompió (regex no extrajo pares): se marca para el re-parseo de tablas del P2.
+_RE_TABLA_PRESENTE = re.compile(
+    r"Indicadores?\s+Financieros|PAR[ÁA]METRO DE INDICADORES|COMPROMISO\s+CUMPLIMIENTO|"
+    r"INDICADOR\s+COMPROMISO|Compromisos Financieros[\s\S]{0,80}(?:detalle|siguiente)", re.I)
+
+
+def clasificar_grupo(item: dict, skip_directorio: bool = False) -> str:
+    """Tablita destino. Prioridad = del hecho más específico/regulatorio al más
+    genérico; el frame de junta/asamblea es el ÚLTIMO recurso (regla 13) para no
+    sepultar el evento económico extraíble (monto, persona, instrumento) dentro
+    de una fila de reunión sin campos. `skip_directorio` re-clasifica ignorando
+    la rama directorio (lo usa enriquecer al degradar una directorio sin cambios).
+    Detalle de calibración y falsos positivos: CUADERNO_HECHOS_RELEVANTES.md."""
     tags = set(item.get("tags", ()))
     seccion = item.get("seccion", "")
     cat = item.get("categoria", "")
     texto = item.get("texto", "")
     low = texto.lower()
-    # Emisiones = SOLO actos regulatorios (autorizar/inscribir); "aprobar una
-    # emisión" en una junta o "sin Oferta Pública" NO son emisiones autorizadas.
-    if "emision" in tags and seccion in ("Resoluciones Administrativas",
-                                         "Cartas de Autorización") \
-            and re.search(r"[Aa]utoriza|[Ii]nscribe", texto):
+    # 1. Emisiones: (a) inscripción vía Comité/Bolsa (inequívoca), o (b) acto FORMAL
+    #    (Resolución/Carta) que autoriza/inscribe un objeto de emisión —con o sin
+    #    tag `emision`. Exigir sección formal en (b) evita robar cupones/compromisos/
+    #    convocatorias (viven en Hechos Relevantes/Noticias y también nombran bonos).
+    formal = seccion in ("Resoluciones Administrativas", "Cartas de Autorización")
+    if _RE_INSCRIPCION.search(texto):
+        return "emisiones"
+    if formal and _RE_AUTORIZA_INSCRIBE.search(texto) and (
+            "emision" in tags or _RE_EMISION_OBJ.search(texto)):
         return "emisiones"
     if "cupon" in tags:
         return "cupones"
     if "compromisos" in tags:
-        return "compromisos"
+        return "compromisos"          # se parte en enriquecer (reportados/anunciados)
     if "calificacion" in tags and "Calificadoras" in cat:
         return "calificaciones"
-    # Convocatorias con fecha → calendario de juntas (acá cae MADISA aunque su
-    # agenda hable de distribución de resultados: es agenda, no pago declarado).
-    # VA ANTES que directorio: una convocatoria con "elección de directores" en
-    # agenda es calendario, no cambio consumado.
+    # 5. Convocatorias con fecha futura → calendario de juntas (acá cae MADISA
+    #    aunque su agenda hable de distribución de resultados: es agenda, no pago).
     if _RE_JUNTA_CONV.search(texto) and _RE_JUNTA_FECHA.search(texto):
         return "juntas"
-    # Cambios de composición de directorio/síndicos (tentativo: enriquecer()
-    # lo degrada a 'otros' si la extracción no encuentra ningún cambio — la
-    # señal textual sola da demasiados falsos positivos).
-    if _RE_DIR_SIGNAL.search(texto) and _RE_DIR_VERBO.search(texto):
+    # 6. Cambios de composición de directorio/síndicos (tentativo: enriquecer() lo
+    #    degrada si no extrae ningún cambio). VA ANTES de titularización para no
+    #    perder cambios de directorio de titularizadoras.
+    if not skip_directorio and _RE_DIR_SIGNAL.search(texto) and _RE_DIR_VERBO.search(texto):
         return "directorio"
-    if "junta" in tags:
-        return "otros"          # juntas realizadas multi-decisión sin cambio de directorio
-    # Contratación/elección de auditor externo (tentativo, misma degradación).
-    if "auditoria" in tags and re.search(r"[Aa]uditor[íi]a [Ee]xterna|[Aa]uditor [Ee]xterno", texto) \
+    # 7. Titularización (NUEVO): desembolsos/convocatorias/reportes de patrimonios
+    #    autónomos que no cayeron en cupones/compromisos/directorio.
+    if "patrimonio autónomo" in low:
+        return "titularizacion"
+    # 8. Auditorías: designación/contratación de auditor externo, PERO no una
+    #    asamblea que solo menciona la auditoría en su agenda (esas llevan tag
+    #    `junta` y son actas multi-decisión → juntas). Las designaciones genuinas
+    #    son actas de "reunión de Directorio" (sin tag `junta`) o notas standalone.
+    if "auditoria" in tags and "junta" not in tags \
+            and re.search(r"[Aa]uditor[íi]a [Ee]xterna|[Aa]uditor [Ee]xterno", texto) \
             and _RE_AUD_ACTO.search(texto):
         return "auditorias"
-    if "personal" in tags:
+    # 9. Personal: cambio de UNA persona por tag o verbo standalone.
+    if "personal" in tags or _RE_PERSONAL_VERBO.search(texto):
         return "personal"
-    # Desembolsos de patrimonios autónomos (titularización) NO son préstamos
-    # bancarios a empresas.
-    if "prestamo" in tags and "patrimonio autónomo" not in low:
+    # 10. Préstamos/desembolsos recibidos (tag O verbo); patrimonios autónomos NO.
+    if ("prestamo" in tags or _RE_PRESTAMO_TXT.search(texto)) and "patrimonio autónomo" not in low:
         return "prestamos"
-    if "dividendos" in tags and re.search(r"pago|pagar[áa]|cancelar[áa]", low):
+    # 11. Dividendos pagados/distribuidos.
+    if "dividendos" in tags and re.search(r"pago|pagar[áa]|cancelar[áa]|distribuci[óo]n", low):
         return "dividendos"
-    if "uso_fondos" in tags and re.search(r"recursos captados|destino de los recursos", low):
+    # 12. Uso de recursos captados.
+    if "uso_fondos" in tags:
         return "uso_fondos"
+    # 13. Frame de junta/asamblea de accionistas (tag) o acta de reunión de
+    #     Directorio realizada (multi-decisión) sin evento dominante ya ruteado —
+    #     ÚLTIMO antes de otros.
+    if "junta" in tags or _RE_REUNION_ACTA.search(texto):
+        return "juntas"
     return "otros"
 
 
@@ -413,22 +492,47 @@ def extraer_campos(item: dict) -> dict:
 
 
 def enriquecer(item: dict) -> dict:
-    """Agrega/recomputa grupo + campos in-place (idempotente). NO toca
-    resumen/resumen_origen — eso es territorio de resumen.py.
+    """Agrega/recomputa grupo + campos + grupo_v + revisado in-place
+    (idempotente). NO toca resumen/resumen_origen — eso es territorio de
+    resumen.py.
 
-    Degradación extraction-driven: 'directorio' y 'auditorias' son
-    clasificaciones tentativas — si la extracción no encontró el campo clave
-    (cambios / firma), el item vuelve a 'otros' (la señal textual sola mete
-    demasiado falso positivo: convocatorias, dietas de directores, informes
-    de auditor en asambleas)."""
-    item["grupo"] = clasificar_grupo(item)
+    Degradaciones extraction-driven (la señal textual sola mete falso positivo):
+      - 'directorio' sin cambios extraídos → se RE-CLASIFICA ignorando la rama
+        directorio (así una reunión de directorio sin cambio de composición cae
+        en juntas/personal/otros, no se pierde en 'otros').
+      - 'personal' de una asamblea de accionistas (tag `junta`) SIN persona
+        extraíble = fila inútil → degrada a 'juntas' (tipo/agenda dan más
+        contexto). Los standalone (sin tag `junta`) se quedan.
+    'auditorias' YA NO degrada por falta de `firma`: la rama de clasificación
+    exige señal fuerte de auditoría, así que se conserva aunque la firma no
+    extraiga (V3, fase 2a).
+
+    Split de compromisos: la clasificación devuelve 'compromisos' (paraguas) y
+    acá se parte según haya indicadores parseados → 'compromisos_reportados' vs
+    'compromisos_anunciados' (estos últimos con tabla rota por pypdf quedan
+    marcados `tabla_no_parseada` para el re-parseo de tablas del P2)."""
+    grupo = clasificar_grupo(item)
+    item["grupo"] = grupo
     campos = extraer_campos(item)
-    if item["grupo"] == "directorio" and not campos.get("cambios"):
-        item["grupo"] = "otros"
-        campos = {}
-    elif item["grupo"] == "auditorias" and not campos.get("firma"):
-        item["grupo"] = "otros"
-        campos = {}
+    if grupo == "directorio" and not campos.get("cambios"):
+        grupo = clasificar_grupo(item, skip_directorio=True)
+        item["grupo"] = grupo
+        campos = extraer_campos(item)
+    if grupo == "personal" and "junta" in set(item.get("tags", ())) \
+            and not campos.get("persona"):
+        item["grupo"] = grupo = "juntas"
+        campos = extraer_campos(item)
+    if grupo == "compromisos":
+        if campos.get("indicadores"):
+            item["grupo"] = "compromisos_reportados"
+        else:
+            item["grupo"] = "compromisos_anunciados"
+            if _RE_TABLA_PRESENTE.search(item.get("texto", "")):
+                campos["tabla_no_parseada"] = True
+    # Metadatos de taxonomía. `grupo_v` se re-estampa siempre; `revisado` respeta
+    # una curación humana previa ('revisado') y default a 'provisional'.
+    item["grupo_v"] = TAXONOMIA_V
+    item.setdefault("revisado", "provisional")
     if campos:
         item["campos"] = campos
     else:

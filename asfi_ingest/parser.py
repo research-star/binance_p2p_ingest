@@ -29,7 +29,10 @@ import io
 import re
 import unicodedata
 
-from pypdf import PdfReader
+# `pypdf` se importa de forma perezosa dentro de extraer_reporte(): así importar
+# este módulo (para clasificar_tags, que usa `ingest_asfi.py --reextraer` sobre
+# la data ya persistida) no exige la dependencia — recomputar tags/grupo/campos
+# no baja ni parsea PDFs. El fetch/parseo real de un PDF sí la requiere.
 
 # ── Vocabularios (survey 122 reportes ene–jul 2026) ─────────────────────────
 
@@ -200,6 +203,7 @@ def extraer_reporte(pdf: "str | bytes") -> dict:
     cuerpo del item abierto o se descartan si no hay contexto); sí propaga
     errores de lectura del PDF en sí (archivo corrupto → el caller decide).
     """
+    from pypdf import PdfReader  # lazy: solo el parseo real de PDF necesita pypdf
     reader = PdfReader(io.BytesIO(pdf) if isinstance(pdf, bytes) else pdf)
 
     fecha = None
