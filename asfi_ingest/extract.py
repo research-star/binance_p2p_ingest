@@ -154,13 +154,33 @@ _AGENDA_KEYS = [
     ("directorio", re.compile(r"[Ee]lecci[óo]n|[Dd]esignaci[óo]n de [Dd]irectores")),
 ]
 
+# Firma auditora (fase 2a.1): el disparador es case-INSENSITIVE (scoped `(?i:…)`) —
+# el texto real alterna "Auditoría Externa"/"auditoría externa" y la versión vieja,
+# case-sensitive, perdía la mayúscula. Cubre "firma [de] [auditoría externa]",
+# "firma auditora", "empresa [de auditoría externa]", "consultora", y el verbo-acto
+# ("contratación/elección/designación de [la] [firma|empresa]") — el nombre puede
+# seguir directo al verbo sin sustantivo intermedio ("contratación de BERTHIN… S.R.L.").
+# La captura arranca en MAYÚSCULA (case-sensitive), tras una comilla opcional, y un
+# lookahead negativo impide que arranque en una palabra-trigger (evita capturar
+# "Firma de Auditoría Externa X" con el prefijo). Corta en el sufijo legal.
 _RE_AUDITORA = re.compile(
-    r"(?:firma(?: de auditor[ií]a(?: externa)?)?|"
-    r"(?:elecci[óo]n|contrataci[óo]n|designaci[óo]n) de(?: la)?(?: firma| empresa|l)?)\s+"
-    r"([A-ZÁÉÍÓÚÑ][^,\n“”\"]{2,70}?(?:S\.\s?R\.\s?L\.|S\.\s?A\.|LTDA\.?|Ltda\.?))")
+    r"(?i:"
+    r"firma(?:\s+auditora|\s+de\s+auditor[ií]a(?:\s+externa)?)?"
+    r"|empresa(?:\s+de\s+auditor[ií]a(?:\s+externa)?)?"
+    r"|consultora"
+    r"|(?:elecci[óo]n|contrataci[óo]n|designaci[óo]n)\s+de(?:\s+la)?(?:\s+(?:firma|empresa|consultora))?"
+    r")"
+    r"\s+[“\"«'‘]?"
+    r"(?!(?:Firma|Empresa|Consultora|Auditor[ií]a)\b)"
+    r"([A-ZÁÉÍÓÚÑ][^,\n“”\"«»]{2,70}?"
+    r"(?:S\.\s?R\.\s?L\.|S\.\s?A\.(?:\s?M\.)?|LTDA\.?|Ltda\.?))")
 _RE_AUD_ACTO = re.compile(
     r"contrataci[óo]n|elecci[óo]n|designaci[óo]n|aprobar la firma|ratificar", re.I)
 _RE_GESTION = re.compile(r"gesti[óo]n(?:es)? (\d{4}(?:\s*[-y]+\s*\d{4})?)")
+# Fallback de gestión: el cierre fiscal "al 31 de diciembre de YYYY" = gestión
+# auditada cuando el comunicado no dice "gestión YYYY" explícito. Solo 31-dic
+# (cierre de ejercicio) para no capturar fechas sueltas (dictamen, reunión).
+_RE_GESTION_FECHA = re.compile(r"al\s+31\s+de\s+diciembre\s+de\s+(\d{4})", re.I)
 
 _RE_DESTINO = re.compile(
     r"[-–]?\s*([A-ZÁÉÍÓÚÑ][\wÁÉÍÓÚÑáéíóúñ /]{4,60}?):\s*(?:Bs|USD|\$us)", )
@@ -471,7 +491,8 @@ def extraer_campos(item: dict) -> dict:
         m = _RE_AUDITORA.search(texto)
         if m:
             c["firma"] = " ".join(m.group(1).split())
-        m = _RE_GESTION.search(texto)
+        # gestión explícita ("gestión YYYY") primero; si no, cierre fiscal.
+        m = _RE_GESTION.search(texto) or _RE_GESTION_FECHA.search(texto)
         if m:
             c["gestion"] = m.group(1)
 
