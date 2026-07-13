@@ -6528,7 +6528,8 @@ function badgeMov(m){
 /* Config de tablitas: columnas + extractor de celdas por item. */
 var TEMAS_LABEL={emisiones:'{{t:asfi.tema_emisiones}}',cupones:'{{t:asfi.tema_cupones}}',prestamos:'{{t:asfi.tema_prestamos}}',
   directorio:'{{t:asfi.tema_directorio}}',personal:'{{t:asfi.tema_personal}}',dividendos:'{{t:asfi.tema_dividendos}}',uso_fondos:'{{t:asfi.tema_uso_fondos}}',
-  compromisos:'{{t:asfi.tema_compromisos}}',auditorias:'{{t:asfi.tema_auditorias}}',juntas:'{{t:asfi.tema_juntas}}',
+  compromisos_reportados:'{{t:asfi.tema_compromisos_reportados}}',compromisos_anunciados:'{{t:asfi.tema_compromisos_anunciados}}',
+  titularizacion:'{{t:asfi.tema_titularizacion}}',auditorias:'{{t:asfi.tema_auditorias}}',juntas:'{{t:asfi.tema_juntas}}',
   calificaciones:'{{t:asfi.tema_calificaciones}}',otros:'{{t:asfi.tema_otros}}'};
 function badgeDir(t){
   var map={sale:['neg','{{t:asfi.js_badge_sale}}'],entra:['pos','{{t:asfi.js_badge_entra}}'],ratificado:['','{{t:asfi.js_badge_ratificado}}']};
@@ -6557,13 +6558,16 @@ var GRUPOS=[
       return [i===0?'<span class="asfi-ent">'+esc(it.entidad)+'</span>':'',
         celda(cb.persona),celda(cb.cargo),badgeDir(cb.tipo)];
     });}},
+ {id:'personal',titulo:'{{t:asfi.grupo_personal_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_persona}}','{{t:asfi.col_cargo}}','{{t:asfi.col_movimiento}}'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
+    celda(campo(it,'persona')),celda(campo(it,'cargo')),badgeMov(campo(it,'movimiento'))];}},
  {id:'dividendos',titulo:'{{t:asfi.grupo_dividendos_titulo}}',cols:['','{{t:asfi.col_empresa}}','{{t:asfi.col_monto}}','{{t:asfi.col_pago_desde}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'monto')),celda(campo(it,'fecha_pago'))];}},
  {id:'uso_fondos',titulo:'{{t:asfi.grupo_uso_fondos_titulo}}',cols:['','{{t:asfi.col_empresa}}','{{t:asfi.col_emision}}','{{t:asfi.col_destino}}','{{t:asfi.col_monto}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'instrumento')),celda(campo(it,'destino')),celda(campo(it,'monto'))];}},
- {id:'compromisos',titulo:'{{t:asfi.grupo_compromisos_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_indicador}}','{{t:asfi.col_compromiso}}','{{t:asfi.col_reportado}}'],
+ {id:'compromisos_reportados',titulo:'{{t:asfi.grupo_compromisos_reportados_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_indicador}}','{{t:asfi.col_compromiso}}','{{t:asfi.col_reportado}}'],
   filas:function(it){
     var inds=(it.campos&&it.campos.indicadores)||[];
     if(!inds.length){
@@ -6576,12 +6580,23 @@ var GRUPOS=[
       return [i===0?'<span class="asfi-ent">'+esc(it.entidad)+'</span>':'',
         celda(ind.sigla),celda(ind.op+' '+ind.req),v];
     });}},
+ {id:'compromisos_anunciados',titulo:'{{t:asfi.grupo_compromisos_anunciados_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_detalle}}'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',resHtml(it)];}},
+ {id:'titularizacion',titulo:'{{t:asfi.grupo_titularizacion_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_detalle}}'],
+  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',resHtml(it)];}},
  {id:'auditorias',titulo:'{{t:asfi.grupo_auditorias_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_firma_auditora}}','{{t:asfi.col_gestion}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
     celda(campo(it,'firma')),celda(campo(it,'gestion'))];}},
  {id:'juntas',titulo:'{{t:asfi.grupo_juntas_titulo}}',cols:['','{{t:asfi.col_entidad}}','{{t:asfi.col_tipo}}','{{t:asfi.col_fecha}}','{{t:asfi.col_agenda}}'],
-  fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',
-    celda(campo(it,'tipo')),celda(campo(it,'fecha_junta')),celda(campo(it,'agenda'))];}},
+  filas:function(it){
+    var tipo=campo(it,'tipo'),fecha=campo(it,'fecha_junta'),agenda=campo(it,'agenda');
+    // Actas realizadas (V3) suelen no traer tipo/fecha/agenda → fallback al
+    // resumen en una celda expandida, para no dejar la fila vacía.
+    if(!tipo&&!fecha&&!agenda){
+      return [['<span class="asfi-ent">'+esc(it.entidad)+'</span>','<td-span3>'+resHtml(it)+'</td-span3>']];
+    }
+    return [['<span class="asfi-ent">'+esc(it.entidad)+'</span>',celda(tipo),celda(fecha),celda(agenda)]];
+  }},
  {id:'calificaciones',titulo:'{{t:asfi.grupo_calificaciones_titulo}}',cols:['','{{t:asfi.col_calificadora}}','{{t:asfi.col_detalle}}'],
   fila:function(it){return ['<span class="asfi-ent">'+esc(it.entidad)+'</span>',resHtml(it)];}}
 ];
