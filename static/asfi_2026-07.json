@@ -49,7 +49,8 @@
      "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
-      "firma": "Consultora RUIZMIER PELAEZ S.R.L."
+      "firma": "RUIZMIER PELAEZ S.R.L.",
+      "gestion": "2026"
      },
      "resumen_v": 2,
      "grupo_v": 2,
@@ -330,6 +331,7 @@
      "grupo_v": 2,
      "revisado": "provisional",
      "campos": {
+      "firma": "RUIZMIER PELAEZ S.R.L.",
       "gestion": "2026"
      }
     },

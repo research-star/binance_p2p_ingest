@@ -2102,7 +2102,11 @@
      "grupo": "auditorias",
      "resumen_v": 2,
      "grupo_v": 2,
-     "revisado": "provisional"
+     "revisado": "provisional",
+     "campos": {
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2117,7 +2121,11 @@
      "grupo": "auditorias",
      "resumen_v": 2,
      "grupo_v": 2,
-     "revisado": "provisional"
+     "revisado": "provisional",
+     "campos": {
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2364,7 +2372,11 @@
      "grupo": "auditorias",
      "resumen_v": 2,
      "grupo_v": 2,
-     "revisado": "provisional"
+     "revisado": "provisional",
+     "campos": {
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2561,7 +2573,8 @@
      "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
-      "firma": "Firma de Auditoría Externa Ruizmier Pelaez S.R.L."
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
      },
      "resumen_v": 2,
      "grupo_v": 2,
@@ -3091,7 +3104,11 @@
      "grupo": "auditorias",
      "resumen_v": 2,
      "grupo_v": 2,
-     "revisado": "provisional"
+     "revisado": "provisional",
+     "campos": {
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3105,7 +3122,8 @@
      "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
-      "firma": "Ruizmier Pelaez S.R.L."
+      "firma": "Ruizmier Pelaez S.R.L.",
+      "gestion": "2026"
      },
      "resumen_v": 2,
      "grupo_v": 2,
@@ -3781,6 +3799,7 @@
      "grupo_v": 2,
      "revisado": "provisional",
      "campos": {
+      "firma": "BerthinAssurance Group Auditoría & Consultoría S.R.L.",
       "gestion": "2026"
      }
     },
@@ -5728,6 +5747,7 @@
      "grupo_v": 2,
      "revisado": "provisional",
      "campos": {
+      "firma": "RUIZMIER PELAEZ S.R.L.",
       "gestion": "2026"
      }
     },
@@ -7439,7 +7459,7 @@
      "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
-      "firma": "Empresa PricewaterhouseCoopers S.R.L.",
+      "firma": "PricewaterhouseCoopers S.R.L.",
       "gestion": "2026"
      },
      "resumen_v": 2,
@@ -7742,7 +7762,11 @@
      "grupo": "auditorias",
      "resumen_v": 2,
      "grupo_v": 2,
-     "revisado": "provisional"
+     "revisado": "provisional",
+     "campos": {
+      "firma": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7756,7 +7780,8 @@
      "resumen_origen": "ia",
      "grupo": "auditorias",
      "campos": {
-      "firma": "PricewaterhouseCoopers S.R.L."
+      "firma": "PricewaterhouseCoopers S.R.L.",
+      "gestion": "2026"
      },
      "resumen_v": 2,
      "grupo_v": 2,
