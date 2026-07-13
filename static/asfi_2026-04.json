@@ -15,8 +15,13 @@
      ],
      "resumen": "Sudaval Agencia de Bolsa aprueba EEFF 2025 con Dictamen Auditoría Externa",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -30,8 +35,13 @@
      ],
      "resumen": "Sudaval Agencia de Bolsa aprueba EE.FF. 2025 y designa directivos 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -43,7 +53,12 @@
      ],
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 31 de marzo de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -53,8 +68,14 @@
      "tags": [],
      "resumen": "Bisa Leasing obtiene préstamo Bs 14,0M de BMSC",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Mercantil Santa Cruz S.A.",
+      "monto": "Bs 14,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -78,7 +99,9 @@
         "tipo": "entra"
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -96,7 +119,9 @@
       "cargo": "Gerente Unidad Legal & Compliance",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -114,7 +139,9 @@
       "cargo": "Gerente de Planificación y Proyectos",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -127,8 +154,15 @@
      ],
      "resumen": "Farmacia Chávez S.A. aprueba Memoria 2025 y distribuye 10% utilidades",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Juan Pablo Chuta Camacho",
+      "cargo": "Reserva Legal",
+      "movimiento": "remoción"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -138,8 +172,13 @@
      "tags": [],
      "resumen": "Elige BFC mesa directiva con Pascutti de presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -150,7 +189,9 @@
      "resumen": "PLASTIFORTE adquiere crédito Banco Ganadero Bs 12.000.000",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -160,8 +201,14 @@
      "tags": [],
      "resumen": "PLASTIFORTE amplía línea de crédito con Banco Ganadero por Bs 12,0M",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Ganadero S.A.",
+      "monto": "Bs 12,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -173,8 +220,13 @@
      ],
      "resumen": "PROLEGA autoriza emisión de Pagaré por Bs 14.000.000,00 a Fortaleza SAFI",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -190,7 +242,9 @@
      "campos": {
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -203,8 +257,10 @@
      ],
      "resumen": "Tienda Amiga ER S.A. difiere decisión sobre modificaciones Programa Bonos TIENDA AMIGA I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -214,8 +270,10 @@
      "tags": [],
      "resumen": "Tienda Amiga ER aprueba Balance General y EEFF 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -258,7 +316,9 @@
         "tipo": "ratificado"
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -268,7 +328,9 @@
      "tags": [],
      "resumen": "Comunica que, el 31 de marzo de 2026, el señor Gonzalo Ostria Molina presentó",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "otros",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -286,7 +348,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -299,8 +363,10 @@
      ],
      "resumen": "Tienda Amiga ER designa nueva Mesa Directiva con E. Roca como Presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -313,8 +379,13 @@
      ],
      "resumen": "Toyosa S.A. aprueba Reserva Legal 5% gestión 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -327,7 +398,9 @@
      "resumen": "Toyosa emite Pagarés Privados TOYOSA XI - ALIANZA por Bs 10,0M",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -345,7 +418,9 @@
       "cargo": "Directora de la señora Ninette Denise Paz Bernardini",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -358,7 +433,9 @@
      ],
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 31 de marzo de 2026, realizada con el 89.31% de los accionistas, determinó lo siguiente: - Delegar al Directorio la contratación de una",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -372,8 +449,13 @@
      ],
      "resumen": "Sembrar Alimentario FIC aprueba EEFF 2025 y pago de rendimientos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -387,8 +469,13 @@
      ],
      "resumen": "Sembrar Exportador designa Berthin Asurrance para auditoría 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -402,8 +489,13 @@
      ],
      "resumen": "Sembrar Micro Capital aprueba EEFF 2025 y designa auditor para 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -417,8 +509,13 @@
      ],
      "resumen": "Aprueba Sembrar Productivo Estados Financieros 2025 y pago de rendimientos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -432,8 +529,15 @@
      ],
      "resumen": "DIACONÍA FRIF aprueba EEFF 2025 y nombra a Kjell Kristian Larsen Rep. Capital",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Katya Susana Jacqueline Collao Grandi",
+      "cargo": "Representantes del Capital Fundacional",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -446,8 +550,10 @@
      ],
      "resumen": "Diaconía FRIF-IFD aprueba financiamientos por Bs 42M vía pagarés",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -461,8 +567,14 @@
      ],
      "resumen": "Capital + Gestionadora de Activos aprueba resultados 2025 y paga dividendos a accionistas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Fernando Quinteros Arce",
+      "movimiento": "nombramiento"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -475,8 +587,15 @@
      ],
      "resumen": "Capital Crecimiento Empresarial reparte Bs5,5 por acción y ratifica directiva",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "José Alejandro Mallea Castillo",
+      "cargo": "Directores Independientes",
+      "movimiento": "nombramiento"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -490,8 +609,13 @@
      ],
      "resumen": "Panamerican SAFI aprueba dividendo Bs9,30 por acción gestión 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "distribución de resultados · estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -503,8 +627,10 @@
      ],
      "resumen": "BDP ST recibe Certificación Semestral sin Desvío de Fondos período jul-dic 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "titularizacion",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -516,8 +642,10 @@
      ],
      "resumen": "BDP ST certifica no hay Desvío de Fondos en INOLSA período oct-dic 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "titularizacion",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -530,8 +658,10 @@
      ],
      "resumen": "iBolsa aprueba Balance 2025 y designa directivos en Junta del 31.03.26",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -551,7 +681,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -570,7 +702,9 @@
       "fecha_pago": "6 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -590,7 +724,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -610,7 +746,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -623,7 +761,9 @@
      "resumen": "Autorizan registro Bonos BNB Leasing V - Emisión 2 en BBV",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -643,7 +783,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -654,7 +796,9 @@
      "resumen": "Fortaleza Leasing transfiere Bs 21.000.000,00 a Capital Pagado",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -667,8 +811,15 @@
      ],
      "resumen": "Farmacia Chávez utiliza Bs 58.628,20 en Bonos Farmacia Chávez I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "destino": "capital de inversión",
+      "monto": "Bs 59 mil"
+     }
     },
     {
      "seccion": "Noticias",
@@ -688,7 +839,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -702,8 +855,10 @@
      ],
      "resumen": "Granja Avícola Integral Sofía convoca Asamblea Tenedores Bonos SOFIA III 10.04.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -717,8 +872,10 @@
      ],
      "resumen": "Sofía Ltda. convoca Asamblea Tenedores Pagarés SOFIA I para 10 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -732,8 +889,10 @@
      ],
      "resumen": "Granja Avícola Integral Sofía convoca Asamblea Tenedores Bonos SOFIA II para 10 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -752,7 +911,9 @@
       "fecha_pago": "2 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -771,7 +932,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -789,7 +952,9 @@
       "cargo": "Gerente Regional - Oriente",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -807,7 +972,9 @@
       "cargo": "Gerente Regional - El Alto",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -825,7 +992,9 @@
       "cargo": "Gerente Nacional de Fideicomisos y Administración de Fondos",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -843,7 +1012,9 @@
       "cargo": "Gerente Nacional de Gestión Integral de Riesgos",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -861,7 +1032,9 @@
       "cargo": "Gerente Nacional de Tecnologías de la Información",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -879,7 +1052,9 @@
       "cargo": "Jefe de Sucursales",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -899,7 +1074,9 @@
       "fecha_pago": "6 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -912,7 +1089,7 @@
      ],
      "resumen": "iBolsa informa coeficientes MADEPA - iBOLSA ST 004 periodo feb-mar 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -945,7 +1122,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -965,7 +1144,9 @@
       "registro": "ASFI/DSV-ED-TCB-013/2026",
       "pizarra": "TCB-N1U-26"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -984,7 +1165,9 @@
       "emisor": "Industrias Oleaginosas S.A.",
       "registro": "ASFI/DSV-PED-IOL-003/2026"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -997,7 +1180,9 @@
      "resumen": "ASFI sanciona a ALIANZA COMPAÑÍA DE SEGUROS Y REASEGUROS S.A. con multa",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1010,7 +1195,9 @@
      "resumen": "ASFI sanciona a ALIANZA VIDA SEGUROS Y REASEGUROS S.A. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -1028,8 +1215,10 @@
      ],
      "resumen": "Mercantil Santa Cruz Agencia Bolsa aprueba aumento capital a Bs 12.261.827,68",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1045,7 +1234,9 @@
      "campos": {
       "monto": "Bs 10,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1057,8 +1248,10 @@
      ],
      "resumen": "Nexolider capitaliza utilidades 2024 por Bs 10.780.000",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1070,8 +1263,13 @@
      ],
      "resumen": "Nexolider S.A. aumenta Capital Social a Bs 22.638.000",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1088,7 +1286,9 @@
       "banco": "Banco FIE S.A.",
       "monto": "Bs 28,1 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1100,7 +1300,9 @@
      ],
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de marzo de 2026, realizada con el 87.40% de los accionistas, determinó lo siguiente: Realizar un cuarto intermedio hasta el 8 de",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1114,8 +1316,15 @@
      ],
      "resumen": "TELECEL aprueba resultados 2025 y designa nuevo Directorio para gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Herman Stelzer Jimenez",
+      "cargo": "Síndico Titular para la gestión 2026",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1127,7 +1336,9 @@
      ],
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 31 de marzo de 2026, realizada con el 99.99% de los accionistas, determinó lo siguiente: Tomar conocimiento del Informe presentado",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1140,8 +1351,13 @@
      ],
      "resumen": "BDP Sociedad de Titularización aprueba EEFF 2025 y constituye Reserva Legal Bs29.912,94",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1160,7 +1376,9 @@
       "instrumento": "Bonos BANCO FIE 4",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1179,7 +1397,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1198,7 +1418,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1216,7 +1438,9 @@
       "instrumento": "Bonos BANCO FIE 3",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1234,7 +1458,9 @@
       "cargo": "Gerenta Regional Potosí",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1245,7 +1471,9 @@
      "resumen": "Banco PYME Ecofuturo capitaliza Bs 7,8M por resultados 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1258,7 +1486,9 @@
      "resumen": "Registra Pagarés Bursátiles San Lucas - Emisión 3, coloca Credibolsa S.A.",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1271,7 +1501,9 @@
      "resumen": "Sancionan a DELAPAZ con multa por incumplimientos normativos del mercado de valores",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1284,7 +1516,9 @@
      "resumen": "ASFI sanciona a SAFÍ Unión por errores en envío de información",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1297,7 +1531,9 @@
      "resumen": "ASFI sanciona Valores Unión S.A. Agencia de Bolsa por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -1314,7 +1550,9 @@
      "resumen": "Mercantil Santa Cruz AB utiliza Bs 19,5M con BNB en avance cuenta corriente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1324,8 +1562,10 @@
      "tags": [],
      "resumen": "BBV designa Directorio con Hugo Alejandro Morató Heredia como Presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1336,7 +1576,9 @@
      "resumen": "BNB Leasing modifica línea de crédito con BMSC a Bs 24.010.000,00",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1349,8 +1591,14 @@
      ],
      "resumen": "Farmacia Chávez SA elige nueva Mesa Directiva con Salvatierra como Presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Juan Pablo Chuta Camacho",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1362,8 +1610,10 @@
      ],
      "resumen": "PROLEGA firma Pagaré Bs 14.000.000 con FORTALEZA SAFI",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1376,8 +1626,10 @@
      ],
      "resumen": "Nutrioil autoriza cesión de flujos futuros por Bs 144.950.000 para titularización",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "titularizacion",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1400,7 +1652,9 @@
         "tipo": "entra"
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1413,8 +1667,10 @@
      ],
      "resumen": "BDP ST devuelve Bs 870.919,75 por exceso en Coeficiente Cobertura Cupón NUEVATEL",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1434,7 +1690,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1453,7 +1711,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1472,7 +1732,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1491,7 +1753,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1510,7 +1774,9 @@
       "fecha_pago": "7 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1521,7 +1787,9 @@
      "resumen": "CAII paga préstamo Bs 7.000.000,00 a Banco Ganadero",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1539,7 +1807,9 @@
       "instrumento": "Bonos PROLEGA II",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1550,7 +1820,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1570,7 +1842,9 @@
       "fecha_pago": "6 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1581,7 +1855,9 @@
      "resumen": "NIBOL destina Bs 25,3M de Bonos III a proveedores FOTON y John Deere",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1600,7 +1876,9 @@
       "instrumento": "Bonos PROLEGA II",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1619,7 +1897,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1631,7 +1911,7 @@
      ],
      "resumen": "Banco Ganadero cumple compromisos financieros de Bonos Subordinados al 31-mar-2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -1657,7 +1937,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1675,7 +1957,9 @@
       "cargo": "Gerente Nacional de Auditoria Interna",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1688,8 +1972,14 @@
      ],
      "resumen": "CAP FIC convoca Asamblea General de Participantes para 17 de abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "17 de abril de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1703,8 +1993,13 @@
      ],
      "resumen": "ALIANZA SAFI convoca Asamblea General CRECIMIENTO FIC para 9 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1717,8 +2012,14 @@
      ],
      "resumen": "K12 FIC convoca Asamblea General de Participantes para 17 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "17 de abril de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1731,8 +2032,14 @@
      ],
      "resumen": "BISA convoca Asamblea General MICROFIC II para 13 de abril de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "13 de abril de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -1749,7 +2056,9 @@
       "cargo": "Jefe de Asuntos Jurídicos",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1767,7 +2076,9 @@
       "fecha_pago": "6 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1786,7 +2097,9 @@
       "emisor": "Telecel S.A.",
       "registro": "ASFI/DSV-PED-TCB-004/2026"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1799,8 +2112,14 @@
      ],
      "resumen": "Autorizan funcionamiento e inscripción IQ SAFI S.A. en RMV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "emisor": "Investment Quality Sociedad Administradora de Fondos de Inversión S.A.",
+      "registro": "ASFI/DSV-SAF-SIQ-001/2026"
+     }
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -1813,7 +2132,9 @@
      "resumen": "ASFI sanciona RUIZMIER PELAEZ S.R.L. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -1832,8 +2153,15 @@
      ],
      "resumen": "Designan nueva Directiva en Santa Cruz Vida y Salud; Saucedo Justiniano como Pdte.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Vanessa Rosemery Saucedo Justiniano",
+      "cargo": "Apoderada Tipo \"A\"",
+      "movimiento": "nombramiento"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1846,8 +2174,15 @@
      ],
      "resumen": "Renuncia Marco Antonio Ramos Condori como Síndico Titular de PILA SRL",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Marco Antonio Ramos Condori",
+      "cargo": "Síndico Titular",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1857,8 +2192,10 @@
      "tags": [],
      "resumen": "Toyosa S.A. aprueba operación crediticia por Bs 10.439.191,00 con Banco BISA",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1870,8 +2207,10 @@
      ],
      "resumen": "Fundación Pro Mujer IFD aprueba aumento capital ordinario Bs 2.602.386,82",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -1883,8 +2222,15 @@
      ],
      "resumen": "iBolsa designa Directorio; Arredondo Mancilla como Gerente General a.i. y Aruquipa Layme como Contador",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Juan Carlos Quisbert Urquidi",
+      "cargo": "Secretario",
+      "movimiento": "designación a.i."
+     }
     },
     {
      "seccion": "Noticias",
@@ -1904,7 +2250,9 @@
       "fecha_pago": "8 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1923,7 +2271,9 @@
       "instrumento": "Bonos BISA Leasing V",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1941,7 +2291,9 @@
       "instrumento": "Bonos GAS & ELECTRICIDAD SOCIEDAD ANONIMA",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1959,7 +2311,9 @@
       "instrumento": "Bonos Subordinados BANCO FIE 7",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1977,7 +2331,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -1995,7 +2351,9 @@
       "instrumento": "Bonos BANCO FIE 3",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2013,7 +2371,9 @@
       "instrumento": "Bonos Subordinados BCP",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2024,7 +2384,9 @@
      "resumen": "BMSC coloca 8.500 Bonos Subordinados BMSC II - Emisión 3",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2035,7 +2397,9 @@
      "resumen": "ASFI deroga Carta Circular CC-7297/2024 a partir del 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2054,7 +2418,9 @@
       "instrumento": "Bonos COBEE V Emisión 1",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2071,7 +2437,9 @@
       "instrumento": "Bonos BMSC III",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2089,7 +2457,9 @@
       "cargo": "Gerente Nacional de TI",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2107,7 +2477,9 @@
       "cupon_n": "30",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2125,7 +2497,9 @@
       "cargo": "Gerente de Sucursal Oruro",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -2149,7 +2523,9 @@
       "instrumento": "BONOS TSM Apparel 001",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2161,8 +2537,10 @@
      ],
      "resumen": "Autoriza emisión 5 Pagarés sin OPP por Bs 50,0M a favor de FIPADE SAFI-AGROFIN FIC",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2178,7 +2556,9 @@
      "campos": {
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2192,8 +2572,13 @@
      ],
      "resumen": "Asamblea Tienda Amiga ER reanuda sesión de Bonos hasta 20 abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2207,8 +2592,13 @@
      ],
      "resumen": "Tienda Amiga ER convoca Asamblea Bonos Tienda Amiga I para 20 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2222,8 +2612,13 @@
      ],
      "resumen": "Tienda Amiga ER reanuda Asamblea Bonos Tienda Amiga I, continúa 20 abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2241,7 +2636,9 @@
       "cargo": "Gerente Regional Tarija",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2254,7 +2651,9 @@
      "resumen": "GanaCobertura FIC aprueba Estados Financieros 31/12/25 y designa RUIZMIER PELAEZ SRL auditor",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2267,7 +2666,9 @@
      "resumen": "Aprueban Estados Financieros Auditados GanAnticipo FIC al 31/12/25",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2280,8 +2681,13 @@
      ],
      "resumen": "Fundación Pro Mujer IFD aprueba emisiones de Pagarés y Bonos Sociales de Género",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2294,8 +2700,10 @@
      ],
      "resumen": "INOLSA cumple recaudación Flujo Cedido Patrimonio Autónomo INOLSA - BDP ST 062",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2307,8 +2715,10 @@
      ],
      "resumen": "BDP Titularización rectifica conformación de Directorio y Sindicatura",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2319,7 +2729,9 @@
      "resumen": "Mateo Kuljis vende 558 acciones de Multiplika a Panamerican Investments",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2338,7 +2750,9 @@
       "instrumento": "Bonos TIENDA AMIGA",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2358,7 +2772,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2377,7 +2793,9 @@
       "fecha_pago": "9 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2390,7 +2808,9 @@
      "resumen": "Credibolsa coloca 70.000 Pagarés Bursátiles San Lucas - Emisión 3",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2401,7 +2821,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2414,7 +2836,9 @@
      "resumen": "Autorizan Pagarés Bursátiles San Lucas - Emisión 3",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2425,7 +2849,9 @@
      "resumen": "Crediseguro revoca Poderes Tipo B y otorga nuevos Poderes de Representación",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2436,7 +2862,9 @@
      "resumen": "Crediseguro revoca y otorga Poderes Tipo B a cinco representantes",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2449,8 +2877,15 @@
      ],
      "resumen": "Farmacia Chávez utiliza Bs 156.678,29 como capital de inversión",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "destino": "capital de inversión",
+      "monto": "Bs 157 mil"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2464,8 +2899,13 @@
      ],
      "resumen": "Jalasoft convoca Asamblea Tenedores Bonos Emisión 1 Serie B JSF-1-E1B-19",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "21 de abril de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2479,8 +2919,14 @@
      ],
      "resumen": "Jalasoft convoca Asamblea General Tenedores Bonos JALASOFT III Serie Única JSF-E2U-23",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "21 de abril de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2494,8 +2940,14 @@
      ],
      "resumen": "Jalasoft convoca Asamblea General de Tenedores Bonos JALASOFT IV para 21 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "21 de abril de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2515,7 +2967,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2534,7 +2988,9 @@
       "fecha_pago": "9 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -2553,7 +3009,9 @@
       "emisor": "Grupo Empresarial de Inversiones Nacional Vida S.A.",
       "registro": "ASFI/DSV-PEB-GNI-002/2026"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -2572,8 +3030,10 @@
      ],
      "resumen": "Aprueban Programa Bonos NEXOLIDER 1 por Bs 200.000.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2591,7 +3051,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2603,8 +3065,10 @@
      ],
      "resumen": "FANCESA aplaza votación Bonos Intercambio VI Serie B para 7 mayo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2615,7 +3079,9 @@
      "resumen": "FANCESA reinstala Asamblea General de Accionistas presencial 8/4/26",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2627,8 +3093,10 @@
      ],
      "resumen": "FANCESA aplaza votación Asamblea Tenedores Bonos IV para 7 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2642,8 +3110,14 @@
      ],
      "resumen": "Aprueba Pagarés IASA 002 por Bs 20.000.000,00 a MSC Productivo FIC",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Diego Moreno Menezes",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2656,8 +3130,10 @@
      ],
      "resumen": "PROLEGA firma 2 pagarés sin OPP con CAPITAL + SAFI por Bs 10.000.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2670,8 +3146,10 @@
      ],
      "resumen": "PROLEGA aprueba Programa Emisiones Bonos por Bs 350,0M",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2685,8 +3163,13 @@
      ],
      "resumen": "Aprueban Estados Financieros 2025 de CRECIMIENTO FIC y designan auditor y calificador",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2697,7 +3180,9 @@
      "resumen": "DIACONÍA FRIF renueva préstamo BDP-SAM por Bs 100,0M hasta julio 2026",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2714,7 +3199,9 @@
       "cargo": "Gerente Nacional de Operaciones a María René Gonzalez Sotelo",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2725,7 +3212,9 @@
      "resumen": "Renuncia Asesor Legal de SAFÍ Unión",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -2743,7 +3232,9 @@
       "cargo": "Director",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2761,7 +3252,9 @@
       "instrumento": "Bonos BMSC III",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2780,7 +3273,9 @@
       "fecha_pago": "10 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2791,7 +3286,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2805,8 +3302,13 @@
      ],
      "resumen": "CAMSA convoca Asamblea Tenedores Bonos CAMSA II - Emisión 1 para 23 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "23 de abril de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2820,8 +3322,13 @@
      ],
      "resumen": "Convoca CAMSA II Asamblea General de Tenedores de Bonos para 23 de abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "23 de abril de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2834,8 +3341,15 @@
      ],
      "resumen": "Farmacia Chávez utiliza Bs 50.205,00 como capital de inversión en Bonos I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "destino": "capital de inversión",
+      "monto": "Bs 50 mil"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2848,7 +3362,9 @@
      "resumen": "Gas y Electricidad S.A. destina Bs 16.728.000,00 Pagarés Bursátiles Gas & Electricidad II - Emisión 5",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2861,7 +3377,9 @@
      "resumen": "Gas y Electricidad S.A. reporta destino fondos Pagarés Bursátiles Gas & Electricidad II - Emisión 6 por Bs 12.154.000,00",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2873,7 +3391,7 @@
      ],
      "resumen": "Banco BISA cumple compromisos Bonos Subordinados III al 31.03.26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -2899,7 +3417,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2911,7 +3431,7 @@
      ],
      "resumen": "Banco BISA reporta indicadores financieros Bonos Subordinados II al 31.03.26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -2937,7 +3457,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2949,7 +3471,7 @@
      ],
      "resumen": "Paga cupón Bonos Subordinados Emisiones 2 y 3 Banco BISA",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -2975,7 +3497,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -2986,7 +3510,9 @@
      "resumen": "SAFIU revoca Testimonios de Poder N° 2313/2022, 2316/2022 y 138/2023",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -3011,7 +3537,9 @@
      "campos": {
       "tipo": "Extraordinaria",
       "fecha_junta": "22 de abril de 2026"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3023,8 +3551,10 @@
      ],
      "resumen": "Crediseguro S.A. paga distribución utilidades 2025 Bs 566,80 por acción",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3037,8 +3567,13 @@
      ],
      "resumen": "Designan Directores y Síndicos de Empresa Ferroviaria Andina para gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3056,7 +3591,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3070,8 +3607,10 @@
      ],
      "resumen": "Aprueban modificación de Compromisos Financieros de Bonos SOFIA II Serie B, SOFIA III y Pagarés SOFIA I",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3082,7 +3621,9 @@
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 70,0M de Banco Unión para capital operativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3092,8 +3633,13 @@
      "tags": [],
      "resumen": "AGUAÍ aprueba precio liquidación final caña azúcar zafra 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3103,8 +3649,10 @@
      "tags": [],
      "resumen": "Nombran a Pablo Javier Toro Salinas Gerente Regional Santa Cruz en Mercantile",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3115,7 +3663,9 @@
      "resumen": "SOBOCE eleva Subgerencia Nacional de Prefabricados a Gerencia Nacional",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3133,7 +3683,9 @@
       "cargo": "Gerente Nacional de Prefabricados",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3150,7 +3702,9 @@
       "cargo": "Directora de Negocios Corporativos",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3168,7 +3722,9 @@
       "cargo": "Director",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3181,8 +3737,10 @@
      ],
      "resumen": "Asamblea BDP ST aprueba penalidad Bs1.000,00 a UNIPARTES por incumplimiento",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "titularizacion",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3192,8 +3750,10 @@
      "tags": [],
      "resumen": "Designan a Rolando Burgoa Celis como Resp. de Riesgos de iBolsa",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3212,7 +3772,9 @@
       "instrumento": "Bonos GYE",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3232,7 +3794,9 @@
       "fecha_pago": "13 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3250,7 +3814,9 @@
       "instrumento": "Bonos Subordinados BEC IV",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3269,7 +3835,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3289,7 +3857,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3300,7 +3870,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 de enero",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3313,7 +3885,9 @@
      "resumen": "Bisa Leasing destina Bs 18,09M en Bonos VII Emisión 2",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3331,7 +3905,9 @@
       "cargo": "Gerente General",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3344,8 +3920,13 @@
      ],
      "resumen": "EMIPA convoca Asamblea Tenedores Bonos EMIPA I para 23 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "23 de abril de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3358,8 +3939,13 @@
      ],
      "resumen": "Convoca EMIPA Asamblea Tenedores Bonos EMIPA II para 23 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "23 de abril de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3379,7 +3965,9 @@
       "fecha_pago": "14 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3392,7 +3980,9 @@
      "resumen": "Granja Avícola Integral Sofía aún no utiliza fondos de Pagarés SOFIA I",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3412,7 +4002,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3425,7 +4017,7 @@
      ],
      "resumen": "BCP cumple compromisos financieros a marzo 2026 con ratios superiores a lo requerido",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -3451,7 +4043,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3463,7 +4057,7 @@
      ],
      "resumen": "Banco Económico cumple compromisos financieros bonos subordinados BEC IV-VI",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3489,7 +4083,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3501,7 +4097,7 @@
      ],
      "resumen": "Banco Fortaleza cumple compromisos financieros Bonos Subordinados 2021 al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3527,7 +4123,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3539,8 +4137,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Subordinados VI para 12 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3552,8 +4152,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Subordinados V para 12 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3565,8 +4167,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Subordinados VII para 12 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3578,8 +4182,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Subordinados VII para 12 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3591,8 +4197,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Subordinados IX para 12 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3604,8 +4212,10 @@
      ],
      "resumen": "Banco Ganadero convoca Asamblea Tenedores Bonos Banco Ganadero I para 12 mayo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3617,7 +4227,7 @@
      ],
      "resumen": "BMSC comunica Compromisos Financieros marzo 2026: CAP 15,11%, Liquidez 80,76%, Incobrabilidad 128,57%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3636,7 +4246,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3648,7 +4260,7 @@
      ],
      "resumen": "BMSC comunica Compromisos Financieros a marzo 2026: CAP 15,11%, Liquidez 80,76%, Incobrabilidad 128,03%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3667,7 +4279,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3679,7 +4293,7 @@
      ],
      "resumen": "BMSC comunica Compromisos Financieros a marzo 2026: CAP 15,11%, Liquidez 80,76%, Incobrabilidad 128,03%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3698,7 +4312,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3710,7 +4326,7 @@
      ],
      "resumen": "BMSC comunica Compromisos Financieros a marzo 2026 con CAP 15,11%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3729,7 +4345,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3748,7 +4366,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3760,8 +4380,13 @@
      ],
      "resumen": "Banco Prodem aumenta Capital Pagado Bs 66,8M por reinversión de utilidades 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3774,7 +4399,7 @@
      ],
      "resumen": "Ecofuturo reporta indicadores financieros compromisos marzo 2026 CAP 13,04% IL 80,14% IC 204,29%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -3800,7 +4425,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3811,7 +4438,9 @@
      "resumen": "Registra EDVB Incremento de Acciones Banco Ganadero Series BGA1A a BGA1E",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3823,8 +4452,13 @@
      ],
      "resumen": "CRECER IFD reporta Suficiencia Patrimonial 16,80% a marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -3835,7 +4469,9 @@
      "resumen": "Autoriza ASFI aumento de Capital Social IDEPRO IFD por Bs 2.731.074,71",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -3848,7 +4484,9 @@
      "resumen": "ASFI sanciona a Deloitte Bolivia Ltda. por incumplimientos normativos",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -3861,7 +4499,9 @@
      "resumen": "ASFI sanciona a GANADERO SAFI por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -3885,7 +4525,9 @@
       "cargo": "Director Suplente",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3898,8 +4540,10 @@
      ],
      "resumen": "Ferroviaria Oriental ratifica Directorio y nombra Síndicos Titulares",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3916,7 +4560,9 @@
       "persona": "Sergio Antonio Troche Gutiérrez",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3928,8 +4574,13 @@
      ],
      "resumen": "Sociedad Hotelera Los Tajibos aprueba EE.FF. 2025 y designa nuevos Directores",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros · directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3947,7 +4598,9 @@
       "cargo": "Director",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -3965,7 +4618,9 @@
       "cargo": "Director Titular",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -3984,7 +4639,9 @@
       "instrumento": "Bonos FANCESA IV",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4003,7 +4660,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4016,7 +4675,9 @@
      "resumen": "Compañía Americana de Inversiones paga Pagarés Bursátiles Gravetal III Emisión 2",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4034,7 +4695,9 @@
       "instrumento": "Bonos Subordinados BANCO UNIÓN",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4045,7 +4708,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4064,7 +4729,9 @@
       "fecha_pago": "13 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4076,8 +4743,13 @@
      ],
      "resumen": "Banco Fortaleza aumenta capital pagado a Bs 379,8M por reinversión utilidades 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4095,7 +4767,9 @@
       "cargo": "Gerente Nacional de Operaciones",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4106,7 +4780,9 @@
      "resumen": "Banco Unión incrementa Capital Pagado Bs 56,1M por cupón N°7 subordinadas",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4119,8 +4795,13 @@
      ],
      "resumen": "Convoca Asamblea General de Participantes Renta Activa Agroindustrial 23 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4133,8 +4814,13 @@
      ],
      "resumen": "Renta Activa Puente convoca Asamblea General de Participantes 23 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     }
    ]
   },
@@ -4158,7 +4844,9 @@
       "cargo": "Gerente General",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4169,7 +4857,9 @@
      "resumen": "Incorpora IMPORT. EXPORT. LAS LOMAS a Cesar Nuñez Bernal como Gte. Nac. Operaciones",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4182,8 +4872,13 @@
      ],
      "resumen": "MADISA distribuye dividendos Bs 213,68 por acción cuota 1 desde 21 abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "dividendos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 213,68"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4196,8 +4891,14 @@
      ],
      "resumen": "PLASTIFORTE amplía línea crédito Banco Fortaleza a Bs 14.000.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Edgar Gustavo Heredia Deiters",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4210,8 +4911,15 @@
      ],
      "resumen": "Designan a Javier Mauricio Toledo Cariaga en Directorio de BDP S.A.M.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Javier Mauricio Toledo Cariaga",
+      "cargo": "Gerente General",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4241,7 +4949,9 @@
         "tipo": "entra"
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4251,8 +4961,10 @@
      "tags": [],
      "resumen": "Prodem ratifica a Pereira de Presidente y designa a Figueroa de Secretaria",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4266,7 +4978,9 @@
      "resumen": "Pacific Credit Rating asigna N-1/B1- Estable a Pagarés Nexolider I por Bs 90M",
      "resumen_origen": "ia",
      "grupo": "calificaciones",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4279,8 +4993,13 @@
      ],
      "resumen": "Aprueban Estados Financieros Auditados 2025 MICROFIC II",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4293,7 +5012,9 @@
      ],
      "resumen": "Comunica que, el 13 de abril de 2026, el Originador del Patrimonio Autónomo NUEVATEL - BDP ST 049, informó que el 7 de abril de 2026 a Hrs.",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "titularizacion",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4312,7 +5033,9 @@
       "instrumento": "Bonos GYE",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4330,7 +5053,9 @@
       "instrumento": "Pagarés Bursátiles GRAVETAL III",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4348,7 +5073,9 @@
       "instrumento": "Bonos Banco Ganadero I",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4359,7 +5086,9 @@
      "resumen": "Amplían 90 días plazo colocación Valores Titularización MADEPA-IBolsa ST 004",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4370,7 +5099,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4381,7 +5112,9 @@
      "resumen": "Renuncia Gerente de Auditoría de Tudela & TH Consulting Group",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4392,7 +5125,9 @@
      "resumen": "Banco de Crédito de Bolivia revoca poderes a Luisa Fanny Barragan Mercado y Jaqueline Bell Ruiz",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4405,8 +5140,10 @@
      ],
      "resumen": "BancoSol comunica Compromisos Financieros vigentes al 31.03.2026 de Programas Bonos Subordinados y Sociales",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -4430,7 +5167,9 @@
       "cargo": "Gerente Nacional Comercial",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4442,8 +5181,10 @@
      ],
      "resumen": "Toyosa S.A. aprueba aumento de capital por Bs 17.000.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4454,7 +5195,9 @@
      "resumen": "BDP rectifica composición de Comités Directivos",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4467,8 +5210,15 @@
      ],
      "resumen": "Renuncia Director Titular Hans Mejía Vera de Entidad de Depósito de Valores",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Hans Mejía Vera",
+      "cargo": "Director Titular",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4480,8 +5230,13 @@
      ],
      "resumen": "Asamblea GLOBAL Fondo Inversión aprueba Estados Financieros 2025 y Presupuesto 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4494,8 +5249,13 @@
      ],
      "resumen": "CIDRE IFD aprueba EEFF 2025 e reinvierte resultados como aportes de capital",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4508,8 +5268,15 @@
      ],
      "resumen": "Renuncia Hans Wagner Mejía Vera como Director Titular de BDP Sociedad de Titularización",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Hans Wagner Mejía Vera",
+      "cargo": "Director Titular",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4522,8 +5289,10 @@
      ],
      "resumen": "BDP ST devuelve Bs 141.162,20 por exceso Coef. Cobertura Cupón UNIPARTES",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4543,7 +5312,9 @@
       "fecha_pago": "16 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4554,7 +5325,9 @@
      "resumen": "Deroga ASFI Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4574,7 +5347,9 @@
       "fecha_pago": "16 de abril",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4587,8 +5362,15 @@
      ],
      "resumen": "Farmacia Chávez invierte Bs 143.217,70 de Bonos Farmacia Chávez I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "destino": "capital de inversión",
+      "monto": "Bs 143 mil"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4605,7 +5387,9 @@
      "campos": {
       "monto": "Bs 21,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4618,7 +5402,9 @@
      ],
      "resumen": "Comunica que, los Compromisos Financieros asumidos producto de la colocación de los Bonos Banco Unión, los cuales se presentan a continuación: - BONOS BANCO UNIÓN - EMISIÓN 1 - BONOS BANCO UNIÓN -",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4631,7 +5417,9 @@
      "resumen": "EDVB registra Bonos TELECEL VII, BISA S.A. agencia colocadora",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4648,7 +5436,9 @@
       "cargo": "Jefe Legal de Procesos Judiciales y Bienes Adjudicados",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4661,7 +5451,7 @@
      ],
      "resumen": "iBolsa ST reporta coeficientes financieros Patrimonio LAS LOMAS periodo marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -4687,7 +5477,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -4700,7 +5492,9 @@
      "resumen": "ASFI sanciona a BISA SAFI por incumplimiento regulatorio",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -4722,7 +5516,9 @@
      "resumen_v": 2,
      "campos": {
       "monto": "Bs 97,6 M"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4734,8 +5530,10 @@
      ],
      "resumen": "Import. Export. Las Lomas traslada Agencia German Mendoza N° 1893 de Sucre",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4748,8 +5546,13 @@
      ],
      "resumen": "Industrias Oleaginosas contrata AUDISET como auditora externa",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4762,8 +5565,14 @@
      ],
      "resumen": "Panamerican Investments convoca JGA Ordinaria 29 abr 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "29 de abril de 2026",
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4776,7 +5585,9 @@
      "resumen": "Moody´s Local PE retira a Reyna Che y Gómez Ortiz de comités clasificadores",
      "resumen_origen": "ia",
      "grupo": "calificaciones",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4789,7 +5600,9 @@
      "resumen": "Asamblea de Diverso Import-Export FIC aprueba Estados Financieros 2025 y designa auditor",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4802,7 +5615,9 @@
      "resumen": "Inclusión Empresarial FIC aprueba distribución de rendimientos año 9 y reduce capital 30%",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -4813,7 +5628,9 @@
      "resumen": "IDEPRO IFD aumenta capital en Bs 2.731.074,71 por reinversión de utilidades",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4832,7 +5649,9 @@
       "instrumento": "Bonos BISA LEASING VII",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4843,7 +5662,9 @@
      "resumen": "Mercantil Santa Cruz paga avance en cuenta corriente al BNB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4854,7 +5675,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 de enero",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4866,8 +5689,14 @@
      ],
      "resumen": "Autorizan inscripción Pagarés Bursátiles IOL II en BBV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "PAGARÉS BURSÁTILES IOL II",
+      "emisor": "Valores S.A."
+     }
     },
     {
      "seccion": "Noticias",
@@ -4879,8 +5708,13 @@
      ],
      "resumen": "Gravetal Bolivia cumple ratios financieros al 31 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -4891,7 +5725,9 @@
      "resumen": "Industrias de Aceite SA otorga Poder General a Gastón Ezequiel Greco",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4904,8 +5740,13 @@
      ],
      "resumen": "BISA convoca Asamblea Tenedores Bonos Subordinados Emisión 2 para 5 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "5 de mayo de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4918,8 +5759,13 @@
      ],
      "resumen": "BISA convoca Asamblea Tenedores Bonos Subordinados Emisión 3 para 5 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "5 de mayo de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4932,8 +5778,13 @@
      ],
      "resumen": "Banco BISA convoca Asamblea Tenedores Bonos Subordinados II - Emisión 1",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "5 de mayo de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4946,8 +5797,13 @@
      ],
      "resumen": "Banco BISA convoca Asamblea Tenedores Bonos Subordinados II para 5 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "5 de mayo de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4960,8 +5816,13 @@
      ],
      "resumen": "Banco BISA convoca Asamblea Tenedores Bonos Subordinados III-E1 para 5 mayo 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "5 de mayo de 2026"
+     }
     },
     {
      "seccion": "Noticias",
@@ -4979,7 +5840,9 @@
       "cargo": "Gerenta Nacional de Finanzas",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -4997,7 +5860,9 @@
       "fecha_pago": "20 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -5020,7 +5885,9 @@
       "banco": "Banco Ganadero S.A.",
       "monto": "Bs 5,6 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5033,8 +5900,13 @@
      ],
      "resumen": "Mercantil Santa Cruz aprueba incremento Bs27,67 en Resultados Acumulados y fija dividendo Bs23,93",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "distribución de resultados"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5046,8 +5918,10 @@
      ],
      "resumen": "Mercantil Santa Cruz Agencia Bolsa aprueba incremento capital Bs 2.368.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5057,8 +5931,10 @@
      "tags": [],
      "resumen": "Aprueba Mercantil Santa Cruz nueva Estructura Organizativa",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5068,8 +5944,10 @@
      "tags": [],
      "resumen": "Crediseguro modifica denominación de Gerencia Legal & Compliance a Gerencia Legal",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5082,8 +5960,13 @@
      ],
      "resumen": "Convocan Junta Gral. Extraordinaria EMIPA para 24/04/2026 a las 15:00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "24 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5101,7 +5984,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5112,7 +5997,9 @@
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 8.575.000 con Banco Económico",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5130,7 +6017,9 @@
       "cargo": "Gerente Nacional de Cumplimiento hasta la fecha indicada",
       "movimiento": "desvinculación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5141,7 +6030,9 @@
      "resumen": "FIBRA aprueba distribución de rendimientos con pago 24 abril 2026",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5157,7 +6048,9 @@
      "campos": {
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5175,7 +6068,9 @@
       "cargo": "Gerente General",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5186,7 +6081,9 @@
      "resumen": "ASFI deroga Carta Circular ASFI/DSV/CC-7297/2024 a partir 30 ene 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5198,7 +6095,7 @@
      ],
      "resumen": "Gas y Electricidad SA cumple ratios financieros al 31-Mar-2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -5224,7 +6121,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5240,7 +6139,9 @@
      "campos": {
       "monto": "Bs 7,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5251,7 +6152,9 @@
      "resumen": "Christian Hausherr Ariñez ausente 20-21 abril; Edgar Rodrigo Valdez Goytia Ger. General interino BCB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5261,7 +6164,9 @@
      "tags": [],
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de abril de 2026, se determinó lo siguiente: Aprobar las modificaciones a la Estructura Documental de la Sociedad: - Metodología para la evaluación",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -5278,7 +6183,9 @@
      "resumen": "Mercantil Santa Cruz usa Bs 1.000.000,00 en avance con BNB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5291,8 +6198,13 @@
      ],
      "resumen": "CBEE aprueba EEFF con auditoría externa al 7 de abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "auditorias",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "gestion": "2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5310,7 +6222,9 @@
       "cargo": "Gerente Nacional de Fideicomisos y Administración de Fondos",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5321,7 +6235,9 @@
      "resumen": "Banco Unión contrata a Marcelo Walter Melgarejo Duran como Gerente Nacional de Productos",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5333,8 +6249,13 @@
      ],
      "resumen": "CAP FIC aprueba EEFF 2025 y designa Auditores Externos para 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5346,8 +6267,13 @@
      ],
      "resumen": "Aprueban Estados Financieros K12 FIC al 31.12.2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5359,8 +6285,10 @@
      ],
      "resumen": "IDEPRO aprueba incremento de capital social por Bs 1.509.200,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5380,7 +6308,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5391,7 +6321,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5401,8 +6333,10 @@
      "tags": [],
      "resumen": "Eligen mesa directiva Gas y Electricidad S.A.: Calderón pte., Llobet vicepte., Ibarnegaray secr.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5422,7 +6356,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5433,7 +6369,9 @@
      "resumen": "Ecofuturo emite y canjea nuevas acciones por incremento de Capital Pagado",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5451,7 +6389,9 @@
       "cargo": "Gerente Regional - El Alto",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -5469,7 +6409,9 @@
       "cargo": "Gerente Nacional de Cumplimiento",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -5482,7 +6424,9 @@
      "resumen": "ASFI sanciona a MULTIPLIKA SOC. DE TITULARIZACIÓN S.A. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -5505,7 +6449,9 @@
       "banco": "Banco Nacional de Bolivia S.A.",
       "monto": "Bs 11,4 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5518,8 +6464,13 @@
      ],
      "resumen": "DELAPAZ convoca Junta General Ordinaria de Accionistas para 29 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "29 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5532,8 +6483,13 @@
      ],
      "resumen": "ENDE Corani convoca Junta General Ordinaria de Accionistas para 29 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "29 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5551,7 +6507,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5564,8 +6522,13 @@
      ],
      "resumen": "ENDE Servicios y Construcciones convoca Junta General Ordinaria de Accionistas para 29 de abril de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "29 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5578,8 +6541,13 @@
      ],
      "resumen": "ENDE Transmisión convoca Junta General Ordinaria de Accionistas 27 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "27 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5592,8 +6560,10 @@
      ],
      "resumen": "ENDE Transmisión convoca Junta General Ordinaria 27 abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5606,8 +6576,13 @@
      ],
      "resumen": "ENDE Valle Hermoso convoca Junta General Ordinaria 27 de abril 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "27 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5620,8 +6595,14 @@
      ],
      "resumen": "Parque Industrial Latinoamericano aprueba EE.FF. 2025 y elige nuevo Directorio",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Freddy Huallpara Quispe",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5639,7 +6620,9 @@
       "banco": "Banco Nacional de Bolivia S.A.",
       "monto": "Bs 70,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5651,8 +6634,10 @@
      ],
      "resumen": "Tienda Amiga ER aprueba modificación Ratio RCSD Bonos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5663,7 +6648,9 @@
      "resumen": "EDVB registra nueva acción de Bolva Boliviana de Valores S.A.",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5675,8 +6662,13 @@
      ],
      "resumen": "Marca Verde SAFII elige Mesa Directiva y designa miembros de comités",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5689,7 +6681,9 @@
      "resumen": "BISA coloca 9.000 Pagarés Bursátiles Plastiforte I - Emisión 3",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5709,7 +6703,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5728,7 +6724,9 @@
       "fecha_pago": "21 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5739,7 +6737,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5757,7 +6757,9 @@
       "cargo": "Gerente Administrativo Financiero",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5767,7 +6769,9 @@
      "tags": [],
      "resumen": "Comunica que, en reunión de Directorio de 20 de abril de 2026, resolvió lo siguiente: Presidente: Carlos Enrique Gill Ramirez Vicepresidente: Isabel Virgilia Pantoja Barroso Secretario: Miguel",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "juntas",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5779,7 +6783,7 @@
      ],
      "resumen": "ITACAMBA CEMENTO cumplen compromisos financieros al 31.03.2026: RDP 1,11, RCSD 5,49, RC 1,67",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -5805,7 +6809,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5816,7 +6822,9 @@
      "resumen": "BFIE registra Modificación de Estatuto en SEPREC",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5827,7 +6835,9 @@
      "resumen": "TERRA-PRODUCTIVO coloca 1.217 Cuotas por Bs 250.458.600",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5838,7 +6848,9 @@
      "resumen": "TERRA-PRODUCTIVO inicia actividades 22 de abril de 2026",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5849,7 +6861,9 @@
      "resumen": "TERRA-PRODUCTIVO coloca 158 Cuotas Participación por Bs 32.516.400",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5861,8 +6875,13 @@
      ],
      "resumen": "DIACONÍA FRIF cumple compromisos financieros al 31.03.2026 con indicadores superiores",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5880,7 +6899,9 @@
       "cupon_n": "6",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5897,7 +6918,9 @@
       "cupon_n": "45",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -5910,7 +6933,9 @@
      "resumen": "ASFI sanciona BOLSA BOLIVIANA DE VALORES por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -5923,7 +6948,9 @@
      "resumen": "ASFI sanciona a Bolsa Boliviana de Valores por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -5945,7 +6972,9 @@
      "campos": {
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5959,8 +6988,10 @@
      ],
      "resumen": "Aprueba Bisa Leasing modificaciones a Bonos VIII",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5976,7 +7007,9 @@
      "resumen_v": 2,
      "campos": {
       "monto": "Bs 9,8 M"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5988,8 +7021,10 @@
      ],
      "resumen": "Jalasoft aprueba Informe Emisor en Asamblea Bonos JALASOFT I Serie B",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6001,8 +7036,10 @@
      ],
      "resumen": "Jalasoft aprueban Informe del Emisor en Asamblea Bonos JALASOFT III",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6014,8 +7051,10 @@
      ],
      "resumen": "Aprueba Asamblea de Bonos JALASOFT IV con 100% participación",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6026,7 +7065,9 @@
      "resumen": "Sociedad Minera Illapa obtiene préstamo Bs 90,5M de Banco Bisa",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6040,7 +7081,9 @@
      "resumen": "PCR califica Pagarés Bursátiles IOL II de INDUSTRIAS OLEAGINOSAS en N-1/B1-",
      "resumen_origen": "ia",
      "grupo": "calificaciones",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6054,8 +7097,13 @@
      ],
      "resumen": "Sembrar Microcapital FIC aprueba modificaciones a Reglamento Interno",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Noticias",
@@ -6073,7 +7121,9 @@
       "instrumento": "Bonos Banco Unión",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6084,7 +7134,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6095,7 +7147,9 @@
      "resumen": "Carolina del Rosario Gonzales registrada como Asesor de Inversión de Panamerican Securities",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6108,8 +7162,15 @@
      ],
      "resumen": "Farmacia Chávez usa fondos Bs 40.319 como capital inversión Bonos I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "destino": "capital de inversión",
+      "monto": "Bs 40 mil"
+     }
     },
     {
      "seccion": "Noticias",
@@ -6119,8 +7180,10 @@
      "tags": [],
      "resumen": "Aprueba cambio de denominación Gerencia Microcrédito a Gerencia Microfinanzas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6131,7 +7194,9 @@
      "resumen": "Banco de Crédito Bolivia otorga Poder Representación Tipo A a Pamela Maria Giacoman de Klinsky",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6142,7 +7207,9 @@
      "resumen": "BCB otorga Poder Representación Tipo B a Ovando Santander, Patiño Serrate y Lopez Sanchez",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6155,8 +7222,13 @@
      ],
      "resumen": "BDP cumple compromisos Bonos Verdes BDP I: CAP 16,29%, Liquidez 13,13%, Previsión 123,64%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -6169,7 +7241,7 @@
      ],
      "resumen": "BANCO FIE cumple compromisos financieros al 31.03.2026 con CAP 12,08%, IL 94,17%, IC 256,25%",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -6195,7 +7267,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -6208,7 +7282,9 @@
      "resumen": "ASFI sanciona a SAFIMSC por incumplimientos en gestión de seguridad",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -6232,7 +7308,9 @@
       "cargo": "Gerente de Administrativo Financiero",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6246,8 +7324,13 @@
      ],
      "resumen": "Gas y Electricidad S.A. convoca JGA Extraordinaria para aprobar Programa de Emisiones de Bonos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "30 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6260,8 +7343,13 @@
      ],
      "resumen": "AGUAÍ convoca Junta General Extraordinaria para 30 de abril de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "30 de abril de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6278,7 +7366,9 @@
       "banco": "Banco Bisa S.A.",
       "monto": "Bs 70,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6295,7 +7385,9 @@
       "persona": "Geronimo Antonio Melean Eterovic",
       "movimiento": "designación"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6307,8 +7399,10 @@
      ],
      "resumen": "BDP ST no recauda flujo cedido abril 2026 Patrimonio Autónomo CRESPAL",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "titularizacion",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6321,7 +7415,9 @@
      "resumen": "BISA coloca 10.000 Pagarés Bursátiles Plastiforte I – Emisión 3",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6340,7 +7436,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6359,7 +7457,9 @@
       "estado": "pagado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6369,7 +7469,9 @@
      "tags": [],
      "resumen": "Se recuerda que la Carta Circular ASFI/DSV/CC-7297/2024 de 16 de mayo de 2024, referente a la “Presentación de Información Periódica para Emisores Inscritos en el Registro del Mercado de Valores”",
      "resumen_origen": "extractivo",
-     "grupo": "otros"
+     "grupo": "otros",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6379,8 +7481,13 @@
      "tags": [],
      "resumen": "Empresa Ferroviaria Andina elige Mesa Directiva; Pdte Carlos Gill",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Noticias",
@@ -6390,8 +7497,10 @@
      "tags": [],
      "resumen": "EMIPA suscribe préstamo USD 5.000.000 con Orvana Sweden International AB",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6409,7 +7518,9 @@
       "cargo": "Gerente General",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6420,7 +7531,9 @@
      "resumen": "DIACONÍA FRIF conforma Mesa Directiva y Comités para Gestión 2026-2027",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6430,8 +7543,13 @@
      "tags": [],
      "resumen": "Aprueban EEFF Auditados AICC SAFI S.A. al 31.12.2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     }
    ]
   },
@@ -6449,8 +7567,10 @@
      ],
      "resumen": "Aprueban ampliación Objeto Comercial CAMSA INDUSTRIA Y COMERCIO",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6462,8 +7582,10 @@
      ],
      "resumen": "Aprueba ampliación de Objeto Comercial CAMSA en Asamblea Bonistas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6474,7 +7596,9 @@
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 29.750.000 de Banco Económico",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6492,7 +7616,9 @@
      "campos": {
       "tipo": "Extraordinaria",
       "fecha_junta": "8 de mayo de 2026"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6510,7 +7636,9 @@
      "campos": {
       "tipo": "Extraordinaria",
       "fecha_junta": "8 de mayo de 2026"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6530,7 +7658,9 @@
       "tipo": "Extraordinaria",
       "fecha_junta": "8 de mayo de 2026",
       "agenda": "emisión de valores"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6540,8 +7670,10 @@
      "tags": [],
      "resumen": "Banco Solidario modifica integrantes Comité Seguridad Física",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6553,8 +7685,10 @@
      ],
      "resumen": "FIBRA distribuye rendimientos aprobados en Asamblea del 16 de abril",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6566,8 +7700,10 @@
      ],
      "resumen": "Inclusión Empresarial FIC distribuye rendimientos Series A y B",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6578,7 +7714,9 @@
      "resumen": "Conforma Comité de Gobierno Corporativo IDEPRO con Casanovas como Presidente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6589,7 +7727,9 @@
      "resumen": "Constituyen Comité de Tecnología de Información en IDEPRO IFD con Pdte. Ricardo Vargas",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6600,7 +7740,9 @@
      "resumen": "Conforman Comité de Riesgos IDEPRO con Efraín Camacho como Presidente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6611,7 +7753,9 @@
      "resumen": "Conforman Comité de Cumplimiento en IDEPRO IFD con Efraín Camacho como Presidente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6624,8 +7768,14 @@
      ],
      "resumen": "AICC SAFI aprueba Estados Financieros 2025 y designa Directores gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Ruben Acuña Zalles",
+      "movimiento": "nombramiento"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6635,8 +7785,10 @@
      "tags": [],
      "resumen": "Aprueban modificaciones a constitución AICC Inmobiliario I",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6648,8 +7800,10 @@
      ],
      "resumen": "BDP Sociedad de Titularización reconforma Directorio y Sindicatura",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6667,7 +7821,9 @@
       "cargo": "Gerente General",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6687,7 +7843,9 @@
       "fecha_pago": "27 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6707,7 +7865,9 @@
       "fecha_pago": "27 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6726,7 +7886,9 @@
       "fecha_pago": "24 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6737,7 +7899,9 @@
      "resumen": "ASFI aclara Resolución 316/2026 correspondía a SAFIM Mercantil Santa Cruz",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6749,8 +7913,14 @@
      ],
      "resumen": "Autorizan inscripción Pagarés Bursátiles Telecel I en BBV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "PAGARÉS BURSÁTILES TELECEL I",
+      "emisor": "Valores S.A."
+     }
     },
     {
      "seccion": "Noticias",
@@ -6762,8 +7932,14 @@
      ],
      "resumen": "Autorizan Bonos TELECEL VII en BBV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "BONOS TELECEL VII",
+      "emisor": "Valores S.A."
+     }
     },
     {
      "seccion": "Noticias",
@@ -6779,7 +7955,9 @@
      "campos": {
       "monto": "Bs 7,5 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6791,7 +7969,7 @@
      ],
      "resumen": "Jalasoft cumple Compromisos Financieros al 31.03.2026 en tres emisiones de bonos",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -6817,7 +7995,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6827,8 +8007,10 @@
      "tags": [],
      "resumen": "Banco Unión otorga Poder de Representación Legal a Mauricio Gabriel Ortiz Mejia",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -6839,7 +8021,9 @@
      "resumen": "IDEPRO IFD conforma Comité de Auditoría con Álvarez, Querejazu y Camacho",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Cartas de Autorización",
@@ -6856,7 +8040,9 @@
      "campos": {
       "instrumento": "BONOS GAS & ELECTRICIDAD III - EMISIÓN 2"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -6873,7 +8059,9 @@
      "resumen": "Mercantil Santa Cruz utiliza Bs 13,5M en avance cuenta corriente con BNB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6883,8 +8071,14 @@
      "tags": [],
      "resumen": "CAMSA obtiene préstamo Bs 14.000.000 de Banco Ganadero",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Ganadero S.A.",
+      "monto": "Bs 14,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6896,8 +8090,10 @@
      ],
      "resumen": "ENDE Transmisión distribuye Bs 266,1M en utilidades acumuladas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6909,8 +8105,10 @@
      ],
      "resumen": "ENDE Transmisión renueva Directores y Síndico en Junta de Accionistas",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6921,7 +8119,9 @@
      "resumen": "Ferroviaria Oriental contrata William Jose Padilla Ulloa como Auditor Interno",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6938,7 +8138,9 @@
       "banco": "Banco FIE S.A.",
       "monto": "Bs 70,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6950,8 +8152,10 @@
      ],
      "resumen": "Designan 10 Directores Titulares y Síndicos en EDVB S.A.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6963,8 +8167,13 @@
      ],
      "resumen": "MSC Expansión FIC aprueba Estados Financieros Auditados y Presupuesto Anual de Gastos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6976,8 +8185,13 @@
      ],
      "resumen": "MSC Expansión FIC aprueba Estados Financieros Auditados y presupuesto anual",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6989,8 +8203,13 @@
      ],
      "resumen": "Renta Activa Agroindustrial aprueba estados financieros 2025 y contrata auditores",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7002,8 +8221,13 @@
      ],
      "resumen": "Renta Activa Emergente aprueba EE.FF. auditados al 31.12.2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7015,8 +8239,13 @@
      ],
      "resumen": "Renta Activa Puente aprueba estados financieros 2025 y auditor PwC para 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7034,7 +8263,9 @@
       "cupon_n": "72",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7053,7 +8284,9 @@
       "instrumento": "Bonos Subordinados BANCOSOL 2",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7072,7 +8305,9 @@
       "instrumento": "Bonos FANCESA IV",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7090,7 +8325,9 @@
       "instrumento": "Bonos Subordinados Banco Ganadero VIII con Clave de Pizarra: BGA-N2U-23",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7101,7 +8338,9 @@
      "resumen": "Mercantil Santa Cruz paga parcialmente avance en cuenta corriente BNB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7119,7 +8358,9 @@
       "instrumento": "Bonos BANCO UNIÓN",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7130,7 +8371,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7141,7 +8384,9 @@
      "resumen": "ENDE Corani revoca Poder General N° 586/2025 a favor de Jorge Méndez Marquina",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7152,7 +8397,9 @@
      "resumen": "ENDE Corani revoca Poder Especial N° 111/2026 y otorga a Carol Jhoana Aguilar Aguilar",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7164,8 +8411,13 @@
      ],
      "resumen": "ENDE Transmisión reporta RDL 1,15 y RCSD 1,72 al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7183,7 +8435,9 @@
       "instrumento": "Bonos PILAT II",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7202,7 +8456,9 @@
       "fecha_pago": "27 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7220,7 +8476,9 @@
       "cargo": "Gerente de Desarrollo Organizacional",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7233,7 +8491,9 @@
      "resumen": "Asume Isabel Rueda Fernández como Gerente General interina de CRECER IFD",
      "resumen_origen": "ia",
      "grupo": "personal",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7245,8 +8505,14 @@
      ],
      "resumen": "Autorizan e inscriben a IRUPANA ANDEAN ORGANIC FOOD como Emisor RMV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "emisiones",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "emisor": "Supervisión del Sistema Financiero a IRUPANA ANDEAN ORGANIC FOOD S.A.",
+      "registro": "ASFI/DSV-EM-IAO-001/2026"
+     }
     }
    ]
   },
@@ -7270,7 +8536,9 @@
       "cargo": "Apoderado General",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7281,7 +8549,9 @@
      "resumen": "Roberto Pablo Rocabado Rojas deja Gerencia Nacional de Tecnología en ENTEL",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7293,8 +8563,10 @@
      ],
      "resumen": "ENDE Valle Hermoso renueva Directorio y fija remuneración a Directores y Síndico",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7311,7 +8583,9 @@
       "banco": "Banco Económico S.A.",
       "monto": "Bs 48,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7328,7 +8602,9 @@
       "banco": "Banco Bisa S.A.",
       "monto": "Bs 42,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7350,7 +8626,9 @@
        }
       ]
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7368,7 +8646,9 @@
       "cargo": "Subgerente Nacional de Finanzas y Planificación",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7380,8 +8660,10 @@
      ],
      "resumen": "Banco Solidario incrementa Capital Pagado Bs 160.050.500 por Reinversión Utilidades 2025",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7392,7 +8674,9 @@
      "resumen": "Registra nueva acción BBV en anotación en cuenta",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7406,8 +8690,13 @@
      ],
      "resumen": "Inversor FIC aprueba EEFF 2025 y designa auditor RUIZMIER PELAEZ 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7419,8 +8708,10 @@
      ],
      "resumen": "PYME II Fondo Inversión Cerrado posterga Asamblea al 11 de mayo",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7430,8 +8721,13 @@
      "tags": [],
      "resumen": "FUBODE IFD elige nueva Directiva; Moreno Cejas Presidente",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7444,8 +8740,13 @@
      ],
      "resumen": "Convoca FUBODE IFD Asamblea General Ordinaria para 15 de mayo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "15 de mayo de 2026"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7463,7 +8764,9 @@
       "cargo": "Responsable de Seguridad de la Información",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7481,7 +8784,9 @@
       "cargo": "Auditora Interina del 11 al 22 de mayo de 2026",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7492,7 +8797,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 de enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7505,8 +8812,13 @@
      ],
      "resumen": "Bisa Leasing cumple compromisos financieros Bonos IV, V, VI y VII al 31/03/2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7524,7 +8836,9 @@
       "estado": "programado",
       "amortiza": "sí"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7537,8 +8851,10 @@
      ],
      "resumen": "EMPRESA MINERA SAN LUCAS comunica Compromisos Financieros al 31.03.2026 Pagarés Bursátiles Emisión 1 y 2",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7550,7 +8866,12 @@
      ],
      "resumen": "Comunica que, los Compromisos Financieros al 31 de marzo de 2026, correspondiente a los Bonos Ferroviaria Oriental Emisiones 6, 7, 9, 10 y 11, se muestran en el siguiente detalle: Indicadores",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7562,8 +8883,13 @@
      ],
      "resumen": "NIBOL cumple compromisos financieros con razón corriente 3,08 dic-25",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7575,8 +8901,13 @@
      ],
      "resumen": "NIBOL cumple ratios financieros al 31 de marzo 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7588,7 +8919,7 @@
      ],
      "resumen": "PILAT comunica Compromisos Financieros al 31 de marzo 2026 Bonos Pilat II",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -7614,7 +8945,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7626,7 +8959,7 @@
      ],
      "resumen": "Comunica que, los resultados de los Compromisos Financieros al 31 de marzo de 2026, son los siguientes: INDICADORES FINANCIEROS COMPROMISO MARZO 2026 Relación Circulante (RC) => 1,2 1,34 Relación",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -7651,7 +8984,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7664,8 +8999,13 @@
      ],
      "resumen": "Tienda Amiga ER cumple compromisos financieros Bonos TIENDA AMIGA dic-25",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7678,8 +9018,13 @@
      ],
      "resumen": "Tienda Amiga ER cumple compromisos financieros Bonos TIENDA AMIGA I dic-25",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7692,8 +9037,13 @@
      ],
      "resumen": "Tienda Amiga ER cumple compromisos financieros Bonos TIENDA AMIGA al 31.03.26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7706,8 +9056,13 @@
      ],
      "resumen": "Tienda Amiga ER cumple compromisos financieros Bonos TIENDA AMIGA I mar-26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
     },
     {
      "seccion": "Noticias",
@@ -7718,7 +9073,9 @@
      "resumen": "Otorgan Poder a María René González Sotelo como Ger. Nac. de Operaciones en IDEPRO IFD",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -7730,8 +9087,10 @@
      ],
      "resumen": "IDEPRO IFD cumple compromisos financieros Bonos Subordinados 1 al mar-26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
-     "resumen_v": 2
+     "grupo": "compromisos_anunciados",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7744,7 +9103,9 @@
      "resumen": "ASFI sanciona BANCO MERCANTIL SANTA CRUZ S.A. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7757,7 +9118,9 @@
      "resumen": "ASFI sanciona a ENDE GUARACACHI S.A. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7770,7 +9133,9 @@
      "resumen": "Multan a GANAVALORES AGENCIA DE BOLSA S.A. por incumplimientos normativos",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7783,7 +9148,9 @@
      "resumen": "ASFI sanciona a IMPORT.EXPORT. LAS LOMAS LTDA. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7796,7 +9163,9 @@
      "resumen": "ASFI sanciona LEGAL ACCOUNTING SERVICES S.R.L. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7809,7 +9178,9 @@
      "resumen": "ASFI sanciona a SOCIEDAD HOTELERA LOS TAJIBOS S.A. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Resoluciones Administrativas",
@@ -7822,7 +9193,9 @@
      "resumen": "ASFI sanciona TUDELA & TH CONSULTING GROUP S.R.L. por incumplimiento normativo",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -7838,8 +9211,10 @@
      "tags": [],
      "resumen": "Compañía Americana de Inversiones elige nueva Junta Directiva y renueva Poderes ejecutivos",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7855,7 +9230,9 @@
      "campos": {
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7865,8 +9242,13 @@
      "tags": [],
      "resumen": "BNB Leasing obtiene préstamo Bs 2.300.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 2,3 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7876,8 +9258,14 @@
      "tags": [],
      "resumen": "BNB Leasing obtiene préstamo Bs 2.300.000,00 del Banco Económico",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Económico S.A.",
+      "monto": "Bs 2,3 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7894,7 +9282,9 @@
       "persona": "Álvaro Gabriel Garrón Torres",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7907,8 +9297,10 @@
      ],
      "resumen": "Aprueban ampliación Objeto Comercial CAMSA INDUSTRIA Y COMERCIO S.A.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7921,8 +9313,10 @@
      ],
      "resumen": "Aprueban ampliación Objeto Comercial CAMSA en Asamblea Bonos II",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7939,7 +9333,9 @@
       "banco": "Banco Unión S.A.",
       "monto": "Bs 55,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7956,7 +9352,9 @@
       "banco": "Banco Unión S.A.",
       "monto": "Bs 30,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7974,7 +9372,9 @@
       "cargo": "Secretario Municipal de Desarrollo Humano",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7985,7 +9385,9 @@
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 30.870.000 Banco Económico",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7997,7 +9399,9 @@
      ],
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de abril de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos"
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8010,8 +9414,14 @@
      ],
      "resumen": "Renuncia José Luis Galvez Vera como Director de INCOTEC, designan Jorge Eduardo Molteni Moreno",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Jorge Eduardo Molteni Moreno",
+      "movimiento": "renuncia"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8028,7 +9438,9 @@
       "persona": "Jorge Eduardo Molteni Moreno",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8038,8 +9450,10 @@
      "tags": [],
      "resumen": "Aprueba ITACAMBA CEMENTO Políticas de Gobernanza y Compliance",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8049,8 +9463,10 @@
      "tags": [],
      "resumen": "PILA designa nuevos directivos para gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8064,8 +9480,13 @@
      ],
      "resumen": "Acelerador de Empresas FIC aprueba reducción de capital y designa auditor RUIZMIER PELAEZ",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8079,8 +9500,13 @@
      ],
      "resumen": "MiPyME Fondo de Inversión Cerrado designa Ruizmier Pelaez auditor 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8094,8 +9520,14 @@
      ],
      "resumen": "FUBODE IFD convoca Asamblea Gral. Extraordinaria 15/5/2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "15 de mayo de 2026",
+      "agenda": "emisión de valores"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8107,8 +9539,13 @@
      ],
      "resumen": "SAFIM Santa Cruz aprueba préstamo Bs 13,0M con BNB",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 13,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8121,8 +9558,10 @@
      ],
      "resumen": "Multiplika Titularización renueva Directorio con 5 nuevos miembros",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8134,8 +9573,10 @@
      ],
      "resumen": "Multiplika aprueба modificación de estatutos en junta extraordinaria",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8153,7 +9594,9 @@
       "instrumento": "BONOS PILAT II-EMISIÓN 1”",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8164,7 +9607,9 @@
      "resumen": "ASFI deroga Carta Circular DSV/CC-7297/2024 a partir del 30 enero 2025",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8176,7 +9621,7 @@
      ],
      "resumen": "Droguería INTI cumple compromisos financieros Bonos INTI VI al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8188,7 +9633,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8201,7 +9648,7 @@
      ],
      "resumen": "Farmacia Chávez cumple compromisos financieros 2025 con RC 2,24 y RDP 4,96",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8227,7 +9674,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8240,7 +9689,7 @@
      ],
      "resumen": "Farmacia Chávez cumple compromisos financieros al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8266,7 +9715,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8279,7 +9730,7 @@
      ],
      "resumen": "Granja Avícola Integral Sofía cumple compromisos financieros BONOS SOFIA II, III y",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8305,7 +9756,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8317,7 +9770,7 @@
      ],
      "resumen": "INDUSTRIA TEXTIL TSM cumple compromisos financieros al 31-mar-26",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8343,7 +9796,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8356,7 +9811,7 @@
      ],
      "resumen": "MADISA cumple compromisos financieros Pagarés Bursátiles I al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8382,7 +9837,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8395,7 +9852,7 @@
      ],
      "resumen": "PROLEGA cumple compromisos financieros al 31.mar.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8421,7 +9878,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8433,7 +9892,7 @@
      ],
      "resumen": "Comunica que, los Compromisos Financieros asumidos con información al 31 de marzo de 2026, de acuerdo al siguiente detalle: Indicadores Financieros Compromiso Marzo 2026 Razón Corriente (RC) >= 1,00",
      "resumen_origen": "extractivo",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "campos": {
       "indicadores": [
        {
@@ -8458,7 +9917,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8470,7 +9931,7 @@
      ],
      "resumen": "Toyosa comunica Indicadores Financieros al 31 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8503,7 +9964,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8521,7 +9984,9 @@
       "cargo": "Gerenta Nacional de Auditoría Interna",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -8539,7 +10004,9 @@
       "cargo": "Gerente Nacional de Créditos",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   },
@@ -8562,7 +10029,9 @@
       "banco": "Banco Nacional de Bolivia S.A.",
       "monto": "Bs 3,5 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8573,7 +10042,9 @@
      "resumen": "Mercantil Santa Cruz AB utiliza Bs 5.000.000,00 con BNB en avance cuenta corriente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8591,7 +10062,9 @@
       "cargo": "Director Suplente",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8604,8 +10077,10 @@
      ],
      "resumen": "DELAPAZ renueva junta directiva y síndicos en asamblea del 29.04.2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8618,8 +10093,10 @@
      ],
      "resumen": "Remplazan 8 Directores y Síndico en ELFEC S.A.",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8632,8 +10109,10 @@
      ],
      "resumen": "ENDE Corani renueva Directorio y nombra 8 Directores Titulares y Síndico",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8645,8 +10124,10 @@
      ],
      "resumen": "ENDE cambia directiva: remueve 6 directores y nombra nueva junta directiva",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8658,7 +10139,7 @@
      ],
      "resumen": "FANCESA no alcanza parámetro RC en Estados Financieros preliminares al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -8684,7 +10165,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8697,8 +10180,10 @@
      ],
      "resumen": "Aprueban Programa Emisiones Bonos GAS & ELECTRICIDAD IV",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8716,7 +10201,9 @@
       "cargo": "Secretario Municipal de Resiliencia y Gestión de Vulnerabilidades",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8734,7 +10221,9 @@
       "cargo": "Secretario Municipal de Infraestructura Pública",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8752,7 +10241,9 @@
       "cargo": "Secretario Municipal de Movilidad y Seguridad Ciudadana",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8768,7 +10259,9 @@
      "campos": {
       "monto": "Bs 58,3 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8781,8 +10274,10 @@
      ],
      "resumen": "IMPORT. EXPORT. LAS LOMAS aprueba financiamiento Pagarés hasta Bs 12.600.000,00",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8796,8 +10291,14 @@
      ],
      "resumen": "Aprueba IASA emisión Pagarés 2026 por Bs 28.000.000 a Inversor Fondo Inversión Cerrado",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "personal",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Diego Moreno Menezes",
+      "movimiento": "designación"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8807,8 +10308,10 @@
      "tags": [],
      "resumen": "Ratifican Mesa Directiva MADISA gestión 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8821,8 +10324,13 @@
      ],
      "resumen": "Panamerican Investments aprueba EE.FF. 2025 y destina Bs1.065.029,00 a Reserva Legal",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8836,8 +10344,10 @@
      ],
      "resumen": "BDP reanuda Junta Gral Ordinaria de Accionistas del 16 de marzo de 2026",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8854,7 +10364,9 @@
      "campos": {
       "firma": "PricewaterhouseCoopers S.R.L.",
       "gestion": "2026"
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8871,7 +10383,9 @@
       "persona": "Jorge Alberto Vargas Ríos",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8884,7 +10398,9 @@
      "resumen": "Directorio AESA Ratings aprueba Metodología de Calificación de Riesgos",
      "resumen_origen": "ia",
      "grupo": "calificaciones",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8897,7 +10413,9 @@
      "resumen": "AESA Ratings califica Bonos Gas & Electricidad III Emisión 2 en AA3/BAA-",
      "resumen_origen": "ia",
      "grupo": "calificaciones",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8908,7 +10426,9 @@
      "resumen": "GanaCobertura FIC distribuye rendimientos el 28 de abril 2026",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8918,8 +10438,13 @@
      "tags": [],
      "resumen": "DIACONÍA FRIF suscribe préstamo liquidez Bs 6,8M con BDP por 90 días",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "prestamos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 6,8 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8930,7 +10455,9 @@
      "resumen": "Alianza SAFI conforma Mesa Directiva con Aguirre como Presidenta",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8940,8 +10467,10 @@
      "tags": [],
      "resumen": "MULTIFONDOS designa a Mary Luz Quispe Quispe como Auditora Interna",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8958,7 +10487,9 @@
       "persona": "Renzo Martinez",
       "movimiento": "renuncia"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8970,8 +10501,13 @@
      ],
      "resumen": "SAFIM Santa Cruz aprueba préstamo Bs 5.488.000 con BCB",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 5,5 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8988,7 +10524,9 @@
       "banco": "Banco Nacional de Bolivia S.A.",
       "monto": "Bs 13,0 M"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Hechos Relevantes",
@@ -8998,8 +10536,10 @@
      "tags": [],
      "resumen": "Unión SAFI designa tres ejecutivos en Directorio",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9017,7 +10557,9 @@
       "instrumento": "Bonos IASA IV",
       "estado": "pagado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9028,7 +10570,9 @@
      "resumen": "Mercantil Santa Cruz paga parcial avance en cuenta corriente BNB",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9047,7 +10591,9 @@
       "fecha_pago": "4 de mayo de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9058,7 +10604,9 @@
      "resumen": "ASFI deroga CC-7297/2024 sobre info periódica emisores RMV",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9071,7 +10619,7 @@
      ],
      "resumen": "DISMATEC cumple compromisos financieros al 31/03/2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9104,7 +10652,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9115,7 +10665,9 @@
      "resumen": "FANCESA: Néstor Guido Calvo Miranda cesa como Presidente",
      "resumen_origen": "ia",
      "grupo": "otros",
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9133,7 +10685,9 @@
       "cargo": "Gerente General interino",
       "movimiento": "designación a.i."
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9146,8 +10700,15 @@
      ],
      "resumen": "Farmacia Chávez utiliza Bs 3.088.840,21 en compra de mercadería",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "uso_fondos",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez II",
+      "destino": "capital de operaciones",
+      "monto": "Bs 3,1 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -9159,7 +10720,7 @@
      ],
      "resumen": "IMPORT. EXPORT. LAS LOMAS LTDA. cumple Compromisos Financieros al 31-mar-2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9185,7 +10746,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9204,7 +10767,9 @@
       "fecha_pago": "30 de abril de 2026",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9217,7 +10782,7 @@
      ],
      "resumen": "IASA cumple compromisos financieros al 31.03.2026 en Bonos IASA IV, V y VI",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9243,7 +10808,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9256,7 +10823,7 @@
      ],
      "resumen": "INCOTEC reporta indicadores financieros Bonos I-EMISIÓN 1 al 31.03.2026",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9282,7 +10849,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9295,7 +10864,7 @@
      ],
      "resumen": "Paga cupón N°1 de Pagarés INCOTEC I",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9314,7 +10883,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9333,7 +10904,9 @@
       "instrumento": "Bonos PROLEGA II",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9346,7 +10919,7 @@
      ],
      "resumen": "SOBOCE cumple compromisos financieros al 31.mar.26 con RDP 0,7935 y RCD 4,4817",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9365,7 +10938,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9378,7 +10953,7 @@
      ],
      "resumen": "SOBOCE reporta Compromisos Financieros al 31.mar.26: RDP 0,7935 y RCD 4,4817",
      "resumen_origen": "ia",
-     "grupo": "compromisos",
+     "grupo": "compromisos_reportados",
      "resumen_v": 2,
      "campos": {
       "indicadores": [
@@ -9397,7 +10972,9 @@
         "ok": true
        }
       ]
-     }
+     },
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9407,8 +10984,10 @@
      "tags": [],
      "resumen": "SAFI Unión revoca 14 Testimonios de Poder",
      "resumen_origen": "ia",
-     "grupo": "otros",
-     "resumen_v": 2
+     "grupo": "juntas",
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     },
     {
      "seccion": "Noticias",
@@ -9428,7 +11007,9 @@
       "fecha_pago": "5 de mayo",
       "estado": "programado"
      },
-     "resumen_v": 2
+     "resumen_v": 2,
+     "grupo_v": 2,
+     "revisado": "provisional"
     }
    ]
   }
