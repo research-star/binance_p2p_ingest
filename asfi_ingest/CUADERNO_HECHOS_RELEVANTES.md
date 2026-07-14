@@ -268,3 +268,56 @@ intacto (3052 'ia' de 2026 preservados, 2025 sigue 100% extractivo). Idempotente
   (renuncia/desvinculación/…), así que esos personal rinden persona+cargo sin badge de
   movimiento. Aceptable (persona es el dato clave); ampliar `_MOVIMIENTOS` con
   "cese/fin de relación laboral" es mejora opcional futura.
+
+---
+
+## 2026-07-14 — Fase 2b.2: backfill histórico 2020-2024 (extractivo, sin API)
+
+**Qué.** Los 5 años restantes por el mismo pipeline del piloto 2b.1: descarga vía proxy BO
+en el VPS a `/tmp` scratch (código de main @#236, `TAXONOMIA_V=3`), titulado 100%
+EXTRACTIVO (`--sin-ia` → `resumen.extracto`, cero Haiku/API), `grupo_v=3` +
+`revisado='provisional'`. **19.958 items en 1.039 días.** Descarga ~76 min wall-clock,
+~198 MB RX vía proxy (holgadamente <$1). Idempotente (gap-fill re-run = 0 nuevos).
+
+**Veredicto de generalización: v3 SE SOSTIENE en 2020-2024.** `otros` por año: 2020 25,3% ·
+2021 25,8% · 2022 24,8% · 2023 24,2% · 2024 25,2%, contra la referencia 2025 24,0% /
+2026 21,5%. Banda 24-26%, pegada al baseline 2025; **el freno de decisión del brief NO se
+dispara** (ningún año infla `otros` claramente). El leve tilt de 2020/2021 (~+1,8 pp sobre
+2025) es residual genuino, no misclasificación (spot-check abajo). La forma completa de la
+distribución es idéntica a 2025/2026 (juntas/otros/cupones top-3, ningún grupo colapsa).
+
+### Spot-check estratificado 2020-2021 (años más viejos = mayor riesgo de drift)
+
+`otros` es misc genuino, **mismas categorías que el residual 2a de 2026**, sin patrón nuevo
+sistemático: resoluciones sancionatorias ASFI (`ASFI/NNN/AAAA … RESUELVE: Sancionar…`),
+colocaciones primarias de bonos, incrementos de capital suscrito y pagado, cambios de
+denominación / adendas a contratos de calificación, "Ver Adjunto" (tasas de regulación),
+transferencias de acciones. Todas son las categorías que 2a dejó explícitamente como
+residual precisión-sobre-número; NO son gaps de v3.
+
+`prestamos` clasifica bien sobre redacción vieja, incluida la variante v2.1 "adquirió un
+préstamo" (Ferroviaria Oriental 2021-02-01) — el fix de 2b.1b no era 2025-específico.
+`campos.monto`/`campos.banco` se pueblan OK. `personal` correcto (renuncia/designación/cese).
+
+### Patrón de redacción nuevo (candidato menor, NO dispara freno)
+
+- **"retomó sus funciones"** (reincorporación de un cargo tras licencia; ej. Banco Mercantil
+  Santa Cruz 2020-05-11, "el señor … retomó sus funciones como Vicepresidente Ejecutivo")
+  no está en `_RE_PERSONAL_VERBO` → cae a `otros`. Bajo volumen (≈unidades). Candidato a
+  ampliar el verbo-acto de personal ("retomó/reasumió funciones") en un brief de regex
+  futuro; no material para el número de `otros`.
+
+### Hueco de descarga upstream (NO taxonomía — fetch/ASFI)
+
+- **2020, 2021, 2022 completos** (246/250/251 días ≈ todos los hábiles).
+- **2023: 131/248 días · 2024: 161/250 días.** Faltan **117 (2023, nov-dic + tramos)** y
+  **89 (2024, ene-mar)**: el visor devuelve determinísticamente un doc de 604 B
+  **"Operación no permitida"** (ASP.NET con `__VIEWSTATE`) para esos GUIDs específicos,
+  mientras los GUIDs vecinos sirven el PDF real. Diagnóstico: 6/6 fallos por GUID cookieless,
+  6 exits distintos del pool residencial, **y con sesión válida** (cookie `cookiesession1`
+  seteada visitando el listado) → sigue fallando. Un GUID bueno baja 3/3 cookieless en
+  simultáneo. **No es rate-limit, ni proxy, ni sesión, ni reintento** — es una restricción
+  upstream de ASFI sobre esos documentos. `descargar_pdf` valida `%PDF` y descarta (correcto:
+  no persiste basura); el hueco queda visible ("huecos visibles, no rellenados"). Los años
+  parciales se shippean como tales; recuperarlos pediría otra vía de acceso al documento
+  (fuera del pipeline actual) — decisión del IJ.
