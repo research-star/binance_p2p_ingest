@@ -1,0 +1,503 @@
+{
+ "dias": {
+  "2023-10-10": {
+   "guid": "b13ebcfd-2b1c-4553-a77a-d562cfebaf14",
+   "titulo": "Reporte Informativo ASFI al 10/10/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "ENDE Valle Hermoso S.A.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, designó al señor Ronald Gamboa Aguilar en el cargo de Gerente de Proyecto Hidroeléctrico Ivirizu, el mismo, inició sus funciones a partir de la misma fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, designó al señor Ronald Gamboa Aguilar en el cargo de Gerente de Proyecto Hidroeléctrico Ivirizu, el mismo, inició sus funciones a partir de la misma fecha.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Ronald Gamboa Aguilar",
+      "cargo": "Gerente de Proyecto Hidroeléctrico Ivirizu",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Granja Avícola Integral Sofía Ltda.",
+     "texto": "Ha comunicado que la Asamblea Extraordinaria de Socios de fecha 10 de octubre de 2023, realizada con el 100.00% de los socios, determinó lo siguiente:\n1. Aprobación de la Revalorización Técnica – Mantenimiento Correctivo Limpieza Preparado de Superficies y Pintado de Chapas Silo Nro. 1 - Fábrica de Alimentos 1.\n2. Aprobación de la Revalorización Técnica – Mantenimiento Correctivo Limpieza Preparado de Superficies y Pintado de Chapas Silo Nro. 5 - Fábrica de Alimentos 1.",
+     "tags": [],
+     "resumen": "Ha comunicado que la Asamblea Extraordinaria de Socios de fecha 10 de octubre de 2023, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Toyosa S.A.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023 realizó la Emisión de \"Pagarés Privados Toyosa VIII - Alianza\" por Bs10.000.000,00.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023 realizó la Emisión de \"Pagarés Privados Toyosa VIII - Alianza\" por Bs10.000.000,00.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Ha comunicado que el señor Daniel Alfredo Diez Canseco Brambilla, renunció al cargo de Tribe Líder, siendo su último día laboral el 9 de octubre del presente.",
+     "tags": [],
+     "resumen": "Ha comunicado que el señor Daniel Alfredo Diez Canseco Brambilla, renunció al cargo de Tribe Líder, siendo su último día laboral el 9 de octubre del presente.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, el señor David Castro Bracamonte presentó renuncia al cargo de Gerente de Sucursal Chuquisaca, siendo su último día de trabajo el 9 de octubre de la presente gestión.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, el señor David Castro Bracamonte presentó renuncia al cargo de Gerente de Sucursal Chuquisaca, siendo su último día de trabajo el 9 de octubre de la",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "David Castro Bracamonte",
+      "cargo": "Gerente de Sucursal Chuquisaca",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, el señor Marcos Gonzalo Ibañez Gutierrez presentó renuncia al cargo de Gerente de Sucursal Cochabamba y Puntos de Atención Financiera del Departamento del Beni, siendo su último día laboral la citada fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, el señor Marcos Gonzalo Ibañez Gutierrez presentó renuncia al cargo de Gerente de Sucursal Cochabamba y Puntos de Atención Financiera del Departamento del",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Marcos Gonzalo Ibañez Gutierrez",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado que debido a la renuncia del señor Marcos Gonzalo Ibañez Gutierrez, al cargo Gerente de Sucursal, informa que el señor Dino Chambi Arenas asume el cargo de Gerente de Sucursal Cochabamba a.i. y Puntos de Atención Financiera del Departamento del Beni, desde el 10 de octubre de 2023, hasta nuevo aviso.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que debido a la renuncia del señor Marcos Gonzalo Ibañez Gutierrez, al cargo Gerente de Sucursal, informa que el señor Dino Chambi Arenas asume el cargo de Gerente de Sucursal",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Marcos Gonzalo Ibañez Gutierrez",
+      "cargo": "Gerente de Sucursal Cochabamba",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado que el 10 de octubre de 2023, la señora Gissel Cabrera Torres presentó renuncia al cargo de Subgerente Nacional de Prevención y Cumplimiento, siendo su último día laboral la citada fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 10 de octubre de 2023, la señora Gissel Cabrera Torres presentó renuncia al cargo de Subgerente Nacional de Prevención y Cumplimiento, siendo su último día laboral la citada fecha.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Gissel Cabrera Torres",
+      "cargo": "Subgerente Nacional de Prevención y Cumplimiento",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado que debido a la renuncia de la señora Gissel Cabrera Torres al cargo de Subgerente Nacional de Prevención y Cumplimiento, informa que el señor Helio Limber Avalos Caya, asume el cargo de Subgerente Nacional de Prevención y Cumplimiento a.i., desde el 11 de octubre de 2023, hasta nuevo aviso.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que debido a la renuncia de la señora Gissel Cabrera Torres al cargo de Subgerente Nacional de Prevención y Cumplimiento, informa que el señor Helio Limber Avalos Caya, asume el cargo",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Gissel Cabrera Torres",
+      "cargo": "Subgerente Nacional de Prevención y Cumplimiento",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 10 de octubre de 2023, se determinó lo siguiente:\n- Aprobar la contratación de TUDELA & TH CONSULTING GROUP S.R.L para la realización de la auditoría externa del Patrimonio Autónomo CRECER IFD – BDP ST 058, correspondiente las gestiones 2023, 2024 y 2025.\n- Autorizar a Gerencia General la suscripción del Contrato de Derecho de Compra de Pagarés, la Declaración Unilateral de Cesión Irrevocable de un Derecho de Compra de Pagarés y/o de los documentos aclaratorios o modificatorios necesarios para viabilizar la constitución del “Patrimonio Autónomo CRECER IFD – BDP ST 058”.",
+     "tags": [
+      "titularizacion",
+      "auditoria"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 10 de octubre de 2023, se determinó lo siguiente: - Aprobar la contratación de TUDELA & TH CONSULTING GROUP S.R.L para la realización de la auditoría",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 10 de octubre de 2023, concluyó el pago del Cupón Nº 8 y",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 10 de octubre de 2023, concluyó el pago del Cupón Nº 8 y",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 10 de octubre de 2023, concluyó el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 2, Serie Única con Clave de Pizarra: TDE-1-N2U-19.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 10 de octubre de 2023, concluyó el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 2, Serie Única con Clave de Pizarra: TDE-1-N2U-19.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos ENDE TRANSMISIÓN I",
+      "estado": "pagado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Credibolsa S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, JALASOFT S.R.L. realizó el abono correspondiente de los fondos para el pago del vencimiento de Cupón N° 8 de la Serie A, con Clave de Pizarra JSF-1-E1A-19 y de la Serie B, con Clave de Pizarra JSF-1- E1B-19, ambas de la Emisión denominada “BONOS JALASOFT I – EMISIÓN 1”. Asimismo, informa que Credibolsa S.A. Agencia de Bolsa, como agente pagador, procederá al pago de los mismos, a partir del 10 de octubre de 2023, por medio de transferencia de fondos o la emisión de cheques.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, JALASOFT S.R.L.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "BONOS JALASOFT I",
+      "fecha_pago": "10 de octubre de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Panamerican Securities S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 10 de octubre de 2023, finalizó la cancelación del Cupón Nº 18 de los “BONOS SUBORDINADOS ECOFUTURO 2 – EMISIÓN 2”, correspondiente a la Serie Única y con Clave de Pizarra FEF-2-N1U-14.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 10 de octubre de 2023, finalizó la cancelación del Cupón Nº 18 de los “BONOS SUBORDINADOS ECOFUTURO 2 – EMISIÓN 2”, correspondiente a la Serie Única y con Clave de Pizarra",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "18",
+      "instrumento": "BONOS SUBORDINADOS ECOFUTURO 2",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, realizó la provisión de fondos al agente pagador Credibolsa S.A. Agencia de Bolsa, para el pago del Cupón Nº 8 de los Bonos JALASOFT I - Emisión 1 (Serie A y B) dentro del Programa de Emisiones de Bonos JALASOFT I. Ver Adjunto",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, realizó la provisión de fondos al agente pagador Credibolsa S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos JALASOFT I",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Ha comunicado que el 9 de octubre de 2023, publicó en la plataforma digital de un medio de prensa escrito de circulación nacional, el aviso del pago de Cupón N° 8 de las Series A y B de la Emisión denominada \"Bonos JALASOFT I - Emisión 1\", que se pagará mediante el agente pagador Credibolsa S.A. Agencia de Bolsa, a partir del 10 de octubre de 2023.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 9 de octubre de 2023, publicó en la plataforma digital de un medio de prensa escrito de circulación nacional, el aviso del pago de Cupón N° 8 de las Series A y B de la Emisión",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos JALASOFT I",
+      "fecha_pago": "10 de octubre de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco BISA S.A.",
+     "texto": "Ha comunicado que, al 30 de septiembre de 2023, cumplió con los Compromisos Financieros de los Bonos Subordinados Banco BISA I Emisiones 1, 2 y 3; de acuerdo al detalle siguiente: Indicadores Financieros Compromiso sep-23 Coeficiente de Adecuación Patrimonial (CAP) (i) CAP >= 11% 12,79% Índice de Liquidez (IL) (i) IL >= 50% 78,90% Índice de Cobertura (IC) (i) IC >= 100% 150,36% (i) Promedio de los últimos tres meses",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado que, al 30 de septiembre de 2023, cumplió con los Compromisos Financieros de los Bonos Subordinados Banco BISA I Emisiones 1, 2 y 3; de acuerdo al detalle siguiente: Indicadores",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.79%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.9%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "150.36%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco BISA S.A.",
+     "texto": "Ha comunicado que, al 30 de septiembre de 2023, cumplió con los Compromisos Financieros de los Bonos Subordinados Banco BISA II Emisiones 1 y 2, de acuerdo al detalle siguiente: Indicadores Financieros Compromiso sep-23 Coeficiente de Adecuación Patrimonial (CAP) (i) CAP >= 11% 12,79% Índice de Liquidez (IL) (i) IL >= 50% 78,90% Índice de Cobertura (IC) (i) IC >= 100% 150,36% (i) Promedio de los últimos tres meses",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado que, al 30 de septiembre de 2023, cumplió con los Compromisos Financieros de los Bonos Subordinados Banco BISA II Emisiones 1 y 2, de acuerdo al detalle siguiente: Indicadores",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.79%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "78.9%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "150.36%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Ha comunicado que, en su calidad de Fiduciario - Agente Pagador de la emisión de Bonos de la Compañía Boliviana de Energía Eléctrica S.A. Bolivian Power Company Limited Sucursal Bolivia (COBEE), el 9 de octubre de 2023, completó el pago correspondiente al Cupón Nº 18 de los Bonos COBEE IV Emisión 04, por un monto de Bs16.229.850,00.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que, en su calidad de Fiduciario - Agente Pagador de la emisión de Bonos de la Compañía Boliviana de Energía Eléctrica S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "18",
+      "instrumento": "Bonos COBEE IV Emisión 04",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Económico S.A.",
+     "texto": "Ha comunicado que los Compromisos Financieros al 30 de septiembre de 2023, asumidos dentro de los Programas de Emisiones de Bonos denominado “Bonos Subordinados BEC III”, “Bonos Subordinados BEC IV”, “Bonos Subordinados BEC V”, “Bonos Banco Económico I” y de las Emisiones vigentes que lo conforman, se detallan a continuación: Indicadores Financieros Compromisos Trimestre III-2023 Coeficiente de Adecuación Patrimonial (CAP) CAP >= 11% 11,61% Índice de Liquidez (IL) IL >= 50% 83,91% Índice de Cobertura (IC) IC >= 100% 169,66%",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado que los Compromisos Financieros al 30 de septiembre de 2023, asumidos dentro de los Programas de Emisiones de Bonos denominado “Bonos Subordinados BEC III”, “Bonos Subordinados BEC IV”",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "11.61%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "83.91%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "169.66%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME Ecofuturo S.A.",
+     "texto": "Ha comunicado el cumplimiento de los Compromisos Financieros al 30 de septiembre de 2023, de acuerdo al siguiente detalle:\n- Emisiones Bonos Subordinados ECOFUTURO 2 – Emisión 2 y Bonos Subordinados ECOFUTURO 3: Indicadores Financieros Compromiso Septiembre 2023 Coeficiente de Adecuación Patrimonial (CAP) (i) CAP >= 11% 12,67% Índice de Liquidez (IL) (ii) IL >= 50% 82,64% Índice de Cobertura (IC) (ii) IC >= 100% 206,19% (i) Promedio de los últimos 12 meses (ii) Promedio de los últimos 3 meses\n- Emisión Bonos ECOFUTURO 2 – Emisión 1: Indicadores Financieros Compromiso Septiembre 2023 Coeficiente de Adecuación Patrimonial (CAP) (iii) CAP >= 11% 13,65% Índice de Liquidez (IL) (iv) IL >= 50% 82,64% Índice de Cobertura (IC) (iv) IC >= 100% 206,19% (iii) Promedio de los últimos 6 meses (iv) Promedio de los últimos 3 meses",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado el cumplimiento de los Compromisos Financieros al 30 de septiembre de 2023, de acuerdo al siguiente detalle: - Emisiones Bonos Subordinados ECOFUTURO 2 – Emisión 2 y Bonos Subordinados",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.67%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "82.64%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "206.19%",
+        "ok": true
+       },
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "13.65%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "50%",
+        "valor": "82.64%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "206.19%",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Ha comunicado que en cumplimiento a lo estipulado en los Prospectos de los Programas y Emisiones que se detallan a continuación: Programa de Emisiones Bonos Subordinados BancoSol 2\n- Bonos Subordinados BancoSol 2 – Emisión 1\n- Bonos Subordinados BancoSol 2 – Emisión 2\n- Bonos Subordinados BancoSol 2 – Emisión 3 Programa de Emisiones Bonos Subordinados BancoSol III\n- Bonos Subordinados BancoSol III – Emisión 1 El Coeficiente de Adecuación Patrimonial de BSO sobre Activos Ponderados por Riesgo debe ser, en promedio de los tres últimos meses, igual o superior a 11%. A septiembre de 2023, el promedio del tercer trimestre asciende a 15,55%. El Resultado de dividir la suma de los saldos de las cuentas de Disponibilidades e Inversiones Temporarias entre la suma de los saldos de las cuentas de Obligaciones con el Público a la Vista y Obligaciones con el Público por Cuentas de Ahorro debe ser igual o superior a 50%. A septiembre de 2023, el promedio del tercer trimestre asciende a 82,23%. El resultado de dividir la suma de los saldos de las cuentas Previsión para Cartera Incobrable, Previsión para Activos Contingentes, Previsiones Genéricas Voluntarias para Pérdidas Futuras aún no Identificadas y Previsión Genérica Cíclica, entre la suma de los saldos de las cuentas Cartera Vencida, Cartera en Ejecución, Cartera Reprogramada o Reestructurada Vencida y Cartera Reprogramada o Reestructurada en Ejecución debe ser igual o superior al 100%. A septiembre de 2023, el promedio del tercer trimestre asciende a 561,12%.",
+     "tags": [
+      "emision",
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado que en cumplimiento a lo estipulado en los Prospectos de los Programas y Emisiones que se detallan a continuación: Programa de Emisiones Bonos Subordinados BancoSol 2 - Bonos",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  }
+ }
+}
