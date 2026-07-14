@@ -321,3 +321,11 @@ préstamo" (Ferroviaria Oriental 2021-02-01) — el fix de 2b.1b no era 2025-esp
   no persiste basura); el hueco queda visible ("huecos visibles, no rellenados"). Los años
   parciales se shippean como tales; recuperarlos pediría otra vía de acceso al documento
   (fuera del pipeline actual) — decisión del IJ.
+- **Marca de incompletitud (cierre 2b.2, dentro de #237).** Regla del proyecto "gaps se
+  muestran o se omiten, nunca en silencio": `reescribir_index` emite un bloque `cobertura`
+  por año derivado de `LISTADO_ESPERADO` (tamaño del listado completo, `{2023:248, 2024:250}`)
+  vs. días presentes → `faltantes` + `parcial`. `renderAsfi` (`notaParcial`) muestra una nota
+  cuando el año/vista tocado es parcial. **Data-driven y self-correcting:** si un re-probe
+  futuro rellena días, `faltantes` baja y la nota se apaga sola al regenerar el índice — sin
+  texto hardcodeado por año. Copy placeholder en `asfi.parcial_nota` (i18n es/en), definitivo
+  a gate de Diego.

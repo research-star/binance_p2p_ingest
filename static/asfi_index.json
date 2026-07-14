@@ -1,5 +1,5 @@
 {
- "generado": "2026-07-14T13:01:25Z",
+ "generado": "2026-07-14T14:28:51Z",
  "meses": [
   "2020-01",
   "2020-02",
@@ -1491,5 +1491,19 @@
   "2026-07-09": 25,
   "2026-07-10": 29,
   "2026-07-13": 31
+ },
+ "cobertura": {
+  "2023": {
+   "esperado": 248,
+   "presentes": 131,
+   "faltantes": 117,
+   "parcial": true
+  },
+  "2024": {
+   "esperado": 250,
+   "presentes": 161,
+   "faltantes": 89,
+   "parcial": true
+  }
  }
 }

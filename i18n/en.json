@@ -114,6 +114,7 @@
   "asfi.col_reportado": "Reported",
   "asfi.col_tipo": "Type",
   "asfi.fuente_post": "are excerpts from the original text. The content of each disclosure is the sole responsibility of the party that submits and registers it with the RMV.",
+  "asfi.parcial_nota": "{years} archive incomplete: {n} days unavailable due to a source-side restriction (ASFI).",
   "asfi.fuente_pre": "Source: ASFI &mdash; Securities Supervision Directorate, RMV Informative Report. Headlines are generated automatically; those marked with",
   "asfi.grupo_auditorias_titulo": "External auditors appointed",
   "asfi.grupo_calificaciones_titulo": "Credit ratings",

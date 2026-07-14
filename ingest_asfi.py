@@ -50,6 +50,16 @@ NORMALIZED_DB = REPO_ROOT / "p2p_normalized.db"
 
 _RE_FECHA_TITULO = re.compile(r"(\d{2})/(\d{2})/(\d{4})")
 
+# Días esperados por gestión = tamaño del listado COMPLETO de ASFI (nº de reportes
+# únicos que devuelve ListaPublicacionHechoRelevante.aspx?Gestion=YYYY), capturado
+# en el backfill 2b.2 (2026-07-14). El visor bloquea ("Operación no permitida") un
+# subconjunto de GUIDs de ciertos años → esos años quedan PARCIALES. `reescribir_index`
+# deriva de acá la señal de incompletitud (`cobertura`) que el frontend muestra; al ser
+# `faltantes = esperado - presentes`, la marca se corrige sola si un re-probe futuro
+# rellena días (presentes sube → faltantes baja → parcial pasa a false). Años sin
+# entrada acá se asumen completos (sin marca).
+LISTADO_ESPERADO = {2023: 248, 2024: 250}
+
 
 # ── Persistencia JSON mensual ────────────────────────────────────────────────
 
@@ -98,10 +108,26 @@ def reescribir_index(datadir: Path) -> dict:
         meses.append(mes)
         for fecha, dia in data.get("dias", {}).items():
             dias[fecha] = len(dia.get("items", []))
+    # Cobertura por gestión: señal data-driven de años incompletos (backfill 2b.2).
+    # Derivada de LISTADO_ESPERADO vs. días efectivamente presentes → se auto-corrige
+    # al regenerar si un re-probe rellena días. Solo se emiten los años con esperado
+    # conocido; el resto se asume completo.
+    presentes: dict[str, int] = {}
+    for fecha in dias:
+        y = fecha[:4]
+        presentes[y] = presentes.get(y, 0) + 1
+    cobertura: dict[str, dict] = {}
+    for gestion, esperado in LISTADO_ESPERADO.items():
+        y = str(gestion)
+        pres = presentes.get(y, 0)
+        faltantes = max(0, esperado - pres)
+        cobertura[y] = {"esperado": esperado, "presentes": pres,
+                        "faltantes": faltantes, "parcial": faltantes > 0}
     index = {
         "generado": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "meses": meses,
         "dias": dict(sorted(dias.items())),
+        "cobertura": dict(sorted(cobertura.items())),
     }
     with open(datadir / "asfi_index.json", "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=1)
