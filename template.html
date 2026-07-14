@@ -5397,16 +5397,17 @@ window.addEventListener('popstate', function(){
     if(ln.i>=0){
       traces.push({type:'scatter',mode:'markers',x:[x[ln.i]],y:[ln.v],
         marker:{color:WARM_DARK,size:8,line:{color:'#fff',width:1.5}}, hoverinfo:'skip', showlegend:false});
-      // Label del último 12m ADENTRO del plot (anclado a la derecha del punto),
-      // para poder usar el ancho completo (margen der. chico, como el mensual).
+      // Label del último 12m a la DERECHA del punto (end-label estilo FT):
+      // el borde izq. del texto ancla en el punto y se corre 8px hacia afuera.
+      // El margen der. se amplía (r:52) para que el número no se recorte.
       anns.push({x:x[ln.i],y:ln.v,xref:'x',yref:'y',text:'<b>'+fmtPct(ln.v)+'</b>',
-        showarrow:false,xanchor:'right',yanchor:'bottom',xshift:-8,yshift:6,
+        showarrow:false,xanchor:'left',yanchor:'middle',xshift:8,yshift:0,
         font:{family:'Outfit',size:16,color:WARM_DARK}});
     }
     Plotly.react(el,traces,{...L,
       xaxis:ftx(L,{type:'date',nticks:11,tickangle:0}),
       yaxis:fty(L,{ticksuffix:'%'}),
-      annotations:anns, margin:{l:48,r:14,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
+      annotations:anns, margin:{l:48,r:52,t:12,b:34}, showlegend:false, hovermode:'x', height:360}, PC);
   }
   function plotMensual(){
     var el=document.getElementById('inflMensualChart'); if(!el||!IPC) return;
