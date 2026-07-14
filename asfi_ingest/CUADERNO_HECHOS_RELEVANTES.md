@@ -178,3 +178,93 @@ capturar fechas sueltas (dictamen, reunión). Explícita tiene prioridad.
 detectable + "auditoría externa" + acto, sin tag `junta`): **0 candidatos**. La mejora de
 extracción no destapó ningún auditor mal clasificado → cero promociones, `auditorias`
 sigue en 25 (distribución de grupos SIN cambios).
+
+---
+
+## 2026-07-13 — Fase 2b.1: piloto backfill gestión 2025 (extractivo, sin API)
+
+**Qué.** Primer año histórico completo corrido por el pipeline: 247 reportes de 2025
+(el probe 2b.0 confirmó que el listado no pagina), titulado 100% EXTRACTIVO
+(`resumen.extracto`, cero Haiku/API), `grupo_v=2` + `revisado='provisional'`. Objetivo:
+validar que la taxonomía v2 (calibrada sobre 2026) generaliza a data de otra gestión.
+**5.913 items** en 247 días (~24/día). Descarga ~22,5 min vía proxy DataImpulse (4
+errores de red transitorios —Read timeout/SSL/ChunkedEncoding— todos recuperados por
+los reintentos de `_get`; 0 fallos reales). Idempotente (re-run = 0 nuevos, md5 idéntico).
+
+**Veredicto de generalización: v2 SE SOSTIENE.** Distribución 2025 vs 2026:
+`otros 25% (2025) vs 22,6% (2026)` · `juntas 25% vs 25,5%` · `cupones 18% vs 18,3%` ·
+`personal 13% vs 15,7%`. Formas casi idénticas — la taxonomía no se rompe con redacción
+no-2026. `otros` NO se infla.
+
+### Gap sistemático de redacción vieja (candidato de ajuste ANTES de 2020-2024)
+
+La brecha de ~2,4 pp de `otros` (25% vs 22,6%) se explica casi entera por **UN** patrón:
+
+- **Verbo de préstamo: 2025 usa "adquirió un préstamo" / "bajo línea de crédito"** donde
+  2026 usa "obtuvo/suscribió". `extract._RE_PRESTAMO_TXT` (obtuvo/suscribió/desembolso/
+  otorgó) **no cubre "adquirió un préstamo" ni "línea de crédito"** → **~80 items** de 2025
+  caen en `otros` que deberían ser `prestamos` (ej. "adquirió un préstamo del Banco BISA
+  S.A. bajo línea de crédito por Bs…"). Con ese verbo agregado, `otros` 2025 bajaría a
+  ~24% (≈ 2026). **Es el ajuste #1 a hacer antes de comprometer 2020-2024.**
+  *Generalización:* el vocabulario de verbos-acto driftea por gestión; conviene ampliar
+  `_RE_PRESTAMO_TXT` con sinónimos ("adquirió/contrató un préstamo", "línea de crédito",
+  "crédito/financiamiento") y re-medir sobre 2025 antes de escalar.
+
+- **Fin de relación laboral (menor, ~4 items):** 2025 usa "finalizó la vinculación
+  laboral", "dejó de ejercer/prestar funciones", "cese de funciones" — `_RE_PERSONAL_VERBO`
+  cubre "culminó relación laboral" pero no estas variantes → caen en `otros`. Bajo impacto
+  pero mismo fenómeno de drift léxico.
+
+- **Split de compromisos limpio en 2025:** 119 `compromisos_anunciados`, solo **1 posible
+  FP** (una convocatoria de junta cuyo agenda menciona compromisos). Sin gap.
+
+- **Auditorías (2a.1) funciona en 2025:** extrae `firma` (RUIZMIER PELAEZ, PwC) y `gestion`
+  correctamente sobre redacción 2025 — la mejora de 2a.1 no era 2026-específica.
+
+**Decisión:** NO ajusté regex (fuera de scope de 2b.1 — solo reportar). El ajuste de
+`_RE_PRESTAMO_TXT` (+ opcional `_RE_PERSONAL_VERBO`) es brief aparte antes de 2020-2024.
+
+---
+
+## 2026-07-13 — Fase 2b.1b: taxonomía v2.1 (`TAXONOMIA_V 2→3`) — cierra el gap de 2b.1
+
+**Qué.** Cerré los dos gaps de drift léxico que detectó el piloto 2025, sobre TODA la
+data existente (2026 prod + 2025 branch), para consistencia. Sin scraping, sin API,
+sin tocar títulos. Efecto (reextraer, por año):
+
+| año | otros antes | otros después | prestamos | personal |
+|---|--:|--:|--:|--:|
+| **2025** | 1493 (25%) | **1419 (24%)** | 161→230 (+69) | 792→798 (+6) |
+| **2026** | 759 (22%) | **723 (21%)** | 102→131 (+29) | 526→533 (+7) |
+
+`otros` baja hacia paridad; 2026 (prod) también tenía el FN (~29 préstamos) → el fix
+lo corrige en ambos. `grupo_v=3` + `revisado='provisional'` al 100%; `resumen_origen`
+intacto (3052 'ia' de 2026 preservados, 2025 sigue 100% extractivo). Idempotente.
+
+### Cambios (extract.py)
+
+- **`_RE_PRESTAMO_TXT`** += `adquiri[óo] (un) (préstamo|línea de crédito|crédito)` +
+  `adquirir …`. 2025/2026 usan "adquirió un préstamo del Banco X por Bs…" donde el
+  vocabulario viejo (v2) solo tenía "obtuvo/suscribió/desembolso". Corta el monto igual
+  que las otras ramas (via `_RE_MONTO_BS` en `extraer_campos`).
+- **`_RE_PERSONAL_VERBO`** += `finalizó/concluyó la (relación|vinculación) laboral`,
+  `dejó de (ejercer|prestar|desempeñar|pertenecer)`, `cese de (sus) funciones`.
+
+### Decisiones de precisión (learn-loop)
+
+- **FP-risk descartado por prioridad:** el préstamo puede convivir con emisiones/
+  compromisos en el mismo texto, pero esos grupos van ANTES (prioridad 1-3); `prestamos`
+  es prioridad 10 → solo captura lo que hoy cae a `otros`. Verificado: de los 69+29
+  candidatos, **0 tienen tag `junta`** (sin colisión con asambleas). Todos extraen monto.
+- **No agregué `línea de crédito` a secas** (solo "adquirió/suscribió … línea de
+  crédito"): bare "línea de crédito" aparece en agendas de junta y daría FP. El piloto
+  contó ~80 con el patrón laxo; el tight (verbo + objeto) da **69** genuinos.
+- **1 `juntas→personal` (Telefónica, "reunión de Directorio … cese de funciones de
+  Roberto Andino Pinto, Gerente General"):** NO es FP — es un cese de un cargo específico
+  (sin tag junta), correcto en `personal`. Único matiz: la persona no se extrae porque el
+  nombre viene sin "señor" ("cese de funciones de Roberto Andino") → fila algo sparse.
+  Gap de extracción de `_RE_PERSONA` (no de clasificación); candidato menor, 1 item.
+- **Fin-laboral sin `movimiento`:** las variantes nuevas no mapean a `_MOVIMIENTOS`
+  (renuncia/desvinculación/…), así que esos personal rinden persona+cargo sin badge de
+  movimiento. Aceptable (persona es el dato clave); ampliar `_MOVIMIENTOS` con
+  "cese/fin de relación laboral" es mejora opcional futura.
