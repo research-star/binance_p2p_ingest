@@ -921,7 +921,6 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
   <div class="panel-grid" id="panelGrid">
     <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog inactive" data-trace="venta" style="--fb-trace-color:#990F3D"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#990F3D"></span><span class="fb-stog-label">{{t:dolar.stog_venta}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button><button type="button" class="fb-stog inactive" data-trace="tcoref" style="--fb-trace-color:#38BDF8"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#38BDF8"></span><span class="fb-stog-label">{{t:dolar.stog_tcoref}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
     <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_offer_h2}} <span class="help-tip" tabindex="0" aria-label="{{t:dolar.offer_help_aria}}"><span class="help-icon">i</span><span class="help-pop">{{t:dolar.offer_help_pop}}</span></span></h2><p>{{t:dolar.offer_sub}}</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="{{t:dolar.side_filter_aria}}"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_buy}}</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_sell}}</span></label></div><p class="snap-stamp">{{t:dolar.offer_snap_label}} <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
-    <div class="section full-width" data-panel="volumen" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vol_h2}}</h2><p>{{t:dolar.panel_vol_sub}}</p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartVolume"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -2087,8 +2086,7 @@ function applyTheme(){
 // ═══ PLOTLY ═══
 // ═══ SIDE FILTER STATE (per panel) ═══
 const panelSideFilter = {
-  vwap:'both', offer_range:'both',
-  volumen:'both'
+  vwap:'both', offer_range:'both'
 };
 function panelShowBuy(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='buy'}
 function panelShowSell(id){const f=panelSideFilter[id]||'both';return f==='both'||f==='sell'}
@@ -2618,16 +2616,6 @@ function rVwap(c,v){
   Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_bob_usdt}}',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
-function rVolume(c,v){
-  const L=BL(c),x=v.x;
-  // Volumen = USDT disponible en anuncios activos por lado (USDT ~ USD), escala en millones.
-  const toM=arr=>(arr||[]).map(d=>d==null?null:d/1e6);
-  const traces=filterDirectionalTraces([
-    {_side:'buy', x:x,y:toM(v.buy_depth), name:'{{t:dolar.trace_vol_compra}}',fill:'tozeroy',fillcolor:hexToRgba(c.buy,.10), line:{color:c.buy,width:1.5}},
-    {_side:'sell',x:x,y:toM(v.sell_depth),name:'{{t:dolar.trace_vol_venta}}', fill:'tozeroy',fillcolor:hexToRgba(c.sell,.10),line:{color:c.sell,width:1.5}}
-  ], 'volumen');
-  Plotly.react('chartVolume',traces,{...L,xaxis:xaWithSlider(xaxisForView(L.xaxis,v)),yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_usd_millones}}',font:{size:10,color:c.textMuted}},tickformat:',.1f',rangemode:'tozero',automargin:true,gridcolor:'rgba(33,30,27,.09)',showgrid:true},shapes:gapShapes(c),height:chartHeight('chartVolume')},PC);
-}
 function rOutliers(){
   const ml=DATA.merchants_last||null;
   const el=document.getElementById('outliersTable');
@@ -2831,7 +2819,7 @@ function renderTimeSeries(view){
   currentView=view;
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, view);
-  rVwap(c,v); rVolume(c,v); rOutliers(); rFlow(c);
+  rVwap(c,v); rOutliers(); rFlow(c);
 }
 // Flags de carga lazy de la tab Dólar (misma idea que ntBuilt).
 // dollarBuilt: mientras sea false, replotAllCharts es no-op → applyTheme (toggle de
@@ -2851,7 +2839,7 @@ function replotAllCharts(){
   dollarThemeDirty=false;
   const c=getC();
   const v=aggregateTimeView(activeRange.fromIdx, activeRange.toIdx, currentView);
-  rVwap(c,v); rVolume(c,v);
+  rVwap(c,v);
   rOutliers(); rFlow(c); rOffer(c); rHeatmap(c);
   rActivityHm(c);
   updateKpis();
@@ -3080,8 +3068,7 @@ document.querySelectorAll('.panel-side-toggle input[type="checkbox"]').forEach(i
 // ═══ PANEL LAYOUT (drag + resize + persist) ═══
 const DEFAULT_LAYOUT = [
   {id:'vwap',full:true},
-  {id:'offer_range',full:true},
-  {id:'volumen',full:true}
+  {id:'offer_range',full:true}
 ];
 
 function loadLayout(){
@@ -3268,8 +3255,7 @@ function closeFabPopup(returnFocus){
 // \u2550\u2550\u2550 PANEL DOWNLOADS (PNG / CSV) \u2550\u2550\u2550
 // Mapas de tipo de panel.
 const PANEL_CHART_DIV = {
-  vwap:'chartVwap', offer_range:'chartOffer',
-  volumen:'chartVolume'
+  vwap:'chartVwap', offer_range:'chartOffer'
 };
 const PANEL_TABLE_ROOT = {};
 
