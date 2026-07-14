@@ -1044,6 +1044,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .asfi-sec-chip{font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-soft);white-space:nowrap}
 .asfi-vacio{margin:44px auto;text-align:center;color:var(--text-muted);font-size:13px}
 .asfi-fuente{margin-top:18px;font-size:10.5px;color:var(--text-muted);line-height:1.6}
+.asfi-parcial{margin-top:16px;font-size:11px;color:var(--text-muted);line-height:1.6;border-left:2px solid var(--np-accent);padding-left:10px}
 /* Barra de fechas unificada (Desde – Hasta; reusa .asfi-nav input[type=date]) */
 .asfi-rango-lbl{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
 .asfi-rango-dash{color:var(--text-soft)}
@@ -1079,6 +1080,7 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
       <span class="asfi-sec-chip" id="asfiPdfSlot"></span>
     </div>
     <div id="asfiCuerpo"><div class="asfi-vacio">{{t:asfi.cargando_html}}</div></div>
+    <div id="asfiParcial" class="asfi-parcial" style="display:none"></div>
     <div class="asfi-fuente">{{t:asfi.fuente_pre}} <span style="color:var(--np-accent)">*</span> {{t:asfi.fuente_post}}</div>
   </div>
 </div><!-- /tab-asfi -->
@@ -6726,6 +6728,7 @@ function renderGrupos(entries, dateCol){
 /* Vista por día (default). */
 function pintar(){
   var cuerpo=document.getElementById('asfiCuerpo');
+  notaParcial();
   cuerpo.innerHTML='<div class="asfi-vacio">{{t:asfi.js_cargando}}</div>';
   cargarDia(st.fecha,function(err,dia){
     document.getElementById('asfiFechaLabel').textContent=fmtFecha(st.fecha);
@@ -6745,6 +6748,7 @@ function pintar(){
    mes) y luego renderiza de una sola pasada. */
 function pintarRango(){
   var cuerpo=document.getElementById('asfiCuerpo');
+  notaParcial();
   var d0=st.rango.desde, d1=st.rango.hasta;
   document.getElementById('asfiPdfSlot').innerHTML='';
   document.getElementById('asfiFechaLabel').textContent=fmtNum(d0)+' – '+fmtNum(d1);
@@ -6775,6 +6779,30 @@ function pintarRangoRender(fechas){
   });
   document.getElementById('asfiMetaN').textContent=entries.length+'{{t:asfi.js_n_comunicados}} · '+dias+'{{t:asfi.js_rango_dias}}';
   cuerpo.innerHTML=entries.length?renderGrupos(entries, true):'<div class="asfi-vacio">{{t:asfi.js_sin_match}}</div>';
+}
+/* Años que la vista actual "toca" (día suelto → su año; rango → todos los años
+   del intervalo, incluidos los extremos aunque no tengan reporte). */
+function aniosEnVista(){
+  var ys={};
+  if(st.rango){
+    ys[st.rango.desde.slice(0,4)]=1; ys[st.rango.hasta.slice(0,4)]=1;
+    st.fechas.forEach(function(f){ if(f>=st.rango.desde && f<=st.rango.hasta) ys[f.slice(0,4)]=1; });
+  } else if(st.fecha){ ys[st.fecha.slice(0,4)]=1; }
+  return Object.keys(ys);
+}
+/* Nota de incompletitud: data-driven desde index.cobertura (faltantes por año).
+   Visible solo si algún año tocado por la vista está marcado parcial → si un
+   re-probe futuro rellena los días, cobertura.parcial pasa a false y la nota se
+   apaga sola al regenerar el índice. */
+function notaParcial(){
+  var el=document.getElementById('asfiParcial');
+  var cob=(st.indice&&st.indice.cobertura)||{};
+  var years=aniosEnVista().filter(function(y){return cob[y]&&cob[y].parcial;}).sort();
+  if(!years.length){ el.style.display='none'; el.innerHTML=''; return; }
+  var n=years.reduce(function(s,y){return s+(cob[y].faltantes||0);},0);
+  var yl=years.length>1?(years[0]+'–'+years[years.length-1]):years[0];
+  el.innerHTML='{{t:asfi.parcial_nota}}'.replace('{years}',yl).replace('{n}',n);
+  el.style.display='';
 }
 function repintar(){ if(st.rango) pintarRango(); else pintar(); }
 function initAsfi(){

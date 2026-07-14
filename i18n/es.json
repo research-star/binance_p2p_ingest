@@ -114,6 +114,7 @@
   "asfi.col_reportado": "Reportado",
   "asfi.col_tipo": "Tipo",
   "asfi.fuente_post": "son extractos del texto original. El contenido de los comunicados es de exclusiva responsabilidad de quien los presenta e inscribe en el RMV.",
+  "asfi.parcial_nota": "Archivo {years} parcial: {n} d&iacute;as no disponibles por restricci&oacute;n de la fuente (ASFI).",
   "asfi.fuente_pre": "Fuente: ASFI &mdash; Direcci&oacute;n de Supervisi&oacute;n de Valores, Reporte Informativo del RMV. Los titulares se generan autom&aacute;ticamente; los marcados con",
   "asfi.grupo_auditorias_titulo": "Auditores externos designados",
   "asfi.grupo_calificaciones_titulo": "Calificaciones de riesgo",

@@ -1,0 +1,1725 @@
+{
+ "dias": {
+  "2023-06-01": {
+   "guid": "ce219f29-e73c-4ae6-91a7-196eb9d370e4",
+   "titulo": "Reporte Informativo ASFI al 01/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Ibolsa Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, la señora Melvy Sonia Aguilar Quisbert presentó renuncia al cargo de Jefe de Contabilidad y Administración y a los respectivos Comités del cual forma parte, efectiva desde el 20 de junio de 2023.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, la señora Melvy Sonia Aguilar Quisbert presentó renuncia al cargo de Jefe de Contabilidad y Administración y a los respectivos Comités del cual forma parte",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Melvy Sonia Aguilar Quisbert",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Santa Cruz Securities Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Aprobar la renuncia presentada por el señor Daniel Gerardo Jordán Nogales – Director Titular y miembro de Comités de Directorio de la Sociedad.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Aprobar la renuncia presentada por el señor Daniel Gerardo Jordán Nogales – Director Titular y miembro de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Daniel Gerardo Jordán Nogales",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Sudaval Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que el 30 de mayo de 2023, el señor Vladimir Ernesto Rada Ochoa, presentó renuncia al cargo de Responsable de Gestión Integral de Riesgos, Funcionario Responsable ante la UIF y Representante Legal de la Sociedad, renuncia que será efectiva a partir del 12 de junio de 2023. El Directorio en pleno, analizó la renuncia presentada y luego de considerar diferentes aspectos, aceptó la renuncia. Ante esta decisión, a partir de la fecha, el señor Rada deja de ser miembro del Comité de Gestión Integral de Riesgos, Comité de Cumplimiento y Riesgo de Legitimación de Ganancias Ilícitas y Financiamiento del Terrorismo y/o Delitos Precedentes y Comité Operativo de Tecnología de la Información de la Sociedad. Por tal motivo, se efectuará la revocatoria de los Poderes otorgados.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 30 de mayo de 2023, el señor Vladimir Ernesto Rada Ochoa, presentó renuncia al cargo de Responsable de Gestión Integral de Riesgos, Funcionario Responsable ante la UIF y",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Vladimir Ernesto Rada Ochoa",
+      "cargo": "Responsable de Gestión Integral de Riesgos",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "BNB Leasing S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, obtuvo dos préstamos de Bs4.045.387,39 y Bs5.565.659,89 del Banco Mercantil Santa Cruz S.A.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, obtuvo dos préstamos de Bs4.045.387,39 y Bs5.565.659,89 del Banco Mercantil Santa Cruz S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "CLÍNICA METROPOLITANA DE LAS AMÉRICAS S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, registró en el Libro de Registro de Acciones la transferencia de 20.827 acciones ordinarias y nominativa “Serie C”, que fuera realizada por parte del accionista Sociedad de Inversiones Serie C S.A., en favor del adquiriente Nacional Seguros Vida y Salud S.A., a través de mecanismo bursátil.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, registró en el Libro de Registro de Acciones la transferencia de 20.827 acciones ordinarias y nominativa “Serie C”, que fuera realizada por parte del",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "CLÍNICA METROPOLITANA DE LAS AMÉRICAS S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, registró en el Libro de Registro de Acciones la transferencia de 2.745 acciones ordinarias y nominativa “Serie C”, que fuera realizada por parte del accionista Sociedad de Inversiones Serie C S.A., en favor del adquiriente Nacional Seguros Patrimoniales y Fianzas S.A., a través de mecanismo bursátil.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, registró en el Libro de Registro de Acciones la transferencia de 2.745 acciones ordinarias y nominativa “Serie C”, que fuera realizada por parte del",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Droguería INTI S.A.",
+     "texto": "Ha comunicado que, en reunión de Directorio de 31 de mayo de 2023, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse de forma virtual y presencial, el 29 de junio de 2023 a Hrs. 08:30, con el siguiente Orden del Día.\n1. Verificación del quorum de la Junta.\n2. Lectura de la Convocatoria.\n3. Lectura y consideración de la Memoria Informe correspondiente al ejercicio de la Gestión 2022/2023.\n4. Consideración de los Estados Financieros de la gestión 2022/2023.\n5. Informe de los Auditores Externos.\n6. Lectura del Informe del Síndico.\n7. Consideración del destino de los resultados de la gestión.\n8. Elección/Ratificación del Directorio, Síndico, fijación de dietas y fianzas.\n9. Designación de auditores externos.\n10. Designación de dos accionistas para la firma del Acta de la Junta General.\n11. Aprobación y suscripción del acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que, en reunión de Directorio de 31 de mayo de 2023, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse de forma virtual y presencial, el 29 de junio de 2023 a",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros · directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Gravetal Bolivia S.A.",
+     "texto": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de mayo de 2023, realizada con el 100.00% de los socios, determinó lo siguiente:\n1. Remoción o Ratificación de Directores y Síndico La Junta, de manera unánime ratifica como Directores Titulares a los señores: Juan Valdivia Almanza, Roberto Carlos Justiniano Terrazas y Katarina Maria Emilia Gumucio Stambuk; y como Síndico Hugo Fernando Mendívil Ortiz.\n2. Fianza La Junta resuelve que la fianza de los Directores y Síndico sea cubierta mediante póliza de responsabilidad civil contratada por la Sociedad, en efectivo u otras garantías.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 30 de mayo de 2023, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Juan Valdivia Almanza",
+      "cargo": "Síndico Hugo Fernando Mendívil Ortiz",
+      "movimiento": "remoción"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Cooperativa de Ahorro y Crédito Abierta Jesús Nazareno R. L.",
+     "texto": "Ha comunicado que el 30 de mayo de 2023, fueron notificados con la Resolución ASFI/648/2023, mediante la cual, la Autoridad de Supervisión del Sistema Financiero – ASFI, autoriza la apertura de la Agencia Fija denominada \"Agencia San Jose Obrero”, ubicada en la Avenida Virgen de Cotoca esquina Pasillo 1, a dos cuadras del 2do. Anillo, de la Ciudad de Santa Cruz de la Sierra, en el Departamento de Santa Cruz.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 30 de mayo de 2023, fueron notificados con la Resolución ASFI/648/2023, mediante la cual, la Autoridad de Supervisión del Sistema Financiero – ASFI, autoriza la apertura de la",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades de Depósito de Valores",
+     "entidad": "Entidad de Depósito de Valores de Bolivia S.A.",
+     "texto": "Ha comunicado que, de acuerdo con la solicitud realizada por la Bolsa Boliviana de Valores S.A. (BBV), para el registro de la emisión de cuarenta y ocho nuevas acciones representadas mediante anotaciones en cuenta a ser intercambiadas de manera parcial paulatina por acciones físicas emitidas previamente por la BBV, informa lo siguiente:\n- Habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de Bolivia S.A., procedió con el registro de la emisión de cuarenta y ocho nuevas acciones emitidas por la BBV, en el Sistema de Registro de Anotaciones en Cuenta a cargo de la Entidad.",
+     "tags": [],
+     "resumen": "Ha comunicado que, de acuerdo con la solicitud realizada por la Bolsa Boliviana de Valores S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Ganadero Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, la señora Vida Fabiola Efen Revollo presentó renuncia al cargo de Administrador de Fondos, siendo su último día de trabajo el 31 de mayo de 2023.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, la señora Vida Fabiola Efen Revollo presentó renuncia al cargo de Administrador de Fondos, siendo su último día de trabajo el 31 de mayo de 2023.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Vida Fabiola Efen Revollo",
+      "cargo": "Administrador de Fondos",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Ganadero Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Renuncia de Administradora de Fondos y Revocatoria de Poderes. Aprobar la renuncia de la señora Vida Fabiola Efen Revollo, al cargo de Administrador de Fondos y como Administrador Suplente de los Fondos GanaInversiones FIA, GanaRendimiento FIA y GanaCobertura FIC, siendo su último día de trabajo el 31 de mayo de 2023. En consecuencia, el Directorio determinó que se revoquen parcialmente los Poderes N° 628/2021 de 4 de octubre de 2021, 629/2021 de 4 de octubre de 2021 y 720/2022 de 20 de octubre de 2022. Específicamente se revocan las partes, cláusulas y facultades conferidas en favor de la Apoderada señora Vida Fabiola Efen Revollo, y quedan ratificadas las partes, cláusulas y facultades conferidas en favor del Apoderado señor Carlos Juan Arnold Saldías Pozo.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Renuncia de Administradora de Fondos y Revocatoria de Poderes.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Vida Fabiola Efen Revollo",
+      "cargo": "Administrador Suplente de los Fondos GanaInversiones FIA",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Santa Cruz Investments Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Aprobar la renuncia presentada por el señor Daniel Gerardo Jordán Nogales – Director Titular y miembro de Comités de Directorio de la Sociedad.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 31 de mayo de 2023, se determinó lo siguiente: Aprobar la renuncia presentada por el señor Daniel Gerardo Jordán Nogales – Director Titular y miembro de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Daniel Gerardo Jordán Nogales",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que dando cumplimiento con lo establecido en el “Anexo B” del Contrato de Cesión de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y Representación del Patrimonio Autónomo CRESPAL - BDP ST 035, de la Cláusula Décima Segunda y de la Cláusula Trigésima Tercera del referido Contrato, las certificaciones por el período comprendido entre el 1 de octubre de 2022 y el 31 de marzo de 2023, que la empresa TUDELA & TH CONSULTING GROUP S.R.L. hizo llegar, son las que se detallan a continuación:\n- Desvío de Fondos y Multas: No existió Desvío de Fondos por el periodo comprendido entre el 1 de enero al 31 de marzo de 2023.\n- Coeficiente de Cobertura por Avance Técnico: El nivel ejecutado por LABORATORIOS CRESPAL S.A. es de 10,31 mayor al Coeficiente de Cobertura requerido en el Contrato de Cesión de 2,68.\n- Coeficiente de Cobertura Promedio: El nivel ejecutado por LABORATORIOS CRESPAL S.A. es de 2,63 superior al Coeficiente de Cobertura requerido en el Contrato de Cesión de 1,00.\n- El monto total a ser transferido al Fondo de Aceleración por concepto de aceleración de flujos para alcanzar el nuevo “Coeficiente de Cobertura promedio” es 0.",
+     "tags": [
+      "compromisos",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que dando cumplimiento con lo establecido en el “Anexo B” del Contrato de Cesión de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y Representación del",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Credibolsa S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, en calidad de agente colocador, realizó la colocación primaria de 2.578 valores de la emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles IASA IV – Emisión 1”.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, en calidad de agente colocador, realizó la colocación primaria de 2.578 valores de la emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles IASA IV –",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "GanaValores Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que, en su calidad de agente pagador, el 31 de mayo de 2023, concluyó con el pago del Capital e intereses extraordinarios de los “Pagarés Bursátiles TSM 002-Emisión 1 y Emisión 2”.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que, en su calidad de agente pagador, el 31 de mayo de 2023, concluyó con el pago del Capital e intereses extraordinarios de los “Pagarés Bursátiles TSM 002-Emisión 1 y Emisión 2”.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles TSM 002-Emisión 1 y Emisión 2”",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "NIBOL LTDA.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, el Banco de Crédito de Bolivia S.A. desembolso a favor de Nibol Ltda. la siguiente operación:\n- Operación: D 701-69733\n- Monto: Bs9.000.000.-",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, el Banco de Crédito de Bolivia S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 9,0 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "SOCIEDADES CONTROLADORAS DE GRUPOS FINANCIEROS",
+     "entidad": "GRUPO FINANCIERO BISA S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, obtuvo desembolsos del Banco Nacional de Bolivia S.A., de acuerdo con el siguiente detalle:\n- Operación 1010499823 por Bs15.000.000.-\n- Operación 1010499723 por Bs27.000.000.-",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, obtuvo desembolsos del Banco Nacional de Bolivia S.A., de acuerdo con el siguiente detalle: - Operación 1010499823 por Bs15.000.000.- - Operación 1010499723",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Nacional de Bolivia S.A.",
+      "monto": "Bs 15,0 M"
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/670/2023 de 29 de mayo de 2023",
+     "texto": "RESUELVE: Sancionar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 y 2, por haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores; el último párrafo del Artículo 2°, Sección 3, Capítulo VI del Reglamento para Sociedades Administradoras de Fondos de Inversión y de los Fondos de Inversión, contenido en el Título I, Libro 5° y el Anexo 1: \"Matriz de Envío de Información Periódica\" del Reglamento para el Envío de Información Periódica, contenido en el Capítulo I, Título I, Libro 10°, todos de la Recopilación de Normas para el Mercado de Valores, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 y 2, por haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  },
+  "2023-06-02": {
+   "guid": "173ee261-86c9-401e-ae6f-c6d1cbc7740e",
+   "titulo": "Reporte Informativo ASFI al 02/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Sudaval Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que el 2 de junio de 2023, el señor Nelson Rodrigo Manrique Mariaca, presentó renuncia al cargo de Operador de Bolsa, siendo su último día laboral el 30 de junio de 2023. La renuncia fue aceptada por Gerencia General, haciéndose efectiva en la fecha indicada. Por tal motivo, se efectuará la revocatoria de los Poderes otorgados.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 2 de junio de 2023, el señor Nelson Rodrigo Manrique Mariaca, presentó renuncia al cargo de Operador de Bolsa, siendo su último día laboral el 30 de junio de 2023.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Nelson Rodrigo Manrique Mariaca",
+      "cargo": "Operador de Bolsa",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Ha comunicado que el 1 de junio de 2023, emitió las siguientes disposiciones internas:\n- Comunicación Organizativa Interna N° 020/2023, a partir de la fecha, la señora Iveth Shirley Terrazas Miranda, deja la responsabilidad interina de la Gerencia Nacional de Administración y Finanzas.\n- Orden de Servicio N° 018/2023, a partir de la fecha, la Gerencia Nacional de Administración y Finanzas, queda bajo la responsabilidad interina del señor Humberto Baldiviezo Medina.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 1 de junio de 2023, emitió las siguientes disposiciones internas: - Comunicación Organizativa Interna N° 020/2023, a partir de la fecha, la señora Iveth Shirley Terrazas Miranda",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Industrias de Aceite S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 01 de junio de 2023, se determinó lo siguiente: Modificar el organigrama de la Sociedad. Entre los principales cambios de la estructura organizacional, determinó eliminar los siguientes cargos: Country Manager Bolivia Gerente de Marketing Gerente de Trade Marketing Gerente de Ventas Añadir los siguientes cargos: VP de Bolivia y Negocios Internacionales Gerente de Negocio Consumo Masivo Bolivia Gerente Nacional de Ventas Mantener los siguientes cargos: Director Comercial de Molienda Gerente de Manufactura e Ingeniería Gerente de Contraloría Gerente de Supply Chain Gerente de Recursos Humanos Gerente de Asuntos Corporativos Quedando el organigrama de la siguiente manera: VP de Bolivia y Negocios Internacionales Gerente Nacional de Ventas Gerente de Negocio Consumo Masivo Bolivia Director Comercial de Molienda Gerente de Manufactura e Ingeniería Gerente de Contraloría Gerente de Supply Chain Gerente de Recursos Humanos Gerente de Asuntos Corporativos",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 01 de junio de 2023, se determinó lo siguiente: Modificar el organigrama de la Sociedad.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Industrias de Aceite S.A.",
+     "texto": "Ha comunicado que el 1 de junio de 2023, fueron designados los siguientes ejecutivos: VP de Bolivia y Negocios Internacionales Javier Martín Rota Baguer Gerente Nacional de Ventas Luis Federico Alarcón Rodríguez",
+     "tags": [],
+     "resumen": "Ha comunicado que el 1 de junio de 2023, fueron designados los siguientes ejecutivos: VP de Bolivia y Negocios Internacionales Javier Martín Rota Baguer Gerente Nacional de Ventas Luis Federico",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Toyosa S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 02 de junio de 2023, se determinó lo siguiente:\n- Autorización de contratar la constitución de una línea de crédito entre TOYOSA S.A. y el Banco Nacional de Bolivia S.A., por la suma de 68.600.000.- con la garantía de vehículos de la marca Toyota, bajo la modalidad de prenda sin desplazamiento.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 02 de junio de 2023, se determinó lo siguiente: - Autorización de contratar la constitución de una línea de crédito entre TOYOSA S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Ha comunicado que el señor Marcelo Alberto Trigo Villegas, el 1 de junio de 2023, presentó renuncia al cargo de Gerente General del Banco, misma que fue aprobada por el Directorio en sesión de 2 de junio de 2023, acordando que el señor Trigo ejerza funciones hasta el 31 de agosto de 2023.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el señor Marcelo Alberto Trigo Villegas, el 1 de junio de 2023, presentó renuncia al cargo de Gerente General del Banco, misma que fue aprobada por el Directorio en sesión de 2 de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Marcelo Alberto Trigo Villegas",
+      "cargo": "Gerente General del Banco",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que dando cumplimiento a lo establecido en la Cláusula Decimonovena del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y Representación del Patrimonio Autónomo NUEVATEL – BDP ST 049 y al numeral 3.7 (Coeficiente de Cobertura Cupón) del Prospecto de Emisión, debido al exceso registrado en el cálculo del Coeficiente de Cobertura de Cupón, el 2 de junio de 2023, procedió a la entrega de recursos en las Cuentas Administrativas del Originador por el importe de Bs159.067,17",
+     "tags": [
+      "compromisos",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que dando cumplimiento a lo establecido en la Cláusula Decimonovena del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Bisa Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo AMERICAN IRIS – BISA ST, el 1 de junio de 2023, recibió por parte del Originador AMERICAN IRIS PAPER COMPANY S.A., una nota mediante la cual informa que, a partir del 1 de junio de 2023, el señor Diego Villegas Navia quien ocupaba el cargo de Gerente Administrativo Financiero de AMERICAN IRIS PAPER COMPANY S.A. no tiene vinculación laboral con la empresa, de acuerdo a la renuncia voluntaria presentada por el señor Villegas.",
+     "tags": [
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo AMERICAN IRIS – BISA ST, el 1 de junio de 2023, recibió por parte del Originador AMERICAN IRIS PAPER COMPANY S.A., una nota",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Bisa Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo AMERICAN IRIS – BISA ST, el 1 de junio de 2023, recibió por parte del Originador AMERICAN IRIS PAPER COMPANY S.A., una nota mediante la cual informa que, el 31 de mayo de 2023, AMERICAN IRIS PAPER COMPANY S.A. tomó conocimiento de la renuncia del señor Cayo Salinas como Síndico Titular y del señor Guillermo Adriasola como Director Titular de la Sociedad.",
+     "tags": [
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo AMERICAN IRIS – BISA ST, el 1 de junio de 2023, recibió por parte del Originador AMERICAN IRIS PAPER COMPANY S.A., una nota",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que BDP SOCIEDAD DE TITULARIZACIÓN S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 34 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Series “A y B” con Claves de Pizarra: PTL- TD-NA y PTL-TD-NB, el mismo será pagado a partir del 5 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que BDP SOCIEDAD DE TITULARIZACIÓN S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 34 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Series",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "34",
+      "instrumento": "VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049",
+      "fecha_pago": "5 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el BANCO FIE S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los BONOS BANCO FIE 3 - EMISIÓN 3, Serie Única con Clave de Pizarra: FIE-3-N2U-21, el mismo será pagado a partir del 5 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el BANCO FIE S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los BONOS BANCO FIE 3 - EMISIÓN 3, Serie Única con Clave de Pizarra",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "BONOS BANCO FIE 3",
+      "fecha_pago": "5 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el BANCO FIE S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 5 de los BONOS BANCO FIE 3 - EMISIÓN 2, Serie Única con Clave de Pizarra: FIE-3-N2U-20, el mismo será pagado a partir del 5 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el BANCO FIE S.A., el 2 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 5 de los BONOS BANCO FIE 3 - EMISIÓN 2, Serie Única con Clave de Pizarra",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "5",
+      "instrumento": "BONOS BANCO FIE 3",
+      "fecha_pago": "5 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que INDUSTRIAS OLEAGINOSAS S.A., el 2 de junio del presente, realizó la provisión de fondos para el pago del Cupón Nº 9 y amortización de capital de las Series “B y C” con Clave de Pizarra: IOL-2-N1B-18 e IOL-2-N1C-18, de los BONOS IOL II – EMISIÓN 2, el mismo será pagado a partir del 5 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que INDUSTRIAS OLEAGINOSAS S.A., el 2 de junio del presente, realizó la provisión de fondos para el pago del Cupón Nº 9 y amortización de capital de las Series “B y C” con Clave de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "9",
+      "instrumento": "BONOS IOL II",
+      "fecha_pago": "5 de junio",
+      "estado": "programado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Ha comunicado que de acuerdo a lo informado por Multivalores Agencia de Bolsa S.A., el 31 de mayo de 2023, procedió con la baja del señor Moisés Murillo Lima como Operador de Bolsa y Asesor de Inversión en los registros de la Bolsa Boliviana de Valores S.A.",
+     "tags": [],
+     "resumen": "Ha comunicado que de acuerdo a lo informado por Multivalores Agencia de Bolsa S.A., el 31 de mayo de 2023, procedió con la baja del señor Moisés Murillo Lima como Operador de Bolsa y Asesor de",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "Bisa Leasing S.A.",
+     "texto": "Ha comunicado que en cumplimiento a lo establecido en el Prospecto Complementario de la Emisión denominada Bonos BISA LEASING V – Emisión 2, dentro del Programa de Emisiones de Bonos BISA LEASING V, se realizó el 2 de junio de 2023, la provisión de los fondos respectivos a BISA S.A. Agencia de Bolsa (agente pagador), para realizar el pago del Cupón N° 8 correspondiente a dicha emisión, de las siguientes Series, cuyo vencimiento es el 4 de junio de 2023:\n- Serie B (con Clave de Pizarra BIL-5-N1B-19): Capital e Intereses.\n- Serie C (con Clave de Pizarra BIL-5-N1C-19): Intereses. El pago será realizado por BISA S.A. Agencia de Bolsa, a partir del 5 de junio del año en curso.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que en cumplimiento a lo establecido en el Prospecto Complementario de la Emisión denominada Bonos BISA LEASING V – Emisión 2, dentro del Programa de Emisiones de Bonos BISA LEASING V",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos BISA LEASING V",
+      "fecha_pago": "5 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Ha comunicado que el 1 de junio de 2023, emitió la siguiente disposición interna: Disposición Organizativa N° 001/2023, a partir de la fecha, dentro el esquema de la Organización, la Gerencia Nacional de Innovación y Transformación Digital, cambia de denominativo a Gerencia Nacional de Desarrollo, con la siguiente estructura organizativa:\n- Subgerencia de Innovación Tecnológica.\n- Subgerencia de Transformación Organizacional.\n- Subgerencia de Planificación y Control.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 1 de junio de 2023, emitió la siguiente disposición interna: Disposición Organizativa N° 001/2023, a partir de la fecha, dentro el esquema de la Organización, la Gerencia",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Ha comunicado que el 1 de junio de 2023, Recursos Humanos dio a conocer que, procedió a la actualización del documento:\n- ENT.EO Estructura Organizacional de Entel S.A. Versión 358, misma que refleja los cambios efectuados según Disposición Organizativa N° 001/2023.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 1 de junio de 2023, Recursos Humanos dio a conocer que, procedió a la actualización del documento: - ENT.EO Estructura Organizacional de Entel S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Ha comunicado que procederá al pago del Cupón N° 5 de la Serie Única correspondiente a la Emisión \"BONOS BANCO FIE 3 - EMISIÓN 2\", realizada en el marco del Programa de Emisiones de Bonos denominado \"BONOS BANCO FIE 3\", mismo que vence el 5 de junio de 2023 y que será cancelado a partir de la misma fecha, en las oficinas del agente pagador BNB Valores S.A. Agencia de Bolsa.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que procederá al pago del Cupón N° 5 de la Serie Única correspondiente a la Emisión \"BONOS BANCO FIE 3 - EMISIÓN 2\", realizada en el marco del Programa de Emisiones de Bonos denominado",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "5",
+      "instrumento": "BONOS BANCO FIE 3",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Ha comunicado que procederá al pago del Cupón N° 3 de la Serie Única correspondiente a la Emisión \"BONOS BANCO FIE 3 - EMISIÓN 3\", realizada en el marco del Programa de Emisiones de Bonos denominado \"BONOS BANCO FIE 3\", mismo que vence el 3 de junio de 2023 y que será cancelado a partir del 5 de junio de 2023, en las oficinas del agente pagador BNB Valores S.A. Agencia de Bolsa.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que procederá al pago del Cupón N° 3 de la Serie Única correspondiente a la Emisión \"BONOS BANCO FIE 3 - EMISIÓN 3\", realizada en el marco del Programa de Emisiones de Bonos denominado",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "BONOS BANCO FIE 3",
+      "fecha_pago": "5 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Ha comunicado que procederá al pago del Cupón N° 10 de la Serie \"B\" correspondiente a la Emisión \"BONOS BANCO FIE 2 - EMISIÓN 3\", realizada en el marco del Programa de Emisiones de Bonos denominado \"BONOS BANCO FIE 2\", mismo que vence el 3 de junio de 2023 y que será cancelado a partir del 5 de junio de 2023, en las oficinas del agente pagador BISA S.A. Agencia de Bolsa.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que procederá al pago del Cupón N° 10 de la Serie \"B\" correspondiente a la Emisión \"BONOS BANCO FIE 2 - EMISIÓN 3\", realizada en el marco del Programa de Emisiones de Bonos denominado",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "10",
+      "instrumento": "BONOS BANCO FIE 2",
+      "fecha_pago": "5 de junio de 2023",
+      "estado": "programado"
+     }
+    }
+   ]
+  },
+  "2023-06-05": {
+   "guid": "485585fc-cb26-426c-8ed2-83d47e2bb7ab",
+   "titulo": "Reporte Informativo ASFI al 05/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Sudaval Agencia de Bolsa S.A.",
+     "texto": "Rectifica el Hecho Relevante informado el 2 de junio de 2023, el cual, señala que la renuncia del señor Nelson Rodrigo Manrique Mariaca fue aceptada por Gerencia General, siendo lo correcto comunicar que dicha renuncia fue aceptada por el Presidente Ejecutivo.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Rectifica el Hecho Relevante informado el 2 de junio de 2023, el cual, señala que la renuncia del señor Nelson Rodrigo Manrique Mariaca fue aceptada por Gerencia General, siendo lo correcto comunicar",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Nelson Rodrigo Manrique Mariaca",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Eléctrica ENDE Corani S.A.",
+     "texto": "Ha comunicado que el 2 de junio de 2023, el señor Diego Ávila Bruckner, mediante carta, renuncia al cargo de Gerente de Planificación y Proyectos, dejando de ejercer sus funciones a partir de la misma fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 2 de junio de 2023, el señor Diego Ávila Bruckner, mediante carta, renuncia al cargo de Gerente de Planificación y Proyectos, dejando de ejercer sus funciones a partir de la",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Diego Ávila Bruckner",
+      "cargo": "Gerente de Planificación y Proyectos",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 02 de junio de 2023, se determinó lo siguiente:\n1. La renuncia presentada por el señor Marcelo Alberto Trigo Villegas al cargo de Gerente General del Banco, misma que fue aprobada por el Directorio, acordando que el señor Trigo ejerza funciones hasta el 31 de agosto de 2023.\n2. La designación del señor Luis Miguel Almandoz Luna para que asuma el puesto de Gerente General del Banco, a partir del 1 de septiembre de 2023.\n3. La creación del puesto temporal de Gerente General Adjunto, designando al señor Luis Miguel Almandoz Luna, que ocupará el cargo desde el 6 de junio de 2023, hasta el 31 de agosto de 2023, esto con la finalidad de realizar una transición ordenada. Finalmente, disponer la revocatoria y otorgación de los respectivos Poderes.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 02 de junio de 2023, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Marcelo Alberto Trigo Villegas",
+      "cargo": "Gerente General del Banco",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que el 1 de junio de 2023, procedió a la compra de cartera de créditos de Sembrar Sartawi IFD, tanto de Crédito Individual como de Banca Comunal, por un valor de Bs28.985.159.-",
+     "tags": [],
+     "resumen": "Ha comunicado que el 1 de junio de 2023, procedió a la compra de cartera de créditos de Sembrar Sartawi IFD, tanto de Crédito Individual como de Banca Comunal, por un valor de Bs28.985.159.-",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 10 de la Emisión de Bonos Banco FIE 2 - Emisión 3, Serie B dentro del Programa de Emisiones de Bonos Banco FIE 2, se realiza a partir del 5 de junio de 2023, en sus oficinas.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 10 de la Emisión de Bonos Banco FIE 2 - Emisión 3, Serie B dentro del Programa de Emisiones de Bonos",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "10",
+      "instrumento": "Bonos Banco FIE 2",
+      "fecha_pago": "5 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 8 de la Emisión de Bonos BISA LEASING V - Emisión 2, Series B y C dentro del Programa de Emisiones de Bonos BISA LEASING V, se realiza a partir del 5 de junio de 2023, en sus oficinas.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 8 de la Emisión de Bonos BISA LEASING V - Emisión 2, Series B y C dentro del Programa de Emisiones de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos BISA LEASING V",
+      "fecha_pago": "5 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Credibolsa S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, en calidad de agente colocador, realizó la colocación primaria de 104 valores de la emisión denominada “Pagarés Bursátiles IASA IV – Emisión 1”.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, en calidad de agente colocador, realizó la colocación primaria de 104 valores de la emisión denominada “Pagarés Bursátiles IASA IV – Emisión 1”.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "ENDE Transmisión S.A.",
+     "texto": "Ha comunicado que el 5 de junio de 2023, realizó la publicación en prensa para informar que el 9 de junio de 2023, efectuará el pago del Cupón N° 3, correspondiente a las Emisiones 9 y 10 del Programa “Bonos ENDE Transmisión I”, a través del agente pagador BNB Valores S.A. Agencia de Bolsa.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, realizó la publicación en prensa para informar que el 9 de junio de 2023, efectuará el pago del Cupón N° 3, correspondiente a las Emisiones 9 y 10 del",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "Bonos ENDE Transmisión I”",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Ganadero S.A.",
+     "texto": "Ha comunicado que el señor Ronald Gutierrez López, Gerente General, estará ausente desde el 5, hasta el 9 de junio del presente año inclusive, retornará a sus funciones el 12 de junio, por lo que asumirá el cargo de Gerente General a.i. el señor Adolfo Guzman R.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el señor Ronald Gutierrez López, Gerente General, estará ausente desde el 5, hasta el 9 de junio del presente año inclusive, retornará a sus funciones el 12 de junio, por lo que",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Ronald Gutierrez López",
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "SOCIEDADES CONTROLADORAS DE GRUPOS FINANCIEROS",
+     "entidad": "Sociedad Controladora Ganadero S.A.",
+     "texto": "Ha comunicado que el señor Jaime Ronald Gutiérrez López, Gerente General, estará ausente desde el 5 de junio, hasta el 9 de junio, retornará a sus funciones el 12 de junio, por lo que, asumirá el cargo de Gerente General a.i. la señora Vivian Cecilia Araúz Justiniano.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el señor Jaime Ronald Gutiérrez López, Gerente General, estará ausente desde el 5 de junio, hasta el 9 de junio, retornará a sus funciones el 12 de junio, por lo que, asumirá el",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Jaime Ronald Gutiérrez López",
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/671/2023 de 29 de mayo de 2023",
+     "texto": "RESUELVE: Sancionar a VALORES UNIÓN S.A. AGENCIA DE BOLSA, con multa, por los cargos de la Nota de Cargos ASFI/DSV/R-87826/2023 de 19 de abril de 2023, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores de 31 de marzo de 1998; Artículo 1°, Sección 2, Capítulo IV del Reglamento para Agencias de Bolsa, contenido en el Título III, Libro 4°; los Artículos 1° y 3° de la Sección 2 y el Anexo 1 del Reglamento para el Envío de Información Periódica, contenido en el Capítulo I, Título I, Libro 10°, todos de la Recopilación de Normas para el Mercado de Valores, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a VALORES UNIÓN S.A. AGENCIA DE BOLSA, con multa, por los cargos de la Nota de Cargos ASFI/DSV/R-87826/2023 de 19 de abril de 2023, al haber incumplido lo dispuesto en el segundo",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  },
+  "2023-06-06": {
+   "guid": "9494f801-66a4-4ca5-9b2b-8bc1200de111",
+   "titulo": "Reporte Informativo ASFI al 06/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Ibolsa Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que el 5 de junio de 2023, el señor Jose Ramiro Peña Guzman presentó renuncia irrevocable al cargo de Gerente General a.i., misma que será considerada en próximo Directorio.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, el señor Jose Ramiro Peña Guzman presentó renuncia irrevocable al cargo de Gerente General a.i., misma que será considerada en próximo Directorio.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Jose Ramiro Peña Guzman",
+      "cargo": "Gerente General",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "Fortaleza Leasing S.A.",
+     "texto": "Ha comunicado que el 31 de mayo de 2023, recibió un desembolso de préstamo del Banco Ganadero S.A. por un importe de Bs12.000.000.- correspondiente a un préstamo con cargo a la Línea de Crédito que mantiene en dicha entidad.",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Ha comunicado que el 31 de mayo de 2023, recibió un desembolso de préstamo del Banco Ganadero S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Ganadero S.A.",
+      "monto": "Bs 12,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "Fortaleza Leasing S.A.",
+     "texto": "Ha comunicado que el 5 de junio de 2023, recibió un desembolso del Banco de Desarrollo Productivo S.A.M. por un importe de Bs6.000.000.-",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, recibió un desembolso del Banco de Desarrollo Productivo S.A.M.",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 6,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Ferroviaria Oriental S.A.",
+     "texto": "Ha comunicado que en cumplimiento de la R.A. APS/DJ/DP/N° 215/2023, que establece el procedimiento para el traspaso de la Administración del Fondo de Capitalización Colectivo (FCC) de las AFP’s a la Gestora Pública de la Seguridad Social de Largo Plazo y en atención a la solicitud de la Gestora Pública de la Seguridad Social de Largo Plazo, recibida en Ferroviaria Oriental el 29 de mayo de 2023, procedió el 1 de junio de 2023, a registrar el cambio de la titularidad de acciones a nombre de la Gestora Pública de Seguridad Social de Largo Plazo, de acuerdo a lo siguiente: Nombre Acciones % Accionario Tipo de Acción FCC administrado por Gestora Pública de Seguridad Social de Largo Plazo 573.221 24,9554 Ordinaria FCC administrado por Gestora Pública de Seguridad Social de Largo Plazo 573.221 24,9554 Ordinaria Luego del registro del cambio de titularidad antes citado, la composición accionaria de Ferroviaria Oriental S.A. quedó de la siguiente manera: No. Nombre Cant. de % de Tipo de Acciones Participación Acción 1 Trenes Continentales S.A. 1.148.499 50,00035% Ordinaria 2 FCC administrado por Gestora Pública de Seguridad Social de Largo Plazo 1.146.442 49,91080% Ordinaria 3 Accionistas Minoritarios 2.041 0,08886% Ordinaria Totales 2.296.982 100,00000%",
+     "tags": [],
+     "resumen": "Ha comunicado que en cumplimiento de la R.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Gravetal Bolivia S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 05 de junio de 2023, realizada con el 100.00% de los socios, determinó lo siguiente: Dejar sin efecto todas las determinaciones asumidas por la Junta General Extraordinaria de Accionistas de 22 de febrero de 2023, referente a la Emisión de Bonos denominada Bonos GRAVETAL 1. Aprobar y autorizar a GRAVETAL BOLIVIA S.A. a contraer obligaciones mediante la Emisión de Bonos para su negociación en el Mercado de Valores por Bs128.000.000.- Aprobar las características y condiciones de la Emisión de Bonos presentadas. Delegar la determinación de algunas condiciones de la emisión y sus correspondientes características por parte de JUAN CARLOS MUNGUIA SANTIESTEBAN en su calidad de Gerente General y MARIANO TERUGGI TONELLI en su calidad de Gerente Administrativo y Financiero. Aprobar las restricciones, obligaciones y limitaciones y Compromisos Financieros a los que se sujetará la Sociedad durante la vigencia de la Emisión de Bonos. Aprobar los Aspectos Generales Aplicables a los Hechos Potenciales de Incumplimiento y a los Hechos de Incumplimiento mientras los Bonos estén pendientes de pago. Aprobar que JUAN CARLOS MUNGUIA SANTIESTEBAN en su condición de GERENTE GENERAL y/o MARIANO TERUGGI TONELLI en su condición de GERENTE ADMINISTRATIVO Y FINANCIERO sean quienes realicen la firma de documentos necesarios y las gestiones para lograr las autorizaciones de las inscripciones que sean necesarias a nombre de la Sociedad. Aprobar que JUAN CARLOS MUNGUIA SANTIESTEBAN en su condición de GERENTE GENERAL y/o MARIANO TERUGGI TONELLI en su condición de GERENTE ADMINISTRATIVO Y FINANCIERO efectúen, suscriban modifiquen o dejen sin efecto el documento a nombre de la Sociedad, que contendrá la Declaración Unilateral de Voluntad.",
+     "tags": [
+      "emision",
+      "compromisos",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 05 de junio de 2023, realizada con el 100.00% de los socios, determinó lo siguiente: Dejar sin efecto todas las determinaciones",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que en reunión de Directorio de 05 de junio de 2023, se determinó lo siguiente: Elegir y ratificar los cargos del Directorio, como se detalla a continuación: Director Cargo Juan Gerardo Garrett Mendieta Presidente Rolando Miguel Schmidt Vicepresidente Marisol Jimena Fernandez Capriles Secretaria Rafael Ramos Alvarez Vocal María del Carmen Correa Cabris Vocal Como consecuencia de lo anterior, la señora María del Carmen Correa Cabris, pasa a ser miembro del Comité de innovación Social.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 05 de junio de 2023, se determinó lo siguiente: Elegir y ratificar los cargos del Directorio, como se detalla a continuación: Director Cargo Juan Gerardo",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que la Asamblea Ordinaria de Socios de fecha 05 de junio de 2023, realizada con el 60.00% de los socios, determinó lo siguiente:\n1. Designar a la señora María del Carmen Correa Cabris como Directora Titular y a la señora María Cruz Pemán como Directora Suplente y ratificar a los demás Directores, siendo la composición del Directorio, según detalle siguiente: DIRECTORIO Juan Gerardo Garrett Mendieta - DIRECTOR TITULAR Rolando Miguel Schmidt - DIRECTOR TITULAR Marisol Jimena Fernández Capriles - DIRECTOR TITULAR María del Carmen Correa Cabris - DIRECTOR TITULAR Rafael Ramos Alvarez - DIRECTOR TITULAR Gloria Amelia Ruiz Gutierrez - DIRECTOR SUPLENTE María Cruz Pemán - DIRECTOR SUPLENTE\n2. Aprobar los montos para la remuneración de Directores.",
+     "tags": [],
+     "resumen": "Ha comunicado que la Asamblea Ordinaria de Socios de fecha 05 de junio de 2023, realizada con el 60.00% de los socios, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que, dando cumplimiento a lo establecido en la Cláusula Trigésima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y Representación del Patrimonio Autónomo CRESPAL – BDP ST 035 y al numeral 3.2.25 (Redención Anticipada de los Valores de Titularización) del Prospecto de Emisión, realizó la provisión de los fondos para proceder con el pago por la redención anticipada por Sorteo de los siguientes valores:\n- Valores de Titularización “CRESPAL – BDP ST 035” Serie “B” CRP-TD-NB-11Q: 86 títulos.\n- Valores de Titularización “CRESPAL – BDP ST 035” Serie “C” CRP-TD-NC-11Q: 147 títulos. El pago de los mismos, será realizado el 16 de junio de 2023.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que, dando cumplimiento a lo establecido en la Cláusula Trigésima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó con el pago del Cupón N° 10 de la Emisión de Bonos BANCO FIE 2- Emisión 3 (Series A y B), dentro del Programa de Emisiones de Bonos BANCO FIE 2.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó con el pago del Cupón N° 10 de la Emisión de Bonos BANCO FIE 2- Emisión 3 (Series A y B), dentro del Programa de Emisiones de Bonos BANCO FIE 2.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "10",
+      "instrumento": "Bonos BANCO FIE 2- Emisión 3",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó con el pago del Cupón N° 8 de la Emisión de Bonos BISA LEASING V - Emisión 2 (Series B y C), dentro del Programa de Emisiones de Bonos BISA LEASING V.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó con el pago del Cupón N° 8 de la Emisión de Bonos BISA LEASING V - Emisión 2 (Series B y C), dentro del Programa de Emisiones de Bonos BISA LEASING V.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "8",
+      "instrumento": "Bonos BISA LEASING V",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 3 de los BONOS BANCO FIE 3 – EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra: FIE-3-N2U-21.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 3 de los BONOS BANCO FIE 3 – EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra: FIE-3-N2U-21.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "BONOS BANCO FIE 3",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 34 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Series A y B con Claves de Pizarra: PTL-TD-NA y PTL-TD-NB.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 34 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Series A y B con Claves de Pizarra: PTL-TD-NA y PTL-TD-NB.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "34",
+      "instrumento": "VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 9 y amortización de capital correspondiente a las Series “B y C” con Claves de Pizarra IOL- 2-N1B-18 e IOL-2-N1C-18 de los BONOS IOL II – EMISIÓN 2.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 9 y amortización de capital correspondiente a las Series “B y C” con Claves de Pizarra IOL- 2-N1B-18 e IOL-2-N1C-18 de los BONOS",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "9",
+      "instrumento": "BONOS IOL II",
+      "estado": "pagado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 5 de los BONOS BANCO FIE 3 – EMISIÓN 2, correspondiente a la Serie Única con Clave de Pizarra: FIE-3-N2U-20.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, concluyó el pago del Cupón Nº 5 de los BONOS BANCO FIE 3 – EMISIÓN 2, correspondiente a la Serie Única con Clave de Pizarra: FIE-3-N2U-20.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "5",
+      "instrumento": "BONOS BANCO FIE 3",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco de Crédito de Bolivia S.A.",
+     "texto": "Ha comunicado que el señor Marcelo Trigo Villegas, Gerente General del Banco, se encontrará ausente desde el 8, hasta el 26 de junio del presente; durante su ausencia, queda delegado como Gerente General interino el señor Christian Hausherr Ariñez, Gerente de División Finanzas y Mercado de Capitales.",
+     "tags": [],
+     "resumen": "Ha comunicado que el señor Marcelo Trigo Villegas, Gerente General del Banco, se encontrará ausente desde el 8, hasta el 26 de junio del presente; durante su ausencia, queda delegado como Gerente",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Bisa Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que dando cumplimiento con lo establecido en el numeral 12.1 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de Titularización y Administración del Patrimonio Autónomo GRANOSOL – BISA ST y su posterior Adenda y al numeral 3.10.1 del Prospecto de Emisión, procedió al cálculo del ratio con fecha de corte al 31 de marzo de 2023, con los siguientes resultados:\n- Ratio de Control de Ventas del Originador (RCVO) = 2,09 cumpliendo con el mínimo requerido que es mayor o igual a 1.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que dando cumplimiento con lo establecido en el numeral 12.1 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/689/2023 de 05 de junio de 2023",
+     "texto": "RESUELVE:\nPRIMERO.- Aprobar las modificaciones al Reglamento Interno de Registro y Operaciones de la BOLSA BOLIVIANA DE VALORES S.A. de conformidad al texto aprobado por la Resolución de Directorio N° 02/2023 de 2 de junio de 2023, que en Anexo forma parte integrante e indivisible de la presente Resolución.\nSEGUNDO.- Disponer que, la BOLSA BOLIVIANA DE VALORES S.A. remita a esta Autoridad de Supervisión, el Reglamento Interno de Registro y Operaciones (RIRO), compilado de forma física y electrónica, así como, poner en conocimiento del Mercado de Valores y público en general las modificaciones aprobadas, en el plazo de cinco (5) días hábiles administrativos computables a partir del día siguiente de la notificación con la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Aprobar las modificaciones al Reglamento Interno de Registro y Operaciones de la BOLSA BOLIVIANA DE VALORES S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  },
+  "2023-06-07": {
+   "guid": "57ec5074-8d08-4f66-9b45-b345d5733a30",
+   "titulo": "Reporte Informativo ASFI al 07/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 5 de junio de 2023, el Banco Mercantil Santa Cruz S.A. realizó un desembolso por la suma de Bs6.000.000.- a favor de BISA S.A. Agencia de Bolsa, en calidad de préstamo bajo línea de crédito, mediante contrato suscrito en la misma fecha.",
+     "tags": [
+      "prestamo"
+     ],
+     "resumen": "Ha comunicado que el 5 de junio de 2023, el Banco Mercantil Santa Cruz S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Mercantil Santa Cruz S.A.",
+      "monto": "Bs 6,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Eléctrica ENDE Corani S.A.",
+     "texto": "Ha comunicado que mediante Memorándum EC-GG-ME-5/6-2023 de 6 de junio de 2023, el Gerente General a.i., designa al señor Werner Willy Adolfo Hoffmann Zabalaga como Gerente de Planificación y Proyectos a.i., quien ejerce sus funciones a partir de la misma fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que mediante Memorándum EC-GG-ME-5/6-2023 de 6 de junio de 2023, el Gerente General a.i., designa al señor Werner Willy Adolfo Hoffmann Zabalaga como Gerente de Planificación y",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Werner Willy Adolfo Hoffmann Zabalaga",
+      "cargo": "Gerente de Planificación y Proyectos",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Ha comunicado que el 6 de junio de 2023, emitió las siguientes disposiciones internas:\n- Comunicación Organizativa Interna N° 021/2023, a partir de la fecha, el señor Carlos Alberto Sánchez Vallejos, deja la responsabilidad interina de la Gerencia Regional Chuquisaca.\n- Orden de Servicio N° 019/2023, a partir de la fecha, la Gerencia Regional Chuquisaca, queda bajo la responsabilidad interina del señor David Augusto Lopez Aguilar.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 6 de junio de 2023, emitió las siguientes disposiciones internas: - Comunicación Organizativa Interna N° 021/2023, a partir de la fecha, el señor Carlos Alberto Sánchez Vallejos",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "La Papelera S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 05 de junio de 2023, realizada con el 97.20% de los socios, determinó lo siguiente: Autorizar la emisión de Pagarés por un monto total de Bs28.000.000.- con un plazo de 360 días, a partir de la fecha de emisión, para su colocación a favor de Fortaleza SAFI actuando por cuenta del Fondo de Inversión Cerrado INVERSOR.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 05 de junio de 2023, realizada con el 97.20% de los socios, determinó lo siguiente: Autorizar la emisión de Pagarés por un monto",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Transporte S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 06 de junio de 2023, se determinó lo siguiente: Por unanimidad aceptar la renuncia al cargo de Director presentada por el señor Miguel Angel Colque Pacheco, con efectividad a partir de la fecha. Por mayoría, designar en el cargo de Gerente de Operaciones al señor Miguel Angel Colque Pacheco, a partir del 7 de junio de 2023, con remuneración según escala salarial vigente aprobada por el Directorio de la Sociedad el 26 de julio de 2010, y atribuciones y responsabilidades inherentes a su cargo fijadas en los Poderes a ser conferidos y/o en la normativa interna de la Sociedad. Por unanimidad revocar el Poder Especial y Suficiente N° 1214/2021 de 30 de diciembre de 2021, a favor del señor Julio David Infante Cordero y el otorgamiento de un nuevo Poder Especial y Suficiente en favor del señor Miguel Angel Colque Pacheco, para realizar en representación de la Sociedad operaciones bancarias, financieras y comerciales como “Apoderado B”. De conformidad con el artículo 60 de los Estatutos de la Sociedad, autorizar a la Gerente Legal, señora Maria de los Ángeles Nahid Cuomo, para que realice todas las gestiones y suscriba los documentos que resulten necesarios a fin de hacer efectiva las revocatorias y otorgamientos de Poderes conferidos en la presente reunión.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 06 de junio de 2023, se determinó lo siguiente: Por unanimidad aceptar la renuncia al cargo de Director presentada por el señor Miguel Angel Colque",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Miguel Angel Colque Pacheco",
+      "cargo": "Director presentada por el señor Miguel Angel Colque Pacheco",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Transporte S.A.",
+     "texto": "Ha comunicado que el 6 de junio de 2023, fue removido el señor Julio David Infante Cordero del cargo de Gerente de Operaciones, con efectividad en la misma fecha.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 6 de junio de 2023, fue removido el señor Julio David Infante Cordero del cargo de Gerente de Operaciones, con efectividad en la misma fecha.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que el 6 de junio de 2023, el señor Arsenio Oscar Minaya Ramos presentó renuncia al cargo de Gerente Nacional de Negocios, efectiva a partir del 8 de junio de 2023.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 6 de junio de 2023, el señor Arsenio Oscar Minaya Ramos presentó renuncia al cargo de Gerente Nacional de Negocios, efectiva a partir del 8 de junio de 2023.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Arsenio Oscar Minaya Ramos",
+      "cargo": "Gerente Nacional de Negocios",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 15 de la Emisión de Bonos FANCESA IV - Emisión 2 (Serie A) dentro del Programa de Emisiones de Bonos FANCESA IV, se realiza a partir del 7 de junio de 2023, en sus oficinas.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 15 de la Emisión de Bonos FANCESA IV - Emisión 2 (Serie A) dentro del Programa de Emisiones de Bonos",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "15",
+      "instrumento": "Bonos FANCESA IV",
+      "fecha_pago": "7 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que ENDE Transmisión S.A., el 7 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 9, Serie Única con Clave de Pizarra: TDE-1-N3U-21, el mismo será pagado a partir del 9 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que ENDE Transmisión S.A., el 7 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 9, Serie Única con Clave de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "Bonos ENDE TRANSMISIÓN I",
+      "fecha_pago": "9 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que ENDE Transmisión S.A., el 7 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 10, Serie Única con Clave de Pizarra: TDE-1-N4U-21, el mismo será pagado a partir del 9 de junio del presente.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que ENDE Transmisión S.A., el 7 de junio de 2023, realizó la provisión de fondos para el pago del Cupón Nº 3 de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 10, Serie Única con Clave de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "3",
+      "instrumento": "Bonos ENDE TRANSMISIÓN I",
+      "fecha_pago": "9 de junio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Compañía Americana de Inversiones S.A.",
+     "texto": "Ha comunicado que el 6 de junio de 2023, realizó el pago del préstamo bancario al Banco Nacional de Bolivia S.A. por Bs14.000.000.-",
+     "tags": [],
+     "resumen": "Ha comunicado que el 6 de junio de 2023, realizó el pago del préstamo bancario al Banco Nacional de Bolivia S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Panamerican Securities S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que Crédito con Educación Rural Institución Financiera de Desarrollo, realizó la provisión de fondos para la cancelación del Cupón Nº 12 de los “BONOS CRECER I - EMISIÓN 1”, Serie B correspondiente a la Clave de Pizarra: CRE-1-N1B-\n20. El pago se realizará a partir del 9 de junio de 2023.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que Crédito con Educación Rural Institución Financiera de Desarrollo, realizó la provisión de fondos para la cancelación del Cupón Nº 12 de los “BONOS CRECER I - EMISIÓN 1”, Serie B",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "12",
+      "instrumento": "BONOS CRECER I",
+      "fecha_pago": "9 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "KERKUS CORREDORES DE SEGUROS S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 06 de junio de 2023, se determinó lo siguiente: Designar a la Jefe Administrativo Financiero, señora Rossio Cristal Rodriguez Córdova como Gerente General interino desde el 9 de junio, hasta el 19 de junio de 2023, inclusive; mientras se encuentre ausente el titular señor Vicente Francisco Arraya Vidaurre.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 06 de junio de 2023, se determinó lo siguiente: Designar a la Jefe Administrativo Financiero, señora Rossio Cristal Rodriguez Córdova como Gerente",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "CRECER IFD",
+     "texto": "Ha comunicado que el 7 de junio de 2023, realizó la provisión de fondos en la cuenta receptora del agente pagador Panamerican Securities S.A. Agencia de Bolsa, para el pago del Cupón Nº 12 correspondiente al pago de interés y amortización de capital de los BONOS CRECER I – EMISIÓN 1, Serie B con Clave de Pizarra CRE-1-N1B-20. Asimismo, informa que, a partir del 9 de junio de 2023, Panamerican Securities S.A. Agencia de Bolsa, procederá con dicho pago a los Tenedores de los BONOS CRECER I – Emisión 1, en sus oficinas.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 7 de junio de 2023, realizó la provisión de fondos en la cuenta receptora del agente pagador Panamerican Securities S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "12",
+      "instrumento": "BONOS CRECER I",
+      "fecha_pago": "9 de junio de 2023",
+      "estado": "programado",
+      "amortiza": "sí"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "CRECER IFD",
+     "texto": "Ha comunicado que en cumplimiento al artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en el numeral 2.2. inciso C) del Acta de la Asamblea Extraordinaria de Asociados de Crédito con Educación Rural Institución Financiera de Desarrollo “CRECER IFD”, celebrada el 23 de febrero de 2019 y al numeral 2.7 – Asamblea General de Tenedores de Bonos del Prospecto Marco del Programa de Emisiones ”Bonos CRECER I”, Crédito con Educación Rural Institución Financiera de Desarrollo “CRECER IFD”, convoca a la Asamblea General de Tenedores de Bonos de la Emisión “BONOS CRECER I – EMISIÓN 1”, a realizarse el 16 de junio de 2023 a Hrs. 10:00, de manera presencial en el domicilio legal de la institución, para considerar el siguiente Orden del Día:\n1. Verificación del quorum y lectura del Orden del Día.\n2. Informe de la situación financiera de CRECER IFD al 31 de diciembre de 2022 y al 31 de mayo de 2023.\n3. Informe del Representante Común de Tenedores de Bonos de la Emisión.\n4. Lectura, consideración y aprobación del Acta.\n5. Designación de dos representantes de los Tenedores para la firma del Acta de la Asamblea.",
+     "tags": [
+      "emision",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en cumplimiento al artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en el numeral 2.2.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "16 de junio de 2023"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que el 7 de junio de 2023, convoca a la Asamblea General de Tenedores de Valores de Titularización del Patrimonio Autónomo MICROCRÉDITO IFD – BDP ST 042, a realizarse el 27 de junio de 2023 a Hrs. 10:00, mediante una plataforma virtual, para tratar el siguiente Orden del Día:\n1. Explicación por parte de CIDRE IFD de los aspectos financieros, operativos y legales más significativos de la Institución.\n2. Presentación del Informe por parte del Representante Común de Tenedores de Valores de Titularización.\n3. Presentación del Informe por parte de BDP Sociedad Titularización S.A. como Administrador del Patrimonio Autónomo.\n4. Designación de Tenedores de Valores para la firma del Acta.",
+     "tags": [
+      "junta",
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que el 7 de junio de 2023, convoca a la Asamblea General de Tenedores de Valores de Titularización del Patrimonio Autónomo MICROCRÉDITO IFD – BDP ST 042, a realizarse el 27 de junio de",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que el 7 de junio de 2023, convoca a la Asamblea General de Tenedores de Valores de Titularización de los siguientes Patrimonios Autónomos: Patrimonio Autónomo Hora MICROCRÉDITO IFD - BDP ST 038 10:00 MICROCRÉDITO IFD - BDP ST 046 10:30 MICROCRÉDITO IFD - BDP ST 052 11:00 MICROCRÉDITO IFD - BDP ST 054 11:30 A realizarse el 28 de junio de 2023, mediante una plataforma virtual, para tratar el siguiente Orden del Día:\n1. Explicación por parte de PRO MUJER IFD de los aspectos financieros, operativos y legales más significativos de la Institución.\n2. Presentación del Informe por parte del Representante Común de Tenedores de Valores de Titularización.\n3. Presentación del Informe por parte de BDP Sociedad Titularización S.A. como Administrador del Patrimonio Autónomo.\n4. Designación de Tenedores de Valores para la firma del Acta.",
+     "tags": [
+      "junta",
+      "personal",
+      "titularizacion"
+     ],
+     "resumen": "Ha comunicado que el 7 de junio de 2023, convoca a la Asamblea General de Tenedores de Valores de Titularización de los siguientes Patrimonios Autónomos: Patrimonio Autónomo Hora MICROCRÉDITO IFD -",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  },
+  "2023-06-09": {
+   "guid": "c6ad16da-9b86-441d-abf0-42db475e99a1",
+   "titulo": "Reporte Informativo ASFI al 09/06/2023",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "CLÍNICA METROPOLITANA DE LAS AMÉRICAS S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de junio de 2023, se determinó lo siguiente: Aprobar la contratación de la consultora TUDELA & TH CONSULTING GROUP S.R.L., para la realización del trabajo de auditoría externa a los Estados Financieros al 31 de diciembre de 2023.",
+     "tags": [
+      "auditoria"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de junio de 2023, se determinó lo siguiente: Aprobar la contratación de la consultora TUDELA & TH CONSULTING GROUP S.R.L., para la realización del",
+     "resumen_origen": "extractivo",
+     "grupo": "auditorias",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "firma": "TUDELA & TH CONSULTING GROUP S.R.L.",
+      "gestion": "2023"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Ferroviaria Andina S.A.",
+     "texto": "Ha comunicado que en cumplimiento de la R.A. APS/DJ/DP/Nº 215/2023, que establece el procedimiento para el traspaso de la Administración del Fondo de Capitalización Colectivo (FCC) de las AFP’s a la Gestora Pública de Seguridad Social de Largo Plazo y en atención a la solicitud de la Gestora Pública de la Seguridad Social de Largo Plazo, recibida en Ferroviaria Andina S.A. el 29 de mayo de 2023, procedió el 7 de junio de 2023, a registrar el cambio de Titularidad de Acciones a nombre de la Gestora Pública de Seguridad Social de Largo Plazo, de acuerdo a lo siguiente: Nombre Acciones % Accionario Tipo de Acción Gestora Pública de Seguridad Social de Largo Plazo para el FCC 330.141 24,9644 % Ordinaria Gestora Pública de Seguridad Social de Largo Plazo para el FCC 330.141 24,9644 % Ordinaria Luego del registro de cambio de titularidad antes citado, la composición accionaria de la Empresa Ferroviaria Andina S.A., quedó de la siguiente manera: N° Accionista Cant. de Acciones % de Participación Tipo de Acción 1 Inversiones Bolivian Railways S.A. 661.274 50,004% Ordinaria 2 Gestora Pública de Seguridad Social de Largo Plazo para el FCC 660.282 49,929% Ordinaria 3 Otros accionistas 892 0,067% Ordinaria Total acciones emitidas 1.322.448 100,000%",
+     "tags": [],
+     "resumen": "Ha comunicado que en cumplimiento de la R.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Ingenio Sucroalcoholero AGUAÍ S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 07 de junio de 2023, se determinó lo siguiente:\n1. Tomar conocimiento y aprobar el Informe de Presidencia y Gerencia General.\n2. Tomar conocimiento de los Estados Financieros de la Sociedad por el período cerrado al 31/03/2023 y aprobar por unanimidad su presentación ante la próxima Junta General Ordinaria de Accionistas.\n3. Considerar el borrador de la Memoria Anual, y acordar por unanimidad un plazo de cinco (5) días para que los señores Directores y Síndico hagan conocer sus observaciones para que este documento sea puesto en consideración de la Junta General Ordinaria de Accionistas.\n4. Tomar conocimiento de un borrador del Informe de Sindicatura por la gestión 01/abril/2022-31/mar/2023, cuyo informe definitivo será presentado a la próxima Junta General Ordinaria de Accionistas.\n5. Tomar conocimiento del proyecto de Tratamiento de las Utilidades y aprobar por unanimidad su presentación ante la Junta General Ordinaria de Accionistas.\n6. Deliberar y aprobar en forma unánime elevar la consideración de las modificaciones a las condiciones de emisión de Acciones Preferidas ante la próxima Junta General Extraordinaria de Accionistas.\n7. Aprobar convocar a Junta General Ordinaria de Accionistas, a realizarse el 14 de junio de 2023 a Hrs. 08:30, con el siguiente Orden del Día: i. Verificación de quórum, publicaciones de ley y acreditación de representantes. ii. Consideración y aprobación de la Memoria Anual. iii. Consideración y probación de los Estados Financieros del INGENIO SUCROALCOHOLERO AGUAÍ S.A. con corte al 31/03/2023. iv. Consideración y Aprobación del Informe Anual de Sindicatura. v. Tratamiento de los Resultados. vi. Nombramiento y/o ratificación de Directores y Síndico. vii. Política de Dietas y Fianzas. viii. Nombramiento de Auditores Externos. ix. Nombramiento de representantes para la firma del Acta.\n8. Aprobar convocar a Junta General Extraordinaria de Accionistas, a realizarse el 14 de junio de 2023 a Hrs. 10:30, con el siguiente Orden del Día: i. Verificación de quórum, publicaciones de ley y acreditación de representantes. ii. Consideración de modificaciones a las condiciones de emisión de acciones Preferidas. iii. Nombramiento de representantes para la firma del Acta.",
+     "tags": [
+      "emision",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 07 de junio de 2023, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "14 de junio de 2023",
+      "agenda": "emisión de valores · estados financieros"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Transporte S.A.",
+     "texto": "Ha comunicado que, en reunión de Directorio de 7 de junio de 2023, se determinó disponer unánimemente la convocatoria a Junta General Extraordinaria de Accionistas, a realizarse el 15 de junio de 2023 a Hrs. 10:00, en el domicilio de la Sociedad con la posibilidad que los accionistas y el Síndico participen también en forma virtual a través de video conferencia, para considerar y resolver el siguiente Orden del Día:\n1. Autorización para la compra de Cuotas de Participación.\n2. Designación de dos representantes de los accionistas para firma del Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que, en reunión de Directorio de 7 de junio de 2023, se determinó disponer unánimemente la convocatoria a Junta General Extraordinaria de Accionistas, a realizarse el 15 de junio de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "15 de junio de 2023"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Ver Adjunto",
+     "tags": [],
+     "resumen": "Ver Adjunto",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Ha comunicado que el Comité de Calificación N° 054/2023 celebrado el 6 de junio de 2023, con información financiera al 31 de marzo de 2023, PCR acordó otorgar las Calificaciones que se presentan en adjunto.",
+     "tags": [],
+     "resumen": "Ha comunicado que el Comité de Calificación N° 054/2023 celebrado el 6 de junio de 2023, con información financiera al 31 de marzo de 2023, PCR acordó otorgar las Calificaciones que se presentan en",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Capital + Gestionadora de Activos Sociedad Administradora de Fondos de Inversión Sociedad Anónima",
+     "texto": "Ha comunicado que mediante nota recibida el 6 de junio de 2023, la señora Luisa Marcela Cabrerizo Uzín, presentó renuncia como miembro del Comité de Auditoría Interna, efectiva a partir del 7 de junio de la presente gestión.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que mediante nota recibida el 6 de junio de 2023, la señora Luisa Marcela Cabrerizo Uzín, presentó renuncia como miembro del Comité de Auditoría Interna, efectiva a partir del 7 de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Luisa Marcela Cabrerizo Uzín",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 7 de junio de 2023, concluyó con el pago del Cupón N° 14 de los Bonos FANCESA IV - Emisión 2, (Serie A) dentro del Programa de Emisiones de Bonos FANCESA IV.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que el 7 de junio de 2023, concluyó con el pago del Cupón N° 14 de los Bonos FANCESA IV - Emisión 2, (Serie A) dentro del Programa de Emisiones de Bonos FANCESA IV.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "14",
+      "instrumento": "Bonos FANCESA IV",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Panamerican Securities S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que Inversiones Inmobiliarias IRALA S.A. realizó la provisión de fondos para el pago del Pagaré de Mesa de Negociación correspondiente a la Serie: IIRE000249. El pago se realizó a partir del 9 de junio de 2023.",
+     "tags": [],
+     "resumen": "Ha comunicado que Inversiones Inmobiliarias IRALA S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Panamerican Securities S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que DISMATEC S.A. realizó la provisión de fondos para la cancelación del Cupón Nº 7 de los “BONOS DISMATEC I – EMISIÓN 1\" correspondiente a las Series A y B con Claves de Pizarra: DMT-1-N1A-19 y DMT-1-N1B-19. El pago se realizará a partir del 13 de junio de 2023.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Ha comunicado que DISMATEC S.A. realizó la provisión de fondos para la cancelación del Cupón Nº 7 de los “BONOS DISMATEC I – EMISIÓN 1\" correspondiente a las Series A y B con Claves de Pizarra",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "7",
+      "instrumento": "BONOS DISMATEC I",
+      "fecha_pago": "13 de junio de 2023",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Panamerican Securities S.A. Agencia de Bolsa",
+     "texto": "Ha comunicado que el 9 de junio de 2023, finalizó la cancelación del Pagaré de Mesa de Negociación correspondiente a la Serie: IIRE000249.",
+     "tags": [],
+     "resumen": "Ha comunicado que el 9 de junio de 2023, finalizó la cancelación del Pagaré de Mesa de Negociación correspondiente a la Serie: IIRE000249.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Ha comunicado que de acuerdo a lo informado por iBolsa Agencia de Bolsa S.A., el 7 de junio de 2023, procedió con la baja de Cristian Alejandro Ledezma Vásquez como Asesor de Inversión en los registros de la Bolsa Boliviana de Valores S.A.",
+     "tags": [],
+     "resumen": "Ha comunicado que de acuerdo a lo informado por iBolsa Agencia de Bolsa S.A., el 7 de junio de 2023, procedió con la baja de Cristian Alejandro Ledezma Vásquez como Asesor de Inversión en los",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Ha comunicado que de acuerdo a lo informado por iBolsa Agencia de Bolsa S.A., el 7 de junio de 2023, procedió con la baja de Rolando Brian Cuevas como Operador de Bolsa y Asesor de Inversión, misma que se hará efectiva el 9 de junio de 2023, en los registros de la Bolsa Boliviana de Valores S.A.",
+     "tags": [],
+     "resumen": "Ha comunicado que de acuerdo a lo informado por iBolsa Agencia de Bolsa S.A., el 7 de junio de 2023, procedió con la baja de Rolando Brian Cuevas como Operador de Bolsa y Asesor de Inversión, misma",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "NIBOL LTDA.",
+     "texto": "Ha comunicado la rectificación de los resultados de los Compromisos Financieros de los Estados Financieros a marzo 2023.",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Ha comunicado la rectificación de los resultados de los Compromisos Financieros de los Estados Financieros a marzo 2023.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Parque Industrial Latinoamericano S.R.L.",
+     "texto": "Ha comunicado que el 9 de junio 2023, convoca a la Asamblea General de Tenedores de Bonos PILAT I – Emisión 1, Emisión 2 y Emisión 3, a realizarse el 20 de junio de 2023 a Hrs. 09:30, 10:00 y 10:30, respectivamente. Las mismas se llevarán a cabo desde la Ciudad de Santa Cruz de la Sierra, vía telemática, virtual o física, con el siguiente Orden del Día:\n1. Lectura de la convocatoria.\n2. Informe del Representante Común de Tenedores de Bonos.\n3. Informe de la Sociedad Emisora.\n4. Designación de Representantes para la suscripción del Acta de la Asamblea.\n5. Lectura, consideración y aprobación del Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 9 de junio 2023, convoca a la Asamblea General de Tenedores de Bonos PILAT I – Emisión 1, Emisión 2 y Emisión 3, a realizarse el 20 de junio de 2023 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "20 de junio de 2023"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Parque Industrial Latinoamericano S.R.L.",
+     "texto": "Ha comunicado que el 9 de junio 2023, convoca a la Asamblea General de Tenedores de Bonos PILAT II – Emisión 1, Emisión 2 y Emisión 3, a realizarse el 20 de junio de 2023 a Hrs. 11:00, 11:30 y 12:00, respectivamente. Las mismas se llevarán a cabo desde la Ciudad de Santa Cruz de la Sierra, vía telemática o virtual, con el siguiente Orden del Día:\n1. Lectura de la convocatoria.\n2. Informe del Representante Común de Tenedores de Bonos.\n3. Informe de la Sociedad Emisora.\n4. Designación de Representantes para la suscripción del Acta de la Asamblea.\n5. Lectura, consideración y aprobación del Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que el 9 de junio 2023, convoca a la Asamblea General de Tenedores de Bonos PILAT II – Emisión 1, Emisión 2 y Emisión 3, a realizarse el 20 de junio de 2023 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "20 de junio de 2023"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Ha comunicado la designación temporal del señor Giner Ortiz Inturias, en el cargo de Gerente Nacional de Negocios a.i., a partir del 9 de junio de 2023 y será efectivo hasta el 16 de junio de 2023, periodo en el que el señor Jaime Andres Zegarra Dick se encontrará de vacaciones. El mismo retornará a sus funciones habituales en el cargo de Gerente Nacional de Negocios, a partir del 17 de junio de 2023.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado la designación temporal del señor Giner Ortiz Inturias, en el cargo de Gerente Nacional de Negocios a.i., a partir del 9 de junio de 2023 y será efectivo hasta el 16 de junio de 2023",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Giner Ortiz Inturias",
+      "cargo": "Gerente Nacional de Negocios",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/688/2023 de 05 de junio de 2023",
+     "texto": "RESUELVE:\nPRIMERO.- Aprobar las modificaciones a los Artículos VIII. 34, VIII. 86, VIII. 87 y a los INSTRUCTIVOS VIII.10, VIII.13, VIII.16 del REGLAMENTO OPERATIVO INTERNO de la ENTIDAD DE DEPÓSITO DE VALORES DE BOLIVIA S.A., que en Anexo forma parte integrante e indivisible de la presente Resolución.\nSEGUNDO.- Disponer que, la ENTIDAD DE DEPÓSITO DE VALORES DE BOLIVIA S.A. debe presentar a esta Autoridad de Supervisión, en formato físico y electrónico, el texto del REGLAMENTO OPERATIVO INTERNO con las modificaciones aprobadas mediante la presente Resolución, en el plazo de diez (10) días hábiles administrativos, computables a partir de su notificación.\nTERCERO.- La ENTIDAD DE DEPÓSITO DE VALORES DE BOLIVIA S.A. debe poner en conocimiento del Mercado de Valores y público en general, los cambios incorporados en su REGLAMENTO OPERATIVO INTERNO, aprobados mediante la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Aprobar las modificaciones a los Artículos VIII.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
+  }
+ }
+}
