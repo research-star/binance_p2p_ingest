@@ -223,3 +223,48 @@ La brecha de ~2,4 pp de `otros` (25% vs 22,6%) se explica casi entera por **UN**
 
 **Decisión:** NO ajusté regex (fuera de scope de 2b.1 — solo reportar). El ajuste de
 `_RE_PRESTAMO_TXT` (+ opcional `_RE_PERSONAL_VERBO`) es brief aparte antes de 2020-2024.
+
+---
+
+## 2026-07-13 — Fase 2b.1b: taxonomía v2.1 (`TAXONOMIA_V 2→3`) — cierra el gap de 2b.1
+
+**Qué.** Cerré los dos gaps de drift léxico que detectó el piloto 2025, sobre TODA la
+data existente (2026 prod + 2025 branch), para consistencia. Sin scraping, sin API,
+sin tocar títulos. Efecto (reextraer, por año):
+
+| año | otros antes | otros después | prestamos | personal |
+|---|--:|--:|--:|--:|
+| **2025** | 1493 (25%) | **1419 (24%)** | 161→230 (+69) | 792→798 (+6) |
+| **2026** | 759 (22%) | **723 (21%)** | 102→131 (+29) | 526→533 (+7) |
+
+`otros` baja hacia paridad; 2026 (prod) también tenía el FN (~29 préstamos) → el fix
+lo corrige en ambos. `grupo_v=3` + `revisado='provisional'` al 100%; `resumen_origen`
+intacto (3052 'ia' de 2026 preservados, 2025 sigue 100% extractivo). Idempotente.
+
+### Cambios (extract.py)
+
+- **`_RE_PRESTAMO_TXT`** += `adquiri[óo] (un) (préstamo|línea de crédito|crédito)` +
+  `adquirir …`. 2025/2026 usan "adquirió un préstamo del Banco X por Bs…" donde el
+  vocabulario viejo (v2) solo tenía "obtuvo/suscribió/desembolso". Corta el monto igual
+  que las otras ramas (via `_RE_MONTO_BS` en `extraer_campos`).
+- **`_RE_PERSONAL_VERBO`** += `finalizó/concluyó la (relación|vinculación) laboral`,
+  `dejó de (ejercer|prestar|desempeñar|pertenecer)`, `cese de (sus) funciones`.
+
+### Decisiones de precisión (learn-loop)
+
+- **FP-risk descartado por prioridad:** el préstamo puede convivir con emisiones/
+  compromisos en el mismo texto, pero esos grupos van ANTES (prioridad 1-3); `prestamos`
+  es prioridad 10 → solo captura lo que hoy cae a `otros`. Verificado: de los 69+29
+  candidatos, **0 tienen tag `junta`** (sin colisión con asambleas). Todos extraen monto.
+- **No agregué `línea de crédito` a secas** (solo "adquirió/suscribió … línea de
+  crédito"): bare "línea de crédito" aparece en agendas de junta y daría FP. El piloto
+  contó ~80 con el patrón laxo; el tight (verbo + objeto) da **69** genuinos.
+- **1 `juntas→personal` (Telefónica, "reunión de Directorio … cese de funciones de
+  Roberto Andino Pinto, Gerente General"):** NO es FP — es un cese de un cargo específico
+  (sin tag junta), correcto en `personal`. Único matiz: la persona no se extrae porque el
+  nombre viene sin "señor" ("cese de funciones de Roberto Andino") → fila algo sparse.
+  Gap de extracción de `_RE_PERSONA` (no de clasificación); candidato menor, 1 item.
+- **Fin-laboral sin `movimiento`:** las variantes nuevas no mapean a `_MOVIMIENTOS`
+  (renuncia/desvinculación/…), así que esos personal rinden persona+cargo sin badge de
+  movimiento. Aceptable (persona es el dato clave); ampliar `_MOVIMIENTOS` con
+  "cese/fin de relación laboral" es mejora opcional futura.
