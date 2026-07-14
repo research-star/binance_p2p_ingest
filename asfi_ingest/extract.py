@@ -47,7 +47,11 @@ import re
 
 # Versión de la taxonomía. Se estampa en cada item (`grupo_v`) para que un pase
 # futuro pueda re-clasificar selectivamente. V1 = implícito (items sin el campo).
-TAXONOMIA_V = 2
+# V3 (fase 2b.1b): amplía verbos de préstamo ("adquirió un préstamo/línea de
+# crédito", drift léxico visto en 2025) y de fin laboral ("finalizó/concluyó la
+# relación/vinculación laboral", "dejó de ejercer/prestar/pertenecer", "cese de
+# funciones") — cierra ~69/año (préstamo) + ~5-7/año (personal) que caían a 'otros'.
+TAXONOMIA_V = 3
 
 GRUPOS = ("emisiones", "cupones", "prestamos", "directorio", "personal",
           "dividendos", "uso_fondos", "compromisos_reportados",
@@ -250,11 +254,18 @@ _RE_REUNION_ACTA = re.compile(
 _RE_PERSONAL_VERBO = re.compile(
     r"asume el cargo|asumi[óo] el cargo|fue ascendid|culmin[óo][^.]{0,40}relaci[óo]n laboral|"
     r"acept[óo] la renuncia|present[óo] su renuncia|fue posesionad|se incorpora(?:r[áa])?|"
-    r"design[óo] (?:a|al|como)|fue design", re.I)
+    r"design[óo] (?:a|al|como)|fue design|"
+    # V3: variantes de fin de relación laboral (drift léxico 2025/2026).
+    r"finaliz[óo] (?:la|su) (?:vinculaci[óo]n|relaci[óo]n) laboral|"
+    r"conclu(?:y[óo]|si[óo]n)[^.]{0,30}(?:relaci[óo]n|vinculaci[óo]n) laboral|"
+    r"dej[óo] de (?:ejercer|prestar|desempe[ñn]ar|pertenecer)|cese de (?:sus )?funciones", re.I)
 # Préstamo/desembolso recibido, por verbo textual (el tag `prestamo` solo capta
 # "desembolso"/"préstamo de dinero" y se pierde "obtuvo/suscribió un préstamo").
 _RE_PRESTAMO_TXT = re.compile(
     r"obtuvo un pr[ée]stamo|suscrib\w+[^.]{0,60}(?:contrato de pr[ée]stamo|l[íi]nea de cr[ée]dito)|"
+    # V3: "adquirió/adquirir (un) préstamo/línea de crédito/crédito" (redacción 2025+2026).
+    r"adquiri[óo] (?:un[ao]? )?(?:pr[ée]stamo|l[íi]nea de cr[ée]dito|cr[ée]dito)|"
+    r"adquirir (?:un[ao]? )?(?:pr[ée]stamo|l[íi]nea de cr[ée]dito)|"
     r"desembolso|pr[ée]stamo de dinero|otorg[óo][^.]{0,20}pr[ée]stamo", re.I)
 # Compromiso financiero cuya TABLA de indicadores existe pero el aplanado pypdf la
 # rompió (regex no extrajo pares): se marca para el re-parseo de tablas del P2.
