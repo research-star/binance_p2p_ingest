@@ -4532,6 +4532,521 @@
      "revisado": "provisional"
     }
    ]
+  },
+  "2026-07-14": {
+   "guid": "e98aac32-e59b-43e6-8ece-40c2e6185d83",
+   "titulo": "Reporte Informativo ASFI al 14/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Credibolsa S.A. Agencia de Bolsa",
+     "texto": "Comunica que, el 11 de julio de 2026, el Emisor Frigorífico BFC S.A. efectuó la reposición total de los recursos utilizados del Fondo de Contingencia, los cuales fueron destinados al pago del Cupón Nº 4, con fecha de vencimiento 18 de junio de 2026, correspondiente a la emisión “Bonos BFC - Emisión 2”, identificada con Clave de Pizarra: FBF-1-N2U-24; por lo que, el mecanismo de cobertura adicional de la referida emisión quedó debidamente restituido.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 11 de julio de 2026, el Emisor Frigorífico BFC S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "4",
+      "instrumento": "Bonos BFC",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Mercantil Santa Cruz Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 13 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Aprobar la modificación de la Escritura de Constitución de la Sociedad.\n2. Lectura del Informe del Síndico.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 13 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Seguros Illimani S.A. (S.I.S.A.)",
+     "texto": "Comunica que, en reunión de Directorio de 14 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 22 de julio de 2026 a Hrs. 10:00, con el siguiente Orden del Día:\n1. Lectura de Convocatoria.\n2. Capitalización de la cuenta de Ajuste de Capital.\n3. Lectura y aprobación del Acta.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 14 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 22 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "22 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Seguros Illimani S.A. (S.I.S.A.)",
+     "texto": "Comunica que, en reunión de Directorio de 14 de julio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 22 de julio de 2026 a Hrs. 10:30, con el siguiente Orden del Día:\n1. Lectura de Convocatoria.\n2. Aprobación del Incremento de Capital Pagado y Suscrito.\n3. Lectura y aprobación del Acta.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 14 de julio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 22 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "22 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Sociedad Boliviana de Cemento S.A. \"SOBOCE\"",
+     "texto": "Ha comunicado que en reunión de Directorio de 13 de julio de 2026, se determinó lo siguiente: Ratificación de contratos de materia prima.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 13 de julio de 2026, se determinó lo siguiente: Ratificación de contratos de materia prima.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Nacional de Bolivia S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 13 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 3 de agosto de 2026 a Hrs. 09:00 de forma virtual (no presencial), para considerar el siguiente Orden del Día:\n1. Lectura de la Convocatoria a la Junta General Ordinaria de Accionistas de la Sociedad.\n2. Aclaración de determinaciones adoptadas en el Punto 6 del Acta de Junta General Ordinaria de Accionistas celebrada el 19 de febrero de 2026.\n3. Designación de accionistas para la firma del Acta de la Junta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 13 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 3 de agosto de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "3 de agosto de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Fondos de Inversión",
+     "entidad": "INVERSEC + Fondo de Inversión Cerrado",
+     "texto": "Comunica que, el 13 de julio de 2026, recibió la carta presentada por Adriana Roca Bello, mediante la cual, informa su renuncia al cargo de Administrador Titular de Inversec + FIC, siendo su último día laboral el 31 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 13 de julio de 2026, recibió la carta presentada por Adriana Roca Bello, mediante la cual, informa su renuncia al cargo de Administrador Titular de Inversec + FIC, siendo su último",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Administrador Titular de Inversec + FIC",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Centro de Investigación y Desarrollo Regional - CIDRE IFD",
+     "texto": "Comunica que, el 13 de julio de 2026, procedió a la constitución de las reservas y la capitalización derivadas de la reinversión del excedente de utilidades correspondiente a la gestión 2025, conforme al siguiente detalle: Reserva para Servicios Integrales de Desarrollo: Se constituyó por un monto equivalente al 10% del Resultado Neto de la gestión. Reserva Legal: Se constituyó por un monto equivalente al 10% del Resultado Neto de la gestión, en cumplimiento de la normativa vigente. Capitalización: El 80% restante de las utilidades generadas fue destinado a incrementar el Capital Social de la entidad.",
+     "tags": [],
+     "resumen": "Comunica que, el 13 de julio de 2026, procedió a la constitución de las reservas y la capitalización derivadas de la reinversión del excedente de utilidades correspondiente a la gestión 2025",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Comunica que, el 14 de julio de 2026, emitió Pagarés sin Oferta Pública por un monto total de Bs45.000.000,00 a favor de INTERFIN FIC - Administrado por FIPADE SAFI",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el 14 de julio de 2026, emitió Pagarés sin Oferta Pública por un monto total de Bs45.000.000,00 a favor de INTERFIN FIC - Administrado por FIPADE SAFI",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "S.A. Fundación Diaconía Fondo Rotativo de Inversión y Fomento - DIACONÍA FRIF - IFD",
+     "texto": "Comunica que, en reunión Ordinaria de Directorio de 24 de junio de 2026, se determinó convocar a la Asamblea Extraordinaria de Asociados, a realizarse el 11 de agosto de 2026 a Hrs. 08:30, de forma mixta, con el siguiente Orden del Día:\n- Oración de apertura.\n- Modificaciones del Estatuto Orgánico de DIACONIA FRIF IFD.\n- Informe del Nivel de Previsiones Constituidas al 31 de marzo de 2026.\n- Informe del Nivel de Previsiones Constituidas al 30 de junio de 2026.\n- Consideración de Resolución del Comité de Ética.\n- Designación para la firma del Acta.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión Ordinaria de Directorio de 24 de junio de 2026, se determinó convocar a la Asamblea Extraordinaria de Asociados, a realizarse el 11 de agosto de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 13 de julio de 2026, realizada con el 60.00% de los asociados, determinó lo siguiente: Autorizar la suscripción de Pagarés sin Oferta Pública a favor de “MSC EXPANSIÓN Fondo de Inversión Cerrado”, administrado por SAFI MERCANTIL SANTA CRUZ S.A. por Bs30.000.000,00.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 13 de julio de 2026, realizada con el 60.00% de los asociados, determinó lo siguiente: Autorizar la suscripción de Pagarés sin",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Capital Para el Crecimiento Empresarial Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que la Junta General Ordinaria de Accionistas de 10 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aceptar la delegación de facultad de conformación de Comités de Inversiones para Fondos de Inversión administrados por CAPCEM SAFI S.A. al Directorio.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 10 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aceptar la delegación de facultad de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "iBolsa Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 9 de julio de 2026, se determinó proceder a la segunda publicación de la convocatoria a Junta General Extraordinaria de Accionistas, a realizarse el 31 de julio de 2026 a Hrs. 10:00, con el siguiente Orden del Día:\n1. Modificación parcial del Estatuto de la Sociedad.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 9 de julio de 2026, se determinó proceder a la segunda publicación de la convocatoria a Junta General Extraordinaria de Accionistas, a realizarse el 31 de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "31 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "iBolsa Sociedad de Titularización S.A.",
+     "texto": "Comunica que, la Junta General Extraordinaria de Accionistas, convocada para el 30 de junio de 2026, no se llevó a cabo por falta de quórum.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, la Junta General Extraordinaria de Accionistas, convocada para el 30 de junio de 2026, no se llevó a cabo por falta de quórum.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "iBolsa Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del Patrimonio Autónomo Las Lomas - iBOLSA ST 003, dando cumplimiento a lo establecido en el Contrato de Cesión Cláusula Décima Segunda Control de Ventas y Tratamiento de Discrepancias de Fondos y numeral 12.1 (Control de Ventas), inciso a) y del Prospecto de emisión numeral 1.11 (Control de Ventas y Tratamiento de Discrepancias de Fondos), numeral 1.11.1 (Control de Ventas) inciso a) del Patrimonio Autónomo Las Lomas - iBolsa ST 003, en atención al Informe APA-ST 017/2026 de 14 de julio de 2026, referente a “Informe de verificación de captura de ventas”, correspondiente al noveno periodo mensual, señala en su parte conclusiva que, se está dando cumplimiento de forma razonable a la aplicación de las estipulaciones y procedimientos establecidos en el Contrato de Cesión y del Prospecto de Las Lomas - IBOLSA ST 003 y determina que no hay Discrepancia de Fondos del Periodo mensual.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo Las Lomas - iBOLSA ST 003, dando cumplimiento a lo establecido en el Contrato de Cesión Cláusula Décima Segunda Control de Ventas y",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 6 de la Emisión de Bonos BISA LEASING VI - Emisión 2 (Series A y B), dentro del Programa de Emisiones de Bonos BISA LEASING VI, se realizará, a partir del 15 de julio de 2026, en sus oficinas.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 6 de la Emisión de Bonos BISA LEASING VI - Emisión 2 (Series A y B), dentro del Programa de Emisiones de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "6",
+      "instrumento": "Bonos BISA LEASING VI",
+      "fecha_pago": "15 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “BONOS INCOTEC II”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, Ingeniería y Construcciones Técnicas Incotec S.A. deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “BONOS INCOTEC II”, en la Bolsa Boliviana",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "BONOS INCOTEC II",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “Pagarés Bursátiles CRECER IFD I”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, Crédito con Educación Rural Institución Financiera de Desarrollo (CRECER IFD), deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “Pagarés",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles CRECER IFD I",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “Pagarés Bursátiles LAS LOMAS I”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, IMPORT. EXPORT. LAS LOMAS LTDA., deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 13 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “Pagarés",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles LAS LOMAS I",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "Bisa Leasing S.A.",
+     "texto": "Comunica que, en cumplimiento a lo establecido en el Prospecto Complementario de la Emisión denominada Bonos BISA LEASING VI - Emisión 2, dentro del Programa de Emisiones de Bonos BISA LEASING VI, el 14 de julio de 2026, realizó la provisión de los fondos respectivos a BISA S.A. Agencia de Bolsa (agente pagador) para realizar el pago del Cupón N° 6 correspondiente a dicha emisión, de las siguientes Series, cuyo vencimiento es el 15 de julio de 2026:\n- Serie “A” (Clave de Pizarra: BIL-6-N1A-23), Capital e intereses.\n- Serie “B” (Clave de Pizarra: BIL-6-N1B-23), Intereses. El pago será realizado por BISA S.A. Agencia de Bolsa, a partir del 15 de julio del año en curso.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, en cumplimiento a lo establecido en el Prospecto Complementario de la Emisión denominada Bonos BISA LEASING VI - Emisión 2, dentro del Programa de Emisiones de Bonos BISA LEASING VI, el",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "6",
+      "instrumento": "Bonos BISA LEASING VI",
+      "fecha_pago": "15 de julio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Droguería INTI S.A.",
+     "texto": "Comunica que, el 13 de julio de 2026, fue informada que el número de Acciones Ordinarias por 30.974 pertenecientes a TILL ERNST SCHILLING BOHME, fueron transferidas a Jorge Rodolfo Claros Fuentes.",
+     "tags": [],
+     "resumen": "Comunica que, el 13 de julio de 2026, fue informada que el número de Acciones Ordinarias por 30.974 pertenecientes a TILL ERNST SCHILLING BOHME, fueron transferidas a Jorge Rodolfo Claros Fuentes.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Droguería INTI S.A.",
+     "texto": "Comunica que, a partir del 13 de julio de 2026, la nueva Composición Accionaria es la siguiente: Accionista Acciones % Accionario PROFECTIO-DSD-GmbH & Co. KG. 762.452 25,00% EKMISCH GmbH & Co. KG 665.392 21,82% Voss de Schilling Doerte 403.319 13,23% DALGAS VOSS GmbH 403.319 13,23% Claros Fuentes Jorge Rodolfo 304.958 10,00% Schilling Nuñez Carolina 288.507 9,46% Schilling Bohme Till Ernst 116.434 3,82% Schilling Astorga Klaus 68.604 2,25% Nuñez Vda. de Schilling Lina 36.591 1,20% Total 3.049.576 100%",
+     "tags": [],
+     "resumen": "Comunica que, a partir del 13 de julio de 2026, la nueva Composición Accionaria es la siguiente: Accionista Acciones % Accionario PROFECTIO-DSD-GmbH & Co.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A. Ver Adjunto Ver Adjunto",
+     "texto": "Comunica que, el 14 de julio de 2026, emitió la siguiente disposición interna: Disposición Organizativa N° 007/2026, a partir de la fecha, en el marco de la Disposición Organizativa N° 004/2026 y como parte del proceso de fortalecimiento de la estructura organizacional de ENTEL S.A., dentro de la Gerencia Nacional Comercial, la reorganización de la Estructura Organizativa de la Subgerencia Marketing y su segregación en Subgerencia Marketing y Subgerencia Gestión de Productos, con el propósito de optimizar la gestión de Marketing, el Desarrollo y Gestión de Producto de la institución. La presente reorganización contempla la definición de las funciones de Marketing Comercial, Marketing Digital, Publicidad e Imagen a nivel de Jefaturas dentro de la Subgerencia Marketing y las funciones de Producto Hogar, Producto Mobile a nivel de Jefaturas dentro de la Subgerencia de Gestión de Productos. De igual manera, quedan aprobados todos los cambios que deriven de esta modificación.",
+     "tags": [],
+     "resumen": "Comunica que, el 14 de julio de 2026, emitió la siguiente disposición interna: Disposición Organizativa N° 007/2026, a partir de la fecha, en el marco de la Disposición Organizativa N° 004/2026 y",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs1.150.018,78 para compra de mercadería como parte del capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs1.150.018,78 para compra de mercadería como parte del capital de operaciones.",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacias Chávez II",
+      "destino": "parte del capital de operaciones",
+      "monto": "Bs 1,2 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs21.720,64 para capital de inversión.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs21.720,64 para capital de inversión.",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacia Chávez I",
+      "monto": "Bs 22 mil"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Gas y Electricidad S.A.",
+     "texto": "Comunica que, los Compromisos Financieros al 30 de junio de 2026, asumidos de acuerdo al Prospecto de Emisión de “Bonos Gas & Electricidad Sociedad Anónima”, Prospecto Complementario de Emisión de “Bonos GAS & ELECTRICIDAD II - Emisión 1”, Prospecto de Emisión de “Bonos GYE”, Prospecto Complementario de Emisión de “Bonos GAS & ELECTRICIDAD II - Emisión 2”, Prospecto Complementario de “Bonos GAS & ELECTRICIDAD III - Emisión 1” y Prospecto Complementario de “Bonos GAS & ELECTRICIDAD III - Emisión 2”, mismos que se detallan a continuación: RATIOS Compromiso Al 30-Jun-2026 Ratio de Cobertura del Servicio de la Deuda (RCD) >= 1,20 1,92 Ratio Deuda a Patrimonio (RDP) <= 2,4 2,20 Razón Corriente (RC) >= 1,2 1,80",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los Compromisos Financieros al 30 de junio de 2026, asumidos de acuerdo al Prospecto de Emisión de “Bonos Gas & Electricidad Sociedad Anónima”, Prospecto Complementario de Emisión de",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "RCD",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.92",
+        "ok": true
+       },
+       {
+        "sigla": "RDP",
+        "op": "<=",
+        "req": "2.4",
+        "valor": "2.2",
+        "ok": true
+       },
+       {
+        "sigla": "RC",
+        "op": ">=",
+        "req": "1.2",
+        "valor": "1.8",
+        "ok": true
+       }
+      ]
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Comunica la designación temporal de Reynaldo De La Cruz Velasquez Espejo, en el cargo de Gerente Regional - El Alto a.i., a partir del 13 de julio de 2026 y será efectivo hasta el 2 de agosto de 2026, periodo en el que Paola Andrea Peña Gallardo se encontrará de vacaciones. La misma retornará a sus funciones habituales en el cargo de Gerente Regional - El Alto, a partir del 3 de agosto de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica la designación temporal de Reynaldo De La Cruz Velasquez Espejo, en el cargo de Gerente Regional - El Alto a.i., a partir del 13 de julio de 2026 y será efectivo hasta el 2 de agosto de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Regional - El Alto",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "iBolsa Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del Patrimonio Autónomo - Las Lomas - iBOLSA ST 003, dando cumplimiento a lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de Cesión de Derechos sobre Flujos de Ventas Futuras para Fines de Titularización, Administración y Representación, sus Adendas modificatorias suscritas el 9 de septiembre y el 25 de septiembre de 2025, entre iBolsa Sociedad de Titularización S.A. e IMPORT. EXPORT. LAS LOMAS LTDA. y dando cumplimiento a los numerales 2.5.1 (Coeficiente de Cobertura Cupón), 2.5.2 (Coeficiente de Depósitos Directos) y 2.5.4 (Coeficiente de Cobertura por Captura de Ventas Brutas) del Prospecto de Emisión, los coeficientes corresponden al Periodo Mensual, comprendido entre el 1 al 30 de junio de 2026, son los siguientes: Indicadores Financieros Compromiso Periodo Mensual Coeficiente de Depósitos Directos (CDD): CDD >= 0,60 7,61 Coeficiente de Cobertura por Captura de Ventas Brutas (CCCV): CCCV >= 3,00 4,93 Coeficiente de Cobertura Cupón (CCC): CCC >= 1,10 9,36 Coeficiente de Apalancamiento Financiero (CAF): CAF <=2,00 1,81",
+     "tags": [
+      "compromisos",
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del Patrimonio Autónomo - Las Lomas - iBOLSA ST 003, dando cumplimiento a lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CDD",
+        "op": ">=",
+        "req": "0.6",
+        "valor": "7.61",
+        "ok": true
+       },
+       {
+        "sigla": "CCCV",
+        "op": ">=",
+        "req": "3",
+        "valor": "4.93",
+        "ok": true
+       },
+       {
+        "sigla": "CCC",
+        "op": ">=",
+        "req": "1.1",
+        "valor": "9.36",
+        "ok": true
+       },
+       {
+        "sigla": "CAF",
+        "op": "<=",
+        "req": "2",
+        "valor": "1.81",
+        "ok": true
+       }
+      ]
+     }
+    }
+   ]
   }
  }
 }
