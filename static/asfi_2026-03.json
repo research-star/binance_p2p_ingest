@@ -23,7 +23,7 @@
       "fecha_junta": "20 de marzo de 2026",
       "agenda": "estados financieros"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -42,7 +42,7 @@
       "movimiento": "remoción"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -62,7 +62,7 @@
       "tipo": "Ordinaria",
       "fecha_junta": "20 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -78,7 +78,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -99,7 +99,7 @@
       "fecha_junta": "7 de marzo de 2026",
       "agenda": "estados financieros"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -119,7 +119,7 @@
       "movimiento": "remoción"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -138,7 +138,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -158,7 +158,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -178,7 +178,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -195,7 +195,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -213,7 +213,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -229,7 +229,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -245,7 +245,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -260,7 +260,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "18 de marzo de 2026",
@@ -283,7 +283,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -302,7 +302,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -318,7 +318,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -339,7 +339,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -357,7 +357,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -370,7 +370,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -390,7 +390,7 @@
       "tipo": "Extraordinaria",
       "fecha_junta": "13 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -401,10 +401,14 @@
      "tags": [],
      "resumen": "Renuncia Subgerente de Operaciones de Alianza SAFI",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Rubén Gustavo Alcázar Endara",
+      "cargo": "Subgerente de Operaciones"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -416,7 +420,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -432,7 +436,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -447,7 +451,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -463,7 +467,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -482,7 +486,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -508,7 +512,7 @@
        }
       ]
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -524,7 +528,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -546,7 +550,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -564,7 +568,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -586,7 +590,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -608,7 +612,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -629,7 +633,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -645,7 +649,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -670,7 +674,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -690,7 +694,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -710,7 +714,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -729,7 +733,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -749,7 +753,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -762,7 +766,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -784,7 +788,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -799,7 +803,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -814,7 +818,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -829,7 +833,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -844,7 +848,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -859,7 +863,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -874,7 +878,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -897,7 +901,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -913,7 +917,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -935,7 +939,7 @@
       "monto": "Bs 500 mil"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -951,7 +955,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de marzo de 2026",
@@ -971,7 +975,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de marzo de 2026",
@@ -991,7 +995,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de marzo de 2026"
@@ -1007,7 +1011,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1027,7 +1031,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1043,7 +1047,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -1062,7 +1066,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital"
@@ -1085,7 +1089,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1102,7 +1106,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria"
@@ -1126,7 +1130,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1147,7 +1151,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1168,7 +1172,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1189,7 +1193,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1210,7 +1214,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1231,7 +1235,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1252,7 +1256,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1273,7 +1277,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1294,7 +1298,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1315,7 +1319,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1336,7 +1340,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1357,7 +1361,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1370,7 +1374,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1391,7 +1395,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1412,7 +1416,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1432,7 +1436,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1452,7 +1456,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1500,7 +1504,7 @@
        }
       ]
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1521,7 +1525,7 @@
       "registro": "ASFI/DSV-FIA-NMP-001/2026"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1540,7 +1544,7 @@
       "instrumento": "Pagarés Bursátiles GRAVETAL IV - Emisión 2"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1561,7 +1565,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Mario Alberto Patiño Serrate",
@@ -1585,7 +1589,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1601,7 +1605,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "25 de marzo de 2026"
@@ -1620,7 +1624,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "25 de marzo de 2026"
@@ -1644,7 +1648,7 @@
       "tipo": "Ordinaria",
       "fecha_junta": "18 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1657,7 +1661,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -1676,7 +1680,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de marzo de 2026",
@@ -1696,7 +1700,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 2 mil por acción",
@@ -1720,7 +1724,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1740,7 +1744,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1760,7 +1764,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1773,7 +1777,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1789,7 +1793,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 5,84"
@@ -1808,7 +1812,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1829,7 +1833,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1850,7 +1854,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1871,7 +1875,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1891,7 +1895,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1911,7 +1915,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1924,7 +1928,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1937,7 +1941,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1959,7 +1963,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1979,7 +1983,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1994,7 +1998,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2014,7 +2018,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2029,7 +2033,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2048,7 +2052,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2060,7 +2064,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 05 de marzo de 2026, se determinó lo siguiente: Conformación de la Mesa Directiva: Julio Cesar León Prado Presidente del Directorio Tomás Nelsón Barrios",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2075,7 +2079,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2094,7 +2098,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2109,7 +2113,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2129,7 +2133,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2142,7 +2146,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2157,7 +2161,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Banco Ganadero II",
@@ -2174,7 +2178,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2187,7 +2191,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2200,7 +2204,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2213,7 +2217,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2233,7 +2237,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2254,7 +2258,7 @@
       "registro": "ASFI/DSV-PEB-CMI-001/2026"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2273,7 +2277,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2286,7 +2290,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2299,7 +2303,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2315,7 +2319,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "24 de marzo de 2026",
@@ -2335,7 +2339,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "24 de marzo de 2026",
@@ -2352,7 +2356,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2372,7 +2376,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2389,7 +2393,7 @@
      "campos": {
       "movimiento": "designación"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2409,7 +2413,7 @@
       "movimiento": "remoción"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2425,7 +2429,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -2443,7 +2447,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2459,7 +2463,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2474,7 +2478,7 @@
      "resumen_origen": "ia",
      "grupo": "calificaciones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2486,7 +2490,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 05 de marzo de 2026, se determinó lo siguiente: Aprobar la conformación de Comités para la gestión 2026, de acuerdo con el siguiente detalle: COMITÉ",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2501,7 +2505,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2514,7 +2518,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2534,7 +2538,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2549,7 +2553,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2562,7 +2566,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2575,7 +2579,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "emisor": "AICC SAFI S.A."
@@ -2593,7 +2597,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2608,7 +2612,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2633,7 +2637,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2649,7 +2653,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2668,7 +2672,7 @@
       "monto": "Bs 5,0 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2687,7 +2691,7 @@
       "monto": "Bs 4,0 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2702,7 +2706,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2717,7 +2721,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2737,7 +2741,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2754,7 +2758,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -2777,7 +2781,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2796,7 +2800,7 @@
       "movimiento": "nombramiento"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2816,7 +2820,7 @@
       "tipo": "Ordinaria",
       "fecha_junta": "31 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2833,7 +2837,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 355,7 M",
@@ -2852,7 +2856,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2868,7 +2872,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -2887,7 +2891,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Subordinados BANCOSOL IV",
@@ -2904,7 +2908,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2920,7 +2924,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2937,7 +2941,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -2956,7 +2960,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2972,7 +2976,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2992,7 +2996,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3005,7 +3009,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3020,7 +3024,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3041,7 +3045,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3056,7 +3060,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3072,7 +3076,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -3096,7 +3100,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3109,7 +3113,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3122,7 +3126,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3142,7 +3146,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3162,7 +3166,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3177,7 +3181,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3192,7 +3196,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3213,7 +3217,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -3232,7 +3236,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3252,7 +3256,7 @@
       "tipo": "Ordinaria",
       "fecha_junta": "23 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3272,7 +3276,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3292,7 +3296,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3309,7 +3313,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Paola Angelica Gutierrez Aguilar",
@@ -3336,7 +3340,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3351,7 +3355,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3370,7 +3374,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3390,7 +3394,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3405,7 +3409,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3418,7 +3422,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3444,7 +3448,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3460,7 +3464,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria"
@@ -3483,7 +3487,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3499,7 +3503,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Tienda Amiga II",
@@ -3518,7 +3522,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "nombramiento"
@@ -3533,7 +3537,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3546,7 +3550,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3567,7 +3571,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3582,7 +3586,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3602,7 +3606,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3617,7 +3621,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "destino": "capital de inversión",
@@ -3637,7 +3641,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -3658,7 +3662,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -3679,7 +3683,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -3700,7 +3704,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -3725,7 +3729,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3742,7 +3746,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3757,7 +3761,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3772,7 +3776,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3787,7 +3791,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3808,7 +3812,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3828,7 +3832,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3844,7 +3848,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "26 de marzo de 2026",
@@ -3864,7 +3868,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de marzo de 2026"
@@ -3879,7 +3883,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 12 de marzo de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3894,7 +3898,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3906,7 +3910,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3918,7 +3922,7 @@
      "resumen": "Comunica que, en Comité N° 024/2026 celebrado el 10 de marzo de 2026, con información financiera al 31 de diciembre de 2025, PCR acordó otorgar las Calificaciones que se presentan en adjunto.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3934,7 +3938,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3950,7 +3954,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3965,7 +3969,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3986,7 +3990,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4001,7 +4005,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -4019,7 +4023,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4032,7 +4036,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4053,7 +4057,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4073,7 +4077,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4096,7 +4100,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -4115,7 +4119,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -4134,7 +4138,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 320 mil",
@@ -4154,7 +4158,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Robert Marcelo Oliva Torrico",
@@ -4173,7 +4177,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4188,7 +4192,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4207,7 +4211,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4220,7 +4224,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4237,7 +4241,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -4253,7 +4257,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4268,7 +4272,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4290,7 +4294,7 @@
       "fecha_junta": "25 de marzo de 2026",
       "agenda": "directorio"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4312,7 +4316,7 @@
       "fecha_junta": "25 de marzo de 2026",
       "agenda": "emisión de valores · aumento de capital"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4325,7 +4329,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4340,7 +4344,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4356,7 +4360,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "30 de marzo de 2026",
@@ -4382,7 +4386,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4403,7 +4407,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4418,7 +4422,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4439,7 +4443,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4458,7 +4462,7 @@
       "movimiento": "nombramiento"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4474,7 +4478,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -4498,7 +4502,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4518,7 +4522,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4534,7 +4538,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de marzo de 2026",
@@ -4557,7 +4561,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4574,7 +4578,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -4596,7 +4600,7 @@
       "fecha_pago": "23 de marzo de 2026"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4613,7 +4617,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -4635,7 +4639,7 @@
       "fecha_pago": "23 de marzo de 2026"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4654,7 +4658,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4669,7 +4673,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4689,7 +4693,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4709,7 +4713,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4726,7 +4730,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -4744,7 +4748,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4760,7 +4764,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4776,7 +4780,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4791,7 +4795,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4804,7 +4808,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4824,7 +4828,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4845,7 +4849,7 @@
       "fecha_junta": "16 de marzo de 2026",
       "agenda": "estados financieros"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4865,7 +4869,7 @@
       "tipo": "Extraordinaria",
       "fecha_junta": "16 de marzo de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4885,7 +4889,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4902,7 +4906,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -4917,7 +4921,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de marzo de 2026, se determinó lo siguiente: - Aprobar el Informe Anual sobre la Gestión Integral de Riesgos - Gestión 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4930,7 +4934,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4947,7 +4951,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "31 de marzo de 2026",
@@ -4971,7 +4975,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4989,7 +4993,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5004,7 +5008,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacias Chávez II",
@@ -5028,7 +5032,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5048,7 +5052,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5064,7 +5068,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de marzo de 2026",
@@ -5090,7 +5094,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -5106,7 +5110,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5122,7 +5126,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Raúl Alberto Torrico Gómez",
@@ -5146,7 +5150,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5167,7 +5171,7 @@
       "fecha_junta": "23 de marzo de 2026",
       "agenda": "estados financieros"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5183,7 +5187,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jorge Ignacio Candia Quiroga",
@@ -5206,7 +5210,7 @@
       "monto": "Bs 5,5 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5217,10 +5221,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 4.500.000 de Banco FIE",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco FIE S.A.",
+      "monto": "Bs 4,5 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -5238,7 +5246,7 @@
       "monto": "Bs 28,1 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5253,7 +5261,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5266,7 +5274,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5282,7 +5290,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de marzo de 2026",
@@ -5302,7 +5310,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "23 de marzo de 2026",
@@ -5322,7 +5330,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "23 de marzo de 2026",
@@ -5341,7 +5349,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -5360,7 +5368,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -5378,7 +5386,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5393,7 +5401,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5409,7 +5417,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5422,7 +5430,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5437,7 +5445,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria"
@@ -5460,7 +5468,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5475,7 +5483,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5494,7 +5502,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5535,7 +5543,7 @@
        }
       ]
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5550,7 +5558,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5565,7 +5573,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5580,7 +5588,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5595,7 +5603,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5610,7 +5618,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5634,7 +5642,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5647,7 +5655,7 @@
      "resumen_origen": "ia",
      "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Económico S.A.",
@@ -5667,7 +5675,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -5691,7 +5699,7 @@
       "fecha_junta": "24 de marzo de 2026",
       "agenda": "estados financieros"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5705,7 +5713,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 17 de marzo de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: - El Directorio queda integrado por el señor",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5718,7 +5726,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5734,7 +5742,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -5752,7 +5760,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -5775,7 +5783,7 @@
       "movimiento": "desvinculación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5792,7 +5800,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -5807,7 +5815,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de marzo de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -5823,7 +5831,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5845,7 +5853,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5867,7 +5875,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5880,7 +5888,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5893,7 +5901,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5910,7 +5918,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5930,7 +5938,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5949,7 +5957,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5969,7 +5977,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5984,7 +5992,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6006,7 +6014,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Elias Francklin Argandoña Pérez",
@@ -6021,10 +6029,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia S.A. adquiere préstamo Banco Unión Bs 67,9M",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Unión S.A.",
+      "monto": "Bs 67,9 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6039,7 +6051,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -6061,7 +6073,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6077,7 +6089,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -6095,7 +6107,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6108,7 +6120,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6128,7 +6140,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6141,7 +6153,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6153,7 +6165,7 @@
      "resumen": "Comunica que, en Comité de Calificación N° 031/2026, celebrado el 19 de marzo de 2026, con información financiera al 31 de diciembre de 2025, PCR acordó otorgar las Calificaciones que se presentan en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6166,7 +6178,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6182,7 +6194,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6203,7 +6215,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6224,7 +6236,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6245,7 +6257,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6265,7 +6277,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6285,7 +6297,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6304,7 +6316,7 @@
      "resumen_origen": "ia",
      "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 1,0 M"
@@ -6323,7 +6335,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6339,7 +6351,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Gisela María Mac Lean Céspedes",
@@ -6361,7 +6373,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de marzo de 2026"
@@ -6379,7 +6391,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de marzo de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -6394,7 +6406,7 @@
      "resumen": "Comunica que, en Comité de Calificación N° 033/2026, celebrado el 20 de marzo de 2026, con información financiera al 31 de diciembre de 2025, PCR acordó otorgar las Calificaciones que se presentan en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6416,7 +6428,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6431,7 +6443,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles DISMATEC II",
@@ -6456,7 +6468,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6469,7 +6481,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6482,7 +6494,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6495,7 +6507,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6515,7 +6527,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6536,7 +6548,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6556,7 +6568,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6576,7 +6588,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6596,7 +6608,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6609,7 +6621,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6629,7 +6641,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6648,7 +6660,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6667,7 +6679,7 @@
       "instrumento": "Bonos BNB Leasing V - Emisión 2"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6686,7 +6698,7 @@
       "instrumento": "Pagarés Bursátiles TOYOSA V - Emisión 5"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6705,7 +6717,7 @@
       "instrumento": "Pagarés Bursátiles SOFIA I - Emisión 1"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6727,7 +6739,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -6743,7 +6755,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6759,7 +6771,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Julio Cesar Gemio Montes",
@@ -6780,7 +6792,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -6802,7 +6814,7 @@
       "monto": "Bs 45,0 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6817,7 +6829,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6832,7 +6844,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6847,7 +6859,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jorge Francisco",
@@ -6869,7 +6881,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6880,10 +6892,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 34.300.000 de Banco Económico",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Económico S.A.",
+      "monto": "Bs 34,3 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6902,7 +6918,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6918,7 +6934,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · estados financieros"
@@ -6937,7 +6953,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · aumento de capital"
@@ -6957,7 +6973,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6974,7 +6990,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -6992,7 +7008,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7018,7 +7034,7 @@
        }
       ]
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7033,7 +7049,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7053,7 +7069,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7074,7 +7090,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7096,7 +7112,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7117,7 +7133,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7130,7 +7146,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7150,7 +7166,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7169,7 +7185,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7188,7 +7204,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7208,7 +7224,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7221,7 +7237,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7241,7 +7257,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7261,7 +7277,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7281,7 +7297,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7301,7 +7317,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7322,7 +7338,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7341,7 +7357,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7360,7 +7376,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7379,7 +7395,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7392,7 +7408,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7405,7 +7421,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7420,7 +7436,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -7439,7 +7455,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7455,7 +7471,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -7471,7 +7487,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -7490,7 +7506,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7506,7 +7522,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7522,7 +7538,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7535,7 +7551,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7551,7 +7567,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -7570,7 +7586,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7581,10 +7597,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 67,9M con Banco Unión",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Unión S.A.",
+      "monto": "Bs 67,9 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -7596,7 +7616,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7612,7 +7632,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -7631,7 +7651,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "30 de marzo de 2026"
@@ -7650,7 +7670,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -7669,7 +7689,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7686,7 +7706,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · aumento de capital"
@@ -7704,7 +7724,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7724,7 +7744,7 @@
       "tipo": "Extraordinaria",
       "fecha_junta": "6 de abril de 2026"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7744,7 +7764,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7760,7 +7780,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7781,7 +7801,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7802,7 +7822,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7823,7 +7843,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7843,7 +7863,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7863,7 +7883,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7881,7 +7901,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7896,7 +7916,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7916,7 +7936,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7928,7 +7948,7 @@
      "resumen": "Comunica que, el 20 de marzo de 2026, mediante Escritura Pública Nº 522/2026, otorgó Poder Especial a favor de los señores Jaime Isidoro Moreno Lopez y/o Pedro Luiz Daga Jordan y/o Edmee Dorothy",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7943,7 +7963,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Franco Antonio Mauricio Urquidi Fernández",
@@ -7967,7 +7987,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7987,7 +8007,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8008,7 +8028,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8028,7 +8048,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8043,7 +8063,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8058,7 +8078,7 @@
      "resumen": "Comunica que, en cumplimiento con lo establecido en la Cláusula Décima Segunda y Vigésima Séptima del Contrato de Cesión de Derechos sobre Flujos de Ventas Futuras para Fines de Titularización",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8077,7 +8097,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -8097,7 +8117,7 @@
      "resumen": "Comunica que, complementa el Hecho Relevante publicado el 24 de marzo de 2026, correspondiente a las determinaciones de la Junta General Ordinaria de Accionistas de la misma fecha, incorporando en el",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8114,7 +8134,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "30 de marzo de 2026",
@@ -8142,7 +8162,7 @@
        }
       ]
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8155,7 +8175,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8171,7 +8191,7 @@
      "resumen_origen": "ia",
      "grupo": "titularizacion",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8193,7 +8213,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8215,7 +8235,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8230,7 +8250,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8251,7 +8271,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8266,7 +8286,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8285,7 +8305,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8305,7 +8325,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8325,7 +8345,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8338,7 +8358,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8359,7 +8379,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8372,7 +8392,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8385,7 +8405,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8407,7 +8427,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8422,7 +8442,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8437,7 +8457,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8452,7 +8472,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -8478,7 +8498,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8498,7 +8518,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8511,7 +8531,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8528,7 +8548,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8544,7 +8564,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -8563,7 +8583,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8579,7 +8599,7 @@
      "resumen_origen": "ia",
      "grupo": "compromisos_anunciados",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8594,7 +8614,7 @@
      "resumen_origen": "ia",
      "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8607,7 +8627,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8623,7 +8643,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -8639,7 +8659,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8655,7 +8675,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · estados financieros"
@@ -8675,7 +8695,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 100",
@@ -8694,7 +8714,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8709,7 +8729,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8729,7 +8749,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8749,7 +8769,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8762,7 +8782,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Lionel Enrique Villa Gómez Reyes",
@@ -8788,7 +8808,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8803,7 +8823,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8816,7 +8836,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8831,7 +8851,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Cuotas de Participación OPERATIVO AVANZA FIC",
@@ -8848,7 +8868,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8870,7 +8890,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8886,7 +8906,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -8904,7 +8924,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8919,7 +8939,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8934,7 +8954,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -8959,7 +8979,7 @@
       "monto": "Bs 14,0 M"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8974,7 +8994,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -8990,7 +9010,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9007,7 +9027,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -9029,7 +9049,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9042,7 +9062,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9059,7 +9079,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -9075,7 +9095,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9091,7 +9111,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Dario Elías Camhi Testa",
@@ -9111,7 +9131,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9124,7 +9144,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9140,7 +9160,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9154,10 +9174,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 40.474.000 con Banco Económico",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Económico S.A.",
+      "monto": "Bs 40,5 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -9171,7 +9195,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Silvia Patricia Gómez Aguilar",
@@ -9192,7 +9216,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9209,7 +9233,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9225,7 +9249,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -9243,7 +9267,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "nombramiento"
@@ -9266,7 +9290,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9286,7 +9310,7 @@
       "movimiento": "designación"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9303,7 +9327,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9320,7 +9344,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9340,7 +9364,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9364,7 +9388,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9379,7 +9403,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9392,7 +9416,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9407,7 +9431,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9422,7 +9446,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9441,7 +9465,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9453,7 +9477,7 @@
      "resumen": "Comunica que, el 26 de marzo de 2026, emitió la siguiente disposición interna: - Disposición Organizativa N° 002/2026, a partir de la fecha, con la misión de fortalecer la uniformidad de criterios",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9468,7 +9492,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9490,7 +9514,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9503,7 +9527,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9524,7 +9548,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9544,7 +9568,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9564,7 +9588,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9584,7 +9608,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -9603,7 +9627,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -9619,7 +9643,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9636,7 +9660,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -9659,7 +9683,7 @@
       "movimiento": "renuncia"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9672,7 +9696,7 @@
      "resumen_origen": "ia",
      "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Unión S.A.",
@@ -9689,7 +9713,7 @@
      "resumen_origen": "ia",
      "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 10,4 M"
@@ -9708,7 +9732,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -9728,7 +9752,7 @@
      "resumen_origen": "ia",
      "grupo": "personal",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Franz Eduardo Lino Alurralde",
@@ -9749,7 +9773,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "9 de abril de 2026",
@@ -9770,7 +9794,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 42,5 M"
@@ -9788,7 +9812,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 70,0 M"
@@ -9808,7 +9832,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "5 de mayo de 2026",
@@ -9829,7 +9853,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "5 de mayo de 2026"
@@ -9845,7 +9869,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9861,7 +9885,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9880,7 +9904,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9905,7 +9929,7 @@
       "fecha_junta": "7 de abril de 2026",
       "agenda": "emisión de valores"
      },
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9921,7 +9945,7 @@
      "resumen_origen": "ia",
      "grupo": "dividendos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 44"
@@ -9940,7 +9964,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9956,7 +9980,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -9971,7 +9995,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -9995,7 +10019,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10017,7 +10041,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10039,7 +10063,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10060,7 +10084,7 @@
       "amortiza": "sí"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10073,7 +10097,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10088,7 +10112,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10100,7 +10124,7 @@
      "resumen": "Comunica que, las oficinas a nivel nacional atenderán el 2 de abril de 2026 de Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10112,7 +10136,7 @@
      "resumen": "Comunica que, las oficinas a nivel nacional atenderán el 2 de abril de 2026 de Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10132,7 +10156,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10148,7 +10172,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -10169,7 +10193,7 @@
      "resumen_origen": "ia",
      "grupo": "uso_fondos",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez II",
@@ -10189,7 +10213,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10202,7 +10226,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10222,7 +10246,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10235,7 +10259,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10250,7 +10274,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -10274,7 +10298,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10287,7 +10311,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10300,7 +10324,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10313,7 +10337,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -10336,7 +10360,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10347,10 +10371,14 @@
      "tags": [],
      "resumen": "Gravetal Bolivia adquiere préstamo Bs 10.000.000 Banco FIE",
      "resumen_origen": "ia",
-     "grupo": "otros",
+     "grupo": "prestamos",
      "resumen_v": 2,
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco FIE S.A.",
+      "monto": "Bs 10,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -10364,7 +10392,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10380,7 +10408,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -10399,7 +10427,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10416,7 +10444,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · estados financieros"
@@ -10435,7 +10463,7 @@
      "resumen_origen": "ia",
      "grupo": "juntas",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -10450,7 +10478,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de marzo de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10468,7 +10496,7 @@
       "movimiento": "nombramiento"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10482,7 +10510,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de marzo de 2026, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -10500,7 +10528,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10520,7 +10548,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10540,7 +10568,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10560,7 +10588,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10580,7 +10608,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10600,7 +10628,7 @@
       "estado": "pagado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10613,7 +10641,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10633,7 +10661,7 @@
       "movimiento": "designación a.i."
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10648,7 +10676,7 @@
      "resumen_origen": "ia",
      "grupo": "emisiones",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS CAMSA III",
@@ -10672,7 +10700,7 @@
       "estado": "programado"
      },
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -10685,7 +10713,7 @@
      "resumen_origen": "ia",
      "grupo": "otros",
      "resumen_v": 2,
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]

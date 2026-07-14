@@ -15,7 +15,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, designó al señor Roberto Renjel Doria Medina en el cargo de Gerente de Operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Roberto Renjel Doria Medina",
@@ -35,7 +35,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 31 de diciembre de 2024, realizada con el 100.00% de los socios, determinó lo siguiente: Aprobar la distribución de dividendos de la",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 28,2 M"
@@ -49,9 +49,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 31 de diciembre de 2024, finalizó la vinculación laboral de la señora Carmen Rosa Cardona Tordoya, al cargo de Gerente Nacional Administrativa y Financiera, y sus funciones",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Carmen Rosa Cardona Tordoya",
+      "cargo": "Gerente Nacional Administrativa y Financiera"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -64,7 +68,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 31 de diciembre de 2024, se determinó lo siguiente: Contratar a la Empresa RUIZMIER PELAEZ S.R.L., para la realización de la Auditoría Externa de los",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -81,7 +85,7 @@
      "resumen": "Ha comunicado que, el 30 de diciembre de 2024 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -92,9 +96,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, a partir del 1 de enero de 2025, el señor Héctor Marcelo Antonio Escobar Flores dejó de ejercer el cargo de Gerente General.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "persona": "Héctor Marcelo Antonio Escobar Flores",
+      "cargo": "Gerente General"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -105,7 +113,7 @@
      "resumen": "Ha comunicado que, a partir del 1 de enero de 2025, la señora María Verónica Gavilanes Vejar asume el cargo de Gerente General.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "María Verónica Gavilanes Vejar",
@@ -121,7 +129,7 @@
      "resumen": "Ha comunicado que, a partir del 2 de enero 2025, el señor Juan Pablo Iriarte Quiroga, queda delegado como Gerente de Finanzas, ante la salida del señor Juan Marko Avendaño Mollinedo.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -136,7 +144,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 21 de la emisión de Bonos FANCESA IV - Emisión 2 (Serie B) dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "21",
@@ -154,7 +162,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, realizó la provisión de los fondos",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -169,7 +177,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, realizó la provisión de los fondos respectivos a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -187,7 +195,7 @@
      "resumen": "Ha comunicado que, el 31 de diciembre de 2024, procedió con la apropiación contable por Incremento de Capital Pagado por un importe de Bs9.030.000,00 provenientes por Aportes de Capital en Efectivo",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -201,7 +209,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de diciembre de 2024, se determinó lo siguiente: Otorgar Poder de Representación Legal en favor de Víctor Achata Delgadillo, en su calidad de Gerente",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "MARIO ROBERTO VISCARRA RODRIGUEZ",
@@ -220,7 +228,7 @@
      "resumen": "Ha comunicado que, Mauricio Casso Acha, quien actualmente desempeña el cargo de Subgerente Nacional de Captaciones y Servicios Financieros, fue designado temporalmente el 31 de diciembre de 2024",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Subgerente Nacional de Captaciones y Servicios Financieros",
@@ -238,7 +246,7 @@
      "resumen": "Ha comunicado que, el Gerente General, señor Rodolfo Marcelo Medrano Cabrera se encontrará ausente desde el 3 al 15 de enero de la presente gestión; durante su ausencia, queda delegada como Gerente",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rodolfo Marcelo Medrano Cabrera",
@@ -261,7 +269,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, utilizó Bs17.500.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -276,7 +284,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 2 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 10 de enero del año en curso a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -290,7 +298,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, mediante Resolución Ejecutiva N° 001/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó al",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -309,7 +317,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 02 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -323,7 +331,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, el Gerente General, Jaime Enrique Rozenman Attie determinó la designación y/o contratación del señor Walter Eduardo Añez Leigue como Gerente de Exportaciones.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Walter Eduardo Añez Leigue",
@@ -342,7 +350,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 31 de diciembre de 2024, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital"
@@ -361,7 +369,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 2 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 16 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -373,7 +381,7 @@
      "resumen": "Ha comunicado que, a partir del 2 de enero de 2025, Jacqueline Zapata de La Faye y Álvaro Sossa Rodriguez, en su condición de Gerente General y Gerente Nacional de Riesgos, respectivamente, en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -388,7 +396,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, concluyó con el pago del Cupón N° 21 de los Bonos FANCESA IV - Emisión 2 (Serie B) dentro del Programa de Emisiones de Bonos FANCESA IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "21",
@@ -408,7 +416,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 9 de la Emisión de Bonos GAS & ELECTRICIDAD II - Emisión 2 (Serie Única) dentro del Programa de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -428,7 +436,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 53 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049 Series “A y B” con Claves de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "53",
@@ -448,7 +456,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 8 de los BONOS LAS LOMAS I - EMISIÓN 3, Serie Única con Clave de Pizarra: IEL-1-N1U-21, el mismo",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -468,7 +476,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 8 de los BONOS LAS LOMAS I - EMISIÓN 4, Serie Única con Clave de Pizarra: IEL-1-N2U-21, el mismo",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -488,7 +496,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 6 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 13, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "6",
@@ -507,7 +515,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, procedió con el pago total de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -519,7 +527,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, en virtud a lo establecido en el Artículo I.11 del RIRO y en el ejercicio de las atribuciones otorgadas mediante Memorándum 65-MM- GG-20Dec24, la Gerencia",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -531,7 +539,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, realizó la provisión de fondos a favor de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -545,7 +553,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, realizó la provisión de fondos a favor de BNB Valores SA Agencia de Bolsa para el siguiente pago: Cupón N° 6 de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 13",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "6",
@@ -565,7 +573,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, mediante Resolución Ejecutiva N° 005/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -582,7 +590,7 @@
      "resumen": "Ha comunicado la suscripción de las siguientes Escrituras Públicas: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -596,7 +604,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -610,7 +618,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -624,7 +632,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -638,7 +646,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -652,7 +660,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -666,7 +674,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno de la Entidad de Depósito de Valores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -680,7 +688,7 @@
      "resumen": "- Ha comunicado que mediante Testimonio N° 5/2025 de 2 de enero de 2025, realizó la Revocatoria Parcial del Testimonio de Poder General de Administración Clase “A” N° 677/2016 de 29 de septiembre de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "JOSE AUAD LEMA",
@@ -696,7 +704,7 @@
      "resumen": "Ha comunicado que, el Gerente General, señor Rodolfo Marcelo Medrano Cabrera se",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -710,7 +718,7 @@
      "resumen": "Ha comunicado que, el Gerente General, señor Rodolfo Marcelo Medrano Cabrera se encontrará ausente desde el 3 al 15 de enero de la presente gestión; durante su ausencia, queda delegada como Gerente",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rodolfo Marcelo Medrano Cabrera",
@@ -735,7 +743,7 @@
      "resumen": "Ha comunicado que, el 2 de enero de 2025, mediante Resolución Ejecutiva N° 002/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó al",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -752,7 +760,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, procedió con el pago total de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -764,7 +772,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, procedió a la revocatoria del Poder Especial, Bastante y Suficiente N° 427/2020 de 20 de julio de 2020, en favor de los señores Franz Ezequiel Carvajal",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -779,7 +787,7 @@
      "resumen": "Ha comunicado que, provisionó los fondos para el pago del Cupón N° 3 de la Emisión de Bonos Subordinados Banco BISA II - Emisión 2 (Serie Única) dentro el Programa de Emisiones de Bonos Subordinados",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -800,7 +808,7 @@
      "resumen": "Ha comunicado que, dentro de los Compromisos Financieros a diciembre de 2024, asumidos mediante la “EMISIÓN DE BONOS SUBORDINADOS - BANCO DE CRÉDITO DE BOLIVIA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -837,7 +845,7 @@
      "resumen": "Ha comunicado que el señor Miguel Angel Castro Claure - Gerente Nacional de Auditoria Interna, estará ausente por vacación del 6 al 10 de enero 2025, por lo que, la señora Karem Chavez Ninavia le",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -851,7 +859,7 @@
      "resumen": "Ha comunicado que amplió la designación del señor Adams Giuliano Callejas Machaca, quien actualmente desempeña el cargo de Encargado de Cumplimiento y Fraude Interno, fue designado temporalmente el 6",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Adams Giuliano Callejas Machaca",
@@ -870,7 +878,7 @@
      "resumen": "Ha comunicado que, el 3 de enero de 2025, realizó la provisión de los fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "53",
@@ -890,7 +898,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Pagarés Bursátiles denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles SAN LUCAS",
@@ -908,7 +916,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS SAN LUCAS”",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS SAN LUCAS",
@@ -926,7 +934,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Pagarés Bursátiles denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles DIACONIA II",
@@ -944,7 +952,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS DIACONIA II”",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS DIACONIA II",
@@ -960,7 +968,7 @@
      "resumen": "Sancionar a MICROFINANZA RATING BOLIVIA CALIFICADORA DE RIESGO S.A., con multa, por los cargos N° 1 al 5, imputados en la Nota de Cargos ASFI/DSV/R- 291019/2024 de 3 de diciembre de 2024, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -972,7 +980,7 @@
      "resumen": "Sancionar a la SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN MERCANTIL SANTA CRUZ S.A., con multa, por los cargos N° 1 al 3, imputados en la Nota de Cargos ASFI/DSV/R-291064/2024 de 3 de diciembre",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -992,7 +1000,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de diciembre de 2024, se determinó lo siguiente: Aprobar la Contratación de los Servicios de Auditoría Externa, para lo cual, autoriza a la Gerencia",
      "resumen_origen": "extractivo",
      "grupo": "auditorias",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "firma": "RUIZMIER PELAEZ S.R.L.",
@@ -1010,7 +1018,7 @@
      "resumen": "Ha comunicado que, el Gerente General, el 6 de enero de 2025, tomó conocimiento de la renuncia del señor Ariel Freddy Sandy Sanchez quien desempeñó sus funciones en el cargo de Gerente Técnico, hasta",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Ariel Freddy Sandy Sanchez",
@@ -1030,7 +1038,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 6 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 14 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de enero de 2025"
@@ -1045,7 +1053,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 07 de enero de 2025, se determinó lo siguiente: Aprobación de la modificación al Reglamento Interno de “MSC SERCOM FIC” - Art.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1059,7 +1067,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 06 de enero de 2025, realizada con el 99.90% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital"
@@ -1077,7 +1085,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2025, concluyó con el pago del Cupón N° 9 de los Bonos GAS & ELECTRICIDAD II - EMISIÓN 2 (Serie Única), dentro del Programa de Emisiones de Bonos GAS &",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -1097,7 +1105,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 8 de la emisión de Bonos PLASTIFORTE - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1117,7 +1125,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2025, concluyó el pago del Cupón Nº 8 de los BONOS LAS LOMAS I - EMISIÓN 4, correspondiente a la Serie Única con Clave de Pizarra: IEL-1-N2U-21.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1136,7 +1144,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2025, concluyó el pago del Cupón Nº 6 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 13, Serie Única con Clave de Pizarra: TDE-1-N1U-22.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "6",
@@ -1156,7 +1164,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2025, concluyó el pago del Cupón Nº 8 de los BONOS LAS LOMAS I - EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra: IEL-1-N1U-21.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1175,7 +1183,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2025, concluyó el pago del Cupón Nº 53 de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Series A y B con Claves de Pizarra: PTL-TD-NA, PTL-TD-NB y",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "53",
@@ -1196,7 +1204,7 @@
      "resumen": "Ha comunicado que, realizó la provisión de los fondos respectivos a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1214,7 +1222,7 @@
      "resumen": "Ha comunicado que, el 6 de enero de 2024, el señor Pedro Carrion Martínez, retomó sus funciones como Gerente de Auditoría Interna.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1228,7 +1236,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos en la Emisión de \"Bonos Subordinados Banco Ganadero V\", \"Bonos Subordinados Banco Ganadero VI\", \"Bonos Subordinados",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1243,7 +1251,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1261,7 +1269,7 @@
      "resumen": "Ha comunicado que, el 7 de enero de 2025, procedió con la apertura de las siguientes Sucursales: - Sucursal “Beef Club”: Ubicada en la Av.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1273,7 +1281,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 07 de enero de 2025, se determinó lo siguiente: - Aprobar el Plan Estratégico Institucional (PEI) y Plan Operativo Anual (POA) para la gestión 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1288,7 +1296,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento a lo establecido en el Artículo Decimonoveno del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1303,7 +1311,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 3 de la emisión de Bonos Subordinados Banco BISA II - Emisión 2 (Serie Única) dentro del Programa de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -1324,7 +1332,7 @@
      "resumen": "Ha comunicado que, los recursos captados en la emisión de los Pagarés Bursátiles TSM 003 - EMISIÓN 2, fueron utilizados en el trimestre de octubre, noviembre y diciembre de la gestión 2024 y se",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles TSM 003"
@@ -1341,7 +1349,7 @@
      "resumen": "Ha comunicado que, los recursos captados en la Emisión de los Pagares Bursátiles TSM 003 - EMISIÓN 3, al trimestre de octubre, noviembre y diciembre de la gestión 2024, aún no fueron utilizados en el",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1355,7 +1363,7 @@
      "resumen": "Ha comunicado que, dando continuidad al Hecho Relevante de 10 de diciembre de 2024, informa que, desde del 7 de enero de los presentes, se mantiene la designación del señor Alan Guillermo Moscoso de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alan Guillermo Moscoso",
@@ -1374,7 +1382,7 @@
      "resumen": "RESUELVE:",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1389,7 +1397,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS NUTRIOIL",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS NUTRIOIL III",
@@ -1408,7 +1416,7 @@
      "resumen": "RESUELVE: PRIMERO. - Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Pagarés Bursátiles denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles PLASTIFORTE I",
@@ -1427,7 +1435,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar a DIACONIA FONDO ROTATIVO DE INVERSIÓN Y FOMENTO - INSTITUCIÓN FINANCIERA DE DESARROLLO con multa, por los cargos N° 1, 7, 8 y 9, imputados en la Nota de Cargos",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1441,7 +1449,7 @@
      "resumen": "RESUELVE: Sancionar a SANTA CRUZ FG SOCIEDAD CONTROLADORA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1456,7 +1464,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1476,7 +1484,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Luis Alejandro Otero Duran",
@@ -1493,7 +1501,7 @@
      "resumen": "Ha comunicado que, el 7 de enero de 2025, determinó el ascenso al cargo de Gerencia Nacional de Administración y Finanzas del señor Guillermo Mariscal Ruiz, el cual, iniciará en sus nuevas funciones",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1507,7 +1515,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -1526,7 +1534,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 08 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: Aprobar y autorizar el “Retiro Voluntario del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1541,7 +1549,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 09 de enero de 2025, realizada con el 99.33% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "directorio",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cambios": [
@@ -1595,7 +1603,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 08 de enero de 2025, realizada con el 99.30% de los socios, determinó lo siguiente: - La remoción de los Directores Sidney Enzo Michel",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jaime Rodrigo Calderón Pérez",
@@ -1614,7 +1622,7 @@
      "resumen": "Ha comunicado que, el 8 de enero de 2025, el señor William Alfredo Peña Yujra presentó renuncia al cargo de Gerente Regional - El Alto, misma que fue aceptada, siendo su último día de trabajo el 8 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "William Alfredo Peña Yujra",
@@ -1633,7 +1641,7 @@
      "resumen": "Ha comunicado la designación temporal del señor Alcides Jorge Cadena Ramos en el cargo de Gerente Regional - El Alto a.i., a partir del 9 de enero de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alcides Jorge Cadena Ramos",
@@ -1652,7 +1660,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 8 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1664,7 +1672,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de enero de 2025, se determinó lo siguiente: Aprobación de la modificación al Reglamento Interno de “MSC SERCOM FIC”.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1679,7 +1687,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 32 de la Emisión de Bonos GAS & ELECTRICIDAD S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "32",
@@ -1700,7 +1708,7 @@
      "resumen": "Ha comunicado que, el 8 de enero de 2025, concluyó con el pago del Cupón N° 8 de la emisión de Bonos PLASTIFORTE - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos PLASTIFORTE.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1720,7 +1728,7 @@
      "resumen": "Ha comunicado que, el 8 de enero de 2025, concluyó con el pago del Cupón N° 3 de la emisión de Bonos Subordinados Banco BISA II - Emisión 2 (Serie Única) dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -1739,7 +1747,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 8 de enero de 2025, determinó lo siguiente: • Autorizar la inscripción de la Emisión de Bonos denominada “BONOS FERROVIARIA ORIENTAL EMISIÓN",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS FERROVIARIA ORIENTAL EMISIÓN 10",
@@ -1757,7 +1765,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 8 de enero de 2025, determinó lo siguiente: • Autorizar la inscripción de la Emisión de Bonos denominada “BONOS FERROVIARIA ORIENTAL EMISIÓN",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS FERROVIARIA ORIENTAL EMISIÓN 11",
@@ -1776,7 +1784,7 @@
      "resumen": "Ha comunicado que, el 8 de enero de 2025, realizó la provisión de los fondos respectivos a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "32",
@@ -1796,7 +1804,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, designa a la señora MAYLIN LISSETTE OBLITAS ROSSELL como GERENTE REGIONAL a.i., en la Regional Tarija, quien ocupará el cargo, a partir del 10 hasta el 24 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "MAYLIN LISSETTE OBLITAS ROSSELL",
@@ -1815,7 +1823,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, designa al señor EDMUNDO VALLEJOS VEGA como GERENTE REGIONAL a.i., en la Regional Cochabamba, quien ocupará el cargo a partir del 13 hasta el 17 de enero de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "EDMUNDO VALLEJOS VEGA",
@@ -1835,7 +1843,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar el funcionamiento y la inscripción en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero del Fondo de Inversión Cerrado denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "AGROFIN FONDO DE INVERSIÓN CERRADO",
@@ -1854,7 +1862,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1874,7 +1882,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 10 de enero de 2025, realizada con el 84.87% de los socios, determinó lo siguiente: - Consideración del Acuerdo Definitivo de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1890,7 +1898,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 9 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse de manera virtual el 10 de febrero de 2025 a partir de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -1908,7 +1916,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 9 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse de manera virtual el 10 de febrero de 2025 a",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1922,7 +1930,7 @@
      "resumen": "Ha comunicado que, el 26 de diciembre de 2024, el señor Alvaro Mauricio Felipe Franklin Espinoza Wieler, presentó renuncia al cargo de Vicepresidente Negocios Banca Corporativa y Empresas, efectiva a",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alvaro Mauricio Felipe Franklin Espinoza",
@@ -1941,7 +1949,7 @@
      "resumen": "Ha comunicado que, Juan Carlos Ibieta Alconini presentó renuncia voluntaria al cargo de Gerente Nacional de Transformación Digital y Planificación, el 8 de enero de la presente gestión, siendo su",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Gerente Nacional de Transformación Digital y Planificación",
@@ -1959,7 +1967,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, el señor Bryant Josue Alarcon Peñarrieta, presentó renuncia voluntaria al cargo de Jefe Comercial, siendo su último día laboral el 23 de enero de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Bryant Josue Alarcon Peñarrieta",
@@ -1976,7 +1984,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1990,7 +1998,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 16 y amortización de capital de los Bonos Subordinados BNB III, Serie “B” con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -2011,7 +2019,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones de la BBV, la Gerencia General autorizó el registro e",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2025,7 +2033,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones de la BBV, la Gerencia General autorizó el registro e",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2039,7 +2047,7 @@
      "resumen": "Ha comunicado que, de acuerdo con lo establecido en el numeral 1.4.17.2.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2054,7 +2062,7 @@
      "resumen": "Ha comunicado que, el 10 de enero de 2025, efectuó la provisión de fondos al agente pagador Entidad de Depósito de Valores de Bolivia S.A - EDV, para realizar el pago de Cupón N° 15 de la emisión de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "15",
@@ -2074,7 +2082,7 @@
      "resumen": "Ha comunicado que, en el trimestre concluido al 31 de diciembre de 2024, el destino de los fondos correspondientes a la emisión de Pagarés Bursátiles Gas & Electricidad II - Emisión 1, emitidos el 29",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2086,7 +2094,7 @@
      "resumen": "Ha comunicado que, el señor Christian Hausherr Ariñez - Gerente General, se encontrará ausente desde el 13 hasta el 16 de enero de 2025, durante su ausencia, queda delegado como Gerente General",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2100,7 +2108,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, procedió con la provisión de los fondos necesarios para el pago del Cupón N° 6 de la Serie Única de la Emisión denominada “Bonos Subordinados Banco Fortaleza",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "6",
@@ -2120,7 +2128,7 @@
      "resumen": "Ha comunicado que, en el marco del punto 2.4.2 del Prospecto Marco de los Bonos Subordinados Banco Mercantil Santa Cruz y del punto 1.4 de los Prospectos Complementarios Bonos Subordinados Banco",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2152,7 +2160,7 @@
      "resumen": "Ha comunicado que, en el marco del punto 2.4.2 del Prospecto Marco de los Bonos BMSC II y del punto 1.6 del Prospecto Complementario de la emisión Bonos BMSC II - Emisión 2, Emisión 3, Emisión 4 y",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2184,7 +2192,7 @@
      "resumen": "Ha comunicado que, en el marco del punto 1.4.2 del Prospecto Marco de los Bonos BMSC III y del punto 1.4.24 del Prospecto Complementario de las emisiones Bonos BMSC III Emisión 1, Emisión 2, Emisión",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2217,7 +2225,7 @@
      "resumen": "Ha comunicado que, el cálculo de los Compromisos Financieros al 30 de septiembre de 2024, mismos que fueron establecidos dentro de todas las Emisiones de Bonos Subordinados realizadas y a los cuales",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Subordinados emitidos",
@@ -2234,7 +2242,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, procedió con la apropiación contable por Incremento de Capital Pagado por un importe de Bs1.794.100,00 provenientes por Aportes de Capital en Efectivo, de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2248,7 +2256,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, de acuerdo con el siguiente detalle: - Emisiones Bonos Subordinados ECOFUTURO 2 - Emisión 2 y Bonos Subordinados ECOFUTURO",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2316,7 +2324,7 @@
      "resumen": "Ha comunicado que, al 31 de diciembre de 2024, cumple con los Compromisos Financieros asumidos en los Prospectos del “Programa de Emisiones de Bonos Subordinados BancoSol 2”, “Programa de Emisiones",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2355,7 +2363,7 @@
      "resumen": "Ha comunicado que, Cintia Denisse Mollinedo Laura, quien actualmente desempeña el cargo de Gerente Nacional de Tecnología de la Información, fue designada de manera simultánea temporalmente como",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Gerente Nacional de Tecnología de la Información",
@@ -2374,7 +2382,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2394,7 +2402,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 11 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Javier Agrada Torrez",
@@ -2413,7 +2421,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 8 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2427,7 +2435,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 10 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2439,7 +2447,7 @@
      "resumen": "Ha comunicado que, obtuvo por parte de la Autoridad de Supervisión del Sistema Financiero - ASFI, la no objeción para que la Sociedad desarrolle sus actividades en su nuevo domicilio legal ubicado en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2454,7 +2462,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 10 de enero de 2025, de conformidad a lo establecido por el Artículo 29° de los Estatutos de la Sociedad, se determinó convocar a Junta General",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "20 de enero de 2025"
@@ -2471,7 +2479,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Ángel Rolando Burgoa Celis",
@@ -2489,7 +2497,7 @@
      "resumen": "Ha comunicado que, el 10 de enero de 2025, concluyó con el pago del Cupón N° 32 de los Bonos Gas & Electricidad S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "32",
@@ -2508,7 +2516,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón N° 5 y amortización de capital de los BONOS PROLEGA III - EMISIÓN 3, Serie Única, con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -2529,7 +2537,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 5 y amortización de capital de los BONOS BANCO FIE 3 - EMISIÓN 4, Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -2550,7 +2558,7 @@
      "resumen": "Ha comunicado que, convoca a la Asamblea de Tenedores de Bonos Nexolider, a realizarse el 21 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "designación"
@@ -2567,7 +2575,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, utilizó del Fondo de Liquidez para la provisión de fondos del tercer abono bimestral para el pago del Cupón N° 5 de los Bonos denominados BONOS TSM APPAREL",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -2587,7 +2595,7 @@
      "resumen": "Ha comunicado que, el 10 de enero de 2025, realizó la provisión de fondos por USD1.014.700,00 a BNB Valores S.A., agente pagador, para el pago del Cupón N° 5 correspondiente a la emisión de bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -2606,7 +2614,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos dentro de los Programas de Emisiones de Bonos denominado “Bonos Subordinados BEC III”, “Bonos Subordinados BEC IV”",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -2646,7 +2654,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -2666,7 +2674,7 @@
      "resumen": "Ha comunicado que, en el marco del punto 1.3.36.3 del Prospecto de Emisión de los Bonos Subordinados CRECER IFD, los Compromisos Financieros a diciembre 2024, son los siguientes: Pactado Obtenido",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -2681,7 +2689,7 @@
      "resumen": "Ha comunicado que, a partir del 11 de enero de 2025, Marcel Iriarte Callisaya queda designado en el cargo de la Gerente de Sucursal Potosí.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2695,7 +2703,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar con amonestación al BANCO NACIONAL DE BOLIVIA S.A., por los cargos N° 2 y 3 de la Nota de Cargos ASFI/DSV/R-286375/2024 de 27 de noviembre de 2024, al haber incumplido",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2710,7 +2718,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2728,7 +2736,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, utilizó Bs10.000.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2740,7 +2748,7 @@
      "resumen": "Ha comunicado que la Asamblea Extraordinaria de Socios de fecha 13 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2752,7 +2760,7 @@
      "resumen": "Ha comunicado que la Asamblea Extraordinaria de Socios de fecha 13 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2767,7 +2775,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, con la participación del 100% de los inversionistas de los Bonos vigentes en circulación, se llevaron a cabo las Asambleas Generales de Tenedores de BONOS",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2783,7 +2791,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 2 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 16 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -2802,7 +2810,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 13 de enero de 2025, se determinó lo siguiente: Conforme el Plan de Sucesión y en el marco de la normativa vigente, aprobó: • La renuncia del señor",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alvaro Mauricio Felipe Franklin Espinoza",
@@ -2821,7 +2829,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, la señorita Isel Ximena Blanco Espinoza fue designada por Gerencia General, como Gerente Nacional de Calidad de Servicio a.i., cargo que será efectivo a",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Isel Ximena Blanco Espinoza",
@@ -2840,7 +2848,7 @@
      "resumen": "Ver AdjuntoHa comunicado que en reunión de Directorio de 13 de enero de 2025, se determinó lo siguiente: Designación del señor Rodolfo Soto Camacho, tanto como miembro del Comité de Clasificación que",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rodolfo Soto Camacho",
@@ -2858,7 +2866,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité de Calificación N° 002/2025, realizado el 13 de enero de 2025, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva al siguiente",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2872,7 +2880,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, concluyó el pago del Cupón Nº 16 y amortización de capital correspondiente a la Serie B con Clave de Pizarra: BNB-E1B-17 de los Bonos Subordinados BNB III.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -2890,7 +2898,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, procedió con el pago total de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2904,7 +2912,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, en su calidad de agente pagador concluyó con el pago del Cupón Nº 16 correspondiente a la emisión denominada “BONOS PARTICIPATIVOS TSM DENIMS 001”, con",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -2923,7 +2931,7 @@
      "resumen": "Ha comunicado que, el 13 de enero de 2025, realizó la provisión de fondos del Cupón de la emisión denominada “Bonos IASA V - Emisión 1” al agente pagador Credibolsa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos IASA V",
@@ -2940,7 +2948,7 @@
      "resumen": "Ha comunicado que, el 10 de enero de 2025, el señor Felipe Bellott Llano, retomó sus funciones como Gerente de Gestión Financiera.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2955,7 +2963,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo indicado en el Prospecto Marco del Programa de Emisiones de Bonos Verdes, Sociales o Sostenibles BDP I “Bonos Verdes BDP I - Emisión 1”, informa que los",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -2972,7 +2980,7 @@
      "resumen": "Ha comunicado que, el 14 de enero de 2025, realizó el pago de Bs1.725.000,00 correspondiente a la finalización del pago de intereses del Cupón Nº 6 a todos los Tenedores de los “Bonos Subordinados",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "6",
@@ -2991,7 +2999,7 @@
      "resumen": "Ha comunicado que, en virtud de que la señora Julia Isabel Gomez Saavedra se encuentra de vacaciones, informa que la señora Carla Patricia Uscamaita Barrera asume el cargo de Gerente Nacional de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Julia Isabel Gomez Saavedra",
@@ -3011,7 +3019,7 @@
      "resumen": "Ha comunicado que, en calidad de agentes pagadores de los Bonos de Intercambio Fancesa VI, habiendo recibido la provisión de fondos por parte del Emisor, el 13 de enero de 2025, concluyó con el pago",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "15",
@@ -3031,7 +3039,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3052,7 +3060,7 @@
      "resumen": "Ha comunicado que, el 9 de enero de 2025, de conformidad a lo establecido por el Artículo 29° de los Estatutos de la Sociedad, el Directorio convoca a Junta General Ordinaria de Accionistas, a",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "20 de enero de 2025"
@@ -3069,7 +3077,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 14 de enero de 2025, realizada con el 98.55% de los socios, determinó lo siguiente: Los accionistas presentes y representados, en",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3081,7 +3089,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de enero de 2025, se determinó lo siguiente: - Tomar conocimiento de las evaluaciones regulatorias anuales.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3095,7 +3103,7 @@
      "resumen": "Ha comunicado que, el 14 de enero de 2025, concluyó el pago del Cupón Nº 5 y amortización de capital de los BONOS BANCO FIE 3 - EMISION 4, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -3115,7 +3123,7 @@
      "resumen": "Ha comunicado que, el 14 de enero de 2025, concluyó el pago del Cupón N° 5 y amortización de capital de los BONOS PROLEGA III - EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -3135,7 +3143,7 @@
      "resumen": "Ha comunicado que, el 14 de enero de 2025, en su calidad de agente pagador, concluyó con el pago N° 5 de los “Bonos IASA V - Emisión 1”, con Clave de Pizarra FIN-5-N1U-22.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos IASA V",
@@ -3154,7 +3162,7 @@
      "resumen": "Ha comunicado que, publicó en un medio de prensa escrito, el 15 de enero de 2025, la convocatoria a la Asamblea General de Tenedores de “Bonos Plastiforte Emisión 1’’, a realizarse el 29 de enero de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "29 de enero de 2025"
@@ -3172,7 +3180,7 @@
      "resumen": "RESUELVE: Sancionar a PANAMERICAN SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 12, imputados en la Nota de Cargos ASFI/DSV/R-301509/2024 de 16 de diciembre",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3187,7 +3195,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3208,7 +3216,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 17 de diciembre de 2024, realizada con el 100.00% de los socios, determinó lo siguiente: - Designación y/o Ratificación de los Auditores",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3223,7 +3231,7 @@
      "resumen": "Ha comunicado que, de conformidad a lo dispuesto por la Junta General Ordinaria de Accionistas celebrada el 30 de diciembre de 2024, a través de BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_pago": "27 de enero de 2025"
@@ -3240,7 +3248,7 @@
      "resumen": "Ha comunicado que, el 15 de enero de 2025, el señor Yecid Contreras Gutierrez presentó renuncia al cargo de Gerente Servicio Riesgo de Mercado y Tesorería, efectiva el mismo día.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Yecid Contreras Gutierrez",
@@ -3260,7 +3268,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité, se acordó la asignación de categorías locales de Calificación de Riesgo y Perspectiva del siguiente instrumento de Bolivia: Calificación con Estados",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3275,7 +3283,7 @@
      "resumen": "Ha comunicado que, el 15 de enero de 2025, realizó el desembolso de Bs16.000.000,00 a través de la emisión de Pagarés sin Oferta Pública, en favor de FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 16,0 M"
@@ -3290,7 +3298,7 @@
      "resumen": "Ha comunicado que, efectuó la suscripción de la adenda de Contrato Préstamo de Liquidez N° 11390 entre el BDP-SAM y DIACONÍA FRIF IFD, ambas partes acuerdan renovar el plazo de la obligación a",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3302,7 +3310,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de enero de 2025, se determinó lo siguiente: Tomar conocimiento y aprobar el Programa de Educación Bursátil que implementará CAPCEM SAFI S.A.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3317,7 +3325,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, dando cumplimiento a lo establecido en el Artículo Decimonoveno del Contrato de Cesión Irrevocable de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3332,7 +3340,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 13 de la emisión de Bonos BISA LEASING VI - Emisión 1 (Serie B) dentro del Programa de Emisiones de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -3353,7 +3361,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo establecido en el Prospecto Complementario de la emisión denominada Bonos BISA LEASING VI - Emisión 1, dentro del Programa de Emisiones de Bonos BISA LEASING",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -3373,7 +3381,7 @@
      "resumen": "Ha comunicado que, el Gerente Nacional de Operaciones y Finanzas, señor Mauricio Fernando Rodriguez Peredo se encontrará ausente desde el 14 al 17 de enero de la presente gestión; durante su",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Mauricio Fernando Rodriguez Peredo",
@@ -3393,7 +3401,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3415,7 +3423,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 19 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "19 de febrero de 2025",
@@ -3434,7 +3442,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 19 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "19 de febrero de 2025"
@@ -3452,7 +3460,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 17 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "17 de febrero de 2025",
@@ -3471,7 +3479,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 17 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "17 de febrero de 2025",
@@ -3491,7 +3499,7 @@
      "resumen": "Ha comunicado que, el 17 de enero de 2025, el Directorio determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 17 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "17 de febrero de 2025",
@@ -3510,7 +3518,7 @@
      "resumen": "Ha comunicado que, el 17 de enero de 2025, el Directorio determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 17 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "17 de febrero de 2025"
@@ -3529,7 +3537,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "18 de febrero de 2025",
@@ -3549,7 +3557,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a la Junta General Ordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "18 de febrero de 2025",
@@ -3568,7 +3576,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "18 de febrero de 2025"
@@ -3586,7 +3594,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de enero de 2025, se aprobó la convocatoria a Junta General Ordinaria de Accionistas, a realizarse el 24 de enero de 2025 a Hrs.10:00, con el",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -3606,7 +3614,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de enero de 2025, se aprobó la convocatoria a Junta General Extraordinaria de Accionistas, a realizarse el 24 de enero de 2025 a Hrs.11:30, con el",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -3627,7 +3635,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 16 de enero de 2025, realizada con el 93.54% de los socios, determinó lo siguiente: - Dar lectura al informe del señor Presidente del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -3645,7 +3653,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de enero de 2025, realizada con el 93.54% de los socios, determinó lo siguiente: - Autorizar el aumento de Capital Suscrito y",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3660,7 +3668,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo aprobado en la Junta General Ordinaria de Accionistas de 16 de enero de 2025, hizo efectivo el pago de dividendos de los accionistas.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 42,8 M"
@@ -3675,7 +3683,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de enero de 2025, se determinó lo siguiente: Designar a los señores, Ivo Mateo Kuljis Füchtner como Presidente, Luis Alberto Perrogon Saavedra como",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3691,7 +3699,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 7 de febrero de 2025 a partir de Hrs.10:00 de",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "RMV",
@@ -3709,7 +3717,7 @@
      "resumen": "Ha comunicado que, a partir del 16 de enero de 2025, la señora Maria Antonieta Patricia Claure Martinez, Asesor de Desempeño Responsabilidad Social e Impacto, queda delegada como Gerente Nacional de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Maria Antonieta Patricia Claure Martinez",
@@ -3729,7 +3737,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 19 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "19 de febrero de 2025"
@@ -3748,7 +3756,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 19 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "19 de febrero de 2025",
@@ -3767,7 +3775,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 28 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -3783,7 +3791,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de enero de 2025, se determinó lo siguiente: - Aprobar el Programa de Educación Bursátil BDP ST 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3798,7 +3806,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 27 de la Emisión de Bonos FANCESA IV - Emisión 1 (Serie Única), dentro del Programa de Emisiones de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "27",
@@ -3818,7 +3826,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de enero de 2025, se determinó lo siguiente: - Designar a la señora Nadia Estefanía Zabala Murillo, como Auditora Interna a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Nadia Estefanía Zabala Murillo",
@@ -3837,7 +3845,7 @@
      "resumen": "Ha comunicado que, el 16 de enero de 2025, en su calidad de agente pagador concluyó con el pago del Cupón Nº 3 correspondiente a la Emisión denominada “BONOS SUBORDINADOS BANCO UNIÓN II”, con Clave",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -3856,7 +3864,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones de 16 de enero de 2025, determinó lo siguiente: - Autorizar la inscripción del Programa de Emisiones de Bonos denominado “BONOS DIACONÍA II”.",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS DIACONÍA II",
@@ -3874,7 +3882,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones de 16 de enero de 2025, determinó lo siguiente: - Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES DIACONÍA II",
@@ -3890,7 +3898,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de enero de 2025, se determinó lo siguiente: Nombrar a la señora Ylsen Gabriela Paz Franco como Auditora Interna Interina, todas las veces que la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3905,7 +3913,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo establecido en el Prospecto Complementario de la Emisión denominada Bonos BISA LEASING IV - Emisión 6, dentro del Programa de Emisiones de Bonos BISA LEASING",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "14",
@@ -3926,7 +3934,7 @@
      "resumen": "Ha comunicado que, el cumplimiento de los Compromisos Financieros al 31 de diciembre de 2024, asumidos en los Prospectos de Emisión de Bonos que se detallan a continuación: “Bonos Subordinados BANCO",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -3965,7 +3973,7 @@
      "resumen": "Ha comunicado que, procedió a la suscripción del Testimonio N° 66/2025 de 16 de enero de 2025, correspondiente a la revocatoria del Poder N° 1197/2023 de 19 de septiembre de 2023, otorgado al señor",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "William Alfredo Peña Yujra",
@@ -3981,7 +3989,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de enero de 2025, se determinó lo siguiente: - Revocar totalmente el Testimonio de Poder N° 699/2023 en favor de MARIO ENRIQUE ESPINAR ANGLES.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3993,7 +4001,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos del Reglamento Operativo Interno en el Artículo III.4, registró como Emisor el Fondo de Inversión Cerrado denominado “AGROFIN Fondo de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4005,7 +4013,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, procedió con el registro de la Emisión de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4017,7 +4025,7 @@
      "resumen": "Ha comunicado que, la Gerencia General procedió a revocar y emitir Poderes, según el siguiente detalle: - Emitió el Poder N° 15/2025 de 15 de enero de 2025, donde ejecutó la Revocatoria total del",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4031,7 +4039,7 @@
      "resumen": "Ha comunicado que, por motivo de licencia otorgada al Gerente Nacional de Asuntos Jurídicos, señor Gabriel Rolando Reyes Delgado, el 17 de enero de 2025, designó a la señora Maria Daniela Paz Cuellar",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Gabriel Rolando Reyes Delgado",
@@ -4050,7 +4058,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar con amonestación a COVAN CONSULTORÍA S.R.L., por el cargo N° 1 de la Nota de Cargos ASFI/DSV/R-286401/2024 de 27 de noviembre de 2024, al haber incumplido lo dispuesto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4065,7 +4073,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4086,7 +4094,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "18 de febrero de 2025"
@@ -4101,7 +4109,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de enero de 2025, se determinó lo siguiente: Tomar conocimiento y aprobar por unanimidad los informes de Gerencia General siguientes: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4116,7 +4124,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de enero de 2025, realizada con el 95.21% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "RMV",
@@ -4134,7 +4142,7 @@
      "resumen": "Ha comunicado que, en la Asamblea General de Participantes, llevada a cabo con el 100% de las Cuotas de Participación vigentes, en su reunión realizada el 17 de enero de 2025, tomó la siguiente",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4150,7 +4158,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 15 de enero de 2025, se determinó convocar a la ASAMBLEA GENERAL EXTRAORDINARIA DE ASOCIADOS, a realizarse el 28 de enero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -4169,7 +4177,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de enero de 2025, se determinó lo siguiente: La señora Claudia Marcela Zabala Pérez presentó renuncia al cargo de Subgerente Regional Oriente, con",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Claudia Marcela Zabala Pérez",
@@ -4189,7 +4197,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de enero de 2025, se aprobó convocar a Junta General Ordinaria de Accionistas, a realizarse el 20 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "20 de febrero de 2025"
@@ -4207,7 +4215,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de enero de 2025, se aprobó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 20 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "20 de febrero de 2025",
@@ -4226,7 +4234,7 @@
      "resumen": "Ha comunicado que, el 17 de enero de 2025, concluyó con el pago del Cupón N°13 de la emisión de Bonos BISA LEASING VI - Emisión 1 (Serie B), dentro del Programa de Emisiones de Bonos BISA LEASING VI.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -4246,7 +4254,7 @@
      "resumen": "Ha comunicado que, el 17 de enero de 2025, concluyó con el pago del Cupón N° 27 de los Bonos FANCESA IV - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos FANCESA IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "27",
@@ -4266,7 +4274,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 3 de la emisión de Bonos BISA LEASING VI - Emisión 2 dentro del Programa de Emisiones de Bonos BISA",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -4286,7 +4294,7 @@
      "resumen": "Ha comunicado que, el 17 de enero de 2025, designó al señor Sebastian Pablo Terrazas Aramayo al cargo de Gerente General a.i., a partir del 20 de enero y será efectivo hasta el 24 de enero del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Sebastian Pablo Terrazas Aramayo",
@@ -4303,7 +4311,7 @@
      "resumen": "Ha comunicado que, el Comité de Vigilancia, reunido el 17 de enero de 2025, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4317,7 +4325,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones de 16 de enero de 2025, determinó lo siguiente: • Autorizar la inscripción de la Emisión de Bonos denominada “BONOS SUBORDINADOS BANCO GANADERO IX”, en",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS SUBORDINADOS BANCO GANADERO IX",
@@ -4336,7 +4344,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo establecido en el Prospecto Complementario de la emisión denominada Bonos BISA LEASING VI - Emisión 2, dentro del Programa de Emisiones de Bonos BISA LEASING",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -4356,7 +4364,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos de acuerdo al Prospecto de emisión de “Bonos Gas & Electricidad Sociedad Anónima”, Prospecto Complementario de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -4396,7 +4404,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros, calculados al 31 de diciembre de 2024 (con las cifras de los Estados Financieros a esa misma fecha, no auditados), de acuerdo con los lineamientos",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -4429,7 +4437,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros, calculados al 31 de diciembre de 2024 (con las cifras de los Estados Financieros a esa misma fecha, no auditados), de acuerdo con los lineamientos",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -4459,7 +4467,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, procederá a la emisión de nuevas acciones y su posterior canje en sus oficinas ubicadas en la Av.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4475,7 +4483,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo dispuesto en el Contrato de Cesión Irrevocable de Derecho sobre Flujos Futuros para fines de Titularización, Administración y Representación y al Prospecto de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4489,7 +4497,7 @@
      "resumen": "Ha comunicado que, como agente pagador, procederá al pago del Cupón N° 30 de los Valores de Titularización BISA ST - CIDRE II (Serie B), a partir del 20 de enero de la presente gestión, en su oficina.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "30",
@@ -4508,7 +4516,7 @@
      "resumen": "Ha comunicado que, como agente pagador, procederá al pago del Cupón N° 41 de los Valores de Titularización BISA ST - FUBODE II (Serie D), a partir del 23 de enero de la presente gestión, en su oficina.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "41",
@@ -4527,7 +4535,7 @@
      "resumen": "RESUELVE: Sancionar a CREDIFONDO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 al 7 imputados en la Nota de Cargos ASFI/DSV/R-301598/2024 de 16 de diciembre de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4542,7 +4550,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4560,7 +4568,7 @@
      "resumen": "Ha comunicado que, el 20 de enero de 2025, utilizó Bs7.000.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4572,7 +4580,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de enero de 2025, se determinó lo siguiente: Aprobar el Programa de Educación Bursátil 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4587,7 +4595,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 20 de enero de 2025, realizada con el 51.06% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4603,7 +4611,7 @@
      "resumen": "Ha comunicado que, el Directorio, el 20 de enero de 2025, de acuerdo a lo dispuesto por los Estatutos de la Sociedad y los Artículos 288 y 289 del Código de Comercio Boliviano, convoca a Junta",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "28 de enero de 2025",
@@ -4622,7 +4630,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4637,7 +4645,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4652,7 +4660,7 @@
      "resumen": "Ha comunicado que, la Junta General Ordinaria de Accionistas de 20 de enero de 2025, decidió la distribución de Bs90.525.000,00 en dividendos que corresponde a Bs9,9940 por acción (USD1,4569 T.C.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 90,5 M",
@@ -4672,7 +4680,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 20 de enero de 2025, realizada con el 91.29% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -4690,7 +4698,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 20 de enero de 2025, realizada con el 91.29% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · aumento de capital"
@@ -4707,7 +4715,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de enero de 2025, se determinó lo siguiente: Designar al señor Oscar Alejandro Caballero Urquizu como Vicepresidente Ejecutivo a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Oscar Alejandro Caballero Urquizu",
@@ -4726,7 +4734,7 @@
      "resumen": "Ha comunicado que adoptó las siguientes decisiones: - El 20 de enero de 2025, establece el cese de interinato del señor MIGUEL ANGEL RAMIREZ ROCHA como GERENTE NACIONAL DE CUMPLIMIENTO a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "MIGUEL ANGEL RAMIREZ ROCHA",
@@ -4746,7 +4754,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité de Calificación N° 004/2025, realizada el 20 de enero de 2025, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4761,7 +4769,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 20 de enero de 2025, realizada con el 51.06% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4773,7 +4781,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4785,7 +4793,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de enero de 2025, se determinó lo siguiente: - Tomar conocimiento de los informes emitidos por el área de Gestión Integral de Riesgos y por el Oficial",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4801,7 +4809,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, de acuerdo a lo dispuesto por los Estatutos de la Sociedad y los Artículos 288 y 289 del Código de Comercio Boliviano, se determinó",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "23 de enero de 2025",
@@ -4821,7 +4829,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 16 de enero de 2025, de acuerdo a lo dispuesto por los Estatutos de la Sociedad y los Artículos 288 y 289 del Código de Comercio Boliviano, se determinó",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "23 de enero de 2025",
@@ -4840,7 +4848,7 @@
      "resumen": "Ha comunicado que, el 20 de enero de 2025, concluyó con el pago del Cupón N° 14 de la emisión de Bonos BISA LEASING IV - Emisión 6 (Serie C) dentro del Programa de Emisiones de Bonos BISA LEASING IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "14",
@@ -4859,7 +4867,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente pagador, el 20 de enero de 2025, concluyó el pago del Cupón Nº 9 de los Bonos Bancarios Bursátiles - Emisión 2 con Clave de Pizarra: BGA-1-N1U-20.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -4878,7 +4886,7 @@
      "resumen": "Ha comunicado que, el 20 de enero de 2025, mediante Resolución Ejecutiva N° 038/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -4897,7 +4905,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, son los siguientes: Ratios Comprometidos Ratios al 31 de diciembre de 2024 Relación Cobertura de Deuda > = 1,10 1,61",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -4912,7 +4920,7 @@
      "resumen": "Ha comunicado que, hace conocer el informe trimestral de la deuda financiera (a Bancos), y los pagos a intereses y amortizaciones (capital) efectuados, con el detalle siguiente: 1) Deuda financiera",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4927,7 +4935,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4945,7 +4953,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de enero de 2025, se determinó lo siguiente: Aprobar la modificación al organigrama de la Sociedad.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4959,7 +4967,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 21 de enero de 2025, se determinó lo siguiente: - La conclusión del interinato del señor Alexis Omar Gomez Cañipa siendo el último día de interinato el",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alexis Omar Gomez Cañipa",
@@ -4978,7 +4986,7 @@
      "resumen": "Ha comunicado que, designó el 21 de enero de 2025, al señor Esteban Sauto Roda en el cargo de Gerente Comercial.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Esteban Sauto Roda",
@@ -4998,7 +5006,7 @@
      "resumen": "Ha comunicado que, de acuerdo con lo resuelto por la Junta General Ordinaria de Accionistas de 11 de diciembre de 2024, el pago de dividendos por Resultados Acumulados de gestiones anteriores, por un",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 5,28 por acción",
@@ -5016,7 +5024,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 20 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: La consideración y aprobación de la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5031,7 +5039,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 21 de enero de 2025, se determinó autorizar al Presidente a convocar a la Asamblea General Ordinaria de Asociados, a realizarse el 25 de febrero de 2025",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "25 de febrero de 2025",
@@ -5051,7 +5059,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 21 de enero de 2025, se determinó autorizar al Presidente a convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 25 de febrero de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "25 de febrero de 2025",
@@ -5067,7 +5075,7 @@
      "resumen": "Ha comunicado que, el 20 de enero de 2025, recibió un financiamiento por Bs20.000.000,00 de BDP SAM.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5081,7 +5089,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Eddy Coaquira Zapana"
@@ -5096,7 +5104,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de enero de 2025, se determinó lo siguiente: Designar al señor Jorge Orlando Gutierrez Parada como funcionario responsable suplente ante la UIF, en",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5111,7 +5119,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 21 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -5128,7 +5136,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 20 de enero de 2025, se determinó lo siguiente: - Ante el uso de vacaciones del señor Mauricio Ricardo Orozco Ortiz, por el 23 y 24 de enero de 2025",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Mauricio Ricardo Orozco Ortiz"
@@ -5145,7 +5153,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del PATRIMONIO AUTÓNOMO CRESPAL - BDP ST 035, Laboratorios CRESPAL S.A.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5157,7 +5165,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 13 de enero de 2025, se determinó lo siguiente: La autorización de la firma del nuevo Contrato de Cesión Irrevocable de Derechos Sobre Flujos de Ventas",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5169,7 +5177,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 21 de enero de 2025, se determinó lo siguiente: - Aprobar la nueva conformación del Comité de la Gestión Integral de Riesgos Christian de Jesús Henrich",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5181,7 +5189,7 @@
      "resumen": "Ha comunicado que, el 21 de enero de 2025, procedió con el pago total de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5193,7 +5201,7 @@
      "resumen": "Ha comunicado que, el 21 de enero de 2025, en virtud a lo establecido en el Artículo I.11 del RIRO, la Gerencia General autorizó el registro e inscripción de la señora Valeria Marjorie Sagárnaga",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5205,7 +5213,7 @@
      "resumen": "Ha comunicado que, el 16 de enero de 2025, registró en el Servicio Plurinacional de Registro de Comercio (SEPREC), el Poder General de Administración como Apoderado General de la Sociedad al señor",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5220,7 +5228,7 @@
      "resumen": "Ha comunicado que, el 23 de enero de 2025, realizó la provisión de los fondos respectivos a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -5240,7 +5248,7 @@
      "resumen": "Ha comunicado que, los resultados del cálculo de los Compromisos Financieros al 31 de diciembre de 2024, asumidos en el Prospecto de Bonos Subordinados Banco Fortaleza 2021, son los siguientes",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -5277,7 +5285,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos del Reglamento Operativo Interno en el Artículo III.4, registró como Emisor a la empresa “DATEC LTDA.” en el Sistema de Registro de Emisores de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5289,7 +5297,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos del Reglamento Operativo Interno en el Artículo III.4, registró como Emisor al “Gobierno Autónomo Municipal de Santa Cruz de la Sierra”, en el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5303,7 +5311,7 @@
      "resumen": "Ha comunicado que, Franz Raúl Salazar Vásquez, quien actualmente desempeña el cargo de Encargado de Auditoría Interna de Oficina Central, fue designado temporalmente el 23 de enero de 2025, como",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Gabriel Echeverria Rodríguez",
@@ -5323,7 +5331,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a los “Compromisos Financieros” del Prospecto Marco del Programa de Emisiones de Bonos Diaconía, informa que los mismos a diciembre de 2024 son: Incisos Compromiso",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5338,7 +5346,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5360,7 +5368,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 21 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 6,8 M"
@@ -5375,7 +5383,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de enero de 2025, se determinó lo siguiente: Aprobar los personeros del Directorio, conforme al siguiente detalle: PRESIDENTE: Armin Ludwig Dorgathen",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5390,7 +5398,7 @@
      "resumen": "Ha comunicado que, la Junta General Ordinaria de Accionistas de 24 de enero de 2025, aprobó el pago de dividendos a sus accionistas correspondiente a la gestión 2024, a partir de Hrs.15:30 de la",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 0,91"
@@ -5408,7 +5416,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 24 de enero de 2025, realizada con el 86.69% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -5427,7 +5435,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 24 de enero de 2025, realizada con el 86.69% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "distribución de resultados · directorio"
@@ -5444,7 +5452,7 @@
      "resumen": "- Ha comunicado que, el 23 de enero de 2025, el señor Rafael Oscar Cuellar Trigo, presentó renuncia al cargo de Gerente División de Riesgos, efectiva el 31 de marzo de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rafael Oscar Cuellar Trigo",
@@ -5464,7 +5472,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 23 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -5484,7 +5492,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 23 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 18 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -5502,7 +5510,7 @@
      "resumen": "Ha comunicado que, la Asamblea General de Participantes de 23 de enero de 2025, con la presencia del 100% de los Participantes, determinó lo siguiente: - Aprobar por unanimidad la ampliación del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5514,7 +5522,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de enero de 2025, se determinó lo siguiente: - Aprobar el Programa de Educación Bursátil 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5530,7 +5538,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 23 de enero de 2025, realizada con el 99.90% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros · directorio"
@@ -5547,7 +5555,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 23 de enero de 2025, realizada con el 99.90% de los socios, determinó lo siguiente: Autorizar el aumento de Capital Suscrito y",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital"
@@ -5564,7 +5572,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -5584,7 +5592,7 @@
      "resumen": "Ha comunicado que, el 23 de enero de 2025, concluyó con el pago del Cupón N° 41 de los Valores de Titularización BISA ST - FUBODE II (Serie D).",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "41",
@@ -5602,7 +5610,7 @@
      "resumen": "Ha comunicado que, el 20 de enero de 2025, concluyó con el pago del Cupón N° 30 de los Valores de Titularización BISA ST - CIDRE II (Serie B).",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "30",
@@ -5622,7 +5630,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Patrimonio Autónomo denominado “Patrimonio Autónomo CIDRE IFD",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Patrimonio Autónomo CIDRE IFD - BDP ST 061",
@@ -5640,7 +5648,7 @@
      "resumen": "RESUELVE: Sancionar a MARCA VERDE SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos N° 1 y 2 imputados en la Nota de Cargos ASFI/DSV/R-301668/2024 de 16 de diciembre de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5655,7 +5663,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5675,7 +5683,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago de dividendos de YPFB ANDINA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_pago": "27 de enero"
@@ -5692,7 +5700,7 @@
      "resumen": "Ha comunicado que, a través de nota de 24 de enero de 2025, tomó conocimiento de la renuncia presentada por el señor Rafael Oscar Cuellar Trigo como Director.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rafael Oscar Cuellar Trigo",
@@ -5711,7 +5719,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, Rafael Oscar Cuellar Trigo, presentó renuncia al cargo de Director, con efecto en la misma fecha.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Director",
@@ -5729,7 +5737,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de enero de 2025, se determinó lo siguiente: Aceptar la renuncia de Rafael Oscar Cuellar Trigo al cargo de Director.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Director",
@@ -5747,7 +5755,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, Rafael Oscar Cuellar Trigo, presentó renuncia al cargo de Director, con efecto en la misma fecha.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Director",
@@ -5765,7 +5773,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de enero de 2025, se determinó lo siguiente: Aceptar la renuncia de Rafael Oscar Cuellar Trigo al cargo de Director.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Director",
@@ -5783,7 +5791,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, el señor Jorge Raúl Ramallo Beltrán presentó carta de renuncia al cargo de Gerente Nacional de Talento Humano, siendo su último día de trabajo el 31 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jorge Raúl Ramallo Beltrán",
@@ -5802,7 +5810,7 @@
      "resumen": "Ha comunicado que, la Asamblea General de Participantes de 24 de enero de 2025, realizada con el 100% de los participantes, determinó lo siguiente: Aprobar las modificaciones al Reglamento Interno de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5816,7 +5824,7 @@
      "resumen": "Ha comunicado que, a través de nota de 24 de enero de 2025, tomó conocimiento de la renuncia presentada por el señor Rafael Oscar Cuellar Trigo como Director.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Rafael Oscar Cuellar Trigo",
@@ -5833,7 +5841,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 24 de enero de 2025, se determinó lo siguiente: - Aprobar las modificaciones al Reglamento del Comité de Cumplimiento de Legitimación de Ganancias",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5848,7 +5856,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo CRESPAL - BDP ST 035, y agente pagador de los Valores de Titularización CRESPAL - BDP ST 035, no procedió al pago de capital e",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "57",
@@ -5866,7 +5874,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 12 de los BONOS SUBORDINADOS BANCO FIE 5, Series A y B con Claves de Pizarra: FIE-N1A-19",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -5884,7 +5892,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, realizó el pago al Banco Fie S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5898,7 +5906,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 24 de enero de 2025, determinó lo siguiente: • Autorizar la inscripción de la Emisión de Cuotas de Participación denominada “Cuotas de",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Cuotas de Participación AGROFIN Fondo de Inversión Cerrado",
@@ -5916,7 +5924,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 24 de enero de 2025, determinó lo siguiente: • Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado “PAGARÉS",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES PLASTIFORTE I",
@@ -5935,7 +5943,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, de acuerdo con el siguiente detalle: N° COMPROMISOS FINANCIEROS FORMULA RATIO 1 Relación de cobertura del servicio de deuda",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "estado": "programado",
@@ -5953,7 +5961,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, procedió a realizar la provisión de fondos al agente pagador - GanaValores Agencia de Bolsa S.A., para el pago del Cupón Nº 12 de los “BONOS PILAT II -",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -5973,7 +5981,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos por la Sociedad en los Prospectos de Emisión de instrumentos financieros, para las Emisiones comprendidas dentro",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6010,7 +6018,7 @@
      "resumen": "Ha comunicado que el señor Alberto Alfredo Valdés Andreatta, retomó sus funciones como Vicepresidente Ejecutivo, a partir del 27 de enero de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6024,7 +6032,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, designa al señor HUGO ZUÑIGA TALAVERA como GERENTE NACIONAL DE FINANZAS Y COMERCIO EXTERIOR a.i., en Oficina Nacional, quien ocupará el cargo, a partir del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "HUGO ZUÑIGA TALAVERA",
@@ -6044,7 +6052,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, convoca a la Asamblea General de Participantes, a realizarse a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6059,7 +6067,7 @@
      "resumen": "Ha comunicado que, el 24 de enero de 2025, convoca a la Asamblea General de Participantes, a realizarse a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6073,7 +6081,7 @@
      "resumen": "Ha comunicado que, efectuó la ampliación de designación a la señora Cintia Denisse Mollinedo Laura, quien actualmente desempeña el cargo de Gerente Nacional de Tecnología de la Información, de manera",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Cintia Denisse Mollinedo Laura",
@@ -6092,7 +6100,7 @@
      "resumen": "Ha comunicado que, a partir del 27 de enero al 7 de febrero 2025, el señor Harol Medrano Virhuez queda delegado como Gerente de Auditoria a.i., ante uso de vacaciones del señor Joel Roger Carreño",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Harol Medrano Virhuez",
@@ -6111,7 +6119,7 @@
      "resumen": "Ha comunicado que, el señor Jaime Ronald Gutiérrez López - Gerente General, estará ausente desde el 27 hasta el 31 de enero, retornando a sus funciones el 3 de febrero.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jaime Ronald Gutiérrez López",
@@ -6131,7 +6139,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6151,7 +6159,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Vanessa Rosemery Saucedo Justiniano",
@@ -6168,7 +6176,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de enero de 2025, se determinó lo siguiente: Aprobar por unanimidad la contratación de Jose Carlos Mendez Roca, como Gerente Nacional Técnico, a",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6180,7 +6188,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de enero de 2025, se determinó lo siguiente: Aprobar por unanimidad la contratación de Maria Elena Arevalo Guzman, como Gerente Nacional de Banca",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6195,7 +6203,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, el Síndico de la Sociedad, señor Hans Jurguen Cáceres Moreira, en el marco del Art.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hans Jurguen Cáceres Moreira",
@@ -6213,7 +6221,7 @@
      "resumen": "Ha comunicado que la Asamblea Extraordinaria de Socios de fecha 28 de enero de 2025, realizada con el 60.00% de los socios, determinó lo siguiente: Aprobar la emisión de Pagarés sin Oferta Pública, a",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6227,7 +6235,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Daniela Mariane Hurtado Soria",
@@ -6246,7 +6254,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, el señor Bernardo Boris Vino Patón presentó renuncia al cargo de Subgerente de Administración y Finanzas, siendo su último día en ejercicio de funciones el",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Bernardo Boris Vino Patón",
@@ -6265,7 +6273,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, procedió al nombramiento de Jeanethe Silvia Bellido Quintanilla como Subgerente de Administración y Finanzas a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Subgerente de Administración y Finanzas",
@@ -6284,7 +6292,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 13 de la emisión de Bonos GAS & ELECTRICIDAD II - Emisión 1, Serie B dentro del Programa de Emisiones de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -6305,7 +6313,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, concluyó con el pago del Cupón N° 13 de los Bonos GAS & ELECTRICIDAD II - EMISION 1, Serie B dentro del Programa de Emisiones de Bonos GAS & ELECTRICIDAD II.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "13",
@@ -6324,7 +6332,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, concluyó el pago del Cupón Nº 12 de los BONOS SUBORDINADOS BANCO FIE 5, correspondiente a las Series A y B con Claves de Pizarra: FIE-N1A-19 y FIE-N1B-19.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -6343,7 +6351,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, realizó la colocación total de la emisión denominada “Bonos BISA LEASING VII - EMISIÓN 1”, Serie Única dentro del “Programa de Emisiones de Bonos BISA",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6358,7 +6366,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, realizó la provisión de fondos al agente pagador Bisa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles CAMSA II",
@@ -6377,7 +6385,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, según el siguiente detalle: RATIOS COMPROMETIDOS Relación Cobertura del Servicio de Deuda >= 1,2 Relación Deuda Patrimonio",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -6394,7 +6402,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, mediante Resolución Ejecutiva N° 045/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -6413,7 +6421,7 @@
      "resumen": "Ha comunicado que, los resultados de los Compromisos Financieros de los Estados Financieros al 31 de diciembre de 2024, son los siguientes: INDICADORES FINANCIEROS Compromiso DIC.2024 a) Relación de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6443,7 +6451,7 @@
      "resumen": "Ha comunicado que, efectuó el otorgamiento de Poder Especial, Bastante y Suficiente N° 72/2025 de 24 de enero de 2025, en favor del señor José Eduardo Murillo Elio, Gerente de Operaciones Retail.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6457,7 +6465,7 @@
      "resumen": "Ha comunicado que, al 31 de diciembre de 2024, dio cumplimiento a los Compromisos Financieros, según el siguiente detalle: INDICADORES FINANCIEROS COMPROMISO DICIEMBRE 2024 RAZÓN CORRIENTE (RC) > =",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -6474,7 +6482,7 @@
      "resumen": "Ha comunicado que, el señor Franco Antonio Mauricio Urquidi Fernández fue designado el día de hoy, por el Presidente de Directorio, como Vicepresidente Ejecutivo a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Franco Antonio Mauricio Urquidi Fernández",
@@ -6491,7 +6499,7 @@
      "resumen": "Ha comunicado que, a partir del 1 de febrero de 2025, la señora Carmen Andrea Lopez Baldivieso, quien desempeña actualmente las funciones de Gerente de Servicio Banca Empresas Transaccional, asumirá",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6505,7 +6513,7 @@
      "resumen": "Ha comunicado que, el señor Adolfo Guzman quedará en reemplazo del señor Ronald Gutierrez L., como Gerente General a.i., desde el 27 hasta el 31 de enero, retornando a sus funciones el 3 de febrero",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Adolfo Guzman",
@@ -6524,7 +6532,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos del Reglamento Operativo Interno en el Artículo III.4, registró como Emisor al “Patrimonio Autónomo CIDRE IFD - BDP ST 061” en el Sistema de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6538,7 +6546,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, procedió con el registro de la Emisión de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6550,7 +6558,7 @@
      "resumen": "Ha comunicado que, el 27 de enero de 2025, procedió a la revocatoria parcial del Testimonio de Poder N° 2313/2022 de 20 de julio de 2022, en lo concerniente a las facultades otorgadas al señor Bryant",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6564,7 +6572,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento con lo establecido en el numeral 12.2 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6579,7 +6587,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6597,7 +6605,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de enero de 2025, se determinó lo siguiente: Aprobar el Programa de Educación Bursátil 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6609,7 +6617,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, en su calidad de agente colocador realizó la colocación primaria de 701 Cuotas de participación del Fondo de Inversión Cerrado AGROFIN FIC administrado por",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6624,7 +6632,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, en aplicación a lo establecido en el Artículo 289 y en el numeral 6) del Artículo 335 del Código de Comercio, el Síndico de la Sociedad, convocó a Junta",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "5 de febrero de 2025"
@@ -6642,7 +6650,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 28 de enero de 2025, realizada con el 84.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores · aumento de capital"
@@ -6660,7 +6668,7 @@
      "resumen": "Ha comunicado que el 28 de enero de 2025, el Síndico de acuerdo a lo dispuesto en los Estatutos de la Sociedad y lo establecido en el Artículo 289 y en el numeral 6) del Artículo 335 del Código de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "3 de febrero de 2025"
@@ -6677,7 +6685,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, llevó a cabo la Asamblea General de Tenedores de BONOS EQUIPETROL II - EMISIÓN 1 de manera virtual, con la participación del 100% del capital pendiente de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6691,7 +6699,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6705,7 +6713,7 @@
      "resumen": "Ha comunicado que la Asamblea Ordinaria de Socios de fecha 28 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6719,7 +6727,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "auditorias",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "firma": "RUIZMIER PELAEZ S.R.L.",
@@ -6738,7 +6746,7 @@
      "resumen": "Ha comunicado que, el 23 de enero de 2025, el Síndico a solicitud escrita del accionista mayoritario de TIGRE S.A.",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6750,7 +6758,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, ratificó a los señores Juan Carlos Rodriguez Lafuente en el cargo de Gerente Nacional Comercial y Nilda Sotez Vallejos en el cargo de Gerente Nacional de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6762,7 +6770,7 @@
      "resumen": "Ha comunicado que, el 29 de enero 2025, realizó la colocación primaria de las Cuotas de Participación de AGROFIN FONDO DE INVERSIÓN CERRADO.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6776,7 +6784,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 28 de enero de 2025, realizada con el 89.34% de los socios, determinó lo siguiente: Disponer un cuarto intermedio hasta Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6790,7 +6798,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, en su calidad de agente colocador, realizó la colocación primaria de 2.722 Valores de la Emisión de Bonos denominada \"Bonos BISA Leasing VII - Emisión 1\".",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6804,7 +6812,7 @@
      "resumen": "Ha comunicado que, el Emisor completó la provisión de los fondos en la cuenta designada para proceder al pago de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles CAMSA II - Emisión 1”",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6818,7 +6826,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, en su calidad de agente pagador concluyó con el pago del Cupón Nº 12 de la Serie Única con Clave de Pizarra PAR-2-N1U-22 de los BONOS PILAT II - EMISIÓN 1.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -6837,7 +6845,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros asumidos, en los prospectos de las Emisiones BONOS SOFIA II y BONOS SOFIA III, al 31 de diciembre de 2024, son los siguientes: Indicador Compromiso",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6876,7 +6884,7 @@
      "resumen": "Ha comunicado que, sus Compromisos Financieros al 31 de diciembre de 2024, asumidos en los Prospectos de Emisión de Instrumentos Financieros, se detallan a continuación: Indicadores Financieros",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6916,7 +6924,7 @@
      "resumen": "Ha comunicado que, de acuerdo a las obligaciones asumidas en el Prospecto Marco del Programa de Bonos INCOTEC I y el Prospecto Complementario de la Emisión de Bonos INCOTEC I - EMISIÓN 1, los",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6955,7 +6963,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024 correspondientes a las Emisiones de Bonos JALASOFT I - Emisión 1, Bonos JALASOFT II - Emisión 1, Bonos JALASOFT III y Bonos",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -6994,7 +7002,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024 son los siguientes: Indicadores Financieros Compromiso Dic.",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7033,7 +7041,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros - Bonos Subordinados Banco BISA - Emisión 2 y 3; al 31 de diciembre de 2024, son los siguientes: Indicadores Financieros Compromiso dic-24 Coeficiente",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7072,7 +7080,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros - Bonos Subordinados Banco BISA II - Emisión 1 y 2; al 31 de diciembre de 2024, son los siguientes: Indicadores Financieros Compromiso dic-24",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7111,7 +7119,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de enero de 2025, se determinó lo siguiente: Designar a la señora María Luisa Campuzano Alcázar, para que asuma las funciones como Gerenta Nacional de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "María Luisa Campuzano Alcázar",
@@ -7130,7 +7138,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 28 de enero de 2025, se determinó lo siguiente: Debido a la ausencia del Gerente Nacional de Cumplimiento titular, señor Victor Manuel Valencia Ibiett",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Victor Manuel Valencia Ibiett",
@@ -7149,7 +7157,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 27 de enero de 2025, se determinó lo siguiente: Designar como Auditor Interino a la señora Elsa Ucharico Alarcon, en caso de acefalía o vacaciones del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Elsa Ucharico Alarcon",
@@ -7167,7 +7175,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7181,7 +7189,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7196,7 +7204,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -7214,7 +7222,7 @@
      "resumen": "Ha comunicado que, el 30 de enero de 2025, utilizó Bs300.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7226,7 +7234,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente colocador, hasta el 29 de enero de 2025, realizó la colocación primaria de 4.201 Cuotas de Participación del Fondo de Inversión Cerrado AGROFIN FIC",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7241,7 +7249,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, el Síndico de acuerdo a lo dispuesto por los Estatutos de la Sociedad y los Artículos 288 y 289 del Código de Comercio, determinó convocar a Junta General",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "4 de febrero de 2025"
@@ -7259,7 +7267,7 @@
      "resumen": "Ha comunicado que, el 28 de enero de 2025, el Síndico convoca a Junta General Ordinaria de Accionistas, en aplicación a lo establecido en el Código de Comercio en el Artículo 289 y numeral 6) del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "5 de febrero de 2025"
@@ -7276,7 +7284,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 29 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7290,7 +7298,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 29 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: Aprobar la ampliación y modificación del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7304,7 +7312,7 @@
      "resumen": "Rectifica el Hecho Relevante publicado el 29 de enero de 2025, sobre la Convocatoria a Junta General Ordinaria de Accionistas, siendo que la misma fue convocada el 27 de enero de 2025 y no el 28 de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria"
@@ -7321,7 +7329,7 @@
      "resumen": "Ha comunicado que, el 29 de enero de 2025, la Presidencia del Directorio a cargo del señor Néstor Guido Calvo Miranda determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Néstor Guido Calvo Miranda",
@@ -7340,7 +7348,7 @@
      "resumen": "Ha comunicado que, siguiendo las determinaciones de la Asamblea General Ordinaria de Socios de 28 de enero de 2025, procedió con el pago parcial equivalente a Bs22.968.001,03 de dividendos el 29 de",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 23,0 M"
@@ -7357,7 +7365,7 @@
      "resumen": "Ha comunicado que, el 29 de enero de 2025 a Hrs.15:00, se llevó a cabo la Asamblea General de Tenedores de “Bonos Plastiforte - Emisión 1” de manera presencial y virtual, con la participación del",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7371,7 +7379,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 29 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7386,7 +7394,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: - Designar al Director Ariel Ernesto Montaño Rojas como Presidente, a la Directora María Alejandra Pérez",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Marioli Michelle Rocabado Valdiviezo",
@@ -7403,7 +7411,7 @@
      "resumen": "Ha comunicado que, el 30 de enero de 2025, la señora Kathia Zoraya Ferrufino Rivera fue removida del cargo de Gerente de Talento Humano con efectividad a partir de la fecha.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7418,7 +7426,7 @@
      "resumen": "Ha comunicado que, en sesión de Comité de Calificación N° 005/2025 realizado el 27 de enero de 2025, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7430,7 +7438,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: siguiente: Aprobar por unanimidad el informe trimestral de Cumplimiento con corte al 31 de diciembre de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7445,7 +7453,7 @@
      "resumen": "Ha comunicado que, en sesión de Comité de Calificación N° 007/2025 realizado el 29 de enero de 2025, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7457,7 +7465,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7469,7 +7477,7 @@
      "resumen": "Ha comunicado la ratificación de Mauricio Javier Moscoso Guttentag como Gerente General Titular.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7481,7 +7489,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7495,7 +7503,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de enero de 2025, se determinó lo siguiente: En vista de la aceptación de la renuncia del señor Ismael Severo Huanaco Carpio como miembro titular del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Ismael Severo Huanaco Carpio",
@@ -7511,7 +7519,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: Aprobar de la modificación al Reglamento Interno de “DINÁMICO FONDO MUTUO CORTO PLAZO” - Art.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7526,7 +7534,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: - Tomar conocimiento de las evaluaciones regulatorias.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Héctor Eloy Cevallos Pastor",
@@ -7545,7 +7553,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para la cancelación del Cupón Nº 10 de los “BONOS PISA I - EMISIÓN 1”, con Clave Pizarra: PIN-1-N1U-20, el pago se realizará a",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -7565,7 +7573,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para la cancelación del Cupón Nº 10 de los “BONOS PISA I - EMISIÓN 2, con Clave de Pizarra PIN-1-E2U-20, el pago se realizará",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -7585,7 +7593,7 @@
      "resumen": "Ha comunicado que, el 29 de enero de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones de la BBV, la Gerencia General autorizó el registro e",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7600,7 +7608,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros asumidos para el “Programa de Emisiones de Bonos BISA LEASING IV”, el “Programa de Emisiones de Bonos BISA LEASING V”, el “Programa de Emisiones de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -7617,7 +7625,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros correspondientes a la Emisión de “Bonos Fortaleza Leasing 2020”, al 31 de diciembre de 2024, son los siguientes: Compromisos Financieros Ratio al",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7649,7 +7657,7 @@
      "resumen": "Ha comunicado que, los resultados de los Compromisos Financieros al 31 de diciembre de 2024, de los Estados Financieros de la Sociedad son los siguientes: Indicadores Financieros Compromiso",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7695,7 +7703,7 @@
      "resumen": "Ha comunicado que, en cumplimiento de las obligaciones de información del Prospecto Marco del Programa “BONOS ENDE Transmisión I”, los Compromisos Financieros al 31 de diciembre de 2024, son los",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -7712,7 +7720,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, conforme lo establecido en el Prospecto Marco y Prospectos Complementarios de las Emisiones: “Bonos BFC - Emisión 1”, “Bonos",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -7730,7 +7738,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, de acuerdo con los lineamientos establecidos como compromisos asumidos en el Programa Marco de Emisión de Bonos Las Lomas",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -7747,7 +7755,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, son los siguientes: RATIOS COMPROMETIDOS: Relación Cobertura de Deuda (RCD) >= 2,50 Relación Deuda Patrimonio (RDP) <= 2,20",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tabla_no_parseada": true
@@ -7765,7 +7773,7 @@
      "resumen": "Ha comunicado que, de acuerdo con sus Estados Financieros preliminares a diciembre 2024, cumple con los Compromisos Financieros de las emisiones de Bonos NIBOL - Emisión 1 y 2.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos NIBOL",
@@ -7786,7 +7794,7 @@
      "resumen": "Ha comunicado que, de acuerdo con sus Estados Financieros preliminares a diciembre 2024, cumple con sus Compromisos Financieros de la emisión de Bonos NIBOL II - Emisión 1.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos NIBOL II",
@@ -7806,7 +7814,7 @@
      "resumen": "Ha comunicado que los Compromisos Financieros al 31 de diciembre de 2024, asumidos dentro del Programa de Emisiones de “BONOS PISA I” y las Emisiones vigentes que lo conforman, son los siguientes",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7831,7 +7839,7 @@
      "resumen": "Ha comunicado que, el 29 de enero de 2025, provisionó los fondos necesarios para el pago del Cupón N° 10 de los BONOS PISA 1 - EMISIÓN I, Serie Única con Clave de Pizarra: PIN-1-N1U-20 y BONOS PISA I",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -7851,7 +7859,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos en el Prospecto Marco de Emisiones de “Bonos Pilat I” y “Bonos Pilat II”, se detallan a continuación: Indicadores",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7890,7 +7898,7 @@
      "resumen": "Ha comunicado que, al 31 de diciembre de 2024, dió cumplimiento a los Compromisos Financieros, según el siguiente detalle: Ratios Comprometido Ratios al 31 de diciembre de 2024: Razón Corriente (RC)",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7929,7 +7937,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, asumidos en el Prospecto de Emisión de Instrumentos Financieros, se detallan a continuación: Indicadores Financieros",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7961,7 +7969,7 @@
      "resumen": "Ha comunicado que, los Compromisos Financieros al 31 de diciembre de 2024, son los siguientes: Indicadores Financieros Compromiso Dic-24 Relación de Endeudamiento (RDP) RDP <= 2,2, 1,36 Relación de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_reportados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "indicadores": [
@@ -7994,7 +8002,7 @@
      "resumen": "Ha comunicado que, provisionó los fondos para el pago del Cupón N° 17 de la Emisión de Bonos Subordinados Banco BISA - Emisión 2, dentro el Programa de Emisiones de Bonos Subordinados Banco BISA, a",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "17",
@@ -8014,7 +8022,7 @@
      "resumen": "Ha comunicado que, el 30 de enero de 2025, designa al señor Luis Carlos Sempertegui como Gerente Regional a.i., en la Regional Potosí, quien ocupará el cargo a partir del 3 al 14 de febrero de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Luis Carlos Sempertegui",
@@ -8035,7 +8043,7 @@
      "resumen": "Ha comunicado que, procederá al pago de los siguientes Cupones: - Cupón Nº 43 de la Serie Única de la Emisión de Valores de Titularización de Contenido Crediticio del Patrimonio Autónomo Microcrédito",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "43",
@@ -8055,7 +8063,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -8075,7 +8083,7 @@
      "resumen": "Ha comunicado que, la señorita Carla Tamayo Arana presentó renuncia al cargo Subgerente Comercial, siendo su último día el 31 de enero de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Carla Tamayo Arana",
@@ -8091,7 +8099,7 @@
      "resumen": "Ha comunicado que, el 30 de enero del presente, el Servicio Plurinacional del Registro de Comercio (SEPREC) registró el Testimonio N° 23/2025 de Acuerdo Definitivo de Fusión, mediante el cual, BISA",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8106,7 +8114,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 30 de enero de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 27 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de febrero de 2025"
@@ -8125,7 +8133,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 30 de enero de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 27 de febrero de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "27 de febrero de 2025",
@@ -8141,7 +8149,7 @@
      "resumen": "Ha comunicado que la Asamblea Ordinaria de Socios de fecha 30 de enero de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8155,7 +8163,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de enero de 2025, se determinó lo siguiente: Tomar conocimiento y aceptar la renuncia del señor Teodoro Chikara Uechi Ikemura, al cargo de Vocal",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Teodoro Chikara Uechi Ikemura",
@@ -8172,7 +8180,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de enero de 2025, se determinó lo siguiente: Aprobar el Programa de Educación Bursátil correspondiente a la gestión 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8188,7 +8196,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de enero de 2025, se determinó lo siguiente: - Promocionar a la Subgerente de Administración y Finanzas, señora Patricia Crespo Vidaurre al cargo de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -8205,7 +8213,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de enero de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -8220,7 +8228,7 @@
      "resumen": "Rectifica la publicación del Hecho Relevante de 29 enero de 2025, en la que se comunicó la colocación de Cuotas e inicio de actividades en el Fondo INTERFIN FIC, siendo que la misma debería",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8234,7 +8242,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 9 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 5, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -8255,7 +8263,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 9 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 6, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -8276,7 +8284,7 @@
      "resumen": "Ha comunicado que, el 31 de enero de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -8294,7 +8302,7 @@
      "resumen": "Ha comunicado que, el 12 de febrero de 2025, procederá a la emisión de nuevas acciones y su posterior canje en sus oficinas ubicadas en la Av.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8309,7 +8317,7 @@
      "resumen": "Ver AdjuntoPRESENTACIÓN DE INFORMACIÓN PARA EMPRESAS DE AUDITORÍA EXTERNA Y EMISORES GESTIÓN 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]

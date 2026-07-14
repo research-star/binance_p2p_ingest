@@ -13,7 +13,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, utilizó Bs8.500.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -29,7 +29,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 1 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 8 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "8 de septiembre de 2025"
@@ -46,7 +46,7 @@
      "resumen": "Ha comunicado que, el 28 de agosto de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -63,7 +63,7 @@
      "resumen": "Ha comunicado que, la Junta General Ordinaria de Accionistas, convocada para el 29 de agosto de 2025, no fue instalada por falta de quorum.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -78,7 +78,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 29 de agosto de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -97,7 +97,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 29 de agosto de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 9 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "9 de septiembre de 2025",
@@ -115,7 +115,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 29 de agosto de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -130,7 +130,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 01 de septiembre de 2025, realizada con el 63.89% de los accionistas, determinó lo siguiente: - Aprobar las modificaciones de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -149,7 +149,7 @@
      "resumen": "Ha comunicado que, en reunión Ordinaria de Directorio de 29 de agosto de 2025, se determinó convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 25 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "25 de septiembre de 2025",
@@ -167,7 +167,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 29 de agosto de 2025, realizada con el 100.00% de los asociados, determinó lo siguiente: Dando cumplimiento a la Nota ASFI/DSR",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -179,7 +179,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de agosto de 2025, se determinó lo siguiente: * Tomar conocimiento de Informes de auditoría interna de evaluación regulatoria - Mensual.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -193,7 +193,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo CRESPAL - BDP ST 035, sin perjuicio a la notificación y las determinaciones del Auto Declarativo de Quiebra Resolución Nº",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -207,7 +207,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento con lo establecido en el numeral 11.1 del Artículo Undécimo del Contrato de Cesión de Derechos sobre Flujos Futuros para Fines de Titularización, Administración",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -222,7 +222,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, concluyó con el pago del Cupón N° 5 de la emisión de Bonos Subordinados Banco BISA II - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -242,7 +242,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, concluyó con el pago del Cupón N° 12 de los Bonos Subordinados BANCOSOL 2 - Emisión 3 (Serie Única) dentro del Programa de Emisiones de Bonos Subordinados",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -261,7 +261,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 7, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -282,7 +282,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 8, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -303,7 +303,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 11 y amortización de capital de los BONOS LAS LOMAS I - EMISIÓN 2, Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -322,7 +322,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, procedió con el pago parcial de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -334,7 +334,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, realizó la colocación primaria bursátil del 100% de los “BONOS EMIPA II” con Serie Única y Clave de Pizarra EMT-E1U-25.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -349,7 +349,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo establecido en el Prospecto Complementario de la emisión denominada Bonos BISA LEASING V - Emisión 3, dentro del Programa de Emisiones de Bonos BISA LEASING V",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -369,7 +369,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -386,9 +386,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, adquirió un préstamo con el Banco Unión S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Unión S.A.",
+      "monto": "Bs 1,6 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -398,9 +402,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, adquirió un préstamo con el Banco Unión S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Unión S.A.",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -410,8 +418,8 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, adquirió un préstamo con el Banco Unión",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
+     "grupo": "prestamos",
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -422,9 +430,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, adquirió un préstamo con el Banco Unión S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Unión S.A.",
+      "monto": "Bs 1,1 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -437,7 +449,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, mediante Resolución Ejecutiva N° 695/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -457,7 +469,7 @@
      "resumen": "Ha comunicado que, en cumplimiento al punto 2.4.3 del Prospecto de Emisión convoca a la Asamblea General de Tenedores de Bonos de la Emisión denominada “Bonos TSM 001”, a realizarse el 10 de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "10 de septiembre de 2025"
@@ -474,7 +486,7 @@
      "resumen": "Ha comunicado que, la señora Cecilia Pereyra Foianini fungirá como Gerenta de División de Negocios a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Cecilia Pereyra Foianini",
@@ -493,7 +505,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 29 de agosto de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -507,7 +519,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con lo establecido en el Artículo III.4 del Reglamento Operativo Interno, el 29 de agosto de 2025, registró como Emisor al “Patrimonio Autónomo CIDRE IFD - BDP ST",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -523,7 +535,7 @@
      "resumen": "Ha comunicado que, procederá al pago de los siguientes Cupones: Cupón Nº 46 de la Serie \"Única\" de la Emisión de Valores de Titularización de Contenido Crediticio del Patrimonio Autónomo Microcrédito",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "46",
@@ -543,7 +555,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES MADISA I",
@@ -562,7 +574,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -580,7 +592,7 @@
      "resumen": "Ha comunicado que, mediante Memorándum D.G.RR.HH.5198/2025 de 1 de septiembre de 2025, el señor Iván Arias Durán en atribución de sus competencias como Alcalde Municipal de La Paz, destituyó al",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -594,7 +606,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, mediante Resolución Ejecutiva N° 709/2025, el señor Hernán Iván Arias Durán en atribución de sus facultades como Alcalde Municipal de La Paz, designó al",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hernán Iván Arias Durán",
@@ -611,7 +623,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, redimió parcialmente 3.160 Valores correspondientes a la Emisión Bonos PISA 1 - Emisión 1 con Serie Única y Clave de Pizarra PIN-1-N1U-20, a través de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -625,7 +637,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité N° 079/2025 de 4 de agosto de 2025, se acordó la asignación de categorías locales de Calificación de Riesgo y Perspectiva a los siguientes instrumentos de",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -639,7 +651,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, designa al señor Sergio Mario Reynolds Ruiz como Gerente Nacional de Asesoría Legal y Gobierno Corporativo, cargo que asumirá con efectividad a partir",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Sergio Mario Reynolds Ruiz",
@@ -659,7 +671,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 01 de septiembre de 2025, realizada con el 60.00% de los asociados, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -674,7 +686,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó con el pago del Cupón N° 29 de los Bonos FANCESA IV - Emisión 2 (Serie B) dentro del Programa de Emisiones de Bonos FANCESA IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "29",
@@ -693,7 +705,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó con el pago del Cupón N° 4",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "4",
@@ -712,7 +724,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó con el pago del Cupón N° 4 de los Bonos GAS & ELECTRICIDAD III - EMISION 1 (Serie Única), dentro del Programa de Emisiones de Bonos GAS &",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "4",
@@ -732,7 +744,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 10 de la emisión de Bonos BISA LEASING V - Emisión 3 dentro del Programa de Emisiones de Bonos BISA",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -752,7 +764,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, concluyó el pago del Cupón Nº 16 y amortización de capital de los BONOS TELECEL II - EMISIÓN 3, correspondiente a la Serie C con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -772,7 +784,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS LAS LOMAS I - EMISIÓN 2 correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -792,7 +804,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS BNB II - EMISIÓN 1, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -812,7 +824,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS BNB II - EMISIÓN 2, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -832,7 +844,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 11 y amortización de capital de los BONOS BNB II - EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -852,7 +864,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, efectuó el pago del Cupón Nº 19 y amortización de capital de los BONOS BNB I - EMISIÓN 3, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "19",
@@ -872,7 +884,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 19 y amortización de capital de los BONOS BNB I - EMISIÓN 4, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "19",
@@ -892,7 +904,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 9 y amortización capital de los BONOS BNB LEASING IV-EMISIÓN 1, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -910,7 +922,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, Panamerican Investments S.A., redimió parcialmente y a través de compra en Mercado Secundario, 3.160 Valores correspondientes a la Emisión “BONOS PISA I",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -922,7 +934,7 @@
      "resumen": "Ha comunicado que, Panamerican Investments S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -936,7 +948,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, recibió un desembolso del Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Nacional de Bolivia S.A.",
@@ -952,7 +964,7 @@
      "resumen": "Ha comunicado que, el 29 de agosto de 2025, cumplió con el compromiso financiero a través de la devolución de capital del Pagaré Privado con la señora Rossio Cristal Guzman Ortiz por USD50.000,00 con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -964,7 +976,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre de 2025, realizó la colocación primaria bursátil a través de la Agencia de Bolsa PANAMERICAN SECURITIES S.A., del 100% de los “BONOS EMIPA II” con Serie Única y",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -979,7 +991,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs4.079.942,48 para la compra de mercadería como capital de operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -999,7 +1011,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, convoca a la Asamblea General de Tenedores de “Bonos INCOTEC I - Emisión 1”, a realizarse el 11 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "11 de septiembre de 2025"
@@ -1017,7 +1029,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, realizará la provisión de fondos para el pago de intereses correspondientes al Cupón N° 24 de la emisión de bonos subordinados denominada “BONOS",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "24",
@@ -1036,7 +1048,7 @@
      "resumen": "Ha comunicado que, el 1 de septiembre y a fin de asegurar la continuidad operativa y de gestión, designa temporalmente al señor Alvaro Gabriel Gonzales Luna Orozco como Gerente de Sucursal a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alvaro Gabriel Gonzales Luna Orozco",
@@ -1055,7 +1067,7 @@
      "resumen": "Ha comunicado que, en virtud a que el cargo de Gerente Regional Tarija continúa acéfalo, designó al señor Miguel Fernando Arce Huanca para que asuma las funciones de Gerente Regional Tarija a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Miguel Fernando Arce Huanca",
@@ -1072,7 +1084,7 @@
      "resumen": "Ha comunicado que, la señora Carla Virginia Calderon Salinas, retornó a sus funciones habituales como Subgerente Nacional de Cumplimiento, a partir del 2 de septiembre de 2025.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1084,7 +1096,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de agosto de 2025, se determinó lo siguiente: Que durante el periodo de licencia comprendido entre el 30 de agosto y 30 de octubre de la presente",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1098,7 +1110,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento con lo establecido en el numeral 12.1 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1112,7 +1124,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1130,7 +1142,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, utilizó Bs5.000.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1145,7 +1157,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 13 de agosto de 2025, se determinó lo siguiente: Considerando la nota recibida por el señor Hector Horacio Herbas Buais, quien declina su nombramiento",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Hector Horacio Herbas Buais",
@@ -1164,7 +1176,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 02 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Ricardo Winter",
@@ -1180,7 +1192,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, redimió parcialmente 200 Valores correspondientes a la emisión Bonos PISA I - Emisión 1, Serie Única y Clave de Pizarra PIN-1-N1U-20, a través de compra",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1195,7 +1207,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento a lo establecido en el Artículo Decimonoveno del Contrato de Cesión Irrevocable de Derechos sobre Flujos Futuros para Fines de Titularización, Administración y",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1210,7 +1222,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, concluyó con el pago del Cupón N° 10 de la emisión de Bonos BISA LEASING V - Emisión 3 (Serie B), dentro del Programa de Emisiones de Bonos BISA LEASING",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -1229,7 +1241,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, concluyó el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 7, Serie Única con Clave de Pizarra: TDE-1-N1U-21.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1249,7 +1261,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, concluyó el pago del Cupón Nº 8 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 8, Serie Única con Clave de Pizarra: TDE-1-N2U-21.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -1269,7 +1281,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 61 y amortización de capital de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Serie “B” con",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "61",
@@ -1290,7 +1302,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 9 y amortización de capital de los BONOS BNB LEASING IV - EMISIÓN 2, correspondiente a la Serie",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -1311,7 +1323,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente pagador, el 1 de septiembre de 2025, concluyó el pago del Cupón Nº 11 de los Bonos INCOTEC I - EMISIÓN 1, Serie B con Clave de Pizarra ICT-1-N1B-20.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -1328,7 +1340,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, Panamerican Investments S.A., redimió parcialmente y a través de compra en Mercado Secundario, 200 Valores correspondientes a la emisión “BONOS PISA I -",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1340,7 +1352,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, en el marco de lo indicado por el Artículo 657 del Código de Comercio y en cumplimiento a las disposiciones establecidas por los respectivos Prospectos",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1354,7 +1366,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, realizó la provisión de fondos para el pago del Cupón N° 9 y amortización de capital de la emisión denominada “BONOS BNB LEASING IV - EMISIÓN 2”, cuyo",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -1375,7 +1387,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, efectuó la provisión de fondos a la COMPAÑÍA AMERICANA DE INVERSIONES S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -1393,7 +1405,7 @@
      "resumen": "Ha comunicado que, mediante Testimonio N° 885/2025 de 1 de septiembre de 2025, otorgó Poder Especial, Amplio y Suficiente en favor del señor Juan Carlos Herrera Amenábar.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1405,7 +1417,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, otorgó Poder de Representación Tipo ¨B¨ N° 1583/2025, en favor del señor Fabricio Michel Dorado Aguilar.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1419,7 +1431,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 2 de septiembre de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1433,7 +1445,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 2 de septiembre de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1447,7 +1459,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 2 de septiembre de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1461,7 +1473,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 2 de septiembre de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1475,7 +1487,7 @@
      "resumen": "Ha comunicado que, Alberto Suxo Sosa quien desempeña el cargo de Jefe de Sucursal fue designado temporalmente el 2 de septiembre 2025, como Gerente Nacional de Créditos a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Jefe de Sucursal fue designado temporalmente el 2 de septiembre 2025",
@@ -1495,7 +1507,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo dispuesto en el Contrato de Cesión Irrevocable de Derecho sobre Flujos Futuros para fines de Titularización, Administración y Representación y al Prospecto de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1509,7 +1521,7 @@
      "resumen": "Ha comunicado que, el 2 de septiembre de 2025, realizó la provisión de los fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "61",
@@ -1529,7 +1541,7 @@
      "resumen": "RESUELVE: Sancionar a KERKUS CORREDORES DE SEGUROS S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-171903/2025 de 29 de julio de 2025, al haber incumplido lo dispuesto en el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1543,7 +1555,7 @@
      "resumen": "RESUELVE: Sancionar a la SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN UNIÓN S.A., con multa, por los cargos imputados en la Nota de Cargos ASFI/DSV/R- 170659/2025 de 28 de julio de 2025, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1557,7 +1569,7 @@
      "resumen": "RESUELVE: Sancionar a TOYOSA S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-171879/2025 de 29 de julio de 2025, al haber incumplido lo dispuesto en el segundo párrafo del",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1571,7 +1583,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1591,7 +1603,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1605,7 +1617,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1619,7 +1631,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1634,7 +1646,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1649,7 +1661,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1661,7 +1673,7 @@
      "resumen": "Ha comunicado que, rectifica el Hecho Relevante publicado el 21 de agosto de 2025, correspondiente a lo ocurrido el 20 de agosto de 2025, respecto a la composición accionaria, puesto que por un error",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1673,7 +1685,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025, redimió parcialmente 6.586 Valores correspondientes a la Emisión Bonos PISA I - Emisión 1, Serie Única y Clave de Pizarra PIN-1-N1U-20, a través de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1688,7 +1700,7 @@
      "resumen": "Ha comunicado que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva al siguiente instrumento de Bolivia: EMISOR INSTRUMENTO CALIFICADO",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1704,7 +1716,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 28 de agosto de 2025, se determinó convocar a la ASAMBLEA GENERAL EXTRAORDINARIA DE ASOCIADOS, a realizarse el 15 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -1721,7 +1733,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025, Panamerican Investments S.A., redimió parcialmente y a través de compra en Mercado Secundario, 6.586 Valores correspondientes a la emisión “BONOS PISA I",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1733,7 +1745,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025, mediante Escritura Pública N° 1619/2025, revoca de forma parcial el Testimonio de Poder Tipo ¨B¨ N° 1683/2024 de 6 de julio de 2024, en favor de la",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1747,7 +1759,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, designó al señor MIGUEL ANTONIO ROCA HURTADO como GERENTE REGIONAL a.i., en la Regional Santa Cruz, quien ocupará el cargo a partir del 3 hasta el 8 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "MIGUEL ANTONIO ROCA HURTADO",
@@ -1764,7 +1776,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, procedió a revocar el Poder General,",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1776,7 +1788,7 @@
      "resumen": "Ha comunicado que, el 3 de septiembre de 2025, procedió a revocar el Poder General, Amplio y Suficiente de Administración y Representación Legal Tipo “B” N° 14/2018 de 9 de enero de 2018, que fuera",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1790,7 +1802,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -1810,7 +1822,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025, el señor Olvis Ribera Arroyo presentó renuncia al cargo de Gerente de Planificación y Control de Gestión, en la regional Santa Cruz, efectiva a partir",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Olvis Ribera Arroyo",
@@ -1827,7 +1839,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1839,7 +1851,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, redimió parcialmente 494 Valores correspondientes a la Emisión Bonos PISA I - Emisión 1, Serie Única y Clave de Pizarra PIN-1-N1U-20, a través de compra",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1851,7 +1863,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 04 de septiembre de 2025, se determinó lo siguiente: - Tomar conocimiento del Informe de Auditoría Interna en cumplimiento a nota ASFI/DSV/R-177999/2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1865,7 +1877,7 @@
      "resumen": "Ha comunicado que, el 4 de septiembre de 2025, concluyó el pago del Cupón Nº 9 y amortización de capital de los BONOS BNB LEASING IV-EMISION 2, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -1885,7 +1897,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, concluyó el pago del Cupón Nº 61 y amortización de capital de los VALORES DE TITULARIZACIÓN NUEVATEL BDP ST 049, Serie B con Clave de Pizarra: PTL-TD-NB.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "61",
@@ -1905,7 +1917,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para la cancelación del Cupón N° 12 de la emisión denominada “BONOS SOFIA III” (Serie Única) con Clave de Pizarra: SOF-N2U-22",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -1923,7 +1935,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, Panamerican Investments S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1935,7 +1947,7 @@
      "resumen": "Ha comunicado que, en calidad de agente colocador, efectuó las siguientes",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1947,7 +1959,7 @@
      "resumen": "Ha comunicado que, en calidad de agente colocador, efectuó las siguientes transferencias: 1.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -1961,7 +1973,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, designa al señor CARLOS VLADIMIR CERRUTO LOBATON como GERENTE NACIONAL DE NEGOCIOS a.i., en Oficina Nacional, quien ocupará el cargo a partir del 8",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "CARLOS VLADIMIR CERRUTO LOBATON",
@@ -1980,7 +1992,7 @@
      "resumen": "Ha comunicado que, Gabriel Echeverria Rodríguez quien desempeña el cargo de Subgerente General, fue designado temporalmente el 4 de septiembre 2025, como Gerente General a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Subgerente General",
@@ -1996,7 +2008,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 04 de septiembre de 2025, se determinó lo siguiente: La Revocatoria del Poder N° 222/2024 y otorgar nuevo Poder Especial para trámites ante el BCB, a",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2010,7 +2022,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento con lo establecido en el numeral 12.1 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2025,7 +2037,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES PROLEGA III",
@@ -2043,7 +2055,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero a “PROYECTOS SOSTENIBLES GREENWORKS BOLIVIA S.R.L.”, como Empresa",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PROYECTOS SOSTENIBLES GREENWORKS BOLIVIA S.R.L.",
@@ -2061,7 +2073,7 @@
      "resumen": "RESUELVE: ÚNICO.- Disponer la modificación de la denominación social de BISA SOCIEDAD DE TITULARIZACIÓN S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2075,7 +2087,7 @@
      "resumen": "RESUELVE: Sancionar a BNB SAFI S.A., con multa, por los cargos N° 1 y 2 de la Nota de Cargos ASFI/DSV/R-186975/2025 de 18 de agosto de 2025, al haber incumplido lo dispuesto en el segundo párrafo del",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2089,7 +2101,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-180771/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a JENNY ELENA NAVIA CABA como Auditor",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2103,7 +2115,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-182574/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a MARIA ALEJANDRA MONDACA ARAMAYO como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2117,7 +2129,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-198432/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a JOSEPH MIJAIL CANEDO CALDERON como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2131,7 +2143,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-198441/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a ROXANA NICOLE BALDERRAMA BALDERRAMA como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2145,7 +2157,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2166,7 +2178,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 08 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2178,7 +2190,7 @@
      "resumen": "Ha comunicado que, a partir del 5 de septiembre de 2025, incorporó al señor Rafael Salas como Gerente de Operaciones y Tecnología de la Información.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2190,7 +2202,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, por disposición de la Gerencia General, se constituyó en el último día laboral del señor Jaime Arturo Cuéllar Martínez, quien desempeñaba el cargo de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2205,7 +2217,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 05 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2219,7 +2231,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 08 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: - Aprobar la ampliación del Objeto",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2231,7 +2243,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 04 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2246,7 +2258,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 05 de septiembre de 2025, realizada con el 3.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2260,7 +2272,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 05 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Raúl Alberto Ballón Fernández",
@@ -2279,7 +2291,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente pagador, informa que el 5 de septiembre de 2025, concluyó con el pago del Cupón N° 12 de la emisión denominada “BONOS SOFIA III”, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -2299,7 +2311,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, en su calidad de agente pagador, concluyó con el pago del Cupón N° 24 de los bonos denominados “Emisión de Bonos Subordinados - Banco de Crédito de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "24",
@@ -2319,7 +2331,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 5 de septiembre de 2025, determinó lo siguiente: • Autorizar la inscripción de la Emisión de Valores de Titularización de Contenido",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Valores de Titularización CIDRE IFD - BDP ST 064",
@@ -2338,7 +2350,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, efectuó la provisión de fondos al agente pagador Entidad de Depósito de Valores de Bolivia S.A., para realizar el pago del Cupón N° 23 de la emisión de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "23",
@@ -2359,7 +2371,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs5.384.642,72 para la compra de mercadería como Capital de Operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -2375,7 +2387,7 @@
      "resumen": "Ha comunicado que, el 5 de septiembre de 2025, otorgó Poder Especial N° 904/2025 a favor de RAUL GUILLERMO ALMARAZ LOBOS, para que realice y se apersone en el proceso de investigación CASO",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2387,7 +2399,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de septiembre de 2025, se determinó lo siguiente: Revocar en su totalidad los siguientes Poderes: • Poder N° 2968/2022 de 26 de septiembre de 2022",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2399,7 +2411,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de septiembre de 2025, se determinó lo siguiente: • Otorgar nuevo Poder General de Administración Tipo A especial en favor del señor Walter Gonzalo",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2413,7 +2425,7 @@
      "resumen": "Ha comunicado la designación temporal del señor Alexander Angola Flores en el cargo de Gerente Regional - El Alto a.i., a partir del 8 hasta el 22 de septiembre de 2025, periodo en el que la señora",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alexander Angola Flores",
@@ -2433,7 +2445,7 @@
      "resumen": "Ha comunicado que, en calidad de agente pagador de los Bonos de Intercambio Fancesa VI, habiendo recibido la provisión de fondos por parte del Emisor, el 8 de septiembre de 2025, concluyó con el pago",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "23",
@@ -2452,7 +2464,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la modificación del registro de las Acciones Suscritas y Pagadas de CLÍNICA",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2466,7 +2478,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2486,7 +2498,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 05 de septiembre de 2025, se determinó lo siguiente: Tomar conocimiento y aceptar la renuncia presentada por Valerie Jordán Ledezma como Asesor de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Asesor de Inversión",
@@ -2504,7 +2516,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 05 de septiembre de 2025, se determinó lo siguiente: - Por motivo de vacación de la señorita Magaly Sandy Cabrera Llanos, el Directorio aprueba la",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Magaly Sandy Cabrera Llanos",
@@ -2524,7 +2536,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 08 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "DATEC II",
@@ -2540,7 +2552,7 @@
      "resumen": "Ha comunicado que, por decisión de la Gerencia General, a partir del 8 de septiembre de 2025, el señor Ignacio Alejandro Vargas Morales asumió, de manera interina, el cargo de Gerente Industrial",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2555,7 +2567,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 9 de septiembre de 2025, de acuerdo a lo dispuesto por el Estatuto de la Sociedad y los Artículos 288 y 289 del Código de Comercio Boliviano, determinó",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "16 de septiembre de 2025"
@@ -2573,7 +2585,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 09 de septiembre de 2025, realizada con el 82.78% de los accionistas, determinó lo siguiente: - Aprobar la reducción del Capital",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -2588,7 +2600,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 09 de septiembre de 2025, se determinó lo siguiente: Tomar conocimiento de la nota ASFI/DSV/R-188593/2025 de 19 de agosto de 2025, así como de la Matriz",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2600,7 +2612,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 08 de septiembre de 2025, se determinó lo siguiente: * Aprobación de la modificación al Reglamento Interno del siguiente Fondo: - PLATINUM FM MP -",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2614,7 +2626,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para la cancelación del Cupón Nº 7 de los “BONOS DISMATEC I - EMISIÓN 2”, Serie Única con Clave de Pizarra: DMT-1-N1U-22, el",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "7",
@@ -2634,7 +2646,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 09 de septiembre de 2025, se determinó lo siguiente: Autorizar las vacaciones del señor Juan Alejandro Mac Lean Céspedes, Vicepresidente Ejecutivo, del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Juan Alejandro Mac Lean Céspedes",
@@ -2653,7 +2665,7 @@
      "resumen": "Ha comunicado que mediante Resolución ASFI/777/2025 de 3 de septiembre de 2025, la Autoridad de Supervisión del Sistema Financiero autorizó a MICROFINANZA RATING BOLIVIA CALIFICADORA DE RIESGO S.A.",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2667,7 +2679,7 @@
      "resumen": "RESUELVE: Sancionar a la COMPAÑÍA BOLIVIANA DE ENERGÍA ELÉCTRICA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2681,7 +2693,7 @@
      "resumen": "RESUELVE: Sancionar a PANAMERICAN SECURITIES S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2695,7 +2707,7 @@
      "resumen": "RESUELVE: Sancionar a SUDAVAL AGENCIA DE BOLSA S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-180610/2025 de 11 de agosto de 2025, al haber incumplido lo dispuesto en el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2710,7 +2722,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-205573/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Bonos Subordinados",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Subordinados Banco BISA III - Emisión 1"
@@ -2727,7 +2739,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2748,7 +2760,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 09 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "DATEC III",
@@ -2766,7 +2778,7 @@
      "resumen": "Ha comunicado que, el 10 de septiembre de 2025, se llevó a cabo la Asamblea General de Tenedores de Bonos TSM 001, la misma se llevó a cabo de manera virtual y determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2781,7 +2793,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente instrumento de Bolivia: Calificación con Estados Financieros",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2793,7 +2805,7 @@
      "resumen": "Ha comunicado que, en Comité de Calificación N° 095/2025 celebrado el 8 de septiembre de 2025, con información financiera al 30 de junio de 2025, PCR acordó otorgar las calificaciones que se",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2809,7 +2821,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 9 de septiembre de 2025, se determinó convocar a la ASAMBLEA GENERAL EXTRAORDINARIA DE ASOCIADOS, a realizarse el 22 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -2827,7 +2839,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 09 de septiembre de 2025, se determinó lo siguiente: Nombrar a la señora Joan Cristina Rivero Hernani como Auditora Interna Interina, por el tiempo que",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Joan Cristina Rivero Hernani",
@@ -2843,9 +2855,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 10 de septiembre de 2025, adquirió un préstamo con el Banco Bisa S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Bisa S.A.",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -2858,7 +2874,7 @@
      "resumen": "Ha comunicado que, el 9 de septiembre de 2025, designó al señor VICTOR JOHNNY RAMIREZ ACARAPI como GERENTE REGIONAL a.i., en la Regional La Paz, quien ocupará el cargo a partir del 10 hasta el 12 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "VICTOR JOHNNY RAMIREZ ACARAPI",
@@ -2877,7 +2893,7 @@
      "resumen": "RESUELVE: PRIMERO.- Sancionar a ACEVEDO & ASOCIADOS CONSULTORES DE EMPRESAS S.R.L., con la cancelación definitiva en el Registro del Mercado de Valores de ASFI, por el cargo imputado en la Nota de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2891,7 +2907,7 @@
      "resumen": "RESUELVE: Sancionar a GANAVALORES AGENCIA DE BOLSA S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-171934/2025 de 29 de julio de 2025, al haber incumplido lo dispuesto en el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2905,7 +2921,7 @@
      "resumen": "RESUELVE: Sancionar a INVERSIONES INMOBILIARIAS IRALA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2919,7 +2935,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -2939,7 +2955,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de septiembre de 2025, se determinó lo siguiente: De acuerdo a las determinaciones de la Junta General Extraordinaria de Accionistas celebrada el 9 de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2953,7 +2969,7 @@
      "resumen": "Ha comunicado que, en atención a la solicitud realizada por el Representante Común de Tenedores de Bonos, se adiciona al punto Nº 4 de las determinaciones de la Asamblea de Tenedores de Bonos “TSM",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2967,7 +2983,7 @@
      "resumen": "Ha comunicado que, el 11 de septiembre de 2025, se realizó la Asamblea General de Tenedores de Bonos \"Programa Bonos INCOTEC I - EMISIÓN 1\", en la cual, se tomaron las siguientes determinaciones: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2979,7 +2995,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -2991,7 +3007,7 @@
      "resumen": "Ha comunicado que, en Comité de Calificación N° 097/2025 celebrado el 9 de septiembre de 2025, con información financiera al 30 de junio de 2025, PCR acordó otorgar las calificaciones que se",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3003,7 +3019,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 10 de septiembre de 2025, se determinó lo siguiente: Aprobar el Plan de Acción a las observaciones de la Inspección ASFI - Gestión Integral de Riesgos.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3017,7 +3033,7 @@
      "resumen": "Ha comunicado que, el 11 de septiembre de 2025, finalizó la cancelación del Cupón Nº 7 de los “BONOS DISMATEC I - EMISIÓN 2”, correspondiente a la Serie Única con Clave de Pizarra: DMT-1-N1U-22.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "7",
@@ -3036,7 +3052,7 @@
      "resumen": "Ha comunicado que, el 10 de septiembre de 2025 suscribió con el Banco FIE S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco FIE S.A.",
@@ -3051,9 +3067,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 10 de septiembre de 2025, adquirió un préstamo con el Banco Bisa S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Bisa S.A.",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3064,7 +3084,7 @@
      "resumen": "Ha comunicado que, mediante Testimonio N° 929/2025 de 10 de septiembre de 2025, procedió a revocar los Instrumentos de Poderes Especiales y Suficientes N° 92/2021 y Nº 93/2021, ambos de 25 de enero",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3078,7 +3098,7 @@
      "resumen": "Ha comunicado que, la señora Julia Isabel Gomez Saavedra se encuentra de vacaciones e informa que la señora Claudia Magdalena Cadima Laserna asume el cargo de Gerente Nacional de Operaciones a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Julia Isabel Gomez Saavedra",
@@ -3097,7 +3117,7 @@
      "resumen": "Ha comunicado que, el 10 de septiembre de 2025, designó a la señora KAREN FABIOLA LUNA CANAVIRI como GERENTE NACIONAL DE AUDITORÍA INTERNA a.i., en Oficina Nacional, quien ocupará el cargo a partir",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "KAREN FABIOLA LUNA CANAVIRI",
@@ -3116,7 +3136,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 11 de septiembre de 2025, se determinó lo siguiente: - Designar como Gerente General a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Guido Cárdenas Pérez",
@@ -3135,7 +3155,7 @@
      "resumen": "Ha comunicado que, Ingrid Andrea Aramayo Shaw, quien desempeña el cargo de Jefe de Riesgo Operativo fue designada temporalmente el 11 de septiembre de 2025, como Gerente Nacional de Riesgos a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cargo": "Gerente Nacional de Riesgos",
@@ -3154,7 +3174,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-207655/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursátiles",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles IOL I - Emisión 6"
@@ -3171,7 +3191,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3191,7 +3211,7 @@
      "resumen": "Ha comunicado que, Santa Cruz FG Sociedad Controladora S.A., el 11 de septiembre de 2025, no realizó la provisión de fondos para el pago del Cupón N° 5 de los “Bonos SCFG Sociedad Controladora”",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -3210,7 +3230,7 @@
      "resumen": "Ha comunicado que, el 11 de septiembre de 2025, la señora María Celina Pérez Inda presentó su renuncia al cargo de Gerente de Talento Humano, por motivos personales, efectiva a partir del 1 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "María Celina Pérez Inda",
@@ -3227,7 +3247,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3239,7 +3259,7 @@
      "resumen": "Ha comunicado que, en Comité de Calificación N° 099/2025 celebrado el 10 de septiembre de 2025, con información financiera al 30 de junio de 2025, PCR acordó otorgar las calificaciones que se",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3253,7 +3273,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 12 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3267,7 +3287,7 @@
      "resumen": "El Comité de Inversión de 12 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3281,7 +3301,7 @@
      "resumen": "Ha comunicado que, el Gerente de Operaciones, señor Marcos Gonzalo Ibañez Gutierrez presentó renuncia el día de hoy, con efecto inmediato.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Marcos Gonzalo Ibañez Gutierrez",
@@ -3297,7 +3317,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 12 de septiembre de 2025, se determinó lo siguiente: Aprobación de la modificación al Reglamento Interno del siguiente Fondo: MSC SERCOM + FIC: - GLOSARIO.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3309,7 +3329,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 11 de septiembre de 2025, se determinó lo siguiente: Aprobar la modificación a la Escritura de Constitución del Fondo MSC SERCOM + FIC: - Quinta",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3324,7 +3344,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 35 de la Emisión de Bonos FANCESA IV - Emisión 1, Serie Única dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "35",
@@ -3344,7 +3364,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 8 de los BONOS SUBORDINADOS BANCO FIE 6, Serie Única con Clave de Pizarra: FIE-E1U-21, el pago se",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -3364,7 +3384,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones de la BBV, el Gerente General autorizó el registro e",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3379,7 +3399,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, realizó la provisión de fondos al agente pagador Bisa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles CAMSA II",
@@ -3395,9 +3415,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 11 de septiembre de 2025, adquirió un préstamo con el Banco Bisa S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Bisa S.A.",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3407,9 +3431,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 11 de septiembre de 2025, adquirió un préstamo con el Banco Bisa S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Bisa S.A.",
+      "monto": "Bs 1,7 M"
+     }
     },
     {
      "seccion": "Noticias",
@@ -3423,7 +3451,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, realizará la provisión de fondos para el pago de intereses correspondientes al Cupón N° 10 de la emisión de bonos subordinados denominada “BONOS",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -3442,7 +3470,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, el Banco Mercantil Santa Cruz S.A., procedió con la provisión de los fondos al agente pagador Mercantil Santa Cruz Agencia de Bolsa S.A., para el pago",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -3462,7 +3490,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -3480,7 +3508,7 @@
      "resumen": "Ha comunicado que, el 10 de septiembre 2025, mediante Escritura Pública Nº 167/2025, otorgó Poder Especial tipo “A” a favor del señor Jorge Aldo Choquetaxi Villacorta, en su calidad de Gerente",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3492,7 +3520,7 @@
      "resumen": "Ha comunicado que, a partir del 11 de septiembre de 2025, efectivizó la apertura del Cajero Automático Punata dependiente de la Sucursal Cochabamba, ubicada en la Plaza 18 de Mayo Calle Potosí N°",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3506,7 +3534,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3526,7 +3554,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, Santa Cruz Securities Agencia de Bolsa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -3545,7 +3573,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 15 de septiembre de 2025, realizada con el 99.93% de los accionistas, determinó lo siguiente: Mantener sin modificaciones la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3559,7 +3587,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 11 de septiembre de 2025, realizada con el 99.90% de los accionistas, determinó lo siguiente: Que, la conformación del Directorio",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3573,7 +3601,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 11 de septiembre de 2025, realizada con el 99.90% de los accionistas, determinó lo siguiente: Declarar un cuarto intermedio hasta",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3585,7 +3613,7 @@
      "resumen": "Ha comunicado que, a partir del 15 de septiembre de 2025, la oficina principal se traslada a su nueva ubicación en el Piso 23, Torre 2 del Edificio “MANZANA 40 PLAZA EMPRESARIAL”, ubicado en el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3599,7 +3627,7 @@
      "resumen": "Ha comunicado que, en el marco de lo determinado por la Junta General Extraordinaria de Accionistas de 9 de septiembre de 2025, procedió el 15 de septiembre de 2025, a la redención de 140.000",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3615,7 +3643,7 @@
      "resumen": "Ha comunicado que, en reunión Extraordinaria de Directorio de 15 de septiembre de 2025, se aprobó: a.",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "RMV",
@@ -3633,7 +3661,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 12 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1) Aumento del Capital Suscrito y",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital · estados financieros"
@@ -3650,7 +3678,7 @@
      "resumen": "Ha comunicado que, la Gerencia General determinó realizar las siguientes designaciones de ejecutivos, a partir del 15 de septiembre de 2025: • Designar al señor Álvaro Gabriel Gonzales Luna Orozco al",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Álvaro Gabriel Gonzales Luna Orozco",
@@ -3669,7 +3697,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, el señor Luis Patricio Garrett Mendieta, presentó renuncia al cargo de Vicepresidente Finanzas e Internacional, ejerciendo el cargo de forma efectiva",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Luis Patricio Garrett Mendieta",
@@ -3686,7 +3714,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 12 de septiembre de 2025, se determinó lo siguiente: Tomar conocimiento de los Informes Mensuales de Auditoría Interna de evaluación regulatoria.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3701,7 +3729,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo UNIPARTES - BDP ST 055, dando cumplimiento a lo establecido en el Artículo Decimonoveno del Contrato de Cesión Irrevocable de",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3715,7 +3743,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para la cancelación del Cupón Nº 10 de los “BONOS SUBORDINADOS BCP - EMISIÓN III” Serie Única con Clave de Pizarra: BTB-N1U-20.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -3735,7 +3763,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 15 de septiembre de 2025, determinó lo siguiente: • Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES NEXOLIDER I",
@@ -3751,7 +3779,7 @@
      "resumen": "Ha comunicado que, el 12 de septiembre de 2025, el Gerente General autorizó el registro e inscripción de la señora Noelia Jenny Andia Mendoza como Asesor de Inversión en representación de la Compañía",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3766,7 +3794,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs8.414.448,82 para la compra de mercadería como capital de operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -3783,7 +3811,7 @@
      "resumen": "Ha comunicado que, el 13 de septiembre de 2025, otorgó Poder de Representación Tipo ¨A¨ N° 1696/2025, en favor del señor Carlos Matheos Rau Jordan.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3797,7 +3825,7 @@
      "resumen": "Ha comunicado que, en virtud de que el señor Alejandro Fabian Bustillos Meneses se encontrará de vacaciones, informa que el señor Andres Eduardo Salinas San Martin asume el cargo de Gerente General",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Alejandro Fabian Bustillos Meneses",
@@ -3816,7 +3844,7 @@
      "resumen": "Ha comunicado que, en virtud de que el señor Andres Eduardo Salinas San Martin se encuentra en interinato en el cargo Gerente General a.i, informa que la señora Raquel Lucia Chumacero Gonzales asume",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Andres Eduardo Salinas San Martin",
@@ -3836,7 +3864,7 @@
      "resumen": "Ha comunicado que, conforme a las disposiciones contenidas en el Artículo 657° del Código de Comercio, convoca a la Asamblea General de Tenedores de Bonos, a realizarse el 24 de septiembre de 2025",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "24 de septiembre de 2025"
@@ -3853,7 +3881,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-206833/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a MIGUEL ALEJANDRO BALLÓN VALLE como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3868,7 +3896,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 207648/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursátiles",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles NUTRIOIL III - Emisión 3"
@@ -3885,7 +3913,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-207922/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a DIEGO ARMANDO MANTILLA URIA como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3899,7 +3927,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-207979/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a LAURA SILVIA TERAN VASQUEZ como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3913,7 +3941,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-209098/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a CARLA ADRIANA FERNANDEZ AGUILAR como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3927,7 +3955,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -3947,7 +3975,7 @@
      "resumen": "Ha comunicado que, el 16 de septiembre de 2025, realizó las Asambleas Generales de Tenedores de Bonos de las Emisiones de Bonos vigentes, conforme al siguiente detalle: Emisión Programa al que",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3962,7 +3990,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -3980,7 +4008,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "compromisos_anunciados",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -3996,7 +4024,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "designación"
@@ -4014,7 +4042,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 15 de septiembre de 2025, realizada con el 60.00% de los asociados, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -4031,7 +4059,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, concluyó con la cancelación total del pago del Cupón N° 3 de los BONOS BMSC III - Emisión 1, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "3",
@@ -4050,7 +4078,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, concluyó con la cancelación total del Cupón N° 9 de los BONOS SUBORDINADOS BANCO MERCANTIL SANTA CRUZ - Emisión 1, correspondiente a la Serie B con",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -4069,7 +4097,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, concluyó con la cancelación total del Cupón N° 9 de los BONOS SUBORDINADOS BANCO MERCANTIL SANTA CRUZ - Emisión 2, correspondiente a las Series A y B",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "9",
@@ -4088,7 +4116,7 @@
      "resumen": "Ha comunicado que, el 16 de septiembre de 2025, finalizó la cancelación del Cupón Nº 10 de los “BONOS SUBORDINADOS BCP - EMISIÓN III”, correspondiente a la Serie Única con Clave de Pizarra: BTB-N1U-20.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "10",
@@ -4105,7 +4133,7 @@
      "resumen": "Ha comunicado que, mediante Testimonio N° 301/2025 de 15 de septiembre de 2025, el Presidente y el Director Secretario, otorgaron al señor José Luis Zeballos Velasco, en su calidad de Gerente General",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4119,7 +4147,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, realizó la provisión de los fondos del Cupón N° 11 de las Series A y B de la emisión denominada \"BONOS NIBOL - EMISIÓN 2\" con vencimiento el 29 de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -4139,7 +4167,7 @@
      "resumen": "Ha comunicado que, el 16 de septiembre de 2025, mediante Escritura Pública N° 173/2025, revocó el Poder N° 167/2025 que fuera otorgado en favor de Jorge Aldo Choquetaxi Villacorta en su calidad de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "designación a.i."
@@ -4156,7 +4184,7 @@
      "resumen": "Ha comunicado la designación temporal del señor Carlos Andres Moscoso Huaylla en el cargo de Gerente Regional - Sur a.i., a partir del 16 hasta el 18 de septiembre de 2025, periodo en el que la",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Carlos Andres Moscoso Huaylla",
@@ -4175,7 +4203,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 16 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4189,7 +4217,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 8 de septiembre de 2025, procedió con el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4203,7 +4231,7 @@
      "resumen": "Ha comunicado que, a partir del 15 hasta el 22 de septiembre de 2025, el señor Walter Gualberto Mérida Arispe queda delegado como Gerente General Interino, en suplencia por el uso de vacaciones del",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Walter Gualberto Mérida Arispe",
@@ -4221,7 +4249,7 @@
      "resumen": "Ha comunicado que, designó a la señora Guadalupe Omonte Gonzales como Gerente de Operaciones a.i., con efecto a partir del 15 de septiembre 2025, hasta la reposición del titular del puesto.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Guadalupe Omonte Gonzales",
@@ -4240,7 +4268,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo CIDRE IFD - BDP ST 064, informa que, el 16 de septiembre de 2025, alcanzó el Objetivo de Colocación de los Valores de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4254,7 +4282,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-200990/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a NOELIA JENNY ANDIA MENDOZA como Asesor de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4268,7 +4296,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4289,7 +4317,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 15 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 22 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "22 de septiembre de 2025"
@@ -4304,7 +4332,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de septiembre de 2025, se determinó lo siguiente: La Aprobación de un préstamo con financiamiento bancario por la suma de Bs69.348.470,00 para capital",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4318,7 +4346,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de septiembre de 2025, realizada con el 99.99% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4333,7 +4361,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -4350,7 +4378,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 17 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: - Autorizar la participación de la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4362,7 +4390,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de septiembre de 2025, se determinó lo siguiente: La aprobación de los siguientes cambios que se harán efectivos a partir del 1 de octubre de 2025: -",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4374,7 +4402,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de septiembre de 2025, se determinó lo siguiente: - Tomar conocimiento de los Informes emitidos por el área de Gestión integral de Riesgos.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "directorio"
@@ -4389,7 +4417,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 15 de septiembre de 2025, se determinó lo siguiente: Complementar la determinación inserta en el Acta de Directorio de 12 de agosto de 2025, de forma que",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4404,7 +4432,7 @@
      "resumen": "Ha comunicado que, en calidad de administradores del Patrimonio Autónomo CIDRE IFD - BDP ST 064, BDP Sociedad de Titularización S.A.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4419,7 +4447,7 @@
      "resumen": "Ha comunicado que, el 15 de septiembre de 2025, concluyó con el pago del Cupón N° 35 de los Bonos FANCESA IV - Emisión 1 (Serie Única) dentro del Programa de Emisiones de Bonos FANCESA IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "35",
@@ -4438,7 +4466,7 @@
      "resumen": "Ha comunicado que, el 17 de septiembre de 2025, realizó la colocación primaria de 12.000 Valores de la emisión denominada “Pagarés Bursátiles Tienda Amiga II - Emisión 5”.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4452,7 +4480,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles CAMSA II - Emisión 3”, se realizará a partir del",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4466,7 +4494,7 @@
      "resumen": "Ha comunicado que, el 16 de septiembre de 2025, concluyó el pago del Cupón Nº 8 y amortización de capital de los BONOS SUBORDINADOS BANCO FIE 6 correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "8",
@@ -4483,7 +4511,7 @@
      "resumen": "Ha comunicado que, el 17 de septiembre de 2025, en virtud a lo dispuesto por el",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4497,7 +4525,7 @@
      "resumen": "Ha comunicado que, el 17 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4511,7 +4539,7 @@
      "resumen": "Ha comunicado que, el 17 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4526,7 +4554,7 @@
      "resumen": "Ha comunicado que, el 16 de septiembre de 2025, realizó el desembolso por un valor nominal de Bs63.499.000,00 provenientes de la emisión de los Valores de Titularización de Contenido Crediticio",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4540,7 +4568,7 @@
      "resumen": "RESUELVE: Sancionar a la SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN MERCANTIL SANTA CRUZ S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-189191/2025 de 20 de agosto de 2025",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4555,7 +4583,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-211788/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada \"PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES NEXOLIDER I - EMISIÓN 1"
@@ -4572,7 +4600,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4592,7 +4620,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de septiembre de 2025, se determinó lo siguiente: Designar a la firma Ernst & Young Ltda.",
      "resumen_origen": "extractivo",
      "grupo": "auditorias",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "firma": "Ernst & Young Ltda.",
@@ -4610,7 +4638,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de septiembre de 2025, se determinó lo siguiente: Designar a la firma Ernst & Young Ltda.",
      "resumen_origen": "extractivo",
      "grupo": "auditorias",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "firma": "Ernst & Young Ltda.",
@@ -4629,7 +4657,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 17 de septiembre de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 30 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "30 de septiembre de 2025"
@@ -4647,7 +4675,7 @@
      "resumen": "Ha comunicado que, la Junta General Extraordinaria de Accionistas, convocada para el 17 de septiembre de 2025, con el propósito de considerar la propuesta de modificación a los Estatutos Sociales de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4661,7 +4689,7 @@
      "resumen": "Ha comunicado que, la Asamblea General de Participantes de 17 de septiembre de 2025, realizada sin necesidad de convocatoria en mérito a la concurrencia del 100% de los Participantes, determinó lo",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4673,7 +4701,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 17 de septiembre de 2025, se determinó lo siguiente: Otorgar Poder de Operador de Bolsa a José Ignacio Palenque Vidaurre.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4687,7 +4715,7 @@
      "resumen": "Ha comunicado que, el 17 de septiembre de 2025, realizó la provisión de fondos al agente pagador Mercantil Santa Cruz Agencia de Bolsa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -4707,7 +4735,7 @@
      "resumen": "Ha comunicado que, el 18 de septiembre de 2025, designa al señor RICARDO CAMARA BALDERRAMA como GERENTE REGIONAL a.i., en la Regional Potosí, quien ocupará el cargo a partir del 18 hasta el 26 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "RICARDO CAMARA BALDERRAMA",
@@ -4724,7 +4752,7 @@
      "resumen": "Ha comunicado que, emitió el Poder N° 250/2025 el 12 de septiembre de 2025, donde se ejecutó la Revocatoria total del Testimonio Poder Nº 16/2025 y otorgación de nuevo Poder Especial, Bastante y",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4738,7 +4766,7 @@
      "resumen": "Ha comunicado que, como agente pagador, procederá al pago del Cupón N° 19 de los Valores de Titularización GRANOSOL-BISA ST (Serie Única), a partir del 22 de septiembre de 2025, en su oficina.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "19",
@@ -4757,7 +4785,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-208647/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a ELSY HURTADO BENAVIDES como Contador",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4771,7 +4799,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -4793,7 +4821,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 18 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -4811,7 +4839,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 18 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 14 de octubre de 2025 a partir de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de octubre de 2025"
@@ -4826,7 +4854,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4838,7 +4866,7 @@
      "resumen": "Ha comunicado que, en Comité de Calificación N° 104/2025, celebrado el 18 septiembre de 2025, con información financiera al 30 de junio de 2025, PCR acordó otorgar las Calificaciones que se presenta",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4853,7 +4881,7 @@
      "resumen": "Ha comunicado que, la Asamblea General de Participantes, llevada a cabo con el 100% de las Cuotas de Participación vigentes, en su reunión realizada el 18 de septiembre de 2025, tomó la siguiente",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4868,7 +4896,7 @@
      "resumen": "Ha comunicado que, la Asamblea General de Participantes, llevada a cabo con el 100% de las Cuotas de Participación vigentes, en su reunión realizada el 18 de septiembre de 2025, tomó la siguiente",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4882,7 +4910,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles TIENDA AMIGA II - Emisión 2”, se realizará a",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4896,7 +4924,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón N° 2 de los BONOS IOL III - EMISIÓN 1, Serie Única con Clave de Pizarra: IOL-3-N1U-24, el pago se",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -4916,7 +4944,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 5 de los BONOS SUBORDINADOS BEC V - EMISIÓN 1, Serie Única con Clave de Pizarra: BEC-6-N1U-23, el",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -4936,7 +4964,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón N° 2 y amortización de capital de los BONOS CAMSA II - EMISIÓN 1, Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -4955,7 +4983,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, realizó el pago al Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -4969,7 +4997,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, realizó la provisión de fondos al agente pagador BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -4990,7 +5018,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó los fondos de Bs6.299.924,40 para la compra de mercadería como capital de operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -5010,7 +5038,7 @@
      "resumen": "Ha comunicado que, el 18 de septiembre de 2025, realizó la provisión de fondos necesarios para el pago del Cupón 2 correspondiente a la emisión de Bonos denominada Bonos BFC - Emisión 3.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos BFC",
@@ -5029,7 +5057,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, realizó la provisión de fondos en la cuenta receptora del agente pagador BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -5049,7 +5077,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, designa al señor GENARO MARADEY MELENDREZ como GERENTE DE SUCURSAL a.i., en la Sucursal Pando, quien ocupará el cargo a partir del 22 hasta el 26 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "GENARO MARADEY MELENDREZ",
@@ -5068,7 +5096,7 @@
      "resumen": "Ha comunicado que, como agente pagador, procederá al pago del Cupón N° 38 de los Valores de Titularización BISA ST - CIDRE II (Serie B), a partir del 22 de septiembre de 2025, en su oficina.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "38",
@@ -5087,7 +5115,7 @@
      "resumen": "RESUELVE: Sancionar a la COMPAÑÍA AMERICANA DE INVERSIONES S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5101,7 +5129,7 @@
      "resumen": "RESUELVE: Sancionar a la MULTIVALORES AGENCIA DE BOLSA S.A., con multa, por los cargos imputados en la Nota de Cargos ASFI/DSV/R-187122/2025 de 18 de agosto de 2025, al haber incumplido lo dispuesto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5115,7 +5143,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5137,7 +5165,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 19 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 16 de octubre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -5155,7 +5183,7 @@
      "resumen": "Ha comunicado que, en cumplimiento a lo establecido en el Acta de la Junta General Ordinaria de Accionistas de 27 de junio de 2025, el Secretario del Directorio el 21 de septiembre de 2025, determinó",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "29 de septiembre de 2025"
@@ -5172,7 +5200,7 @@
      "resumen": "Ha comunicado que, el 20 de septiembre de 2025, el señor Jhon Michael Flores Chavez presentó carta de renuncia al cargo de Gerente de Alimentos y Bebidas.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jhon Michael Flores Chavez",
@@ -5191,7 +5219,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: Aprobar la propuesta de contratar a la empresa Ernst & Young LTDA.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -5208,7 +5236,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: • Aprobar la renuncia del señor Luis Patricio Garrett Mendieta al cargo de Vicepresidente Finanzas e",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Luis Patricio Garrett Mendieta",
@@ -5225,7 +5253,7 @@
      "resumen": "Ver Adjunto",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5237,7 +5265,7 @@
      "resumen": "Ha comunicado que, en Comité de Calificación N° 105/2025, celebrado el 19 de septiembre de 2025, con información financiera al 30 de junio de 2025, PCR acordó otorgar las Calificaciones que se",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5249,7 +5277,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5265,7 +5293,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 19 de septiembre de 2025, se determinó convocar a la ASAMBLEA GENERAL EXTRAORDINARIA DE ASOCIADOS, a realizarse el 30 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Extraordinaria",
@@ -5285,7 +5313,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 22 de septiembre de 2025, realizada con el 60.00% de los asociados, determinó lo siguiente: Autorizar la modificación de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5297,7 +5325,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 18 de septiembre de 2025, se determinó lo siguiente: Aprobar modificación presupuestaria para la gestión 2025.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5313,7 +5341,7 @@
      "resumen": "Ha comunicado que, en Asamblea General de Tenedores de Valores de Titularización del Patrimonio Autónomo NUEVATEL - BDP ST 049, celebrada el 19 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5327,7 +5355,7 @@
      "resumen": "Ha comunicado que, el 20 de septiembre de 2025, publicó el aviso de Oferta Pública de la Emisión de Pagarés denominada “PAGARES BURSATILES IOL I - EMISIÓN 6”, en un medio de prensa escrito de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5339,7 +5367,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, realizó la respectiva provisión de fondos para el pago del Segundo Cupón de los Bonos IOL III - Emisión 1, Serie Única, Clave de Pizarra IOL-3-N1U-24.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5351,7 +5379,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: Revocar de forma parcial en cuanto al apoderado Luis Patricio Garrett Mendieta, el Poder N°",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5365,7 +5393,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 22 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5377,7 +5405,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 19 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5391,7 +5419,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó con el pago del Cupón N° 38 de los Valores de Titularización BISA ST- CIDRE II (Serie B).",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "38",
@@ -5409,7 +5437,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó con el pago del Cupón N° 19 de los Valores de Titularización GRANOSOL-BISA ST (Serie Única).",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "19",
@@ -5427,7 +5455,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-213826/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a CLIVIA NIEVES CASTRO MENESES como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5441,7 +5469,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5461,7 +5489,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de septiembre de 2025, realizada con el 97.99% de los accionistas, determinó lo siguiente: Aprobar dar cumplimiento a lo",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5473,7 +5501,7 @@
      "resumen": "Ha comunicado que, el 19 de septiembre de 2025, realizó la suscripción del contrato de préstamo con el Banco BISA S.A por la suma de Bs69.348.470,00 mismo que será utilizado para Capital de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5487,7 +5515,7 @@
      "resumen": "Ha comunicado que la Asamblea General Ordinaria de Socios de 22 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5501,7 +5529,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5516,7 +5544,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 22 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -5534,7 +5562,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 23 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aprobación de modificaciones",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -5549,7 +5577,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, el accionista NESAB S.R.L.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5563,7 +5591,7 @@
      "resumen": "Ha comunicado que, en la Asamblea General de Participantes, llevada a cabo con el 100% de las Cuotas de Participación vigentes, en su reunión realizada el 19 de septiembre de 2025, tomó la siguiente",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5575,7 +5603,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: - Aprobar las modificaciones a la Norma para la Gestión de Riesgos K12 FIC.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5589,7 +5617,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aprobar dar cumplimiento a lo",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5603,7 +5631,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del PATRIMONIO AUTÓNOMO CRESPAL - BDP ST 035, sin perjuicio a la notificación y las determinaciones del Auto Declarativo de Quiebra Resolución Nº",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5617,7 +5645,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó con el pago de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles CAMSA II - Emisión 3” dentro del Programa de Emisiones de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5631,7 +5659,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó con el pago de la Emisión de Pagarés Bursátiles denominada “Pagarés Bursátiles TIENDA AMIGA II - Emisión 2” dentro del Programa de Emisiones",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5645,7 +5673,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó el pago del Cupón Nº 5 de los BONOS SUBORDINADOS BEC V - EMISIÓN 1, Serie Única con Clave de Pizarra: BEC-6-N1U-23.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "5",
@@ -5664,7 +5692,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó el pago del Cupón Nº 2 de los BONOS IOL III - EMISIÓN 1, Serie Única con Clave de Pizarra: IOL-3-N1U-24.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -5683,7 +5711,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó el pago del Cupón Nº 2 y amortización de capital de los BONOS CAMSA II - EMISIÓN 1, Serie Única con Clave de Pizarra: CMI-2-N1U-24.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -5703,7 +5731,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 2 de los BONOS DISMATEC II - EMISIÓN 1, Serie Única con Clave de Pizarra: DMT-2-N1U-24, el pago se",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -5723,7 +5751,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, en su calidad de agente pagador, concluyó con el pago del Cupón N° 2 de los Bonos denominados “Bonos BFC - Emisión 3”, correspondiente a la Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -5742,7 +5770,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, concluyó con la cancelación total del Cupón N° 12 de los Bonos Grupo Nacional Vida I - Emisión 2, correspondiente a la Serie Única con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -5761,7 +5789,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, en su rol de agente Co-Colocador, realizó la colocación de 1.232 Pagarés de la emisión denominada Pagarés Bursátiles ECOFUTURO I - Emisión 2.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5775,7 +5803,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5789,7 +5817,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 22 de septiembre de 2025, determinó lo siguiente: - Autorizar la inscripción del Programa de Emisiones de Pagarés Bursátiles denominado",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES PROLEGA III",
@@ -5807,7 +5835,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, realizó la provisión de fondos al agente pagador BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -5824,7 +5852,7 @@
      "resumen": "Ha comunicado que, el 22 de septiembre de 2025, mediante Escritura Pública Nº 2405/2025, otorgó Poder Especial a favor del señor Jorge Enrique Anglarill Serrate, en su calidad de Gerente General.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5836,7 +5864,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 22 de septiembre de 2025, se determinó lo siguiente: Revocar de forma parcial en cuanto al apoderado Luis Patricio Garrett Mendieta, el Poder N°",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5850,7 +5878,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, efectuó la provisión de fondos, para proceder con el pago del Cupón Nº 16 de los “BONOS ECOFUTURO 2 - EMISIÓN 1”, Serie Única y Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -5870,7 +5898,7 @@
      "resumen": "Ha comunicado que el 23 de septiembre de 2025, designa a la señora FABIOLA ESTEFANIA CALLE ESPEJO como GERENTE NACIONAL DE GESTIÓN INTEGRAL DE RIESGOS a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "FABIOLA ESTEFANIA CALLE ESPEJO",
@@ -5889,7 +5917,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo IDEPRO IFD - BDP ST 056, el 22 de septiembre de 2025, procedió al pago del último Cupón de la Serie \"A\" con Clave de Pizarra",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5903,7 +5931,7 @@
      "resumen": "RESUELVE: Sancionar a PANAMERICAN INVESTMENTS S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-187037/2025 de 18 de agosto de 2025, al haber incumplido lo dispuesto en el segundo",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5917,7 +5945,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -5935,7 +5963,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de septiembre de 2025, se determinó lo siguiente: - Aprobar la ampliación del monto de la Línea de Crédito Rotativa que la Agencia mantiene con el",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5947,7 +5975,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, utilizó Bs3.514.045,97 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5961,7 +5989,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5975,7 +6003,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 18 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -5987,7 +6015,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de septiembre de 2025, se determinó lo siguiente: - Autorización de renovación de Garantías a Primer Requerimiento.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6001,7 +6029,7 @@
      "resumen": "Ha comunicado que el 23 de septiembre de 2025, con la participación del 100.00% de los accionistas, se reanudó después de un cuarto intermedio la Junta General Extraordinaria de Accionistas de 14 de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6016,7 +6044,7 @@
      "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 23 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aprobar el Orden del Día y el",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6030,7 +6058,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 23 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Carla Antonia Cuevas Lanza",
@@ -6050,7 +6078,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo GRANOSOL - BISA ST, el 22 de septiembre de 2025, recibió por parte de la Sociedad Granelera Granosol S.A.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6064,7 +6092,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, procedió a la colocación de 38.626 Pagarés Bursátiles de la Emisión denominada “PAGARÉS BURSÁTILES IOL I - EMISIÓN 6”, por un monto nominal colocado de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6078,7 +6106,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, en su rol de agente Co-Colocador, realizó la colocación de 7.068 Pagarés de la emisión denominada Pagarés Bursátiles ECOFUTURO I - Emisión 2.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6090,7 +6118,7 @@
      "resumen": "Ha comunicado que, el 23 de septiembre de 2025, procedió con el pago parcial de la operación crediticia otorgada bajo la modalidad de avance en cuenta corriente por el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6104,7 +6132,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6118,7 +6146,7 @@
      "resumen": "Ha comunicado que, mediante Testimonio N° 572/2025 de 16 de septiembre de 2025, procedió a la revocatoria del instrumento N° 485/2018 y otorgación de Poder Especial a favor de los señores Miguel",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6130,7 +6158,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 16 de septiembre de 2025, se determinó lo siguiente: Aprobar la revocatoria del Testimonio N° 485/2018 y otorgar nuevo Poder Especial y Suficiente a",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6144,7 +6172,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, procedió con la provisión de los fondos al agente pagador MERCANTIL SANTA CRUZ AGENCIA DE BOLSA S.A., para el pago del Cupón N° 2, Serie Única, “BONOS",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -6163,7 +6191,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 23 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6177,7 +6205,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 23 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6191,7 +6219,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, realizó la provisión de fondos en la cuenta receptora del agente pagador BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "4",
@@ -6211,7 +6239,7 @@
      "resumen": "Ha comunicado que, dando cumplimiento con lo establecido en el numeral 12.2 de la Cláusula Décima Segunda del Contrato de Cesión Irrevocable de Derechos sobre Flujos de Ventas Futuras para fines de",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6225,7 +6253,7 @@
      "resumen": "RESUELVE: Sancionar a ESCOBAR & ASOCIADOS S.R.L., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R-186945/2025 de 18 de agosto de 2025., al haber incumplido lo dispuesto en el segundo",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6239,7 +6267,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-212701/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a CARLA ANDREA BENAVIDES MONJE como Auditor",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6253,7 +6281,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-212926/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a SONIA ISABEL ROJAS UREY como Representante",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6268,7 +6296,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-217160/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión de Pagarés Bursátiles denominada",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles TOYOSA V - Emisión 3"
@@ -6285,7 +6313,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-217222/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a CARLOS MAURICIO ANZOLEAGA FLORES como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6299,7 +6327,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6317,7 +6345,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, obtuvo un préstamo del Banco para el Fomento a Iniciativas Económicas S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 5,0 M"
@@ -6332,7 +6360,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, a través de una plataforma virtual, con el quórum requerido, procedió a realizar las Asambleas Generales de Tenedores de Bonos para las siguientes",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6346,7 +6374,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, suscribió Pagarés sin Oferta Pública para recibir un financiamiento por Bs25.000.000,00 de MiPyME Fondo de Inversión Cerrado administrado por Fortaleza",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6360,7 +6388,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del PATRIMONIO AUTÓNOMO UNIPARTES - BDP ST 055, el 25 de septiembre de 2025, recibió de parte de UNIPARTES S.R.L., Originador del Patrimonio Autónomo",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6375,7 +6403,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 1 de la emisión de Bonos Banco FIE 4 - Emisión 3 dentro del Programa de Emisiones de Bonos Banco FIE 4",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "1",
@@ -6396,7 +6424,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, concluyó con el pago del Cupón N° 4 de la Emisión de BONOS SUBORDIANDOS CRECER IFD.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "4",
@@ -6415,7 +6443,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 4 de la Emisión de los Bonos Subordinados CRECER IFD (Serie Única) se realizará a partir del 25 de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "4",
@@ -6435,7 +6463,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, concluyó el pago del Cupón Nº 2 de los BONOS DISMATEC II - EMISIÓN 1, Serie Única con Clave de Pizarra: DMT-2-N1U- 24.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -6454,7 +6482,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, procedió a la colocación de 1.937 Pagarés Bursátiles de la emisión denominada “PAGARÉS BURSÁTILES IOL I - EMISIÓN 6”, por un monto nominal colocado de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6468,7 +6496,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, procedió a la colocación de 997 Pagarés Bursátiles de la emisión denominada “PAGARÉS BURSÁTILES IOL I - EMISIÓN 6”, por un monto nominal colocado de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6483,7 +6511,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente pagador el 25 de septiembre de 2025, concluyó el pago de los Pagarés Bursátiles TSM 003 Emisión 3 con Clave de Pizarra: TSM-PB3-N3U.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles TSM 003 Emisión 3 con Clave de Pizarra: TSM-PB3-N3U",
@@ -6501,7 +6529,7 @@
      "resumen": "Ha comunicado que, efectuó la provisión de fondos en la cuenta asignada por el agente pagador Mercantil Santa Cruz Agencia de Bolsa S.A., para proceder con el pago del Cupón Nº 2 de los \"BONOS",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -6521,7 +6549,7 @@
      "resumen": "Ha comunicado que, debido a la participación del señor Jorge Antonio Camargo Rojas (Gerente General) en la Rueda de Negocios, a llevarse a cabo en la Ciudad de Santa Cruz de la Sierra, designa de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Jorge Antonio Camargo Rojas",
@@ -6540,7 +6568,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, procedió a realizar la provisión de fondos al agente pagador - Ganavalores Agencia de Bolsa S.A., para el pago del Cupón Nº 14 de los “BONOS PILAT II -",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "14",
@@ -6559,7 +6587,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, realizó la provisión de fondos a BISA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "1",
@@ -6580,7 +6608,7 @@
      "resumen": "Ha comunicado que, el 24 de septiembre de 2025, finalizó la cancelación del Cupón Nº 16 de los “BONOS ECOFUTURO 2 - EMISIÓN 1” correspondiente a la Serie Única y con Clave de Pizarra FEF-4-N1U-21.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "16",
@@ -6600,7 +6628,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “BONOS COBEE VI” de",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS COBEE VI",
@@ -6620,7 +6648,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Patrimonio Autónomo denominado “Patrimonio Autónomo INOLSA -",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Patrimonio Autónomo INOLSA - BDP ST 062",
@@ -6639,7 +6667,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar la Oferta Pública e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión de Bonos denominada “BONOS BANCO",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS BANCO ECONÓMICO II",
@@ -6659,7 +6687,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-218333/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada \"PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES FARMACIA CHAVEZ I - EMISIÓN 2"
@@ -6676,7 +6704,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -6696,7 +6724,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Nacional de Bolivia S.A.",
@@ -6712,7 +6740,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, obtuvo un préstamo del Banco de Crédito de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 3,9 M"
@@ -6727,7 +6755,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, obtuvo un préstamo de Bs5.000.000,00 del Banco de Desarrollo Productivo-SAM con destino a capital operativo para la otorgación de operaciones de",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "monto": "Bs 5,0 M"
@@ -6742,7 +6770,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, efectuó pagos por un monto total de Bs28.524.672,00 correspondientes a la distribución parcial de las utilidades de la gestión 2024, en virtud de la",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -6753,9 +6781,13 @@
      "tags": [],
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, la Sociedad adquirió un préstamo con Banco Fortaleza S.A.",
      "resumen_origen": "extractivo",
-     "grupo": "otros",
-     "grupo_v": 2,
-     "revisado": "provisional"
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "banco": "Banco Fortaleza S.A.",
+      "monto": "Bs 7,0 M"
+     }
     },
     {
      "seccion": "Hechos Relevantes",
@@ -6770,7 +6802,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 25 de septiembre de 2025, realizada con el 71.00% de los asociados, determinó lo siguiente: - Tomar conocimiento del informe de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -6789,7 +6821,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 25 de septiembre de 2025, se determinó lo siguiente: - Convocar a Junta General Extraordinaria de Asociados, a realizarse de manera virtual el 29 de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "emisión de valores"
@@ -6806,7 +6838,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 26 de septiembre de 2025, se determinó lo siguiente: Tomar conocimiento y aceptar la renuncia del señor Julio Daniel Delgado Merida, como miembro titular",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Julio Daniel Delgado Merida",
@@ -6825,7 +6857,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 26 de septiembre de 2025, se determinó convocar a la ASAMBLEA GENERAL ORDINARIA DE ASOCIADOS, a realizarse el 9 de octubre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "tipo": "Ordinaria",
@@ -6844,7 +6876,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 25 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Elias Martín Quintela Subieta",
@@ -6864,7 +6896,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 1 de emisión de Bonos denominada “Bonos Tienda Amiga I - Emisión 1”, se realizará a partir del 29 de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "1",
@@ -6884,7 +6916,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 12 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 1, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -6905,7 +6937,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada para el pago del Cupón Nº 12 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 2, Serie Única con Clave de",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -6927,7 +6959,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, en su calidad de agente pagador, recibió tanto la acreditación como la provisión de la totalidad de los fondos para el pago del Cupón N° 12 de los",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -6947,7 +6979,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, concluyó con la cancelación total del Cupón N° 2 de los BONOS NEXOLIDER II, correspondiente a la Serie Única con Clave de Pizarra NXS-N1U-24.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -6966,7 +6998,7 @@
      "resumen": "Ha comunicado que, el 25 de septiembre de 2025, concluyó con la cancelación total del Cupón N°2 de los BONOS BMSC III - EMISIÓN 5, correspondiente a la Serie Única con Clave de Pizarra BME-4-N1U-24.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "2",
@@ -6985,7 +7017,7 @@
      "resumen": "Ha comunicado que, el Comité de Inscripciones, reunido el 25 de septiembre de 2025, determinó lo siguiente: determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Pagarés",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles MADISA I",
@@ -7004,7 +7036,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, realizó tanto la acreditación como la provisión de la totalidad de los fondos al agente pagador Credibolsa S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -7024,7 +7056,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 25 de septiembre de 2025, se determinó lo siguiente: La designación de la señora Sonia Grisel Riva Vera como Gerente de Auditoría Interna Interina",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Sonia Grisel Riva Vera",
@@ -7044,7 +7076,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar a FORTALEZA SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., el nuevo capital autorizado que ascenderá al monto de Bs58.374.600,00 (Cincuenta y Ocho Millones",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "aumento de capital"
@@ -7061,7 +7093,7 @@
      "resumen": "RESUELVE: Sancionar a GANADERO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos Nº 1 al 3 de la Nota de Cargos ASFI/DSV/R-186964/2025 de 18 de agosto de 2025, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7075,7 +7107,7 @@
      "resumen": "RESUELVE: Sancionar a GANADERO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por el cargo imputado en la Nota de Cargo ASFI/DSV/R- 180866/2025 de 11 de agosto de 2025, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7089,7 +7121,7 @@
      "resumen": "RESUELVE: Sancionar con amonestación a NIBOL LTDA., por el cargo imputado en la Nota de Cargo ASFI/DSV/R-180813/2025 de 11 de agosto de 2025, al haber incumplido lo previsto en el segundo párrafo del",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7103,7 +7135,7 @@
      "resumen": "RESUELVE: Sancionar a SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN UNIÓN S.A., con multa, por los cargos N° 1, 2 y 3 de la Nota de Cargos ASFI/DSV/R- 180682/2025 de 11 de agosto de 2025, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7118,7 +7150,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 218072/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursátiles",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles MADISA I - Emisión 1"
@@ -7136,7 +7168,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 218682/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Bonos NIBOL III -",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos NIBOL III - Emisión 1"
@@ -7154,7 +7186,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 219644/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursátiles",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Pagarés Bursátiles EQUIPETROL I - Emisión 2"
@@ -7172,7 +7204,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 220161/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Bonos Banco FIE 4 -",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Banco FIE 4 - Emisión 5"
@@ -7189,7 +7221,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -7207,7 +7239,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, utilizó Bs13.000.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7219,7 +7251,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 26 de septiembre de 2025, se determinó lo siguiente: Autorizar el registro de la apertura de Sucursales ante los Entes Reguladores: -Sucursal Roca y",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7231,7 +7263,7 @@
      "resumen": "Rectifica el Hecho Relevante publicado el 26 de septiembre de 2025, menciona que se efectuó pagos por un monto de Bs28.524.672,00 correspondientes a la distribución parcial de las utilidades de la",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7245,7 +7277,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 26 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "agenda": "estados financieros"
@@ -7260,7 +7292,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7274,7 +7306,7 @@
      "resumen": "Ha comunicado que, en Sesión de Comité de Calificación N° 104/2025, realizado el 18 de septiembre de 2025, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva al",
      "resumen_origen": "extractivo",
      "grupo": "calificaciones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7286,7 +7318,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 26 de septiembre de 2025, se determinó lo siguiente: Tomar conocimiento del Informe de Evaluación de seguimiento al cumplimiento del Plan de Acción de",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7300,7 +7332,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo NUEVATEL - BDP ST 049, el 26 de septiembre de 2025, recibió de parte de la Empresa Auditora Tudela & TH Consulting Group S.R.L.",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7315,7 +7347,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del Patrimonio Autónomo CRESPAL - BDP ST 035 y agente pagador de los Valores de Titularización CRESPAL - BDP ST 035, sin perjuicio a la notificación y",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "65",
@@ -7334,7 +7366,7 @@
      "resumen": "Ha comunicado que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 30 de la emisión de Bonos FANCESA IV - Emisión 2 (Serie B) dentro del Programa de Emisiones de Bonos",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "30",
@@ -7352,7 +7384,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, utilizó Bs1.300.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7366,7 +7398,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7380,7 +7412,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -7401,7 +7433,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, realizó la provisión de fondos a BNB Valores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -7423,7 +7455,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacia Chávez I, utilizó Bs1.372.580,81 para la compra de mercadería como capital de operaciones.",
      "resumen_origen": "extractivo",
      "grupo": "uso_fondos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos Farmacia Chávez I",
@@ -7442,7 +7474,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, designa a la señora MAYLIN LISSETTE OBLITAS ROSSELL como GERENTE REGIONAL a.i., en la Regional Tarija, quien ocupará el cargo a partir del 29 de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "MAYLIN LISSETTE OBLITAS ROSSELL",
@@ -7462,7 +7494,7 @@
      "resumen": "Ha comunicado que, la Sociedad Administradora de Fondos de Inversión Unión S.A., el 27 de septiembre de 2025, convocó a la Asamblea General de Participantes, a realizarse a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7477,7 +7509,7 @@
      "resumen": "Ha comunicado que, la Sociedad Administradora de Fondos de Inversión Unión S.A., el 27 de septiembre de 2025, convocó a la Asamblea General de Participantes, a realizarse a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7493,7 +7525,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Patrimonio Autónomo LAS LOMAS – IBOLSA ST 003, bajo el",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "registro": "ASFI/DSV-PA-PLO-007/2025"
@@ -7511,7 +7543,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar la Oferta Pública e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión de Bonos denominada “BONOS BANCO",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "BONOS BANCO BISA 1",
@@ -7531,7 +7563,7 @@
      "resumen": "RESUELVE: PRIMERO.- Disponer la cancelación del número de registro SPVS-lV-EM-FSL-070/2001 del BANCO FASSIL S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7545,7 +7577,7 @@
      "resumen": "Mediante carta ASFI/DSV/R-218289/2025, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a SERGIO NOEL RODRIGUEZ DE LA BARRA como",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7560,7 +7592,7 @@
      "resumen": "Mediante carta ASFI/DSV/R- 219220/2025, se Autoriza e Inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Bonos BFC – Emisión",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "Bonos BFC – Emisión 5"
@@ -7577,7 +7609,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
@@ -7595,7 +7627,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, obtuvo un préstamo del Banco Unión S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Unión S.A.",
@@ -7611,7 +7643,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, obtuvo un préstamo de Bs5.900.000,00 del Banco Mercantil Santa Cruz S.A.",
      "resumen_origen": "extractivo",
      "grupo": "prestamos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "banco": "Banco Mercantil Santa Cruz S.A.",
@@ -7627,7 +7659,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de septiembre de 2025, se determinó lo siguiente: Por unanimidad de los Directores presentes, aprobar la compra de un bien inmueble ubicado en la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7639,7 +7671,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de septiembre de 2025, se determinó lo siguiente: Por unanimidad de los Directores presentes, aprobar la compra de un bien inmueble ubicado en la",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7651,7 +7683,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 30 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7666,7 +7698,7 @@
      "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 30 de septiembre de 2025, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7680,7 +7712,7 @@
      "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 29 de septiembre de 2025, realizada con el 100.00% de los accionistas, determinó lo siguiente: - Tratamiento de resultados de la gestión",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7692,7 +7724,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, tomó conocimiento que el señor Carlos Armando Bermúdez Soto, Director de Administración y Finanzas, dejará la compañía con fecha efectiva al 30 de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7708,7 +7740,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 29 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 14 de noviembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de noviembre de 2025",
@@ -7728,7 +7760,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 29 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 14 de noviembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de noviembre de 2025"
@@ -7747,7 +7779,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 29 de septiembre de 2025, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 14 de noviembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "14 de noviembre de 2025",
@@ -7765,7 +7797,7 @@
      "resumen": "Ha comunicado que, en virtud a que el cargo de Gerente Regional Tarija continúa acéfalo, designó a la señora Daniela Menacho Iriarte para que asuma las funciones de Gerente Regional Tarija a.i.",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Daniela Menacho Iriarte",
@@ -7782,7 +7814,7 @@
      "resumen": "Ha comunicado que, el 26 de septiembre de 2025, fue notificado con la Nota ASFI/DSR II/R-221223/2025, por la cual, la Autoridad de Supervisión del Sistema Financiero - ASFI, informó al Banco que en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7797,7 +7829,7 @@
      "resumen": "Ha comunicado que, en reunión de Directorio de 29 de septiembre de 2025, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 9 de octubre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "fecha_junta": "9 de octubre de 2025",
@@ -7815,7 +7847,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 29 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7829,7 +7861,7 @@
      "resumen": "Ha comunicado que, el Comité de Inversión de 29 de septiembre de 2025 a Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7841,7 +7873,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de septiembre de 2025, se determinó lo siguiente: 1.",
      "resumen_origen": "extractivo",
      "grupo": "juntas",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7855,7 +7887,7 @@
      "resumen": "Ha comunicado que, en calidad de Administrador del PATRIMONIO AUTÓNOMO NUEVATEL - BDP ST 049, el 29 de septiembre de 2025, recibió de parte de NUEVATEL PCS de Bolivia S.A., Originador del Patrimonio",
      "resumen_origen": "extractivo",
      "grupo": "titularizacion",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7867,7 +7899,7 @@
      "resumen": "Ha comunicado que, a partir del 1 de octubre de 2025, realizará el cambio en las denominaciones de los cargos de Auditor Interno y Asesor Legal por Subgerente de Auditoría Interna y Subgerente Legal",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7881,7 +7913,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, realizó la colocación primaria de 7.000 Valores de la emisión denominada “Pagarés Bursátiles Nexolider I - Emisión 1”.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -7896,7 +7928,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó con el pago del Cupón N° 1 de la Emisión de Bonos BANCO FIE 4 - Emisión 3, dentro del Programa de Emisiones de Bonos BANCO FIE 4.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "1",
@@ -7916,7 +7948,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó con el pago del Cupón N° 1 de la emisión de Bonos Tienda Amiga I - Emisión 1.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "1",
@@ -7936,7 +7968,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó con el pago del Cupón N° 30 de los Bonos FANCESA IV - Emisión 2 (Serie B) dentro del Programa de Emisiones de Bonos FANCESA IV.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "30",
@@ -7955,7 +7987,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó el pago del Cupón Nº 12 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 1, Serie Única con Clave de Pizarra: TDE-1-N1U-19.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -7975,7 +8007,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó el pago del Cupón Nº 12 y amortización de capital de los Bonos ENDE TRANSMISIÓN I - EMISIÓN 2, Serie Única con Clave de Pizarra: TDE-1-N2U-19.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -7995,7 +8027,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, en su calidad de agente pagador, habiendo verificado y acreditado todos los pagos de la emisión denominada “BONOS JALASOFT I - Emisión 1 (Serie B)”",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "12",
@@ -8014,7 +8046,7 @@
      "resumen": "Ha comunicado que, en su calidad de agente pagador el 29 de septiembre de 2025, concluyó con el pago del Cupón Nº 14 de la Serie Única con Clave de Pizarra PAR-2- N3U-22 de los BONOS PILAT II-EMISION",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "14",
@@ -8033,7 +8065,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, concluyó con la cancelación total del Cupón N° 11 de los BONOS NIBOL - Emisión 2, con Clave de Pizarra NIB-1-N1A-20 y NIB-1-N1B-20.",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "11",
@@ -8050,7 +8082,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, utilizó Bs2.300.000,00 con el Banco Nacional de Bolivia S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8062,7 +8094,7 @@
      "resumen": "Ha comunicado que, de acuerdo a lo informado por GanaValores S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8076,7 +8108,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, el Gerente General autorizó el Registro e Inscripción",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8090,7 +8122,7 @@
      "resumen": "Ha comunicado que, el 29 de septiembre de 2025, determinó convocar a las Asambleas Generales de Tenedores de Bonos, a realizarse el 16 de octubre de 2025, en oficinas de la empresa y a través de",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "movimiento": "designación"
@@ -8107,7 +8139,7 @@
      "resumen": "Ha comunicado que, el 30 de septiembre de 2025, concluyó el pago del 100% de los dividendos por la tenencia de acciones ordinarias a los accionistas respectivos, por la gestión fiscal 2024, con",
      "resumen_origen": "extractivo",
      "grupo": "dividendos",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8119,7 +8151,7 @@
      "resumen": "Ha comunicado que, a partir del 29 de septiembre de 2025, cambia el horario de atención al público, de lunes a viernes de 08:30 a 16:30 y sábado de 09:00 a 13:00 Hrs.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8133,7 +8165,7 @@
      "resumen": "Ha comunicado que en reunión de Directorio de 29 de septiembre de 2025, se determinó lo siguiente: Otorgar vacaciones al señor Helio Limber Avalos Caya, por tal motivo, informa que la señora Marlen",
      "resumen_origen": "extractivo",
      "grupo": "personal",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "persona": "Helio Limber Avalos Caya",
@@ -8152,7 +8184,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 29 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8166,7 +8198,7 @@
      "resumen": "Ha comunicado que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 29 de septiembre de 2025, procedió con",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8182,7 +8214,7 @@
      "resumen": "Ha comunicado que, procederá al pago de los siguientes Cupones: - Cupón Nº 47 de la Serie \"Única\" de la Emisión de Valores de Titularización de Contenido Crediticio del Patrimonio Autónomo",
      "resumen_origen": "extractivo",
      "grupo": "cupones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "cupon_n": "47",
@@ -8201,7 +8233,7 @@
      "resumen": "RESUELVE: ÚNICO.- ANULAR el proceso sancionatorio instaurado en la Resolución de Comité de Vigilancia No.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8216,7 +8248,7 @@
      "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Pagarés Bursátiles denominado “PAGARÉS BURSÁTILES",
      "resumen_origen": "extractivo",
      "grupo": "emisiones",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional",
      "campos": {
       "instrumento": "PAGARÉS BURSÁTILES TIENDA AMIGA III",
@@ -8235,7 +8267,7 @@
      "resumen": "RESUELVE: Sancionar a CREDIBOLSA S.A. AGENCIA DE BOLSA, con multa, por los cargos N° 1, 2 y 3 de la Nota de Cargos ASFI/DSV/R-192711/2025 de 25 de agosto de 2025, al haber incumplido lo dispuesto en",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8249,7 +8281,7 @@
      "resumen": "RESUELVE: Sancionar a CREDIFONDO SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por el incumplimiento al Cargo Único establecido en la Nota de Cargos ASFI/DSV/R-192754/2025 de 25 de",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8263,7 +8295,7 @@
      "resumen": "RESUELVE: Sancionar a PANAMERICAN SECURITIES AGENCIA DE BOLSA S.A.",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8277,7 +8309,7 @@
      "resumen": "RESUELVE: Sancionar a PANAMERICAN SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., con multa, por los cargos imputados en la Nota de Cargo ASFI/DSV/R-187041/2025 de 18 de agosto de 2025, al haber",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     },
     {
@@ -8291,7 +8323,7 @@
      "resumen": "Ver AdjuntoMÓDULO DE VENTANILLA VIRTUAL (ver adjunto)",
      "resumen_origen": "extractivo",
      "grupo": "otros",
-     "grupo_v": 2,
+     "grupo_v": 3,
      "revisado": "provisional"
     }
    ]
