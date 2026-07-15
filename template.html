@@ -5772,17 +5772,32 @@ window.addEventListener('popstate', function(){
       return p(d.getUTCHours())+':'+p(d.getUTCMinutes());
     }catch(e){ return ''; }
   }
+  // npScrapeDDMM: fecha "DD-MM" del scrapeo (createdAtUtc → hora Bolivia UTC-4). Fallback
+  // para filas legacy sin createdAtUtc: n.date (fecha editorial = día de corrida en BO).
+  function npScrapeDDMM(n){
+    try{ var t=Date.parse(n&&n.createdAtUtc);
+      if(!isNaN(t)){ var d=new Date(t-4*3600000), p=function(x){return String(x).padStart(2,'0');};
+        return p(d.getUTCDate())+'-'+p(d.getUTCMonth()+1); }
+    }catch(e){}
+    var s=String((n&&n.date)||'');
+    return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s.slice(8,10)+'-'+s.slice(5,7) : '';
+  }
   function npTime(n){
     if(!n) return '';
     if(ntEsLatam(n)){
       var pub=ntEsc(n.time||'');                       // pubDate real: visible para todos
       if(!npAdmin.isAdmin) return pub;
       var scr=npScrapeHHMM(n);                          // scrapeo real: solo admin, de createdAtUtc
-      return scr ? pub+'{{t:noticias.scraped_at_latam}}'+scr : pub;
+      if(!scr) return pub;
+      var fL=npScrapeDDMM(n);
+      return fL ? pub+'{{t:noticias.scraped_el_latam}}'+fL+'{{t:noticias.scraped_hora}}'+scr
+                : pub+'{{t:noticias.scraped_at_latam}}'+scr;
     }
-    // Bolivia: n.time = hora de corrida. Público sin hora; admin la ve rotulada.
+    // Bolivia: n.time = hora de corrida. Público sin hora; admin la ve rotulada con fecha.
     if(!npAdmin.isAdmin || !n.time) return '';
-    return '{{t:noticias.scraped_at}}'+ntEsc(n.time);
+    var f=npScrapeDDMM(n);
+    return f ? '{{t:noticias.scraped_el}}'+f+'{{t:noticias.scraped_hora}}'+ntEsc(n.time)
+             : '{{t:noticias.scraped_at}}'+ntEsc(n.time);
   }
   // Adaptadores de markup: el separador desaparece junto con la hora (sin "·" huérfano).
   // Foot/meta (hero + card): span np-sep + np-time. Ranking/latam: separador plano " · ".
