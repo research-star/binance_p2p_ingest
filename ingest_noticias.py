@@ -163,8 +163,38 @@ _COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
             ("resumen_reintentos", "INTEGER"))  # pasadas de re-resumen por nota (0008)
 
 
+# Log de salidas del funnel (PR1). Espejo canónico en scripts/migrations/
+# 0010_noticias_funnel_log.sql (se aplica a mano en el VPS); este DDL idempotente lo
+# crea en runtime — al mergear, el cron lo crea en prod (consecuencia asumida/aprobada).
+# Registra TODA nota que entra al funnel y NO termina publicada, con su score y razón,
+# para hacer auditable PR2 (categorías nuevas + bajada de umbral). PK = url → dedup por
+# URL: los kills de evaluar y las absorbidas por evento se re-evalúan ~14×/día pero dejan
+# 1 fila (INSERT OR REPLACE, última corrida gana). Las colisiones de id NO se registran
+# (no son pérdida: su contenido ya está publicado).
+DDL_FUNNEL_LOG = """
+CREATE TABLE IF NOT EXISTS noticias_funnel_log (
+    url              TEXT PRIMARY KEY,   -- dedup por URL (1 fila por nota, no por re-avistamiento)
+    fecha            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4) de la última corrida que la vio
+    hora             TEXT NOT NULL,      -- HH:MM (Bolivia UTC-4)
+    portal           TEXT NOT NULL,
+    titulo           TEXT NOT NULL,
+    tema             TEXT NOT NULL DEFAULT '',
+    score_crudo      REAL,               -- prob TF-IDF cruda (None si no hubo modelo / kill pre-scoring)
+    score_ajustado   REAL,               -- prob tras la escala editorial
+    puntaje          REAL NOT NULL,      -- 0-10 final (0 = kill de evaluar)
+    salida           TEXT NOT NULL,      -- keyword_excluida|falta_bolivia|umbral_modelo|no_calificada|evento_absorbida|dedupe_inter_dia|evictada
+    penalizado_por   TEXT NOT NULL DEFAULT '',  -- slug de la penalización (atribución de causa); "" si ninguna
+    taxonomia_v      INTEGER,
+    representante_id TEXT,               -- solo evento_absorbida: id del representante que la absorbió
+    created_at_utc   TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_funnel_log_fecha ON noticias_funnel_log(fecha);
+"""
+
+
 def init_schema(conn: sqlite3.Connection):
     conn.executescript(DDL)
+    conn.executescript(DDL_FUNNEL_LOG)
     # Self-migrate idempotente de columnas nuevas sobre DB con la tabla vieja:
     # SQLite no tiene ADD COLUMN IF NOT EXISTS → se traga el "duplicate column"
     # por columna. Desacopla el INSERT de cuándo se aplica 0005 a mano en el VPS
@@ -245,13 +275,17 @@ def _mismo_evento(a: dict, b: dict) -> bool:
     return False
 
 
-def agrupar_eventos(notas: list) -> list:
+def agrupar_eventos(notas: list, absorbidas: list | None = None) -> list:
     """Colapsa notas del MISMO evento (misma corrida) a UNA representante que lleva
     `tambien_en` = [{source, portal, url}] de las demás. La representante es la de
     MENOR tier (desempate: mayor puntaje). Los grupos se devuelven ordenados por su
     puntaje MÁXIMO (relevancia del evento), no por el de la representante. NO hace
     dedupe inter-día (eso sigue en es_repetida). Asume `notas` pre-ordenadas por
-    puntaje desc (así grp[0], usado para el match, es la de mayor puntaje del grupo)."""
+    puntaje desc (así grp[0], usado para el match, es la de mayor puntaje del grupo).
+
+    Si se pasa `absorbidas` (lista), se le APPENDEA (nota, representante_id) por cada
+    nota no-representante del grupo — para el log de salidas del funnel (PR1). NO altera
+    la mecánica de agrupación: solo expone lo que ya se colapsaba a `tambien_en`."""
     grupos = []  # list[list[nota]]
     for n in notas:
         g = next((grp for grp in grupos if _mismo_evento(n, grp[0])), None)
@@ -266,6 +300,8 @@ def agrupar_eventos(notas: list) -> list:
         rep = g[0]
         vistos, te = {rep["source"]}, []
         for o in g[1:]:
+            if absorbidas is not None:
+                absorbidas.append((o, rep["id"]))   # o fue absorbida por rep (mismo evento)
             if o["source"] in vistos:
                 continue
             vistos.add(o["source"])
@@ -317,6 +353,55 @@ def escribir_csv_debug(candidatos: list, fecha: str):
         for c in candidatos:
             writer.writerow(c)
     return out
+
+
+# ── Log de salidas del funnel (PR1) ────────────────────────────────────────
+# Mapea la razón interna del kill de evaluar (descartado_por) al slug de salida del log.
+# 'umbral' se explicita como 'umbral_modelo' (el kill por UMBRAL_MODELO=0.33, distinto del
+# corte editorial UMBRAL_PUNTAJE que produce 'no_calificada').
+_SALIDA_KILL = {"keyword_excluida": "keyword_excluida",
+                "falta_bolivia": "falta_bolivia",
+                "umbral": "umbral_modelo"}
+
+
+def _fila_funnel(url, portal, titulo, tema, score_crudo, score_ajustado, puntaje,
+                 salida, penalizado_por, taxonomia_v, fecha, hora, representante_id=None):
+    return {"url": url, "portal": portal, "titulo": titulo, "tema": tema or "",
+            "score_crudo": score_crudo, "score_ajustado": score_ajustado,
+            "puntaje": puntaje, "salida": salida, "penalizado_por": penalizado_por or "",
+            "taxonomia_v": taxonomia_v, "representante_id": representante_id,
+            "fecha": fecha, "hora": hora}
+
+
+def registrar_salidas_funnel(conn: sqlite3.Connection, filas: list, ahora_utc) -> int:
+    """Upsert dedup-por-URL de las salidas del funnel. INSERT OR REPLACE → una nota
+    re-evaluada 14×/día deja 1 fila (la última corrida gana). Idempotente. Va por `conn`
+    (mismo commit que los INSERTs de la corrida → atómico con el resto del lane)."""
+    created = ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+    escritas = 0
+    for f in filas:
+        if not f.get("url"):
+            continue
+        conn.execute(
+            """INSERT OR REPLACE INTO noticias_funnel_log
+               (url, fecha, hora, portal, titulo, tema, score_crudo, score_ajustado,
+                puntaje, salida, penalizado_por, taxonomia_v, representante_id, created_at_utc)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+            (f["url"], f["fecha"], f["hora"], f["portal"], f["titulo"], f.get("tema", ""),
+             f.get("score_crudo"), f.get("score_ajustado"), f["puntaje"], f["salida"],
+             f.get("penalizado_por", ""), f.get("taxonomia_v"), f.get("representante_id"),
+             created))
+        escritas += 1
+    return escritas
+
+
+def purgar_funnel_log(conn: sqlite3.Connection, fecha_bo: str, dias: int = 30) -> int:
+    """Purga idempotente del log > `dias` días (TTL). Corte relativo a la fecha Bolivia de
+    la corrida (date(fecha_bo, '-N days')). Devuelve filas borradas."""
+    cur = conn.execute(
+        "DELETE FROM noticias_funnel_log WHERE fecha < date(?, ?)",
+        (fecha_bo, f"-{dias} days"))
+    return cur.rowcount
 
 
 # ── Carril Bolivia ────────────────────────────────────────────────────────
@@ -388,7 +473,9 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
         # varios medios a UNA representante (tier de fuente manda) que lleva las
         # otras fuentes en tambien_en. Antes del presupuesto → menos casi-duplicados
         # en el feed. Calibración 2026-06-21.
-        seleccion = agrupar_eventos(seleccion)
+        # `absorbidas` recoge (nota, representante_id) de las colapsadas → log de salidas (PR1).
+        absorbidas = []
+        seleccion = agrupar_eventos(seleccion, absorbidas)
         # agrupar_eventos DEVUELVE los eventos ordenados por puntaje MÁXIMO del grupo (gmax),
         # pero la fila que se inserta es el REPRESENTANTE (fuente de menor tier), cuyo
         # n["puntaje"] puede ser < gmax. El compare-and-evict de abajo compara y corta por
@@ -502,6 +589,52 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             n_resumen = resumen_ia.aplicar(finales, autorizado=True, conn=conn)  # candado API: el pipeline (cron) autoriza
             if n_resumen:
                 print(f"[noticias] bolivia: resumen_ia aplicado a {n_resumen}/{len(finales)}")
+
+            # ── Log de salidas del funnel (PR1): TODA nota que entró y NO se publica, con
+            #    su score y razón. Excluye colisiones de id (contenido ya publicado, no es
+            #    pérdida). Dedup por URL en la tabla (PK=url). Va por `conn` → mismo commit
+            #    atómico que los INSERTs (insertar_notas, abajo). ──
+            hora_bo = (ahora_utc - timedelta(hours=4)).strftime("%H:%M")
+            filas_log = []
+            # (a) kills de evaluar (recicladas ~14×/día sin marcar vista → dedup por URL las colapsa a 1)
+            for d in descartados:
+                filas_log.append(_fila_funnel(
+                    d["link"], d["portal"], d["titulo"], "", d.get("score_crudo"),
+                    d.get("score_ajustado"), 0,
+                    _SALIDA_KILL.get(d["descartado_por"], d["descartado_por"]),
+                    d.get("penalizado_por", ""), d.get("taxonomia_v"), fecha_bo, hora_bo))
+            # (b) NO-CALIFICADAS: pasaron evaluar pero < umbral editorial (banda que decide
+            #     la bajada de umbral). Se marcan vistas → 1 fila por nota única.
+            for n in notas:
+                if n["puntaje"] < args.umbral:
+                    filas_log.append(_fila_funnel(
+                        n["url"], n["portal"], n["title"], n.get("tema", ""),
+                        n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
+                        "no_calificada", n.get("penalizado_por", ""),
+                        n.get("taxonomia_v"), fecha_bo, hora_bo))
+            # (c) absorbidas por agrupar_eventos (recicladas → dedup por URL), con el id del rep
+            for o, rep_id in absorbidas:
+                filas_log.append(_fila_funnel(
+                    o["url"], o["portal"], o["title"], o.get("tema", ""),
+                    o.get("score_crudo"), o.get("score_ajustado"), o["puntaje"],
+                    "evento_absorbida", o.get("penalizado_por", ""),
+                    o.get("taxonomia_v"), fecha_bo, hora_bo, representante_id=rep_id))
+            # (c) dedupe-losers inter-día
+            for n in dedupe_losers:
+                filas_log.append(_fila_funnel(
+                    n["url"], n["portal"], n["title"], n.get("tema", ""),
+                    n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
+                    "dedupe_inter_dia", n.get("penalizado_por", ""),
+                    n.get("taxonomia_v"), fecha_bo, hora_bo))
+            # (c) evictadas por rotación (0 hoy; van igual). Vienen del ranking `hoy` (dict
+            #     parcial: sin tema/scores/penalización) → se loguean con lo disponible.
+            for e in evicciones:
+                filas_log.append(_fila_funnel(
+                    e["url"], e["portal"], e["title"], "", None, None, e["puntaje"],
+                    "evictada", "", None, fecha_bo, hora_bo))
+            res["funnel_log"] = registrar_salidas_funnel(conn, filas_log, ahora_utc)
+            res["funnel_log_purgadas"] = purgar_funnel_log(conn, fecha_bo, dias=30)
+
             res["insertadas"] = insertar_notas(conn, finales)
             if evicciones:
                 print(f"[noticias] bolivia: rotación evictó {len(evicciones)} de menor score (cap={cap})")
