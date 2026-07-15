@@ -14,6 +14,7 @@ Uso:  python scripts/test_noticias_funnel_log.py
 """
 from __future__ import annotations
 
+import os
 import sqlite3
 import sys
 import tempfile
@@ -182,6 +183,60 @@ def run():
     if n_abs != 1:
         errores.append(f"E: absorbida reciclada deja {n_abs} filas (esperado 1 — dedup por URL)")
 
+    # ── Escenario F: log NO-FATAL — un fallo del log NO tumba la inserción ─────
+    db_f = tmp / "f.db"
+    conn = sqlite3.connect(str(db_f))
+    ingest_noticias.init_schema(conn)
+    F_INS = "https://eldeber.com.bo/economia/publica-pese-a-log-roto_1790000030"
+    F_NOCAL = "https://eldeber.com.bo/economia/nocal-log-roto_1790000031"
+    cands_F = [
+        _cand(F_INS, "El IBCE reporta superavit comercial de Bolivia en el primer trimestre", 8.0),
+        _cand(F_NOCAL, "Nota menor de bajo puntaje sobre gestiones internas varias", 3.5),
+    ]
+    scraper.correr_scraper = lambda *a, **k: (cands_F, [], ["El Deber"], [])
+    orig_reg = ingest_noticias.registrar_salidas_funnel
+    ingest_noticias.registrar_salidas_funnel = lambda *a, **k: (_ for _ in ()).throw(
+        RuntimeError("boom log"))
+    try:
+        res_f = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[])
+    finally:
+        ingest_noticias.registrar_salidas_funnel = orig_reg
+    n_pub = conn.execute("SELECT COUNT(*) FROM noticias WHERE url = ?", (F_INS,)).fetchone()[0]
+    n_log = conn.execute("SELECT COUNT(*) FROM noticias_funnel_log").fetchone()[0]
+    conn.close()
+    if res_f["estado"] != "ok" or res_f["insertadas"] != 1 or n_pub != 1:
+        errores.append(f"F: el fallo del log tumbó la inserción (estado={res_f['estado']}, "
+                       f"insertadas={res_f['insertadas']}, publicada={n_pub})")
+    if not str(res_f.get("funnel_log", "")).startswith("error"):
+        errores.append(f"F: funnel_log debía marcar error visible, dio {res_f.get('funnel_log')!r}")
+    if n_log != 0:
+        errores.append(f"F: rollback del log falló — quedaron {n_log} filas")
+
+    # ── Escenario G: killswitch FUNNEL_LOG_ENABLED='0' → cero filas ────────────
+    db_g = tmp / "g.db"
+    conn = sqlite3.connect(str(db_g))
+    ingest_noticias.init_schema(conn)
+    cands_G = [
+        _cand("https://eldeber.com.bo/economia/pub-killswitch_1790000040",
+              "El BCB publica el dato de reservas internacionales de Bolivia hoy", 8.1),
+        _cand("https://eldeber.com.bo/economia/nocal-killswitch_1790000041",
+              "Nota menor sobre tramites administrativos varios de baja relevancia", 3.2),
+    ]
+    scraper.correr_scraper = lambda *a, **k: (cands_G, [], ["El Deber"], [])
+    os.environ["FUNNEL_LOG_ENABLED"] = "0"
+    try:
+        res_g = ingest_noticias.lane_bolivia(conn, args, ahora, fecha_bo, previos=[])
+    finally:
+        os.environ.pop("FUNNEL_LOG_ENABLED", None)
+    n_log_g = conn.execute("SELECT COUNT(*) FROM noticias_funnel_log").fetchone()[0]
+    conn.close()
+    if n_log_g != 0:
+        errores.append(f"G: killswitch='0' debía dejar 0 filas, dejó {n_log_g}")
+    if res_g.get("funnel_log") != "skip:disabled":
+        errores.append(f"G: funnel_log debía ser 'skip:disabled', dio {res_g.get('funnel_log')!r}")
+    if res_g["insertadas"] != 1:
+        errores.append(f"G: killswitch no debe afectar la inserción (insertadas={res_g['insertadas']})")
+
     # ── Escenario D: penalizado_por atribuido por evaluar (modelo REAL) ────────
     import importlib
     importlib.reload(scraper)   # restaura get_modelo/correr_scraper reales para el modelo
@@ -203,7 +258,9 @@ def run():
         return 1
     print("OK test_noticias_funnel_log: A poblaciones (no_calificada+puntaje, dedupe, "
           "evento_absorbida+representante_id, insertada/rep fuera) | B colisión no-logueada "
-          "+ dedup-por-URL | C purga TTL idempotente | D penalizado_por atribuido.")
+          "+ dedup-por-(url,fecha) | C purga TTL idempotente | E dedup kills+absorbidas | "
+          "F log NO-FATAL (fallo no tumba inserción) | G killswitch=0 cero filas | "
+          "D penalizado_por atribuido.")
     return 0
 
 

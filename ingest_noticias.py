@@ -167,14 +167,15 @@ _COLS_V1 = (("carril", "TEXT"), ("tema_hits", "INTEGER"), ("entidades", "TEXT"),
 # 0010_noticias_funnel_log.sql (se aplica a mano en el VPS); este DDL idempotente lo
 # crea en runtime — al mergear, el cron lo crea en prod (consecuencia asumida/aprobada).
 # Registra TODA nota que entra al funnel y NO termina publicada, con su score y razón,
-# para hacer auditable PR2 (categorías nuevas + bajada de umbral). PK = url → dedup por
-# URL: los kills de evaluar y las absorbidas por evento se re-evalúan ~14×/día pero dejan
-# 1 fila (INSERT OR REPLACE, última corrida gana). Las colisiones de id NO se registran
-# (no son pérdida: su contenido ya está publicado).
+# para hacer auditable PR2 (categorías nuevas + bajada de umbral). PK = (url, fecha) →
+# dedup DENTRO del día: los kills de evaluar y las absorbidas por evento se re-evalúan
+# ~14×/día pero dejan 1 fila/día (INSERT OR REPLACE, última corrida del día gana), y la
+# serie cross-día se conserva. Las colisiones de id NO se registran (no son pérdida: su
+# contenido ya está publicado).
 DDL_FUNNEL_LOG = """
 CREATE TABLE IF NOT EXISTS noticias_funnel_log (
-    url              TEXT PRIMARY KEY,   -- dedup por URL (1 fila por nota, no por re-avistamiento)
-    fecha            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4) de la última corrida que la vio
+    url              TEXT NOT NULL,      -- URL de la nota
+    fecha            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4) de la corrida
     hora             TEXT NOT NULL,      -- HH:MM (Bolivia UTC-4)
     portal           TEXT NOT NULL,
     titulo           TEXT NOT NULL,
@@ -186,7 +187,11 @@ CREATE TABLE IF NOT EXISTS noticias_funnel_log (
     penalizado_por   TEXT NOT NULL DEFAULT '',  -- slug de la penalización (atribución de causa); "" si ninguna
     taxonomia_v      INTEGER,
     representante_id TEXT,               -- solo evento_absorbida: id del representante que la absorbió
-    created_at_utc   TEXT NOT NULL
+    created_at_utc   TEXT NOT NULL,
+    -- Grano de clave = (url, fecha): dedup DENTRO del día (una nota re-evaluada ~14×/día
+    -- deja 1 fila) PERO preserva la serie temporal cross-día (re-avistada el día 20 = fila
+    -- nueva, no pisa la del día 1). Con url sola, el re-avistamiento borraría el histórico.
+    PRIMARY KEY (url, fecha)
 );
 CREATE INDEX IF NOT EXISTS idx_funnel_log_fecha ON noticias_funnel_log(fecha);
 """
@@ -374,9 +379,9 @@ def _fila_funnel(url, portal, titulo, tema, score_crudo, score_ajustado, puntaje
 
 
 def registrar_salidas_funnel(conn: sqlite3.Connection, filas: list, ahora_utc) -> int:
-    """Upsert dedup-por-URL de las salidas del funnel. INSERT OR REPLACE → una nota
-    re-evaluada 14×/día deja 1 fila (la última corrida gana). Idempotente. Va por `conn`
-    (mismo commit que los INSERTs de la corrida → atómico con el resto del lane)."""
+    """Upsert dedup por (url, fecha) de las salidas del funnel. INSERT OR REPLACE → una
+    nota re-evaluada 14×/día deja 1 fila/día (última corrida del día gana); cross-día se
+    conserva. Idempotente. El commit lo hace el caller (_log_salidas_funnel, no-fatal)."""
     created = ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
     escritas = 0
     for f in filas:
@@ -402,6 +407,72 @@ def purgar_funnel_log(conn: sqlite3.Connection, fecha_bo: str, dias: int = 30) -
         "DELETE FROM noticias_funnel_log WHERE fecha < date(?, ?)",
         (fecha_bo, f"-{dias} days"))
     return cur.rowcount
+
+
+def _log_salidas_funnel(conn, res, descartados, notas, absorbidas, dedupe_losers,
+                        evicciones, umbral, fecha_bo, ahora_utc):
+    """Escribe las salidas del funnel en noticias_funnel_log. NO-FATAL y DESACOPLADO:
+    corre DESPUÉS de que insertar_notas commiteó las notas, en su propia transacción. Si
+    algo falla (bind inesperado, lock, None), hace rollback SOLO del log, avisa fuerte
+    (stderr + res→body de HC_NOTICIAS) y retorna — la ingesta ya publicó. El log es
+    infraestructura de observación: no puede vetar lo observado. Poblaciones disjuntas de
+    las publicadas (registra solo NO-publicadas), así que desacoplar no rompe coherencia.
+    Killswitch FUNNEL_LOG_ENABLED (default '1', patrón de CF_DEPLOY_ENABLED): '0'/'false'/
+    'no'/'off' apaga el log SIN tocar el resto del funnel (byte-idéntico)."""
+    if os.environ.get("FUNNEL_LOG_ENABLED", "1").strip().lower() in ("0", "false", "no", "off"):
+        res["funnel_log"] = "skip:disabled"
+        return
+    try:
+        hora_bo = (ahora_utc - timedelta(hours=4)).strftime("%H:%M")
+        filas = []
+        # (a) kills de evaluar (recicladas ~14×/día sin marcar vista → dedup por (url,fecha) las colapsa a 1/día)
+        for d in descartados:
+            filas.append(_fila_funnel(
+                d["link"], d["portal"], d["titulo"], "", d.get("score_crudo"),
+                d.get("score_ajustado"), 0,
+                _SALIDA_KILL.get(d["descartado_por"], d["descartado_por"]),
+                d.get("penalizado_por", ""), d.get("taxonomia_v"), fecha_bo, hora_bo))
+        # (b) NO-CALIFICADAS: pasaron evaluar pero < umbral editorial (la banda 5.4-6.7 que
+        #     decide la bajada de umbral). Se marcan vistas → 1 fila por nota única/día.
+        for n in notas:
+            if n["puntaje"] < umbral:
+                filas.append(_fila_funnel(
+                    n["url"], n["portal"], n["title"], n.get("tema", ""),
+                    n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
+                    "no_calificada", n.get("penalizado_por", ""),
+                    n.get("taxonomia_v"), fecha_bo, hora_bo))
+        # (c) absorbidas por agrupar_eventos (recicladas → dedup por (url,fecha)), con el id del rep
+        for o, rep_id in absorbidas:
+            filas.append(_fila_funnel(
+                o["url"], o["portal"], o["title"], o.get("tema", ""),
+                o.get("score_crudo"), o.get("score_ajustado"), o["puntaje"],
+                "evento_absorbida", o.get("penalizado_por", ""),
+                o.get("taxonomia_v"), fecha_bo, hora_bo, representante_id=rep_id))
+        # (c) dedupe-losers inter-día
+        for n in dedupe_losers:
+            filas.append(_fila_funnel(
+                n["url"], n["portal"], n["title"], n.get("tema", ""),
+                n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
+                "dedupe_inter_dia", n.get("penalizado_por", ""),
+                n.get("taxonomia_v"), fecha_bo, hora_bo))
+        # (c) evictadas por rotación (0 hoy; van igual). Vienen del ranking `hoy` (dict
+        #     parcial: sin tema/scores/penalización) → se loguean con lo disponible.
+        for e in evicciones:
+            filas.append(_fila_funnel(
+                e["url"], e["portal"], e["title"], "", None, None, e["puntaje"],
+                "evictada", "", None, fecha_bo, hora_bo))
+        escritas = registrar_salidas_funnel(conn, filas, ahora_utc)
+        purgadas = purgar_funnel_log(conn, fecha_bo, dias=30)
+        conn.commit()
+        res["funnel_log"] = escritas
+        res["funnel_log_purgadas"] = purgadas
+    except Exception as e:
+        try:
+            conn.rollback()   # deshace SOLO el log (las notas ya se commitearon aparte)
+        except Exception:
+            pass
+        res["funnel_log"] = f"error:{type(e).__name__}"
+        print(f"[noticias] WARN funnel_log_fail: {type(e).__name__}: {e}", file=sys.stderr)
 
 
 # ── Carril Bolivia ────────────────────────────────────────────────────────
@@ -590,51 +661,6 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             if n_resumen:
                 print(f"[noticias] bolivia: resumen_ia aplicado a {n_resumen}/{len(finales)}")
 
-            # ── Log de salidas del funnel (PR1): TODA nota que entró y NO se publica, con
-            #    su score y razón. Excluye colisiones de id (contenido ya publicado, no es
-            #    pérdida). Dedup por URL en la tabla (PK=url). Va por `conn` → mismo commit
-            #    atómico que los INSERTs (insertar_notas, abajo). ──
-            hora_bo = (ahora_utc - timedelta(hours=4)).strftime("%H:%M")
-            filas_log = []
-            # (a) kills de evaluar (recicladas ~14×/día sin marcar vista → dedup por URL las colapsa a 1)
-            for d in descartados:
-                filas_log.append(_fila_funnel(
-                    d["link"], d["portal"], d["titulo"], "", d.get("score_crudo"),
-                    d.get("score_ajustado"), 0,
-                    _SALIDA_KILL.get(d["descartado_por"], d["descartado_por"]),
-                    d.get("penalizado_por", ""), d.get("taxonomia_v"), fecha_bo, hora_bo))
-            # (b) NO-CALIFICADAS: pasaron evaluar pero < umbral editorial (banda que decide
-            #     la bajada de umbral). Se marcan vistas → 1 fila por nota única.
-            for n in notas:
-                if n["puntaje"] < args.umbral:
-                    filas_log.append(_fila_funnel(
-                        n["url"], n["portal"], n["title"], n.get("tema", ""),
-                        n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
-                        "no_calificada", n.get("penalizado_por", ""),
-                        n.get("taxonomia_v"), fecha_bo, hora_bo))
-            # (c) absorbidas por agrupar_eventos (recicladas → dedup por URL), con el id del rep
-            for o, rep_id in absorbidas:
-                filas_log.append(_fila_funnel(
-                    o["url"], o["portal"], o["title"], o.get("tema", ""),
-                    o.get("score_crudo"), o.get("score_ajustado"), o["puntaje"],
-                    "evento_absorbida", o.get("penalizado_por", ""),
-                    o.get("taxonomia_v"), fecha_bo, hora_bo, representante_id=rep_id))
-            # (c) dedupe-losers inter-día
-            for n in dedupe_losers:
-                filas_log.append(_fila_funnel(
-                    n["url"], n["portal"], n["title"], n.get("tema", ""),
-                    n.get("score_crudo"), n.get("score_ajustado"), n["puntaje"],
-                    "dedupe_inter_dia", n.get("penalizado_por", ""),
-                    n.get("taxonomia_v"), fecha_bo, hora_bo))
-            # (c) evictadas por rotación (0 hoy; van igual). Vienen del ranking `hoy` (dict
-            #     parcial: sin tema/scores/penalización) → se loguean con lo disponible.
-            for e in evicciones:
-                filas_log.append(_fila_funnel(
-                    e["url"], e["portal"], e["title"], "", None, None, e["puntaje"],
-                    "evictada", "", None, fecha_bo, hora_bo))
-            res["funnel_log"] = registrar_salidas_funnel(conn, filas_log, ahora_utc)
-            res["funnel_log_purgadas"] = purgar_funnel_log(conn, fecha_bo, dias=30)
-
             res["insertadas"] = insertar_notas(conn, finales)
             if evicciones:
                 print(f"[noticias] bolivia: rotación evictó {len(evicciones)} de menor score (cap={cap})")
@@ -654,6 +680,12 @@ def lane_bolivia(conn, args, ahora_utc, fecha_bo, previos) -> dict:
             vistas += [(n["url"], n["portal"]) for n in colisiones]   # re-scrape ya en tabla: no re-bajar cuerpo
             vistas += [(e["url"], e["portal"]) for e in evicciones]
             scraper.marcar_urls_vistas(vistas)
+
+            # Log de salidas del funnel (PR1): NO-FATAL y DESACOPLADO del commit de las
+            # notas — corre acá, DESPUÉS de que insertar_notas ya publicó. Si el log falla,
+            # avisa fuerte y la ingesta NO se cae. El log observa; no veta lo observado.
+            _log_salidas_funnel(conn, res, descartados, notas, absorbidas,
+                                dedupe_losers, evicciones, args.umbral, fecha_bo, ahora_utc)
 
         # Embudo unificado del carril Bolivia (WS6 funnel-v2): UN solo lugar arma el
         # entran→insert por etapa, combinando el embudo del scraper (scraper.LAST_FUNNEL:
@@ -933,6 +965,10 @@ def main() -> int:
     funnel_str = (" funnel_bolivia="
                   + json.dumps(funnel_bo, ensure_ascii=False, separators=(",", ":"))
                   ) if funnel_bo else ""
+    # Estado del log de salidas (no-fatal): int=filas escritas, "skip:disabled" o
+    # "error:<Tipo>". Va al body del HC para que un log roto sea VISIBLE (no silencioso).
+    fl = res_bo.get("funnel_log")
+    funnel_log_str = f" funnel_log={fl}" if fl is not None else ""
 
     summary = (f"[noticias] mode={'dry-run' if args.dry_run else 'ok'} "
                f"scoring={scoring} fecha={fecha_bo} "
@@ -945,6 +981,7 @@ def main() -> int:
                   f" preskip={res_rr.get('pre_skip_umbral', 0)}"
                   f" errapi={res_rr.get('errores_api', 0)}")
                + f" duration_s={dur:.0f}"
+               + funnel_log_str
                + funnel_str)
     print(summary)
 

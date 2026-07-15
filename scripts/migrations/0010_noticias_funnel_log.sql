@@ -10,14 +10,16 @@
 --   evictada                                          — desplazada del cupo diario por una de mayor score
 -- Las colisiones de id (URL ya en `noticias`) NO se registran: no son pérdida.
 --
--- PK = url → dedup por URL: los kills de evaluar y las absorbidas se re-evalúan ~14×/día
--- pero dejan 1 fila (INSERT OR REPLACE, última corrida gana). TTL 30 días (purga
--- idempotente en ingest_noticias.purgar_funnel_log). Espejo runtime idempotente en
+-- PK = (url, fecha) → dedup DENTRO del día: los kills de evaluar y las absorbidas se
+-- re-evalúan ~14×/día pero dejan 1 fila/día (INSERT OR REPLACE, última corrida del día
+-- gana), y la serie cross-día se conserva (re-avistada el día 20 = fila nueva). TTL 30
+-- días (purga idempotente en ingest_noticias.purgar_funnel_log). La escritura es NO-FATAL
+-- y gateada por FUNNEL_LOG_ENABLED (default '1'). Espejo runtime idempotente en
 -- ingest_noticias.DDL_FUNNEL_LOG (el cron lo autocrea; esta migración es el canon).
 
 CREATE TABLE IF NOT EXISTS noticias_funnel_log (
-    url              TEXT PRIMARY KEY,   -- dedup por URL (1 fila por nota, no por re-avistamiento)
-    fecha            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4) de la última corrida que la vio
+    url              TEXT NOT NULL,      -- URL de la nota
+    fecha            TEXT NOT NULL,      -- YYYY-MM-DD (Bolivia UTC-4) de la corrida
     hora             TEXT NOT NULL,      -- HH:MM (Bolivia UTC-4)
     portal           TEXT NOT NULL,
     titulo           TEXT NOT NULL,
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS noticias_funnel_log (
     penalizado_por   TEXT NOT NULL DEFAULT '',  -- slug de la penalización (atribución de causa); '' si ninguna
     taxonomia_v      INTEGER,            -- versión de la escala editorial vigente al evaluar
     representante_id TEXT,               -- solo evento_absorbida: id del representante que la absorbió
-    created_at_utc   TEXT NOT NULL
+    created_at_utc   TEXT NOT NULL,
+    PRIMARY KEY (url, fecha)             -- dedup dentro del día; serie cross-día preservada
 );
 CREATE INDEX IF NOT EXISTS idx_funnel_log_fecha ON noticias_funnel_log(fecha);
