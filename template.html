@@ -322,6 +322,29 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-foot-login:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
 .fb-foot-login:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
 .fb-chrome-foot .fb-session{font-size:12px;color:var(--text-soft)}
+/* ── Cluster social (catálogo FB_SOCIAL; preview ?social=a1..c3) ──
+   Tratamiento base (t1 implícito) = clon de .fb-foot-login (icon-only ghost).
+   .t2 = mono presente (opacity .8 + label kicker "Seguinos").
+   .t3 = color de marca por red (var --fb-social-brand inyectada por el render). */
+.fb-social{display:inline-flex;align-items:center;gap:6px}
+.fb-social[hidden]{display:none} /* el display:inline-flex de arriba pisaría el [hidden] de UA — sin esta regla el gate admin no oculta nada */
+.fb-chrome-foot .fb-social{margin-right:10px}
+.fb-social-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.45;cursor:default;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
+.fb-social-btn svg{width:15px;height:15px}
+.fb-social-btn:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
+.fb-social-btn:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
+a.fb-social-btn{cursor:pointer}
+.fb-social-label{display:none;font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-right:4px;white-space:nowrap}
+.fb-social.t2 .fb-social-label{display:inline}
+.fb-social.t2 .fb-social-btn{opacity:.8}
+.fb-social.t3 .fb-social-btn{opacity:1;color:var(--fb-social-brand,var(--text-soft))}
+.fb-social.t3 .fb-social-btn:hover{color:var(--fb-social-brand,var(--text-secondary))}
+/* Hosts del masthead (preview b/c): fila propia dentro de la columna actions;
+   en la zona izquierda alinea al inicio. Bajo 980px .fb-masthead-left es
+   display:none → la variante c desaparece en mobile (a propósito, es dato
+   para la decisión; no tocar el media query por el preview). */
+.fb-masthead-actions .fb-social{align-self:flex-end}
+.fb-masthead-left .fb-social{justify-content:flex-start}
 .fb-login,.fb-search-link{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.02em;background:none;border:none;border-bottom:1px solid transparent;padding:2px 0;text-align:left;white-space:nowrap}
 .fb-login svg,.fb-search-link svg{width:14px;height:14px;opacity:.7;flex-shrink:0}
 .fb-login{color:var(--text-secondary);cursor:pointer;transition:color .15s,border-color .15s}
@@ -1994,6 +2017,12 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
      anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
      candado real es Cloudflare Access + JWT). -->
 <footer class="fb-chrome-foot" aria-label="{{t:footer.access_aria}}">
+  <!-- Cluster social (4 redes, catálogo FB_SOCIAL): admin-only vía data-admin-only
+       (mismo gate cosmético que Agro/Mercado247, toggleado por fbRenderSession).
+       Botones INERTES mientras url=null ("Próximamente"). Host default: footer.
+       Preview desechable ?social=a1..c3 (fbApplySocialPreview) fuerza visible y
+       lo mueve de host / cambia tratamiento — solo para decidir ubicación. -->
+  <div class="fb-social" id="fbSocialCluster" data-admin-only hidden></div>
   <div id="fbFooterSession"></div>
 </footer>
 
@@ -2030,6 +2059,19 @@ const SEMANTIC_VAR_FALLBACKS = {
   'color-neutral':'blue-accent','color-accent-warm':'orange'
 };
 let currentView='snapshot', activeThemeValues={...THEMES.paper};
+
+// Preview desechable del cluster social (?social=a1..c3). Se captura ACÁ,
+// antes del init del router: ese init hace history.replaceState (deep-links
+// vía ?path= y fallback a '/') y borra el query string de la barra. El router
+// solo lee ?path — ?social no colisiona con el routing, pero hay que leerlo
+// antes de que la reescritura lo descarte. host: a=footer b=masthead-derecha
+// c=masthead-izquierda · treat: 1=mono tenue 2=mono presente 3=marca.
+var FB_SOCIAL_PREVIEW=(function(){
+  try{
+    var m=/^([abc])([123])$/.exec(new URLSearchParams(window.location.search).get('social')||'');
+    return m?{host:m[1],treat:m[2]}:null;
+  }catch(e){ return null; }
+})();
 
 // ═══ UTILS ═══
 const NF_INT = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
@@ -6375,6 +6417,56 @@ window.addEventListener('popstate', function(){
   // ── Sesión en el masthead global (área 2; login reubicado desde la portada) ──
   // Anónimo = ícono discreto (sin texto), baja prominencia, fácil de pasar por alto.
   var FB_LOGIN_BTN='<button class="fb-foot-login" type="button" data-np-login title="{{t:footer.login_title}}" aria-label="{{t:footer.login_aria}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></button>';
+
+  // ── Cluster social — catálogo ÚNICO (agregar/quitar red o togglear su
+  // visibilidad = editar UNA línea acá). url nace null → botón INERTE
+  // ("Próximamente", aria-disabled, sin href/onclick). Cuando exista url, el
+  // render emite <a href target="_blank" rel="noopener noreferrer"> (https
+  // canónico universal-link; NO custom schemes whatsapp://, fb://). WhatsApp es
+  // el CANAL de difusión (link whatsapp.com/channel/...), no contacto wa.me.
+  // url_app queda RESERVADO (p.ej. Facebook-en-iOS) — hoy null y sin lógica de
+  // resolución. Glifos oficiales (paths fill de cada marca, viewBox 24): la
+  // convención stroke-2 del chrome no aplica a logos de marca — un logo
+  // redibujado a stroke deforma el glifo; se colorean vía fill=currentColor
+  // (t1/t2) o var --fb-social-brand (t3).
+  var FB_SOCIAL=[
+    { id:'whatsapp', label:'{{t:social.wa_label}}', brand:'#25D366', icon:'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z', url:null, url_app:null, visible:true },
+    { id:'facebook', label:'{{t:social.fb_label}}', brand:'#1877F2', icon:'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', url:null, url_app:null, visible:true },
+    { id:'x', label:'{{t:social.x_label}}', brand:'#0F1419', icon:'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z', url:null, url_app:null, visible:true },
+    { id:'linkedin', label:'{{t:social.li_label}}', brand:'#0A66C2', icon:'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z', url:null, url_app:null, visible:true }
+  ];
+  function fbRenderSocial(){
+    var host=document.getElementById('fbSocialCluster'); if(!host) return;
+    var out='<span class="fb-social-label">{{t:social.follow_label}}</span>';
+    FB_SOCIAL.forEach(function(s){
+      if(!s.visible) return;
+      var svg='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="'+s.icon+'"/></svg>';
+      var style=' style="--fb-social-brand:'+s.brand+'"';
+      if(s.url){
+        out+='<a class="fb-social-btn" data-social="'+s.id+'" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+s.label+'" aria-label="'+s.label+'"'+style+'>'+svg+'</a>';
+      }else{
+        out+='<button class="fb-social-btn" type="button" data-social="'+s.id+'" aria-disabled="true" title="'+s.label+' — {{t:social.soon}}" aria-label="'+s.label+' — {{t:social.soon}}"'+style+'>'+svg+'</button>';
+      }
+    });
+    host.innerHTML=out;
+  }
+  // Bypass de preview (?social=a1..c3): fuerza el cluster visible en el host y
+  // tratamiento pedidos. Quita data-admin-only para que fbRenderSession deje de
+  // re-ocultarlo en cada transición de sesión. Mecanismo desechable — sin el
+  // param es un no-op absoluto y la página se comporta exactamente como hoy.
+  function fbApplySocialPreview(){
+    if(!FB_SOCIAL_PREVIEW) return;
+    var cl=document.getElementById('fbSocialCluster'); if(!cl) return;
+    var sel={a:'.fb-chrome-foot', b:'.fb-masthead-actions', c:'.fb-masthead-left'}[FB_SOCIAL_PREVIEW.host];
+    var dest=document.querySelector(sel);
+    if(dest && FB_SOCIAL_PREVIEW.host!=='a'){
+      if(FB_SOCIAL_PREVIEW.host==='c') dest.removeAttribute('aria-hidden');
+      dest.appendChild(cl);
+    }
+    if(FB_SOCIAL_PREVIEW.treat!=='1') cl.classList.add('t'+FB_SOCIAL_PREVIEW.treat);
+    cl.removeAttribute('data-admin-only');
+    cl.hidden=false;
+  }
   function fbRenderSession(){
     // Tabs admin-only (ej. Mercado 24/7): visibles SOLO con sesión admin confirmada.
     // Mismo gate anti-flash que el resto de la UI admin — ocultas por `hidden` en el
@@ -6396,7 +6488,7 @@ window.addEventListener('popstate', function(){
     if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
     if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
   });
-  function fbChromeInit(){ fbRenderTicker(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
+  function fbChromeInit(){ fbRenderTicker(); fbRenderSocial(); fbApplySocialPreview(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
 
