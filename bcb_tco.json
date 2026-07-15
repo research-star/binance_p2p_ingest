@@ -82,5 +82,11 @@
     "tco": 10.5,
     "source": "bcb_tco_portada",
     "fetched_at_utc": "2026-07-14T00:05:03.391304Z"
+  },
+  {
+    "fecha": "2026-07-15",
+    "tco": 10.7,
+    "source": "bcb_tco_portada",
+    "fetched_at_utc": "2026-07-15T00:05:03.101960Z"
   }
 ]
