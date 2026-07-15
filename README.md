@@ -144,6 +144,13 @@ deploy a CF es **NO-FATAL** (si falla, `gh-pages` ya quedó publicado) y está
 gateado por la env-var `CF_DEPLOY_ENABLED` (default `"1"`; `"0"` pausa el espejo
 CF sin tocar el push a `gh-pages`).
 
+Mismo patrón de kill-switch reversible en la ingesta de noticias: el **log de
+salidas del funnel** (`noticias_funnel_log`, escrito por `ingest_noticias.py`) es
+**NO-FATAL** (si falla, la ingesta publica igual y avisa en el body de
+`HC_NOTICIAS`) y está gateado por `FUNNEL_LOG_ENABLED` (default `"1"`; `"0"` apaga
+el log sin tocar el resto del funnel). Sirve para apagarlo con un flag en el `.env`
+del VPS si se porta mal, en vez de revertir un PR.
+
 > Para regenerar el dashboard **local** (inspección, sin publicar), corré
 > `dashboard.py` directamente — no toca producción.
 

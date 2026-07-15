@@ -88,14 +88,16 @@ def run() -> int:
 
     # ── M1 piso Bloomberg-Bolivia ─────────────────────────────────────────────
     # pasa gates (ancla Bolivia) → >= 9 aunque el modelo lo puntúe bajo
-    p, *_rest, desc = scraper.evaluar(
+    _r = scraper.evaluar(
         "Bolivia y Brasil firman acuerdo de integración gasífera",
         "nota", "Bloomberg Línea")
+    p, desc = _r[0], _r[7]   # descartado_por es índice 7 (la tupla creció a 10 en PR1)
     if not (p >= 9.0 and desc == ""):
         err.append(f"M1: Bloomberg+Bolivia debía quedar >=9 (got {p}, descartado={desc!r})")
     # gate DURO lo frena igual (sin ancla ni tema económico → geo-gate)
-    p2, *_r2, desc2 = scraper.evaluar(
+    _r2 = scraper.evaluar(
         "Champions League: definición del título", "deportes", "Bloomberg Línea")
+    p2, desc2 = _r2[0], _r2[7]
     if not (p2 == 0 and desc2 == "falta_bolivia"):
         err.append(f"M1: Bloomberg sin ancla debe caer por geo-gate (got {p2}, {desc2!r})")
     # un noticiero NO-Bloomberg no recibe piso

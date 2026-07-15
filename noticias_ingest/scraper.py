@@ -24,6 +24,7 @@ import pickle
 import re
 import sqlite3
 import time
+from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -965,6 +966,12 @@ ENTIDADES_BOLIVIANAS = {
 }
 # Entidades que dan evidencia económica suficiente para CONSERVAR una nota "General"
 # (sin tema). Excluye las puramente políticas/electorales (Gobierno, TSE, TED, COB).
+#
+# AUDIT-ONLY (documentado en PR1): este set NO lo consume el gate vivo de evaluar(), que
+# ancla solo por TERMINOS_BOLIVIA (substring) o ENTIDADES_BOLIVIANAS (word-boundary). Su
+# único consumidor es scripts/auditar_noticias.py (auditoría offline del recall). La
+# divergencia es INTENCIONAL: adoptarlo en el gate vivo (rescatar 'General' por ancla
+# económica) es una decisión de PR2, no de este PR. No lo cablees a evaluar() sin brief.
 ENTIDADES_ECONOMICAS = {
     "BCB", "YPFB", "ANH", "YLB", "COMIBOL", "ASFI", "ASOBAN", "INE", "Aduana",
     "IBCE", "CAINCO", "SENASAG", "ANAPO", "CAO", "EMAPA", "MEFP",
@@ -1035,19 +1042,24 @@ def score_keywords(titulo: str, descripcion: str, portal: str) -> tuple:
 def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False) -> tuple:
     """
     Devuelve (puntaje, tema, tema_hits, entidades, score_crudo, score_ajustado,
-              ajuste_aplicado, descartado_por).
+              ajuste_aplicado, descartado_por, penalizado_por, taxonomia_v).
     - puntaje: float 0-10 (1 decimal) de RELEVANCIA (modelo TF-IDF). 0 = descartar.
     - tema_hits: int de CONFIANZA del tema (strong*10 + weak-con-contexto; ≠ puntaje).
     - entidades: list[str] de entidades canónicas detectadas (independiente del tema).
     - score_crudo / score_ajustado: floats 0-1 (None si no hubo modelo).
     - ajuste_aplicado: string descriptivo ("—" si no hubo).
     - descartado_por: "" si pasa, o uno de: "keyword_excluida", "falta_bolivia", "umbral".
+    - penalizado_por: slug de la penalización que la tocó ("deportes"/"intl"/"opinion"/…),
+      o "" si ninguna. CLAVE para el log: un ×0.3 muere con descartado_por="umbral", pero
+      penalizado_por dice que la CAUSA fue la categoría, no un crudo bajo. Los kills previos
+      al scoring (keyword_excluida/falta_bolivia) no llevan penalización → "".
+    - taxonomia_v: versión de la escala editorial vigente (_TAXONOMIA_V).
     """
     # Siempre aplicar exclusiones básicas primero
     texto = (titulo + " " + descripcion).lower()
     for excl in KEYWORDS_EXCLUIR:
         if excl in texto:
-            return 0, "", 0, [], None, None, "—", "keyword_excluida"
+            return 0, "", 0, [], None, None, "—", "keyword_excluida", "", _TAXONOMIA_V
     # Entidades + tema se computan ANTES del geo-gate (WS1 funnel-v2): el gate ahora
     # rescata por tema, así que necesita la clasificación en el punto de decisión.
     entidades = detectar_entidades(titulo, descripcion)
@@ -1063,7 +1075,7 @@ def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False
     ancla_bo = (any(t in texto for t in TERMINOS_BOLIVIA)
                 or any(e in ENTIDADES_BOLIVIANAS for e in entidades))
     if not (ancla_bo or tema != "General"):
-        return 0, "", 0, [], None, None, "—", "falta_bolivia"
+        return 0, "", 0, [], None, None, "—", "falta_bolivia", "", _TAXONOMIA_V
 
     # Intentar modelo TF-IDF
     prob_crudo = get_modelo().puntaje(titulo, descripcion)
@@ -1071,6 +1083,10 @@ def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False
         # Ajustar score con reglas editoriales
         prob_ajustado = ajustar_score(prob_crudo, titulo, descripcion, portal, es_opinion)
         ajuste = detectar_ajuste(titulo, descripcion, portal, es_opinion)
+        # Atribución de causa (WS2 PR1): qué penalización de la tabla la tocó. Misma tabla
+        # que ajustar_score → coherente con el factor efectivamente aplicado.
+        _penal = _penalizacion(titulo, descripcion, es_opinion)
+        penalizado_por = _penal.nombre if _penal else ""
         # M1: piso Bloomberg-Bolivia. Una nota de Bloomberg Línea en el carril Bolivia que
         # sobrevivió los gates DUROS (exclusión de keywords + geo-gate) es editorialmente
         # relevante por definición → piso 9/10. DOMINA los ajustes editoriales (bonos/
@@ -1082,25 +1098,59 @@ def evaluar(titulo: str, descripcion: str, portal: str, es_opinion: bool = False
             ajuste_bloom = ajuste if base >= 9.0 else (
                 ((ajuste + "; ") if ajuste and ajuste != "—" else "") + f"piso_bloomberg(base={base})")
             return (puntaje, tema, tema_hits, entidades,
-                    round(prob_crudo, 4), round(prob_ajustado, 4), ajuste_bloom, "")
+                    round(prob_crudo, 4), round(prob_ajustado, 4), ajuste_bloom, "",
+                    penalizado_por, _TAXONOMIA_V)
         # Modelo disponible
         if prob_ajustado < UMBRAL_MODELO:
-            return 0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "umbral"
+            return (0, "", 0, [], round(prob_crudo, 4), round(prob_ajustado, 4), ajuste,
+                    "umbral", penalizado_por, _TAXONOMIA_V)
         # tema / tema_hits ya computados arriba (no recomputar).
         return (round(prob_ajustado * 10, 1), tema, tema_hits, entidades,
-                round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "")
+                round(prob_crudo, 4), round(prob_ajustado, 4), ajuste, "",
+                penalizado_por, _TAXONOMIA_V)
 
     # Fallback keywords (path muerto en prod por fail-closed)
     puntaje, tema_fb, tema_hits_fb = score_keywords(titulo, descripcion, portal)
-    return puntaje, tema_fb, tema_hits_fb, entidades, None, None, "—", ""
+    return puntaje, tema_fb, tema_hits_fb, entidades, None, None, "—", "", "", _TAXONOMIA_V
 
 
 # ---------------------------------------------------------------------------
 # AJUSTE DE SCORE
 # ---------------------------------------------------------------------------
+# Límite de palabra sobre el alfabeto ESPAÑOL (regla de Diego, PR1). Un término solo
+# matchea si su borde es un carácter que NO es letra española. Difiere de \b en dos
+# cosas queridas: (1) dígitos y guión bajo cuentan como NO-letra → "marte2026" matchea;
+# (2) las vocales acentuadas y la ñ SÍ son letra (con [a-zA-Z] quedarían como no-letra y
+# "ligá" matchearía deportes). El texto llega lowercased, pero el set con mayúsculas +
+# IGNORECASE lo vuelve robusto a ambas grafías. Se aplica SOLO a los términos que hoy
+# llevan borde de palabra (gol\b, liga\b, \bonu\b) y a los dos FP que se corrigen en PR1
+# (liga, marte); los términos substring (champions, marihuana, luna, …) quedan intactos
+# para no cambiar comportamiento fuera del alcance del fix (ver reporte).
+_LETRA_ES = "a-zA-ZáéíóúüñÁÉÍÓÚÜÑ"
+
+
+def _borde(term: str, izq: bool = True, der: bool = True) -> str:
+    """Envuelve `term` (fragmento regex) con lookarounds negativos sobre _LETRA_ES.
+    izq/der = exigir borde izquierdo/derecho (lookbehind/lookahead). No consume."""
+    pre = f"(?<![{_LETRA_ES}])" if izq else ""
+    post = f"(?![{_LETRA_ES}])" if der else ""
+    return pre + term + post
+
+
 _RE_DEPORTES = re.compile(
-    r"champions|gol\b|derrotó|venció|liga\b|copa libertadores"
-    r"|eliminatorias|baloncesto|fútbol|futbol", re.IGNORECASE
+    "|".join([
+        "champions",
+        # 'gol' conserva su borde histórico SOLO a la derecha (era `gol\\b`). El borde
+        # izquierdo faltante deja pasar el FP "mongol"/"Mongolia" → reportado, NO corregido
+        # en PR1 (cambiaría comportamiento fuera de los dos FP autorizados: liga y marte).
+        _borde("gol", izq=False),
+        "derrotó", "venció",
+        # FIX PR1 (boundary): antes `liga\\b` (solo borde derecho) → matcheaba "obliga",
+        # "desliga", "religa". Ahora borde a ambos lados.
+        _borde("liga"),
+        "copa libertadores", "eliminatorias", "baloncesto", "fútbol", "futbol",
+    ]),
+    re.IGNORECASE,
 )
 _RE_CRIMEN = re.compile(
     r"aprehendida|aprehendido|asesinato|feminicidio|atracos"
@@ -1114,7 +1164,16 @@ _RE_CONTRABANDO_ALIM = re.compile(
     r"contrabando de\s+(arroz|fideo|harina|azúcar|huevos)", re.IGNORECASE
 )
 _RE_MARIHUANA = re.compile(r"marihuana|cannabis", re.IGNORECASE)
-_RE_INTL = re.compile(r"luna|marte|champions|\bonu\b", re.IGNORECASE)
+_RE_INTL = re.compile(
+    "|".join([
+        "luna",
+        # FIX PR1 (boundary): antes `marte` sin borde → matcheaba "martes". Borde ambos lados.
+        _borde("marte"),
+        "champions",
+        _borde("onu"),   # era `\\bonu\\b`; borde de palabra a la convención española
+    ]),
+    re.IGNORECASE,
+)
 _RE_BOLIVIA = re.compile(
     r"bolivi|ypfb|bcb|mefp|asfi|emapa|ylb|ana?po|cainco"
     r"|la paz|santa cruz|cochabamba|tarija|oruro|potosí|beni|pando|sucre",
@@ -1136,79 +1195,95 @@ _RE_FX = re.compile(
 _BONUS_PORTAL = {"El Deber": 1.15, "Correo del Sur": 1.10, "La Razón": 1.10}
 
 
-def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "",
-                  es_opinion: bool = False) -> float:
-    """Ajusta el score del modelo con reglas editoriales."""
+# ── Escala editorial como TABLA DE DATOS (PR1) ──────────────────────────────
+# Versión de la taxonomía editorial: se estampa en cada nota evaluada (penalizado_por /
+# taxonomia_v) para que el log de salidas atribuya la causa y un pase futuro pueda
+# re-clasificar selectivamente. Arranca en 1; sube con cada cambio de _PENALIZACIONES.
+_TAXONOMIA_V = 1
+
+# _PENALIZACIONES reemplaza la cadena de if de ajustar_score por una estructura iterable
+# recorrida EN ORDEN, preservando la semántica EXACTA de hoy:
+#  - early-return: la PRIMERA penalización que matchea gana y corta.
+#  - orden fijo: deportes → crimen → chisme → contrabando_alim → marihuana → intl → opinión.
+#  - las bonificaciones (instituciones/fx/portal) se acumulan DESPUÉS (ver _bonificaciones).
+# Los factores NACEN EXACTOS a los de hoy (×0.5 incluido); la migración de la escala a
+# {matar ×0.3, rescatar ×0.85} es PR2 — acá NO se re-etiqueta ninguna regla.
+# Campos: nombre (slug estable → penalizado_por, atribución de causa) · etiqueta (rótulo
+# humano → detectar_ajuste) · factor · ambito ('texto'=título+desc, 'titulo'=solo título,
+# 'opinion'=flag es_opinion sin patrón) · patron (regex compilada o None) · gate
+# ('no_bolivia' exige que _RE_BOLIVIA NO matchee, como intl) · activo (Diego desactiva
+# una regla sin borrar código). Mismo patrón que la taxonomía de ASFI (grupo_v / TAXONOMIA_V).
+_Regla = namedtuple("_Regla", "nombre etiqueta factor ambito patron gate activo")
+
+_PENALIZACIONES = (
+    _Regla("deportes",         "deportes",           0.3, "texto",   _RE_DEPORTES,         None,         True),
+    _Regla("crimen",           "crimen",             0.3, "texto",   _RE_CRIMEN,           None,         True),
+    _Regla("chisme",           "chisme",             0.3, "titulo",  _RE_CHISME,           None,         True),
+    _Regla("contrabando_alim", "contrabando alim.",  0.5, "texto",   _RE_CONTRABANDO_ALIM, None,         True),
+    _Regla("marihuana",        "marihuana",          0.5, "texto",   _RE_MARIHUANA,        None,         True),
+    _Regla("intl",             "intl sin Bolivia",   0.5, "texto",   _RE_INTL,             "no_bolivia", True),
+    _Regla("opinion",          "opinión",            0.7, "opinion", None,                 None,         True),
+)
+
+
+def _penalizacion(titulo: str, descripcion: str, es_opinion: bool = False):
+    """Primera penalización que matchea (early-return), o None. Fuente ÚNICA de la escala:
+    la consumen ajustar_score (factor), detectar_ajuste (etiqueta) y evaluar
+    (penalizado_por) — así es imposible que diverjan."""
     texto = (titulo + " " + descripcion).lower()
     tit = titulo.lower()
+    for r in _PENALIZACIONES:
+        if not r.activo:
+            continue
+        if r.ambito == "opinion":
+            if es_opinion:
+                return r
+            continue
+        objetivo = tit if r.ambito == "titulo" else texto
+        if r.patron.search(objetivo):
+            if r.gate == "no_bolivia" and _RE_BOLIVIA.search(texto):
+                continue
+            return r
+    return None
 
-    # Penalización fuerte (x0.3)
-    if _RE_DEPORTES.search(texto):
-        return score * 0.3
-    if _RE_CRIMEN.search(texto):
-        return score * 0.3
-    if _RE_CHISME.search(tit):
-        return score * 0.3
 
-    # Penalización media (x0.5)
-    if _RE_CONTRABANDO_ALIM.search(texto):
-        return score * 0.5
-    if _RE_MARIHUANA.search(texto):
-        return score * 0.5
-    if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
-        return score * 0.5
-
-    # Penalización opinión (x0.7, WS4 funnel-v2): columna/editorial NO se mata
-    # (lleva category='opinion' propia en transform), pero se penaliza y NO recibe
-    # los bonos de portal/FX/instituciones (early-return antes de la bonificación).
-    if es_opinion:
-        return score * 0.7
-
-    # Bonificación instituciones (x1.3, max 1.0)
+def _bonificaciones(texto: str, portal: str):
+    """Bonos acumulables (post-penalización), en orden de aplicación: [(factor, etiqueta)].
+    Fuente única para ajustar_score y detectar_ajuste."""
+    out = []
     menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
     if len(menciones) >= 2:
-        score = min(score * 1.3, 1.0)
-
-    # Bonus FX/divisas (x1.2, max 1.0)
+        out.append((1.3, "instituciones"))
     if _RE_FX.search(texto):
-        score = min(score * 1.2, 1.0)
-
-    # Bonus por portal principal
+        out.append((1.2, "fx"))
     bonus = _BONUS_PORTAL.get(portal, 1.0)
     if bonus > 1.0:
-        score = min(score * bonus, 1.0)
+        out.append((bonus, "portal"))
+    return out
 
+
+def ajustar_score(score: float, titulo: str, descripcion: str, portal: str = "",
+                  es_opinion: bool = False) -> float:
+    """Ajusta el score del modelo con la escala editorial (tabla _PENALIZACIONES + bonos).
+    Semántica idéntica a la cadena de if histórica: penalización early-return, luego bonos."""
+    penal = _penalizacion(titulo, descripcion, es_opinion)
+    if penal is not None:
+        return score * penal.factor
+    texto = (titulo + " " + descripcion).lower()
+    for factor, _ in _bonificaciones(texto, portal):
+        score = min(score * factor, 1.0)
     return score
 
 
 def detectar_ajuste(titulo: str, descripcion: str, portal: str,
                     es_opinion: bool = False) -> str:
-    """Devuelve string descriptivo de qué reglas de ajustar_score se dispararon."""
+    """String descriptivo de qué reglas se dispararon. DERIVADO de la misma tabla que
+    ajustar_score (no es un espejo mantenido a mano → no pueden divergir)."""
+    penal = _penalizacion(titulo, descripcion, es_opinion)
+    if penal is not None:
+        return f"×{penal.factor} {penal.etiqueta}"
     texto = (titulo + " " + descripcion).lower()
-    tit = titulo.lower()
-    if _RE_DEPORTES.search(texto):
-        return "×0.3 deportes"
-    if _RE_CRIMEN.search(texto):
-        return "×0.3 crimen"
-    if _RE_CHISME.search(tit):
-        return "×0.3 chisme"
-    if _RE_CONTRABANDO_ALIM.search(texto):
-        return "×0.5 contrabando alim."
-    if _RE_MARIHUANA.search(texto):
-        return "×0.5 marihuana"
-    if _RE_INTL.search(texto) and not _RE_BOLIVIA.search(texto):
-        return "×0.5 intl sin Bolivia"
-    if es_opinion:
-        return "×0.7 opinión"
-    partes = []
-    menciones = set(m.group().lower() for m in _RE_INSTIT.finditer(texto))
-    if len(menciones) >= 2:
-        partes.append("×1.3 instituciones")
-    if _RE_FX.search(texto):
-        partes.append("×1.2 fx")
-    bonus = _BONUS_PORTAL.get(portal, 1.0)
-    if bonus > 1.0:
-        partes.append(f"×{bonus} portal")
+    partes = [f"×{f} {et}" for f, et in _bonificaciones(texto, portal)]
     return ", ".join(partes) if partes else "—"
 
 
@@ -1592,7 +1667,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                 # score y marca la nota para category='opinion' en transform.build_nota.
                 es_op = es_opinion(item["titulo"], item["link"])
                 (puntaje, tema, tema_hits, entidades, sc_crudo, sc_ajustado,
-                 ajuste, descartado_por) = evaluar(
+                 ajuste, descartado_por, penalizado_por, taxonomia_v) = evaluar(
                     item["titulo"], item["descripcion"], portal, es_opinion=es_op)
                 if puntaje == 0:
                     if descartado_por:
@@ -1602,6 +1677,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                             "link": item["link"], "cuerpo": "", "portales_extra": "",
                             "score_crudo": sc_crudo, "score_ajustado": sc_ajustado,
                             "ajuste_aplicado": ajuste, "descartado_por": descartado_por,
+                            "penalizado_por": penalizado_por, "taxonomia_v": taxonomia_v,
                         })
                     continue
                 todas.append({
@@ -1612,6 +1688,7 @@ def correr_scraper(cache_db_path: Path = CACHE_DB_PATH) -> tuple:
                     "portales_lista": [{"nombre": portal, "url": item["link"]}],
                     "score_crudo": sc_crudo, "score_ajustado": sc_ajustado,
                     "ajuste_aplicado": ajuste, "es_opinion": es_op,
+                    "penalizado_por": penalizado_por, "taxonomia_v": taxonomia_v,
                 })
                 encontrados += 1
 
