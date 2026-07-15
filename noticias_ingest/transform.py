@@ -237,6 +237,11 @@ def build_nota(cand: dict, ahora_utc: datetime | None = None) -> dict:
         "puntaje": cand["puntaje"],
         "score_crudo": cand.get("score_crudo"),
         "score_ajustado": cand.get("score_ajustado"),
+        # Trazabilidad de la escala editorial (WS2 PR1): qué penalización tocó la nota y
+        # con qué versión de taxonomía. Viajan al log de salidas del funnel; NO se persisten
+        # en la tabla noticias (no van a insertar_notas).
+        "penalizado_por": cand.get("penalizado_por", ""),
+        "taxonomia_v": cand.get("taxonomia_v"),
         "created_at_utc": ahora_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 
