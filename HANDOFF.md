@@ -4,7 +4,7 @@ Documento corto que se lee al inicio de cada ticket. Refleja **estado vivo,
 reglas operativas, y áreas en flujo**. Historia detallada y runbooks viven
 aparte (`docs/history.md`, `docs/backups.md`).
 
-Última actualización: 2026-07-10.
+Última actualización: 2026-07-15.
 
 ---
 
@@ -137,31 +137,55 @@ frontend + botón restaurado) · #78 (`df1b60d` loop guard + `8d0451f` logout de
 - Renombrar Worker `finanzasbo-spike` → nombre de prod (legacy engañoso).
 - La config del Access App vive en el dashboard CF, fuera del repo.
 
-### Anatomía del header / top-UI (recon 2026-06-17, base para el rediseño del top)
+### Anatomía del chrome (header + footer) — refresh 2026-07-15
 
-- **Header global = `<nav class="fb-navbar">`** ([template.html:812](template.html#L812)),
-  sticky `top:0; z-index:52`:
-  - Izquierda (`.fb-navbar-left`): `.fb-logo` "FinanzasBo" + `.fb-tabs`. En el
-    template hay 8 botones de tab, pero **prod hornea solo 4** (Noticias
-    [landing/active] · Dólar · Macro · ASFI); los otros 4 (Mercado 24/7 · DPF ·
-    BBV · Guía) están **DESBAKEADOS** (existen en el source, no se inyectan a
-    prod). Inventario completo, estado por tab y mecánica del desbake en § 2
-    "Routing por paths" y "Módulos desbakeados".
-  - Derecha (`.fb-navbar-right`): `#langToggle` (ES | EN, funcional desde
-    `feat/i18n-en` — navegación full-page a la ruta equivalente en el otro
-    idioma, ver § "Interfaz EN (i18n bake-time)" abajo) + `#themeToggle` (SVG
-    luna/sol).
+(Supersede el recon 2026-06-17: la reconstrucción "chrome editorial v3" y el
+re-skin cálido cambiaron la estructura descrita entonces — ya no existen
+`.fb-navbar-left/right`, `.fb-logo` ni `#themeToggle`.)
+
+- **Header global = `<header class="fb-chrome">`** ([template.html:854](template.html#L854)),
+  **NO sticky** (scrollea con la página). Contiene, en orden:
+  - **`.fb-utility`**: fecha (`#fbDate`) a la izquierda; a la derecha
+    "Actualizado" (`#fbUpd` + dot `.fb-live`) y `#langToggle` (ES | EN,
+    navegación full-page a la ruta equivalente en el otro idioma, ver
+    § "Interfaz EN (i18n bake-time)" abajo).
+  - **`.fb-ticker`** ("El día en cifras"): tag fijo + `#fbTickerTrack` vacío en
+    el markup, poblado por `fbRenderTicker()` — data-driven, no admite
+    contenido estático.
+  - **`.fb-masthead`**: grid de 3 zonas `1fr auto 1fr` —
+    `.fb-masthead-left` (**vacía**, `aria-hidden`, solo balancea el grid;
+    `display:none` bajo 980px), `.fb-brand` (nameplate "FinanzasBo" +
+    tagline, centrado), `.fb-masthead-actions` (derecha, `flex-direction:column`;
+    hoy solo contiene el buscador `.fb-search-link` deshabilitado y `hidden` —
+    zona con espacio libre). Bajo 980px el grid colapsa a filas
+    `"actions" / "name"`.
+- **Fila de tabs = `<nav class="fb-navbar">`** ([template.html:886](template.html#L886)),
+  hermana del header (fuera de `.fb-chrome`), sticky `top:0; z-index:52`, con
+  `overflow-x:auto` bajo 980px. Contiene `.fb-tabs`: 8 botones `.fb-tab` en
+  **markup literal** (no loop), cada módulo opcional envuelto en marcadores
+  `bake:optional:<mod>`. Inventario por tab, gate `data-admin-only` (Agro) y
+  mecánica del desbake en § 2 "Routing por paths" y "Módulos desbakeados".
 - **Sub-header por tab** (`.fb-subheader`, sticky `top:var(--nav-h); z-index:51`):
-  `h1` + stats de visitas. Cada tab tiene el suyo.
-- **Botón de login — NO está en el header.** Vive en la barra admin de la tab
-  Noticias (`npAdminBar()`, [template.html:5483](template.html#L5483)), generada
-  por JS y **solo presente con `#admin` en la URL**. Sin sesión muestra "Iniciar
-  sesión" (`data-np-login`) → `npLogin()` navega full-page al **bounce `/v1/login`
-  del Worker** (que el edge gatea → login de Cloudflare Access; flujo completo en
-  §0 "Auth admin"). **Implicación para el top-UI: no hay un botón de login en el header que
-  "reubicar"** — sería colocación net-new, o promover la entrada admin gated.
-- CSS del header: `.fb-navbar` (~L252), `.fb-navbar-left/right` (~L253-254),
-  `.fb-logo` (~L255), `.fb-subheader` (~L266); offset sticky vía `--nav-h`.
+  `h1` + subtitle. Cada tab tiene el suyo; Macro y Agro lo hacen `position:static`.
+- **NO hay toggle de tema ni dark mode.** `#themeToggle`, `body.theme-dark` y
+  `THEMES.slate` se retiraron con el re-skin editorial cálido: `THEMES` solo
+  tiene `paper` ([template.html:2023](template.html#L2023)). Single-theme.
+- **Footer estructural = `<footer class="fb-chrome-foot">`**
+  ([template.html:1996](template.html#L1996)), al fin de la página, no sticky.
+  Un solo hijo: el slot global `#fbFooterSession`. Lo puebla `fbRenderSession()`
+  en cada transición de sesión (init/login/logout/expire): anónimo → botón de
+  login icon-only ghost (`.fb-foot-login`, SVG `currentColor`, opacity .45→1 en
+  hover); admin → email de sesión + `.fb-logout`. `fbRenderSession()` es también
+  quien togglea todos los `[data-admin-only]` (`el.hidden = !npAdmin.isAdmin`).
+- **Botón de login — vive en el footer, NO en el masthead ni en la barra admin
+  de Noticias.** El click (`data-np-login`, listener a nivel `document`) llama
+  `npLogin()` → navegación full-page al **bounce `/v1/login` del Worker** (que
+  el edge gatea → login de Cloudflare Access; flujo completo en §0 "Auth
+  admin"). La barra admin de Noticias (`npAdminBar()`) quedó solo con los
+  controles de edición de ocultas, sin gate `#admin` en la URL.
+- CSS del chrome: `.fb-chrome` (~L271), `.fb-utility` (~L272), `.fb-masthead`
+  (~L310), `.fb-chrome-foot` / `.fb-foot-login` (~L319-324), `.fb-navbar`
+  (~L345), `.fb-subheader` (~L356); offset sticky vía `--nav-h`.
 
 ---
 
