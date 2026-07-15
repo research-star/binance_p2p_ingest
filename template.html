@@ -2017,11 +2017,12 @@ a.fb-social-btn{cursor:pointer}
      anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
      candado real es Cloudflare Access + JWT). -->
 <footer class="fb-chrome-foot" aria-label="{{t:footer.access_aria}}">
-  <!-- Cluster social (4 redes, catálogo FB_SOCIAL): admin-only vía data-admin-only
-       (mismo gate cosmético que Agro/Mercado247, toggleado por fbRenderSession).
-       Botones INERTES mientras url=null ("Próximamente"). Host default: footer.
-       Preview desechable ?social=a1..c3 (fbApplySocialPreview) fuerza visible y
-       lo mueve de host / cambia tratamiento — solo para decidir ubicación. -->
+  <!-- Cluster social (4 redes, catálogo FB_SOCIAL). PREVIEW-ONLY hoy: visible solo
+       con ?social=a1..c3 Y (sesión admin O localhost) — ver fbApplySocialPreview.
+       Sin el param queda oculto para todos, incluido admin. Conserva data-admin-only
+       (gate cosmético como Agro/Mercado247, toggleado por fbRenderSession). Botones
+       INERTES mientras url=null ("Próximamente"). El param mueve el cluster de host
+       (a=footer, b=masthead-derecha, c=masthead-izquierda) y cambia el tratamiento. -->
   <div class="fb-social" id="fbSocialCluster" data-admin-only hidden></div>
   <div id="fbFooterSession"></div>
 </footer>
@@ -6450,21 +6451,36 @@ window.addEventListener('popstate', function(){
     });
     host.innerHTML=out;
   }
-  // Bypass de preview (?social=a1..c3): fuerza el cluster visible en el host y
-  // tratamiento pedidos. Quita data-admin-only para que fbRenderSession deje de
-  // re-ocultarlo en cada transición de sesión. Mecanismo desechable — sin el
-  // param es un no-op absoluto y la página se comporta exactamente como hoy.
+  // localhost/127.0.0.1: en local no hay Cloudflare Access y nunca sos admin, así
+  // que sin esta rama el preview local (el gate de validación de Diego) se pierde.
+  function fbIsLocalPreviewHost(){
+    var h=window.location.hostname;
+    return h==='localhost' || h==='127.0.0.1' || h==='[::1]';
+  }
+  // Preview del cluster social (?social=a1..c3). VISIBLE si y solo si hay param
+  // Y (sesión admin confirmada O localhost). Sin param → oculto para TODOS,
+  // incluido admin (el cluster es preview-only; no tiene función productiva aún).
+  // Se llama DESDE fbRenderSession (init/login/logout/expire): npCheckMe es un
+  // fetch async, al init isAdmin todavía es false — reevaluar en cada transición
+  // es lo que hace aparecer/desaparecer el cluster al loguear/desloguear sin
+  // recargar. El cluster CONSERVA data-admin-only; esta función es la autoridad
+  // final sobre su .hidden (corre después del loop genérico de fbRenderSession).
+  // El move de host y el tratamiento se aplican UNA vez (idempotente).
+  var _fbSocialMoved=false;
   function fbApplySocialPreview(){
-    if(!FB_SOCIAL_PREVIEW) return;
     var cl=document.getElementById('fbSocialCluster'); if(!cl) return;
-    var sel={a:'.fb-chrome-foot', b:'.fb-masthead-actions', c:'.fb-masthead-left'}[FB_SOCIAL_PREVIEW.host];
-    var dest=document.querySelector(sel);
-    if(dest && FB_SOCIAL_PREVIEW.host!=='a'){
-      if(FB_SOCIAL_PREVIEW.host==='c') dest.removeAttribute('aria-hidden');
-      dest.appendChild(cl);
+    var allowed = !!FB_SOCIAL_PREVIEW && (npAdmin.isAdmin || fbIsLocalPreviewHost());
+    if(!allowed){ cl.hidden=true; return; }  // sin param, o sin permiso → oculto
+    if(!_fbSocialMoved){
+      var sel={a:'.fb-chrome-foot', b:'.fb-masthead-actions', c:'.fb-masthead-left'}[FB_SOCIAL_PREVIEW.host];
+      var dest=document.querySelector(sel);
+      if(dest && FB_SOCIAL_PREVIEW.host!=='a'){
+        if(FB_SOCIAL_PREVIEW.host==='c') dest.removeAttribute('aria-hidden');
+        dest.appendChild(cl);
+      }
+      if(FB_SOCIAL_PREVIEW.treat!=='1') cl.classList.add('t'+FB_SOCIAL_PREVIEW.treat);
+      _fbSocialMoved=true;
     }
-    if(FB_SOCIAL_PREVIEW.treat!=='1') cl.classList.add('t'+FB_SOCIAL_PREVIEW.treat);
-    cl.removeAttribute('data-admin-only');
     cl.hidden=false;
   }
   function fbRenderSession(){
@@ -6474,6 +6490,9 @@ window.addEventListener('popstate', function(){
     // admin=true. fbRenderSession corre en toda transición (init/login/logout/expire),
     // así que el toggle sigue el estado de npAdmin.isAdmin sin tocar cada handler.
     document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });
+    // El cluster social lleva data-admin-only (lo tocó el loop de arriba), pero su
+    // visibilidad real la decide el preview: sin ?social= queda oculto aun para admin.
+    fbApplySocialPreview();
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>{{t:footer.logout}}</button></span>';
@@ -6488,7 +6507,9 @@ window.addEventListener('popstate', function(){
     if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
     if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
   });
-  function fbChromeInit(){ fbRenderTicker(); fbRenderSocial(); fbApplySocialPreview(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
+  // fbRenderSocial() construye el markup del cluster (una vez); fbRenderSession()
+  // decide su visibilidad vía fbApplySocialPreview() y se re-llama al resolver npCheckMe.
+  function fbChromeInit(){ fbRenderTicker(); fbRenderSocial(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
 
