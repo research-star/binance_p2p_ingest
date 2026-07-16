@@ -7,21 +7,24 @@
 #   (UTC 00:00–03:55 mar–sáb = 20:00–23:55 BO lun–vie. El TCO se publica a las 20:00
 #    BO pero a veces con minutos de atraso, por eso reintentamos cada 5 min.)
 #
-# Idempotente y AUTO-FRENANTE (clave para correr cada 5 min sin ensuciar el repo):
-#   - Si bcb_tco.json YA tiene una fecha de VIGENCIA futura (> hoy BO), ya capturamos
-#     el valor de esta noche → no hace nada (los ticks restantes son no-op).
-#   - Si no, corre el scraper. Solo commitea/pushea cuando aparece una FECHA NUEVA
-#     (no por el simple bump de `fetched_at`), evitando ~48 commits basura por noche.
-#   - Si el scraper solo re-trae el valor viejo (BCB aún no publicó), descarta el
-#     cambio y reintenta en el próximo tick.
-#   - Autorreparable igual que antes: si una noche nunca se logra, la corrida del
-#     día hábil siguiente lo recupera (el scraper baja una ventana de 14 días atrás).
+# Idempotente. Commitea por CAMBIO DE VALOR (snapshot {fecha:tco}), no solo por
+# fecha nueva — así una REVISIÓN del BCB sobre una fecha ya capturada se guarda en
+# vez de descartarse (el BCB publica un TCO preliminar a las 20:00 y a veces lo
+# corrige más tarde; con el commit-por-fecha viejo esa revisión se perdía). Dos
+# fuentes por corrida:
+#   (A) PORTADA (cada tick): HOY/MAÑANA fresco. SIN auto-freno — sigue mirando toda
+#       la ventana; el snapshot por valor evita commits basura (solo bump de
+#       fetched_at → descarte). Captura revisiones que caen dentro de la misma noche.
+#   (B) HISTÓRICO (1×/noche, gate por stamp): el detalle CSV autoritativo del BCB.
+#       Lagea ~2 días pero corrige revisiones TARDÍAS que la portada ya no muestra.
+#       save_entries reconcilia por vigencia; el snapshot detecta el cambio y commitea.
+#   - Autorreparable: si una noche falla, la corrida siguiente recupera (ventana 14d).
 #
 # Primera corrida / backfill del histórico:
 #   .venv/bin/python ingest_bcb_tco.py --backfill
 #
-# Healthcheck (healthchecks.io): pingea $HC_BCB_TCO en el ÉXITO (captura del valor
-# nuevo) y /fail si el scraper rompe. Sin /start por tick (evita falsos "started").
+# Healthcheck (healthchecks.io): pingea $HC_BCB_TCO en el ÉXITO (commit) y /fail si
+# la portada rompe sin que nada se capture. Sin /start por tick (evita falsos "started").
 set -uo pipefail
 cd /opt/binance_p2p
 
@@ -29,35 +32,35 @@ cd /opt/binance_p2p
 HC="${HC_BCB_TCO:-}"
 hc(){ [ -n "$HC" ] && curl -fsS -m 10 "https://hc-ping.com/${HC}$1" -o /dev/null 2>/dev/null || true; }
 
-# Fecha de hoy en Bolivia (UTC-4, sin DST). El TCO se fecha por su VIGENCIA (el
-# próximo día hábil), así que al capturarlo max(fecha) queda > hoy_bo.
+# Fecha de hoy en Bolivia (UTC-4, sin DST) — usada para el stamp diario de (B).
 hoy_bo=$(date -u -d '-4 hours' +%F)
 
-max_fecha(){
+# Snapshot canónico {fecha:tco} (IGNORA fetched_at) para detectar cambios de VALOR,
+# no solo de fecha. Un cambio aquí = fecha nueva O revisión de una fecha existente.
+snapshot(){
   [ -f bcb_tco.json ] || { echo ""; return 0; }
-  .venv/bin/python -c "import json;d=json.load(open('bcb_tco.json'));print(max((e.get('fecha','') for e in d),default=''))" 2>/dev/null || echo ""
+  .venv/bin/python -c "import json;d=json.load(open('bcb_tco.json'));print(';'.join(f\"{e.get('fecha')}={e.get('tco')}\" for e in sorted(d,key=lambda x:x.get('fecha',''))))" 2>/dev/null || echo ""
 }
 
-# ¿Ya tenemos el valor de esta noche (vigencia futura)? → nada que hacer.
-antes=$(max_fecha)
-if [ -n "$antes" ] && [[ "$antes" > "$hoy_bo" ]]; then
-  exit 0
+antes=$(snapshot)
+
+# (A) Portada — fuente primaria, cada tick.
+portada_ok=1
+.venv/bin/python ingest_bcb_tco.py || portada_ok=0
+
+# (B) Histórico autoritativo — 1×/noche (gate por stamp diario, fuera del índice de
+# git vía .gitignore). Reconcilia días recientes; captura revisiones tardías. Si el
+# fetch falla no crea el stamp → reintenta en el próximo tick.
+STAMP=".tco_histsync_${hoy_bo}"
+if [ ! -f "$STAMP" ]; then
+  rm -f .tco_histsync_*                                   # limpiar stamps de días previos
+  .venv/bin/python ingest_bcb_tco.py --via historico && : > "$STAMP" || true
 fi
 
-# Intento de captura. Si el scraper rompe (red/parse), pingea /fail y sale sin
-# romper el cron; el próximo tick reintenta.
-if ! .venv/bin/python ingest_bcb_tco.py; then
-  hc /fail
-  exit 0
-fi
+despues=$(snapshot)
 
-despues=$(max_fecha)
-# Commitear cuando la fecha máxima AVANZA respecto a lo que ya teníamos (no solo
-# cuando es > hoy): si una noche falla la captura, el valor reaparece al día
-# siguiente como HOY en la portada (fecha == hoy_bo) y también debe guardarse —
-# con la comparación vs hoy_bo esa recuperación diurna se descartaba.
-if [ -n "$despues" ] && { [ -z "$antes" ] || [[ "$despues" > "$antes" ]]; }; then
-  # Capturamos una fecha nueva → commit + push (con reintentos por red).
+if [ "$antes" != "$despues" ]; then
+  # Cambió una fecha o un VALOR → commit + push (con reintentos por red).
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
   git add bcb_tco.json
   git -c user.name="VPS BCB Scraper" \
@@ -67,8 +70,11 @@ if [ -n "$despues" ] && { [ -z "$antes" ] || [[ "$despues" > "$antes" ]]; }; the
     git push origin "$CURRENT_BRANCH" && break || sleep $((2**i))
   done
   hc  # éxito (el dashboard lo recoge el cron de publish */12)
+elif [ "$portada_ok" -eq 0 ]; then
+  # Nada cambió y la portada rompió (red/parse) → señal de falla; próximo tick reintenta.
+  git checkout -- bcb_tco.json 2>/dev/null || true
+  hc /fail
 else
-  # Solo se bumpeó `fetched_at` (mismo valor viejo) → descartar para no commitear
-  # cada 5 min. Reintentará en el próximo tick.
+  # Solo se bumpeó `fetched_at` (mismo valor) → descartar para no commitear cada 5 min.
   git checkout -- bcb_tco.json 2>/dev/null || true
 fi

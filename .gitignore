@@ -112,3 +112,9 @@ design-system/_unzipped/
 # - bcb_referencial.json  → histórico del referencial, necesario para el dashboard
 # - *.py, *.bat, *.md     → código y docs
 .tmp_*
+
+# Stamp diario del reconcile histórico del TCO (bcb_tco_scrape_and_commit.sh):
+# marca "ya bajé el detalle CSV esta noche" para no re-descargarlo en cada tick.
+.tco_histsync_*
+# Volcado crudo de --debug del scraper TCO (inspección manual, regenerable).
+bcb_tco_raw.html

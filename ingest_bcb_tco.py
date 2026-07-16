@@ -404,13 +404,20 @@ def _csv_num(s: str) -> float | None:
 
 
 def parse_tco_csv(text: str) -> list[dict]:
-    """Parser del CSV oficial del BCB (`tco_reporte_detalle_historico.php`).
+    """Parser del CSV oficial del BCB (`tco_tcreferencial_descargar_csv.php`).
 
-    Formato real (verificado 2026-06-29): delimitado por `;`. Por día hay N filas
-    de detalle (una por nivel de precio: `Fecha; TC; <por banco: N°, Monto>...;
-    TOTAL BANCOS N°, Monto`), una fila `TOTAL` y una fila `TCO` con el promedio
-    ponderado ya calculado por el BCB. La columna `TOTAL BANCOS` de la fila `TCO`
-    es el **TCO oficial del día**.
+    Formato real (verificado 2026-07-16, tras el rediseño del reporte): delimitado
+    por `;`. Tres columnas fijas — `Fecha de corte`; `Fecha de vigencia`;
+    `TC (En Bs/USD)` — seguidas de pares (N°, Monto) por banco y una columna final
+    `TOTAL BANCOS`. Por día de corte hay N filas de detalle (una por nivel de
+    precio), una fila `TOTAL` y una fila `TCO`. En la fila `TCO`, la columna
+    `TOTAL BANCOS` es el **TCO oficial del día**, ya calculado por el BCB.
+
+    La fecha que guardamos es la **Fecha de vigencia** (col 1) — la que el BCB usa
+    como vigente y la misma que muestra la portada; así el histórico reconcilia por
+    la misma clave que la portada. El label (`TOTAL`/`TCO`) está en la **col 2**.
+    (El formato anterior — verificado 2026-06-29, label en col 1 y fecha en col 0 —
+    quedó obsoleto cuando el BCB rediseñó el reporte ~jul-2026.)
 
     Estrategia: LEEMOS el TCO publicado (no lo inventamos) y, como chequeo de
     integridad, RECALCULAMOS el promedio ponderado por monto del detalle
@@ -418,46 +425,49 @@ def parse_tco_csv(text: str) -> list[dict]:
     en un mismo archivo (reporte por rango)."""
     rows = list(csv.reader(io.StringIO(text), delimiter=";"))
 
-    # Índice de la columna "TOTAL BANCOS" (desde el header que arranca con 'Fecha')
+    LABEL_COL = 2  # col donde el BCB pone 'TOTAL'/'TCO'/<nivel de precio>
+    VIG_COL = 1    # 'Fecha de vigencia' → la fecha que guardamos
+
+    # Índice de la columna "TOTAL BANCOS" (desde el header que la nombra)
     total_idx = None
     for r in rows:
-        if r and r[0].strip().lower() == "fecha":
-            for i, c in enumerate(r):
-                if "total bancos" in c.lower():
-                    total_idx = i
-                    break
+        for i, c in enumerate(r):
+            if c.strip().lower() == "total bancos":
+                total_idx = i
+                break
+        if total_idx is not None:
             break
 
-    # TCO publicado por fecha (fila etiqueta 'TCO', columna TOTAL BANCOS)
+    # TCO publicado por vigencia (fila etiqueta 'TCO', columna TOTAL BANCOS)
     publicado: dict[str, float] = {}
     for r in rows:
-        if len(r) > 1 and r[1].strip().upper() == "TCO":
-            fecha = parse_fecha(r[0])
+        if len(r) > LABEL_COL and r[LABEL_COL].strip().upper() == "TCO":
+            fecha = parse_fecha(r[VIG_COL]) if len(r) > VIG_COL else None
             if not fecha:
                 continue
             val = None
             if total_idx is not None and total_idx < len(r):
                 val = parse_rate(r[total_idx])
             if val is None:  # fallback: última cotización plausible de la fila
-                cand = [x for x in (parse_rate(c) for c in r[2:]) if x is not None]
+                cand = [x for x in (parse_rate(c) for c in r[LABEL_COL + 1:]) if x is not None]
                 val = cand[-1] if cand else None
             if val is not None:
                 publicado[fecha] = val
 
-    # Recalculo (verificación): Σ(precio×monto)/Σ(monto) del detalle, por fecha
+    # Recalculo (verificación): Σ(precio×monto)/Σ(monto) del detalle, por vigencia
     calc_num: dict[str, float] = {}
     calc_den: dict[str, float] = {}
     if total_idx is not None:
         for r in rows:
-            if len(r) <= total_idx + 1:
+            if len(r) <= total_idx + 1 or len(r) <= LABEL_COL:
                 continue
-            fecha = parse_fecha(r[0])
+            fecha = parse_fecha(r[VIG_COL]) if len(r) > VIG_COL else None
             if not fecha:
                 continue
-            label = r[1].strip().upper()
+            label = r[LABEL_COL].strip().upper()
             if label in ("TCO", "TOTAL"):
                 continue
-            precio = _csv_num(r[1])
+            precio = _csv_num(r[LABEL_COL])
             monto = _csv_num(r[total_idx + 1])
             if precio is None or monto is None or monto <= 0:
                 continue
