@@ -40,6 +40,20 @@ cada push a `main`, **excepto** cuando el único cambio es data BCB
 autocommiteada (`bcb_referencial.json` / `bcb_tco.json` / `bcb_tre.json`) — esos los recoge el
 cron `*/12` en su ciclo normal, no fuerzan publish.
 
+**Watchdog del TCO (revisión del dólar oficial):**
+- **Alerta admin (frontend).** El dashboard computa `meta.bcb_tco_stale` en
+  `dashboard.py:load_bcb_tco` (última vigencia publicada < hoy BO → el histórico
+  dejó de actualizarse) y `template.html` muestra un banner FEO admin-only en la
+  tab Dólar (`#fbTcoStaleAlert`, `fbApplyTcoStaleAlert`, gate `npAdmin.isAdmin`).
+  Cero markup para el público; se revela solo con sesión admin + stale.
+- **Chequeo 22:00 + 07:00 BO.** Routine cloud (`0 2,11 * * *` UTC) que re-scrapea
+  la portada del BCB + reconcilia el histórico y commitea a `main` si el valor
+  cambió (mismo idempotente que el wrapper). El 07:00 BO cubre el hueco matutino
+  que el cron VPS (ventana nocturna 00:00–03:55 UTC) no toca — donde el BCB suele
+  publicar revisiones. Convive con el cron VPS (ambos idempotentes; el routine
+  hace `git pull --rebase` antes de push). Equivalente en cron VPS si se prefiere
+  mover ahí: `0 2,11 * * 2-6`.
+
 > **Estado de hosting (transitorio, cutover 2026-07-06).** El edge productivo/canónico
 > de `finanzasbo.com` (+ `www`) es **Cloudflare Pages** (Direct Upload desde el mismo
 > worktree que publica `gh-pages`). La rama **`gh-pages` NO se retiró**: sigue siendo el
