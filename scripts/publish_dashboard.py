@@ -574,6 +574,62 @@ def deploy_cf_pages():
              f"detail={type(e).__name__}:{str(e)[:200]}")
 
 
+# ── Stubs de ruta para deep-links compartibles (Open Graph) ─────────────────
+# Las rutas de la SPA (/dolar, ...) no tienen archivo propio: 404.html las
+# rebota por JS a /?path=… y activa el tab. Pero los crawlers (Facebook,
+# WhatsApp, Twitter, …) NO ejecutan JS y ven el 404.html pelado, sin tags OG →
+# sin preview. Este stub es un index.html REAL en la ruta: da 200 + tags OG a
+# los bots, y a los humanos los manda a la SPA con el mismo bounce que 404.html.
+_ROUTE_STUBS = (
+    # (subdir, lang, redirect_js, canonical, og_title, og_description)
+    ("dolar", "es", "/?path=/dolar", "https://finanzasbo.com/dolar",
+     "FinanzasBo — Dólar paralelo (USDT/BOB) en Bolivia",
+     "Cotización del dólar paralelo en Bolivia: compra/venta USDT, tipo de "
+     "cambio oficial y evolución histórica, actualizado en tiempo real."),
+    ("en/dolar", "en", "/en/?path=/dolar", "https://finanzasbo.com/en/dolar",
+     "FinanzasBo — Parallel USD (USDT/BOB) in Bolivia",
+     "Bolivia's parallel USD rate: USDT buy/sell, official exchange rate and "
+     "historical trend, updated in real time."),
+)
+
+
+def _route_stub_html(lang: str, og_title: str, og_desc: str,
+                     canonical: str, redirect: str) -> str:
+    """HTML mínimo con tags OG para una ruta SPA. Sin JS pesado: solo un
+    location.replace() que los crawlers ignoran (leen los tags) y los humanos
+    siguen hacia la SPA. og:image reusa el og.png global (1200×630)."""
+    locale = "es_BO" if lang == "es" else "en_US"
+    loading = "Cargando FinanzasBo…" if lang == "es" else "Loading FinanzasBo…"
+    return (
+        '<!DOCTYPE html>\n'
+        f'<html lang="{lang}"><head>\n'
+        '<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">\n'
+        f'<title>{og_title}</title>\n'
+        f'<meta name="description" content="{og_desc}">\n'
+        f'<meta property="og:title" content="{og_title}">\n'
+        f'<meta property="og:description" content="{og_desc}">\n'
+        '<meta property="og:type" content="website">\n'
+        '<meta property="og:site_name" content="FinanzasBo">\n'
+        f'<meta property="og:locale" content="{locale}">\n'
+        '<meta property="og:image" content="https://finanzasbo.com/og.png">\n'
+        '<meta property="og:image:width" content="1200">\n'
+        '<meta property="og:image:height" content="630">\n'
+        f'<meta property="og:url" content="{canonical}">\n'
+        '<meta name="twitter:card" content="summary_large_image">\n'
+        f'<meta name="twitter:title" content="{og_title}">\n'
+        f'<meta name="twitter:description" content="{og_desc}">\n'
+        '<meta name="twitter:image" content="https://finanzasbo.com/og.png">\n'
+        f'<link rel="canonical" href="{canonical}">\n'
+        '<style>html,body{margin:0;background:#F7E4D7;color:#211E1B;'
+        'font:14px/1.4 system-ui,sans-serif}.w{padding:40px 20px;text-align:center}</style>\n'
+        '</head><body>\n'
+        f'<div class="w">{loading}</div>\n'
+        f"<script>location.replace({redirect!r});</script>\n"
+        '</body></html>\n'
+    )
+
+
 def _commit_and_push(t0: float, gen_s: float, new_size: int,
                      n_snap: int, n_rows: int, embi_max: str | None,
                      ipc_max: str | None, ipp_max: str | None,
@@ -605,6 +661,14 @@ def _commit_and_push(t0: float, gen_s: float, new_size: int,
         shutil.copyfile(boletin_src, boletin_dst_dir / "index.html")
     else:
         emit("[publish] mode=warn stage=boletin detail=source_missing_stale_preserved")
+
+    # Stubs de ruta (deep-links compartibles con Open Graph). Ver _ROUTE_STUBS.
+    for seg, lang, redirect, canon, otit, odesc in _ROUTE_STUBS:
+        stub_dir = WORKTREE_PATH / seg
+        stub_dir.mkdir(parents=True, exist_ok=True)
+        (stub_dir / "index.html").write_text(
+            _route_stub_html(lang, otit, odesc, canon, redirect),
+            encoding="utf-8")
 
     if STATIC_DIR.exists():
         # Assets de módulos desbakeados (ej. mercado247-tab.js) NO se copian a

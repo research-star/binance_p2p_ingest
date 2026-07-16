@@ -478,6 +478,7 @@
   "meta.error_banner": "No se pudo cargar el dataset.",
   "meta.error_retry": "Reintentando...",
   "meta.og_description": "Noticias económicas, datos macro y análisis financiero/económico",
+  "meta.og_locale": "es_BO",
   "meta.og_title": "FinanzasBo — Información económica y financiera de Bolivia",
   "meta.title": "FinanzasBo — Información económica y financiera de Bolivia",
   "meta.twitter_description": "Noticias económicas, datos macro y análisis financiero/económico",

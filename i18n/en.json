@@ -478,6 +478,7 @@
   "meta.error_banner": "The dataset could not be loaded.",
   "meta.error_retry": "Retrying...",
   "meta.og_description": "Economic news, macro data, and financial and economic analysis",
+  "meta.og_locale": "en_US",
   "meta.og_title": "FinanzasBo — Economic and financial information on Bolivia",
   "meta.title": "FinanzasBo — Economic and financial information on Bolivia",
   "meta.twitter_description": "Economic news, macro data, and financial and economic analysis",
