@@ -86,7 +86,14 @@ UMBRAL_DEDUP_DB = 0.70
 # o moderadamente similar + entidades compartidas. Conservador (calibración
 # 2026-06-21): preferimos NO fusionar de más (un falso merge esconde una nota).
 UMBRAL_EVENTO_TIT = 0.70   # solo por título (igual al dedupe inter-día)
-UMBRAL_EVENTO_ENT = 0.50   # título moderado, exige ≥1 entidad compartida
+UMBRAL_EVENTO_ENT = 0.50   # título moderado, exige ≥1 entidad/commodity compartida
+# Piso del rescate por MONTO exacto compartido. Más alto que el de entidad (0.50)
+# a propósito: un monto es anclaje MÁS DÉBIL que un commodity — cifras redondas
+# ("$us 2.000 millones") coinciden entre eventos no relacionados, y en esos pares
+# la cifra misma infla token_sort_ratio. Calibración 2026-07-16 (7 pares): mismo-
+# evento ≥0.649 (El Día/Unitel), distinto-evento-mismo-monto ≤0.585 → 0.62 separa
+# con margen. El monto solo rescata pares YA cerca del piso de título 0.70.
+UMBRAL_EVENTO_MONTO = 0.62
 
 # Expresión SQL del carril, robusta a filas legacy (col `carril` aún NULL antes de
 # aplicar 0005 / backfill): usa la columna nueva con fallback a la category vieja
@@ -229,19 +236,26 @@ def titulos_recientes(conn: sqlite3.Connection, dias: int = DEDUPE_DIAS) -> list
 
 
 def es_repetida(titulo: str, entidades, previos: list) -> bool:
-    """¿`titulo` repite una nota de los últimos DEDUPE_DIAS días? Título ≥0.70
-    (UMBRAL_DEDUP_DB), O título ≥0.50 (UMBRAL_EVENTO_ENT) + COMMODITY compartido — el
-    mismo rescate de agrupar_eventos, pero inter-día y SOLO por commodity (par cacao
-    El Deber/El Mundo: 0.697 < 0.70 título, pero comparten 'Cacao'; sin esto el gemelo
-    de una nota ya publicada se re-insertaba al re-scrapearse si se borró su fila).
+    """¿`titulo` repite una nota de los últimos DEDUPE_DIAS días? Tres caminos:
+    (1) título ≥0.70 (UMBRAL_DEDUP_DB); (2) título ≥0.50 (UMBRAL_EVENTO_ENT) +
+    COMMODITY compartido — atrapa el par cacao El Deber/El Mundo (0.697<0.70, comparten
+    'Cacao'); (3) título ≥0.62 (UMBRAL_EVENTO_MONTO) + MONTO exacto compartido — atrapa
+    gemelos sin commodity ni entidad (par El Día/Unitel 2026-07-16: "…cooperación de
+    hasta $us 40 millones", 0.649<0.70, entidades []). El monto usa piso más alto que
+    el commodity porque es anclaje más débil (cifras redondas coinciden entre eventos).
+    La comparación de título usa scraper.clave_dedup (unifica alias de referente:
+    EEUU=Estados Unidos; sin normalizar el resto, para preservar la calibración).
     `previos` = [(título, entidades:set)] de titulos_recientes + appends de la corrida."""
-    limpio = scraper._titulo_limpio(titulo)
+    clave = scraper.clave_dedup(titulo)
     com = set(entidades or []) & scraper.ENTIDADES_COMMODITY
+    mis_montos = scraper.montos(titulo)
     for ptitulo, pents in previos:
-        sim = scraper.similitud(limpio, scraper._titulo_limpio(ptitulo))
+        sim = scraper.similitud(clave, scraper.clave_dedup(ptitulo))
         if sim >= UMBRAL_DEDUP_DB:
             return True
         if com and sim >= UMBRAL_EVENTO_ENT and (com & pents):
+            return True
+        if mis_montos and sim >= UMBRAL_EVENTO_MONTO and (mis_montos & scraper.montos(ptitulo)):
             return True
     return False
 
@@ -270,13 +284,16 @@ def source_tier(slug: str) -> int:
 
 def _mismo_evento(a: dict, b: dict) -> bool:
     """¿a y b cubren el mismo evento? Título muy similar, o moderadamente similar
-    + al menos una entidad canónica compartida."""
-    sim = scraper.similitud(scraper._titulo_limpio(a["title"]),
-                            scraper._titulo_limpio(b["title"]))
+    + una huella compartida (entidad canónica O monto exacto). Título vía
+    scraper.clave_dedup (unifica alias de referente: EEUU=Estados Unidos)."""
+    sim = scraper.similitud(scraper.clave_dedup(a["title"]),
+                            scraper.clave_dedup(b["title"]))
     if sim >= UMBRAL_EVENTO_TIT:
         return True
-    if sim >= UMBRAL_EVENTO_ENT:
-        return bool(set(a.get("entidades") or []) & set(b.get("entidades") or []))
+    if sim >= UMBRAL_EVENTO_ENT and (set(a.get("entidades") or []) & set(b.get("entidades") or [])):
+        return True
+    if sim >= UMBRAL_EVENTO_MONTO and (scraper.montos(a["title"]) & scraper.montos(b["title"])):
+        return True
     return False
 
 
