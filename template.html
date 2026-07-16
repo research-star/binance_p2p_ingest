@@ -393,16 +393,22 @@ a.fb-social-btn{cursor:pointer}
 .fb-kpi-sub{font-size:var(--text-sm);color:var(--text-muted);margin-top:4px}
 /* Deltas día/semana de los 3 primeros KPIs de Dólar, a la derecha del valor.
    Texto en --text-primary (mismo color que el value); el verde/rojo va SOLO en
-   la flecha: verde = le conviene al taker, rojo = no (la dirección de la
-   flecha es el signo del cambio; el color es la lectura). Tonos del set
-   cálido de portada (--down/--up de :root), en literal porque el tema de
-   charts pisa --up en :root en runtime. */
+   la flecha: rojo = sube, verde = baja, uniforme en las 3 cards (el dólar
+   subiendo es la mala noticia). Tonos del set cálido de portada (--down/--up
+   de :root), en literal porque el tema de charts pisa --up en :root en
+   runtime. */
 .fb-kpi-valuerow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .fb-kpi-deltas{display:flex;flex-direction:column;gap:2px}
-.fb-kpi-delta{font-family:var(--font-mono);font-size:var(--text-sm);font-variant-numeric:tabular-nums;line-height:1.25;color:var(--text-primary);white-space:nowrap}
+.fb-kpi-delta{font-family:var(--font-mono);font-size:var(--text-md);font-variant-numeric:tabular-nums;line-height:1.3;color:var(--text-primary);white-space:nowrap}
 .fb-kpi-delta .arr.good{color:#5C7D52}
 .fb-kpi-delta .arr.bad{color:#B5503F}
 .fb-kpi-delta .arr.flat,.fb-kpi-delta.flat{color:var(--text-soft)}
+/* Empuje de los deltas: 5% del espacio libre de la card (calibrado por Diego
+   sobre la maqueta local del 16-jul). El grupo .fb-kpi-dpush ocupa el espacio
+   libre del valuerow y wrappea entero en cards angostas; el spacer interno
+   corre los deltas desde el valor hacia el borde derecho. */
+.fb-kpi-dpush{display:flex;flex:1 1 auto;min-width:0;align-items:center}
+.fb-kpi-dspacer{flex-grow:.05}
 /* ── View toggle pills ── */
 .ds-chip{padding:4px 10px;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s;border-radius:var(--radius-sm)}
 .ds-chip:hover{background:var(--bg-tertiary);color:var(--text-primary)}
@@ -2950,7 +2956,7 @@ function kpi(label,value,sub,iconSvg,colorVar,deltas){
        + '</div>'
        + '<div class="fb-kpi-valuerow">'
        + '<div class="fb-kpi-value"'+(colorVar?' style="color:var(--color-'+colorVar+')"':'')+'>'+value+'</div>'
-       + (deltas?'<div class="fb-kpi-deltas">'+deltas+'</div>':'')
+       + (deltas?'<span class="fb-kpi-dpush"><span class="fb-kpi-dspacer"></span><div class="fb-kpi-deltas">'+deltas+'</div></span>':'')
        + '</div>'
        + '<div class="fb-kpi-sub">'+sub+'</div></div>';
 }
@@ -2961,17 +2967,18 @@ function idxHoursBack(i, horas){
   for(let j=i;j>=0;j--){ if(new Date(TS_ARR[j]).getTime()<=target) return j; }
   return -1;
 }
-// Línea "▲ día, 0.04": flecha = signo del cambio; su color = si le conviene
-// al taker (goodWhenUp: true si una suba lo beneficia). El texto va en
-// --text-primary; el valor en absoluto porque la dirección ya la da la flecha.
-function deltaLine(cur, prev, goodWhenUp, lab){
+// Línea "▲ variación día, 0.04": flecha = signo del cambio; rojo si sube,
+// verde si baja, uniforme en las 3 cards (el dólar subiendo es la mala
+// noticia, sin lectura por lado). El texto va en --text-primary; el valor en
+// absoluto porque la dirección ya la da la flecha.
+function deltaLine(cur, prev, lab){
   if(cur==null||prev==null||!isFinite(cur-prev))
     return '<span class="fb-kpi-delta flat">&mdash; '+lab+'</span>';
   const d=cur-prev;
   if(Math.abs(d)<0.005)
     return '<span class="fb-kpi-delta"><span class="arr flat">=</span> '+lab+', 0.00</span>';
   const up=d>0;
-  return '<span class="fb-kpi-delta"><span class="arr '+((up===goodWhenUp)?'good':'bad')+'">'
+  return '<span class="fb-kpi-delta"><span class="arr '+(up?'bad':'good')+'">'
        + (up?'&#9650;':'&#9660;')+'</span> '+lab+', '+fmt2(Math.abs(d))+'</span>';
 }
 function tcoFechaCorta(f){  // ES "2026-06-30" -> "30 jun" · EN -> "Jun 30"
@@ -3014,18 +3021,17 @@ function updateKpis(){
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
   // Deltas día/semana vs el snapshot activo. P2P: contra el snapshot más
   // cercano 24h/7d atrás. TCO: contra el vigente a esas fechas (bcbTcoAt).
-  // goodWhenUp: comprar (TCO, USDT Compra) empeora si sube; vender mejora.
   const tsNow=new Date(TS_ARR[i]).getTime();
   const iDia=idxHoursBack(i,24), iSem=idxHoursBack(i,168);
   const LAB_D='{{t:dolar.kpi_delta_dia}}', LAB_S='{{t:dolar.kpi_delta_semana}}';
   const tcoAyer=hasTco?bcbTcoAt(tsNow-86400000):null;
   const tcoSem =hasTco?bcbTcoAt(tsNow-7*86400000):null;
-  const dTco   = deltaLine(hasTco?tco.tco:null, tcoAyer?tcoAyer.tco:null, false, LAB_D)
-               + deltaLine(hasTco?tco.tco:null, tcoSem?tcoSem.tco:null, false, LAB_S);
-  const dCompra= deltaLine(last.vb10, iDia>=0?tm.vb10[iDia]:null, false, LAB_D)
-               + deltaLine(last.vb10, iSem>=0?tm.vb10[iSem]:null, false, LAB_S);
-  const dVenta = deltaLine(last.vs10, iDia>=0?tm.vs10[iDia]:null, true, LAB_D)
-               + deltaLine(last.vs10, iSem>=0?tm.vs10[iSem]:null, true, LAB_S);
+  const dTco   = deltaLine(hasTco?tco.tco:null, tcoAyer?tcoAyer.tco:null, LAB_D)
+               + deltaLine(hasTco?tco.tco:null, tcoSem?tcoSem.tco:null, LAB_S);
+  const dCompra= deltaLine(last.vb10, iDia>=0?tm.vb10[iDia]:null, LAB_D)
+               + deltaLine(last.vb10, iSem>=0?tm.vb10[iSem]:null, LAB_S);
+  const dVenta = deltaLine(last.vs10, iDia>=0?tm.vs10[iDia]:null, LAB_D)
+               + deltaLine(last.vs10, iSem>=0?tm.vs10[iSem]:null, LAB_S);
   document.getElementById('kpis').innerHTML=
     '<div class="fb-kpi-wrap"><div class="fb-kpi-grid fb-kpi-grid--4">'+
     kpi('{{t:dolar.kpi_bcb_ref}}', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null, dTco)+
