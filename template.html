@@ -3390,25 +3390,53 @@ function downloadPanelPng(panelId){
     // Solo lo que se ve: una serie apagada queda en 'legendonly' → ocultarla del
     // todo para que no aparezca griseada en la leyenda ni se dibuje.
     data.forEach(t=>{ if(t && t.visible==='legendonly') t.visible=false; });
-    // Una etiqueta de último valor por serie CON entrada de leyenda (las trazas
-    // auxiliares — extensiones/compañeras de hover — van con showlegend:false y se
-    // saltan, así no hay etiquetas duplicadas).
-    const valAnns=[];
+    // Renombres SOLO para la leyenda del PNG: no tocan la vista ni el matching de
+    // toggles (que compara contra los tokens crudos de trace_*). El mapa se indexa
+    // por el name YA horneado, así funciona en ES y EN.
+    const DL_NAME={};
+    DL_NAME['{{t:dolar.trace_vwap_compra}}']='{{t:dolar.dl_leg_binance_compra}}';
+    DL_NAME['{{t:dolar.trace_vwap_venta}}'] ='{{t:dolar.dl_leg_binance_venta}}';
+    DL_NAME['{{t:dolar.trace_tco}}']        ='{{t:dolar.dl_leg_tco}}';
+    DL_NAME['{{t:dolar.trace_tco_ref}}']    ='{{t:dolar.dl_leg_tco_ref}}';
+    data.forEach(t=>{ if(t && t.name && DL_NAME[t.name]) t.name=DL_NAME[t.name]; });
+    // Fuente grande (el PNG es ~1000-1300px de ancho; 11-13px eran ilegibles).
+    const FS_LEG=Math.max(18, Math.round(W/56));
+    const FS_VAL=Math.max(20, Math.round(W/48));
+    // Última etiqueta de valor por serie CON entrada de leyenda (auxiliares con
+    // showlegend:false se saltan → sin duplicados). Con FLECHA al punto y
+    // ESCALONADAS en vertical (píxeles) para que NO se encimen dos valores cercanos.
+    const marks=[];
     data.forEach(t=>{
       if(!t || t.visible===false || t.showlegend===false || !t.name) return;
       const ys=t.y||[]; let i=ys.length-1;
       while(i>=0 && (ys[i]==null || !isFinite(ys[i]))) i--;
       if(i<0 || !t.x || t.x[i]==null) return;
       const col=(t.line&&t.line.color) || (t.marker&&t.marker.color) || '#211E1B';
-      valAnns.push({x:t.x[i], y:ys[i], xref:'x', yref:'y', xanchor:'left', yanchor:'middle',
-        xshift:8, showarrow:false, text:'<b>'+Number(ys[i]).toFixed(2)+'</b>',
-        font:{family:'Outfit', size:13, color:(typeof col==='string'?col:'#211E1B')},
-        bgcolor:'rgba(255,247,240,0.72)', borderpad:1});
+      marks.push({x:t.x[i], y:Number(ys[i]), col:(typeof col==='string'?col:'#211E1B')});
+    });
+    // Rango Y (del layout o de los datos) para medir cuándo dos etiquetas quedan cerca.
+    let ylo=Infinity, yhi=-Infinity;
+    const yr=layout.yaxis && layout.yaxis.range;
+    if(yr && yr.length===2){ ylo=Math.min(yr[0],yr[1]); yhi=Math.max(yr[0],yr[1]); }
+    else { marks.forEach(mk=>{ if(mk.y<ylo)ylo=mk.y; if(mk.y>yhi)yhi=mk.y; }); }
+    const span=(yhi-ylo)||1, closeGap=span*0.07, stepPx=FS_VAL+8;
+    marks.sort((a,b)=>b.y-a.y);
+    const valAnns=[]; let prevY=null, prevAy=0;
+    marks.forEach(mk=>{
+      let ay=0;                                   // desplazamiento vertical en píxeles
+      if(prevY!=null && (prevY-mk.y)<closeGap) ay=prevAy+stepPx;
+      prevY=mk.y; prevAy=ay;
+      valAnns.push({x:mk.x, y:mk.y, xref:'x', yref:'y', ax:46, ay:ay, axref:'pixel', ayref:'pixel',
+        showarrow:true, arrowhead:2, arrowsize:1.1, arrowwidth:1.6, arrowcolor:mk.col,
+        xanchor:'left', yanchor:'middle', text:'<b>'+mk.y.toFixed(2)+'</b>',
+        font:{family:'Outfit', size:FS_VAL, color:mk.col},
+        bgcolor:'rgba(255,247,240,0.9)', borderpad:3});
     });
     layout.showlegend=true;
-    layout.legend=Object.assign({}, layout.legend, {orientation:'h', y:1.06, yanchor:'bottom', x:0, xanchor:'left'});
+    const legFont=Object.assign({family:'Outfit'}, (layout.legend&&layout.legend.font)||{}, {size:FS_LEG});
+    layout.legend=Object.assign({}, layout.legend, {orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:legFont});
     const m=layout.margin||{};
-    layout.margin=Object.assign({}, m, {t:Math.max(m.t||32,56), r:Math.max(m.r||16,72)});
+    layout.margin=Object.assign({}, m, {t:Math.max(m.t||32, FS_LEG*3+10), r:Math.max(m.r||16, 140)});
     layout.annotations=(layout.annotations||[]).concat(valAnns);
 
     const tmp=document.createElement('div');
