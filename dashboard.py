@@ -529,8 +529,16 @@ def load_bcb_tco(first_date: str | None = None) -> dict:
     está vacío, devuelve None/[] y el frontend cae al fijo 6.96.
 
     first_date (YYYY-MM-DD): filtra el histórico para el gráfico; el último valor
-    se conserva siempre (bcb_tco_last) para la KPI aunque caiga fuera de rango."""
-    out = {'bcb_tco_last': None, 'bcb_tco_fecha': None, 'bcb_tco_history': []}
+    se conserva siempre (bcb_tco_last) para la KPI aunque caiga fuera de rango.
+
+    Emite además `bcb_tco_stale` (+ `bcb_tco_today_bo`) para la alerta admin del
+    frontend: el TCO se fecha por su VIGENCIA (próximo día hábil), que para un
+    histórico fresco es SIEMPRE >= hoy BO (RD 88/2026, incl. regla de fin de
+    semana). Si la última vigencia publicada quedó ANTES de hoy BO, el ingest dejó
+    de actualizar el histórico → alerta."""
+    today_bo = (datetime.now(timezone.utc) - timedelta(hours=4)).date().isoformat()
+    out = {'bcb_tco_last': None, 'bcb_tco_fecha': None, 'bcb_tco_history': [],
+           'bcb_tco_today_bo': today_bo, 'bcb_tco_stale': False}
     try:
         if BCB_TCO_FILE.exists():
             data = json.loads(BCB_TCO_FILE.read_text(encoding='utf-8'))
@@ -550,6 +558,8 @@ def load_bcb_tco(first_date: str | None = None) -> dict:
                         out['bcb_tco_history'] = filled
     except Exception:
         pass
+    # Última vigencia publicada < hoy BO → el histórico no se está actualizando.
+    out['bcb_tco_stale'] = bool(out['bcb_tco_fecha'] and out['bcb_tco_fecha'] < today_bo)
     return out
 
 
