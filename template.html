@@ -322,29 +322,18 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-foot-login:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
 .fb-foot-login:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
 .fb-chrome-foot .fb-session{font-size:12px;color:var(--text-soft)}
-/* ── Cluster social (catálogo FB_SOCIAL; preview ?social=a1..c3) ──
-   Tratamiento base (t1 implícito) = clon de .fb-foot-login (icon-only ghost).
-   .t2 = mono presente (opacity .8 + label kicker "Seguinos").
-   .t3 = color de marca por red (var --fb-social-brand inyectada por el render). */
+/* ── Cluster social (catálogo FB_SOCIAL) — footer, junto al login. Admin-only.
+   Mono presente: currentColor, opacity .8 en reposo → 1 en hover. Más presente
+   que .fb-foot-login (.45), asimetría deliberada: el login es utilitario, los
+   sociales son invitación. */
 .fb-social{display:inline-flex;align-items:center;gap:6px}
 .fb-social[hidden]{display:none} /* el display:inline-flex de arriba pisaría el [hidden] de UA — sin esta regla el gate admin no oculta nada */
 .fb-chrome-foot .fb-social{margin-right:10px}
-.fb-social-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.45;cursor:default;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
+.fb-social-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.8;cursor:default;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
 .fb-social-btn svg{width:15px;height:15px}
 .fb-social-btn:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
 .fb-social-btn:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
 a.fb-social-btn{cursor:pointer}
-.fb-social-label{display:none;font-family:var(--font-body);font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted);margin-right:4px;white-space:nowrap}
-.fb-social.t2 .fb-social-label{display:inline}
-.fb-social.t2 .fb-social-btn{opacity:.8}
-.fb-social.t3 .fb-social-btn{opacity:1;color:var(--fb-social-brand,var(--text-soft))}
-.fb-social.t3 .fb-social-btn:hover{color:var(--fb-social-brand,var(--text-secondary))}
-/* Hosts del masthead (preview b/c): fila propia dentro de la columna actions;
-   en la zona izquierda alinea al inicio. Bajo 980px .fb-masthead-left es
-   display:none → la variante c desaparece en mobile (a propósito, es dato
-   para la decisión; no tocar el media query por el preview). */
-.fb-masthead-actions .fb-social{align-self:flex-end}
-.fb-masthead-left .fb-social{justify-content:flex-start}
 .fb-login,.fb-search-link{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.02em;background:none;border:none;border-bottom:1px solid transparent;padding:2px 0;text-align:left;white-space:nowrap}
 .fb-login svg,.fb-search-link svg{width:14px;height:14px;opacity:.7;flex-shrink:0}
 .fb-login{color:var(--text-secondary);cursor:pointer;transition:color .15s,border-color .15s}
@@ -2017,12 +2006,9 @@ a.fb-social-btn{cursor:pointer}
      anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
      candado real es Cloudflare Access + JWT). -->
 <footer class="fb-chrome-foot" aria-label="{{t:footer.access_aria}}">
-  <!-- Cluster social (4 redes, catálogo FB_SOCIAL). PREVIEW-ONLY hoy: visible solo
-       con ?social=a1..c3 Y (sesión admin O localhost) — ver fbApplySocialPreview.
-       Sin el param queda oculto para todos, incluido admin. Conserva data-admin-only
-       (gate cosmético como Agro/Mercado247, toggleado por fbRenderSession). Botones
-       INERTES mientras url=null ("Próximamente"). El param mueve el cluster de host
-       (a=footer, b=masthead-derecha, c=masthead-izquierda) y cambia el tratamiento. -->
+  <!-- Cluster social (4 redes, catálogo FB_SOCIAL). Admin-only: data-admin-only
+       (gate cosmético como Agro/Mercado247, toggleado por fbRenderSession).
+       Botones INERTES mientras url=null ("Próximamente"). -->
   <div class="fb-social" id="fbSocialCluster" data-admin-only hidden></div>
   <div id="fbFooterSession"></div>
 </footer>
@@ -2060,19 +2046,6 @@ const SEMANTIC_VAR_FALLBACKS = {
   'color-neutral':'blue-accent','color-accent-warm':'orange'
 };
 let currentView='snapshot', activeThemeValues={...THEMES.paper};
-
-// Preview desechable del cluster social (?social=a1..c3). Se captura ACÁ,
-// antes del init del router: ese init hace history.replaceState (deep-links
-// vía ?path= y fallback a '/') y borra el query string de la barra. El router
-// solo lee ?path — ?social no colisiona con el routing, pero hay que leerlo
-// antes de que la reescritura lo descarte. host: a=footer b=masthead-derecha
-// c=masthead-izquierda · treat: 1=mono tenue 2=mono presente 3=marca.
-var FB_SOCIAL_PREVIEW=(function(){
-  try{
-    var m=/^([abc])([123])$/.exec(new URLSearchParams(window.location.search).get('social')||'');
-    return m?{host:m[1],treat:m[2]}:null;
-  }catch(e){ return null; }
-})();
 
 // ═══ UTILS ═══
 const NF_INT = new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
@@ -6428,8 +6401,9 @@ window.addEventListener('popstate', function(){
   // url_app queda RESERVADO (p.ej. Facebook-en-iOS) — hoy null y sin lógica de
   // resolución. Glifos oficiales (paths fill de cada marca, viewBox 24): la
   // convención stroke-2 del chrome no aplica a logos de marca — un logo
-  // redibujado a stroke deforma el glifo; se colorean vía fill=currentColor
-  // (t1/t2) o var --fb-social-brand (t3).
+  // redibujado a stroke deforma el glifo; se colorean vía fill=currentColor.
+  // `brand` (hex oficial de cada red) queda como dato del catálogo, sin consumo
+  // en el render actual (el tratamiento elegido es monocromo).
   var FB_SOCIAL=[
     { id:'whatsapp', label:'{{t:social.wa_label}}', brand:'#25D366', icon:'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z', url:null, url_app:null, visible:true },
     { id:'facebook', label:'{{t:social.fb_label}}', brand:'#1877F2', icon:'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', url:null, url_app:null, visible:true },
@@ -6438,50 +6412,17 @@ window.addEventListener('popstate', function(){
   ];
   function fbRenderSocial(){
     var host=document.getElementById('fbSocialCluster'); if(!host) return;
-    var out='<span class="fb-social-label">{{t:social.follow_label}}</span>';
+    var out='';
     FB_SOCIAL.forEach(function(s){
       if(!s.visible) return;
       var svg='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="'+s.icon+'"/></svg>';
-      var style=' style="--fb-social-brand:'+s.brand+'"';
       if(s.url){
-        out+='<a class="fb-social-btn" data-social="'+s.id+'" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+s.label+'" aria-label="'+s.label+'"'+style+'>'+svg+'</a>';
+        out+='<a class="fb-social-btn" data-social="'+s.id+'" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+s.label+'" aria-label="'+s.label+'">'+svg+'</a>';
       }else{
-        out+='<button class="fb-social-btn" type="button" data-social="'+s.id+'" aria-disabled="true" title="'+s.label+' — {{t:social.soon}}" aria-label="'+s.label+' — {{t:social.soon}}"'+style+'>'+svg+'</button>';
+        out+='<button class="fb-social-btn" type="button" data-social="'+s.id+'" aria-disabled="true" title="'+s.label+' — {{t:social.soon}}" aria-label="'+s.label+' — {{t:social.soon}}">'+svg+'</button>';
       }
     });
     host.innerHTML=out;
-  }
-  // localhost/127.0.0.1: en local no hay Cloudflare Access y nunca sos admin, así
-  // que sin esta rama el preview local (el gate de validación de Diego) se pierde.
-  function fbIsLocalPreviewHost(){
-    var h=window.location.hostname;
-    return h==='localhost' || h==='127.0.0.1' || h==='[::1]';
-  }
-  // Preview del cluster social (?social=a1..c3). VISIBLE si y solo si hay param
-  // Y (sesión admin confirmada O localhost). Sin param → oculto para TODOS,
-  // incluido admin (el cluster es preview-only; no tiene función productiva aún).
-  // Se llama DESDE fbRenderSession (init/login/logout/expire): npCheckMe es un
-  // fetch async, al init isAdmin todavía es false — reevaluar en cada transición
-  // es lo que hace aparecer/desaparecer el cluster al loguear/desloguear sin
-  // recargar. El cluster CONSERVA data-admin-only; esta función es la autoridad
-  // final sobre su .hidden (corre después del loop genérico de fbRenderSession).
-  // El move de host y el tratamiento se aplican UNA vez (idempotente).
-  var _fbSocialMoved=false;
-  function fbApplySocialPreview(){
-    var cl=document.getElementById('fbSocialCluster'); if(!cl) return;
-    var allowed = !!FB_SOCIAL_PREVIEW && (npAdmin.isAdmin || fbIsLocalPreviewHost());
-    if(!allowed){ cl.hidden=true; return; }  // sin param, o sin permiso → oculto
-    if(!_fbSocialMoved){
-      var sel={a:'.fb-chrome-foot', b:'.fb-masthead-actions', c:'.fb-masthead-left'}[FB_SOCIAL_PREVIEW.host];
-      var dest=document.querySelector(sel);
-      if(dest && FB_SOCIAL_PREVIEW.host!=='a'){
-        if(FB_SOCIAL_PREVIEW.host==='c') dest.removeAttribute('aria-hidden');
-        dest.appendChild(cl);
-      }
-      if(FB_SOCIAL_PREVIEW.treat!=='1') cl.classList.add('t'+FB_SOCIAL_PREVIEW.treat);
-      _fbSocialMoved=true;
-    }
-    cl.hidden=false;
   }
   function fbRenderSession(){
     // Tabs admin-only (ej. Mercado 24/7): visibles SOLO con sesión admin confirmada.
@@ -6490,9 +6431,6 @@ window.addEventListener('popstate', function(){
     // admin=true. fbRenderSession corre en toda transición (init/login/logout/expire),
     // así que el toggle sigue el estado de npAdmin.isAdmin sin tocar cada handler.
     document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });
-    // El cluster social lleva data-admin-only (lo tocó el loop de arriba), pero su
-    // visibilidad real la decide el preview: sin ?social= queda oculto aun para admin.
-    fbApplySocialPreview();
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>{{t:footer.logout}}</button></span>';
@@ -6507,8 +6445,9 @@ window.addEventListener('popstate', function(){
     if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
     if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
   });
-  // fbRenderSocial() construye el markup del cluster (una vez); fbRenderSession()
-  // decide su visibilidad vía fbApplySocialPreview() y se re-llama al resolver npCheckMe.
+  // fbRenderSocial() construye el markup del cluster (una vez); su visibilidad la
+  // gobierna el loop [data-admin-only] de fbRenderSession, que se re-llama en cada
+  // transición de sesión (init/login/logout/expire, incluido el resolve de npCheckMe).
   function fbChromeInit(){ fbRenderTicker(); fbRenderSocial(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
