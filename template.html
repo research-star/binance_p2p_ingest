@@ -3359,11 +3359,19 @@ function downloadPanelPng(panelId){
   const div=document.getElementById(divId);
   if(!div||!window.Plotly||!Plotly.downloadImage) return;
   const r=div.getBoundingClientRect();
+  // Fondo opaco = color de la página. Los charts tienen paper/plot transparentes
+  // (BL: paper_bgcolor/plot_bgcolor rgba(0,0,0,0)); sin setBackground el PNG sale
+  // transparente y los visores lo muestran con fondo negro. Se lee en vivo para
+  // respetar el tema activo, con fallback al beige --bg-primary.
+  let bg;
+  try{ bg=getComputedStyle(document.body).backgroundColor; }catch(e){}
+  if(!bg || bg==='rgba(0, 0, 0, 0)' || bg==='transparent') bg=cssVar('--bg-primary','#F7E4D7');
   Plotly.downloadImage(div, {
     format:'png',
     filename: panelId+'_'+_stamp(),
     width: Math.max(800, Math.round(r.width)||1200),
-    height:Math.max(400, Math.round(r.height)||500)
+    height:Math.max(400, Math.round(r.height)||500),
+    setBackground: bg
   });
 }
 
