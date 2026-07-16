@@ -839,6 +839,11 @@ a.fb-social-btn{cursor:pointer}
 .np-admin-note{flex-basis:100%;font-size:11.5px;line-height:1.45;padding:7px 11px;border-radius:var(--radius-sm)}
 .np-admin-note.info{background:color-mix(in srgb,var(--up) 9%,transparent);border:1px solid color-mix(in srgb,var(--up) 30%,transparent);color:var(--text-secondary)}
 .np-admin-note.warn{background:color-mix(in srgb,var(--orange) 12%,transparent);border:1px solid color-mix(in srgb,var(--orange) 38%,transparent);color:var(--text-primary)}
+/* Alerta admin FEA a propósito (data del TCO sin actualizar). Solo visible con
+   sesión admin + histórico stale (fbApplyTcoStaleAlert). Ruidosa por diseño. */
+.fb-tco-alert{margin:0 0 16px;padding:14px 18px;border:3px dashed #b91c1c;background:repeating-linear-gradient(45deg,#fee2e2,#fee2e2 12px,#fecaca 12px,#fecaca 24px);color:#7f1d1d;font-family:var(--font-mono,ui-monospace,monospace);font-weight:800;font-size:13.5px;letter-spacing:.02em;text-transform:uppercase;line-height:1.45;box-shadow:0 0 0 3px #fca5a5}
+.fb-tco-alert b{color:#450a0a;text-decoration:underline}
+.fb-tco-alert[hidden]{display:none}
 /* control por-nota: botón de ocultar anclado a la esquina del wrapper (solo en modo edición) */
 [data-note-id]{position:relative}
 .np-hide-btn{position:absolute;top:6px;right:6px;z-index:4;width:26px;height:26px;font-size:13px;line-height:1;background:var(--bg-secondary);box-shadow:var(--shadow-md)}
@@ -922,6 +927,9 @@ a.fb-social-btn{cursor:pointer}
     <div class="fb-subtitle">{{t:dolar.subtitle}} <span id="lastUpdateStamp">&mdash;</span></div>
   </div>
 </div>
+
+<!-- Alerta admin (solo admin + histórico TCO stale; la puebla fbApplyTcoStaleAlert) -->
+<div id="fbTcoStaleAlert" class="fb-tco-alert" role="alert" hidden></div>
 
 <div id="kpis"></div>
 
@@ -6424,6 +6432,20 @@ window.addEventListener('popstate', function(){
     });
     host.innerHTML=out;
   }
+  // Alerta admin: el histórico del TCO no se está actualizando (meta.bcb_tco_stale
+  // lo computa dashboard.py: última vigencia publicada < hoy BO). Visible SOLO con
+  // sesión admin confirmada + stale. Corre desde fbRenderSession (init/login/…),
+  // su .hidden lo decide esta función (no el loop genérico de data-admin-only, que
+  // revelaría para todo admin aun sin problema).
+  function fbApplyTcoStaleAlert(){
+    var el=document.getElementById('fbTcoStaleAlert'); if(!el) return;
+    if(!(npAdmin.isAdmin && typeof meta!=='undefined' && meta.bcb_tco_stale)){ el.hidden=true; return; }
+    var f=meta.bcb_tco_fecha||'?', hoy=meta.bcb_tco_today_bo||'?';
+    el.innerHTML='⚠ TCO SIN ACTUALIZAR — el histórico del BCB no avanza. '
+      +'Última vigencia capturada: <b>'+ntEsc(f)+'</b> · hoy BO es <b>'+ntEsc(hoy)+'</b>. '
+      +'Revisá el scraper/cron del TCO (bcb_tco_scrape_and_commit.sh).';
+    el.hidden=false;
+  }
   function fbRenderSession(){
     // Tabs admin-only (ej. Mercado 24/7): visibles SOLO con sesión admin confirmada.
     // Mismo gate anti-flash que el resto de la UI admin — ocultas por `hidden` en el
@@ -6431,6 +6453,7 @@ window.addEventListener('popstate', function(){
     // admin=true. fbRenderSession corre en toda transición (init/login/logout/expire),
     // así que el toggle sigue el estado de npAdmin.isAdmin sin tocar cada handler.
     document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });
+    fbApplyTcoStaleAlert();
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
       slot.innerHTML='<span class="fb-session"><span class="fb-session-mail" title="'+ntEsc(npAdmin.email||'admin')+'">'+ntEsc(npAdmin.email||'admin')+'</span><span class="fb-session-sep" aria-hidden="true">&middot;</span><button class="fb-logout" type="button" data-np-logout>{{t:footer.logout}}</button></span>';
