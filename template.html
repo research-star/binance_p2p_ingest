@@ -409,6 +409,21 @@ a.fb-social-btn{cursor:pointer}
    corre los deltas desde el valor hacia el borde derecho. */
 .fb-kpi-dpush{display:flex;flex:1 1 auto;min-width:0;align-items:center}
 .fb-kpi-dspacer{flex-grow:.05}
+/* Balance de ancho de cards (toggle solo-admin, evaluable): la card 1 (TCO,
+   único value doble "10.75 / 10.85") recibe ~el ancho de "/ 10.85" (~105px de
+   mono 22px, repartido 79px a favor / 26px cedidos por cada una de las otras
+   3) para emparejar el espacio muerto tras la variación. 25% - 7.5px = cuarto
+   exacto del track descontando los 3 gaps de 10px. Solo desktop: en el
+   colapso a 3 col (<=900px) y el carrusel móvil no aplica. */
+@media(min-width:901px){
+  .fb-kpi-grid--4.fb-kpi-grid--w1{--kpi-w1:79px;grid-template-columns:calc(25% - 7.5px + var(--kpi-w1)) calc(25% - 7.5px - var(--kpi-w1)/3) calc(25% - 7.5px - var(--kpi-w1)/3) calc(25% - 7.5px - var(--kpi-w1)/3)}
+}
+/* El botón del toggle existe siempre en el DOM pero solo se muestra con la
+   marca global de admin (html[data-fb-admin], stampeada por npCheckMe tras
+   /v1/me) — así aparece aunque el admin resuelva después del render. */
+.fb-kpi-w1-btn{display:none}
+html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:3px 8px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--text-muted);font-family:var(--font-mono);font-size:var(--text-xs);cursor:pointer}
+.fb-kpi-w1-btn.on{color:var(--text-primary);border-color:var(--line-strong)}
 /* ── View toggle pills ── */
 .ds-chip{padding:4px 10px;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:500;border:1px solid var(--border-color);background:transparent;color:var(--text-secondary);cursor:pointer;margin-right:-1px;transition:all .15s;border-radius:var(--radius-sm)}
 .ds-chip:hover{background:var(--bg-tertiary);color:var(--text-primary)}
@@ -3032,13 +3047,25 @@ function updateKpis(){
                + deltaLine(last.vb10, iSem>=0?tm.vb10[iSem]:null, LAB_S);
   const dVenta = deltaLine(last.vs10, iDia>=0?tm.vs10[iDia]:null, LAB_D)
                + deltaLine(last.vs10, iSem>=0?tm.vs10[iSem]:null, LAB_S);
+  // Toggle solo-admin "TCO ancho" (balance de anchos, ver CSS .fb-kpi-grid--w1).
+  // El estado vive en localStorage del browser del admin; el botón está en el
+  // DOM siempre pero solo es visible con html[data-fb-admin] (gate CSS).
+  let w1On=false;
+  try{ w1On = localStorage.getItem('fbKpiW1')==='1'; }catch(e){}
   document.getElementById('kpis').innerHTML=
-    '<div class="fb-kpi-wrap"><div class="fb-kpi-grid fb-kpi-grid--4">'+
+    '<div class="fb-kpi-wrap"><div class="fb-kpi-grid fb-kpi-grid--4'+(w1On?' fb-kpi-grid--w1':'')+'">'+
     kpi('{{t:dolar.kpi_bcb_ref}}', fmt2(refCompra)+' / '+fmt2(refVenta), bcbSub, ICONS.bcb, null, dTco)+
     kpi('{{t:dolar.kpi_usdt_compra}}', fmt2(last.vb10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.venta, 'buy', dCompra)+
     kpi('{{t:dolar.kpi_usdt_venta}}', fmt2(last.vs10), '{{t:dolar.kpi_sub_bob_usdt}}', ICONS.compra, 'sell', dVenta)+
     kpi('{{t:dolar.kpi_profundidad}}', buyDepth+' / '+sellDepth, '{{t:dolar.kpi_prof_sub}}', ICONS.profundidad, null)+
-    '</div></div>';
+    '</div>'+
+    '<button type="button" class="fb-kpi-w1-btn'+(w1On?' on':'')+'" id="kpiW1Btn">{{t:dolar.kpi_w1_btn}}: '+(w1On?'ON':'OFF')+'</button>'+
+    '</div>';
+  const w1Btn=document.getElementById('kpiW1Btn');
+  if(w1Btn) w1Btn.addEventListener('click', function(){
+    try{ localStorage.setItem('fbKpiW1', w1On?'0':'1'); }catch(e){}
+    updateKpis();
+  });
 }
 const DASHBOARD_VERSION='v0.3.0';
 const lastTsFmt=new Date(meta.last_ts).toLocaleString(FB_LANG==='es'?'es-BO':'en-US',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'America/La_Paz'});
@@ -6295,6 +6322,7 @@ window.addEventListener('popstate', function(){
   // 401/403 mid-uso ⇒ sesión expirada: comunicar + re-login, sin romper en silencio.
   function npAuthExpired(){
     npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
+    document.documentElement.removeAttribute('data-fb-admin');
     npClearHint();  // sesión muerta = logout forzado: limpiar hint para no re-probar al próximo load
     npAdmin.notice={ kind:'warn', text:'{{t:noticias.notice_session_expired}}' };
     fbRenderSession(); npRerender();
@@ -6308,8 +6336,11 @@ window.addEventListener('popstate', function(){
       .then(function(r){ return r.ok ? r.json() : null; })
       .then(function(d){
         npAdmin.checked=true;
-        if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; npSetHint(); }
-        else { npAdmin.isAdmin=false; npClearHint(); }  // 302/401: el hint mentía o la sesión cayó
+        // La marca html[data-fb-admin] es el gate GLOBAL de controles admin
+        // fuera de Noticias (hoy: toggle "TCO ancho" de los KPIs de Dólar);
+        // espeja npAdmin.isAdmin vía CSS, sin re-render de las otras tabs.
+        if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; npSetHint(); document.documentElement.setAttribute('data-fb-admin','1'); }
+        else { npAdmin.isAdmin=false; npClearHint(); document.documentElement.removeAttribute('data-fb-admin'); }  // 302/401: el hint mentía o la sesión cayó
         fbRenderSession(); if(ntBuilt) npRerender();
       })
       .catch(function(){ npAdmin.checked=true; npAdmin.isAdmin=false; fbRenderSession(); if(ntBuilt) npRerender(); });  // red transitoria: NO limpiar hint, reintenta al próximo load
