@@ -5774,7 +5774,18 @@ window.addEventListener('popstate', function(){
   // opinión, se promueve la primera nota NO-opinión al lead (portada) y la de opinión
   // baja al tope de "Lo más relevante hoy" (swap portada ↔ primer relevante). El resto
   // del orden queda estable. Si TODO el día es opinión, no hay a quién promover → sin cambio.
-  function ntEsOpinion(n){ return !!(n && n.category==='opinion'); }
+  // Byline de columna/tertulia SIN tag backend: algunos medios (ej. Brújula) rotulan la
+  // columna con "|SECCIÓN EN MAYÚSCULAS|Título…" y NO la publican bajo /opinion/, así que
+  // el clasificador (es_opinion) no la marca. Se reconoce el patrón por título: arranca con
+  // "|", primer segmento entre pipes con ≥1 mayúscula y CERO minúsculas (todo caps) →
+  // opinión. Exigir 0 minúsculas evita falsos positivos sobre titulares duros con pipe
+  // interno (cuyo segmento trae minúsculas). Frontend-only, efecto inmediato (sin re-ingesta).
+  function ntBylineOpinion(t){
+    var m=String(t||'').trim().match(/^\|\s*([^|]{2,50}?)\s*\|/);
+    if(!m) return false; var seg=m[1];
+    return /[A-ZÁÉÍÓÚÜÑ]/.test(seg) && !/[a-záéíóúüñ]/.test(seg);
+  }
+  function ntEsOpinion(n){ return !!(n && (n.category==='opinion' || ntBylineOpinion(n.title))); }
   function ntLeadFirst(arr){
     if(!arr.length || !ntEsOpinion(arr[0])) return arr;
     var k=-1; for(var i=1;i<arr.length;i++){ if(!ntEsOpinion(arr[i])){ k=i; break; } }
