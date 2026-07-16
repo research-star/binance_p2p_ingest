@@ -322,18 +322,22 @@ th[aria-sort="none"] .sort-arrow::before{content:''}
 .fb-foot-login:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
 .fb-foot-login:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
 .fb-chrome-foot .fb-session{font-size:12px;color:var(--text-soft)}
-/* ── Cluster social (catálogo FB_SOCIAL) — footer, junto al login. Admin-only.
-   Mono presente: currentColor, opacity .8 en reposo → 1 en hover. Más presente
-   que .fb-foot-login (.45), asimetría deliberada: el login es utilitario, los
-   sociales son invitación. */
+/* ── Cluster social (catálogo FB_SOCIAL) — navbar, a la derecha de las tabs.
+   PÚBLICO. Mono presente: currentColor, opacity .8 en reposo → 1 en hover. */
 .fb-social{display:inline-flex;align-items:center;gap:6px}
-.fb-social[hidden]{display:none} /* el display:inline-flex de arriba pisaría el [hidden] de UA — sin esta regla el gate admin no oculta nada */
-.fb-chrome-foot .fb-social{margin-right:10px}
-.fb-social-btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.8;cursor:default;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
+.fb-social[hidden]{display:none} /* el display:inline-flex de arriba pisaría el [hidden] de UA — protege si algo re-oculta el cluster */
+.fb-navbar .fb-social{align-self:center;flex-shrink:0}
+.fb-social-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:none;color:var(--text-soft);opacity:.8;cursor:default;border-radius:7px;transition:opacity .15s,color .15s,background .15s}
 .fb-social-btn svg{width:15px;height:15px}
 .fb-social-btn:hover{opacity:1;color:var(--text-secondary);background:rgba(33,30,27,.05)}
 .fb-social-btn:focus-visible{opacity:1;outline:2px solid var(--blue-accent);outline-offset:2px}
 a.fb-social-btn{cursor:pointer}
+/* Tooltip "Próximamente" (data-tip) — ventanita bajo el ícono (el navbar es
+   sticky top:0, hacia arriba no hay espacio). En ≤980px el navbar tiene
+   overflow-x:auto (scroll de tabs) y clipearía el ::after → se desactiva. */
+.fb-social-btn[data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(-3px);background:var(--text-primary);color:var(--bg-primary);font-family:var(--font-body);font-size:10.5px;font-weight:600;letter-spacing:.02em;line-height:1;padding:5px 9px;border-radius:4px;white-space:nowrap;box-shadow:0 2px 8px rgba(33,30,27,.18);opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:60}
+.fb-social-btn[data-tip]:hover::after,.fb-social-btn[data-tip]:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:980px){.fb-social-btn[data-tip]::after{display:none}}
 .fb-login,.fb-search-link{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-body);font-size:12.5px;font-weight:600;letter-spacing:.02em;background:none;border:none;border-bottom:1px solid transparent;padding:2px 0;text-align:left;white-space:nowrap}
 .fb-login svg,.fb-search-link svg{width:14px;height:14px;opacity:.7;flex-shrink:0}
 .fb-login{color:var(--text-secondary);cursor:pointer;transition:color .15s,border-color .15s}
@@ -919,6 +923,10 @@ a.fb-social-btn{cursor:pointer}
     <!-- bake:optional:guide --><button class="fb-tab" data-tab="guide" hidden>Gu&iacute;a</button><!-- /bake:optional:guide -->
     <!-- /i18n:es-only -->
   </div>
+  <!-- Cluster social (catálogo FB_SOCIAL) — PÚBLICO, a la derecha de las tabs
+       (el space-between del navbar lo empuja al extremo). Botones INERTES
+       mientras url=null: tooltip custom "Próximamente" (data-tip), sin href. -->
+  <div class="fb-social" id="fbSocialCluster"></div>
 </nav>
 <div id="tab-dolar" style="display:none;">
 <!-- Sub-header -->
@@ -2015,10 +2023,6 @@ a.fb-social-btn{cursor:pointer}
      anónimo = ícono discreto; admin = sesión + cerrar. UX, no seguridad (el
      candado real es Cloudflare Access + JWT). -->
 <footer class="fb-chrome-foot" aria-label="{{t:footer.access_aria}}">
-  <!-- Cluster social (4 redes, catálogo FB_SOCIAL). Admin-only: data-admin-only
-       (gate cosmético como Agro/Mercado247, toggleado por fbRenderSession).
-       Botones INERTES mientras url=null ("Próximamente"). -->
-  <div class="fb-social" id="fbSocialCluster" data-admin-only hidden></div>
   <div id="fbFooterSession"></div>
 </footer>
 
@@ -6376,7 +6380,7 @@ window.addEventListener('popstate', function(){
   var FB_SOCIAL=[
     { id:'whatsapp', label:'{{t:social.wa_label}}', brand:'#25D366', icon:'M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z', url:null, url_app:null, visible:true },
     { id:'facebook', label:'{{t:social.fb_label}}', brand:'#1877F2', icon:'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z', url:null, url_app:null, visible:true },
-    { id:'x', label:'{{t:social.x_label}}', brand:'#0F1419', icon:'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z', url:null, url_app:null, visible:true },
+    { id:'x', label:'{{t:social.x_label}}', brand:'#0F1419', icon:'M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z', url:null, url_app:null, visible:false },  // X retirado del cluster (decisión Diego 2026-07-16); revertir = visible:true
     { id:'linkedin', label:'{{t:social.li_label}}', brand:'#0A66C2', icon:'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z', url:null, url_app:null, visible:true }
   ];
   function fbRenderSocial(){
@@ -6388,7 +6392,9 @@ window.addEventListener('popstate', function(){
       if(s.url){
         out+='<a class="fb-social-btn" data-social="'+s.id+'" href="'+s.url+'" target="_blank" rel="noopener noreferrer" title="'+s.label+'" aria-label="'+s.label+'">'+svg+'</a>';
       }else{
-        out+='<button class="fb-social-btn" type="button" data-social="'+s.id+'" aria-disabled="true" title="'+s.label+' — {{t:social.soon}}" aria-label="'+s.label+' — {{t:social.soon}}">'+svg+'</button>';
+        // Inerte: tooltip custom vía data-tip (sin title nativo, para no duplicar
+        // ventanitas al hover); aria-label conserva el contexto completo.
+        out+='<button class="fb-social-btn" type="button" data-social="'+s.id+'" aria-disabled="true" data-tip="{{t:social.soon}}" aria-label="'+s.label+' — {{t:social.soon}}">'+svg+'</button>';
       }
     });
     host.innerHTML=out;
@@ -6429,9 +6435,9 @@ window.addEventListener('popstate', function(){
     if(t.closest('[data-np-login]')){ ev.preventDefault(); npLogin(); return; }
     if(t.closest('[data-np-logout]')){ ev.preventDefault(); npLogout(); return; }
   });
-  // fbRenderSocial() construye el markup del cluster (una vez); su visibilidad la
-  // gobierna el loop [data-admin-only] de fbRenderSession, que se re-llama en cada
-  // transición de sesión (init/login/logout/expire, incluido el resolve de npCheckMe).
+  // fbRenderSocial() construye el markup del cluster (una vez). El cluster es
+  // PÚBLICO (navbar, derecha de las tabs) — ya no lleva data-admin-only ni
+  // depende de fbRenderSession para su visibilidad.
   function fbChromeInit(){ fbRenderTicker(); fbRenderSocial(); fbRenderSession(); if(npHasHint()) npCheckMe(); }
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', fbChromeInit); } else { fbChromeInit(); }
 })();
