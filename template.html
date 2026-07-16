@@ -4347,6 +4347,17 @@ window.addEventListener('popstate', function(){
 // tabla quedaría vacía hasta el primer click en otra tab.
 (function(){
   var qs = new URLSearchParams(window.location.search);
+  // Atajo de DEV (solo localhost/127.0.0.1): ?admin=1 enciende el gate CSS de
+  // controles admin (html[data-fb-admin]) sin loguearse, para previsualizar en
+  // local — el Worker de auth (/v1/me) es prod-only y no responde acá. Se lee
+  // ACÁ (parse sync, antes del replaceState de abajo que borra el ?admin=1 de
+  // la barra). NO toca npAdmin.isAdmin (los controles que dependen del estado
+  // JS, p.ej. editar ocultas de Noticias, siguen apagados); solo revela lo
+  // gateado por CSS. En cualquier host no-local es no-op → inerte en prod.
+  if((location.hostname==='localhost'||location.hostname==='127.0.0.1') && qs.get('admin')==='1'){
+    document.documentElement.setAttribute('data-fb-admin','1');
+    window.__fbDevAdmin=true;  // blinda el gate: npCheckMe/npAuthExpired no lo borran
+  }
   var fromQs = qs.get('path');
   if(fromQs){
     // El 404.html ya entrega un slug SIN prefijo (/en/foo → ?path=/foo).
@@ -6322,7 +6333,7 @@ window.addEventListener('popstate', function(){
   // 401/403 mid-uso ⇒ sesión expirada: comunicar + re-login, sin romper en silencio.
   function npAuthExpired(){
     npAdmin.isAdmin=false; npAdmin.editMode=false; npAdmin.hiddenItems=null;
-    document.documentElement.removeAttribute('data-fb-admin');
+    if(!window.__fbDevAdmin) document.documentElement.removeAttribute('data-fb-admin');
     npClearHint();  // sesión muerta = logout forzado: limpiar hint para no re-probar al próximo load
     npAdmin.notice={ kind:'warn', text:'{{t:noticias.notice_session_expired}}' };
     fbRenderSession(); npRerender();
@@ -6340,7 +6351,7 @@ window.addEventListener('popstate', function(){
         // fuera de Noticias (hoy: toggle "TCO ancho" de los KPIs de Dólar);
         // espeja npAdmin.isAdmin vía CSS, sin re-render de las otras tabs.
         if(d && d.admin===true){ npAdmin.isAdmin=true; npAdmin.email=d.email||null; npSetHint(); document.documentElement.setAttribute('data-fb-admin','1'); }
-        else { npAdmin.isAdmin=false; npClearHint(); document.documentElement.removeAttribute('data-fb-admin'); }  // 302/401: el hint mentía o la sesión cayó
+        else { npAdmin.isAdmin=false; npClearHint(); if(!window.__fbDevAdmin) document.documentElement.removeAttribute('data-fb-admin'); }  // 302/401: el hint mentía o la sesión cayó
         fbRenderSession(); if(ntBuilt) npRerender();
       })
       .catch(function(){ npAdmin.checked=true; npAdmin.isAdmin=false; fbRenderSession(); if(ntBuilt) npRerender(); });  // red transitoria: NO limpiar hint, reintenta al próximo load
