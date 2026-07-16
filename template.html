@@ -3394,25 +3394,43 @@ function downloadPanelPng(panelId){
   const r=div.getBoundingClientRect();
   const W=Math.max(800, Math.round(r.width)||1200);
   const H=Math.max(400, Math.round(r.height)||500);
-  // Fondo opaco = color de la página. Los charts tienen paper/plot transparentes
-  // (BL: paper_bgcolor/plot_bgcolor rgba(0,0,0,0)); sin setBackground el PNG sale
-  // transparente y los visores lo muestran con fondo negro. Se lee en vivo para
-  // respetar el tema activo, con fallback al beige --bg-primary.
+  // Fondo opaco = color de la página (body). Se aplica como paper_bgcolor/plot_bgcolor
+  // del LAYOUT: los charts los tienen transparentes (BL) y el `setBackground` de
+  // Plotly.toImage NO rellena el fondo en esta versión (validado: el PNG sale
+  // transparente, que los visores muestran blanco o negro). Con paper/plot_bgcolor
+  // el fondo queda opaco de verdad. Se lee en vivo (tema activo), fallback al beige.
   let bg;
   try{ bg=getComputedStyle(document.body).backgroundColor; }catch(e){}
   if(!bg || bg==='rgba(0, 0, 0, 0)' || bg==='transparent') bg=cssVar('--bg-primary','#F7E4D7');
   const fname=panelId+'_'+_stamp();
-  const simple=()=>Plotly.downloadImage(div, {format:'png',filename:fname,width:W,height:H,setBackground:bg});
+  const clone=o=>{ try{ return structuredClone(o); }catch(e){ return JSON.parse(JSON.stringify(o)); } };
+  // Render OFFSCREEN de (data, layout) con FONDO OPACO → descarga. No toca el
+  // gráfico en pantalla. Devuelve promesa; limpia el div temporal siempre.
+  const renderOffscreen=(d,l)=>{
+    l=Object.assign({}, l, {paper_bgcolor:bg, plot_bgcolor:bg});
+    const tmp=document.createElement('div');
+    tmp.style.cssText='position:fixed;left:-99999px;top:0;width:'+W+'px;height:'+H+'px;pointer-events:none;';
+    document.body.appendChild(tmp);
+    const cleanup=()=>{ try{ Plotly.purge(tmp); }catch(e){} tmp.remove(); };
+    return Plotly.newPlot(tmp, d, l, {staticPlot:true, displayModeBar:false})
+      .then(()=>Plotly.toImage(tmp, {format:'png', width:W, height:H}))
+      .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname+'.png';
+        document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),150); })
+      .then(cleanup, err=>{ cleanup(); throw err; });
+  };
+  // Fallback simple: mismo render offscreen pero SIN leyenda/etiquetas (solo fondo
+  // opaco). Último recurso: downloadImage directo.
+  const lastResort=()=>Plotly.downloadImage(div, {format:'png',filename:fname,width:W,height:H,setBackground:bg});
+  const plainFallback=()=>{ try{ return renderOffscreen(clone(div.data||[]), clone(div.layout||{})).catch(lastResort); }catch(e){ lastResort(); } };
+
+  if(!Plotly.newPlot || !Plotly.toImage){ lastResort(); return; }
 
   // Descarga ENRIQUECIDA: la leyenda nativa de Plotly está apagada en pantalla
   // (showlegend:false; la "leyenda" son los toggles HTML de arriba) y el PNG no
   // los capturaba. Acá se clona data+layout, se ENCIENDE la leyenda solo con las
-  // series visibles y se rotula el ÚLTIMO valor de cada una, renderizando en un
-  // div OFFSCREEN (no toca el gráfico en pantalla). Cualquier fallo → descarga
-  // simple (que ya trae el fondo opaco).
+  // series visibles y se rotula el ÚLTIMO valor de cada una. Cualquier fallo →
+  // fallback simple (también con fondo opaco).
   try{
-    if(!Plotly.newPlot || !Plotly.toImage){ simple(); return; }
-    const clone=o=>{ try{ return structuredClone(o); }catch(e){ return JSON.parse(JSON.stringify(o)); } };
     const data=clone(div.data||[]), layout=clone(div.layout||{});
     // Solo lo que se ve: una serie apagada queda en 'legendonly' → ocultarla del
     // todo para que no aparezca griseada en la leyenda ni se dibuje.
@@ -3466,17 +3484,8 @@ function downloadPanelPng(panelId){
     layout.margin=Object.assign({}, m, {t:Math.max(m.t||32, FS_LEG*3+10), r:Math.max(m.r||16, 140)});
     layout.annotations=(layout.annotations||[]).concat(valAnns);
 
-    const tmp=document.createElement('div');
-    tmp.style.cssText='position:fixed;left:-99999px;top:0;width:'+W+'px;height:'+H+'px;pointer-events:none;';
-    document.body.appendChild(tmp);
-    const cleanup=()=>{ try{ Plotly.purge(tmp); }catch(e){} tmp.remove(); };
-    Plotly.newPlot(tmp, data, layout, {staticPlot:true, displayModeBar:false})
-      .then(()=>Plotly.toImage(tmp, {format:'png', width:W, height:H, setBackground:bg}))
-      .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname+'.png';
-        document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),150); })
-      .catch(()=>simple())
-      .then(cleanup, cleanup);
-  }catch(e){ simple(); }
+    renderOffscreen(data, layout).catch(plainFallback);
+  }catch(e){ plainFallback(); }
 }
 
 // CSV de tabla gen\u00e9rica (un \u00fanico <table>): respeta orden visible (sort) y
