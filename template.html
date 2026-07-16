@@ -982,8 +982,8 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
   <div class="fb-tab-controls"><div class="fb-view-toggle" id="viewToggle"><button class="ds-chip active" data-view="snapshot" type="button">{{t:dolar.toggle_snapshot}}</button><button class="ds-chip" data-view="daily" type="button">{{t:dolar.toggle_daily}}</button></div></div>
 
   <div class="panel-grid" id="panelGrid">
-    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog inactive" data-trace="venta" style="--fb-trace-color:#990F3D"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#990F3D"></span><span class="fb-stog-label">{{t:dolar.stog_venta}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button><button type="button" class="fb-stog inactive" data-trace="tcoref" style="--fb-trace-color:#38BDF8"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#38BDF8"></span><span class="fb-stog-label">{{t:dolar.stog_tcoref}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
-    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_offer_h2}} <span class="help-tip" tabindex="0" aria-label="{{t:dolar.offer_help_aria}}"><span class="help-icon">i</span><span class="help-pop">{{t:dolar.offer_help_pop}}</span></span></h2><p>{{t:dolar.offer_sub}}</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="{{t:dolar.side_filter_aria}}"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_buy}}</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_sell}}</span></label></div><p class="snap-stamp">{{t:dolar.offer_snap_label}} <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button><button class="sh-ctrl-btn panel-menu-btn" aria-label="{{t:dolar.menu_aria}}" title="{{t:dolar.menu_title}}" type="button">&#8942;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
+    <div class="section full-width" data-panel="vwap" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_vwap_h2}}</h2></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button></div></div><div class="section-body"><div class="fb-series-toggles" id="vwapSeriesToggles"><button type="button" class="fb-stog active" data-trace="compra" style="--fb-trace-color:#0F5499"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#0F5499"></span><span class="fb-stog-label">{{t:dolar.stog_compra}}</span></button><button type="button" class="fb-stog inactive" data-trace="venta" style="--fb-trace-color:#990F3D"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#990F3D"></span><span class="fb-stog-label">{{t:dolar.stog_venta}}</span></button><button type="button" class="fb-stog active" data-trace="tco" style="--fb-trace-color:#B45309"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line solid" style="color:#B45309"></span><span class="fb-stog-label">{{t:dolar.stog_tco}}</span></button><button type="button" class="fb-stog inactive" data-trace="tcoref" style="--fb-trace-color:#38BDF8"><span class="fb-stog-check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span class="fb-stog-line dashed" style="color:#38BDF8"></span><span class="fb-stog-label">{{t:dolar.stog_tcoref}}</span></button></div><div id="chartVwap"></div><div class="fb-chart-source">{{t:dolar.source_bcb_binance}}</div></div></div>
+    <div class="section full-width" data-panel="offer_range" draggable="true"><div class="section-header"><div class="sh-left"><h2>{{t:dolar.panel_offer_h2}} <span class="help-tip" tabindex="0" aria-label="{{t:dolar.offer_help_aria}}"><span class="help-icon">i</span><span class="help-pop">{{t:dolar.offer_help_pop}}</span></span></h2><p>{{t:dolar.offer_sub}}</p><div class="panel-side-toggle" data-panel="offer_range" role="group" aria-label="{{t:dolar.side_filter_aria}}"><label class="side-chk is-checked" data-side="buy"><input type="checkbox" data-side="buy" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_buy}}</span></label><label class="side-chk is-checked" data-side="sell"><input type="checkbox" data-side="sell" checked><span class="chk-box"></span><span>{{t:dolar.side_chk_sell}}</span></label></div><p class="snap-stamp">{{t:dolar.offer_snap_label}} <span id="offerSnapStamp">&mdash;</span></p></div><div class="sh-controls"><button class="sh-ctrl-btn drag-handle" aria-label="{{t:dolar.drag_aria}}" title="{{t:dolar.drag_title}}">&#10303;</button></div></div><div class="section-body"><div id="chartOffer"></div><div class="fb-chart-source">{{t:dolar.source_binance}}</div></div></div>
   </div><!-- /panel-grid -->
 </div><!-- /content -->
 <div class="footer" id="footer"></div>
@@ -2039,8 +2039,6 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
   <button class="panel-menu-item" data-action="toggle-width" role="menuitem" type="button">{{t:dolar.pm_width}}<span class="pmi-state" id="pmiWidthState">&mdash;</span></button>
   <button class="panel-menu-item" data-action="move-up" role="menuitem" type="button">{{t:dolar.pm_move_up}}</button>
   <button class="panel-menu-item" data-action="move-down" role="menuitem" type="button">{{t:dolar.pm_move_down}}</button>
-  <div class="panel-menu-divider" id="pmiDivider"></div>
-  <button class="panel-menu-item" data-action="download-png" role="menuitem" type="button" id="pmiPng">{{t:dolar.pm_download_png}}</button>
 </div>
 
 <button class="fab-more" id="fabMore" type="button" aria-label="{{t:footer.fab_aria_initial}}" title="{{t:footer.fab_title}}">
@@ -3386,108 +3384,6 @@ function _triggerDownload(content, filename, mime){
   setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url)}, 200);
 }
 
-function downloadPanelPng(panelId){
-  const divId=PANEL_CHART_DIV[panelId];
-  if(!divId) return;
-  const div=document.getElementById(divId);
-  if(!div||!window.Plotly||!Plotly.downloadImage) return;
-  const r=div.getBoundingClientRect();
-  const W=Math.max(800, Math.round(r.width)||1200);
-  const H=Math.max(400, Math.round(r.height)||500);
-  // Fondo opaco = color de la página (body). Se aplica como paper_bgcolor/plot_bgcolor
-  // del LAYOUT: los charts los tienen transparentes (BL) y el `setBackground` de
-  // Plotly.toImage NO rellena el fondo en esta versión (validado: el PNG sale
-  // transparente, que los visores muestran blanco o negro). Con paper/plot_bgcolor
-  // el fondo queda opaco de verdad. Se lee en vivo (tema activo), fallback al beige.
-  let bg;
-  try{ bg=getComputedStyle(document.body).backgroundColor; }catch(e){}
-  if(!bg || bg==='rgba(0, 0, 0, 0)' || bg==='transparent') bg=cssVar('--bg-primary','#F7E4D7');
-  const fname=panelId+'_'+_stamp();
-  const clone=o=>{ try{ return structuredClone(o); }catch(e){ return JSON.parse(JSON.stringify(o)); } };
-  // Render OFFSCREEN de (data, layout) con FONDO OPACO → descarga. No toca el
-  // gráfico en pantalla. Devuelve promesa; limpia el div temporal siempre.
-  const renderOffscreen=(d,l)=>{
-    l=Object.assign({}, l, {paper_bgcolor:bg, plot_bgcolor:bg});
-    const tmp=document.createElement('div');
-    tmp.style.cssText='position:fixed;left:-99999px;top:0;width:'+W+'px;height:'+H+'px;pointer-events:none;';
-    document.body.appendChild(tmp);
-    const cleanup=()=>{ try{ Plotly.purge(tmp); }catch(e){} tmp.remove(); };
-    return Plotly.newPlot(tmp, d, l, {staticPlot:true, displayModeBar:false})
-      .then(()=>Plotly.toImage(tmp, {format:'png', width:W, height:H}))
-      .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname+'.png';
-        document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),150); })
-      .then(cleanup, err=>{ cleanup(); throw err; });
-  };
-  // Fallback simple: mismo render offscreen pero SIN leyenda/etiquetas (solo fondo
-  // opaco). Último recurso: downloadImage directo.
-  const lastResort=()=>Plotly.downloadImage(div, {format:'png',filename:fname,width:W,height:H,setBackground:bg});
-  const plainFallback=()=>{ try{ return renderOffscreen(clone(div.data||[]), clone(div.layout||{})).catch(lastResort); }catch(e){ lastResort(); } };
-
-  if(!Plotly.newPlot || !Plotly.toImage){ lastResort(); return; }
-
-  // Descarga ENRIQUECIDA: la leyenda nativa de Plotly está apagada en pantalla
-  // (showlegend:false; la "leyenda" son los toggles HTML de arriba) y el PNG no
-  // los capturaba. Acá se clona data+layout, se ENCIENDE la leyenda solo con las
-  // series visibles y se rotula el ÚLTIMO valor de cada una. Cualquier fallo →
-  // fallback simple (también con fondo opaco).
-  try{
-    const data=clone(div.data||[]), layout=clone(div.layout||{});
-    // Solo lo que se ve: una serie apagada queda en 'legendonly' → ocultarla del
-    // todo para que no aparezca griseada en la leyenda ni se dibuje.
-    data.forEach(t=>{ if(t && t.visible==='legendonly') t.visible=false; });
-    // Renombres SOLO para la leyenda del PNG: no tocan la vista ni el matching de
-    // toggles (que compara contra los tokens crudos de trace_*). El mapa se indexa
-    // por el name YA horneado, así funciona en ES y EN.
-    const DL_NAME={};
-    DL_NAME['{{t:dolar.trace_vwap_compra}}']='{{t:dolar.dl_leg_binance_compra}}';
-    DL_NAME['{{t:dolar.trace_vwap_venta}}'] ='{{t:dolar.dl_leg_binance_venta}}';
-    DL_NAME['{{t:dolar.trace_tco}}']        ='{{t:dolar.dl_leg_tco}}';
-    DL_NAME['{{t:dolar.trace_tco_ref}}']    ='{{t:dolar.dl_leg_tco_ref}}';
-    data.forEach(t=>{ if(t && t.name && DL_NAME[t.name]) t.name=DL_NAME[t.name]; });
-    // Fuente grande (el PNG es ~1000-1300px de ancho; 11-13px eran ilegibles).
-    const FS_LEG=Math.max(18, Math.round(W/56));
-    const FS_VAL=Math.max(20, Math.round(W/48));
-    // Última etiqueta de valor por serie CON entrada de leyenda (auxiliares con
-    // showlegend:false se saltan → sin duplicados). Con FLECHA al punto y
-    // ESCALONADAS en vertical (píxeles) para que NO se encimen dos valores cercanos.
-    const marks=[];
-    data.forEach(t=>{
-      if(!t || t.visible===false || t.showlegend===false || !t.name) return;
-      const ys=t.y||[]; let i=ys.length-1;
-      while(i>=0 && (ys[i]==null || !isFinite(ys[i]))) i--;
-      if(i<0 || !t.x || t.x[i]==null) return;
-      const col=(t.line&&t.line.color) || (t.marker&&t.marker.color) || '#211E1B';
-      marks.push({x:t.x[i], y:Number(ys[i]), col:(typeof col==='string'?col:'#211E1B')});
-    });
-    // Rango Y (del layout o de los datos) para medir cuándo dos etiquetas quedan cerca.
-    let ylo=Infinity, yhi=-Infinity;
-    const yr=layout.yaxis && layout.yaxis.range;
-    if(yr && yr.length===2){ ylo=Math.min(yr[0],yr[1]); yhi=Math.max(yr[0],yr[1]); }
-    else { marks.forEach(mk=>{ if(mk.y<ylo)ylo=mk.y; if(mk.y>yhi)yhi=mk.y; }); }
-    const span=(yhi-ylo)||1, closeGap=span*0.07, stepPx=FS_VAL+8;
-    marks.sort((a,b)=>b.y-a.y);
-    const valAnns=[]; let prevY=null, prevAy=0;
-    marks.forEach(mk=>{
-      let ay=0;                                   // desplazamiento vertical en píxeles
-      if(prevY!=null && (prevY-mk.y)<closeGap) ay=prevAy+stepPx;
-      prevY=mk.y; prevAy=ay;
-      valAnns.push({x:mk.x, y:mk.y, xref:'x', yref:'y', ax:46, ay:ay, axref:'pixel', ayref:'pixel',
-        showarrow:true, arrowhead:2, arrowsize:1.1, arrowwidth:1.6, arrowcolor:mk.col,
-        xanchor:'left', yanchor:'middle', text:'<b>'+mk.y.toFixed(2)+'</b>',
-        font:{family:'Outfit', size:FS_VAL, color:mk.col},
-        bgcolor:'rgba(255,247,240,0.9)', borderpad:3});
-    });
-    layout.showlegend=true;
-    const legFont=Object.assign({family:'Outfit'}, (layout.legend&&layout.legend.font)||{}, {size:FS_LEG});
-    layout.legend=Object.assign({}, layout.legend, {orientation:'h', y:1.08, yanchor:'bottom', x:0, xanchor:'left', font:legFont});
-    const m=layout.margin||{};
-    layout.margin=Object.assign({}, m, {t:Math.max(m.t||32, FS_LEG*3+10), r:Math.max(m.r||16, 140)});
-    layout.annotations=(layout.annotations||[]).concat(valAnns);
-
-    renderOffscreen(data, layout).catch(plainFallback);
-  }catch(e){ plainFallback(); }
-}
-
 // CSV de tabla gen\u00e9rica (un \u00fanico <table>): respeta orden visible (sort) y
 // filas filtradas (toggle Compra/Venta) porque lee el DOM directamente.
 function _tableToRows(tableEl){
@@ -3580,10 +3476,6 @@ function openPanelMenu(panel, btn){
   const idx=sibs.indexOf(panel);
   menu.querySelector('[data-action="move-up"]').disabled = idx<=0;
   menu.querySelector('[data-action="move-down"]').disabled = idx>=sibs.length-1;
-  // PNG solo en paneles tipo chart Plotly. En tablas (bank, merchants,
-  // outliers) ocultar el item completo, no mostrarlo deshabilitado.
-  const pngItem=menu.querySelector('[data-action="download-png"]');
-  if(pngItem) pngItem.style.display = (panel.dataset.panel in PANEL_CHART_DIV) ? '' : 'none';
   // Posicionar fixed alineado a la derecha del bot\u00f3n
   const r=btn.getBoundingClientRect();
   const vw=window.innerWidth, vh=window.innerHeight;
@@ -3649,8 +3541,6 @@ document.querySelectorAll('#panelMenu .panel-menu-item').forEach(item=>{
       if(next) panel.parentElement.insertBefore(next, panel);
       saveLayout();
       document.querySelectorAll('.panel-grid .js-plotly-plot').forEach(p=>{try{Plotly.Plots.resize(p)}catch(e){}});
-    }else if(action==='download-png'){
-      downloadPanelPng(panel.dataset.panel);
     }
     closePanelMenu(true);
   });
