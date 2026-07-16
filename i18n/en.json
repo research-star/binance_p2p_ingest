@@ -223,6 +223,8 @@
   "dolar.kpi_bcb_sub_hoy_manana": "Today · <b>Tomorrow (",
   "dolar.kpi_bcb_sub_no_tco": "Buy · Sell (BOB/USDT)",
   "dolar.kpi_bcb_sub_tco": "TCO · Sell ref · eff. ",
+  "dolar.kpi_delta_dia": "day",
+  "dolar.kpi_delta_semana": "week",
   "dolar.kpi_prima": "P2P Premium",
   "dolar.kpi_prima_sub_oficial": "BCB official rate: ",
   "dolar.kpi_prima_sub_ref": "BCB ref sell: ",

@@ -17,6 +17,11 @@ Cubre:
     de cacao 100% extranjera sigue cortada por el geo-gate.
   - End-to-end: el par cacao real agrupa via _mismo_evento (titulo>=0.50 + entidad
     compartida); dos eventos de cacao DISTINTOS (titulo bajo) NO colapsan.
+  - Alias de referente (clave_dedup): EEUU/Estados Unidos/EE.UU. pliegan al mismo token
+    (sube la similitud cross-outlet); el verbo "usa" NO se pliega (colision evitada).
+  - Ancla-monto (es_repetida/_mismo_evento): un monto exacto compartido + titulo>=0.62
+    rescata gemelos sin commodity ni entidad (par El Dia/Unitel 2026-07-16); guarda de
+    over-merge: mismo monto redondo con titulo <0.62 (evento distinto) NO colapsa.
 
 El modelo TF-IDF se stubea (como en test_noticias_relevancia). Uso:
   python scripts/test_noticias_dedup_tema.py
@@ -148,23 +153,55 @@ def run() -> int:
         ok(f"{c} es entidad", c in scraper._ENTIDADES)
     ok("Cacao NO en geo-gate (no ancla extranjero)", "Cacao" not in scraper.ENTIDADES_BOLIVIANAS)
 
-    # ── Dedup inter-día (es_repetida): rescate por COMMODITY compartido ──
-    # El par cacao (0.697 título) reaparecía al re-scrapearse tras borrar su fila gemela,
-    # porque es_repetida usaba solo título >=0.70. Ahora rescata por commodity compartido.
-    deber_ents = {"Cacao", "IBCE", "INE"}
-    ok("es_repetida: rescate commodity (Cacao) atrapa el par 0.697",
-       es_repetida(MUNDO_T, ["Cacao", "IBCE", "INE"], [(DEBER_T, deber_ents)]) is True)
-    ok("es_repetida: título >=0.70 sigue atrapando (near-dup exacto)",
+    # ── Dedup inter-día (es_repetida) ─────────────────────────────────────
+    # (2) Rescate por COMMODITY compartido en banda [0.50,0.62): dos notas de cacao con
+    # título 0.519 (wording distinto, sin monto) agrupan por la entidad 'Cacao'.
+    CA1 = "El cacao boliviano gana nuevos mercados en Europa pese a la sequía"
+    CA2 = "Pese a la sequía, el cacao de Bolivia conquista mercados europeos"
+    ok("es_repetida: rescate commodity (Cacao) en banda 0.50-0.62",
+       es_repetida(CA2, ["Cacao"], [(CA1, {"Cacao"})]) is True)
+    # (1) Título ≥0.70 atrapa el near-dup exacto (acentos plegados por clave_dedup).
+    ok("es_repetida: título >=0.70 atrapa near-dup exacto",
        es_repetida("Bolivia exportó $us 11 millones en cacao durante 2025",
                    [], [(DEBER_T, set())]) is True)
-    # Entidad INSTITUCIONAL (BCB) NO rescata inter-día: mismos títulos (0.697<0.70) pero
-    # BCB no es commodity → se queda en el piso de título → NO repite (anti sobre-supresión).
-    ok("es_repetida: entidad institucional (BCB) NO rescata a 0.697",
-       es_repetida(MUNDO_T, ["BCB"], [(DEBER_T, {"BCB"})]) is False)
+    # Guarda anti sobre-supresión: entidad INSTITUCIONAL (BCB, no commodity) NO rescata
+    # en banda. Títulos 0.543<0.70, comparten BCB pero BCB∉commodity y sin monto → NO repite.
+    IN1 = "El BCB reporta una caída en las reservas internacionales del país"
+    IN2 = "BCB implementa nuevas medidas para el mercado cambiario nacional"
+    ok("es_repetida: entidad institucional (BCB) NO rescata en banda",
+       es_repetida(IN2, ["BCB"], [(IN1, {"BCB"})]) is False)
     # Commodity compartido pero título <0.50 → NO repite (el piso de título sigue mandando).
     ok("es_repetida: commodity pero título <0.50 NO repite",
        es_repetida("Cacaoteros del Alto Beni bloquean la vía exigiendo mejor precio",
                    ["Cacao"], [(DEBER_T, {"Cacao"})]) is False)
+
+    # ── Alias de referente: EEUU == Estados Unidos == EE.UU. (clave_dedup) ──
+    ok("clave_dedup pliega EEUU y Estados Unidos al mismo token",
+       scraper.clave_dedup("Bolivia y EEUU firman acuerdo") ==
+       scraper.clave_dedup("Bolivia y Estados Unidos firman acuerdo"))
+    ok("es_repetida: alias sube el título ≥0.70 (EEUU vs Estados Unidos)",
+       es_repetida("Bolivia y EEUU firman un acuerdo de cooperación comercial",
+                   [], [("Bolivia y Estados Unidos firman un acuerdo de cooperación comercial",
+                         set())]) is True)
+    # Guarda: el verbo español "usa" NO se pliega a Estados Unidos (colisión evitada).
+    ok("clave_dedup no pliega el verbo 'usa'",
+       "estadosunidos" not in scraper.clave_dedup("El gobierno usa recursos públicos del Estado"))
+
+    # ── Ancla-monto: rescata gemelos sin commodity ni entidad (par El Día/Unitel real) ──
+    ELDIA = "Acuerdo entre Bolivia y Estados Unidos contempla cooperación de hasta $us 40 millones"
+    UNITEL = ("Bolivia y EEUU suscriben memorándum que proyecta cooperación de hasta "
+              "$us 40 millones para desarrollo")
+    eq("montos() extrae la cifra con escala", scraper.montos(ELDIA), frozenset({"40_millon"}))
+    ok("es_repetida: ancla-monto atrapa El Día/Unitel (0.649, $us 40 millones)",
+       es_repetida(UNITEL, [], [(ELDIA, set())]) is True)
+    ok("_mismo_evento: ancla-monto agrupa El Día/Unitel intra-corrida",
+       _mismo_evento({"title": ELDIA, "entidades": []},
+                     {"title": UNITEL, "entidades": []}) is True)
+    # Over-merge guard: mismo monto redondo pero evento distinto (título 0.585<0.62) NO repite.
+    ok("es_repetida: monto compartido pero título <0.62 (evento distinto) NO repite",
+       es_repetida("El Gobierno invertirá $us 2.000 millones en nuevas carreteras",
+                   [], [("El BCB reporta reservas internacionales por $us 2.000 millones",
+                         set())]) is False)
 
     if err:
         print("FAIL test_noticias_dedup_tema:")
@@ -173,7 +210,9 @@ def run() -> int:
         return 1
     print("OK test_noticias_dedup_tema: verbo exportar/invertir clasifica + guardas "
           "(metafora/importa) + B1 recorta dominio publisher (allow-list) + B2 commodity "
-          "como entidad SIN leak geo-gate + par cacao agrupa (capa B) + no over-merge.")
+          "como entidad SIN leak geo-gate + par cacao agrupa (capa B) + no over-merge + "
+          "alias de referente (EEUU=Estados Unidos, verbo 'usa' safe) + ancla-monto "
+          "(El Día/Unitel rescatado, cifra redonda distinta NO colapsa).")
     return 0
 
 

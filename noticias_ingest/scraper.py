@@ -1514,6 +1514,81 @@ def _titulo_limpio(titulo: str) -> str:
     return limpio.strip()
 
 
+# ── Canon de alias de referente (dedup) ────────────────────────────────────
+# Un mismo referente (país / organismo) aparece con varias formas de superficie
+# ("Estados Unidos" ↔ "EEUU" ↔ "EE.UU."). token_sort_ratio los ve como tokens
+# distintos, así que dos notas del MISMO evento que nombran al referente de forma
+# distinta pierden similitud (par El Día/Unitel 2026-07-16: "Estados Unidos" vs
+# "EEUU"). Plegamos cada alias a UN token canónico ANTES de comparar, solo para el
+# scoring de dedup (NO toca detectar_entidades ni el geo-gate: meter países
+# extranjeros como entidad tendría blast-radius sobre el anclaje geográfico).
+#
+# CLAVE: el plegado NO normaliza el resto del título (no _norm). Meter _norm subía
+# la similitud de TODO el feed y cruzaba el piso conservador de 0.50 del rescate por
+# entidad, produciendo falsos merges entre notas que solo comparten 'Gobierno'
+# (validado 2026-07-16 contra el snapshot del inspector: 2 merges espurios). Por eso
+# solo se pliega el alias (match case-insensitive, inyecta el token canónico) y el
+# resto del título conserva su similitud raw ya calibrada.
+#
+# Se excluye a propósito el bare "usa" (colisiona con el verbo español "usar":
+# "el gobierno usa recursos") y siglas de 2 letras. Se listan variantes con y sin
+# acento porque re.IGNORECASE pliega mayúsculas pero no acentos.
+_ALIAS_REFERENTE = {
+    "estadosunidos": ["estados unidos de américa", "estados unidos de america",
+                      "estados unidos", "ee.uu", "ee. uu", "ee uu", "e.e.u.u",
+                      "eeuu", "u.s.a"],
+    "unioneuropea":  ["unión europea", "union europea"],
+    "reinounido":    ["reino unido", "gran bretaña", "gran bretana"],
+    "emiratos":      ["emiratos árabes unidos", "emiratos arabes unidos",
+                      "emiratos árabes", "emiratos arabes"],
+    "nacionesunidas": ["organización de las naciones unidas",
+                       "organizacion de las naciones unidas", "naciones unidas", "onu"],
+    "oea":           ["organización de estados americanos",
+                      "organizacion de estados americanos"],
+    "china":         ["república popular china", "republica popular china",
+                      "república popular de china", "republica popular de china"],
+}
+# Patrón word-boundary (\b unicode) case-insensitive sobre el título RAW. Alias más
+# largos primero: "estados unidos de américa" pliega antes que "estados unidos".
+_ALIAS_PATS = [
+    (re.compile(r"\b" + re.escape(alias) + r"\b", re.IGNORECASE), canon)
+    for canon, aliases in _ALIAS_REFERENTE.items()
+    for alias in sorted(aliases, key=len, reverse=True)
+]
+
+
+def _canon_referentes(texto: str) -> str:
+    """Pliega los alias de referente a su token canónico (case-insensitive). NO
+    normaliza acentos/case del resto: preserva la similitud raw calibrada."""
+    for pat, canon in _ALIAS_PATS:
+        texto = pat.sub(canon, texto)
+    return texto
+
+
+def clave_dedup(titulo: str) -> str:
+    """Clave de comparación para dedup: quita cola de portal y unifica alias de
+    referente (EEUU=Estados Unidos), sin tocar el resto del título. Todos los sitios
+    de similitud de dedup (es_repetida, _mismo_evento, deduplicar) comparan sobre
+    esta clave, así el mismo referente escrito distinto cuenta como el mismo token."""
+    return _canon_referentes(_titulo_limpio(titulo))
+
+
+# Cifras con escala de magnitud ("$us 40 millones" → {"40_millon"}). Huella de
+# evento fuerte y rara para el rescate de dedup a título moderado (≥0.50): las
+# instituciones recurren a lo largo de 7 días, un monto exacto casi nunca. Ignora
+# años y porcentajes (exigen la palabra de escala). Lo usan es_repetida y
+# _mismo_evento junto al piso de título, nunca solo.
+_MONTO_RE = re.compile(r"(\d[\d.,]*)\s*(mill?on(?:es)?|mil)\b")
+
+
+def montos(titulo: str) -> frozenset:
+    """Conjunto de cifras-con-escala normalizadas del título (función pura)."""
+    return frozenset(
+        f"{n.replace('.', '').replace(',', '')}_{esc[:6]}"
+        for n, esc in _MONTO_RE.findall(_norm(titulo))
+    )
+
+
 def similitud(t1: str, t2: str) -> float:
     if TIENE_RAPIDFUZZ:
         return fuzz.token_sort_ratio(t1, t2) / 100.0
@@ -1525,8 +1600,8 @@ def similitud(t1: str, t2: str) -> float:
 
 
 def deduplicar(noticias: list) -> list:
-    # Pre-calcular títulos limpios para comparación
-    titulos_limpios = [_titulo_limpio(n["titulo"]) for n in noticias]
+    # Pre-calcular claves canónicas (cola de portal + alias de referente) para comparación
+    titulos_limpios = [clave_dedup(n["titulo"]) for n in noticias]
 
     grupos = []
     usados = set()
