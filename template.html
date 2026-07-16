@@ -7865,7 +7865,7 @@ function expoSide(d){
   var esYtd = (meta.ytdYears||[]).indexOf(d.anio)!==-1;
   var kpis = [
     {label:'{{t:agro.kpi_fob}}', valor:fUsd(fob), unidad:'USD'},
-    {label:'{{t:agro.kpi_volumen}}', valor:f0(ton), unidad:'t'}
+    {label:'{{t:agro.kpi_volumen}}', valor:f0(ton), unidad:'{{t:agro.kpi_volumen_u}}'}
   ];
   if(esYtd){
     kpis.push({label:'{{t:agro.kpi_var_fob}}', valor:'—', unidad:'{{t:agro.kpi_ytd_nota}}'});
