@@ -561,7 +561,7 @@ dentro de Macro):
 URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
 Dólar tiene slug propio `/dolar`.
 
-**Tabs — 4 públicas + Agro (admin-only) en prod, 4 DESBAKEADOS** (existen en
+**Tabs — 4 públicas en prod, 5 DESBAKEADAS** (existen en
 `template.html` pero NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 
 | # | `data-tab` | Label | Slug | Estado en prod |
@@ -570,7 +570,7 @@ Dólar tiene slug propio `/dolar`.
 | 2 | `dollar` | Dólar | `/dolar` | visible |
 | 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
 | 4 | `asfi` | ASFI | `/asfi` | visible |
-| 5 | `agro` | Agro | `/agro` (+ subtabs) | **BAKEADO admin-only** (2026-07-10: botón nav `data-admin-only hidden`, patrón Mercado 24/7; público no ve el botón, `/agro` por URL directa SÍ renderiza — gate cosmético, ver § Tab Agro) |
+| 5 | `agro` | Agro | ~~`/agro`~~ (+ subtabs) | **DESBAKEADO de nuevo** (2026-07-16, pedido de Diego: ocultar la tab entera; historial: nació desbakeado 07-09 → bakeado 07-10 → desbakeado 07-16) |
 | 6 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
 | 7 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
 | 8 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
@@ -581,25 +581,21 @@ Dólar tiene slug propio `/dolar`.
 `tasas` (TRE mensual del BCB). El primero de la lista es el default al entrar a
 `/macro` bare. (Macro y sus 4 subtabs NO están afectados por el desbake.)
 
-**Gate `data-admin-only` — COSMÉTICO (aplica a `agro` en prod y a `mercado247`
-cuando se bakee).** El gate solo oculta el botón de nav (`fbRenderSession` togglea
+**Gate `data-admin-only` — COSMÉTICO (aplica a `mercado247`/`agro` cuando se
+bakeen).** El gate solo oculta el botón de nav (`fbRenderSession` togglea
 `el.hidden = !npAdmin.isAdmin` en cada transición de sesión); `activateTab` NO
 chequea `isAdmin`, así que la URL directa del tab renderiza igual para anónimos.
-Para `agro` (bakeado admin-only 2026-07-10) esto significa: el público no ve el
-botón, pero `finanzasbo.com/agro` por URL directa SÍ muestra el tab, y los
-`agro_*.json` se sirven públicos. **Leak aceptado por decisión de Diego** (mismo
-estándar de la casa que mercado247; los datos ya son públicos y el HTML también).
-Para `mercado247` el leak es moot: sigue desbakeado, la ruta `/mercado247` no
-existe en prod (404-trick → landing) y su bundle no se sirve.
+Con `agro` desbakeado de nuevo (2026-07-16) el leak es moot para ambos módulos:
+la ruta no existe en prod (404-trick → landing) y sus assets no se sirven.
 
 ### Módulos desbakeados (opción B — presentes en repo, NO servidos en prod)
 
-Cuatro módulos en el set (`mercado247`, `dpf`, `bbv`, `guide`), **desbakeados**
+Cinco módulos en el set (`mercado247`, `dpf`, `bbv`, `guide`, `agro`), **desbakeados**
 (opción B, 2026-07-09): su código fuente PERMANECE en el repo pero NO se inyecta al
 `index.html` publicado ni se sirve su asset. No es un retiro (C) — nada se borró.
-`agro` nació desbakeado el 2026-07-09 y **salió del set el 2026-07-10** (OK de
-Diego): ahora se bakea y sus assets se publican, pero con visibilidad **admin-only**
-vía `data-admin-only` en el botón de nav (ver § Tab Agro y § Gate `data-admin-only`).
+`agro` nació desbakeado el 2026-07-09, salió del set el 2026-07-10 (OK de Diego,
+bakeado) y **volvió al set el 2026-07-16** (pedido de Diego: ocultar la tab entera).
+Sus assets `agro_*.json` dejan de publicarse (entrada de `MODULO_ASSETS` reactivada).
 
 **Punto de control ÚNICO:** el set `config.MODULOS_NO_BAKEADOS` ([config.py](config.py)).
 Un módulo listado ahí:
