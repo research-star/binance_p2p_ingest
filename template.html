@@ -3365,6 +3365,8 @@ function downloadPanelPng(panelId){
   const div=document.getElementById(divId);
   if(!div||!window.Plotly||!Plotly.downloadImage) return;
   const r=div.getBoundingClientRect();
+  const W=Math.max(800, Math.round(r.width)||1200);
+  const H=Math.max(400, Math.round(r.height)||500);
   // Fondo opaco = color de la página. Los charts tienen paper/plot transparentes
   // (BL: paper_bgcolor/plot_bgcolor rgba(0,0,0,0)); sin setBackground el PNG sale
   // transparente y los visores lo muestran con fondo negro. Se lee en vivo para
@@ -3372,13 +3374,54 @@ function downloadPanelPng(panelId){
   let bg;
   try{ bg=getComputedStyle(document.body).backgroundColor; }catch(e){}
   if(!bg || bg==='rgba(0, 0, 0, 0)' || bg==='transparent') bg=cssVar('--bg-primary','#F7E4D7');
-  Plotly.downloadImage(div, {
-    format:'png',
-    filename: panelId+'_'+_stamp(),
-    width: Math.max(800, Math.round(r.width)||1200),
-    height:Math.max(400, Math.round(r.height)||500),
-    setBackground: bg
-  });
+  const fname=panelId+'_'+_stamp();
+  const simple=()=>Plotly.downloadImage(div, {format:'png',filename:fname,width:W,height:H,setBackground:bg});
+
+  // Descarga ENRIQUECIDA: la leyenda nativa de Plotly está apagada en pantalla
+  // (showlegend:false; la "leyenda" son los toggles HTML de arriba) y el PNG no
+  // los capturaba. Acá se clona data+layout, se ENCIENDE la leyenda solo con las
+  // series visibles y se rotula el ÚLTIMO valor de cada una, renderizando en un
+  // div OFFSCREEN (no toca el gráfico en pantalla). Cualquier fallo → descarga
+  // simple (que ya trae el fondo opaco).
+  try{
+    if(!Plotly.newPlot || !Plotly.toImage){ simple(); return; }
+    const clone=o=>{ try{ return structuredClone(o); }catch(e){ return JSON.parse(JSON.stringify(o)); } };
+    const data=clone(div.data||[]), layout=clone(div.layout||{});
+    // Solo lo que se ve: una serie apagada queda en 'legendonly' → ocultarla del
+    // todo para que no aparezca griseada en la leyenda ni se dibuje.
+    data.forEach(t=>{ if(t && t.visible==='legendonly') t.visible=false; });
+    // Una etiqueta de último valor por serie CON entrada de leyenda (las trazas
+    // auxiliares — extensiones/compañeras de hover — van con showlegend:false y se
+    // saltan, así no hay etiquetas duplicadas).
+    const valAnns=[];
+    data.forEach(t=>{
+      if(!t || t.visible===false || t.showlegend===false || !t.name) return;
+      const ys=t.y||[]; let i=ys.length-1;
+      while(i>=0 && (ys[i]==null || !isFinite(ys[i]))) i--;
+      if(i<0 || !t.x || t.x[i]==null) return;
+      const col=(t.line&&t.line.color) || (t.marker&&t.marker.color) || '#211E1B';
+      valAnns.push({x:t.x[i], y:ys[i], xref:'x', yref:'y', xanchor:'left', yanchor:'middle',
+        xshift:8, showarrow:false, text:'<b>'+Number(ys[i]).toFixed(2)+'</b>',
+        font:{family:'Outfit', size:13, color:(typeof col==='string'?col:'#211E1B')},
+        bgcolor:'rgba(255,247,240,0.72)', borderpad:1});
+    });
+    layout.showlegend=true;
+    layout.legend=Object.assign({}, layout.legend, {orientation:'h', y:1.06, yanchor:'bottom', x:0, xanchor:'left'});
+    const m=layout.margin||{};
+    layout.margin=Object.assign({}, m, {t:Math.max(m.t||32,56), r:Math.max(m.r||16,72)});
+    layout.annotations=(layout.annotations||[]).concat(valAnns);
+
+    const tmp=document.createElement('div');
+    tmp.style.cssText='position:fixed;left:-99999px;top:0;width:'+W+'px;height:'+H+'px;pointer-events:none;';
+    document.body.appendChild(tmp);
+    const cleanup=()=>{ try{ Plotly.purge(tmp); }catch(e){} tmp.remove(); };
+    Plotly.newPlot(tmp, data, layout, {staticPlot:true, displayModeBar:false})
+      .then(()=>Plotly.toImage(tmp, {format:'png', width:W, height:H, setBackground:bg}))
+      .then(url=>{ const a=document.createElement('a'); a.href=url; a.download=fname+'.png';
+        document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(),150); })
+      .catch(()=>simple())
+      .then(cleanup, cleanup);
+  }catch(e){ simple(); }
 }
 
 // CSV de tabla gen\u00e9rica (un \u00fanico <table>): respeta orden visible (sort) y
