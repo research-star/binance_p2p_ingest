@@ -5768,8 +5768,20 @@ window.addEventListener('popstate', function(){
   const NT_LIMIT = 29;  // archivo: 30 días (offsets 0..29 desde NT_TODAY)
   // offset 0 = NT_TODAY; ntDateAt(off) = ISO de hoy menos `off` días.
   function ntDateAt(off){ const dt=ntParseD(NT_TODAY); dt.setDate(dt.getDate()-off); return ntISO(dt); }
-  // Notas Bolivia de un día (offset), ordenadas por jerarquía editorial.
-  function ntDayNotes(off){ const d=ntDateAt(off); return ntBolivia().filter(function(n){ return n.date===d; }).sort(ntCmp); }
+  // Regla editorial: una nota de OPINIÓN nunca es portada/lead. category==='opinion'
+  // la marca el backend (transform.build_nota, flag es_opinion). Si el tope del día es
+  // opinión, se promueve la primera nota NO-opinión al lead (portada) y la de opinión
+  // baja al tope de "Lo más relevante hoy" (swap portada ↔ primer relevante). El resto
+  // del orden queda estable. Si TODO el día es opinión, no hay a quién promover → sin cambio.
+  function ntEsOpinion(n){ return !!(n && n.category==='opinion'); }
+  function ntLeadFirst(arr){
+    if(!arr.length || !ntEsOpinion(arr[0])) return arr;
+    var k=-1; for(var i=1;i<arr.length;i++){ if(!ntEsOpinion(arr[i])){ k=i; break; } }
+    if(k<0) return arr;
+    var out=arr.slice(); out.unshift(out.splice(k,1)[0]); return out;
+  }
+  // Notas Bolivia de un día (offset), ordenadas por jerarquía editorial (+ regla de opinión).
+  function ntDayNotes(off){ const d=ntDateAt(off); const arr=ntBolivia().filter(function(n){ return n.date===d; }).sort(ntCmp); return ntLeadFirst(arr); }
   // "Hoy" efectivo: el día más reciente CON notas (normalmente 0). Evita portada en
   // blanco si el primer scrape del día aún no corrió (huecos visibles, no rellenados).
   function ntDefaultDay(){ for(let o=0;o<=NT_LIMIT;o++){ if(ntDayNotes(o).length) return o; } return 0; }
