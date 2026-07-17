@@ -5254,6 +5254,756 @@
      "revisado": "provisional"
     }
    ]
+  },
+  "2026-07-17": {
+   "guid": "a5e4212b-fe9b-4591-9c87-889f23c5c482",
+   "titulo": "Reporte Informativo ASFI al 17/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Arrendamiento Financiero",
+     "entidad": "BNB Leasing S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 16 de julio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 30 de julio de 2026 a Hrs. 11:00 de forma virtual (no presencial), para considerar el siguiente Orden del Día:\n1. Lectura de la convocatoria a la Junta General Extraordinaria de Accionistas.\n2. Consideración de un Programa de Emisiones de Bonos y de las respectivas Emisiones que lo componen para su Oferta Pública y negociación en el Mercado de Valores.\n3. Consideración de una Primera Emisión bajo el Programa de Emisiones de Bonos para su Oferta Pública y negociación en el Mercado de Valores.\n4. Inscripción del Programa de Emisiones de Bonos y de las Emisiones a ser realizadas bajo el mismo en el Registro de Mercado de Valores (RMV) de la Autoridad de Supervisión del Sistema Financiera (ASFI) y en la Bolsa Boliviana de Valores S.A. (BBV) para su Oferta Pública y negociación en el Mercado de Valores.\n5. Designación de accionistas para la firma del Acta de la Junta.",
+     "tags": [
+      "emision",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 16 de julio de 2026, se determinó convocar a Junta General Extraordinaria de Accionistas, a realizarse el 30 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Extraordinaria",
+      "fecha_junta": "30 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros de Personas",
+     "entidad": "Crediseguro S.A. Seguros Personales",
+     "texto": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: Considerar y aceptar las renuncias presentadas por los siguientes Directores:\n- Luciano Bedoya Corazzo\n- Pedro Erick Travezan Farach",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: Considerar y aceptar las renuncias presentadas por los siguientes Directores: - Luciano Bedoya Corazzo -",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Crediseguro S.A. Seguros Generales",
+     "texto": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: Considerar y aceptar las renuncias presentadas por los siguientes Directores:\n- Luciano Bedoya Corazzo\n- Pedro Erick Travezan Farach",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: Considerar y aceptar las renuncias presentadas por los siguientes Directores: - Luciano Bedoya Corazzo -",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Seguros Illimani S.A. (S.I.S.A.)",
+     "texto": "Ha comunicado que la Junta General Ordinaria de Accionistas de 16 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar el resultado y capitalización del monto del revaluó técnico de Activos Fijos- Bienes Muebles de Uso, expuesto en el informe de la firma Auditora Externa Overfront Audit and Consulting S.R.L., de forma adicional instruir al Directorio y/o Gerencia General, tramitar las gestiones que correspondan para obtener la autorización de lo expuesto, ante el Ente Regulador.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 16 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar el resultado y capitalización del",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "CLÍNICA METROPOLITANA DE LAS AMÉRICAS S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aprobar la Emisión de Bonos de Intercambio de Oferta Pública Bursátil denominada “Bonos de Intercambio CLÍNICA DE LAS AMÉRICAS II”, destinada al intercambio de los valores de la Emisión “Bonos Clínica de las Américas I - Emisión 1” con Clave de Pizarra: CTM-1-N1U-20.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 15 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: Aprobar la Emisión de Bonos de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Compañía Boliviana de Energía Eléctrica S.A. - Bolivian Power Company Limited - Sucursal Bolivia",
+     "texto": "Comunica que, mediante resolución de 14 de julio de 2026, el único Accionista de COBEE, resolvió autorizar y aprobar a la gerencia de COBEE Sucursal Bolivia, compensar contra la cuenta contable “Cuenta Corriente Casa Matriz”, la totalidad de las utilidades netas de impuestos de la gestión 2025, es decir, Bs59.278.932,00. Conforme al Artículo 97 de los Estatutos de COBEE, se establece que las resoluciones escritas y firmadas por el único accionista son tan válidas como si hubieran sido adoptadas en una Junta.",
+     "tags": [],
+     "resumen": "Comunica que, mediante resolución de 14 de julio de 2026, el único Accionista de COBEE, resolvió autorizar y aprobar a la gerencia de COBEE Sucursal Bolivia, compensar contra la cuenta contable",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Compañía Molinera Boliviana S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 15 de julio de 2026, se determinó de acuerdo a los Estatutos, convocar a Junta General Ordinaria de Accionistas, a realizarse el 27 de julio de 2026 a Hrs. 10:30, para tratar el siguiente Orden del Día:\n1. Memoria del Ejercicio.\n2. Balance General y Estado de Resultados de la Gestión 1 de abril de 2025 al 31 de marzo de 2026.\n3. Dictamen de Auditores Externos e Informe del Síndico.\n4. Tratamiento de los Resultados.\n5. Elección del Directorio\n6. Elección del Síndico.\n7. Remuneración del Directorio y Síndico.\n8. Nominación de Auditores Externos.\n9. Aprobación del Acta de la Junta.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 15 de julio de 2026, se determinó de acuerdo a los Estatutos, convocar a Junta General Ordinaria de Accionistas, a realizarse el 27 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "27 de julio de 2026",
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Gas y Electricidad S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 17 de julio de 2026, realizada con el 80.94% de los accionistas, determinó lo siguiente: Aprobar las modificaciones a los términos y condiciones del Programa de Emisiones de Bonos denominado “BONOS GAS & ELECTRICIDAD IV”, de acuerdo a lo siguiente:\n- Se sustituye el texto de la característica “Tasa de interés”, en el cuadro del numeral 1.1 Características del Programa y características generales de las Emisiones de Bonos que forman parte del mismo;\n- Se modifica la característica “Tasa de interés incluyendo rango de tasa de interés” en el numeral 1.2 Definición de características y aspectos operativos.\n- Se incluye el inciso u) al final del numeral 1.6.2 Obligaciones del Emisor.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 17 de julio de 2026, realizada con el 80.94% de los accionistas, determinó lo siguiente: Aprobar las modificaciones a los términos",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Comunica que, el 15 de julio de 2026, obtuvo un desembolso por un monto total de Bs7.000.000,00 proveniente de 1 Pagaré Privado de la Emisión de Pagarés sin Oferta Pública JALASOFT III, adquiridos por Capital + SAFI S.A. - SEMBRAR EXPORTADOR FIC.",
+     "tags": [
+      "emision",
+      "prestamo"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, obtuvo un desembolso por un monto total de Bs7.000.000,00 proveniente de 1 Pagaré Privado de la Emisión de Pagarés sin Oferta Pública JALASOFT III, adquiridos",
+     "resumen_origen": "extractivo",
+     "grupo": "prestamos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 7,0 M"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "PLASTIFORTE S. R. L.",
+     "texto": "Ha comunicado que la Asamblea General Ordinaria de Socios de 15 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente:\n1. Verificación del quórum e instalación de la Asamblea Ordinaria de Socios con la participación del total de Cuotas de Capital y la Representante Común de Tenedores de Bonos.\n2. Constitución formal del Directorio de la Sociedad. La Asamblea resolvió y aprobó por unanimidad, la constitución formal del Directorio de la Sociedad en ejercicio de las facultades de la Escritura Pública N° 149/2020, como órgano permanente de dirección estratégica, supervisión de la gestión y control de riesgos, con el fin de fortalecer el gobierno corporativo, manteniéndose la separación entre la dirección y supervisión del Directorio y la administración ejecutiva y representación legal de la Gerencia General.\n3. Determinación de la composición, estructura, periodo de funciones y mecanismos de funcionamiento del Directorio. La Asamblea aprobó por unanimidad, la composición, estructura, periodo de funciones y mecanismos de funcionamiento del Directorio, estableciendo 5 Directores Titulares, presididos por un Presidente Ejecutivo, con un mandato de 2 años, así como la posibilidad de designar Directores para las vacantes, Directores Suplentes e Independientes y un Secretario cuando vea conveniente.\n4. Designación de los miembros de Directorio y elección de su Presidente Ejecutivo. La Asamblea también aprobó por unanimidad, la designación de los miembros del Directorio y la elección de su Presidente Ejecutivo, a partir de la fecha de suscripción del Acta de Asamblea Ordinaria de Socios.\n5. Aprobación de las atribuciones y responsabilidades de los Directores y establecimiento de funciones ejecutivas. La Asamblea aprobó, las atribuciones, responsabilidades y funciones ejecutivas de los Directores, así como la elaboración e implementación de una política de remuneración para el Directorio que será aprobada posteriormente por la Asamblea de Socios.\n6. Designación de responsable para la elaboración de los instrumentos de Gobierno Corporativo de la Sociedad, incluyendo el Reglamento de Directorio, la Matriz de Competencias y la Política de Remuneración. La Asamblea aprobó por unanimidad la elaboración del Reglamento del Directorio, Matriz de Competencias y Política de Remuneración del Directorio, encomendando su elaboración al Presidente Ejecutivo del Directorio y a la Gerencia Legal, para su aprobación posterior por parte de la Asamblea de Socios.\n7. Consideración y definición de la relación funcional entre el Directorio y la Gerencia General, así como de los principios de Gobierno Corporativo aplicables a la Sociedad. La Asamblea aprobó por unanimidad los lineamientos de relación funcional entre el Directorio y la Gerencia General, estableciendo que el Gerente General conserva la representación y administración operativa diaria de la Sociedad; que el Directorio ejercerá funciones de dirección estratégica, supervisión y seguimiento de la gestión empresarial; que los directores no comprometen a la Sociedad frente a terceros salvo mandato expreso o poder específico; y que la actuación de los órganos societarios estará orientada por principios de transparencia, responsabilidad, sostenibilidad, adecuada gestión de riesgos y rendición de cuentas.\n8. Consideración y autorización para la ejecución, formalización, gestiones notariales y registro de las resoluciones adoptadas por la Asamblea. La Asamblea aprobó y autorizó expresamente a Edgar Gustavo Heredia Deiters, a realizar las gestiones necesarias, suscribir la documentación requerida, efectuar registros, reportes, comunicaciones necesarias y trámites ante las instituciones que se requiera.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Ordinaria de Socios de 15 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Chaco S.A.",
+     "texto": "Comunica que, designa a Ricardo Marcelo Michel Villazón como Gerente de Exploración y Desarrollo Interino (a.i.), con fecha efectiva, a partir del 16 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, designa a Ricardo Marcelo Michel Villazón como Gerente de Exploración y Desarrollo Interino (a.i.), con fecha efectiva, a partir del 16 de julio de 2026.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente de Exploración y Desarrollo Interino (a",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Fortaleza S.A.",
+     "texto": "Comunica que, el 15 de julio de 2026, Gerald Kevin Gutiérrez de la Vega presentó su renuncia al cargo de Gerente División Operaciones a.i., la misma que fue aceptada, con efecto a partir de la misma fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, Gerald Kevin Gutiérrez de la Vega presentó su renuncia al cargo de Gerente División Operaciones a.i., la misma que fue aceptada, con efecto a partir de la misma",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente División Operaciones",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME de la Comunidad S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente:\n1. Renuncia de Director Titular. Patricia Rita García Renjifo de Caballero, el 15 de julio de 2026, notificó su renuncia irrevocable al cargo de Directora Titular, misma que fue considerada en la sesión de Directorio de 15 de julio de 2026, habiéndose determinado aceptar la renuncia presentada, siendo efectiva a partir del 16 de julio de 2026.\n2. Convocatoria a Junta General Ordinaria de Accionistas. Convocar a Junta General Ordinaria de Accionistas, a realizarse el 27 de julio de 2026 a Hrs. 09:00 de forma mixta (presencial y virtual), con el siguiente Orden del Día:\n1. Nombramiento de Director Titular y tratamiento de remuneraciones.\n2. Elección de dos representantes de los Accionistas para la suscripción del Acta de la Junta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "27 de julio de 2026",
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de marzo de 2026 COMITÉ/EMISOR INSTRUMENTO CALIFICADO EQUIVALENCIA ASFI PCR PERSPECTIVA Comité N°060/2026 celebrado el 29 de mayo de 2026 FERROVIARIA ORIENTAL S.A. PROGRAMA “PAGARÉS BURSÁTILES FERROVIARIA ORIENTAL II” Monto: Bs 70,00 millones. Plazo: 720 días N-1 B1- Estable Comité N°067/2026 celebrado el 10 de junio de 2026 FERROVIARIA ORIENTAL S.A. PROGRAMA “PAGARÉS BURSÁTILES FERROVIARIA ORIENTAL II” Monto: Bs 70,00 millones. Plazo: 720 días N-1 B1- Estable",
+     "tags": [
+      "emision",
+      "calificacion"
+     ],
+     "resumen": "Comunica que, en Sesiones de Comité, se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva, conforme el siguiente detalle: Calificación con Estados Financieros al 31 de",
+     "resumen_origen": "extractivo",
+     "grupo": "calificaciones",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Fondos de Inversión",
+     "entidad": "MSC SERCOM + Fondo de Inversión Cerrado",
+     "texto": "Comunica que, el 15 de julio de 2026 a Hrs. 10:00, sin necesidad de convocatoria previa al estar el 100% de los participantes del Fondo, mediante plataforma virtual, la Sociedad Administradora de Fondos de Inversión Mercantil Santa Cruz S.A., instauró la Asamblea General de Participantes, en la cual, se determinó lo siguiente:\n1. El Administrador realizó la presentación de su informe y los participantes tomaron nota del mismo.\n2. El Administrador realizó la presentación de las propuestas para Representante Común de Participantes del Fondo y los participantes aprobaron por unanimidad a FACTOR E CONSULTORES S.R.L. y su remuneración.\n3. El Administrador realizó la presentación del Presupuesto Anual de Gastos del Fondo y los participantes lo aprobaron por unanimidad.\n4. El Administrador realizó la presentación para la selección de los Miembros Independientes que formarán parte del Comité de Conflicto de Intereses y los participantes designaron por unanimidad a los siguientes miembros:\n- Dunia Verónica Barrios Siles\n- Rodrigo Victor Argote Perez\n- Sergio Pantoja Navajas\n5. El Administrador realizó la presentación para la selección de la empresa Calificadora de Riesgos y los participantes aprobaron por unanimidad a la empresa AESA RATING de Riesgos y los participantes aprobaron por unanimidad a la empresa AESA RATING S.A.\n6. El Administrador realizó la presentación para la elección del Auditor Externo para auditoría de la Gestión 2026 y los participantes aprobaron por unanimidad a la empresa DELTA CONSULT LTDA.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Rectifica el Hecho Relevante de 10 de julio de 2026, mediante el cual, comunicó la designación de José Antonio Sivila Peñaranda como Gerente Nacional de Riesgos. La denominación correcta del cargo es: Gerente Nacional de Gestión Integral de Riesgos. Los demás aspectos comunicados en el referido Hecho Relevante permanecen sin modificación.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Rectifica el Hecho Relevante de 10 de julio de 2026, mediante el cual, comunicó la designación de José Antonio Sivila Peñaranda como Gerente Nacional de Riesgos.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Nacional de Riesgos",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Credifondo Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente:\n1. Designar a Adriana Roca Bello como Gerente General y Administrador Titular de los Fondos de Inversión a cargo de la Sociedad, quién asumirá sus funciones a partir del 3 de agosto de 2026. Como consecuencia de lo anterior, se determinó la otorgación de un Poder Especial para el ejercicio de los cargos señalados, así como la revocatoria del Testimonio Poder N° 1204/2026, otorgado a favor de Carla Ericka Chuquimia Toconi, en virtud de la conclusión de su interinato.\n2. Designar a los miembros del Comité de Gestión Integral de Riesgos, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Francisco Ricardo Canestri Adriana Roca Bello Natalia Lucia Armaza Pacheco\n3. Designar a los miembros del Comité de Seguridad de la Información, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Milton Franco Hernández La Fuente (Independiente) Miguel Angel Paye Callisaya Sergio Martín Tapia Bernal Adriana Roca Bello Natalia Lucia Armaza Pacheco Natalia Lucia Armaza Pacheco\n4. Designar a los miembros del Comité de Inversiones FIA, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Sergio Martín Tapia Bernal Francisco Ricardo Canestri Adriana Roca Bello Renán Rodrigo Salazar Salas\n5. Designar a los miembros del Comité de Inversiones de Credifondo Promotor Fondo de Inversión Cerrado, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Sergio Martín Tapia Bernal Francisco Ricardo Canestri Adriana Roca Bello Renán Rodrigo Salazar Salas Carlos Alberto Pozzo Velasco (Independiente)\n6. Designar a los miembros del Comité de Inversiones de Credifondo Garantiza Fondo de Inversión Cerrado, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Sergio Martín Tapia Bernal Francisco Ricardo Canestri Adriana Roca Bello Renán Rodrigo Salazar Salas Carlos Alberto Pozzo Velasco (Independiente)\n7. Designar a los miembros del Comité de Cumplimiento, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Christian Hausherr Ariñez Francisco Ricardo Canestri Adriana Roca Bello Yanis Kalil Jimenez Saavedra\n8. Designar a los miembros del Comité de Ética, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Adriana Roca Bello Christian Hausherr Ariñez Yanis Kalil Jimenez Saavedra Erika Lucia Lottersberger Marin\n9. Designar a los miembros del Comité Operativo de Tecnología de Información, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Chrstian Hausherr Ariñez Freddy Edwin Davalos Zuñiga Adriana Roca Bello\n10. Designar a los miembros del Comité de Tecnología de la Información, el cual, a partir del 3 de agosto de 2026, quedará conformado de la siguiente manera: Chrstian Hausherr Ariñez Freddy Edwin Davalos Zuñiga Adriana Roca Bello",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 15 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "FIPADE Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 14 de julio de 2026, se determinó lo siguiente:\n1. Aprobar las modificaciones al Organigrama Institucional de la Sociedad.\n2. Tomar conocimiento de los resultados de la Inspección Ordinaria de Riesgo Tecnológico Operativo de la Autoridad de Supervisión del Sistema Financiero (ASFI) con corte al 30 de abril 2026.\n3. Considerar y aprobar el Plan de Acción de la Sociedad para subsanar las observaciones resultantes de la Inspección Ordinaria de Riesgo Tecnológico Operativo.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 14 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "FIPADE Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n- Aprobar el aumento del Capital Autorizado hasta la suma de Bs40.000.000,00 y por consecuencia aprobar también la modificación de la Escritura de Constitución y de los Estatutos Sociales.\n- Aprobar la capitalización de Resultados acumulados de gestiones pasadas por Bs266.000,00.\n- Aprobar el aumento de Capital Social y Pagado por el importe total de Bs320.000,00 y la emisión de 3.200 acciones nominativas y ordinarias.\n- Aprobar modificar la Escritura de Constitución, como consecuencia del incremento del Capital Pagado.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 16 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: - Aprobar el aumento del Capital",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Sociedad Administradora de Fondos de Inversión Mercantil Santa Cruz S.A.",
+     "texto": "Comunica que, Daniela Segurondo Ferrel, presentó su renuncia el 17 de julio de 2026, como Representante Autorizado (La Paz), efectiva a partir de la fecha.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Daniela Segurondo Ferrel, presentó su renuncia el 17 de julio de 2026, como Representante Autorizado (La Paz), efectiva a partir de la fecha.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Representante Autorizado (La Paz)",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Comunica que, el 15 de julio de 2026, concluyó con el pago del Cupón N° 6 de los Bonos BISA Leasing VI - Emisión 2 (Series A y B), dentro del Programa de Emisiones de Bonos BISA LEASING VI.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, concluyó con el pago del Cupón N° 6 de los Bonos BISA Leasing VI - Emisión 2 (Series A y B), dentro del Programa de Emisiones de Bonos BISA LEASING VI.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "6",
+      "instrumento": "Bonos BISA Leasing VI",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 16 de la Emisión de Bonos GAS & ELECTRICIDAD II - Emisión 1 (Serie B) dentro del Programa de Emisiones de Bonos GAS & ELECTRICIDAD II, se realizará, a partir del 20 de julio de 2026, en sus oficinas.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada, el pago del Cupón N° 16 de la Emisión de Bonos GAS & ELECTRICIDAD II - Emisión 1 (Serie B) dentro del Programa de Emisiones de",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "16",
+      "instrumento": "Bonos GAS & ELECTRICIDAD II",
+      "fecha_pago": "20 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de los PAGARÉS BURSÁTILES FARMACIAS CHAVEZ I - EMISIÓN 1, Serie Única, con Clave de Pizarra: FCZ-PB1-N1U, el pago se efectuará, a partir del 20 de julio del presente.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de los PAGARÉS BURSÁTILES FARMACIAS CHAVEZ I - EMISIÓN 1, Serie Única, con Clave de Pizarra: FCZ-PB1-N1U, el pago se",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Credibolsa S.A. Agencia de Bolsa",
+     "texto": "Comunica que, el 15 de julio de 2026, en calidad de agente colocador, realizó la colocación primaria de 32.159 valores de la Emisión de Bonos denominada “BONOS JALASOFT V”.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, en calidad de agente colocador, realizó la colocación primaria de 32.159 valores de la Emisión de Bonos denominada “BONOS JALASOFT V”.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Bonos denominado “BONOS BISA LEASING VIII”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, Bisa Leasing S.A., deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Bonos denominado “BONOS BISA LEASING VIII”, en",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "BONOS BISA LEASING VIII",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el 15 de julio de 2026, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, la Gerente General a.i. autorizó el registro e inscripción de la Emisión de Bonos denominada “BONOS CAMSA III - EMISIÓN 1”, comprendida dentro del Programa de Emisiones de Bonos denominado “BONOS CAMSA III”, en la Bolsa Boliviana de Valores S.A. para su negociación y cotización. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision",
+      "personal"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, en virtud a lo dispuesto por el Artículo I.11 del Reglamento Interno de Registro y Operaciones, la Gerente General a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “BONOS TELECEL VIII”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, Telefónica Celular de Bolivia S.A. deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de la solvencia, estabilidad y capacidad de cumplimiento de sus Emisores.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción de la Emisión de Bonos denominada “BONOS TELECEL VIII”, en la Bolsa",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "BONOS TELECEL VIII",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "EMPRESA MINERA PAITITI S.A. - EMIPA",
+     "texto": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.49 del Prospecto de Emisión, convoca a la Asamblea General de Tenedores de Bonos de la Emisión “Bonos EMIPA II”, a realizarse el 29 de julio de 2026 a Hrs. 15:00 de manera mixta (presencial y virtual), para considerar el siguiente Orden del Día:\n1. Informe del Emisor sobre el avance del proyecto de tratamiento de Óxidos.\n2. Tratamiento de Compromisos Financieros.\n3. Designación de dos (2) representantes para la firma del Acta.",
+     "tags": [
+      "compromisos",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.49 del Prospecto de Emisión, convoca a la Asamblea General",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "EMPRESA MINERA PAITITI S.A. - EMIPA",
+     "texto": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.52 del Prospecto de Emisión, convoca a la Asamblea General de Tenedores de Bonos de la Emisión “Bonos EMIPA I”, a realizarse el 29 de julio de 2026 a Hrs. 15:00 de manera mixta (presencial y virtual), para considerar el siguiente Orden del Día:\n1. Informe del Emisor sobre el avance del proyecto de tratamiento de Óxidos.\n2. Tratamiento de Compromisos Financieros.\n3. Designación de dos (2) representantes para la firma del Acta.",
+     "tags": [
+      "compromisos",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.52 del Prospecto de Emisión, convoca a la Asamblea General",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, el 16 de julio de 2026, realizó la provisión de fondos al agente pagador BNB Valores S.A. Agencia de Bolsa, para proceder con el pago del vencimiento de los \"PAGARÉS BURSÁTILES FARMACIA CHÁVEZ I - EMISIÓN 1\", mismos que vencen el 18 de julio de 2026 y serán pagados a partir del 20 de julio del presente.",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 16 de julio de 2026, realizó la provisión de fondos al agente pagador BNB Valores S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "PAGARÉS BURSÁTILES FARMACIA CHÁVEZ I",
+      "fecha_pago": "20 de julio",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs3.500.000,00 para compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Bonos Farmacias Chávez II, utilizó los fondos de Bs3.500.000,00 para compra de mercadería como capital de operaciones.",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos Farmacias Chávez II",
+      "destino": "capital de operaciones",
+      "monto": "Bs 3,5 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Jalasoft S.R.L.",
+     "texto": "Comunica que, el 15 de julio de 2026, por intermedio de Credibolsa S.A. Agencia de Bolsa, en calidad de agente colocador, realizó la colocación primaria de 32.159 valores de la Emisión de Bonos denominada “Bonos Jalasoft V”.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, por intermedio de Credibolsa S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Ganadero S.A.",
+     "texto": "Comunica que, Ronald Gutierrez - Gerente General, estará ausente desde el 17 hasta el 20 de julio de 2026, retornando a sus funciones el 21 de julio del presente. Queda en su reemplazo como Gerente General a.i., Carlos Diaz.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Ronald Gutierrez - Gerente General, estará ausente desde el 17 hasta el 20 de julio de 2026, retornando a sus funciones el 21 de julio del presente.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Solidario S.A.",
+     "texto": "Comunica la designación temporal de Jankiel Racmill Mercado Hidalgo en el cargo de Gerente Regional - Centro a.i., a partir del 15 de julio de 2026 y será efectivo hasta el 20 de julio de 2026, periodo en el que Juan Carlos Miranda Urquidi se encontrará con baja médica. El mismo retornará a sus funciones habituales en el cargo de Gerente Regional - Centro, a partir del 21 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica la designación temporal de Jankiel Racmill Mercado Hidalgo en el cargo de Gerente Regional - Centro a.i., a partir del 15 de julio de 2026 y será efectivo hasta el 20 de julio de 2026",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Regional - Centro",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, el 17 de julio de 2026, designa a Gustavo Alberto Garcia Ugarte como Gerente Nacional División Banca Minorista a.i. en la Regional Cochabamba, quien ocupará el cargo únicamente por el 17 de julio de 2026, esta designación temporal se efectúa por ausencia del titular Marco Antonio Camacho Villazón.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 17 de julio de 2026, designa a Gustavo Alberto Garcia Ugarte como Gerente Nacional División Banca Minorista a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Nacional División Banca Minorista",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, el 17 de julio de 2026, designa a Oscar Jorge Justiniano Justiniano como Gerente Nacional División Banca Mayorista a.i. en Oficina Nacional, quien ocupará el cargo, a partir del 17 de julio de 2026, hasta el 14 de septiembre de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 17 de julio de 2026, designa a Oscar Jorge Justiniano Justiniano como Gerente Nacional División Banca Mayorista a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Nacional División Banca Mayorista",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Entidades de Depósito de Valores",
+     "entidad": "Entidad de Depósito de Valores de Bolivia S.A.",
+     "texto": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 15 de julio de 2026, procedió con el registro de la Emisión de Bonos denominada “BONOS TIENDA AMIGA II”, en el Sistema de Registro de Anotaciones en Cuenta de la Entidad. Asimismo, informa que BISA S.A Agencia de Bolsa, es la agencia colocadora.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, habiendo cumplido con los requisitos de Registro de Nuevas Emisiones establecidos en el Artículo VII.3 del Reglamento Operativo Interno, el 15 de julio de 2026, procedió con el registro",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Crédito con Educación Rural - CRECER IFD",
+     "texto": "Comunica que, en el marco del punto 1.3.36.3 del Prospecto de Emisión de los Bonos Subordinados CRECER IFD, los Compromisos Financieros a junio 2026, son los siguientes: Compromiso Obtenido Suficiencia Patrimonial: Coeficiente de Suficiencia Patrimonial = > 12% 17,88% Indicador Liquidez para Obligaciones: Disponibilidades + Inv. Temporarias = > 2,50% 12,52% Oblig. Financieras (*) Indicador Cobertura: Previsión de Cartera (**) = > 150% 515,72% Cartera en Mora * Oblig. Financieras: Total Obligaciones con costo ** Previsión de Cartera: Previsiones para incobrabilidad de cartera + Previsión Genérica Cíclica",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Comunica que, en el marco del punto 1.3.36.3 del Prospecto de Emisión de los Bonos Subordinados CRECER IFD, los Compromisos Financieros a junio 2026, son los siguientes: Compromiso Obtenido",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Diaconía Fondo Rotativo de Inversión y Fomento - DIACONÍA FRIF - IFD",
+     "texto": "Comunica que, Diego Alejandro Peñaranda Espinoza, quien desempeña el cargo de Jefe Legal de Asuntos Jurídicos, fue designado temporalmente el 17 de julio de 2026, como Gerente Nacional de Asuntos Jurídicos a.i. para cubrir la vacante en la citada fecha, ante la necesidad y por ausencia del Titular.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Diego Alejandro Peñaranda Espinoza, quien desempeña el cargo de Jefe Legal de Asuntos Jurídicos, fue designado temporalmente el 17 de julio de 2026, como Gerente Nacional de Asuntos",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Jefe Legal de Asuntos Jurídicos",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Diaconía Fondo Rotativo de Inversión y Fomento - DIACONÍA FRIF - IFD",
+     "texto": "Comunica que, los Compromisos Financieros asumidos con información al 30 de junio de 2026, se presentan de acuerdo al siguiente detalle: Indicadores Financieros Compromiso Junio 2026 Indicador de Cobertura (IC) IC > = 120% 276,44% Índice de Liquidez para Obligaciones (ILO) ILO > = 5% 23,17% Coeficiente de Adecuación Patrimonial (CAP) CAP > = 11% 26,69% Ratio de Eficiencia Administrativa (REA) REA < =15% 9,07%",
+     "tags": [
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los Compromisos Financieros asumidos con información al 30 de junio de 2026, se presentan de acuerdo al siguiente detalle: Indicadores Financieros Compromiso Junio 2026 Indicador de",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tabla_no_parseada": true
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "SOCIEDADES CONTROLADORAS DE GRUPOS FINANCIEROS",
+     "entidad": "Sociedad Controladora Ganadero S.A.",
+     "texto": "Comunica que, Jaime Ronald Gutiérrez López - Gerente General, estará ausente desde el 17 hasta el 20 de julio de 2026, retornando a sus funciones el 21 de julio del presente. Queda en su reemplazo como Gerente General a.i. María Jesús Paz Suárez.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Jaime Ronald Gutiérrez López - Gerente General, estará ausente desde el 17 hasta el 20 de julio de 2026, retornando a sus funciones el 21 de julio del presente.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Multiplika Sociedad de Titularización S.A.",
+     "texto": "Comunica que, como agente pagador, procederá al pago del Cupón N° 48 de los Valores de Titularización BISA ST - CIDRE II (Serie B), a partir del 20 de julio de 2026, en su oficina.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, como agente pagador, procederá al pago del Cupón N° 48 de los Valores de Titularización BISA ST - CIDRE II (Serie B), a partir del 20 de julio de 2026, en su oficina.",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "48",
+      "fecha_pago": "20 de julio de 2026",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/592/2026 de 09 de julio de 2026",
+     "texto": "RESUELVE: Sancionar a PANAMERICAN SECURITIES S.A. AGENCIA DE BOLSA, con multa, por los cargos N° 1, 2 y 3, imputados en la Nota de Cargos ASFI/DSV/R-112005/2026 de 10 de junio de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores, el Inciso e., Artículo 8°, Sección 1, Capítulo III del Reglamento para Agencias de Bolsa, contenido en el Título III, Libro 4° de la Recopilación de Normas para el Mercado de Valores y las Cartas Circulares ASFI/DSV/CC-14526/2024 y ASFI/DSV/CC-17639/2024, de 2 de octubre y 6 de diciembre de 2024, respectivamente, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a PANAMERICAN SECURITIES S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1428 de 24 de junio de 2026",
+     "texto": "HECHOS RELEVANTES (Ver Adjunto)",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "HECHOS RELEVANTES (Ver Adjunto)",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
   }
  }
 }
