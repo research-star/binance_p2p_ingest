@@ -46,22 +46,48 @@ BOLETIN_DIRNAME = "boletin-4k9x"           # ruta standalone, fuera del SPA
 BOT_TZ = timezone(timedelta(hours=-4))     # hora de Bolivia (UTC-4, sin DST)
 DELTA_EPS = 0.005                          # |Δ| < eps → se muestra como "=0.00"
 
-# Foto del billete (fondo de la banda central). Se embebe base64 en el SVG en
-# tiempo de generación → la página queda self-contained (nada extra que servir).
-PHOTO_PATH = Path(__file__).resolve().parent / "boletin_assets" / "dolar_card_bg.png"
+# Assets embebidos (base64 en el SVG en tiempo de generación → la página queda
+# self-contained, nada extra que servir): foto del billete + las 2 webfonts que
+# el render canónico usa de verdad (spec_fonts.json: Newsreader 600 en el
+# masthead; Inter 800 en la fecha — Aptos nunca renderiza en Chromium).
+_ASSETS_DIR = Path(__file__).resolve().parent / "boletin_assets"
+PHOTO_PATH = _ASSETS_DIR / "dolar_card_bg.png"
+FONT_NEWSREADER_PATH = _ASSETS_DIR / "newsreader_400-700_latin.woff2"
+FONT_INTER800_PATH = _ASSETS_DIR / "inter_800_latin.woff2"
 _PHOTO_W, _PHOTO_H = 612, 408              # dimensiones nativas del PNG
 
 MESES_MAY = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO",
              "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"]
 
 # Paleta del diseño (extraída del render aprobado)
-C_BG = "#F5EADF"        # crema de las bandas
-C_INK = "#211E1B"       # texto principal (masthead, números, sub-labels)
-C_TAN = "#A08970"       # acento tan (COTIZACIÓN, OFICIAL/BINANCE, deltas, fuente)
-C_MUTED = "#6B6256"     # tagline
-C_BORDER = "#BCAC9A"    # marco + divisores
-FONT_SERIF = "'Times New Roman', Georgia, serif"
+C_BG = "#F5EADF"        # crema de las bandas          rgb(245,234,223)
+C_INK = "#211E1B"       # texto principal              rgb(33,30,27)
+C_TAN = "#A08970"       # acento tan                   rgb(160,137,112)
+C_MUTED = "#6B6256"     # tagline                      rgb(107,98,86)
+C_BORDER = "#BCAC9A"    # marco + reglas + divisor     rgb(188,172,154)
+
+# Stacks tipográficos EXACTOS del render canónico (spec_fonts.json § roles).
+# En Windows/Chromium: 'Helvetica Neue' no existe → Arial; 'aptos' no resuelve
+# (vive en el VFS privado de Office) → cae a Times New Roman regular, que es lo
+# que la referencia ref_1700.png realmente muestra en los "vs. …".
+FONT_SERIF = "'Times New Roman', serif"
 FONT_SANS = "'Helvetica Neue', Arial, sans-serif"
+FONT_BRAND = "Newsreader, 'Times New Roman', serif"
+FONT_TAGLINE = "'microsoft himalaya'"
+FONT_DATE = "'Aptos Display', Aptos, Inter, sans-serif"
+FONT_VS = "aptos, 'Times New Roman', serif"
+
+# Geometría medida del original (spec_geometry.json; viewBox 0 0 850 850,
+# y de cada <text> = BASELINE medida, x = centro medido, text-anchor=middle).
+CX = 425                         # eje central de la tarjeta
+CX_OF, CX_BI = 212.5, 637.5      # centros de columna OFICIAL / BINANCE
+# Centros de los sub-stats (delta + "vs. …"); asimétricos respecto del centro
+# de columna por los margin de la fila flex del original (medidos, no derivados)
+CX_OF_DIA, CX_OF_SEM = 125.31, 299.78
+CX_BI_DIA, CX_BI_SEM = 550.31, 724.78
+# Foto: contenedor full-bleed en x, banda y=223..530; cover con foco 50% 23%
+PHOTO_RECT = (0, 223, 850, 307)
+PHOTO_FOCUS_Y = 0.23
 
 
 class BoletinDataError(ValueError):
@@ -208,76 +234,113 @@ def render_captions(now_utc: datetime | None = None) -> dict:
     }
 
 
-# ── Foto embebida ────────────────────────────────────────────────────────────
+# ── Assets embebidos (foto + webfonts) ───────────────────────────────────────
 
-def _photo_data_uri() -> str:
-    """base64 data-URI del PNG de la banda. '' si el asset no existe (el SVG
-    degrada a la banda color sin foto — no aborta el boletín)."""
+def _data_uri(path: Path, mime: str) -> str:
+    """base64 data-URI del archivo. '' si el asset no existe (el SVG degrada
+    con gracia — foto ausente o fuente al fallback del stack — no aborta)."""
     try:
-        b = PHOTO_PATH.read_bytes()
+        b = path.read_bytes()
     except OSError:
         return ""
-    return "data:image/png;base64," + base64.b64encode(b).decode("ascii")
+    return f"data:{mime};base64," + base64.b64encode(b).decode("ascii")
+
+
+def _photo_data_uri() -> str:
+    return _data_uri(PHOTO_PATH, "image/png")
+
+
+def _font_style_block() -> str:
+    """<style> con las @font-face embebidas (woff2 data:URI) DENTRO del SVG,
+    para que el raster vía canvas (SVG→Image→canvas) las tenga disponibles.
+    Solo las 2 caras que el render canónico usa (spec_fonts.json):
+    Newsreader variable 400-700 (masthead, se usa a 600) e Inter 800 (fecha)."""
+    faces = []
+    nr = _data_uri(FONT_NEWSREADER_PATH, "font/woff2")
+    if nr:
+        faces.append(
+            "@font-face{font-family:Newsreader;font-style:normal;"
+            "font-weight:400 700;src:url(" + nr + ") format('woff2');}")
+    inter = _data_uri(FONT_INTER800_PATH, "font/woff2")
+    if inter:
+        faces.append(
+            "@font-face{font-family:Inter;font-style:normal;"
+            "font-weight:800;src:url(" + inter + ") format('woff2');}")
+    if not faces:
+        return ""
+    return "<style>" + "".join(faces) + "</style>"
 
 
 # ── Render del SVG (tarjeta 850×850) ─────────────────────────────────────────
+# Geometría y tipografía calcadas del render canónico (spec_geometry.json /
+# spec_fonts.json): cada <text> usa la BASELINE medida como y y el centro
+# medido como x (text-anchor=middle); reglas/divisor son los rects medidos.
 
 def _stat_block(cx: float, val_delta: str, label: str) -> str:
-    """Sub-stat (delta arriba, 'vs. …' abajo), centrado en cx."""
+    """Sub-stat (delta baseline 690, 'vs. …' baseline 709), centrado en cx.
+    Delta: 16px Times New Roman 700 ls2 tan. Label: 14.5px 'aptos' (que en el
+    render canónico cae a Times New Roman regular) ls2 tinta."""
     return (
-        f'<text x="{cx}" y="731" text-anchor="middle" font-family="{FONT_SERIF}" '
-        f'font-size="16" font-weight="700" letter-spacing="1.5" fill="{C_TAN}">'
+        f'<text x="{cx}" y="690" text-anchor="middle" font-family="{FONT_SERIF}" '
+        f'font-size="16" font-weight="700" letter-spacing="2" fill="{C_TAN}">'
         f'{_html.escape(val_delta)}</text>'
-        f'<text x="{cx}" y="754" text-anchor="middle" font-family="{FONT_SANS}" '
-        f'font-size="14.5" letter-spacing="1.2" fill="{C_INK}">{label}</text>'
+        f'<text x="{cx}" y="709" text-anchor="middle" font-family="{FONT_VS}" '
+        f'font-size="14.5" font-weight="400" letter-spacing="2" fill="{C_INK}">{label}</text>'
     )
 
 
 def render_svg(vals: dict, fecha_card: str) -> str:
-    """SVG 850×850 self-contained con la tarjeta. La foto va embebida base64."""
+    """SVG 850×850 self-contained (foto y webfonts embebidas base64).
+    Orden de pintado = DOM order del original: marco < header < FOTO < stats <
+    footer → la foto full-bleed TAPA los bordes laterales del marco en su banda."""
     photo = _photo_data_uri()
-    # Foto "cover" con foco 23% desde arriba dentro de la banda (22,230)-(828,527).
-    band_w, band_h = 806, 297
-    scale = band_w / _PHOTO_W                      # llenar el ancho
-    img_h = _PHOTO_H * scale                        # alto proporcional (> band_h)
-    img_y = 230 - (img_h - band_h) * 0.23           # foco 23% desde arriba
-    photo_svg = (
-        f'<clipPath id="phclip"><rect x="22" y="230" width="{band_w}" height="{band_h}"/></clipPath>'
+    fonts_css = _font_style_block()
+
+    # Foto "cover": contenedor (0,223)-(850,530); nativa 612×408 escalada al
+    # ancho 850 → 850×566.67 dibujada en y = 223 − (566.67−307)·0.23 = 163.28
+    # (background-position 50% 23% medido), recortada al contenedor.
+    px, py, pw, ph = PHOTO_RECT
+    img_h = _PHOTO_H * (pw / _PHOTO_W)
+    img_y = py - (img_h - ph) * PHOTO_FOCUS_Y
+    photo_defs = (
+        f'<clipPath id="phclip"><rect x="{px}" y="{py}" width="{pw}" height="{ph}"/></clipPath>'
         if photo else ""
     )
     photo_img = (
-        f'<image href="{photo}" xlink:href="{photo}" x="22" y="{img_y:.1f}" '
-        f'width="{band_w}" height="{img_h:.1f}" preserveAspectRatio="none" '
+        f'<image href="{photo}" xlink:href="{photo}" x="{px}" y="{img_y:.2f}" '
+        f'width="{pw}" height="{img_h:.2f}" preserveAspectRatio="none" '
         f'clip-path="url(#phclip)"/>'
         if photo else ""
     )
 
-    return f'''<svg id="dolarCard" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 850 850" width="850" height="850" font-family="{FONT_SANS}">
-<defs>{photo_svg}</defs>
+    return f'''<svg id="dolarCard" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 850 850" width="850" height="850">
+{fonts_css}<defs>{photo_defs}</defs>
 <rect x="0" y="0" width="850" height="850" fill="{C_BG}"/>
-{photo_img}
-<rect x="22" y="22" width="806" height="806" fill="none" stroke="{C_BORDER}" stroke-width="2"/>
+<!-- marco: border-box (22,22,806,802) con borde 1px ADENTRO → path en +0.5 -->
+<rect x="22.5" y="22.5" width="805" height="801" fill="none" stroke="{C_BORDER}" stroke-width="1"/>
 <!-- masthead -->
-<text x="425" y="118" text-anchor="middle" font-family="{FONT_SERIF}" font-size="66" font-weight="700" fill="{C_INK}">FinanzasBo</text>
-<text x="425" y="152" text-anchor="middle" font-family="{FONT_SERIF}" font-style="italic" font-size="25" fill="{C_MUTED}">Informaci&#243;n econ&#243;mica y financiera de Bolivia</text>
-<line x1="175" y1="184" x2="225" y2="184" stroke="{C_BORDER}" stroke-width="1.5"/>
-<line x1="625" y1="184" x2="675" y2="184" stroke="{C_BORDER}" stroke-width="1.5"/>
-<text x="425" y="191" text-anchor="middle" font-family="{FONT_SANS}" font-size="22" font-weight="700" letter-spacing="5" fill="{C_TAN}">COTIZACI&#211;N DEL D&#211;LAR</text>
-<text x="425" y="224" text-anchor="middle" font-family="{FONT_SANS}" font-size="21" font-weight="800" letter-spacing="4.5" fill="{C_INK}">{fecha_card}</text>
-<!-- columnas -->
-<line x1="425" y1="560" x2="425" y2="772" stroke="{C_BORDER}" stroke-width="1.5"/>
-<text x="235" y="592" text-anchor="middle" font-family="{FONT_SANS}" font-size="24" font-weight="700" letter-spacing="5" fill="{C_TAN}">OFICIAL</text>
-<text x="615" y="592" text-anchor="middle" font-family="{FONT_SANS}" font-size="24" font-weight="700" letter-spacing="5" fill="{C_TAN}">BINANCE</text>
-<text x="235" y="688" text-anchor="middle" font-family="{FONT_SERIF}" font-size="100" font-weight="700" fill="{C_INK}">{vals["oficial"]}</text>
-<text x="615" y="688" text-anchor="middle" font-family="{FONT_SERIF}" font-size="100" font-weight="700" fill="{C_INK}">{vals["binance"]}</text>
-{_stat_block(150, vals["oficial_dia"], "vs. d&#237;a anterior")}
-{_stat_block(322, vals["oficial_sem"], "vs. semana anterior")}
-{_stat_block(530, vals["binance_dia"], "vs. d&#237;a anterior")}
-{_stat_block(702, vals["binance_sem"], "vs. semana anterior")}
+<text x="{CX}" y="107" text-anchor="middle" font-family="{FONT_BRAND}" font-size="65" font-weight="600" letter-spacing="0.2" fill="{C_INK}">FinanzasBo</text>
+<text x="{CX}" y="135" text-anchor="middle" font-family="{FONT_TAGLINE}" font-style="italic" font-size="27" font-weight="500" fill="{C_MUTED}">Informaci&#243;n econ&#243;mica y financiera de Bolivia</text>
+<rect x="104.22" y="166.75" width="105" height="2.5" fill="{C_BORDER}"/>
+<rect x="640.77" y="166.75" width="105" height="2.5" fill="{C_BORDER}"/>
+<text x="{CX}" y="176" text-anchor="middle" font-family="{FONT_SANS}" font-size="24" font-weight="700" letter-spacing="5" fill="{C_TAN}">COTIZACI&#211;N DEL D&#211;LAR</text>
+<text x="{CX}" y="204" text-anchor="middle" font-family="{FONT_DATE}" font-size="21" font-weight="800" letter-spacing="4.8" fill="{C_INK}">{_html.escape(fecha_card)}</text>
+<!-- foto (pintada DESPUÉS del marco y el header, como en el original) -->
+{photo_img}
+<!-- stats -->
+<rect x="425" y="558" width="2.5" height="112" fill="{C_BORDER}"/>
+<text x="{CX_OF}" y="570" text-anchor="middle" font-family="{FONT_SANS}" font-size="24" font-weight="700" letter-spacing="5" fill="{C_TAN}">OFICIAL</text>
+<text x="{CX_BI}" y="570" text-anchor="middle" font-family="{FONT_SANS}" font-size="24" font-weight="700" letter-spacing="5" fill="{C_TAN}">BINANCE</text>
+<text x="{CX_OF}" y="659" text-anchor="middle" font-family="{FONT_SERIF}" font-size="100" font-weight="700" fill="{C_INK}">{vals["oficial"]}</text>
+<text x="{CX_BI}" y="659" text-anchor="middle" font-family="{FONT_SERIF}" font-size="100" font-weight="700" fill="{C_INK}">{vals["binance"]}</text>
+{_stat_block(CX_OF_DIA, vals["oficial_dia"], "vs. d&#237;a anterior")}
+{_stat_block(CX_OF_SEM, vals["oficial_sem"], "vs. semana anterior")}
+{_stat_block(CX_BI_DIA, vals["binance_dia"], "vs. d&#237;a anterior")}
+{_stat_block(CX_BI_SEM, vals["binance_sem"], "vs. semana anterior")}
 <!-- footer -->
-<text x="425" y="797" text-anchor="middle" font-family="{FONT_SANS}" font-size="17" font-weight="700" letter-spacing="1.5" fill="{C_TAN}">FUENTE: BANCO CENTRAL DE BOLIVIA | BINANCE</text>
-<text x="425" y="821" text-anchor="middle" font-family="{FONT_SANS}" font-size="15" font-weight="500" letter-spacing="2" fill="{C_INK}">M&#193;S INFORMACI&#211;N EN:</text>
-<text x="425" y="845" text-anchor="middle" font-family="{FONT_SANS}" font-size="20" font-weight="700" letter-spacing="1.5" fill="{C_INK}">finanzasbo.com</text>
+<text x="{CX}" y="756" text-anchor="middle" font-family="{FONT_SANS}" font-size="17" font-weight="700" letter-spacing="1.5" fill="{C_TAN}">FUENTE: BANCO CENTRAL DE BOLIVIA | BINANCE</text>
+<text x="{CX}" y="784" text-anchor="middle" font-family="{FONT_SANS}" font-size="16" font-weight="500" letter-spacing="2" fill="{C_INK}">M&#193;S INFORMACI&#211;N EN:</text>
+<text x="{CX}" y="811" text-anchor="middle" font-family="{FONT_SANS}" font-size="20" font-weight="700" letter-spacing="1.5" fill="{C_INK}">finanzasbo.com</text>
 </svg>'''
 
 
