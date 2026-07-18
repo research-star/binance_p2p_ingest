@@ -2978,12 +2978,23 @@ function kpi(label,value,sub,iconSvg,colorVar,deltas){
        + '</div>'
        + '<div class="fb-kpi-sub">'+sub+'</div></div>';
 }
-// Índice del snapshot más reciente con ts <= (ts del snapshot activo - horas).
-// -1 si el histórico no llega tan atrás.
-function idxHoursBack(i, horas){
-  const target=new Date(TS_ARR[i]).getTime()-horas*3600000;
-  for(let j=i;j>=0;j--){ if(new Date(TS_ARR[j]).getTime()<=target) return j; }
+// Fecha calendario BOT (UTC-4) de un ts en ms: 'YYYY-MM-DD'.
+function botDate(tsMs){ return new Date(tsMs-4*3600000).toISOString().slice(0,10); }
+// Índice del CIERRE (último valor NO-null) de la serie `arr` en el día calendario
+// BOT <= dstr; si ese día tiene hueco, el cierre disponible más reciente anterior.
+// -1 si no hay ninguno. Reemplaza la ventana móvil de 24h/168h: el delta va contra
+// el cierre de AYER / de hace 7 días (coincide con los labels "día/semana anterior").
+function idxCloseVal(i, dstr, arr){
+  for(let j=i;j>=0;j--){
+    if(arr[j]!=null && botDate(new Date(TS_ARR[j]).getTime())<=dstr) return j;
+  }
   return -1;
+}
+// TCO (una obs por día) cuyo `fecha` <= dstr (comparación ISO lexicográfica). null si no hay.
+function tcoOnOrBefore(dstr){
+  const hist=meta.bcb_tco_history||[];
+  for(let k=hist.length-1;k>=0;k--){ if(hist[k].tco!=null && hist[k].fecha<=dstr) return hist[k].tco; }
+  return null;
 }
 // Línea "▲ variación día, 0.04": flecha = signo del cambio; rojo si sube,
 // verde si baja, uniforme en las 3 cards (el dólar subiendo es la mala
@@ -3037,19 +3048,25 @@ function updateKpis(){
         : ('{{t:dolar.kpi_bcb_sub_tco}}'+tcoFechaCorta(tco.fecha)));
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
-  // Deltas día/semana vs el snapshot activo. P2P: contra el snapshot más
-  // cercano 24h/7d atrás. TCO: contra el vigente a esas fechas (bcbTcoAt).
+  // Deltas día/semana contra el CIERRE del día calendario anterior / de hace 7
+  // días (zona BOT), NO una ventana móvil de 24h/168h. Coincide con los labels
+  // "día anterior"/"semana anterior" y con la tarjeta /boletin-4k9x/ (boletin.py).
   const tsNow=new Date(TS_ARR[i]).getTime();
-  const iDia=idxHoursBack(i,24), iSem=idxHoursBack(i,168);
+  const dAyer=new Date(tsNow-4*3600000); dAyer.setUTCDate(dAyer.getUTCDate()-1);
+  const ayerStr=dAyer.toISOString().slice(0,10);
+  const dSem7=new Date(tsNow-4*3600000); dSem7.setUTCDate(dSem7.getUTCDate()-7);
+  const semStr=dSem7.toISOString().slice(0,10);
+  const iDia={vb:idxCloseVal(i,ayerStr,tm.vb10), vs:idxCloseVal(i,ayerStr,tm.vs10)};
+  const iSem={vb:idxCloseVal(i,semStr,tm.vb10),  vs:idxCloseVal(i,semStr,tm.vs10)};
   const LAB_D='{{t:dolar.kpi_delta_dia}}', LAB_S='{{t:dolar.kpi_delta_semana}}';
-  const tcoAyer=hasTco?bcbTcoAt(tsNow-86400000):null;
-  const tcoSem =hasTco?bcbTcoAt(tsNow-7*86400000):null;
-  const dTco   = deltaLine(hasTco?tco.tco:null, tcoAyer?tcoAyer.tco:null, LAB_D)
-               + deltaLine(hasTco?tco.tco:null, tcoSem?tcoSem.tco:null, LAB_S);
-  const dCompra= deltaLine(last.vb10, iDia>=0?tm.vb10[iDia]:null, LAB_D)
-               + deltaLine(last.vb10, iSem>=0?tm.vb10[iSem]:null, LAB_S);
-  const dVenta = deltaLine(last.vs10, iDia>=0?tm.vs10[iDia]:null, LAB_D)
-               + deltaLine(last.vs10, iSem>=0?tm.vs10[iSem]:null, LAB_S);
+  const tcoAyer=hasTco?tcoOnOrBefore(ayerStr):null;
+  const tcoSem =hasTco?tcoOnOrBefore(semStr):null;
+  const dTco   = deltaLine(hasTco?tco.tco:null, tcoAyer, LAB_D)
+               + deltaLine(hasTco?tco.tco:null, tcoSem, LAB_S);
+  const dCompra= deltaLine(last.vb10, iDia.vb>=0?tm.vb10[iDia.vb]:null, LAB_D)
+               + deltaLine(last.vb10, iSem.vb>=0?tm.vb10[iSem.vb]:null, LAB_S);
+  const dVenta = deltaLine(last.vs10, iDia.vs>=0?tm.vs10[iDia.vs]:null, LAB_D)
+               + deltaLine(last.vs10, iSem.vs>=0?tm.vs10[iSem.vs]:null, LAB_S);
   // Toggle solo-admin "TCO ancho" (balance de anchos, ver CSS .fb-kpi-grid--w1).
   // El estado vive en localStorage del browser del admin; el botón está en el
   // DOM siempre pero solo es visible con html[data-fb-admin] (gate CSS).
