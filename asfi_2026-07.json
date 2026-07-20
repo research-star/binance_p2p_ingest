@@ -6004,6 +6004,383 @@
      "revisado": "provisional"
     }
    ]
+  },
+  "2026-07-20": {
+   "guid": "0843ec09-67ef-4859-bf8b-43a79ca8f833",
+   "titulo": "Reporte Informativo ASFI al 20/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "PLASTIFORTE S. R. L.",
+     "texto": "Comunica que, el 15 de julio de 2026, la Asamblea Ordinaria de Socios, en su Orden del Día punto 4, designó como Directores del Directorio a: Edgar Gustavo Heredia Deiters como Presidente Ejecutivo del Directorio, Héctor Alejandro Heredia Deiters como Director Titular y Ana Virginia Heredia Deiters como Directora Titular.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 15 de julio de 2026, la Asamblea Ordinaria de Socios, en su Orden del Día punto 4, designó como Directores del Directorio a: Edgar Gustavo Heredia Deiters como Presidente Ejecutivo",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Presidente Ejecutivo del Directorio",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Sociedad Hotelera Los Tajibos S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 11 de junio de 2026 y de conformidad al Artículo 28 de los Estatutos de la Sociedad, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 23 de julio de 2026 a Hrs. 15:00, a fin de considerar el siguiente Orden del Día:\n1. Elección de Síndico(s), Titular(es) y Suplente(s) y fijación de su remuneración y fianza.\n2. Nominación de dos accionistas para la firma del Acta.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 11 de junio de 2026 y de conformidad al Artículo 28 de los Estatutos de la Sociedad, se determinó convocar a Junta General Ordinaria de Accionistas, a",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "23 de julio de 2026",
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Andina S.A.",
+     "texto": "Comunica que, de acuerdo a lo dispuesto por la Junta General Ordinaria de Accionistas de 29 de junio de 2026, a través de BNB Valores S.A. Agencia de Bolsa, procederá a efectuar el pago de dividendos correspondiente al ejercicio fiscal finalizado el 31 de marzo de 2026 y dividendos correspondientes a los saldos remanentes de los resultados acumulados no distribuidos hasta la gestión fiscal al 31 de marzo de 2025, a partir del 27 de julio de 2026. Los dividendos a ser pagados son: Gestión Fiscal finalizada el 31 de marzo de 2026, por un importe de Bs9,2102 por Acción. Saldos remanentes de los resultados acumulados no distribuidos, hasta la gestión fiscal al 31 de marzo de 2025, por un importe de Bs1,2898 por Acción.",
+     "tags": [
+      "junta",
+      "dividendos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo dispuesto por la Junta General Ordinaria de Accionistas de 29 de junio de 2026, a través de BNB Valores S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "dividendos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 9,21 por acción",
+      "fecha_pago": "27 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Ganadero S.A.",
+     "texto": "Comunica que, a partir del 18 de julio de 2026, Paola Alejandra Nacif Nieme, deja de fungir como Gerente Regional en la Ciudad de Tarija.",
+     "tags": [],
+     "resumen": "Comunica que, a partir del 18 de julio de 2026, Paola Alejandra Nacif Nieme, deja de fungir como Gerente Regional en la Ciudad de Tarija.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, el 20 de julio de 2026, decide la contratación de Felipe Gaston Sainz Moya como Gerente Nacional de Planificación, Control de Gestión y Procesos en Oficina Nacional, quien ocupa el cargo, a partir del 20 de julio de 2026.",
+     "tags": [],
+     "resumen": "Comunica que, el 20 de julio de 2026, decide la contratación de Felipe Gaston Sainz Moya como Gerente Nacional de Planificación, Control de Gestión y Procesos en Oficina Nacional, quien ocupa el",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, adoptó las siguientes decisiones:\n- El 20 de julio de 2026, establece el cese de interinato de Gustavo Boris Lopez Guzman como Gerente Nacional de Admisión Crediticia a.i., en Oficina Nacional.\n- El 20 de julio de 2026, decide la contratación de Mateo Nicolas Soria Suarez como Gerente Nacional de Admisión Crediticia en Oficina Nacional, quien ocupa el cargo, a partir de la fecha citada.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, adoptó las siguientes decisiones: - El 20 de julio de 2026, establece el cese de interinato de Gustavo Boris Lopez Guzman como Gerente Nacional de Admisión Crediticia a.i., en Oficina",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente Nacional de Admisión Crediticia",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Ha comunicado que la Asamblea General Ordinaria de Asociados de 17 de julio de 2026, realizada con el 100.00% de los asociados, determinó lo siguiente: Tomar conocimiento de la contratación de la Firma de Auditoría Externa RUIZMIER PELAEZ S.R.L., para la prestación de los servicios de auditoría externa de los Estados Financieros, correspondientes a las gestiones 2026, 2027 y 2028, aprobada por el Directorio de 19 de junio de 2026.",
+     "tags": [
+      "junta",
+      "auditoria"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Ordinaria de Asociados de 17 de julio de 2026, realizada con el 100.00% de los asociados, determinó lo siguiente: Tomar conocimiento de la contratación de la",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "estados financieros"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Boliviana para el Desarrollo - FUBODE IFD",
+     "texto": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 17 de julio de 2026, realizada con el 100.00% de los asociados, determinó lo siguiente: Aprobar la solicitud de aumento del Capital Fundacional por reinversión de utilidades liquidas anuales al 31 de diciembre de 2025, certificadas por auditores externos, deducida de la reserva legal y el fondo de reserva.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Asociados de 17 de julio de 2026, realizada con el 100.00% de los asociados, determinó lo siguiente: Aprobar la solicitud de aumento del",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Marca Verde Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: Aprobar todas las modificaciones al Reglamento Interno de K12 FIC, en los siguientes Artículos: 1, 6, 9, 24, 27, 31.7, 31.9, 44.1, 46.2, 48, 51, 52, 62.1, 62.2, 62.3 y 62.4, y las respectivas modificaciones en el Prospecto del Fondo, así como las modificaciones y unificación de las Escrituras Públicas del Fondo.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: Aprobar todas las modificaciones al Reglamento Interno de K12 FIC, en los siguientes Artículos: 1, 6, 9",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Sociedad Administradora de Fondos de Inversión Mercantil Santa Cruz S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente:\n1. Aprobar las modificaciones a la Estructura Documental de la Sociedad:\n- Metodología para la determinación del perfil de riesgos.\n- Metodología para la calificación de emisores fondo Productivo FIC.\n- Metodología para la calificación de emisores fondo Expansión FIC.\n- Política de utilización de controles criptográficos.\n- Política de compras.\n- Administración - compras.\n- Administración - registro de proveedores.\n2. Aprobación de las modificaciones a los Reglamentos Internos de los siguientes Fondos:\n- MERCANTIL Fondo Mutuo MP - Articulo 17.\n- PROSSIMO-FIA MP - Articulo 17.\n- HORIZONTE-FIA MP - Articulo 17.\n- CRECER BOLIVIANOS Fondo Mutuo MP - Articulo 17.\n- SUPERIOR Fondo Mutuo LP - Articulo 17.\n- PREVISOR FM LP - Articulo 17.\n- +BENEFICIO FONDO MUTUO MP - Articulo 17.\n- MSC EXPANSIÓN FIC - Artículos 34 y 43.\n- DINÁMICO Fondo Mutuo Corto Plazo - Articulo 17.\n- EQUILIBRIO Fondo Mutuo Mediano Plazo - Articulo 17.\n- EQUILIBRIO Fondo Mutuo Mediano Plazo - Articulo 17.\n- PLATINUM Fondo Mutuo Mediano Plazo - Articulo 17.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "SOCIEDADES CONTROLADORAS DE GRUPOS FINANCIEROS",
+     "entidad": "BNB Corporación S.A.",
+     "texto": "Comunica que, en reunión de Directorio de 20 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 3 de agosto de 2026 a Hrs. 10:30 de forma virtual (no presencial), para considerar el siguiente Orden del Día:\n1. Lectura de la Convocatoria a la Junta General Ordinaria de Accionistas de la Sociedad.\n2. Consideración y elección de Síndico Suplente y fijación de sus dietas.\n3. Designación de accionistas para la firma del Acta de la Junta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 20 de julio de 2026, se determinó convocar a Junta General Ordinaria de Accionistas, a realizarse el 3 de agosto de 2026 a Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "tipo": "Ordinaria",
+      "fecha_junta": "3 de agosto de 2026",
+      "agenda": "directorio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: * Ratificar los cargos a los miembros del Directorio, de acuerdo al siguiente detalle: Dario Monasterio Suarez - Presidente. Boris Sergio Branisa Caballero - Vicepresidente. Miguel Ignacio Mardoñez Barrero - Secretario. Jorge Marcelo Velasco Tudela - Vocal. * Reconformar los siguientes Comités de Directorio, conforme detalle siguiente: Comité de Estructuraciones y Administración de Patrimonios Autónomos: Boris Sergio Branisa Caballero, Darío Monasterio Suarez, Gerente General, Subgerente de Estructuraciones y Administración de Patrimonios Autónomos. Comité de Auditoría: Boris Sergio Branisa Caballero, Darío Monasterio Suarez y Carlos Ferrel Fernández (Invitado externo). Comité de Cumplimiento: Miguel Ignacio Mardoñez Barrero, Jorge Velasco, Gerente General, Subgerente Legal y Funcionario Responsable ante la UIF. * Autorizar a Gerencia General la suscripción del Contrato de Derecho de Compra y de la Declaración Unilateral de Cesión para concretar el nuevo Proceso de Titularización y la Declaración Unilateral de Cesión para concretar el nuevo Proceso de Titularización y la emisión de los Valores de Titularización CIDRE IFD - BDP ST 067. Asimismo, la suscripción de los documentos aclaratorios y/o modificatorios que sean necesarios para viabilizar el citado Proyecto de Titularización.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: * Ratificar los cargos a los miembros del Directorio, de acuerdo al siguiente detalle: Dario Monasterio",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BISA S.A. Agencia de Bolsa",
+     "texto": "Comunica que, el 20 de julio de 2026, concluyó con el pago del Cupón N° 16 de los \"Bonos GAS & ELECTRICIDAD II - EMISION 1\", Serie B, dentro del Programa de Emisiones de \"Bonos GAS & ELECTRICIDAD II\".",
+     "tags": [
+      "emision",
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 20 de julio de 2026, concluyó con el pago del Cupón N° 16 de los \"Bonos GAS & ELECTRICIDAD II - EMISION 1\", Serie B, dentro del Programa de Emisiones de \"Bonos GAS & ELECTRICIDAD II\".",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "16",
+      "instrumento": "Bonos GAS & ELECTRICIDAD II",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "Mercantil Santa Cruz Agencia de Bolsa S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: Lucia Gabriela Perez Mancilla - Gerente General, hará uso de sus vacaciones durante el periodo comprendido entre el 10 al 14 de agosto de 2026, retomando sus funciones, a partir del 17 de agosto de la presente gestión, por lo que, determinó la designación temporal de Micaela Mercado Maldonado, en el cargo de Gerente General a.i., durante el periodo antes señalado.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 17 de julio de 2026, se determinó lo siguiente: Lucia Gabriela Perez Mancilla - Gerente General, hará uso de sus vacaciones durante el periodo",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Bolsas de Valores",
+     "entidad": "Bolsa Boliviana de Valores S.A.",
+     "texto": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Bonos denominado “BONOS TIENDA AMIGA II”, en la Bolsa Boliviana de Valores S.A. Según normas legales vigentes, Tienda Amiga ER S.A. deberá cumplir con la presentación de toda la información requerida en forma periódica o solicitada por la Bolsa Boliviana de Valores S.A. para su seguimiento, sin restricción alguna. De acuerdo con lo establecido en el Artículo IV.4. del Reglamento Interno de Registro y Operaciones, la inscripción de Instrumentos Financieros en la BBV no implica certificación ni responsabilidad alguna por parte de la BBV respecto del precio, bondad, calidad o negociabilidad de los mismos o de solvencia, estabilidad y capacidad de cumplimiento de sus Emisiones.",
+     "tags": [
+      "emision"
+     ],
+     "resumen": "Comunica que, el Comité de Inscripciones, reunido el 15 de julio de 2026, determinó lo siguiente: Autorizar la inscripción del Programa de Emisiones de Bonos denominado “BONOS TIENDA AMIGA II”, en la",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "BONOS TIENDA AMIGA II",
+      "emisor": "Valores S.A."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "EMPRESA MINERA PAITITI S.A. - EMIPA",
+     "texto": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.49 del Prospecto de Emisión, convoca a la Asamblea General de Tenedores de Bonos de la Emisión “Bonos EMIPA II”, a realizarse el 29 de julio de 2026 a Hrs. 17:00 de manera mixta (presencial y virtual), con el siguiente Orden del Día:\n1. Informe del Emisor sobre el avance del proyecto de tratamiento de Óxidos.\n2. Tratamiento de Compromisos Financieros.\n3. Designación de dos (2) representantes para la firma del Acta.",
+     "tags": [
+      "compromisos",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en virtud a lo determinado por el Artículo 657 del Código de Comercio y conforme a las disposiciones contenidas en numeral 1.49 del Prospecto de Emisión, convoca a la Asamblea General",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_anunciados",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de \"Pagarés Bursátiles Farmacias Chávez I - Emisión 3\", utilizó los fondos por Bs1.134.775,68 para la compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de \"Pagarés Bursátiles Farmacias Chávez I - Emisión 3\", utilizó los fondos por Bs1.134.775,68 para la compra de mercadería como",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles Farmacias Chávez I",
+      "destino": "capital de operaciones",
+      "monto": "Bs 1,1 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Comunica que, Rene Calvo Sainz fungirá como Gerente General a.i., del 31 de julio al 17 de agosto de 2026, debido a la ausencia del Gerente General titular, Enrique Palmero Pantoja, en el periodo señalado.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, Rene Calvo Sainz fungirá como Gerente General a.i., del 31 de julio al 17 de agosto de 2026, debido a la ausencia del Gerente General titular, Enrique Palmero Pantoja, en el periodo",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco PYME \"Ecofuturo\" S.A.",
+     "texto": "Comunica que, el 27 de julio de 2026, procederá a la emisión de nuevas acciones y su posterior canje en las oficinas ubicadas en la Av. Sánchez Bustamante N° 302, Calle 9, zona Calacoto de la Ciudad de La Paz, producto del incremento de Capital Pagado.",
+     "tags": [],
+     "resumen": "Comunica que, el 27 de julio de 2026, procederá a la emisión de nuevas acciones y su posterior canje en las oficinas ubicadas en la Av.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Comunica que, el 20 de julio de 2026, designa a Marco Antonio Camacho Villazón como Gerente General a.i., en Oficina Nacional, quien ocupará el cargo, a partir del 20 hasta el 21 de julio de 2026, esta designación temporal se efectúa por ausencia del titular, Jose Vicente Herrera Amenabar.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 20 de julio de 2026, designa a Marco Antonio Camacho Villazón como Gerente General a.i., en Oficina Nacional, quien ocupará el cargo, a partir del 20 hasta el 21 de julio de 2026",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente General",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "iBolsa Sociedad de Titularización S.A.",
+     "texto": "Comunica que, el 17 de julio de 2026, procedió al pago de Capital e Intereses N° 9, con Clave de Pizarra: VTD-PPA-TD-NA VTD-PPA-TD-NB VTD-PPA-TD-NC VTD-PPA-TD-ND VTD-PPA-TD-NE VTD-PPA-TD-NF VTD-PPA-TD-NG Del Patrimonio Autónomo MADEPA IBOLSA ST 004, de acuerdo con el Cronograma de Pagos de Capital e Intereses, que consta en el Prospecto de Emisión.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, el 17 de julio de 2026, procedió al pago de Capital e Intereses N° 9, con Clave de Pizarra: VTD-PPA-TD-NA VTD-PPA-TD-NB VTD-PPA-TD-NC VTD-PPA-TD-ND VTD-PPA-TD-NE VTD-PPA-TD-NF",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "Multiplika Sociedad de Titularización S.A.",
+     "texto": "Comunica que, el 20 de julio de 2026, concluyó con el pago del Cupón N° 48 de los Valores de Titularización BISA ST - CIDRE II (Serie B).",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 20 de julio de 2026, concluyó con el pago del Cupón N° 48 de los Valores de Titularización BISA ST - CIDRE II (Serie B).",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "48",
+      "estado": "pagado"
+     }
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1428 de 24 de junio de 2026",
+     "texto": "HECHOS RELEVANTES (Ver Adjunto)",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "HECHOS RELEVANTES (Ver Adjunto)",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
   }
  }
 }
