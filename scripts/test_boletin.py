@@ -154,6 +154,40 @@ def run() -> int:
     if m._fecha_card(NOW.astimezone(m.BOT_TZ)) == m._fecha_card(NOW_MANANA.astimezone(m.BOT_TZ)):
         err.append("runtime_ts: la fecha del card no cambió de día a día")
 
+    # ── finde: el TCO arrastra el valor del VIERNES (backward-fill); delta día
+    #    plano sáb/dom y el salto aparece el LUNES (regla Diego 2026-07-20) ───────
+    from dashboard import _fill_weekends_tco  # deferido: dashboard no toca DB al importar
+    # Vigencia dating: jue 23 pub → fecha vie 24 (X=6.96); vie 24 pub → fecha lun 27
+    # (Y=6.98). El BCB no fecha sáb/dom. 2026-07-20 = lunes → 24 vie, 25 sáb, 26 dom, 27 lun.
+    raw = [{"fecha": "2026-07-23", "tco": 6.95},   # jue (vigencia)
+           {"fecha": "2026-07-24", "tco": 6.96},   # vie (vigencia) = X
+           {"fecha": "2026-07-27", "tco": 6.98}]   # lun (vigencia) = Y (publicado el viernes)
+    filled = _fill_weekends_tco(raw)
+    byf = {h["fecha"]: h for h in filled}
+    # sáb/dom sintéticos = valor del VIERNES (X=6.96), NO del lunes (Y=6.98)
+    eq("finde_sab_tco", byf.get("2026-07-25", {}).get("tco"), 6.96)
+    eq("finde_dom_tco", byf.get("2026-07-26", {}).get("tco"), 6.96)
+    eq("finde_sab_src", byf.get("2026-07-25", {}).get("source"), "bcb_tco_fin_semana")
+    if byf.get("2026-07-27", {}).get("source") == "bcb_tco_fin_semana":
+        err.append("finde: el lunes publicado no debería quedar como sintético")
+
+    def _wk(nowdt):
+        d = {"meta": {"bcb_tco_last": 6.98, "bcb_tco_history": filled},
+             "ts_metrics": {"ts": ["2026-07-24T14:00:00Z"], "vb10": [10.0]}}
+        return m.compute_values(d, nowdt)
+
+    vs = _wk(datetime(2026, 7, 25, 18, 35, 0, tzinfo=timezone.utc))  # sáb 14:35 BOT
+    vd = _wk(datetime(2026, 7, 26, 18, 35, 0, tzinfo=timezone.utc))  # dom
+    vl = _wk(datetime(2026, 7, 27, 18, 35, 0, tzinfo=timezone.utc))  # lun
+    # sábado y domingo: valor del viernes (6.96) y delta día PLANO
+    eq("finde_sab_val", vs["oficial"], "6.96")
+    eq("finde_sab_dia", vs["oficial_dia"], "=0.00 BOB")
+    eq("finde_dom_val", vd["oficial"], "6.96")
+    eq("finde_dom_dia", vd["oficial_dia"], "=0.00 BOB")
+    # lunes: recién ahí salta al valor nuevo (6.98), delta +0.02
+    eq("finde_lun_val", vl["oficial"], "6.98")
+    eq("finde_lun_dia", vl["oficial_dia"], "+0.02 BOB")
+
     if err:
         print("FAIL test_boletin:")
         for e in err:
