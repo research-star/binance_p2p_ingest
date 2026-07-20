@@ -493,18 +493,60 @@ def load_bcb_ref(first_date: str | None = None) -> dict:
     return out
 
 
+def _redate_weekend_publications(pub: list[dict]) -> list[dict]:
+    """Re-fecha las publicaciones timbradas en fin de semana a su día hábil real.
+
+    La BCB timbra la publicación del viernes 20:00 con 'Fecha de vigencia' = SÁBADO
+    (día-siguiente nominal; `ingest_bcb_tco.py` guarda esa columna tal cual). Pero
+    por la regla operativa (RD 88/2026 art. 5, confirmada por Diego 2026-07-20: lo
+    publicado el jueves es válido hasta el domingo; lo publicado el viernes entra en
+    validez el LUNES), ese valor recién rige el próximo día hábil. Como la BCB no
+    publica sábados/domingos, TODA entrada publicada con fecha de finde es la
+    publicación del viernes mal-timbrada → se mueve al lunes (próximo día hábil).
+
+    Si ese día hábil ya trae entrada publicada (la BCB suele repetir el valor con
+    fecha lunes), la existente manda (dedup) y la de finde se descarta. Deja el
+    finde LIBRE para que `_fill_weekends_tco` lo rellene con el valor del viernes.
+    Opera sobre el histórico PURO (solo publicados, sin sintéticos); `bcb_tco.json`
+    queda intacto — esto es derivación en build. Feriados: re-fecha al próximo día
+    de semana (no conoce el calendario de feriados); un lunes feriado igual hereda
+    el viernes vía el 'último ≤ fecha' de los consumidores."""
+    if not pub:
+        return pub
+    weekday_entries = {}   # fecha_iso -> entrada (publicada en día hábil, autoritativa)
+    weekend_entries = []   # (date, entrada) publicadas en sáb/dom
+    for h in pub:
+        d = datetime.fromisoformat(h['fecha']).date()
+        if d.weekday() >= 5:
+            weekend_entries.append((d, h))
+        else:
+            weekday_entries[h['fecha']] = h
+    for d, h in weekend_entries:
+        nd = d + timedelta(days=1)
+        while nd.weekday() >= 5:               # salta al próximo día de semana (lunes)
+            nd += timedelta(days=1)
+        key = nd.isoformat()
+        if key not in weekday_entries:         # el hábil existente manda (dedup)
+            weekday_entries[key] = {**h, 'fecha': key}
+    return sorted(weekday_entries.values(), key=lambda h: h['fecha'])
+
+
 def _fill_weekends_tco(pub: list[dict]) -> list[dict]:
     """Rellena sábados y domingos con el TCO VIGENTE del viernes (backward-fill).
 
-    Regla operativa (confirmada por Diego 2026-07-20): el valor que el BCB publica
-    un jueves 20:00 (fechado por su vigencia = viernes) rige viernes, sábado y
-    domingo; el que publica el viernes (vigencia = lunes) recién rige el lunes. Por
-    eso el finde arrastra el valor del ÚLTIMO día hábil publicado ANTERIOR (= el
-    viernes), NO el del próximo. Consecuencia: el delta día del finde queda PLANO y
-    el salto aparece el lunes, uniforme en las 3+ superficies (KPI, gráfico, ticker
-    "día en cifras", tarjeta /boletin-4k9x/). NO es interpolación silenciosa: el
-    valor del finde es el del último día hábil vigente. Las entradas sintéticas
-    llevan `source='bcb_tco_fin_semana'` y NO pisan valores publicados.
+    PRE-REQUISITO: `pub` ya pasó por `_redate_weekend_publications`, así que NO
+    quedan publicaciones fechadas en finde (la publicación del viernes ya se movió
+    al lunes). Por eso el 'último día hábil publicado ANTERIOR' a un sábado es el
+    VIERNES, y el finde arrastra su valor.
+
+    Regla operativa (confirmada por Diego 2026-07-20): lo publicado el jueves
+    (vigencia viernes) rige viernes, sábado y domingo; lo publicado el viernes
+    (movido a vigencia lunes) recién rige el lunes. Consecuencia: el delta día del
+    finde queda PLANO y el salto aparece el lunes, uniforme en las 3+ superficies
+    (KPI, gráfico, ticker "día en cifras", tarjeta /boletin-4k9x/). NO es
+    interpolación silenciosa: el valor del finde es el del último día hábil vigente.
+    Las entradas sintéticas llevan `source='bcb_tco_fin_semana'` y NO pisan
+    publicados.
 
     `pub` viene ordenado por fecha, con `tco` no nulo. Un finde SIN día hábil
     publicado anterior (ej. el finde previo al primer publicado) queda como hueco
@@ -556,11 +598,15 @@ def load_bcb_tco(first_date: str | None = None) -> dict:
                 full_hist = sorted(
                     [h for h in data if h.get('fecha') and h.get('tco') is not None],
                     key=lambda h: h['fecha'])
+                # Re-fecha la publicación del viernes (timbrada sábado por la BCB) a
+                # su día hábil real (lunes) ANTES de todo: así bcb_tco_last/_fecha,
+                # la alerta stale y el relleno operan sobre vigencias correctas.
+                full_hist = _redate_weekend_publications(full_hist)
                 if full_hist:
                     latest = full_hist[-1]  # último PUBLICADO (no sintético) para la KPI
                     out['bcb_tco_last'] = latest.get('tco')
                     out['bcb_tco_fecha'] = latest.get('fecha')
-                    # Rellena sáb/dom con el valor del próximo día hábil (regla RD 88/2026)
+                    # Rellena sáb/dom con el valor del viernes (último día hábil vigente)
                     filled = _fill_weekends_tco(full_hist)
                     if first_date:
                         out['bcb_tco_history'] = [h for h in filled if h['fecha'] >= first_date]

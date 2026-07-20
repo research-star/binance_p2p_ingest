@@ -1101,20 +1101,26 @@ Features clave:
     adelantado** — `rVwap` no clipea los puntos TCO por el borde derecho del P2P y
     **extiende el eje X** hasta el último TCO (el oficial siempre va ~1 día hábil
     por delante y el P2P lo va alcanzando).
-  - **Relleno de fin de semana** (`_fill_weekends_tco`, dashboard.py): sábados y
-    domingos se rellenan con el TCO **VIGENTE del viernes** (= último día hábil
-    publicado ANTERIOR, backward-fill), no con el del próximo. Regla operativa
-    (Diego 2026-07-20): el valor publicado el jueves (vigencia = viernes) rige
-    viernes, sábado y domingo; el publicado el viernes (vigencia = lunes) recién
-    rige el lunes. Efecto uniforme en KPI, gráfico, ticker "día en cifras" y tarjeta
-    `/boletin-4k9x/`: **el delta día del finde queda plano y el salto aparece el
-    lunes**. Las entradas sintéticas llevan `source='bcb_tco_fin_semana'`, NO pisan
-    publicados y NO afectan `bcb_tco_last` (sigue siendo el último PUBLICADO — por
-    eso el ticker/KPI/boletín usan **vigente-hoy** = `bcb_tco_history` con `fecha ≤
-    hoy`, no `bcb_tco_last`). Un finde sin día hábil publicado anterior queda hueco
-    (no se inventa). Feriados: un lunes feriado hereda el viernes vía el mismo
-    'último ≤ fecha'. `bcb_tco.json` queda PURO (solo lo del BCB); el relleno es
-    derivado en build.
+  - **Re-fechado de la publicación del viernes** (`_redate_weekend_publications`,
+    dashboard.py — corre ANTES del relleno): la BCB timbra la publicación del
+    viernes 20:00 con `Fecha de vigencia` = **sábado** (día-siguiente nominal;
+    `ingest_bcb_tco.py:416` guarda esa columna tal cual). Pero por la regla operativa
+    (RD 88/2026 art. 5, confirmada por Diego 2026-07-20: lo publicado el **jueves es
+    válido hasta el domingo**; lo publicado el **viernes entra en validez el lunes**)
+    ese valor recién rige el próximo día hábil. Como la BCB no publica finde, TODA
+    entrada publicada fechada en sáb/dom es la del viernes mal-timbrada → se **mueve
+    al lunes** (dedup si el lunes ya existe). Esto además corrige el **falso positivo
+    de `bcb_tco_stale` los lunes** (la última vigencia deja de ser un sábado < hoy).
+  - **Relleno de fin de semana** (`_fill_weekends_tco`, dashboard.py — corre DESPUÉS
+    del re-fechado): sábados y domingos se rellenan con el TCO **VIGENTE del viernes**
+    (= último día hábil publicado ANTERIOR, backward-fill). Efecto uniforme en KPI,
+    gráfico, ticker "día en cifras" y tarjeta `/boletin-4k9x/`: **el delta día del
+    finde queda plano y el salto aparece el lunes** (ej. vie 10.75 → finde 10.75 →
+    lun 10.85 = +0,10). Las entradas sintéticas llevan `source='bcb_tco_fin_semana'`,
+    NO pisan publicados; el ticker/KPI/boletín usan **vigente-hoy** = `bcb_tco_history`
+    con `fecha ≤ hoy`, no `bcb_tco_last`. Un finde sin día hábil publicado anterior
+    queda hueco (no se inventa). `bcb_tco.json` queda PURO (solo lo del BCB); tanto el
+    re-fechado como el relleno son derivados en build.
   - **KPI "BCB Ref" = TCO / TCO+0,10** (RD 88: la venta referencial es TCO + 0,10),
     reordenada **primera** en la fila de KPIs. Fail-soft a `bcb_referencial` si aún no
     hay TCO. La **banda "BCB Ref" del gráfico se retiró** (toggle + traces): era

@@ -154,22 +154,28 @@ def run() -> int:
     if m._fecha_card(NOW.astimezone(m.BOT_TZ)) == m._fecha_card(NOW_MANANA.astimezone(m.BOT_TZ)):
         err.append("runtime_ts: la fecha del card no cambió de día a día")
 
-    # ── finde: el TCO arrastra el valor del VIERNES (backward-fill); delta día
-    #    plano sáb/dom y el salto aparece el LUNES (regla Diego 2026-07-20) ───────
-    from dashboard import _fill_weekends_tco  # deferido: dashboard no toca DB al importar
-    # Vigencia dating: jue 23 pub → fecha vie 24 (X=6.96); vie 24 pub → fecha lun 27
-    # (Y=6.98). El BCB no fecha sáb/dom. 2026-07-20 = lunes → 24 vie, 25 sáb, 26 dom, 27 lun.
-    raw = [{"fecha": "2026-07-23", "tco": 6.95},   # jue (vigencia)
-           {"fecha": "2026-07-24", "tco": 6.96},   # vie (vigencia) = X
-           {"fecha": "2026-07-27", "tco": 6.98}]   # lun (vigencia) = Y (publicado el viernes)
-    filled = _fill_weekends_tco(raw)
+    # ── finde: la BCB timbra la publicación del viernes en SÁBADO → se re-fecha al
+    #    lunes; el finde arrastra el valor del viernes; salto el LUNES (Diego 2026-07-20:
+    #    lo del jueves vale hasta el domingo, lo del viernes entra en validez el lunes) ─
+    from dashboard import (_redate_weekend_publications,  # deferido: dashboard no toca DB al importar
+                           _fill_weekends_tco)
+    # Data CRUDA como la timbra la BCB. 2026-07-20 = lunes → 24 vie, 25 sáb, 26 dom, 27 lun.
+    raw = [{"fecha": "2026-07-23", "tco": 6.95},                              # jue (vig jue)
+           {"fecha": "2026-07-24", "tco": 6.96, "source": "bcb_tco_portada"},  # vie = A (valor del finde)
+           {"fecha": "2026-07-25", "tco": 6.98, "source": "bcb_tco_portada"}]  # SÁB timbrado = pub. del viernes → rige lunes (B)
+    redated = _redate_weekend_publications(raw)
+    rf = {h["fecha"]: h for h in redated}
+    # el sábado timbrado se movió al lunes (27); no queda entrada PUBLICADA de finde
+    eq("redate_sin_sabado", "2026-07-25" in rf, False)
+    eq("redate_lunes_val", rf.get("2026-07-27", {}).get("tco"), 6.98)
+    filled = _fill_weekends_tco(redated)
     byf = {h["fecha"]: h for h in filled}
-    # sáb/dom sintéticos = valor del VIERNES (X=6.96), NO del lunes (Y=6.98)
+    # sáb/dom sintéticos = valor del VIERNES (A=6.96), NO del lunes (B=6.98)
     eq("finde_sab_tco", byf.get("2026-07-25", {}).get("tco"), 6.96)
     eq("finde_dom_tco", byf.get("2026-07-26", {}).get("tco"), 6.96)
     eq("finde_sab_src", byf.get("2026-07-25", {}).get("source"), "bcb_tco_fin_semana")
     if byf.get("2026-07-27", {}).get("source") == "bcb_tco_fin_semana":
-        err.append("finde: el lunes publicado no debería quedar como sintético")
+        err.append("finde: el lunes (ya re-fechado) no debería quedar como sintético")
 
     def _wk(nowdt):
         d = {"meta": {"bcb_tco_last": 6.98, "bcb_tco_history": filled},
