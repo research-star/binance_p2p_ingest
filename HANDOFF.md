@@ -1102,14 +1102,19 @@ Features clave:
     **extiende el eje X** hasta el último TCO (el oficial siempre va ~1 día hábil
     por delante y el P2P lo va alcanzando).
   - **Relleno de fin de semana** (`_fill_weekends_tco`, dashboard.py): sábados y
-    domingos se rellenan con el TCO del **próximo día publicado** (= la publicación
-    del viernes, fechada el lunes), por la regla de fin de semana de la RD 88/2026.
-    NO es interpolación silenciosa: el valor del finde está legalmente definido. Las
-    entradas sintéticas llevan `source='bcb_tco_fin_semana'`, NO pisan publicados y
-    NO afectan `bcb_tco_last` (sigue siendo el último PUBLICADO). Maneja feriados
-    (toma el próximo publicado). `bcb_tco.json` queda PURO (solo lo del BCB); el
-    relleno es derivado en build. Efecto: el finde se ve como línea plana que conecta
-    con el P2P en vez de un punto suelto adelantado.
+    domingos se rellenan con el TCO **VIGENTE del viernes** (= último día hábil
+    publicado ANTERIOR, backward-fill), no con el del próximo. Regla operativa
+    (Diego 2026-07-20): el valor publicado el jueves (vigencia = viernes) rige
+    viernes, sábado y domingo; el publicado el viernes (vigencia = lunes) recién
+    rige el lunes. Efecto uniforme en KPI, gráfico, ticker "día en cifras" y tarjeta
+    `/boletin-4k9x/`: **el delta día del finde queda plano y el salto aparece el
+    lunes**. Las entradas sintéticas llevan `source='bcb_tco_fin_semana'`, NO pisan
+    publicados y NO afectan `bcb_tco_last` (sigue siendo el último PUBLICADO — por
+    eso el ticker/KPI/boletín usan **vigente-hoy** = `bcb_tco_history` con `fecha ≤
+    hoy`, no `bcb_tco_last`). Un finde sin día hábil publicado anterior queda hueco
+    (no se inventa). Feriados: un lunes feriado hereda el viernes vía el mismo
+    'último ≤ fecha'. `bcb_tco.json` queda PURO (solo lo del BCB); el relleno es
+    derivado en build.
   - **KPI "BCB Ref" = TCO / TCO+0,10** (RD 88: la venta referencial es TCO + 0,10),
     reordenada **primera** en la fila de KPIs. Fail-soft a `bcb_referencial` si aún no
     hay TCO. La **banda "BCB Ref" del gráfico se retiró** (toggle + traces): era

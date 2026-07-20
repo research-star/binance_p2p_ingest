@@ -494,30 +494,40 @@ def load_bcb_ref(first_date: str | None = None) -> dict:
 
 
 def _fill_weekends_tco(pub: list[dict]) -> list[dict]:
-    """Rellena sábados y domingos con el TCO del PRÓXIMO día publicado.
+    """Rellena sábados y domingos con el TCO VIGENTE del viernes (backward-fill).
 
-    Regla de fin de semana de la RD 88/2026: los sábados y domingos usan el TCO
-    vigente del lunes, que es la publicación del viernes 20:00 (fechada por el BCB
-    con la vigencia = lunes siguiente). NO es interpolación silenciosa: el valor
-    del finde está legalmente definido (= el del próximo día hábil). Las entradas
-    sintéticas llevan `source='bcb_tco_fin_semana'` y NO pisan valores publicados.
+    Regla operativa (confirmada por Diego 2026-07-20): el valor que el BCB publica
+    un jueves 20:00 (fechado por su vigencia = viernes) rige viernes, sábado y
+    domingo; el que publica el viernes (vigencia = lunes) recién rige el lunes. Por
+    eso el finde arrastra el valor del ÚLTIMO día hábil publicado ANTERIOR (= el
+    viernes), NO el del próximo. Consecuencia: el delta día del finde queda PLANO y
+    el salto aparece el lunes, uniforme en las 3+ superficies (KPI, gráfico, ticker
+    "día en cifras", tarjeta /boletin-4k9x/). NO es interpolación silenciosa: el
+    valor del finde es el del último día hábil vigente. Las entradas sintéticas
+    llevan `source='bcb_tco_fin_semana'` y NO pisan valores publicados.
 
-    `pub` viene ordenado por fecha, con `tco` no nulo. Cubre también el finde
-    previo al primer publicado (ej. sáb/dom anteriores al primer lunes). Holidays:
-    como toma el PRÓXIMO publicado, un lunes feriado (sin publicación) hace que el
-    finde tome el valor del martes = misma publicación del viernes. Correcto."""
+    `pub` viene ordenado por fecha, con `tco` no nulo. Un finde SIN día hábil
+    publicado anterior (ej. el finde previo al primer publicado) queda como hueco
+    visible: no se inventa un valor. Feriados: un lunes feriado (sin publicación)
+    hereda el valor del viernes vía el mismo 'último ≤ fecha' que usan los
+    consumidores (tcoOnOrBefore / _close_on_or_before)."""
     if not pub:
         return pub
     have = {h['fecha'] for h in pub}
     pub_days = [(datetime.fromisoformat(h['fecha']).date(), h['tco']) for h in pub]
     first, last = pub_days[0][0], pub_days[-1][0]
     extra = []
-    d, one = first - timedelta(days=3), timedelta(days=1)
+    d, one = first, timedelta(days=1)
     while d <= last:
         if d.weekday() >= 5 and d.isoformat() not in have:  # 5=sábado, 6=domingo
-            nxt = next((val for (pd, val) in pub_days if pd > d), None)
-            if nxt is not None:
-                extra.append({'fecha': d.isoformat(), 'tco': nxt, 'source': 'bcb_tco_fin_semana'})
+            prev = None  # valor del último día hábil publicado ANTERIOR (= viernes)
+            for (pd, val) in pub_days:
+                if pd < d:
+                    prev = val
+                else:
+                    break
+            if prev is not None:
+                extra.append({'fecha': d.isoformat(), 'tco': prev, 'source': 'bcb_tco_fin_semana'})
         d += one
     return sorted(pub + extra, key=lambda h: h['fecha'])
 

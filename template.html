@@ -3017,20 +3017,34 @@ function tcoFechaCorta(f){  // ES "2026-06-30" -> "30 jun" · EN -> "Jun 30"
   const mo=M[+p[1]-1]||p[1], day=String(+p[2]);
   return FB_LANG==='es' ? (day+' '+mo) : (mo+' '+day);
 }
+// Nombre del día de la semana de una fecha ISO, capitalizado ("2026-07-27" -> "Lunes"/"Monday").
+function tcoDiaSemana(f){
+  const D=FB_LANG==='es'?['domingo','lunes','martes','miércoles','jueves','viernes','sábado']:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const p=(f||'').split('-'); if(p.length<3) return '';
+  const nm=D[new Date(Date.UTC(+p[0],+p[1]-1,+p[2])).getUTCDay()]||'';
+  return nm ? nm.charAt(0).toUpperCase()+nm.slice(1) : '';
+}
+// Días calendario entre dos fechas ISO (a→b). Usa mediodía UTC para no cruzar día.
+function tcoDiffDias(a,b){
+  const pa=(a||'').split('-'), pb=(b||'').split('-');
+  if(pa.length<3||pb.length<3) return NaN;
+  return Math.round((Date.UTC(+pb[0],+pb[1]-1,+pb[2])-Date.UTC(+pa[0],+pa[1]-1,+pa[2]))/86400000);
+}
 function updateKpis(){
   const tm=DATA.ts_metrics, i=activeRange.toIdx;
   last={vb10:tm.vb10[i],vs10:tm.vs10[i],sp10:tm.sp10[i],buy_depth:tm.buy_depth[i],sell_depth:tm.sell_depth[i],buy_count:tm.buy_count[i],sell_count:tm.sell_count[i],depth_ratio:tm.depth_ratio[i]};
   // TCO como el card del BCB: de día muestra el VIGENTE HOY; cuando ya se conoce
-  // el de mañana (el BCB lo publica ~20:00 y el cron lo captura), muestra AMBOS
-  // hasta la medianoche (Bolivia). A las 00:00 el de "mañana" pasa a ser el
-  // vigente y queda solo. Data-driven: el dúo aparece cuando existe una entrada
-  // con fecha futura en el histórico (incluye fines de semana, regla RD 88/2026).
+  // el próximo publicado (el BCB lo publica ~20:00 y el cron lo captura), muestra
+  // AMBOS hasta que rija. `tcoManana` es la próxima vigencia PUBLICADA (salta el
+  // relleno sintético de finde, que solo arrastra el valor del viernes): el finde
+  // el "próximo" es el lunes, no el sábado. El rótulo lo nombra por su día
+  // ("Lunes") cuando no es literalmente mañana; "Mañana" cuando sí (domingo).
   const hoyBo = new Date(Date.now()-4*3600000).toISOString().slice(0,10);
   let tcoHoy=null, tcoManana=null;
   (meta.bcb_tco_history||[]).forEach(function(e){
     if(!e || e.tco==null || !e.fecha) return;
     if(e.fecha<=hoyBo) tcoHoy=e;                       // ordenado asc → queda el último ≤ hoy
-    else if(!tcoManana) tcoManana=e;                   // primera fecha futura = mañana
+    else if(!tcoManana && e.source!=='bcb_tco_fin_semana') tcoManana=e;  // próxima vigencia PUBLICADA
   });
   // Fail-soft en cadena: sin vigente-hoy usa el último publicado; sin datos, 6.96.
   if(!tcoHoy && meta.bcb_tco_last!=null) tcoHoy={tco:meta.bcb_tco_last, fecha:meta.bcb_tco_fecha};
@@ -3042,9 +3056,15 @@ function updateKpis(){
   const hasTco = !!(tco && tco.tco != null);
   const refCompra = hasTco ? tco.tco : ref.compra;
   const refVenta  = hasTco ? (tco.tco + 0.10) : ref.venta;
+  // Rótulo del próximo TCO: "Mañana" si es literalmente el día siguiente; si no
+  // (viernes→lunes, sábado→lunes), su nombre de día ("Lunes"). El BCB no publica
+  // finde: el viernes/sábado el próximo valor rige el lunes; el domingo, mañana.
+  const mananaLbl = tcoManana
+    ? (tcoDiffDias(hoyBo, tcoManana.fecha)===1 ? '{{t:dolar.kpi_bcb_manana}}' : tcoDiaSemana(tcoManana.fecha))
+    : '';
   const bcbSub = !hasTco ? '{{t:dolar.kpi_bcb_sub_no_tco}}'
     : (tcoManana
-        ? ('{{t:dolar.kpi_bcb_sub_hoy_manana}}'+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
+        ? ('{{t:dolar.kpi_bcb_sub_hoy_pre}}'+mananaLbl+' ('+tcoFechaCorta(tcoManana.fecha)+'): '+fmt2(tcoManana.tco)+' / '+fmt2(tcoManana.tco+0.10)+'</b>')
         : ('{{t:dolar.kpi_bcb_sub_tco}}'+tcoFechaCorta(tco.fecha)));
   const buyDepth=fmt2(last.buy_depth/1e6)+'M';
   const sellDepth=fmt2(last.sell_depth/1e6)+'M';
@@ -5862,20 +5882,29 @@ window.addEventListener('popstate', function(){
     // venta: "huecos visibles, no rellenados").
     const vb=npLastNum(tm.vb10);
     const p2p=npNum(vb)?vb:null;
-    // El oficial es el TCO diario (RD 88/2026); fallback al fijo 6.96 si aún no hay datos.
-    const tcoLast=(typeof meta!=='undefined'&&npNum(meta.bcb_tco_last))?meta.bcb_tco_last:null;
+    // El oficial es el TCO EN VIGOR hoy (BO): última fecha ≤ hoy del histórico
+    // relleno (el finde arrastra el valor del viernes). NO es bcb_tco_last (último
+    // PUBLICADO, que puede fecharse mañana/lunes y aún no regir). Consistente con
+    // la KPI Dólar y la tarjeta /boletin-4k9x/. Fallback al fijo 6.96 si no hay datos.
+    const _hoyBo=new Date(Date.now()-4*3600000).toISOString().slice(0,10);
+    const _ayerBo=new Date(Date.now()-4*3600000-86400000).toISOString().slice(0,10);
+    let _tcoHoy=null,_tcoAyer=null;
+    ((typeof meta!=='undefined'&&meta.bcb_tco_history)||[]).forEach(function(e){
+      if(!e||e.tco==null||!e.fecha) return;
+      if(e.fecha<=_hoyBo) _tcoHoy=e;
+      if(e.fecha<=_ayerBo) _tcoAyer=e;
+    });
+    const tcoLast=_tcoHoy?_tcoHoy.tco:null;
     const bcb = tcoLast!=null ? tcoLast : ((typeof meta!=='undefined'&&npNum(meta.bcb_rate))?meta.bcb_rate:null);
     let primaSub='{{t:ticker.no_data}}', primaDir='flat';
     if(npNum(p2p)&&npNum(bcb)&&bcb>0){ const pr=(p2p/bcb-1)*100; primaSub='{{t:ticker.sub_prima}}'+(pr>=0?'+':'')+npFmt(pr,0)+'%'; primaDir=pr>0?'up':(pr<0?'down':'flat'); }
-    // Tile "BCB oficial": delta diario del TCO si hay historia; si no, sin cambios.
+    // Tile "BCB oficial": delta día-a-día del TCO EN VIGOR (hoy − ayer, cierre por
+    // día calendario). Finde plano (= valor del viernes); el salto aparece el lunes.
+    // Primer día del régimen flexible (sin vigente-ayer): compara contra el fijo
+    // previo (RD 88/2026 reemplazó 6.86 compra / 6.96 venta → promedio 6.91).
     let bcbDir='flat', bcbSub=(tcoLast!=null?'TCO':'{{t:ticker.sub_sin_cambios}}');
     if(tcoLast!=null){
-      // Delta del TCO: solo contra valores PUBLICADOS (excluye el relleno sáb/dom
-      // sintético 'bcb_tco_fin_semana', que duplica el valor → daría 0.00 Bs falso).
-      // Primer día del régimen flexible (1 solo TCO real): compara contra el fijo
-      // previo (RD 88/2026 reemplazó 6.86 compra / 6.96 venta → promedio 6.91).
-      const th=((typeof meta!=='undefined'&&meta.bcb_tco_history)||[]).filter(e=>e&&e.tco!=null&&e.source!=='bcb_tco_fin_semana');
-      let d=th.length>=2?(th[th.length-1].tco-th[th.length-2].tco):(th.length===1?(th[0].tco-6.91):null);
+      let d=_tcoAyer?(_tcoHoy.tco-_tcoAyer.tco):(_tcoHoy.tco-6.91);
       if(d!=null){ bcbDir=npDir(d); bcbSub=npNum(d)?npDeltaTxt(d,' Bs',2):'TCO'; }
     }
     let embi=null, embiD=null;
