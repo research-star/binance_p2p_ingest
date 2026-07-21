@@ -44,25 +44,25 @@
   {
     "fecha": "2026-07-07",
     "tco": 9.89,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-07T00:05:03.051005Z"
   },
   {
     "fecha": "2026-07-08",
     "tco": 9.96,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-08T00:05:03.869061Z"
   },
   {
     "fecha": "2026-07-09",
     "tco": 10.1,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-09T00:05:03.754626Z"
   },
   {
     "fecha": "2026-07-10",
     "tco": 10.24,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-10T00:05:03.952974Z"
   },
   {
@@ -74,25 +74,25 @@
   {
     "fecha": "2026-07-13",
     "tco": 10.4,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-14T00:00:03.819976Z"
   },
   {
     "fecha": "2026-07-14",
     "tco": 10.5,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-14T00:05:03.391304Z"
   },
   {
     "fecha": "2026-07-15",
     "tco": 10.7,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-15T00:05:03.101960Z"
   },
   {
     "fecha": "2026-07-16",
     "tco": 10.75,
-    "source": "bcb_tco_portada",
+    "source": "bcb_tco",
     "fetched_at_utc": "2026-07-16T00:25:02.847379Z"
   },
   {
@@ -105,6 +105,12 @@
     "fecha": "2026-07-18",
     "tco": 10.85,
     "source": "bcb_tco_portada",
-    "fetched_at_utc": "2026-07-18T00:05:03.905413Z"
+    "fetched_at_utc": "2026-07-21T00:00:03.468574Z"
+  },
+  {
+    "fecha": "2026-07-20",
+    "tco": 10.85,
+    "source": "bcb_tco",
+    "fetched_at_utc": "2026-07-21T00:00:04.583783Z"
   }
 ]
