@@ -6,13 +6,9 @@ JS = (ROOT / "static" / "asfi-taxonomy-v4-ui.js").read_text(encoding="utf-8")
 HTML = (ROOT / "template.html").read_text(encoding="utf-8")
 
 
-def test_frontend_has_minimal_search_type_and_subtype_controls():
-    # Filtro V3-estricto (decisión de Diego 2026-07-21): solo buscador +
-    # selector de tipo + chips de subtipo; sin orden, limpiar ni grilla de tipos.
-    for control in ("asfiBuscar", "asfiTipo", "asfiSubtipos"):
+def test_frontend_has_type_subtype_search_sort_and_clear_controls():
+    for control in ("asfiBuscar", "asfiTipo", "asfiSubtipos", "asfiOrden", "asfiLimpiarTema"):
         assert f'id="{control}"' in HTML
-    for removed in ("asfiOrden", "asfiLimpiarTema", "asfi-v4-type-summary", "asfi-filtros-v4"):
-        assert removed not in HTML
 
 
 def test_shareable_url_keeps_dates_type_subtypes_query_and_sort():
