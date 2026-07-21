@@ -52,6 +52,28 @@ SUBTYPE_LABEL_ALIASES = {
 KNOWN_SUBTYPE_DELTAS = {
     "financiamiento.contratacion_bancaria": 5,
     "financiamiento.uso_linea_credito": -5,
+    # Overrides curados por decisión de Diego (2026-07-20): 4 casos individuales
+    # de la revisión manual, sin cambio de reglas generales.
+    "registros_autorizaciones.autorizacion_regulatoria": -1,  # asfi:2020-03-17:040 → otros (neto 0 en sin_patron_fuerte: +1 acá, -1 por el caso PYME)
+    "dividendos.rendimientos_fondo": 1,   # asfi:2020-04-28:013 sale de otros_residual
+    "emisiones_colocaciones.emision": -1,  # asfi:2020-09-10:002 → juntas
+    "juntas_asambleas.decisiones_adoptadas": 1,
+    "dividendos.declaracion": -1,          # asfi:2020-08-31:001 se afina a pago_realizado
+    "dividendos.pago_realizado": 1,
+}
+KNOWN_TYPE_DELTAS = {
+    "registros_autorizaciones": -1,
+    "dividendos": 1,
+    "emisiones_colocaciones": -1,
+    "juntas_asambleas": 1,
+}
+# Ids con override curado: las auditorías de Fase 1 esperan la etiqueta V2
+# original; para estos casos la expectativa vigente es la decisión de Diego.
+DECIDED_OVERRIDES = {
+    "asfi:2020-03-17:040": ("otros_residual", "sin_patron_fuerte"),
+    "asfi:2020-04-28:013": ("dividendos", "rendimientos_fondo"),
+    "asfi:2020-09-10:002": ("juntas_asambleas", "decisiones_adoptadas"),
+    "asfi:2020-08-31:001": ("dividendos", "pago_realizado"),
 }
 
 
@@ -166,6 +188,9 @@ def main() -> int:
         for expected in selected:
             actual = by_id.get(expected["item_id"])
             expected_type, expected_subtype = _expected_labels(expected, type_col, subtype_col)
+            if expected["item_id"] in DECIDED_OVERRIDES:
+                decided_type, decided_subtype = DECIDED_OVERRIDES[expected["item_id"]]
+                expected_type, expected_subtype = TYPE_LABELS[decided_type], SUBTYPE_LABELS[decided_type][decided_subtype]
             if not actual or (actual["type_label"], actual["subtype_label"]) != (expected_type, expected_subtype):
                 mismatches.append({
                     "item_id": expected["item_id"], "expected": [expected_type, expected_subtype],
@@ -192,7 +217,8 @@ def main() -> int:
     case_ids = ["asfi:2026-07-15:002", "asfi:2026-07-15:003", "asfi:2024-08-14:010", "asfi:2025-11-11:019", "asfi:2026-03-30:032"]
     audit_ok = not audit509["mismatches"] and not audit488["mismatches"] and not audit_existing["mismatches"]
     known_subtype_difference = subtype_delta == KNOWN_SUBTYPE_DELTAS
-    status = "PASS_WITH_KNOWN_DIFFERENCES" if not any(type_delta.values()) and known_subtype_difference and audit_ok else ("PASS" if not any(type_delta.values()) and not subtype_delta and audit_ok else "REVIEW")
+    known_type_difference = {key: value for key, value in type_delta.items() if value} == KNOWN_TYPE_DELTAS
+    status = "PASS_WITH_KNOWN_DIFFERENCES" if known_type_difference and known_subtype_difference and audit_ok else ("PASS" if not any(type_delta.values()) and not subtype_delta and audit_ok else "REVIEW")
     report = {
         "status": status,
         "taxonomy_v": extract.TAXONOMIA_V,
@@ -207,8 +233,13 @@ def main() -> int:
         "subtype_v2_unified_expected": dict(expected_subtypes), "subtype_delta_vs_v2": subtype_delta,
         "known_subtype_differences": {
             "expected_delta": KNOWN_SUBTYPE_DELTAS,
-            "reason": "V2 buscaba `uso` sin límite de palabra y produjo cinco coincidencias incidentales (por ejemplo dentro de `recursos`); V4 exige verbo próximo a `línea de crédito`."
+            "reason": "V2 buscaba `uso` sin límite de palabra y produjo cinco coincidencias incidentales (por ejemplo dentro de `recursos`); V4 exige verbo próximo a `línea de crédito`. Además, cuatro overrides curados (decisión de Diego 2026-07-20) re-etiquetan casos individuales de la revisión manual."
         },
+        "known_type_differences": {
+            "expected_delta": KNOWN_TYPE_DELTAS,
+            "reason": "Efecto neto de tres de los cuatro overrides curados que cruzan de tipo (el cuarto se mueve dentro de Dividendos)."
+        },
+        "curated_overrides": {item_id: f"{type_id}.{subtype_id}" for item_id, (type_id, subtype_id) in DECIDED_OVERRIDES.items()},
         "residual_by_year": {
             year: {"rows": annual_residual[year], "total": annual_total[year], "pct": round(100 * annual_residual[year] / annual_total[year], 4)}
             for year in sorted(annual_total)
@@ -219,11 +250,11 @@ def main() -> int:
         "source_table_states": dict(source_states),
         "stratified_sample": {"rows": len(sample), "strata": len(strata), "path": str(args.sample.resolve())},
         "stratified_review_findings": [
-            {"scope": "corpus", "finding": "Cinco falsos `uso_linea_credito` por coincidencia de `uso` dentro de otras palabras.", "current_v4": "+5 contratacion_bancaria / -5 uso_linea_credito", "disposition": "Corrección técnica V4 aplicada; no altera el total del tipo Financiamiento."},
-            {"item_id": "asfi:2020-03-17:040", "finding": "La palabra autorizados describe puntos de distribución, no un acto regulatorio.", "current_v4": "registros_autorizaciones.autorizacion_regulatoria", "disposition": "Conservado para respetar la recuperación 488; requiere decisión de Diego."},
-            {"item_id": "asfi:2020-04-28:013", "finding": "Distribución de rendimientos de un fondo es candidata a dividendos.rendimientos_fondo.", "current_v4": "otros_residual.sin_patron_fuerte", "disposition": "Conservado según la decisión MANTENER_RESIDUAL de Fase 1; requiere decisión de Diego."},
-            {"item_id": "asfi:2020-09-10:002", "finding": "La asamblea solo tomó conocimiento de informes; la mención de emisión no es una ejecución económica.", "current_v4": "emisiones_colocaciones.emision", "disposition": "Conservado para reconciliar V2; requiere decisión de Diego."},
-            {"item_id": "asfi:2020-08-31:001", "finding": "Efectuó el pago de dividendos puede afinarse de declaración a pago_realizado.", "current_v4": "dividendos.declaracion", "disposition": "Diferencia de subtipo no aplicada para mantener la conciliación aprobada; requiere decisión de Diego."}
+            {"scope": "corpus", "finding": "Cinco falsos `uso_linea_credito` por coincidencia de `uso` dentro de otras palabras.", "current_v4": "+5 contratacion_bancaria / -5 uso_linea_credito", "disposition": "Corrección técnica V4 aplicada y ACEPTADA por Diego (2026-07-20); no altera el total del tipo Financiamiento."},
+            {"item_id": "asfi:2020-03-17:040", "finding": "La palabra autorizados describe puntos de distribución, no un acto regulatorio.", "current_v4": "otros_residual.sin_patron_fuerte", "disposition": "CORREGIDO: override curado aplicado por decisión de Diego (2026-07-20)."},
+            {"item_id": "asfi:2020-04-28:013", "finding": "Distribución de rendimientos de un fondo es candidata a dividendos.rendimientos_fondo.", "current_v4": "dividendos.rendimientos_fondo", "disposition": "CORREGIDO: override curado aplicado por decisión de Diego (2026-07-20)."},
+            {"item_id": "asfi:2020-09-10:002", "finding": "La asamblea solo tomó conocimiento de informes; la mención de emisión no es una ejecución económica.", "current_v4": "juntas_asambleas.decisiones_adoptadas", "disposition": "CORREGIDO: override curado aplicado por decisión de Diego (2026-07-20; destino Junta elegido por Diego)."},
+            {"item_id": "asfi:2020-08-31:001", "finding": "Efectuó el pago de dividendos puede afinarse de declaración a pago_realizado.", "current_v4": "dividendos.pago_realizado", "disposition": "CORREGIDO: override curado aplicado por decisión de Diego (2026-07-20)."}
         ],
         "inputs": {name: {"path": str((phase1 / name).resolve()), "sha256": _sha256(phase1 / name)} for name in required},
     }

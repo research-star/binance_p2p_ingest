@@ -92,6 +92,22 @@ def test_three_redirected_destinations(item_id, expected):
     assert classify(corpus()[item_id])["taxonomy_key"] == expected
 
 
+@pytest.mark.parametrize(
+    ("item_id", "expected"),
+    [
+        ("asfi:2020-03-17:040", "otros_residual.sin_patron_fuerte"),
+        ("asfi:2020-04-28:013", "dividendos.rendimientos_fondo"),
+        ("asfi:2020-09-10:002", "juntas_asambleas.decisiones_adoptadas"),
+        ("asfi:2020-08-31:001", "dividendos.pago_realizado"),
+    ],
+)
+def test_curated_overrides_decided_2026_07_20(item_id, expected):
+    """Los 4 hallazgos de revisión manual re-etiquetados por decisión de Diego."""
+    result = classify(corpus()[item_id])
+    assert result["taxonomy_key"] == expected
+    assert "override curado" in result["precedence_reason"]
+
+
 def test_enrich_keeps_legacy_compatibility_and_adds_v4_contract():
     enriched = extract.enriquecer(copy.deepcopy(corpus()["asfi:2026-07-15:002"]))
     assert enriched["grupo"] == "juntas"
@@ -109,13 +125,15 @@ def test_every_catalog_subtype_has_a_composite_key():
 
 @pytest.mark.skipif(os.environ.get("ASFI_RUN_CORPUS_TEST") != "1", reason="activar explícitamente para el pase corpus-wide")
 def test_corpus_wide_totals_reconcile_v2_with_unified_financing():
+    # Totales post-overrides curados (decisión de Diego 2026-07-20): dividendos
+    # +1, juntas +1, emisiones -1, registros -1 respecto de la conciliación V2.
     expected = {
         "auditorias": 147, "calificaciones_riesgo": 239, "capital_societario": 1099,
-        "compromisos_financieros": 1402, "directorio": 1064, "dividendos": 252,
-        "emisiones_colocaciones": 2340, "financiamiento": 1851,
-        "juntas_asambleas": 4878, "otros_residual": 2016, "pagos_valores": 6982,
+        "compromisos_financieros": 1402, "directorio": 1064, "dividendos": 253,
+        "emisiones_colocaciones": 2339, "financiamiento": 1851,
+        "juntas_asambleas": 4879, "otros_residual": 2016, "pagos_valores": 6982,
         "personal": 4572, "poderes_representacion": 776,
-        "registros_autorizaciones": 555, "sanciones_procesos": 1160,
+        "registros_autorizaciones": 554, "sanciones_procesos": 1160,
         "titularizacion": 519, "uso_fondos": 415,
     }
     totals = Counter(classify(source)["type_id"] for source in corpus().values())

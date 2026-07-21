@@ -193,6 +193,32 @@ def fold(value: object) -> str:
     return re.sub(r"\s+", " ", "".join(ch for ch in text if not unicodedata.combining(ch)).lower()).strip()
 
 
+# Overrides curados (decisión de Diego, 2026-07-20): re-etiquetan CASOS
+# INDIVIDUALES de la revisión manual sin ampliar ni restringir reglas
+# generales. El clasificador no conoce el item_id fecha:índice, así que cada
+# caso se identifica por huella de contenido: fragmento de entidad + marcadores
+# del texto, todos foldeados. Ids de referencia en el comentario de cada tupla.
+_MANUAL_OVERRIDES: tuple[tuple[str, tuple[str, ...], tuple[str, str]], ...] = (
+    # asfi:2020-03-17:040 — "autorizados" describía puntos de distribución, no un acto regulatorio.
+    ("bnb safi", ("modificacion temporal de sus horarios de atencion", "de lunes a sabado en horario continuo de 08:00 a 13:00"), ("otros_residual", "sin_patron_fuerte")),
+    # asfi:2020-04-28:013 — distribución de rendimientos de fondo = evento económico de dividendos.
+    ("pyme progreso", ("distribucion de rendimientos de la gestion 2019", "el 30 de abril"), ("dividendos", "rendimientos_fondo")),
+    # asfi:2020-09-10:002 — la asamblea solo tomó conocimiento de informes; la emisión no es ejecución económica.
+    ("bisa leasing", ("asamblea general de tenedores de bonos bisa leasing iv", "emision 2 dentro del programa", "realizada el 9 de septiembre de 2020"), ("juntas_asambleas", "decisiones_adoptadas")),
+    # asfi:2020-08-31:001 — "efectuó el pago" = pago consumado, no declaración.
+    ("delapaz", ("efectuo el pago de la segunda cuota de dividendos de la gestion 2019", "el 31 de agosto de 2020"), ("dividendos", "pago_realizado")),
+)
+
+
+def _manual_override(item: dict) -> tuple[str, str] | None:
+    entity = fold(item.get("entidad"))
+    text = fold(item.get("texto") or item.get("resumen"))
+    for entity_key, markers, target in _MANUAL_OVERRIDES:
+        if entity_key in entity and all(marker in text for marker in markers):
+            return target
+    return None
+
+
 def _has(text: str, pattern: str) -> bool:
     return bool(re.search(pattern, text, re.S))
 
@@ -543,6 +569,11 @@ def classify(item: dict) -> dict:
                         precedence = "Emisiones y Capital se evalúan antes que Registros y autorizaciones"
                     else:
                         type_id, subtype_id = "otros_residual", "contenido_generico" if _is_generic(item) else "sin_patron_fuerte"
+
+    override = _manual_override(item)
+    if override:
+        type_id, subtype_id = override
+        precedence = "override curado: decisión editorial de Diego (2026-07-20) sobre hallazgo de revisión manual"
 
     raw = fold(item.get("texto", ""))
     if type_id != "juntas_asambleas" and _has(raw, r"junta|asamblea|reunion de directorio|sesion de directorio"):

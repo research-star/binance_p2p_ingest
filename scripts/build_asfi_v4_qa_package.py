@@ -107,28 +107,28 @@ def build_manual_findings(by_id: dict[str, dict], originals: dict[str, dict]) ->
             "riesgo": "Sobrerrepresentar Registros y autorizaciones y ocultar un comunicado que no contiene una autorización regulatoria nueva.",
             "recomendacion_codex": "Revisar el caso individual; no ampliar ni restringir la regla hasta que Diego confirme el sentido jurídico del texto.",
             "alternativa": "Reclasificar esta fila a otros_residual.sin_patron_fuerte si se confirma que no existe acto autorizatorio.",
-            "decision_requerida_de_diego": "CORREGIR mueve 1 registro de registros_autorizaciones.autorizacion_regulatoria a Otros; MANTENER mueve 0. No se estima impacto corpus-wide sin diseñar y auditar una regla nueva.",
+            "decision_requerida_de_diego": "RESUELTA (Diego, 2026-07-20): CORREGIR. Aplicado como override curado a otros_residual.sin_patron_fuerte; sin regla nueva.",
         },
         "asfi:2020-04-28:013": {
             "hallazgo": "Distribución de rendimientos de un fondo; es candidata a dividendos.rendimientos_fondo aunque Fase 1 decidió mantenerla residual.",
             "riesgo": "Subcontar rendimientos de fondos y conservar un evento económicamente interpretable dentro de Otros.",
             "recomendacion_codex": "Validar manualmente si el rendimiento distribuido debe tratarse como evento económico equivalente a dividendos/rendimientos.",
             "alternativa": "Reclasificar esta fila a dividendos.rendimientos_fondo.",
-            "decision_requerida_de_diego": "CORREGIR mueve 1 registro de Otros a Dividendos y activa 1 caso en un subtipo hoy con 0; MANTENER mueve 0. No hay una regla general propuesta.",
+            "decision_requerida_de_diego": "RESUELTA (Diego, 2026-07-20): CORREGIR. Aplicado como override curado a dividendos.rendimientos_fondo (subtipo activado con 1 caso).",
         },
         "asfi:2020-09-10:002": {
             "hallazgo": "La asamblea tomó conocimiento de informes; la mención de una emisión no demuestra ejecución económica de una emisión.",
             "riesgo": "Confundir una referencia informativa o societaria con una emisión efectivamente realizada.",
             "recomendacion_codex": "Revisar el acto dominante y decidir si debe prevalecer Junta/Asamblea u Otros sobre Emisiones.",
             "alternativa": "Mover la fila a juntas_asambleas.decisiones_adoptadas o a otros_residual.sin_patron_fuerte, según lectura jurídica.",
-            "decision_requerida_de_diego": "CORREGIR mueve exactamente 1 registro fuera de emisiones_colocaciones.emision; MANTENER mueve 0. La elección del destino requiere decisión de producto.",
+            "decision_requerida_de_diego": "RESUELTA (Diego, 2026-07-20): CORREGIR con destino juntas_asambleas.decisiones_adoptadas, elegido por Diego. Aplicado como override curado.",
         },
         "asfi:2020-08-31:001": {
             "hallazgo": "La frase “efectuó el pago de dividendos” puede afinar declaración a pago_realizado.",
             "riesgo": "Subestimar pagos consumados y mezclar declaración/aprobación con ejecución efectiva.",
             "recomendacion_codex": "Si Diego confirma que el verbo describe pago ya ejecutado, corregir únicamente este caso y luego auditar cualquier regla propuesta.",
             "alternativa": "Cambiar el subtipo a dividendos.pago_realizado.",
-            "decision_requerida_de_diego": "CORREGIR mueve 1 registro dentro de Dividendos: declaración -1 y pago_realizado +1; MANTENER mueve 0. El total del tipo no cambia.",
+            "decision_requerida_de_diego": "RESUELTA (Diego, 2026-07-20): CORREGIR. Aplicado como override curado a dividendos.pago_realizado; el total del tipo no cambia.",
         },
     }
     rows = []
@@ -175,7 +175,7 @@ def build_financing_review(original_list: list[dict], phase1: object) -> list[di
             "senal_v4": "V4 exige un verbo real de uso/disposición próximo a la línea; aquí domina la suscripción u obtención contractual.",
             "clasificacion_recomendada": "financiamiento.contratacion_bancaria",
             "explicacion": "La coincidencia V2 no prueba utilización de fondos: `uso` podía aparecer dentro de otra palabra, típicamente `recursos`. V4 conserva el tipo y corrige solo el subtipo.",
-            "posible_falso_positivo": "Revisar el documento si existiera evidencia no capturada de un desembolso o uso efectivo; no modificar la regla antes de la decisión de Diego.",
+            "posible_falso_positivo": "ACEPTADA por Diego (2026-07-20): se adopta la clasificación V4 contratacion_bancaria para los cinco casos; sin cambio adicional de regla.",
         })
     if len(rows) != 5:
         raise AssertionError(f"Se esperaban cinco diferencias de financiamiento y se obtuvieron {len(rows)}")
@@ -302,8 +302,8 @@ Para el mes B se maximiza primero la suma de tipos y subtipos distintos; los des
 - D–H: filtros de tipo y tratamiento visual discreto de Otros.
 - I–K: detalle, estado sin datos, eventos secundarios y tabla no parseada.
 - L–O: casos de bajo volumen, búsqueda y combinación de subtipos.
-- `exports/asfi_v4_manual_review_findings.csv`: exactamente cuatro decisiones pendientes; ninguna regla fue modificada.
-- `exports/asfi_v4_financing_5_case_review.csv`: exactamente cinco diferencias V2/V4; ninguna regla fue modificada durante este empaquetado.
+- `exports/asfi_v4_manual_review_findings.csv`: cuatro hallazgos RESUELTOS por Diego (2026-07-20) y aplicados como overrides curados; sin reglas generales nuevas.
+- `exports/asfi_v4_financing_5_case_review.csv`: cinco diferencias V2/V4 ACEPTADAS por Diego (2026-07-20); la regla V4 queda como está.
 - Conciliaciones y listados cuantitativos: revisar deltas, ceros, subtipos 1–5 y cobertura de campos/eventos.
 
 ## Estado del QA responsive

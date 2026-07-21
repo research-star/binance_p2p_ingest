@@ -98,14 +98,24 @@ El dry-run clasifica copias en memoria, guarda hashes antes/después, concilia
 tipos/subtipos y audita los CSV 509/488/2.972. Solo escribe el reporte y muestra
 en `tmp/`. El builder de preview solo escribe copias bajo `tmp/`.
 
-La comparación V2/V4 admite una diferencia técnica documentada dentro de
-Financiamiento: `contratacion_bancaria +5` y `uso_linea_credito -5`. El patrón
-V2 encontraba `uso` dentro de otras palabras; V4 exige que el verbo aparezca
-cerca de “línea de crédito”. Los totales del tipo y del corpus no cambian.
+La comparación V2/V4 admite diferencias documentadas y aprobadas por Diego
+(2026-07-20). Dentro de Financiamiento: `contratacion_bancaria +5` y
+`uso_linea_credito -5` — el patrón V2 encontraba `uso` dentro de otras
+palabras; V4 exige que el verbo aparezca cerca de “línea de crédito”; los
+totales del tipo no cambian. Además, cuatro **overrides curados**
+(`_MANUAL_OVERRIDES` en `taxonomy_v4.py`) re-etiquetan los cuatro hallazgos de
+la revisión manual por decisión explícita de Diego, identificándolos por huella
+de contenido y sin ampliar reglas generales: `asfi:2020-03-17:040` →
+`otros_residual.sin_patron_fuerte`, `asfi:2020-04-28:013` →
+`dividendos.rendimientos_fondo`, `asfi:2020-09-10:002` →
+`juntas_asambleas.decisiones_adoptadas` (destino elegido por Diego) y
+`asfi:2020-08-31:001` → `dividendos.pago_realizado`. Efecto neto por tipo:
+dividendos +1, juntas +1, emisiones −1, registros −1.
 
 La muestra determinística contiene dos filas por cada estrato año×tipo
 disponible (119 estratos, 238 filas en este universo). El JSON de diagnóstico
-registra hallazgos pendientes de criterio de Diego sin aplicarlos en silencio.
+registra los hallazgos con su disposición final; ninguna corrección se aplicó
+en silencio.
 
 ## Gate para persistir
 
