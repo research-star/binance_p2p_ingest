@@ -40,10 +40,17 @@ Cada item gana además `grupo_v` (versión de taxonomía = TAXONOMIA_V) y
 `revisado` ('provisional' hasta curación humana). El detalle de calibración,
 falsos positivos y decisiones de prioridad vive en
 `asfi_ingest/CUADERNO_HECHOS_RELEVANTES.md`.
+
+V4 (fase 2A, propuesta local): conserva `grupo`/`campos` como compatibilidad y
+añade tipo, subtipo, clave compuesta, eventos secundarios, tags, campos
+estructurados y contrato de tablas fuente mediante `taxonomy_v4`. Persistir
+esta capa sobre los JSON requiere una autorización posterior.
 """
 from __future__ import annotations
 
 import re
+
+from . import taxonomy_v4
 
 # Versión de la taxonomía. Se estampa en cada item (`grupo_v`) para que un pase
 # futuro pueda re-clasificar selectivamente. V1 = implícito (items sin el campo).
@@ -51,7 +58,7 @@ import re
 # crédito", drift léxico visto en 2025) y de fin laboral ("finalizó/concluyó la
 # relación/vinculación laboral", "dejó de ejercer/prestar/pertenecer", "cese de
 # funciones") — cierra ~69/año (préstamo) + ~5-7/año (personal) que caían a 'otros'.
-TAXONOMIA_V = 3
+TAXONOMIA_V = taxonomy_v4.TAXONOMIA_V
 
 GRUPOS = ("emisiones", "cupones", "prestamos", "directorio", "personal",
           "dividendos", "uso_fondos", "compromisos_reportados",
@@ -569,4 +576,4 @@ def enriquecer(item: dict) -> dict:
         item["campos"] = campos
     else:
         item.pop("campos", None)
-    return item
+    return taxonomy_v4.enrich(item)
