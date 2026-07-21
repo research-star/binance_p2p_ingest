@@ -1708,7 +1708,7 @@ publica un "Reporte Informativo" (PDF, 7-9 págs) con los hechos relevantes del
 RMV: comunicados de emisores/agencias/SAFIs (juntas, personal, préstamos),
 pagos de cupones, compromisos financieros de bancos emisores (CAP/liquidez),
 calificaciones de riesgo, resoluciones (emisiones autorizadas) y cartas.
-La sección `finanzasbo.com/asfi.html` lo muestra condensado, navegable por día.
+La ruta `finanzasbo.com/asfi` lo muestra condensado, navegable por día o rango.
 
 **Restricción de red (crítica).** El listado y los PDFs viven en
 `appweb2.asfi.gob.bo` (app ASP.NET aparte del Drupal `www.asfi.gob.bo`), que
@@ -1726,29 +1726,25 @@ El `www` (Drupal/CDN) sí acepta cualquier IP, pero solo tiene el iframe.
 | `asfi_ingest/fetch.py` | Listado (`Gestion=YYYY`) + PDFs vía proxy `__cr.bo`, con reintentos (el pool rota exit y puede dar 502 transitorio). Fail-safe sin `PROXY_URL`. |
 | `asfi_ingest/resumen.py` | Titular telegráfico IA (Haiku, ≤90 chars estilo cable — prompt V2, `RESUMEN_V` versiona: `aplicar()` re-procesa solo items de versión vieja, bajo el cap). Mismo contrato que `resumen_ia.py`: candado `autorizado=True` + cap mensual propio en tabla `asfi_api_spend` (self-create; default $1/mes, decisión Diego: SIN override). Fallback extractivo = origen B con asterisco (taxonomía A/B). `ASFI_RESUMEN=0` lo apaga sin tocar noticias. |
 | `ingest_asfi.py` | Orquestador. Default = corrida diaria de cron (dedupe por FECHA del título del listado — robusto entre backfill sin guid y cron con guid). `--backfill DIR` parsea PDFs locales. `--resumir` re-pasa la IA sobre items no-A (idempotente, cap-bounded — backfill de resúmenes en tandas). `--sin-ia`. |
-| `asfi_ingest/extract.py` | Grupo + campos estructurados por item (regex sobre `texto` persistido). Grupos V3: emisiones, cupones, préstamos, **directorio** (sale/entra/ratificado por persona — clasificación extraction-driven: sin cambios extraídos degrada a 'otros'), personal, dividendos (con monto Bs/USD, total o por acción), **uso_fondos** (emisión/destino/monto), **compromisos** (TODOS los pares indicador/umbral/valor con evaluación de cumplimiento, formatos tabla y verbal-BCP), **auditorias** (firma/gestión, extraction-driven), **juntas** (convocatorias: tipo/fecha/agenda — acá cae el caso 'distribución de resultados' en agenda, que NO es pago de dividendos), calificaciones, otros. `ingest_asfi.py --reextraer` recomputa todo sobre la data existente sin re-bajar PDFs. |
+| `asfi_ingest/extract.py` | Conserva `grupo` + `campos` V3 como compatibilidad y, en la rama `feat/asfi-taxonomy-v4`, llama a la capa V4. `ingest_asfi.py --reextraer` recomputa sobre la data existente; **no ejecutar para V4 hasta autorización expresa de Diego**. |
+| `asfi_ingest/taxonomy_v4.py` | Taxonomía V4 propuesta local: 17 tipos visibles, 120 subtipos con clave estable `type_id.subtype_id`, un evento dominante, eventos secundarios, tags, campos estructurados y contrato de tabla fuente. Integra financiamiento bancario/no bancario en el único tipo `financiamiento`. No usa red, API ni IA. |
 | `static/asfi_YYYY-MM.json` + `static/asfi_index.json` | Data committeada al repo (patrón data-BCB). `publish_dashboard.py` ya copia los archivos sueltos de `static/` a la raíz de `gh-pages` (y de ahí suben al edge Cloudflare Pages en el mismo dual-publish) — la publicación sale gratis en el ciclo normal (*/12). |
-| Tab "ASFI" del SPA (`template.html`) | Pestaña real del dashboard (slug `/asfi`, `ROUTE_MAP`/`TAB_PANELS`/`renderAsfi` lazy — misma convención que BBV). Tablitas por tema con los campos extraídos + lista "Otros comunicados", íconos por rubro de entidad, nav de fecha con deep-link `/asfi#YYYY-MM-DD`, filtros por tema/texto, fila expandible con texto completo. `static/asfi.html` quedó como REDIRECT a `/asfi` (no romper links compartidos). |
-| `scripts/test_asfi_parser.py` | Fixture real (03-jul) + tags + extracto + candado + cap. |
+| Tab "ASFI" del SPA (`template.html` + `static/asfi-taxonomy-v4-ui.js`) | Frontend V4 local, todavía no publicado: tipo organiza; subtipo divide tablas por rango; día muestra subtipo por fila. Filtros de tipo/subtipo múltiple, búsqueda que incluye eventos/tags, conteos dinámicos, orden y hash compartible sin perder fechas. Tablas anchas viven solo dentro de `.table-scroll`; el detalle rotula los datos estructurados y el estado de tabla fuente. |
+| `scripts/asfi_v4_dry_run.py` | Pase in-memory sobre 30.267 items, conciliación contra Fase 1, auditorías 509/488/2.972, residual anual, muestras estratificadas y guard de hashes de JSON productivos. Solo escribe diagnóstico en `tmp/`. |
+| `scripts/build_asfi_v4_preview.py` | Genera bajo `tmp/` un bake local con copias enriquecidas; nunca modifica `static/` ni publica. |
+| `scripts/test_asfi_parser.py`, `scripts/test_asfi_taxonomy_v4.py`, `scripts/test_asfi_v4_ui_contract.py` | Parser y regresión V4: catálogo, precedencias, casos de aceptación, corpus completo, filtros/URL/estados de tabla y contrato responsive. |
 
-**Nota operativa reextraer:** tras mergear un PR que cambie `extract.py`, correr
-en el VPS `.venv/bin/python ingest_asfi.py --reextraer` y luego el wrapper
-(`./scripts/asfi_scrape_and_commit.sh`) para recomputar y publicar la data
-histórica con el vocabulario nuevo (los PRs de extractor shippean solo código —
-la data la regenera el VPS, que es quien tiene los resúmenes IA frescos).
+**Nota operativa reextraer.** El procedimiento histórico sigue siendo
+`.venv/bin/python ingest_asfi.py --reextraer` + wrapper, pero para V4 queda
+bloqueado por el gate de Fase 2A. Primero revisar el diagnóstico dry-run y la
+preview; solo una autorización posterior de Diego habilita persistir JSON,
+committear datos regenerados y publicar. Ver `docs/asfi_taxonomy_v4.md`.
 
-**Deploy (pendiente al merge del PR):**
-1. `cd /opt/binance_p2p && .venv/bin/pip install pypdf` (única dependencia nueva).
-2. Backfill de resúmenes IA (la data JSON de los 122 días ya viene en el
-   repo con extractos; esto solo promueve B→A):
-   `.venv/bin/python ingest_asfi.py --resumir`
-   Bajo el cap de $1/mes la promoción es GRADUAL por diseño (decisión de
-   Diego 2026-07-05: cap $1 en todo, sin override): cada corrida promueve
-   hasta agotar el $1 del mes y frena sola; re-correr en meses siguientes
-   retoma donde quedó (~3.2k items ≈ $2.5 total ≈ 2-3 meses de tandas).
-   Mientras tanto esos días se ven con extracto + asterisco (origen B).
-3. Cron: `10 1,13,23 * * * cd /opt/binance_p2p && ./scripts/asfi_scrape_and_commit.sh >> /var/log/binance_p2p/asfi.log 2>&1`
-4. (Opcional) UUID healthchecks → `HC_ASFI` en `.env`.
+**Estado de publicación.** El módulo ASFI V3, sus dependencias y sus cron ya
+están desplegados (ver § 0 y tabla de cron). La taxonomía/frontend **V4 de esta
+rama no está publicada**, no fue persistida en los JSON y no debe describirse
+como productiva. Sigue pendiente únicamente el gate de Diego para Fase 2A y,
+por separado, el UUID opcional `HC_ASFI`.
 
 **Gasto API.** Autorizado por Diego (sesión 2026-07-05, brief del módulo:
 elección explícita "Extracción + resumen IA"). Cap confirmado por Diego en la

@@ -1123,7 +1123,34 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 .asfi-caret{display:inline-block;width:12px;margin-right:2px;font-size:10px;color:var(--text-soft);transition:transform .15s}
 .asfi-card:not(.asfi-collapsed)>h3 .asfi-caret{transform:rotate(90deg)}
 .asfi-collapsed>.asfi-card-body{display:none}
-@media(max-width:640px){.asfi-card .fb-data-table{display:block;overflow-x:auto}}
+/* V4: el viewport nunca hereda el ancho mínimo de una tabla. */
+#tab-asfi,#tab-asfi .content,#tab-asfi section,#tab-asfi details,#tab-asfi .asfi-v4-subtypes{min-width:0;max-width:100%}
+.asfi-filtros-v4{display:grid;grid-template-columns:minmax(160px,1.4fr) minmax(160px,1fr) minmax(140px,.8fr) auto;gap:8px;align-items:center;margin:2px 0 8px;min-width:0}
+.asfi-filtros-v4 input,.asfi-filtros-v4 select,.asfi-filtros-v4 button{box-sizing:border-box;max-width:100%;min-width:0;width:100%;border:1px solid var(--line-strong);background:var(--bg-secondary);color:var(--text-primary);font-size:12px;padding:7px 9px;border-radius:2px}
+.asfi-filtros-v4 button{width:auto;white-space:nowrap;cursor:pointer}
+.asfi-subtipos{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 10px;min-width:0}
+.asfi-v4-filter-label{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--text-muted);margin-right:3px}
+.asfi-subtipos label{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:4px 8px;border:1px solid var(--border-color);border-radius:999px;font-size:11px;cursor:pointer;background:var(--bg-secondary)}
+.asfi-subtipos label span{overflow-wrap:anywhere}.asfi-subtipos label strong{font-family:var(--font-mono);color:var(--text-muted)}
+.asfi-v4-type-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:7px;margin:12px 0 16px;min-width:0}
+.asfi-v4-type-summary button{display:flex;gap:8px;justify-content:space-between;align-items:center;min-width:0;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);padding:8px 10px;text-align:left;cursor:pointer}
+.asfi-v4-type-summary button span{min-width:0;overflow-wrap:anywhere}.asfi-v4-type-summary button strong{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+.asfi-v4-type-summary button.residual{opacity:.72;border-style:dashed}
+.asfi-v4-type{margin:14px 0;border:1px solid var(--border-color);background:var(--bg-secondary);min-width:0}.asfi-v4-type.residual{border-style:dashed;opacity:.88}
+.asfi-v4-type>h2,.asfi-v4-type>details>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;background:var(--bg-tertiary);font-family:var(--font-display);font-size:14px;font-weight:600;cursor:pointer;overflow-wrap:anywhere}
+.asfi-v4-type>h2 span,.asfi-v4-type summary strong{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+.asfi-v4-subtypes{padding:0 10px 10px}.asfi-v4-subtype-block{margin-top:10px;border:1px solid var(--border-color);min-width:0}
+.asfi-v4-subtype-block>summary{display:flex;justify-content:space-between;gap:10px;padding:9px 11px;font-size:12px;font-weight:600;cursor:pointer;overflow-wrap:anywhere}
+.table-scroll{display:block;width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.asfi-v4-table{width:100%;min-width:620px}.asfi-v4-table td{max-width:330px;overflow-wrap:anywhere;vertical-align:top}.asfi-v4-table tr[data-exp]{cursor:pointer}.asfi-v4-toggle-col{width:30px;text-align:center;color:var(--text-muted)}
+.asfi-v4-detail-row td{white-space:normal!important;padding:0!important}.asfi-v4-detail{padding:13px;background:var(--bg-tertiary);line-height:1.55;overflow-wrap:anywhere}.asfi-v4-summary{font-size:12px;color:var(--text-primary)}
+.asfi-v4-label{margin-top:12px;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted)}
+.asfi-v4-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:7px;margin:8px 0}.asfi-v4-facts>div{min-width:0;padding:8px;border:1px solid var(--border-color);background:var(--bg-secondary)}.asfi-v4-facts span{display:block;font-size:9px;text-transform:uppercase;color:var(--text-muted);overflow-wrap:anywhere}.asfi-v4-facts strong{display:block;margin-top:3px;font-size:11.5px;overflow-wrap:anywhere}
+.asfi-v4-badge{display:inline-block;max-width:100%;margin:2px 3px 2px 0;padding:2px 6px;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-family:var(--font-mono);font-size:9px;overflow-wrap:anywhere}.asfi-v4-badge.secondary{color:var(--blue-accent)}.asfi-v4-badge.tag{color:var(--text-muted)}
+.asfi-v4-detail-line,.asfi-v4-source-state,.asfi-v4-full{margin-top:9px;font-size:11px;color:var(--text-secondary)}.asfi-v4-source-state{border-left:2px solid var(--np-accent);padding-left:8px}.asfi-v4-full{white-space:pre-wrap}.asfi-v4-source{display:inline-block;margin-top:10px;font-size:11px}.asfi-v4-muted{color:var(--text-soft)}
+.asfi-v4-day-list{min-width:0}.asfi-v4-day-row{display:flex;justify-content:space-between;gap:10px;padding:11px 13px;border-top:1px solid var(--border-color);cursor:pointer;min-width:0}.asfi-v4-day-row>div{min-width:0}.asfi-v4-day-row strong{display:block;margin:3px 0;font-size:12px;overflow-wrap:anywhere}.asfi-v4-day-row p{margin:0;font-size:11.5px;color:var(--text-secondary);overflow-wrap:anywhere}.asfi-v4-subtype{font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;color:var(--blue-accent);overflow-wrap:anywhere}.asfi-v4-day-detail{border-top:1px solid var(--border-color)}
+@media(max-width:760px){.asfi-filtros-v4{grid-template-columns:1fr 1fr}.asfi-nav{width:100%}.asfi-nav input[type=date]{flex:1 1 125px;min-width:0;max-width:100%}}
+@media(max-width:420px){.asfi-filtros-v4{grid-template-columns:1fr}.asfi-filtros-v4 button{width:100%}.asfi-rango-lbl,.asfi-rango-dash{display:none}.asfi-nav{gap:5px}.asfi-nav button{padding:6px 8px}.asfi-v4-type-summary{grid-template-columns:1fr}.asfi-v4-subtypes{padding:0 5px 5px}.asfi-v4-day-row,.asfi-v4-detail{padding:10px}}
 </style>
 <div id="tab-asfi" style="display:none;">
   <div class="fb-subheader">
@@ -1142,11 +1169,13 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
     </div>
   </div>
   <div class="content">
-    <div class="asfi-filtros">
+    <div class="asfi-filtros-v4">
       <input type="search" id="asfiBuscar" placeholder="{{t:asfi.buscar_placeholder}}">
-      <select id="asfiTema"><option value="">{{t:asfi.tema_todos}}</option></select>
-      <span class="asfi-sec-chip" id="asfiPdfSlot"></span>
+      <select id="asfiTipo"><option value="">{{t:asfi.v4_todos_tipos}}</option></select>
+      <select id="asfiOrden" aria-label="{{t:asfi.v4_orden}}"><option value="relevance">{{t:asfi.v4_relevancia}}</option><option value="date">{{t:asfi.v4_fecha}}</option><option value="volume">{{t:asfi.v4_volumen}}</option></select>
+      <button type="button" id="asfiLimpiarTema">{{t:asfi.v4_limpiar_tema}}</button>
     </div>
+    <div id="asfiSubtipos" class="asfi-subtipos" hidden></div>
     <div id="asfiCuerpo"><div class="asfi-vacio">{{t:asfi.cargando_html}}</div></div>
     <div id="asfiParcial" class="asfi-parcial" style="display:none"></div>
     <div class="asfi-fuente">{{t:asfi.fuente_pre}} <span style="color:var(--np-accent)">*</span> {{t:asfi.fuente_post}}</div>
@@ -6660,8 +6689,9 @@ window.addEventListener('popstate', function(){
   })();
 </script>
 
-<script>
-/* ═══ ASFI TAB LOGIC ═══
+<script type="application/x-finanzasbo-asfi-v3">
+/* ASFI V3 ARCHIVADO EN ESTA RAMA: no se ejecuta; se retira al consolidar V4.
+   ═══ ASFI TAB LOGIC ═══
    Lazy: activateTab llama window.renderAsfi() en cada activate; el primer
    call inicializa (fetch de asfi_index.json + wiring), los siguientes son
    no-op salvo re-render. Data: asfi_index.json + asfi_YYYY-MM.json en la
@@ -7051,6 +7081,18 @@ function initAsfi(){
 window.renderAsfi=function(){ if(!st.init) initAsfi(); };
 })();
 </script>
+
+<script>
+window.ASFI_V4_I18N={
+  allTypes:'{{t:asfi.v4_todos_tipos}}',subtypes:'{{t:asfi.v4_subtipos}}',disclosures:'{{t:asfi.v4_comunicados}}',
+  structuredLabel:'{{t:asfi.v4_datos_clave_label}}',secondary:'{{t:asfi.v4_eventos_secundarios}}',
+  noStructured:'{{t:asfi.v4_sin_datos}}',openSource:'{{t:asfi.v4_abrir_fuente}}',empty:'{{t:asfi.v4_vacio}}',
+  loading:'{{t:asfi.js_cargando}}',error:'{{t:asfi.js_error_carga}}',yes:'{{t:asfi.v4_si}}',no:'{{t:asfi.v4_no}}',
+  sourceVerified:'{{t:asfi.v4_tabla_asfi}}',reconstructedVerified:'{{t:asfi.v4_tabla_reconstruida}}',
+  reconstructedUnverified:'{{t:asfi.v4_tabla_preliminar}}',detectedUnparsed:'{{t:asfi.v4_tabla_detectada}}'
+};
+</script>
+<script src="/asfi-taxonomy-v4-ui.js"></script>
 
 <!-- bake:optional:agro -->
 <script>
