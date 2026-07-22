@@ -6595,6 +6595,333 @@
      "revisado": "provisional"
     }
    ]
+  },
+  "2026-07-22": {
+   "guid": "3332aaa2-27d0-4414-8e2b-a5eedf5eb0d2",
+   "titulo": "Reporte Informativo ASFI al 22/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Auditoría",
+     "entidad": "BERTHINASSURANCE GROUP AUDITORÍA & CONSULTORÍA S.R.L.",
+     "texto": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 20 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: El Cambio de Domicilio Legal, siendo la nueva dirección: Zona San Jorge, Calle Rosendo Gutiérrez y Av. Arce, Edificio Multicentro N° 2299, Torre B, Piso 12, de la Ciudad de La Paz.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Asamblea General Extraordinaria de Socios de 20 de julio de 2026, realizada con el 100.00% de los socios, determinó lo siguiente: El Cambio de Domicilio Legal, siendo la nueva",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Seguros Illimani S.A. (S.I.S.A.)",
+     "texto": "Ha comunicado que la Junta General Ordinaria de Accionistas de 22 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar la capitalización de un monto de Bs1.910.800,00 de la cuenta de Ajuste de Capital, instruyendo al Directorio y/o Gerencia General, realizar las acciones que correspondan, ante la entidad de regulación APS.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 22 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar la capitalización de un monto de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "INDUSTRIA TEXTIL TSM S.A.",
+     "texto": "Comunica que, el 22 de julio de 2026, utilizó el Fondo de Liquidez para la provisión de fondos del primer abono bimestral para el pago del Cupón N° 13 de los Bonos denominados “BONOS TSM 001”, cuyo vencimiento es el 21 de noviembre de 2026.",
+     "tags": [
+      "cupon"
+     ],
+     "resumen": "Comunica que, el 22 de julio de 2026, utilizó el Fondo de Liquidez para la provisión de fondos del primer abono bimestral para el pago del Cupón N° 13 de los Bonos denominados “BONOS TSM 001”, cuyo",
+     "resumen_origen": "extractivo",
+     "grupo": "cupones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cupon_n": "13",
+      "instrumento": "BONOS TSM 001”",
+      "estado": "programado"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Mayoreo y Distribución S.A. (MADISA)",
+     "texto": "Rectifica y complementa el Hecho Relevante comunicado el 14 de julio de 2026, la Junta General Ordinaria de Accionistas de 14 de julio de 2026, realizada con el 96,27% del capital social, determinó lo siguiente:\n1. Ratificar la distribución de dividendos por Bs42.527.447,00, aprobada por la Junta General Ordinaria de Accionistas de 27 de marzo de 2026, correspondiente a los resultados de la gestión 2025 y resultados acumulados, pagadera en dos (2) cuotas: la primera por Bs21.263.723,50, pagada en abril de 2026, y la segunda por Bs21.263.723,50.\n2. Ratificar la suspensión temporal del inicio del pago de la segunda cuota de dividendos de la gestión 2025, previsto originalmente para el 24 de junio de 2026, dispuesta como medida prudencial de la Sociedad y comunicada a los accionistas mediante nota CITE DIR.LEGAL.42/2026 de 18 de junio de 2026.\n3. Aprobar la modificación del cronograma de pago, de modo que la segunda cuota se pague en dos (2) tramos de Bs10.631.861,75 cada uno, el primero a partir del 21 de julio de 2026 y el segundo durante el mes de agosto de 2026, abonados a los accionistas de manera proporcional a sus respectivas participaciones. La Sociedad podrá realizar el pago de manera anticipada si las condiciones financieras lo permiten.",
+     "tags": [
+      "junta",
+      "dividendos"
+     ],
+     "resumen": "Rectifica y complementa el Hecho Relevante comunicado el 14 de julio de 2026, la Junta General Ordinaria de Accionistas de 14 de julio de 2026, realizada con el 96,27% del capital social, determinó",
+     "resumen_origen": "extractivo",
+     "grupo": "dividendos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "monto": "Bs 42,5 M",
+      "fecha_pago": "21 de julio de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Toyosa S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: Aprobar la anuencia de la inscripción en el registro público de Derechos Reales de la Escritura Pública N° 2533/2024 de 17 de diciembre de 2024, conferida ante la notaria de Fe Pública N° 68 del distrito judicial de Santa Cruz de la Sierra, relativa al Aumento de Capital Social y modificación de Escritura Constitutiva de Sociedad en base al aporte de bienes inmuebles ubicados en la Ciudad de Cochabamba.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: Aprobar la anuencia de la inscripción en el registro público de Derechos Reales de la Escritura Pública",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Toyosa S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 21 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Lectura de la carta remitida por Toyota Motor Corporation, de 11 de mayo de 2026, ratificando a TOYOSA S.A. como distribuidor exclusivo de los productos Toyota dentro del territorio del Estado Plurinacional de Bolivia.\n2. Alcance corporativo de las facultades conferidas a TOYOSA S.A. para la ejecución de medidas destinadas a la protección de los derechos de Toyota Motor Corporation en Bolivia.\n3. Otorgamiento de Poder Especial conforme a los alcances convenidos a Gerónimo Antonio Meleán Eterovic, para que, actuando en representación de TOYOSA S.A., promueva, impulse y ejecute todas las actuaciones administrativas, judiciales, constitucionales y de cualquier otra naturaleza que resulten necesarias para el cumplimiento de las instrucciones impartidas por Toyota Motor Corporation, mediante la comunicación de 11 de mayo de 2026.\n4. Ratificación de la legitimación activa de TOYOSA S.A. para promover actuaciones administrativas, judiciales y constitucionales orientadas a la protección de la marca TOYOTA.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 21 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Chaco S.A.",
+     "texto": "Comunica que, el 21 de julio de 2026, concluyó el interinato de Hugo Arnez Banegas en el cargo de Gerente de Perforación a.i. y el interinato de Ricardo Marcelo Michel Villazón en el cargo de Gerente de Exploración y Desarrollo a.i.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 21 de julio de 2026, concluyó el interinato de Hugo Arnez Banegas en el cargo de Gerente de Perforación a.i.",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Gerente de Perforación",
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "YPFB Chaco S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: i. Designar a Abraham Nery Llorenty Rojas como Gerente de Ingeniería, Estudios y Construcción, con efecto a partir del 22 de julio de 2026; en consecuencia, Ariel Ricardo Arteaga Sabja ejercerá funciones en el cargo de Gerente de Ingeniería, Estudios y Construcción, hasta el 21 de julio de 2026. ii. Designar a las siguientes personas en los cargos ejecutivos que se detallan a continuación:\n- Jorge Alberto Barrón Vazquez, como Gerente de Operaciones, con efectividad a partir del 1 de octubre de 2026.\n- Walter Calderón Ponce de León, como Gerente de Perforación, con efectividad a partir del 22 de julio de 2026.\n- Luis Pérez Melgar, como Gerente de Exploración y Desarrollo, con efectividad a partir del 22 de julio de 2026.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: i.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Crédito con Educación Rural - CRECER IFD",
+     "texto": "Comunica que, en reunión de Directorio de 21 de julio de 2026, se determinó convocar a la Asamblea General Ordinaria de Asociados, a realizarse el 11 de agosto de 2026 a partir de Hrs. 09:00 de manera mixta, presencial y virtual, para considerar el siguiente Orden del Día:\n1. Lectura de la convocatoria y verificación del quórum.\n2. Incorporación de nuevo Asociado.\n3. Informe de la Gerencia General sobre el estado de situación de la institución al 30/06/2026.\n4. Resoluciones Sancionatorias de ASFI.\n5. Lectura, consideración y aprobación del Acta.\n6. Designación de Asociados para la suscripción del Acta.",
+     "tags": [
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 21 de julio de 2026, se determinó convocar a la Asamblea General Ordinaria de Asociados, a realizarse el 11 de agosto de 2026 a partir de Hrs.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "11 de agosto de 2026"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Crédito con Educación Rural - CRECER IFD",
+     "texto": "Comunica que, en reunión de Directorio de 21 de julio de 2026, se determinó autorizar al Presidente a convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 11 de agosto de 2026 a partir de Hrs. 11:30 de manera mixta, presencial y virtual, para considerar el siguiente Orden del Día:\n1. Lectura de la convocatoria y verificación del quórum.\n2. Emisión de Pagarés sin Oferta Pública a favor de FORTALEZA SAFI S.A. para MiPyME Fondo de Inversión Cerrado.\n3. Emisión de Pagarés sin Oferta Pública a favor de BISA SAFI S.A. para Microfinancieras Fondo de Inversión Cerrado II (MICROFIC II).\n4. Postulación de nuevo Asociado.\n5. Lectura, consideración y aprobación del Acta.\n6. Designación de Asociados para la suscripción del Acta.",
+     "tags": [
+      "emision",
+      "junta",
+      "personal"
+     ],
+     "resumen": "Comunica que, en reunión de Directorio de 21 de julio de 2026, se determinó autorizar al Presidente a convocar a la Asamblea General Extraordinaria de Asociados, a realizarse el 11 de agosto de 2026",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_junta": "11 de agosto de 2026",
+      "agenda": "emisión de valores"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Instituciones Financieras de Desarrollo",
+     "entidad": "Fundación Pro Mujer IFD",
+     "texto": "Ha comunicado que en reunión de Directorio de 17 de junio de 2026, se determinó lo siguiente: Designar por mayoría a la Directora Suplente María Cruz Pemán, como Directora Titular de forma transitoria, en tanto la Asamblea Ordinaria de Asociados proceda a la elección y designación definitiva correspondiente, conforme a las previsiones del Estatuto.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 17 de junio de 2026, se determinó lo siguiente: Designar por mayoría a la Directora Suplente María Cruz Pemán, como Directora Titular de forma",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Directora Titular de forma transitoria",
+      "movimiento": "designación"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Fortaleza Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 13 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Aprobar el aumento de Capital Suscrito y Pagado por Bs10.500.000,00 como consecuencia de la capitalización de resultados acumulados y el aporte de los accionistas Grupo Financiero Fortaleza S.A. y Corporación Fortaleza S.R.L.\n2. Aprobar el aumento de Capital Autorizado hasta el monto de Bs79.374.600,00 y la correspondiente modificación del Artículo 5° de los Estatutos Sociales y cláusulas cuarta y quinta de la Escritura Constitutiva de la Sociedad.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 13 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "aumento de capital"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Fortaleza Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Comunica que, el 21 de julio de 2026, recibió la carta presentada por Steven Rodriguez Mercado, mediante la cual, informa su renuncia al cargo de Auditor Nacional de la Sociedad, siendo su último día laboral el 23 de julio de 2026.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, el 21 de julio de 2026, recibió la carta presentada por Steven Rodriguez Mercado, mediante la cual, informa su renuncia al cargo de Auditor Nacional de la Sociedad, siendo su último día",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Auditor Nacional de la Sociedad",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Panamerican Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: Aprobar el traslado de su oficina, a su nueva dirección, Av. Sánchez Bustamante esquina Calle 15, Torre Ketal, piso 3, Of. 318, Calacoto. Previa no objeción de ASFI.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: Aprobar el traslado de su oficina, a su nueva dirección, Av.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Sociedad Administradora de Fondos de Inversión Unión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente:\n- Aprobar los documentos normativos del Fondo Microimpulso Fondo de Inversión Cerrado: Reglamento Interno, Reglamento del Comité de Inversiones, Manual de Evaluación de las Inversiones de Emisores de Valores sin Oferta Pública, Manual de Metodología de Gestión de Riesgo de Contraparte, Formulario de no vinculación y el Prospecto del Fondo “Microimpulso Fondo de Inversión Cerrado”.\n- Aprobar las modificaciones a los Reglamentos Internos de los Fondos Activo Unión Bs. Fondo de Inversión Abierto - Largo Plazo, Dinero Unión Fondo de Inversión Abierto - Mediano Plazo, Global Unión $us. Fondo de Inversión Abierto - Largo Plazo, Trabajo Unión Bs. Fondo de Inversión Abierto - Corto Plazo, Mutuo Unión Fondo de Inversión Abierto - Mediano Plazo y Xtravalor Unión Fondo de Inversión Abierto - Mediano Plazo.\n- Tomar conocimiento de la renuncia al cargo de Subgerente de Inversiones y Finanzas por parte de Varinia Susan Tindal Felipez, siendo su último día laboral el 21 de julio de 2026.\n- Designar a Rolando Brian Cuevas Espejo, como Subgerente de Inversiones y Finanzas a.i. a partir del 22 de julio de 2026.\n- Revocar todos los Poderes otorgados en favor de Varinia Susan Tindal Felipez.\n- Designar a Rolando Brian Cuevas Espejo como Administrador Suplente de los Fondos de Inversión Abiertos y Cerrados administrados por la Sociedad, debiéndose otorgar los Poderes respectivos.\n- Reconformar el Comité de Inversiones de los siguientes Fondos: COMITÉ DE INVERSIONES DE LOS FONDOS DE INVERSIÓN ABIERTOS - FIAS Tatiana Virreira Monroy - Presidente Rubén Mario Ferrufino Goitia - Miembro Leonor Hermoja Lozada Bernal - Miembro Rolando Brian Cuevas Espejo - Miembro Raquel Andrea Amado Lordemann - Secretaria COMITÉ DE INVERSIONES RENTA ACTIVA EMERGENTE FIC DE CAPITAL PRIVADO Carlos Alberto Ferrel Fernandez - Presidente Luisa Marcela Julia Cabrerizo - Miembro Miriam Gladys Herbas Perez - Miembro Maria Elena Querejazu Vidovic - Miembro Alan Jorge Bojanic - Miembro Leonor Hermoja Lozada Bernal - Miembro Rolando Brian Cuevas Espejo - Miembro Daniela Andrea Iporre Bustamante - Secretaria COMITÉ DE INVERSIONES RENTA ACTIVA PUENTE FIC DE CAPITAL PRIVADO Luisa Marcela Julia Cabrerizo - Presidente Carlos Alberto Ferrel Fernandez - Miembro Maria Elena Querejazu Vidovic - Miembro Alan Jorge Bojanic - Miembro Leonor Hermoja Lozada Bernal - Miembro Rolando Brian Cuevas Espejo - Miembro Daniela Andrea Iporre Bustamante - Secretaria COMITÉ DE INVERSIONES RENTA ACTIVA AGROINDUSTRIAL FIC Tatiana Virreira Monroy - Presidente Miriam Gladys Herbas Perez - Miembro Maria Elena Querejazu Vidovic - Miembro Alan Jorge Bojanic - Miembro Leonor Hermoja Lozada Bernal - Miembro Rolando Brian Cuevas Espejo - Miembro Daniela Andrea Iporre Bustamante - Secretaria",
+     "tags": [
+      "emision",
+      "personal"
+     ],
+     "resumen": "Ha comunicado que en reunión de Directorio de 21 de julio de 2026, se determinó lo siguiente: - Aprobar los documentos normativos del Fondo Microimpulso Fondo de Inversión Cerrado: Reglamento",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "cargo": "Subgerente de Inversiones y Finanzas",
+      "movimiento": "renuncia"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades de Titularización",
+     "entidad": "BDP Sociedad de Titularización S.A.",
+     "texto": "Comunica que, en calidad de Administrador del PATRIMONIO AUTÓNOMO CRESPAL\n- BDP ST 035, sin perjuicio a la notificación y las determinaciones del Auto Declarativo de Quiebra Resolución Nº 171/2025 de 25 de marzo de 2025, Laboratorios CRESPAL S.A. - Originador del PATRIMONIO AUTÓNOMO, no cumplió con la recaudación del flujo cedido correspondiente al mes de julio de 2026.",
+     "tags": [
+      "titularizacion"
+     ],
+     "resumen": "Comunica que, en calidad de Administrador del PATRIMONIO AUTÓNOMO CRESPAL - BDP ST 035, sin perjuicio a la notificación y las determinaciones del Auto Declarativo de Quiebra Resolución Nº 171/2025 de",
+     "resumen_origen": "extractivo",
+     "grupo": "titularizacion",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Pagarés Bursátiles Farmacias Chávez I - Emisión 3, utilizó los fondos por Bs2.652.821,03 para la compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Pagarés Bursátiles Farmacias Chávez I - Emisión 3, utilizó los fondos por Bs2.652.821,03 para la compra de mercadería como",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles Farmacias Chávez I",
+      "destino": "capital de operaciones",
+      "monto": "Bs 2,7 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco para el Fomento a Iniciativas Económicas S.A.",
+     "texto": "Comunica que, los Compromisos Financieros al 30 de junio de 2026, asumidos en los Prospectos de Emisión de Bonos que se detallan a continuación: “Bonos Subordinados BANCO FIE 5”. “Bonos BANCO FIE 3 - Emisión 2”. “Bonos Subordinados BANCO FIE 6”. “Bonos BANCO FIE 3 - Emisión 5”. “Bonos BANCO FIE 3 - Emisión 6”. “Bonos Subordinados BANCO FIE 7”. “Bonos BANCO FIE 4 - Emisión 1”. “Bonos BANCO FIE 4 - Emisión 2”. “Bonos BANCO FIE 4 - Emisión 3”. “Bonos BANCO FIE 4 - Emisión 4”. “Bonos BANCO FIE 4 - Emisión 5”. Indicadores Financieros Compromiso Junio-2026 Coeficiente de Adecuación Patrimonial (CAP) CAP >= 11% 12,29% Indicador de Liquidez (IL) IL >= 45% 89,47% Indicador de Cobertura (IC) IC >= 100% 263,73% Nota: Considerando el promedio de los últimos 3 meses calculado cada fin de mes.",
+     "tags": [
+      "emision",
+      "compromisos"
+     ],
+     "resumen": "Comunica que, los Compromisos Financieros al 30 de junio de 2026, asumidos en los Prospectos de Emisión de Bonos que se detallan a continuación: “Bonos Subordinados BANCO FIE 5”.",
+     "resumen_origen": "extractivo",
+     "grupo": "compromisos_reportados",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "indicadores": [
+       {
+        "sigla": "CAP",
+        "op": ">=",
+        "req": "11%",
+        "valor": "12.29%",
+        "ok": true
+       },
+       {
+        "sigla": "IL",
+        "op": ">=",
+        "req": "45%",
+        "valor": "89.47%",
+        "ok": true
+       },
+       {
+        "sigla": "IC",
+        "op": ">=",
+        "req": "100%",
+        "valor": "263.73%",
+        "ok": true
+       }
+      ]
+     }
+    }
+   ]
   }
  }
 }
