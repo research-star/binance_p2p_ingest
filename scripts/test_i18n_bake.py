@@ -23,6 +23,7 @@ Uso:  python -m pytest scripts/test_i18n_bake.py -q
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -302,6 +303,56 @@ def test_calendario_baked_only_es_and_admin_gated():
 
 
 # ── Cobertura data.* (workstream f: labels COICOP/PIB por idioma) ──────────
+
+
+def test_calendario_v2_almanac_contract():
+    """El upgrade mantiene el gate y fija el contrato editorial del almanaque."""
+    from config import MODULOS_NO_BAKEADOS
+
+    tpl = (ROOT / 'template.html').read_text(encoding='utf-8')
+    es = bake(tpl, 'es', '', i18n_bake.load_lang('es'),
+              MODULOS_NO_BAKEADOS)
+    cal_script = tpl[tpl.index('const CAL_DATA'):
+                     tpl.index('function calRevealDevAdmin')]
+
+    cats = set(re.findall(r'data-cal-cat="([^"]+)"', es[:es.index('const CAL_DATA')]))
+    assert cats == {'feriados', 'ine', 'bcb', 'bonos', 'asfi', 'laboral', 'global'}
+
+    for cert in ('confirmado', 'limite', 'ventana', 'estimacion', 'seguimiento'):
+        assert f"cert:'{cert}'" in cal_script
+
+    event_lines = [
+        line.strip() for line in cal_script.splitlines()
+        if re.match(r'^\{(?:d|rango):', line.strip())
+    ]
+    assert event_lines
+    assert all('cat:' in line and 'cert:' in line for line in event_lines)
+
+    confirmed_lines = [line for line in event_lines if "cert:'confirmado'" in line]
+    assert confirmed_lines
+    assert all("src:'https://" in line for line in confirmed_lines)
+
+    for date in (
+        '2026-01-28', '2026-03-18', '2026-04-29', '2026-06-17',
+        '2026-07-29', '2026-09-16', '2026-10-28', '2026-12-09',
+    ):
+        assert date in cal_script
+
+    assert "rango:'Cada semana'" in cal_script
+    assert "rango:'Cada mes'" in cal_script
+    assert "rango:'Cada trimestre'" in cal_script
+    assert "rango:[prefix+'05',prefix+'09'],cat:'ine',cert:'ventana'" in cal_script
+    assert "src:'https://www.ine.gob.bo',approx:true" in cal_script
+    assert "d:prefix+'10',cat:'ine',cert:'limite'" in cal_script
+    assert "CAL_STORAGE_KEY = 'fb-calendar-v2'" in cal_script
+    assert 'data-cal-search' in es
+    assert 'data-cal-firmes' in es
+    assert 'class="cal-sidebar"' in es
+    assert 'No hay eventos con estos filtros' in cal_script
+    assert 'target="_blank" rel="noopener"' in cal_script
+    assert 'CAL_CERT[next.event.cert].label' in cal_script
+    assert 'id="calNextHito" role="status" aria-live="polite" aria-atomic="true"' in es
+    assert "new Date('20" not in cal_script
 
 
 def test_dashboard_coicop_pib_slugs_have_data_keys_in_both_dicts():
