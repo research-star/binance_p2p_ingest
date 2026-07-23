@@ -6922,6 +6922,311 @@
      }
     }
    ]
+  },
+  "2026-07-23": {
+   "guid": "ab7307a9-a5ff-4901-8b41-69a5534139ff",
+   "titulo": "Reporte Informativo ASFI al 23/07/2026",
+   "items": [
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Agencias de Bolsa",
+     "entidad": "BNB Valores S.A. Agencia de Bolsa",
+     "texto": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de dividendos de YPFB ANDINA S.A. correspondiente al ejercicio fiscal finalizado el 31 de marzo de 2026 y dividendos correspondientes a los saldos remanentes de los resultados acumulados no distribuidos hasta la gestión fiscal al 31 de marzo de 2025, el pago se efectuará, a partir del 27 de julio del presente.",
+     "tags": [
+      "dividendos"
+     ],
+     "resumen": "Comunica que, estando los fondos disponibles en la cuenta designada para el pago de dividendos de YPFB ANDINA S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "dividendos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "fecha_pago": "27 de julio"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas de Seguros Generales",
+     "entidad": "Seguros Illimani S.A. (S.I.S.A.)",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar y aprobar el incremento del Capital Pagado y Suscrito al monto de Bs12.242.000,00, instruyendo al Directorio y/o Gerencia General, realizar las gestiones que corresponden para su registro.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de julio de 2026, realizada con el 88.25% de los accionistas, determinó lo siguiente: Autorizar y aprobar el incremento del",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Empresa Nacional de Telecomunicaciones S.A.",
+     "texto": "Comunica que, el 23 de julio de 2026, emitió las siguientes disposiciones internas:\n- Comunicación Organizativa Interna N° 059/2026, a partir de la fecha, Maria del Carmen Severina Lopez Cartagena, deja la responsabilidad interina de la Gerencia Nacional de Auditoría Interna.\n- Orden de Servicio N° 095/2026, a partir de la fecha, la Gerencia Nacional de Auditoría Interna, queda bajo la responsabilidad de Nell Raul Cristian Castro Sainz.",
+     "tags": [],
+     "resumen": "Comunica que, el 23 de julio de 2026, emitió las siguientes disposiciones internas: - Comunicación Organizativa Interna N° 059/2026, a partir de la fecha, Maria del Carmen Severina Lopez Cartagena",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Sociedad Agroindustrial Nutrioil S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Aprobar la Emisión de Pagarés de Oferta Privada denominada “PAGARÉS NUTRIOIL S.A. EMISIÓN 1 2026”, para Fortaleza SAFI S.A. a través de su Fondo PYME II Fondo de Inversión Cerrado por Bs21.000.000,00.\n2. Aprobar las Condiciones generales aplicables a la Emisión de Pagarés.",
+     "tags": [
+      "emision",
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 22 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "agenda": "emisión de valores"
+     }
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Toyosa S.A.",
+     "texto": "Ha comunicado que la Junta General Ordinaria de Accionistas de 22 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente:\n1. Aprobar la nueva dieta y remuneración para Directores y Síndico.\n2. Ratificar la conformación del Directorio y del Síndico, el cual, se mantiene integrado de la siguiente manera: Edwin Santos Saavedra Toledo Presidente Gerónimo Antonio Melean Eterovic Vicepresidente Mauricio Sergio Rodrigo Arturo Costa Du Rels Flores Secretario Boris Buvinic Guerovic Director Sebastián Benjamín Careaga Campos Director Freddy Teodovich Ortiz Director Miguel Johnny Nogales Viruez Director Jacques Trigo Loubiere Director Suplente Sergio Aniceto Armando Pascua Ávila Síndico\n3. Ratificar la fianza para los Directores y el Síndico.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Ordinaria de Accionistas de 22 de julio de 2026, realizada con el 100.00% de los accionistas, determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Unión S.A.",
+     "texto": "Ha comunicado que en reunión de Directorio de 22 de julio de 2026, se determinó lo siguiente: Designar a Rodny Steven Rodriguez Mercado como Gerente Nacional de Auditoría Interna, a partir del 24 de julio de 2026.",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 22 de julio de 2026, se determinó lo siguiente: Designar a Rodny Steven Rodriguez Mercado como Gerente Nacional de Auditoría Interna, a partir del 24 de",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Entidades Calificadoras de Riesgos Nacionales",
+     "entidad": "Calificadora de Riesgo Pacific Credit Rating S.A.",
+     "texto": "Comunica que, en Sesión de Comité se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente instrumento de Bolivia: Calificación con Estados Financieros al 30 de abril de 2026 COMITÉ/EMISOR INSTRUMENTOS CALIFICADOS EQUIVALENCIA ASFI PCR PERSPECTIVA Comité N°073/2026 celebrado el 23 de junio de 2026 EMPRESA MINERA SAN LUCAS S.A. Pagarés Bursátiles SAN LUCAS - Emisión 4 Monto: Bs 70,00 millones. Plazo: 360 días. N-1 B1- Estable",
+     "tags": [
+      "emision",
+      "calificacion"
+     ],
+     "resumen": "Comunica que, en Sesión de Comité se acordó la asignación de categoría local de Calificación de Riesgo y Perspectiva del siguiente instrumento de Bolivia: Calificación con Estados Financieros al 30",
+     "resumen_origen": "extractivo",
+     "grupo": "calificaciones",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "AICC SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A. (AICC SAFI S.A.)",
+     "texto": "Ha comunicado que en reunión de Directorio de 22 de julio de 2026, se determinó lo siguiente:\n1. Dejar sin efecto las resoluciones contenidas en las Actas de Directorio N° 13/2023 de 27 de septiembre de 2023 y Directorio N° 006/2026 de 23 de abril de 2026.\n2. Dejar sin efecto las Escrituras Públicas N° 818/2023 de 29 de septiembre de 2023 y N° 350/2026 de 27 de abril de 2026.\n3. Autorizar de manera expresa la constitución de un Fondo de Inversión Cerrado denominado: “AICC INMOBILIARIO I - FONDO DE INVERSIÓN CERRADO” y aprobar las Características del Fondo.\n4. Designar al Administrador Suplente para el Fondo “AICC INMOBILIARIO I - FONDO DE INVERSIÓN CERRADO” a Sergio Mauricio Castillo.\n5. Designar a Sergio Mauricio Castillo Zambrana como nuevo miembro del Comité de Inversiones del Fondo “AICC INMOBILIARIO I - FONDO DE INVERSIÓN CERRADO” y ratificar a los actuales miembros designados en reunión de Directorio N° 5/2026 de 22 de abril de 2026, como sigue: Wilder Humberto Barrios Siles - Ratificado Julio Cesar Miranda Franco - Ratificado Sergio Mauricio Castillo Zambrana - Designado",
+     "tags": [],
+     "resumen": "Ha comunicado que en reunión de Directorio de 22 de julio de 2026, se determinó lo siguiente: 1.",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Hechos Relevantes",
+     "categoria": "Sociedades Administradoras de Fondos de Inversión",
+     "entidad": "Bisa Sociedad Administradora de Fondos de Inversión S.A.",
+     "texto": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 23 de julio de 2026, realizada con el 99.28% de los accionistas, determinó lo siguiente:\n- Aprobar el incremento del Capital Social por la suma de Bs1.321.000,00, mediante la capitalización de utilidades acumuladas, quedando el Capital Social fijado en Bs7.847.000,00.\n- Facultar y delegar expresamente a la Gerencia General, la ejecución de todos los actos y la realización de todos los trámites que resulten necesarios ante la Autoridad de Supervisión del Sistema Financiero (ASFI), el Registro de Comercio y cualquier otra autoridad o entidad competente, con el objeto de obtener las autorizaciones, registros e inscripciones que correspondan para la plena formalización del incremento del Capital Social.",
+     "tags": [
+      "junta"
+     ],
+     "resumen": "Ha comunicado que la Junta General Extraordinaria de Accionistas de 23 de julio de 2026, realizada con el 99.28% de los accionistas, determinó lo siguiente: - Aprobar el incremento del Capital Social",
+     "resumen_origen": "extractivo",
+     "grupo": "juntas",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "ENDE Transmisión S.A.",
+     "texto": "Comunica que, el 22 de julio de 2026, otorgó Poder Especial y Suficiente N° 730/2026, a favor de Marco Antonio Mendoza Salazar y René Cesar Córdova Salinas, en mérito al Poder General N° 436/2026 conferido al Gerente General Interino.",
+     "tags": [],
+     "resumen": "Comunica que, el 22 de julio de 2026, otorgó Poder Especial y Suficiente N° 730/2026, a favor de Marco Antonio Mendoza Salazar y René Cesar Córdova Salinas, en mérito al Poder General N° 436/2026",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Farmacia Chávez S.A.",
+     "texto": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Pagarés Bursátiles Farmacia Chávez I - Emisión 3, utilizó los fondos por Bs3.393.233,96 para la compra de mercadería como capital de operaciones.",
+     "tags": [
+      "emision",
+      "uso_fondos"
+     ],
+     "resumen": "Comunica que, de acuerdo a lo establecido en el Prospecto de Emisión de Pagarés Bursátiles Farmacia Chávez I - Emisión 3, utilizó los fondos por Bs3.393.233,96 para la compra de mercadería como",
+     "resumen_origen": "extractivo",
+     "grupo": "uso_fondos",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursátiles Farmacia Chávez I",
+      "destino": "capital de operaciones",
+      "monto": "Bs 3,4 M"
+     }
+    },
+    {
+     "seccion": "Noticias",
+     "categoria": "Empresas Privadas (Emisores)",
+     "entidad": "Banco Fortaleza S.A.",
+     "texto": "Comunica que, mediante Testimonio N° 401/2026 de 23 de julio de 2026, fueron revocados los Poderes Generales de Administración, otorgados a favor de los siguientes ejecutivos:\n- Poder General de Administración N° 284/2025 de 22 de mayo de 2025, otorgado a favor de Gerald Kevin Gutiérrez De La Vega, en su condición de Gerente División Operaciones a.i.\n- Poder General de Administración N° 34/2026 de 19 de enero de 2026, otorgado a favor de Freddy Orlando Pardo Gómez, en su condición de Gerente División Operaciones a.i.",
+     "tags": [
+      "personal"
+     ],
+     "resumen": "Comunica que, mediante Testimonio N° 401/2026 de 23 de julio de 2026, fueron revocados los Poderes Generales de Administración, otorgados a favor de los siguientes ejecutivos: - Poder General de",
+     "resumen_origen": "extractivo",
+     "grupo": "personal",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "movimiento": "designación a.i."
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/602/2026 de 15 de julio de 2026",
+     "texto": "RESUELVE:\nPRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “Bonos DISMATEC III” de DISTRIBUIDORA MAYORISTA DE TECNOLOGÍA S.A., bajo el siguiente Número de Registro: DENOMINACIÓN DEL PROGRAMA NÚMERO DE REGISTRO Bonos DISMATEC III ASFI/DSV-PEB-DMT-009/2026\nSEGUNDO.- Instruir que para la inscripción y autorización de Oferta Pública de cada Emisión dentro del Programa de Emisiones de Bonos denominado “Bonos DISMATEC III”, DISTRIBUIDORA MAYORISTA DE TECNOLOGÍA S.A. deberá dar estricto cumplimiento a lo dispuesto por la Ley N° 1834 del Mercado de Valores, el Reglamento del Registro del Mercado de Valores, el Reglamento de Oferta Pública y el Manual de Prospectos, contenidos en los Títulos I y II de los Libros 1° y 2°, respectivamente, de la Recopilación de Normas para el Mercado de Valores y demás disposiciones vigentes.\nTERCERO.- Determinar que en cumplimiento a lo dispuesto por el Artículo 650 del Código de Comercio, DISTRIBUIDORA MAYORISTA DE TECNOLOGÍA S.A. deberá presentar a la Autoridad de Supervisión del Sistema Financiero, la Escritura Pública de Declaración Unilateral de Voluntad para cada Emisión comprendida en el Programa de Emisiones de Bonos denominado “Bonos DISMATEC III”, dentro del trámite de aprobación de la misma.\nCUARTO.- Establecer que verificado el cumplimiento de los requisitos exigidos por la normativa vigente, la Autoridad de Supervisión del Sistema Financiero autorizará e inscribirá cada una de las Emisiones comprendidas dentro del Programa de Emisiones de Bonos denominado “Bonos DISMATEC III”, para su Oferta Pública.\nQUINTO.- Disponer que de conformidad a las disposiciones legales y regulatorias\nQUINTO.- Disponer que de conformidad a las disposiciones legales y regulatorias vigentes, DISTRIBUIDORA MAYORISTA DE TECNOLOGÍA S.A. deberá cumplir con la presentación oportuna de toda la información requerida por la Autoridad de Supervisión del Sistema Financiero, para el control y vigilancia de las Emisiones que conformen el Programa autorizado, así como con las obligaciones establecidas normativamente.\nSEXTO.- Establecer que la Autoridad de Supervisión del Sistema Financiero no se pronuncia sobre la calidad de los Valores ofrecidos como inversión de cada una de las Emisiones dentro del Programa de Emisiones de Bonos denominado “Bonos DISMATEC III”. La información presentada a esta Autoridad de Supervisión es de exclusiva responsabilidad del Emisor o de los responsables que hayan participado en su elaboración.",
+     "tags": [
+      "emision",
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: PRIMERO.- Autorizar e inscribir en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, el Programa de Emisiones de Bonos denominado “Bonos DISMATEC",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Bonos DISMATEC III",
+      "emisor": "DISTRIBUIDORA MAYORISTA DE TECNOLOGÍA S.A.",
+      "registro": "ASFI/DSV-PEB-DMT-009/2026"
+     }
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/600/2026 de 15 de julio de 2026",
+     "texto": "RESUELVE: Sancionar al BANCO SOLIDARIO S.A., con multa , por el cargo imputado en la Nota de Cargo ASFI/DSV/R-112067/2026 de 10 de junio de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 de la Ley N° 1834 del Mercado de Valores y el primer párrafo del Inciso b., Artículo 2°, Sección 2, Capítulo VI del Reglamento del Registro del Mercado de Valores, contenido en el Título I, Libro 1° de la Recopilación de Normas para el Mercado de Valores, conforme a las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar al BANCO SOLIDARIO S.A., con multa , por el cargo imputado en la Nota de Cargo ASFI/DSV/R-112067/2026 de 10 de junio de 2026, al haber incumplido lo dispuesto en el segundo",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Resoluciones Administrativas",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/569/2026 de 01 de julio de 2026",
+     "texto": "RESUELVE: Sancionar a la EMPRESA DE INGENIERÍA Y SERVICIOS INTEGRALES COCHABAMBA S.A. con multa, por los cargos N° 1, 2, 3, 4 y 5 de la Nota de Cargos ASFI/DSV/R-100408/2026 de 21 de mayo de 2026, al haber incumplido lo dispuesto en el segundo párrafo del Artículo 68 y Artículo 69 de la Ley N° 1834 del Mercado de Valores, los Incisos c., d. e i. del Artículo 2°, Sección 2; el Inciso c. del Artículo 1°, Sección 3; el Numeral 6., Inciso a., Artículo 2° y el primer párrafo del Artículo 3°, Sección 4, Capítulo VI del Reglamento del Registro del Mercado de Valores, contenido en el Título I, Libro 1° de la Recopilación de Normas para el Mercado de Valores y la Carta Circular ASFI/DSV/CC-1060/2025 de 14 de abril de 2025, conforme las consideraciones establecidas en la presente Resolución.",
+     "tags": [
+      "resolucion"
+     ],
+     "resumen": "RESUELVE: Sancionar a la EMPRESA DE INGENIERÍA Y SERVICIOS INTEGRALES COCHABAMBA S.A.",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Cartas de Autorización",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/138799 de 17 de julio de 2026",
+     "texto": "Mediante carta ASFI/DSV/R-138799/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursatiles SAN LUCAS - EMISIÓN 4”, estructurada bajo el Programa de Emisiones denominado “Pagarés Bursátiles SAN LUCAS\".",
+     "tags": [
+      "emision",
+      "tramite"
+     ],
+     "resumen": "Mediante carta ASFI/DSV/R-138799/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, la Emisión denominada “Pagarés Bursatiles",
+     "resumen_origen": "extractivo",
+     "grupo": "emisiones",
+     "grupo_v": 3,
+     "revisado": "provisional",
+     "campos": {
+      "instrumento": "Pagarés Bursatiles SAN LUCAS - EMISIÓN 4"
+     }
+    },
+    {
+     "seccion": "Cartas de Autorización",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/R-113584 de 11 de junio de 2026",
+     "texto": "Mediante carta ASFI/DSV/R-113584/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a LEONOR HERMOJA LOZADA BERNAL como Administradora Titular de RENTA ACTIVA PUENTE FONDO DE INVERSIÓN CERRADO DE CAPITAL PRIVADO, administrado por la SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN UNIÓN S.A., manteniendo el Número de Registro ASFI/DSV-AF-002/2026.",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "Mediante carta ASFI/DSV/R-113584/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a LEONOR HERMOJA LOZADA BERNAL como",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Cartas de Autorización",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/R-136909 de 14 de julio de 2026",
+     "texto": "Mediante carta ASFI/DSV/R-136909/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a MOISES MURILLO LIMA como Representante Legal de CAPITAL PARA EL CRECIMIENTO EMPRESARIAL SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., asignando el Número de Registro ASFI/DSV-RL-015/2026.",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "Mediante carta ASFI/DSV/R-136909/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a MOISES MURILLO LIMA como Representante",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Cartas de Autorización",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/R-136973 de 14 de julio de 2026",
+     "texto": "Mediante carta ASFI/DSV/R-136973/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a ERWIN ORLANDO MORENO PIMENTEL como Representante Legal de MULTIFONDOS SOCIEDAD ADMINISTRADORA DE FONDOS DE INVERSIÓN S.A., asignando el Número de Registro ASFI/DSV-RL-014/2026.",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "Mediante carta ASFI/DSV/R-136973/2026, se autoriza e inscribe en el Registro del Mercado de Valores de la Autoridad de Supervisión del Sistema Financiero, a ERWIN ORLANDO MORENO PIMENTEL como",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    },
+    {
+     "seccion": "Cartas Circulares",
+     "categoria": "AUTORIDAD DE SUPERVISIÓN DEL SISTEMA FINANCIERO",
+     "entidad": "ASFI/DSV/CC-1428 de 24 de junio de 2026",
+     "texto": "HECHOS RELEVANTES (Ver Adjunto)",
+     "tags": [
+      "tramite"
+     ],
+     "resumen": "HECHOS RELEVANTES (Ver Adjunto)",
+     "resumen_origen": "extractivo",
+     "grupo": "otros",
+     "grupo_v": 3,
+     "revisado": "provisional"
+    }
+   ]
   }
  }
 }
