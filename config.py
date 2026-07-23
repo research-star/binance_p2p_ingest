@@ -44,7 +44,7 @@ TEMPLATE_HTML = Path(__file__).parent / "template.html"
 # (tab + subtabs + rutas + assets, todo envuelto en bake:optional:agro) y sale
 # del HTML publicado. Revertir = quitar "agro" del set. Historial: desbakeado
 # hasta 2026-07-10, luego bakeado público, ahora oculto de nuevo.
-MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247", "agro"}
+MODULOS_NO_BAKEADOS = {"dpf", "bbv", "guide", "mercado247", "agro", "calendario"}
 
 # Assets en static/ que pertenecen a un módulo. publish_dashboard.py no copia a
 # prod los de módulos desbakeados (derivado de MODULOS_NO_BAKEADOS, no lista
