@@ -561,7 +561,7 @@ dentro de Macro):
 URLs limpias por tab via HTML5 History API. **Noticias es la landing en `/`**;
 Dólar tiene slug propio `/dolar`.
 
-**Tabs — 4 públicas en prod, 5 DESBAKEADAS** (existen en
+**Tabs — 4 públicas, 1 admin-only y 5 DESBAKEADAS en prod** (estas últimas existen en
 `template.html` pero NO se inyectan al `index.html` publicado; ver § Módulos desbakeados):
 
 | # | `data-tab` | Label | Slug | Estado en prod |
@@ -570,23 +570,26 @@ Dólar tiene slug propio `/dolar`.
 | 2 | `dollar` | Dólar | `/dolar` | visible |
 | 3 | `macro` | Macro | `/macro` (+ subtabs) | visible |
 | 4 | `asfi` | ASFI | `/asfi` | visible |
-| 5 | `agro` | Agro | ~~`/agro`~~ (+ subtabs) | **DESBAKEADO de nuevo** (2026-07-16, pedido de Diego: ocultar la tab entera; historial: nació desbakeado 07-09 → bakeado 07-10 → desbakeado 07-16) |
-| 6 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
-| 7 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
-| 8 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
-| 9 | `guide` | Guía | ~~`/guia`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 5 | `calendario` | Calendario | `/calendario` | **admin-only, ES-only** (bakeado; gate UX central de sesión) |
+| 6 | `agro` | Agro | ~~`/agro`~~ (+ subtabs) | **DESBAKEADO de nuevo** (2026-07-16, pedido de Diego: ocultar la tab entera; historial: nació desbakeado 07-09 → bakeado 07-10 → desbakeado 07-16) |
+| 7 | `mercado247` | Mercado 24/7 | ~~`/mercado247`~~ | **DESBAKEADO** (antes admin-only oculto) |
+| 8 | `dpf` | DPF | ~~`/dpf`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 9 | `bbv` | BBV | ~~`/bbv`~~ | **DESBAKEADO** (antes hidden, ES-only) |
+| 10 | `guide` | Guía | ~~`/guia`~~ | **DESBAKEADO** (antes hidden, ES-only) |
 
 **Subnav de Macro** (4 subtabs, botones `.fb-macro-tab`, array `MACRO_SUBTABS`):
 `riesgo` (default) · `inflacion` (IPC/IPP INE) · `bloqueos` (mapa vial + KPIs) ·
 `tasas` (TRE mensual del BCB). El primero de la lista es el default al entrar a
 `/macro` bare. (Macro y sus 4 subtabs NO están afectados por el desbake.)
 
-**Gate `data-admin-only` — COSMÉTICO (aplica a `mercado247`/`agro` cuando se
-bakeen).** El gate solo oculta el botón de nav (`fbRenderSession` togglea
-`el.hidden = !npAdmin.isAdmin` en cada transición de sesión); `activateTab` NO
-chequea `isAdmin`, así que la URL directa del tab renderiza igual para anónimos.
-Con `agro` desbakeado de nuevo (2026-07-16) el leak es moot para ambos módulos:
-la ruta no existe en prod (404-trick → landing) y sus assets no se sirven.
+**Gate `data-admin-only`.** Por sí solo es cosmético: `fbRenderSession` togglea
+`el.hidden = !npAdmin.isAdmin` en cada transición. `mercado247`/`agro` conservan
+ese patrón si se rebakean. **Calendario es la excepción gateada por ruta:** botón
+y panel nacen `hidden`; `activateTab` consulta `allowed|pending|denied` antes del
+render. Un deep link espera el probe `/v1/me` sin montar el panel; admin confirmado
+entra, anónimo/error/expiración vuelve a `/` con `replaceState`. El deep link fuerza
+ese probe aun sin hint local. Sigue siendo control UX client-side, NO confidencialidad:
+`CAL_DATA` y el JS viven en el HTML estático y son inspeccionables por cualquiera.
 
 ### Módulos desbakeados (opción B — presentes en repo, NO servidos en prod)
 
@@ -596,6 +599,8 @@ Cinco módulos en el set (`mercado247`, `dpf`, `bbv`, `guide`, `agro`), **desbak
 `agro` nació desbakeado el 2026-07-09, salió del set el 2026-07-10 (OK de Diego,
 bakeado) y **volvió al set el 2026-07-16** (pedido de Diego: ocultar la tab entera).
 Sus assets `agro_*.json` dejan de publicarse (entrada de `MODULO_ASSETS` reactivada).
+`calendario` conserva marcadores opcionales, pero desde el hotfix 2026-07-23 está
+fuera del set: se bakea solo en ES y no tiene asset externo.
 
 **Punto de control ÚNICO:** el set `config.MODULOS_NO_BAKEADOS` ([config.py](config.py)).
 Un módulo listado ahí:
@@ -641,6 +646,7 @@ corre) — el desbake solo dejó de emitir el payload; la tabla `bcb_dpf_rates` 
 | `/bloqueos` | tab `macro`, subtab `bloqueos` | FinanzasBo — Bloqueos en carreteras |
 | `/tasas` | tab `macro`, subtab `tasas` | FinanzasBo — Tasa de Referencia BCB |
 | `/asfi` | tab `asfi` | FinanzasBo — Hechos Relevantes ASFI |
+| `/calendario` | tab `calendario` (ES-only; gate UX de sesión admin) | FinanzasBo — Calendario económico de Bolivia |
 | `/agro` | tab `agro`, subtab default (`soya`) — **admin-only** (gate cosmético) | FinanzasBo — Agro · Soya |
 | `/agro/soya` | tab `agro`, subtab `soya` — **admin-only** | FinanzasBo — Agro · Soya |
 | `/agro/girasol` | tab `agro`, subtab `girasol` — **admin-only** | FinanzasBo — Agro · Girasol |
