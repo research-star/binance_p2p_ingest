@@ -7,8 +7,7 @@ Before doing any analysis or work in this repository, read completely:
 3. `CLAUDE.local.md` — local and personal workflow rules, only if the file exists.
 
 For project facts and repository rules, use this precedence:
-
-`HANDOFF.md` > `AGENTS.md` / `CLAUDE.md` / `CLAUDE.local.md`.
+`HANDOFF.md` > `CLAUDE.md` > `AGENTS.md` / `CLAUDE.local.md`.
 
 The current task brief defines the authorized perimeter for that task, including filesystem writes, network access, Git operations, VPS access and API usage. Never exceed that perimeter.
 
@@ -20,3 +19,12 @@ If the documents contradict each other, or repository/runtime evidence suggests 
 - Do not rewrite canonical documentation unless the task explicitly authorizes it.
 
 Product decisions, visual decisions, merges, production actions and irreversible operations always require Diego’s explicit authorization.
+
+## Reglas duras
+
+- Jerarquía normativa: `HANDOFF.md` > `CLAUDE.md` > `AGENTS.md`.
+- Nunca usar `git add -A` ni `git add .`; agregar archivos por nombre.
+- Nunca commitear `index.html`; es un artefacto generado por el publish.
+- Los merges usan merge commit, nunca squash; borrar la branch después.
+- Prohibido gastar APIs Anthropic/externas sin autorización explícita en el brief.
+- Nunca tocar VPS/SSH salvo que el perímetro diga explícitamente `VPS-*`.
