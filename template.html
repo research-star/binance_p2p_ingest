@@ -688,93 +688,124 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 /* /bake:optional:bbv *//* i18n:es-only *//* bake:optional:calendario */
 /* ── Calendario · feriados Bolivia + eventos económicos ── */
 #tab-calendario[hidden]{display:none!important}
-.cal-page{font-family:var(--font-body);color:var(--text-primary)}
-.cal-toolbar{display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:16px;align-items:center;padding:16px 18px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:2px;margin-bottom:12px}
+.cal-page{
+  --cal-feriados:#a65347;--cal-feriados-pale:color-mix(in srgb,var(--cal-feriados) 13%,var(--bg-secondary));
+  --cal-ine:#5d7389;--cal-ine-pale:color-mix(in srgb,var(--cal-ine) 13%,var(--bg-secondary));
+  --cal-bcb:#66745d;--cal-bcb-pale:color-mix(in srgb,var(--cal-bcb) 13%,var(--bg-secondary));
+  --cal-bonos:#9a713d;--cal-bonos-pale:color-mix(in srgb,var(--cal-bonos) 13%,var(--bg-secondary));
+  --cal-asfi:#776b7d;--cal-asfi-pale:color-mix(in srgb,var(--cal-asfi) 13%,var(--bg-secondary));
+  --cal-laboral:#8b604f;--cal-laboral-pale:color-mix(in srgb,var(--cal-laboral) 13%,var(--bg-secondary));
+  --cal-global:#4f7470;--cal-global-pale:color-mix(in srgb,var(--cal-global) 13%,var(--bg-secondary));
+  font-family:var(--font-body);color:var(--text-primary)
+}
+.cal-page *{box-sizing:border-box}
+.cal-toolbar{display:grid;grid-template-columns:minmax(300px,1fr) auto;gap:16px;align-items:center;padding:16px 18px;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:2px;margin-bottom:10px}
 .cal-period-nav{display:flex;align-items:center;gap:10px;min-width:0}
-.cal-nav-btn,.cal-today-btn{height:34px;border:1px solid var(--border-color);border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--text-base);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
-.cal-nav-btn{width:34px;font-size:var(--text-2xl);line-height:1}
+.cal-nav-btn,.cal-today-btn{height:36px;border:1px solid var(--border-color);border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--text-base);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.cal-nav-btn{width:36px;font-size:var(--text-2xl);line-height:1}
 .cal-today-btn{padding:0 13px;font-weight:600}
-.cal-nav-btn:hover,.cal-today-btn:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--line-strong)}
+.cal-nav-btn:hover,.cal-today-btn:hover,.cal-view-btn:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--line-strong)}
 .cal-period-copy{min-width:190px;padding:0 4px}
-.cal-period-kicker{font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft)}
+.cal-period-kicker,.cal-filter-label,.cal-sidebar-kicker,.cal-pulse-kicker{font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-soft)}
 .cal-period-title{font-family:var(--font-display);font-size:var(--text-3xl);font-weight:600;line-height:1.05;text-transform:capitalize;color:var(--text-primary)}
 .cal-view-switch{display:inline-flex;justify-self:end}
-.cal-view-btn{height:34px;padding:0 16px;border:1px solid var(--border-color);border-radius:0;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;cursor:pointer;margin-left:-1px}
+.cal-view-btn{height:36px;padding:0 16px;border:1px solid var(--border-color);border-radius:0;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;cursor:pointer;margin-left:-1px}
 .cal-view-btn:first-child{border-radius:2px 0 0 2px;margin-left:0}
 .cal-view-btn:last-child{border-radius:0 2px 2px 0}
 .cal-view-btn.active{position:relative;background:var(--text-primary);border-color:var(--text-primary);color:var(--bg-secondary);z-index:1}
-.cal-filterbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:11px 14px;border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary);margin-bottom:18px}
-.cal-filter-label{font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);margin-right:3px}
-.cal-cat-btn{display:inline-flex;align-items:center;gap:7px;min-height:29px;padding:5px 10px;border:1px solid var(--border-color);border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:var(--text-sm);font-weight:600;cursor:pointer}
-.cal-cat-btn::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--cal-c,var(--text-muted));opacity:.35}
-.cal-cat-btn[aria-pressed="true"]{color:var(--text-primary);border-color:var(--line-strong);background:var(--bg-tertiary)}
+.cal-pulse{display:grid;grid-template-columns:minmax(280px,1fr) minmax(190px,260px) auto;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary);margin-bottom:10px}
+.cal-pulse-next{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 9px;align-items:center;min-width:0}
+.cal-pulse-dot{grid-row:1/4;width:9px;height:9px;border-radius:50%;background:var(--cal-c,var(--text-muted))}
+.cal-pulse-main{min-width:0;font-family:var(--font-display);font-size:var(--text-md);font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-pulse-meta{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-pulse-meta b{color:var(--np-accent)}
+.cal-pulse-meta .cal-pulse-cert{color:var(--cal-c,var(--text-secondary));text-transform:uppercase}
+.cal-search{position:relative;display:block}
+.cal-search svg{position:absolute;left:10px;top:50%;width:13px;height:13px;transform:translateY(-50%);color:var(--text-soft);pointer-events:none}
+.cal-search input{width:100%;height:36px;padding:0 10px 0 31px;border:1px solid var(--border-color);border-radius:2px;background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);font-size:var(--text-sm)}
+.cal-search input::placeholder{color:var(--text-soft)}
+.cal-firm-toggle{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 11px;border:1px solid var(--border-color);border-radius:2px;color:var(--text-secondary);font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;white-space:nowrap;cursor:pointer}
+.cal-firm-toggle:has(input:checked){background:var(--text-primary);border-color:var(--text-primary);color:var(--bg-secondary)}
+.cal-firm-toggle input{accent-color:var(--np-accent)}
+.cal-filterbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary);margin-bottom:16px}
+.cal-filter-label{margin-right:3px}
+.cal-cat-btn{display:inline-flex;align-items:center;gap:6px;min-height:31px;padding:5px 9px;border:1px solid var(--border-color);border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;cursor:pointer}
+.cal-cat-btn::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--cal-c,var(--text-muted));opacity:.32}
+.cal-cat-btn[aria-pressed="true"]{color:var(--text-primary);border-color:var(--line-strong);background:var(--cal-pale,var(--bg-tertiary))}
 .cal-cat-btn[aria-pressed="true"]::before{opacity:1}
-.cal-cat-btn:disabled{cursor:default;opacity:1}
-.cal-next{margin-left:auto;display:flex;align-items:baseline;gap:7px;padding-left:14px;border-left:1px solid var(--border-color);font-size:var(--text-sm);color:var(--text-muted)}
-.cal-next strong{font-family:var(--font-display);font-size:var(--text-md);color:var(--text-primary)}
-.cal-next b{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--np-accent)}
+.cal-cat-count{font-family:var(--font-mono);font-size:9px;color:var(--text-soft)}
+.cal-layout{display:grid;grid-template-columns:minmax(0,3.45fr) minmax(245px,1fr);gap:16px;align-items:start}
+.cal-canvas{min-width:0}
+.cal-sidebar{--cal-sticky-top:calc(var(--nav-h,50px) + var(--sub-h,76px) + 14px);position:sticky;top:var(--cal-sticky-top);align-self:start;display:flex;flex-direction:column;max-height:calc(100vh - var(--cal-sticky-top) - 14px);border-top:2px solid var(--text-primary);border-bottom:1px solid var(--border-color);background:var(--bg-secondary)}
+.cal-sidebar-head{padding:14px 14px 12px;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);border-bottom:1px solid var(--border-color)}
+.cal-sidebar-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-top:3px}
+.cal-sidebar-title{margin:0;font-family:var(--font-display);font-size:var(--text-xl);font-weight:600;line-height:1.08;text-transform:capitalize;color:var(--text-primary)}
+.cal-sidebar-count{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-soft);white-space:nowrap}
+.cal-clear-selection{margin-top:9px;padding:0;border:0;background:none;color:var(--np-accent);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;text-transform:uppercase;cursor:pointer}
+.cal-agenda-list{min-height:0;border-left:1px solid var(--border-color);border-right:1px solid var(--border-color);overflow:auto}
+.cal-agenda-item{padding:12px 13px;border-bottom:1px solid var(--border-color)}
+.cal-agenda-item:last-child{border-bottom:0}
+.cal-agenda-date{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;color:var(--text-muted)}
+.cal-agenda-dot{width:7px;height:7px;border-radius:50%;background:var(--cal-c,var(--text-muted));flex:0 0 auto}
+.cal-agenda-name{font-family:var(--font-display);font-size:var(--text-md);font-weight:600;line-height:1.24;color:var(--text-primary)}
+.cal-agenda-tags{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:7px}
+.cal-tag,.cal-cert{display:inline-block;padding:2px 5px;border:1px solid var(--border-color);border-radius:2px;font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.cal-tag{color:var(--cal-c,var(--text-secondary));background:var(--cal-pale,var(--bg-tertiary))}
+.cal-cert{color:var(--text-secondary);background:var(--bg-primary)}
+.cal-cert[data-cert="confirmado"],.cal-cert[data-cert="limite"]{border-color:var(--line-strong);color:var(--text-primary)}
+.cal-agenda-note{margin-top:7px;font-size:var(--text-xs);line-height:1.42;color:var(--text-muted)}
+.cal-source{display:inline-block;margin-top:8px;color:var(--np-accent);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;text-decoration:none}
+.cal-source:hover{text-decoration:underline}
+.cal-example{display:inline-block;padding:2px 5px;border:1px solid var(--np-accent);border-radius:2px;color:var(--np-accent);font-family:var(--font-mono);font-size:8px;font-weight:700;line-height:1.1;letter-spacing:.03em;text-transform:uppercase;background:var(--bg-secondary)}
+.cal-empty{padding:20px 15px;color:var(--text-muted);font-size:var(--text-sm);line-height:1.45}
+.cal-empty strong{display:block;color:var(--text-secondary);font-family:var(--font-display);font-size:var(--text-base);font-style:normal;margin-bottom:3px}
+.cal-cert-legend{padding:11px 13px;border:1px solid var(--border-color);border-top:0;background:var(--bg-primary);font-size:var(--text-2xs);line-height:1.45;color:var(--text-soft)}
+.cal-cert-legend b{font-family:var(--font-mono);font-size:8px;letter-spacing:.05em;color:var(--text-secondary)}
 .cal-month-scroll{overflow-x:auto;border:1px solid var(--border-color);border-radius:2px;background:var(--border-color)}
 .cal-weekdays,.cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(104px,1fr));min-width:728px;gap:1px}
-.cal-weekdays{background:var(--border-color)}
-.cal-weekday{padding:8px 10px;background:var(--bg-tertiary);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);text-align:right}
+.cal-weekdays{background:var(--line-strong)}
+.cal-weekday{padding:9px 10px;background:color-mix(in srgb,var(--bg-tertiary) 76%,var(--text-primary) 5%);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);text-align:right}
 .cal-month-grid{background:var(--border-color)}
-.cal-day{position:relative;min-height:116px;padding:8px;border:0;border-radius:0;background:var(--bg-secondary);color:var(--text-primary);font:inherit;text-align:left;cursor:pointer;overflow:hidden}
+.cal-day{position:relative;min-height:132px;padding:8px;border:0;border-radius:0;background:var(--bg-secondary);color:var(--text-primary);font:inherit;text-align:left;cursor:pointer;overflow:hidden}
 .cal-day:hover{background:var(--bg-tertiary)}
-.cal-day.is-weekend{background:color-mix(in srgb,var(--bg-tertiary) 48%,var(--bg-secondary))}
-.cal-day.is-outside{color:var(--text-soft);background:color-mix(in srgb,var(--bg-primary) 55%,var(--bg-secondary))}
-.cal-day.is-outside .cal-chip{opacity:.58}
-.cal-day.is-today{box-shadow:inset 0 0 0 2px var(--blue-accent);z-index:1}
+.cal-day.has-events{background:var(--cal-pale,var(--bg-secondary))}
+.cal-day.has-events:hover{background:color-mix(in srgb,var(--cal-pale) 84%,var(--text-primary) 5%)}
+.cal-day.is-weekend:not(.has-events){background:color-mix(in srgb,var(--bg-tertiary) 55%,var(--bg-secondary))}
+.cal-day.is-weekend.has-events{background:color-mix(in srgb,var(--cal-pale) 88%,var(--bg-tertiary))}
+.cal-day.is-outside{color:var(--text-soft);opacity:.6}
 .cal-day.is-selected::after{content:'';position:absolute;inset:3px;border:1px solid var(--line-strong);pointer-events:none}
-.cal-day-top{display:flex;justify-content:space-between;align-items:center;min-height:25px;margin-bottom:5px}
-.cal-day-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;color:inherit}
-.cal-day.has-holiday .cal-day-num{background:var(--np-accent);color:#fff}
-.cal-today-tag{font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-accent)}
-.cal-chip{display:block;margin-top:4px;padding:3px 5px;border-left:3px solid var(--cal-c,var(--text-muted));border-radius:2px;background:color-mix(in srgb,var(--cal-c,var(--text-muted)) 9%,var(--bg-secondary));font-size:10px;font-weight:600;line-height:1.25;color:var(--text-primary);overflow-wrap:anywhere}
-.cal-chip.is-approx{border:1px dashed var(--cal-c,var(--blue-accent));border-left-width:3px;background:transparent}
-.cal-chip-more{font-family:var(--font-mono);font-size:9px;color:var(--text-soft);margin-top:5px}
-.cal-example{display:inline-block;margin-top:3px;padding:2px 4px;border:1px solid var(--np-accent);border-radius:2px;color:var(--np-accent);font-family:var(--font-mono);font-size:8px;font-weight:700;line-height:1.1;letter-spacing:.03em;text-transform:uppercase;background:var(--bg-secondary)}
-.cal-detail{margin-top:12px;border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary)}
-.cal-detail-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--border-color)}
-.cal-detail-head h2{font-family:var(--font-display);font-size:var(--text-xl);font-weight:600;color:var(--text-primary);margin:0;text-transform:capitalize}
-.cal-detail-head span{font-family:var(--font-mono);font-size:var(--text-2xs);color:var(--text-soft)}
-.cal-detail-list{display:grid}
-.cal-detail-item{display:grid;grid-template-columns:105px minmax(0,1fr);gap:13px;padding:12px 16px;border-bottom:1px solid var(--border-color)}
-.cal-detail-item:last-child{border-bottom:0}
-.cal-detail-cat{font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cal-c,var(--text-muted))}
-.cal-detail-name{font-family:var(--font-display);font-size:var(--text-md);font-weight:600;color:var(--text-primary)}
-.cal-detail-note{margin-top:3px;font-size:var(--text-xs);line-height:1.45;color:var(--text-muted)}
-.cal-empty{padding:18px 16px;color:var(--text-muted);font-size:var(--text-sm);font-style:italic}
+.cal-day-top{display:flex;justify-content:space-between;align-items:center;min-height:27px;margin-bottom:4px}
+.cal-day-num{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border:1px solid transparent;border-radius:50%;font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:inherit}
+.cal-day.is-today .cal-day-num{border:2px solid var(--np-accent);color:var(--np-accent)}
+.cal-today-tag{font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--np-accent)}
+.cal-chip{display:block;margin-top:4px;padding:3px 5px 4px;border-left:3px solid var(--cal-c,var(--text-muted));border-radius:2px;background:var(--cal-pale,var(--bg-secondary));line-height:1.15;color:var(--text-primary);overflow:hidden}
+.cal-chip-cert{display:block;margin-bottom:2px;font-family:var(--font-mono);font-size:7px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cal-c,var(--text-muted))}
+.cal-chip-title{display:block;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-chip .cal-example{margin-top:3px}
+.cal-chip.is-approx{border-top:1px dashed var(--cal-c,var(--text-muted));border-right:1px dashed var(--cal-c,var(--text-muted));border-bottom:1px dashed var(--cal-c,var(--text-muted))}
+.cal-chip-more{display:block;font-family:var(--font-mono);font-size:9px;color:var(--text-soft);margin-top:5px}
 .cal-year-view[hidden],.cal-month-view[hidden]{display:none}
-.cal-year-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.cal-mini{border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary);padding:11px}
-.cal-mini-title{width:100%;padding:1px 2px 9px;border:0;background:none;color:var(--text-primary);font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;text-align:left;text-transform:capitalize;cursor:pointer}
+.cal-year-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cal-mini{border:1px solid var(--border-color);border-radius:2px;background:var(--bg-secondary);padding:10px}
+.cal-mini-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;width:100%;padding:1px 2px 8px;border:0;background:none;color:var(--text-primary);font-family:var(--font-display);font-size:var(--text-lg);font-weight:600;text-align:left;text-transform:capitalize;cursor:pointer}
 .cal-mini-title:hover{color:var(--np-accent)}
+.cal-mini-count{font-family:var(--font-mono);font-size:8px;font-weight:700;color:var(--text-soft);text-transform:uppercase}
 .cal-mini-week,.cal-mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
-.cal-mini-week span{padding:3px 0;font-family:var(--font-mono);font-size:8px;font-weight:600;color:var(--text-soft)}
-.cal-mini-day{position:relative;aspect-ratio:1;border:0;border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:9px;cursor:pointer}
-.cal-mini-day:hover{background:var(--bg-tertiary);color:var(--text-primary)}
-.cal-mini-day.is-weekend{color:var(--text-soft)}
-.cal-mini-day.is-today{box-shadow:inset 0 0 0 1px var(--blue-accent);color:var(--blue-accent);font-weight:700}
-.cal-mini-day.has-holiday{background:var(--np-accent);color:#fff;font-weight:700}
-.cal-mini-day.has-event:not(.has-holiday)::after{content:'';position:absolute;left:50%;bottom:2px;width:3px;height:3px;border-radius:50%;background:var(--cal-c,var(--blue-accent));transform:translateX(-50%)}
+.cal-mini-week span{padding:3px 0;font-family:var(--font-mono);font-size:8px;font-weight:700;color:var(--text-soft)}
+.cal-mini-day{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;border:1px solid transparent;border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:9px}
+.cal-mini-day.is-weekend:not(.has-event){background:color-mix(in srgb,var(--bg-tertiary) 60%,transparent);color:var(--text-soft)}
+.cal-mini-day.has-event{background:var(--cal-pale,var(--bg-tertiary));font-weight:700}
+.cal-mini-day.is-today{border-color:var(--np-accent);color:var(--np-accent)}
+.cal-mini-dots{position:absolute;left:2px;right:2px;bottom:1px;display:flex;justify-content:center;gap:1px;pointer-events:none}
+.cal-mini-dots i{width:3px;height:3px;border-radius:50%;background:var(--dot-c,var(--text-muted))}
 .cal-mini-blank{aspect-ratio:1}
-.cal-year-agenda{margin-top:18px;border-top:2px solid var(--text-primary);background:var(--bg-secondary)}
-.cal-year-agenda-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 0 10px}
-.cal-year-agenda-head h2{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:600;margin:0}
-.cal-year-agenda-head p{font-size:var(--text-xs);color:var(--text-muted);margin:0}
-.cal-year-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--border-color);border-radius:2px}
-.cal-year-group{padding:14px 16px;border-bottom:1px solid var(--border-color)}
-.cal-year-group:nth-child(odd){border-right:1px solid var(--border-color)}
-.cal-year-group h3{margin:0 0 8px;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary)}
-.cal-year-event{display:grid;grid-template-columns:48px minmax(0,1fr);gap:9px;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--border-color) 65%,transparent)}
-.cal-year-event:first-of-type{border-top:0}
-.cal-year-date{font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;color:var(--cal-c,var(--text-muted))}
-.cal-year-name{font-family:var(--font-display);font-size:var(--text-base);font-weight:600;line-height:1.3;color:var(--text-primary)}
-.cal-year-event.is-approx{border-left:1px dashed var(--blue-accent);padding-left:8px}
 .cal-footnote{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:14px;padding-top:10px;border-top:1px solid var(--border-color);font-size:var(--text-xs);line-height:1.45;color:var(--text-muted)}
 .cal-footnote strong{color:var(--text-secondary)}
-@media(max-width:1000px){.cal-year-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cal-next{width:100%;margin-left:0;padding:8px 0 0;border-left:0;border-top:1px solid var(--border-color)}}
-@media(max-width:700px){.cal-toolbar{grid-template-columns:1fr;padding:13px}.cal-view-switch{justify-self:start}.cal-period-copy{min-width:0;flex:1}.cal-filterbar{align-items:flex-start}.cal-year-grid,.cal-year-groups{grid-template-columns:1fr}.cal-year-group:nth-child(odd){border-right:0}.cal-detail-item{grid-template-columns:1fr;gap:4px}.cal-year-agenda-head{align-items:flex-start;flex-direction:column}}
+.cal-page button:focus-visible,.cal-page input:focus-visible,.cal-page a:focus-visible{outline:2px solid var(--np-accent);outline-offset:2px}
+@media(max-width:1120px){.cal-layout{grid-template-columns:minmax(0,2.7fr) minmax(238px,1fr)}.cal-year-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.cal-pulse{grid-template-columns:minmax(250px,1fr) minmax(170px,230px)}.cal-firm-toggle{grid-column:2;justify-self:start}}
+@media(max-width:960px){.cal-layout{grid-template-columns:1fr}.cal-sidebar{position:static;display:block;max-height:none;scroll-margin-top:calc(var(--nav-h,50px) + var(--sub-h,76px) + 10px)}.cal-agenda-list{overflow:visible}.cal-pulse{grid-template-columns:minmax(0,1fr) minmax(190px,260px)}.cal-firm-toggle{grid-column:auto}.cal-year-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.cal-toolbar{grid-template-columns:1fr;padding:13px}.cal-view-switch{justify-self:start}.cal-period-copy{min-width:0;flex:1}.cal-pulse{grid-template-columns:1fr}.cal-firm-toggle{grid-column:auto;justify-self:start}.cal-filterbar{align-items:flex-start}.cal-year-grid{grid-template-columns:1fr}.cal-day{min-height:118px}.cal-sidebar-title-row{flex-direction:column;gap:4px}}
+@media(pointer:coarse){.cal-nav-btn,.cal-today-btn,.cal-view-btn,.cal-search input,.cal-firm-toggle,.cal-cat-btn{min-height:44px}}
 /* /bake:optional:calendario *//* /i18n:es-only */
 
 /* ════════════════════════════════════════════════════════════════
@@ -1247,12 +1278,12 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
   <div class="fb-subheader">
     <div>
       <h1>Calendario</h1>
-      <div class="fb-subtitle">Feriados nacionales de Bolivia y eventos económicos &middot; Datos estáticos <span style="color:var(--np-accent);font-weight:600">provisionales</span></div>
+      <div class="fb-subtitle">Feriados nacionales y agenda económica 2026–2027 &middot; Datos estáticos <span style="color:var(--np-accent);font-weight:600">provisionales</span></div>
     </div>
   </div>
   <div class="content cal-page">
     <div class="cal-toolbar">
-      <div class="cal-period-nav" aria-label="Navegación del calendario">
+      <div class="cal-period-nav" role="group" aria-label="Navegación del calendario">
         <button class="cal-nav-btn" type="button" data-cal-nav="-1" aria-label="Periodo anterior">&lsaquo;</button>
         <div class="cal-period-copy">
           <div class="cal-period-kicker" id="calPeriodKicker">Vista mensual</div>
@@ -1267,41 +1298,53 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
       </div>
     </div>
 
-    <div class="cal-filterbar" aria-label="Categorías visibles">
-      <span class="cal-filter-label">Mostrar</span>
-      <button class="cal-cat-btn" style="--cal-c:var(--np-accent)" type="button" aria-pressed="true" disabled>Feriados</button>
-      <button class="cal-cat-btn" style="--cal-c:var(--blue-accent)" type="button" data-cal-cat="ine" aria-pressed="true">INE</button>
-      <button class="cal-cat-btn" style="--cal-c:var(--color-accent-warm)" type="button" data-cal-cat="bonos" aria-pressed="true">Bonos</button>
-      <button class="cal-cat-btn" style="--cal-c:var(--text-primary)" type="button" data-cal-cat="reg" aria-pressed="true">Regulatorio</button>
-      <div class="cal-next" id="calNextHoliday"><strong>Próximo feriado</strong><span>&mdash;</span></div>
+    <div class="cal-pulse">
+      <div class="cal-pulse-next" id="calNextHito" role="status" aria-live="polite" aria-atomic="true">
+        <span class="cal-pulse-dot" aria-hidden="true"></span>
+        <span class="cal-pulse-kicker">Próximo hito</span>
+        <span class="cal-pulse-main">&mdash;</span>
+      </div>
+      <label class="cal-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <input type="search" data-cal-search placeholder="Buscar INE, FOMC, BCB…" autocomplete="off" spellcheck="false" aria-label="Buscar eventos">
+      </label>
+      <label class="cal-firm-toggle"><input type="checkbox" data-cal-firmes> Solo firmes</label>
     </div>
 
-    <section class="cal-month-view" id="calMonthView" aria-label="Vista mensual">
-      <div class="cal-month-scroll">
-        <div class="cal-weekdays" aria-hidden="true">
-          <div class="cal-weekday">Lun</div><div class="cal-weekday">Mar</div><div class="cal-weekday">Mié</div>
-          <div class="cal-weekday">Jue</div><div class="cal-weekday">Vie</div><div class="cal-weekday">Sáb</div>
-          <div class="cal-weekday">Dom</div>
-        </div>
-        <div class="cal-month-grid" id="calMonthGrid"></div>
-      </div>
-      <div class="cal-detail" id="calDayDetail" aria-live="polite"></div>
-    </section>
+    <div class="cal-filterbar" role="group" aria-label="Categorías visibles">
+      <span class="cal-filter-label">Mostrar</span>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-feriados);--cal-pale:var(--cal-feriados-pale)" type="button" data-cal-cat="feriados" aria-pressed="true">Feriados <span class="cal-cat-count" data-cal-count="feriados">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-ine);--cal-pale:var(--cal-ine-pale)" type="button" data-cal-cat="ine" aria-pressed="true">INE <span class="cal-cat-count" data-cal-count="ine">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-bcb);--cal-pale:var(--cal-bcb-pale)" type="button" data-cal-cat="bcb" aria-pressed="true">BCB <span class="cal-cat-count" data-cal-count="bcb">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-bonos);--cal-pale:var(--cal-bonos-pale)" type="button" data-cal-cat="bonos" aria-pressed="true">Bonos <span class="cal-cat-count" data-cal-count="bonos">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-asfi);--cal-pale:var(--cal-asfi-pale)" type="button" data-cal-cat="asfi" aria-pressed="true">ASFI <span class="cal-cat-count" data-cal-count="asfi">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-laboral);--cal-pale:var(--cal-laboral-pale)" type="button" data-cal-cat="laboral" aria-pressed="true">Laboral <span class="cal-cat-count" data-cal-count="laboral">0</span></button>
+      <button class="cal-cat-btn" style="--cal-c:var(--cal-global);--cal-pale:var(--cal-global-pale)" type="button" data-cal-cat="global" aria-pressed="true">Global <span class="cal-cat-count" data-cal-count="global">0</span></button>
+    </div>
 
-    <section class="cal-year-view" id="calYearView" aria-label="Vista anual" hidden>
-      <div class="cal-year-grid" id="calYearGrid"></div>
-      <div class="cal-year-agenda">
-        <div class="cal-year-agenda-head">
-          <h2>Agenda anual</h2>
-          <p>Eventos resumidos por mes; las ventanas INE son aproximadas.</p>
-        </div>
-        <div class="cal-year-groups" id="calYearAgenda"></div>
-      </div>
-    </section>
+    <div class="cal-layout">
+      <main class="cal-canvas">
+        <section class="cal-month-view" id="calMonthView" aria-label="Vista mensual">
+          <div class="cal-month-scroll">
+            <div class="cal-weekdays" aria-hidden="true">
+              <div class="cal-weekday">Lun</div><div class="cal-weekday">Mar</div><div class="cal-weekday">Mié</div>
+              <div class="cal-weekday">Jue</div><div class="cal-weekday">Vie</div><div class="cal-weekday">Sáb</div>
+              <div class="cal-weekday">Dom</div>
+            </div>
+            <div class="cal-month-grid" id="calMonthGrid"></div>
+          </div>
+        </section>
+
+        <section class="cal-year-view" id="calYearView" aria-label="Vista anual" hidden>
+          <div class="cal-year-grid" id="calYearGrid"></div>
+        </section>
+      </main>
+      <aside class="cal-sidebar" id="calSidebar" aria-label="Detalle de agenda"></aside>
+    </div>
 
     <div class="cal-footnote">
-      <span><strong>Datos:</strong> versión 1 &middot; revisión provisional &middot; cobertura 2026–2027.</span>
-      <span>Zona horaria: America/La_Paz &middot; Los feriados departamentales no están incluidos.</span>
+      <span><strong>Datos:</strong> versión 2 &middot; revisión provisional &middot; cobertura 2026–2027.</span>
+      <span>Zona horaria: America/La_Paz &middot; Feriados departamentales no incluidos.</span>
     </div>
   </div>
 </div><!-- /tab-calendario -->
@@ -8685,52 +8728,93 @@ function installObserver(){
   'use strict';
 
   const CAL_DATA = {
-    version: 1, revisado: 'provisional', tz: 'America/La_Paz',
-    feriados: [
-      {d:'2026-01-01',label:'Año Nuevo'},
-      {d:'2026-01-22',label:'Día del Estado Plurinacional'},
-      {d:'2026-02-16',label:'Lunes de Carnaval'},
-      {d:'2026-02-17',label:'Martes de Carnaval'},
-      {d:'2026-04-03',label:'Viernes Santo'},
-      {d:'2026-05-01',label:'Día del Trabajo'},
-      {d:'2026-06-04',label:'Corpus Christi'},
-      {d:'2026-06-21',label:'Año Nuevo Andino Amazónico'},
-      {d:'2026-08-06',label:'Día de la Independencia'},
-      {d:'2026-11-02',label:'Todos los Difuntos'},
-      {d:'2026-12-25',label:'Navidad'},
-      {d:'2027-01-01',label:'Año Nuevo'},
-      {d:'2027-01-22',label:'Día del Estado Plurinacional'},
-      {d:'2027-02-08',label:'Lunes de Carnaval'},
-      {d:'2027-02-09',label:'Martes de Carnaval'},
-      {d:'2027-03-26',label:'Viernes Santo'},
-      {d:'2027-05-01',label:'Día del Trabajo'},
-      {d:'2027-05-27',label:'Corpus Christi'},
-      {d:'2027-06-21',label:'Año Nuevo Andino Amazónico'},
-      {d:'2027-08-06',label:'Día de la Independencia'},
-      {d:'2027-11-02',label:'Todos los Difuntos'},
-      {d:'2027-12-25',label:'Navidad'}
+    version:2, revisado:'provisional', tz:'America/La_Paz', cobertura:[2026,2027],
+    feriados:[
+      {d:'2026-01-01',cat:'feriados',cert:'confirmado',label:'Año Nuevo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-01-22',cat:'feriados',cert:'confirmado',label:'Día del Estado Plurinacional',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/405'},
+      {d:'2026-02-16',cat:'feriados',cert:'confirmado',label:'Lunes de Carnaval',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-02-17',cat:'feriados',cert:'confirmado',label:'Martes de Carnaval',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-04-03',cat:'feriados',cert:'confirmado',label:'Viernes Santo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-05-01',cat:'feriados',cert:'confirmado',label:'Día del Trabajo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-06-04',cat:'feriados',cert:'confirmado',label:'Corpus Christi',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-06-21',cat:'feriados',cert:'confirmado',label:'Año Nuevo Andino Amazónico',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/173'},
+      {d:'2026-08-06',cat:'feriados',cert:'confirmado',label:'Día de la Independencia',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-11-02',cat:'feriados',cert:'confirmado',label:'Todos los Difuntos',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2026-12-25',cat:'feriados',cert:'confirmado',label:'Navidad',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-01-01',cat:'feriados',cert:'confirmado',label:'Año Nuevo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-01-22',cat:'feriados',cert:'confirmado',label:'Día del Estado Plurinacional',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/405'},
+      {d:'2027-02-08',cat:'feriados',cert:'confirmado',label:'Lunes de Carnaval',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-02-09',cat:'feriados',cert:'confirmado',label:'Martes de Carnaval',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-03-26',cat:'feriados',cert:'confirmado',label:'Viernes Santo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-05-01',cat:'feriados',cert:'confirmado',label:'Día del Trabajo',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-05-27',cat:'feriados',cert:'confirmado',label:'Corpus Christi',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-06-21',cat:'feriados',cert:'confirmado',label:'Año Nuevo Andino Amazónico',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/173'},
+      {d:'2027-08-06',cat:'feriados',cert:'confirmado',label:'Día de la Independencia',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-11-02',cat:'feriados',cert:'confirmado',label:'Todos los Difuntos',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'},
+      {d:'2027-12-25',cat:'feriados',cert:'confirmado',label:'Navidad',src:'https://www.gacetaoficialdebolivia.gob.bo/normas/buscar/21060'}
     ],
-    eventos_recurrentes: [
-      {cat:'ine', ventana:[5,10], label:'Publicación IPC/IPP (INE)', approx:true}
-    ],
-    eventos: [
-      {d:'2026-12-20',cat:'reg',label:'Plazo legal pago de aguinaldo'},
-      {d:'2027-12-20',cat:'reg',label:'Plazo legal pago de aguinaldo'},
-      {d:'2026-09-20',cat:'bonos',label:'Cupón bono soberano 2028 (ejemplo)',ejemplo:true},
-      {d:'2027-03-20',cat:'bonos',label:'Cupón bono soberano 2031 (ejemplo)',ejemplo:true}
+    eventos:[
+      {d:'2026-01-28',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-03-18',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',nota:'Incluye proyecciones (dot plot)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-04-29',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-06-17',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',nota:'Incluye proyecciones (dot plot)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-07-29',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-09-16',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',nota:'Incluye proyecciones (dot plot)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-10-28',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {d:'2026-12-09',cat:'global',cert:'confirmado',label:'Decisión de tasas FOMC (Fed)',nota:'Incluye proyecciones (dot plot)',src:'https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'},
+      {rango:['2026-01-01','2026-01-31'],cat:'global',cert:'ventana',label:'Perspectivas Económicas Globales (Banco Mundial)',nota:'Ventana aproximada de publicación durante enero.',src:'https://www.worldbank.org/en/publication/global-economic-prospects',approx:true},
+      {rango:['2026-06-01','2026-06-30'],cat:'global',cert:'ventana',label:'Perspectivas Económicas Globales (Banco Mundial)',nota:'Ventana aproximada de publicación durante junio.',src:'https://www.worldbank.org/en/publication/global-economic-prospects',approx:true},
+      {rango:['2027-01-01','2027-01-31'],cat:'global',cert:'ventana',label:'Perspectivas Económicas Globales (Banco Mundial)',nota:'Ventana aproximada de publicación durante enero.',src:'https://www.worldbank.org/en/publication/global-economic-prospects',approx:true},
+      {rango:['2027-06-01','2027-06-30'],cat:'global',cert:'ventana',label:'Perspectivas Económicas Globales (Banco Mundial)',nota:'Ventana aproximada de publicación durante junio.',src:'https://www.worldbank.org/en/publication/global-economic-prospects',approx:true},
+      {rango:'Cada semana',cat:'bcb',cert:'seguimiento',label:'Reservas internacionales semanales (BCB)',nota:'Recordatorio de revisión; el CAD-BCB no fue incorporado al repo y no se asigna un día exacto.',src:'https://www.bcb.gob.bo/?q=estad-sticas-semanales'},
+      {rango:'Cada mes',cat:'bcb',cert:'estimacion',label:'Planilla de reservas internacionales (BCB)',nota:'Cadencia para planificación; sin fecha oficial cargada.',src:'https://www.bcb.gob.bo/'},
+      {rango:'Cada trimestre',cat:'bcb',cert:'estimacion',label:'Balanza de pagos (BCB)',nota:'Cadencia para planificación; sin fecha oficial cargada.',src:'https://www.bcb.gob.bo/'},
+      {d:'2026-12-20',cat:'laboral',cert:'limite',label:'Plazo legal pago de aguinaldo',nota:'Fecha de control conservada de v1; verificar el instructivo laboral anual.'},
+      {d:'2027-12-20',cat:'laboral',cert:'limite',label:'Plazo legal pago de aguinaldo',nota:'Fecha de control conservada de v1; verificar el instructivo laboral anual.'},
+      {d:'2026-09-20',cat:'bonos',cert:'estimacion',label:'Cupón bono soberano 2028 (ejemplo)',ejemplo:true},
+      {d:'2027-03-20',cat:'bonos',cert:'estimacion',label:'Cupón bono soberano 2031 (ejemplo)',ejemplo:true}
     ]
   };
 
+  CAL_DATA.cobertura.forEach(function(year){
+    for(var month=1; month<=12; month++){
+      var prefix = year+'-'+String(month).padStart(2,'0')+'-';
+      CAL_DATA.eventos.push({
+        rango:[prefix+'05',prefix+'09'],cat:'ine',cert:'ventana',
+        label:'Publicación esperada IPC/IPP (INE)',
+        nota:'El INE suele divulgar en los primeros días del mes',
+        src:'https://www.ine.gob.bo',approx:true
+      });
+      CAL_DATA.eventos.push({
+        d:prefix+'10',cat:'ine',cert:'limite',
+        label:'Fecha máxima de control IPC/IPP (INE)',
+        nota:'Último día del control editorial mensual.',
+        src:'https://www.ine.gob.bo'
+      });
+    }
+  });
+
   var CAL_DAY_MS = 86400000;
+  var CAL_STORAGE_KEY = 'fb-calendar-v2';
   var CAL_WEEK = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
   var CAL_CAT = {
-    feriado:{label:'Feriado', color:'var(--np-accent)'},
-    ine:{label:'INE', color:'var(--blue-accent)'},
-    bonos:{label:'Bonos', color:'var(--color-accent-warm)'},
-    reg:{label:'Regulatorio', color:'var(--text-primary)'}
+    feriados:{label:'Feriados',color:'var(--cal-feriados)',pale:'var(--cal-feriados-pale)',aliases:'feriado bolivia nacional'},
+    ine:{label:'INE',color:'var(--cal-ine)',pale:'var(--cal-ine-pale)',aliases:'ipc ipp inflación precios instituto nacional estadística'},
+    bcb:{label:'BCB',color:'var(--cal-bcb)',pale:'var(--cal-bcb-pale)',aliases:'banco central bolivia rin reservas balanza pagos'},
+    bonos:{label:'Bonos',color:'var(--cal-bonos)',pale:'var(--cal-bonos-pale)',aliases:'cupón deuda soberana'},
+    asfi:{label:'ASFI',color:'var(--cal-asfi)',pale:'var(--cal-asfi-pale)',aliases:'regulación supervisión financiera'},
+    laboral:{label:'Laboral',color:'var(--cal-laboral)',pale:'var(--cal-laboral-pale)',aliases:'mteps trabajo aguinaldo'},
+    global:{label:'Global',color:'var(--cal-global)',pale:'var(--cal-global-pale)',aliases:'fomc fed gep banco mundial tasas'}
   };
-  var calExact = {};
-  var calCovered = {};
+  var CAL_CERT = {
+    confirmado:{label:'confirmado',rank:5},
+    limite:{label:'límite',rank:4},
+    ventana:{label:'ventana',rank:3},
+    estimacion:{label:'estimación',rank:2},
+    seguimiento:{label:'seguimiento',rank:1}
+  };
+  var CAL_CATS = Object.keys(CAL_CAT);
+  var CAL_EVENTS = CAL_DATA.feriados.concat(CAL_DATA.eventos);
   var calWired = false;
   var calDevObserver = null;
 
@@ -8739,316 +8823,419 @@ function installObserver(){
       return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
     });
   }
-  function calPad(value){ return String(value).padStart(2, '0'); }
-  function calIso(year, month, day){ return year+'-'+calPad(month)+'-'+calPad(day); }
+  function calPad(value){ return String(value).padStart(2,'0'); }
+  function calIso(year,month,day){ return year+'-'+calPad(month)+'-'+calPad(day); }
   function calParseIso(iso){
     var parts = String(iso || '').split('-');
     if(parts.length !== 3) return null;
     var year = Number(parts[0]), month = Number(parts[1]), day = Number(parts[2]);
     if(!Number.isInteger(year) || !Number.isInteger(month) || !Number.isInteger(day)) return null;
-    var serial = Math.floor(Date.UTC(year, month-1, day) / CAL_DAY_MS);
-    return {year:year, month:month, day:day, serial:serial, iso:calIso(year, month, day)};
+    var date = new Date(Date.UTC(year,month-1,day));
+    if(date.getUTCFullYear()!==year || date.getUTCMonth()+1!==month || date.getUTCDate()!==day) return null;
+    return {year:year,month:month,day:day,serial:Math.floor(date.getTime()/CAL_DAY_MS),iso:calIso(year,month,day),weekday:date.getUTCDay()};
   }
   function calFromSerial(serial){
-    var date = new Date(serial * CAL_DAY_MS);
+    var date = new Date(serial*CAL_DAY_MS);
     return {
-      year:date.getUTCFullYear(),
-      month:date.getUTCMonth()+1,
-      day:date.getUTCDate(),
-      serial:serial,
-      iso:calIso(date.getUTCFullYear(), date.getUTCMonth()+1, date.getUTCDate()),
+      year:date.getUTCFullYear(),month:date.getUTCMonth()+1,day:date.getUTCDate(),
+      serial:serial,iso:calIso(date.getUTCFullYear(),date.getUTCMonth()+1,date.getUTCDate()),
       weekday:date.getUTCDay()
     };
   }
-  function calDaysInMonth(year, month){
-    return new Date(Date.UTC(year, month, 0)).getUTCDate();
-  }
+  function calDaysInMonth(year,month){ return new Date(Date.UTC(year,month,0)).getUTCDate(); }
   function calToday(){
     var values = {};
-    new Intl.DateTimeFormat('en-CA', {
-      timeZone:CAL_DATA.tz, year:'numeric', month:'2-digit', day:'2-digit'
+    new Intl.DateTimeFormat('en-CA',{
+      timeZone:CAL_DATA.tz,year:'numeric',month:'2-digit',day:'2-digit'
     }).formatToParts(new Date()).forEach(function(part){
-      if(part.type !== 'literal') values[part.type] = Number(part.value);
+      if(part.type!=='literal') values[part.type]=Number(part.value);
     });
-    return calParseIso(calIso(values.year, values.month, values.day));
+    return calParseIso(calIso(values.year,values.month,values.day));
   }
-  function calDateForFormat(parts){
-    return new Date(Date.UTC(parts.year, parts.month-1, parts.day));
-  }
+  function calDateForFormat(parts){ return new Date(Date.UTC(parts.year,parts.month-1,parts.day)); }
   function calCap(value){ return value ? value.charAt(0).toUpperCase()+value.slice(1) : ''; }
-  function calMonthName(year, month, withYear){
-    return calCap(new Intl.DateTimeFormat('es-BO', {
-      month:'long', year:withYear ? 'numeric' : undefined, timeZone:'UTC'
-    }).format(new Date(Date.UTC(year, month-1, 1))));
+  function calMonthName(year,month,withYear){
+    return calCap(new Intl.DateTimeFormat('es-BO',{
+      month:'long',year:withYear?'numeric':undefined,timeZone:'UTC'
+    }).format(new Date(Date.UTC(year,month-1,1))));
+  }
+  function calMonthShort(parts){
+    return new Intl.DateTimeFormat('es-BO',{month:'short',timeZone:'UTC'})
+      .format(calDateForFormat(parts)).replace(/\./g,'');
   }
   function calLongDate(parts){
-    return calCap(new Intl.DateTimeFormat('es-BO', {
-      weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC'
+    return calCap(new Intl.DateTimeFormat('es-BO',{
+      weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'
     }).format(calDateForFormat(parts)));
   }
   function calShortDate(parts){
-    return new Intl.DateTimeFormat('es-BO', {
-      day:'numeric', month:'short', year:'numeric', timeZone:'UTC'
-    }).format(calDateForFormat(parts)).replace(/\./g, '');
+    return new Intl.DateTimeFormat('es-BO',{
+      day:'numeric',month:'short',year:'numeric',timeZone:'UTC'
+    }).format(calDateForFormat(parts)).replace(/\./g,'');
   }
-
-  CAL_DATA.feriados.forEach(function(item){
-    var parsed = calParseIso(item.d);
-    if(!parsed) return;
-    calCovered[parsed.year] = true;
-    if(!calExact[item.d]) calExact[item.d] = [];
-    calExact[item.d].push({d:item.d, cat:'feriado', label:item.label});
-  });
-  CAL_DATA.eventos.forEach(function(item){
-    var parsed = calParseIso(item.d);
-    if(!parsed) return;
-    calCovered[parsed.year] = true;
-    if(!calExact[item.d]) calExact[item.d] = [];
-    calExact[item.d].push({
-      d:item.d, cat:item.cat, label:item.label, ejemplo:item.ejemplo === true
+  function calBounds(event){
+    if(event.d){
+      var exact = calParseIso(event.d);
+      return exact ? {start:exact,end:exact} : null;
+    }
+    if(Array.isArray(event.rango) && event.rango.length===2){
+      var start = calParseIso(event.rango[0]), end = calParseIso(event.rango[1]);
+      return start && end ? {start:start,end:end} : null;
+    }
+    return null;
+  }
+  function calIsCadence(event){ return typeof event.rango === 'string'; }
+  function calValidateData(){
+    CAL_EVENTS.forEach(function(event,index){
+      var hasDate = typeof event.d === 'string';
+      var hasRange = Array.isArray(event.rango) || typeof event.rango === 'string';
+      if(hasDate===hasRange) throw new Error('CAL_DATA evento '+index+': usar d o rango');
+      if(!CAL_CAT[event.cat]) throw new Error('CAL_DATA evento '+index+': categoría inválida');
+      if(!CAL_CERT[event.cert]) throw new Error('CAL_DATA evento '+index+': certeza inválida');
+      if(event.cert==='confirmado' && !event.src) throw new Error('CAL_DATA confirmado sin fuente: '+event.label);
+      var bounds = calBounds(event);
+      if(!calIsCadence(event) && !bounds) throw new Error('CAL_DATA evento '+index+': fecha inválida');
+      if(bounds && bounds.start.serial>bounds.end.serial) throw new Error('CAL_DATA evento '+index+': rango invertido');
     });
-  });
-  var calCoveredYears = Object.keys(calCovered).map(Number).sort(function(a,b){return a-b;});
+  }
+  calValidateData();
 
   var calNow = calToday();
   var calState = {
-    view:'mes',
-    year:calNow.year,
-    month:calNow.month,
-    selected:calNow.iso,
-    filters:{ine:true, bonos:true, reg:true}
+    view:'mes',year:calNow.year,month:calNow.month,selected:null,
+    filters:{},search:'',firmes:false
   };
+  CAL_CATS.forEach(function(cat){ calState.filters[cat]=true; });
 
+  function calLoadPrefs(){
+    try{
+      var saved = JSON.parse(localStorage.getItem(CAL_STORAGE_KEY) || 'null');
+      if(!saved || typeof saved!=='object') return;
+      if(saved.view==='mes' || saved.view==='anio') calState.view=saved.view;
+      if(saved.filters && typeof saved.filters==='object'){
+        CAL_CATS.forEach(function(cat){
+          if(typeof saved.filters[cat]==='boolean') calState.filters[cat]=saved.filters[cat];
+        });
+      }
+      if(typeof saved.firmes==='boolean') calState.firmes=saved.firmes;
+    }catch(e){}
+  }
+  function calSavePrefs(){
+    try{
+      localStorage.setItem(CAL_STORAGE_KEY,JSON.stringify({
+        view:calState.view,filters:calState.filters,firmes:calState.firmes
+      }));
+    }catch(e){}
+  }
+  calLoadPrefs();
+
+  function calFold(value){
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  }
+  function calMatchesSearch(event){
+    var query = calFold(calState.search).trim();
+    if(!query) return true;
+    var category = CAL_CAT[event.cat];
+    return calFold([
+      event.label,category.label,category.aliases,event.nota,event.cert,event.rango
+    ].join(' ')).indexOf(query)!==-1;
+  }
+  function calPassesFirm(event){
+    return !calState.firmes || event.cert==='confirmado' || event.cert==='limite';
+  }
   function calVisible(event){
-    return event.cat === 'feriado' || calState.filters[event.cat] !== false;
+    return calState.filters[event.cat]!==false && calPassesFirm(event) && calMatchesSearch(event);
+  }
+  function calInCoverage(year){ return CAL_DATA.cobertura.indexOf(year)!==-1; }
+  function calIntersectsYear(event,year){
+    if(calIsCadence(event)) return calInCoverage(year);
+    var bounds = calBounds(event);
+    return !!bounds && bounds.start.year<=year && bounds.end.year>=year;
+  }
+  function calIntersectsMonth(event,year,month){
+    if(calIsCadence(event)) return calInCoverage(year);
+    var bounds = calBounds(event);
+    if(!bounds) return false;
+    var monthStart = calParseIso(calIso(year,month,1));
+    var monthEnd = calParseIso(calIso(year,month,calDaysInMonth(year,month)));
+    return bounds.start.serial<=monthEnd.serial && bounds.end.serial>=monthStart.serial;
+  }
+  function calOccursOn(event,parts){
+    var bounds = calBounds(event);
+    return !!bounds && parts.serial>=bounds.start.serial && parts.serial<=bounds.end.serial;
+  }
+  function calSortEvents(a,b){
+    var aBounds=calBounds(a), bBounds=calBounds(b);
+    var aSerial=aBounds?aBounds.start.serial:Number.MAX_SAFE_INTEGER;
+    var bSerial=bBounds?bBounds.start.serial:Number.MAX_SAFE_INTEGER;
+    return aSerial-bSerial || (CAL_CERT[b.cert].rank-CAL_CERT[a.cert].rank)
+      || a.label.localeCompare(b.label,'es');
   }
   function calEventsOn(iso){
-    var parsed = calParseIso(iso);
-    if(!parsed) return [];
-    var events = (calExact[iso] || []).slice();
-    if(calCovered[parsed.year]){
-      CAL_DATA.eventos_recurrentes.forEach(function(item){
-        if(parsed.day >= item.ventana[0] && parsed.day <= item.ventana[1]){
-          events.push({
-            d:iso, cat:item.cat, label:item.label, approx:item.approx === true,
-            ventana:item.ventana.slice()
-          });
-        }
-      });
-    }
-    return events.filter(calVisible);
+    var parts=calParseIso(iso);
+    if(!parts) return [];
+    return CAL_EVENTS.filter(function(event){ return !calIsCadence(event) && calOccursOn(event,parts); })
+      .filter(calVisible).sort(calSortEvents);
+  }
+  function calEventsForMonth(year,month){
+    return CAL_EVENTS.filter(function(event){ return calIntersectsMonth(event,year,month); })
+      .filter(calVisible).sort(calSortEvents);
+  }
+  function calEventsForYear(year){
+    return CAL_EVENTS.filter(function(event){ return calIntersectsYear(event,year); });
   }
   function calStyle(event){
-    return '--cal-c:'+(CAL_CAT[event.cat] || CAL_CAT.reg).color;
+    var category=CAL_CAT[event.cat] || CAL_CAT.global;
+    return '--cal-c:'+category.color+';--cal-pale:'+category.pale;
+  }
+  function calDominant(events){
+    return events.slice().sort(function(a,b){
+      var aHoliday=a.cat==='feriados'?10:0, bHoliday=b.cat==='feriados'?10:0;
+      return (bHoliday+CAL_CERT[b.cert].rank)-(aHoliday+CAL_CERT[a.cert].rank);
+    })[0] || null;
   }
   function calExampleBadge(event){
     return event.ejemplo ? '<span class="cal-example">Datos de ejemplo</span>' : '';
   }
   function calChip(event){
     return '<span class="cal-chip'+(event.approx?' is-approx':'')+'" style="'+calStyle(event)+'">'
-      +calEsc(event.label)+calExampleBadge(event)+'</span>';
+      +'<span class="cal-chip-cert">'+calEsc(CAL_CERT[event.cert].label)+'</span>'
+      +'<span class="cal-chip-title">'+calEsc(event.label)+'</span>'
+      +calExampleBadge(event)+'</span>';
   }
-  function calRenderDetail(){
-    var host = document.getElementById('calDayDetail');
-    var selected = calParseIso(calState.selected);
-    if(!host || !selected) return;
-    var events = calEventsOn(selected.iso);
-    var body;
-    if(!events.length){
-      body = '<div class="cal-empty">No hay eventos visibles para esta fecha.</div>';
-    }else{
-      body = '<div class="cal-detail-list">'+events.map(function(event){
-        var category = CAL_CAT[event.cat] || CAL_CAT.reg;
-        var note = '';
-        if(event.cat === 'feriado') note = 'Feriado nacional de Bolivia.';
-        if(event.approx) note = 'Ventana aproximada del '+event.ventana[0]+' al '+event.ventana[1]+' de cada mes.';
-        return '<div class="cal-detail-item" style="'+calStyle(event)+'">'
-          +'<div class="cal-detail-cat">'+calEsc(category.label)+'</div>'
-          +'<div><div class="cal-detail-name">'+calEsc(event.label)+'</div>'
-          +calExampleBadge(event)
-          +(note?'<div class="cal-detail-note">'+calEsc(note)+'</div>':'')
-          +'</div></div>';
-      }).join('')+'</div>';
+  function calDots(events){
+    var seen={}, cats=[];
+    events.forEach(function(event){
+      if(!seen[event.cat]){ seen[event.cat]=true; cats.push(event.cat); }
+    });
+    return cats.slice(0,4).map(function(cat){
+      return '<i style="--dot-c:'+CAL_CAT[cat].color+'"></i>';
+    }).join('');
+  }
+  function calEventDateLabel(event){
+    if(calIsCadence(event)) return event.rango;
+    var bounds=calBounds(event);
+    if(!bounds) return 'Fecha no disponible';
+    if(event.d) return calShortDate(bounds.start);
+    if(bounds.start.year===bounds.end.year && bounds.start.month===bounds.end.month){
+      return bounds.start.day+'–'+bounds.end.day+' '+calMonthShort(bounds.start)+' '+bounds.start.year;
     }
-    host.innerHTML = '<div class="cal-detail-head"><h2>'+calEsc(calLongDate(selected))+'</h2>'
-      +'<span>'+events.length+' '+(events.length===1?'evento visible':'eventos visibles')+'</span></div>'+body;
+    return calShortDate(bounds.start)+' – '+calShortDate(bounds.end);
+  }
+  function calEventNote(event){
+    if(event.nota) return event.nota;
+    if(event.cat==='feriados') return 'Feriado nacional de Bolivia; fecha confirmada en el almanaque y referencia normativa aún sujeta a revisión editorial.';
+    return '';
+  }
+  function calSidebarItem(event){
+    var category=CAL_CAT[event.cat], note=calEventNote(event);
+    return '<article class="cal-agenda-item" style="'+calStyle(event)+'">'
+      +'<div class="cal-agenda-date"><span class="cal-agenda-dot" aria-hidden="true"></span>'
+      +calEsc(calEventDateLabel(event))+'</div>'
+      +'<div class="cal-agenda-name">'+calEsc(event.label)+'</div>'
+      +'<div class="cal-agenda-tags"><span class="cal-tag">'+calEsc(category.label)+'</span>'
+      +'<span class="cal-cert" data-cert="'+calEsc(event.cert)+'">'+calEsc(CAL_CERT[event.cert].label)+'</span>'
+      +calExampleBadge(event)+'</div>'
+      +(note?'<div class="cal-agenda-note">'+calEsc(note)+'</div>':'')
+      +(event.src?'<a class="cal-source" href="'+calEsc(event.src)+'" target="_blank" rel="noopener">Fuente ↗</a>':'')
+      +'</article>';
+  }
+  function calRenderSidebar(){
+    var host=document.getElementById('calSidebar');
+    if(!host) return;
+    var selected=calParseIso(calState.selected);
+    var events=selected ? calEventsOn(selected.iso) : calEventsForMonth(calState.year,calState.month);
+    var title=selected ? calLongDate(selected) : calMonthName(calState.year,calState.month,true);
+    var count=events.length+' '+(events.length===1?'hito visible':'hitos visibles');
+    var body=events.length ? events.map(calSidebarItem).join('')
+      : '<div class="cal-empty"><strong>No hay eventos con estos filtros</strong>Activa otra categoría o limpia la búsqueda.</div>';
+    host.innerHTML='<div class="cal-sidebar-head"><div class="cal-sidebar-kicker">Detalle de agenda</div>'
+      +'<div class="cal-sidebar-title-row"><h2 class="cal-sidebar-title" tabindex="-1">'+calEsc(title)+'</h2>'
+      +'<span class="cal-sidebar-count" role="status" aria-live="polite" aria-atomic="true">'+calEsc(count)+'</span></div>'
+      +(selected?'<button class="cal-clear-selection" type="button" data-cal-clear-selection>Ver mes completo</button>':'')
+      +'</div><div class="cal-agenda-list">'+body+'</div>'
+      +'<div class="cal-cert-legend"><b>CONFIRMADO</b> oficial · <b>LÍMITE</b> control · '
+      +'<b>VENTANA</b> rango · <b>ESTIMACIÓN</b> no oficial · <b>SEGUIMIENTO</b> recordatorio</div>';
   }
   function calRenderMonth(){
-    var title = document.getElementById('calPeriodTitle');
-    var kicker = document.getElementById('calPeriodKicker');
-    var grid = document.getElementById('calMonthGrid');
+    var title=document.getElementById('calPeriodTitle');
+    var kicker=document.getElementById('calPeriodKicker');
+    var grid=document.getElementById('calMonthGrid');
     if(!title || !kicker || !grid) return;
-    title.textContent = calMonthName(calState.year, calState.month, true);
-    kicker.textContent = 'Vista mensual';
-    var first = calParseIso(calIso(calState.year, calState.month, 1));
-    var firstWeekday = new Date(first.serial * CAL_DAY_MS).getUTCDay();
-    var offset = (firstWeekday + 6) % 7;
-    var start = first.serial - offset;
-    var cells = [];
+    title.textContent=calMonthName(calState.year,calState.month,true);
+    kicker.textContent='Vista mensual';
+    var first=calParseIso(calIso(calState.year,calState.month,1));
+    var offset=(first.weekday+6)%7;
+    var start=first.serial-offset;
+    var cells=[];
     for(var index=0; index<42; index++){
-      var parts = calFromSerial(start + index);
-      var events = calEventsOn(parts.iso);
-      var holiday = events.some(function(event){return event.cat==='feriado';});
-      var classes = ['cal-day'];
-      if(parts.month !== calState.month) classes.push('is-outside');
-      if(parts.weekday === 0 || parts.weekday === 6) classes.push('is-weekend');
-      if(parts.iso === calNow.iso) classes.push('is-today');
-      if(parts.iso === calState.selected) classes.push('is-selected');
-      if(holiday) classes.push('has-holiday');
-      var shown = events.slice(0, 3);
-      var more = events.length-shown.length;
-      var aria = calLongDate(parts)+(events.length ? '. '+events.map(function(event){return event.label;}).join('. ') : '. Sin eventos');
-      cells.push('<button class="'+classes.join(' ')+'" type="button" data-cal-date="'+parts.iso+'" aria-label="'+calEsc(aria)+'">'
+      var parts=calFromSerial(start+index);
+      var events=calEventsOn(parts.iso);
+      var dominant=calDominant(events);
+      var classes=['cal-day'];
+      if(parts.month!==calState.month) classes.push('is-outside');
+      if(parts.weekday===0 || parts.weekday===6) classes.push('is-weekend');
+      if(parts.iso===calNow.iso) classes.push('is-today');
+      if(parts.iso===calState.selected) classes.push('is-selected');
+      if(events.length) classes.push('has-events');
+      var shown=events.slice(0,3), more=events.length-shown.length;
+      var aria=calLongDate(parts)+(events.length?'. '+events.map(function(event){
+        return event.label+', '+CAL_CERT[event.cert].label+(event.ejemplo?', datos de ejemplo':'');
+      }).join('. '):'. Sin eventos');
+      var attrs=' aria-label="'+calEsc(aria)+'"';
+      if(parts.iso===calNow.iso) attrs+=' aria-current="date"';
+      if(parts.iso===calState.selected) attrs+=' aria-pressed="true"';
+      cells.push('<button class="'+classes.join(' ')+'" type="button" data-cal-date="'+parts.iso+'"'
+        +(dominant?' style="'+calStyle(dominant)+'"':'')+attrs+'>'
         +'<span class="cal-day-top"><span class="cal-day-num">'+parts.day+'</span>'
         +(parts.iso===calNow.iso?'<span class="cal-today-tag">Hoy</span>':'')+'</span>'
         +shown.map(calChip).join('')
         +(more>0?'<span class="cal-chip-more">+'+more+' más</span>':'')
         +'</button>');
     }
-    grid.innerHTML = cells.join('');
-    calRenderDetail();
+    grid.innerHTML=cells.join('');
   }
-  function calAnnualEvents(year, month){
-    var events = [];
-    Object.keys(calExact).forEach(function(iso){
-      var parsed = calParseIso(iso);
-      if(!parsed || parsed.year !== year || parsed.month !== month) return;
-      calExact[iso].forEach(function(event){
-        var copy = Object.assign({}, event);
-        copy.sortDay = parsed.day;
-        copy.dateLabel = calPad(parsed.day);
-        events.push(copy);
-      });
-    });
-    if(calCovered[year]){
-      CAL_DATA.eventos_recurrentes.forEach(function(item){
-        events.push({
-          cat:item.cat, label:item.label, approx:item.approx === true,
-          ventana:item.ventana.slice(), sortDay:item.ventana[0],
-          dateLabel:item.ventana[0]+'–'+item.ventana[1]
-        });
-      });
-    }
-    return events.filter(calVisible).sort(function(a,b){
-      return a.sortDay-b.sortDay || a.label.localeCompare(b.label, 'es');
-    });
-  }
-  function calMiniMonth(year, month){
-    var first = calParseIso(calIso(year, month, 1));
-    var offset = (new Date(first.serial * CAL_DAY_MS).getUTCDay()+6)%7;
-    var days = calDaysInMonth(year, month);
-    var cells = [];
+  function calMiniMonth(year,month){
+    var first=calParseIso(calIso(year,month,1));
+    var offset=(first.weekday+6)%7;
+    var days=calDaysInMonth(year,month);
+    var cells=[];
     for(var blank=0; blank<offset; blank++) cells.push('<span class="cal-mini-blank"></span>');
     for(var day=1; day<=days; day++){
-      var iso = calIso(year, month, day);
-      var parts = calParseIso(iso);
-      var weekday = new Date(parts.serial * CAL_DAY_MS).getUTCDay();
-      var events = calEventsOn(iso);
-      var holiday = events.some(function(event){return event.cat==='feriado';});
-      var classes = ['cal-mini-day'];
-      if(weekday===0 || weekday===6) classes.push('is-weekend');
+      var iso=calIso(year,month,day), parts=calParseIso(iso);
+      var events=calEventsOn(iso), dominant=calDominant(events);
+      var classes=['cal-mini-day'];
+      if(parts.weekday===0 || parts.weekday===6) classes.push('is-weekend');
       if(iso===calNow.iso) classes.push('is-today');
-      if(holiday) classes.push('has-holiday');
       if(events.length) classes.push('has-event');
-      var style = events.length ? ' style="'+calStyle(events[0])+'"' : '';
-      var aria = calLongDate(parts)+(events.length?'. '+events.map(function(event){return event.label;}).join('. '):'. Sin eventos');
-      cells.push('<button class="'+classes.join(' ')+'" type="button" data-cal-mini-date="'+iso+'"'
-        +style+' aria-label="'+calEsc(aria)+'">'+day+'</button>');
+      cells.push('<span class="'+classes.join(' ')+'" aria-hidden="true"'
+        +(dominant?' style="'+calStyle(dominant)+'"':'')+'>'+day
+        +(events.length?'<span class="cal-mini-dots" aria-hidden="true">'+calDots(events)+'</span>':'')
+        +'</span>');
     }
+    var count=calEventsForMonth(year,month).length;
     return '<section class="cal-mini"><button class="cal-mini-title" type="button" data-cal-month="'+month
-      +'" data-cal-year="'+year+'">'+calEsc(calMonthName(year, month, false))+'</button>'
-      +'<div class="cal-mini-week" aria-hidden="true">'+CAL_WEEK.map(function(day){return '<span>'+day.charAt(0)+'</span>';}).join('')+'</div>'
-      +'<div class="cal-mini-grid">'+cells.join('')+'</div></section>';
+      +'" data-cal-year="'+year+'"><span>'+calEsc(calMonthName(year,month,false))+'</span>'
+      +'<span class="cal-mini-count">'+count+' '+(count===1?'hito':'hitos')+'</span></button>'
+      +'<div class="cal-mini-week" aria-hidden="true">'+CAL_WEEK.map(function(dayName){
+        return '<span>'+dayName.charAt(0)+'</span>';
+      }).join('')+'</div><div class="cal-mini-grid">'+cells.join('')+'</div></section>';
   }
   function calRenderYear(){
-    var title = document.getElementById('calPeriodTitle');
-    var kicker = document.getElementById('calPeriodKicker');
-    var grid = document.getElementById('calYearGrid');
-    var agenda = document.getElementById('calYearAgenda');
-    if(!title || !kicker || !grid || !agenda) return;
-    title.textContent = String(calState.year);
-    kicker.textContent = 'Vista anual';
-    var months = [];
-    var groups = [];
-    for(var month=1; month<=12; month++){
-      months.push(calMiniMonth(calState.year, month));
-      var events = calAnnualEvents(calState.year, month);
-      var rows = events.map(function(event){
-        return '<div class="cal-year-event'+(event.approx?' is-approx':'')+'" style="'+calStyle(event)+'">'
-          +'<div class="cal-year-date">'+calEsc(event.dateLabel)+'</div>'
-          +'<div><div class="cal-year-name">'+calEsc(event.label)+'</div>'
-          +calExampleBadge(event)+'</div></div>';
-      }).join('');
-      groups.push('<section class="cal-year-group"><h3>'+calEsc(calMonthName(calState.year, month, false))+'</h3>'
-        +(rows || '<div class="cal-empty">Sin eventos visibles.</div>')+'</section>');
-    }
-    grid.innerHTML = months.join('');
-    agenda.innerHTML = groups.join('');
+    var title=document.getElementById('calPeriodTitle');
+    var kicker=document.getElementById('calPeriodKicker');
+    var grid=document.getElementById('calYearGrid');
+    if(!title || !kicker || !grid) return;
+    title.textContent=String(calState.year);
+    kicker.textContent='Vista anual';
+    var months=[];
+    for(var month=1; month<=12; month++) months.push(calMiniMonth(calState.year,month));
+    grid.innerHTML=months.join('');
   }
-  function calRenderNextHoliday(){
-    var host = document.getElementById('calNextHoliday');
+  function calDistance(days){
+    return days===0?'hoy':(days===1?'mañana':'en '+days+' días');
+  }
+  function calRenderNext(){
+    var host=document.getElementById('calNextHito');
     if(!host) return;
-    var next = null;
-    CAL_DATA.feriados.some(function(item){
-      var parsed = calParseIso(item.d);
-      if(parsed && parsed.serial >= calNow.serial){ next={item:item, parsed:parsed}; return true; }
-      return false;
-    });
+    var next=CAL_EVENTS.filter(function(event){
+      var bounds=calBounds(event);
+      return bounds && bounds.end.serial>=calNow.serial && calVisible(event);
+    }).map(function(event){
+      var bounds=calBounds(event);
+      return {event:event,bounds:bounds,effective:Math.max(bounds.start.serial,calNow.serial)};
+    }).sort(function(a,b){
+      return a.effective-b.effective || calSortEvents(a.event,b.event);
+    })[0];
     if(!next){
-      host.innerHTML = '<strong>Próximo feriado</strong><span>Sin fechas futuras en la cobertura</span>';
+      host.removeAttribute('style');
+      host.innerHTML='<span class="cal-pulse-dot" aria-hidden="true"></span>'
+        +'<span class="cal-pulse-kicker">Próximo hito</span>'
+        +'<span class="cal-pulse-main">Sin hitos futuros con estos filtros</span>';
       return;
     }
-    var days = next.parsed.serial-calNow.serial;
-    var distance = days===0 ? 'hoy' : (days===1 ? 'mañana' : 'en '+days+' días');
-    host.innerHTML = '<strong>Próximo feriado</strong><span>'+calEsc(next.item.label)
-      +' · '+calEsc(calShortDate(next.parsed))+' <b>'+distance+'</b></span>';
+    var category=CAL_CAT[next.event.cat];
+    host.setAttribute('style',calStyle(next.event));
+    host.innerHTML='<span class="cal-pulse-dot" aria-hidden="true"></span>'
+      +'<span class="cal-pulse-kicker">Próximo hito</span>'
+      +'<span class="cal-pulse-main">'+calEsc(next.event.label)+'</span>'
+      +'<span class="cal-pulse-meta">'+calEsc(category.label)+' · <b class="cal-pulse-cert">'
+      +calEsc(CAL_CERT[next.event.cert].label)+'</b> · '+calEsc(calEventDateLabel(next.event))
+      +' · <b>'+calEsc(calDistance(next.effective-calNow.serial))+'</b></span>';
+  }
+  function calRenderCounts(){
+    var yearEvents=calEventsForYear(calState.year);
+    CAL_CATS.forEach(function(cat){
+      var count=yearEvents.filter(function(event){
+        return event.cat===cat && calPassesFirm(event) && calMatchesSearch(event);
+      }).length;
+      var countEl=document.querySelector('[data-cal-count="'+cat+'"]');
+      var button=document.querySelector('[data-cal-cat="'+cat+'"]');
+      if(countEl) countEl.textContent=String(count);
+      if(button) button.setAttribute('aria-label',CAL_CAT[cat].label+', '+count+' hitos en '+calState.year);
+    });
   }
   function calRenderAll(){
-    var monthView = document.getElementById('calMonthView');
-    var yearView = document.getElementById('calYearView');
+    var monthView=document.getElementById('calMonthView');
+    var yearView=document.getElementById('calYearView');
     if(!monthView || !yearView) return;
-    var annual = calState.view === 'anio';
-    monthView.hidden = annual;
-    yearView.hidden = !annual;
+    calNow=calToday();
+    var annual=calState.view==='anio';
+    monthView.hidden=annual;
+    yearView.hidden=!annual;
     document.querySelectorAll('[data-cal-view]').forEach(function(button){
-      var active = button.dataset.calView === calState.view;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      var active=button.dataset.calView===calState.view;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',active?'true':'false');
     });
     document.querySelectorAll('[data-cal-cat]').forEach(function(button){
-      button.setAttribute('aria-pressed', calState.filters[button.dataset.calCat] ? 'true' : 'false');
+      button.setAttribute('aria-pressed',calState.filters[button.dataset.calCat]?'true':'false');
     });
+    var firm=document.querySelector('[data-cal-firmes]');
+    if(firm) firm.checked=calState.firmes;
     if(annual) calRenderYear(); else calRenderMonth();
-    calRenderNextHoliday();
+    calRenderSidebar();
+    calRenderNext();
+    calRenderCounts();
     if(window.__fbMeasure) window.__fbMeasure();
   }
   function calMovePeriod(step){
-    if(calState.view === 'anio'){
-      calState.year += step;
-      var selected = calParseIso(calState.selected);
-      var selectedDay = selected ? Math.min(selected.day, calDaysInMonth(calState.year, calState.month)) : 1;
-      calState.selected = calIso(calState.year, calState.month, selectedDay);
+    calState.selected=null;
+    if(calState.view==='anio'){
+      calState.year+=step;
       return;
     }
-    var date = new Date(Date.UTC(calState.year, calState.month-1+step, 1));
-    calState.year = date.getUTCFullYear();
-    calState.month = date.getUTCMonth()+1;
-    calState.selected = calIso(calState.year, calState.month, 1);
+    var date=new Date(Date.UTC(calState.year,calState.month-1+step,1));
+    calState.year=date.getUTCFullYear();
+    calState.month=date.getUTCMonth()+1;
   }
-  function calOpenMonth(year, month, iso){
-    calState.year = year;
-    calState.month = month;
-    calState.selected = iso || calIso(year, month, 1);
-    calState.view = 'mes';
+  function calOpenMonth(year,month,iso){
+    calState.year=year;
+    calState.month=month;
+    calState.selected=iso || null;
+    calState.view='mes';
+    calSavePrefs();
     calRenderAll();
+    if(iso && window.matchMedia && window.matchMedia('(max-width:960px)').matches){
+      var reveal=function(){
+        var sidebar=document.getElementById('calSidebar');
+        var heading=sidebar && sidebar.querySelector('.cal-sidebar-title');
+        if(heading && heading.focus) heading.focus({preventScroll:true});
+        if(sidebar && sidebar.scrollIntoView){
+          var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          sidebar.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+        }
+      };
+      if(window.requestAnimationFrame) window.requestAnimationFrame(reveal); else reveal();
+    }
   }
   function calWire(){
     if(calWired) return;
-    var panel = document.getElementById('tab-calendario');
+    var panel=document.getElementById('tab-calendario');
     if(!panel) return;
-    calWired = true;
-    panel.addEventListener('click', function(event){
-      var target = event.target && event.target.closest ? event.target.closest('button') : null;
+    calWired=true;
+    panel.addEventListener('click',function(event){
+      var target=event.target && event.target.closest ? event.target.closest('button') : null;
       if(!target || !panel.contains(target)) return;
       if(target.hasAttribute('data-cal-nav')){
         calMovePeriod(Number(target.dataset.calNav));
@@ -9056,35 +9243,51 @@ function installObserver(){
         return;
       }
       if(target.hasAttribute('data-cal-today')){
-        calNow = calToday();
-        calState.year = calNow.year;
-        calState.month = calNow.month;
-        calState.selected = calNow.iso;
+        calNow=calToday();
+        calState.year=calNow.year;
+        calState.month=calNow.month;
+        calState.selected=calNow.iso;
         calRenderAll();
         return;
       }
       if(target.dataset.calView){
-        calState.view = target.dataset.calView;
+        calState.view=target.dataset.calView;
+        calState.selected=null;
+        calSavePrefs();
         calRenderAll();
         return;
       }
       if(target.dataset.calCat){
-        calState.filters[target.dataset.calCat] = !calState.filters[target.dataset.calCat];
+        calState.filters[target.dataset.calCat]=!calState.filters[target.dataset.calCat];
+        calSavePrefs();
+        calRenderAll();
+        return;
+      }
+      if(target.hasAttribute('data-cal-clear-selection')){
+        calState.selected=null;
         calRenderAll();
         return;
       }
       if(target.dataset.calDate){
-        var day = calParseIso(target.dataset.calDate);
-        if(day) calOpenMonth(day.year, day.month, day.iso);
-        return;
-      }
-      if(target.dataset.calMiniDate){
-        var miniDay = calParseIso(target.dataset.calMiniDate);
-        if(miniDay) calOpenMonth(miniDay.year, miniDay.month, miniDay.iso);
+        var day=calParseIso(target.dataset.calDate);
+        if(day) calOpenMonth(day.year,day.month,day.iso);
         return;
       }
       if(target.dataset.calMonth && target.dataset.calYear){
-        calOpenMonth(Number(target.dataset.calYear), Number(target.dataset.calMonth));
+        calOpenMonth(Number(target.dataset.calYear),Number(target.dataset.calMonth));
+      }
+    });
+    panel.addEventListener('input',function(event){
+      var target=event.target;
+      if(target && target.matches('[data-cal-search]')){
+        calState.search=target.value || '';
+        calRenderAll();
+        return;
+      }
+      if(target && target.matches('[data-cal-firmes]')){
+        calState.firmes=target.checked;
+        calSavePrefs();
+        calRenderAll();
       }
     });
   }
