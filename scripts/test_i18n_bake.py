@@ -264,6 +264,40 @@ def test_dict_en_keys_subset_of_es():
     assert not extras, f"en.json inventa claves que no están en es.json: {sorted(extras)}"
 
 
+# ── Calendario: bake productivo + gate admin ───────────────────────────────
+
+
+def test_calendario_baked_only_es_and_admin_gated():
+    """El hotfix publica Calendario en ES, pero botón, panel y ruta quedan
+    detrás del gate de sesión. EN no debe heredar ninguna traza del módulo."""
+    from config import MODULOS_NO_BAKEADOS
+
+    assert 'calendario' not in MODULOS_NO_BAKEADOS
+    tpl = (ROOT / 'template.html').read_text(encoding='utf-8')
+    es = bake(tpl, 'es', '', i18n_bake.load_lang('es'),
+              MODULOS_NO_BAKEADOS)
+    en = bake(tpl, 'en', '/en', i18n_bake.load_lang('en'),
+              MODULOS_NO_BAKEADOS)
+
+    assert 'data-tab="calendario" data-admin-only hidden' in es
+    assert 'id="tab-calendario" data-admin-only hidden' in es
+    assert "'/calendario': {tab:'calendario'}" in es
+    assert 'const CAL_DATA' in es
+    assert 'fbCanActivateCalendar' in es
+    assert '__fbAdminGateState' in es
+    assert '__fbReconcileCalendarRoute' in es
+    assert '#tab-calendario[hidden]{display:none!important}' in es
+    assert "if(!fbCanActivateCalendar(target)){ target='noticias'" in es
+    assert "fbSlug(location.pathname)==='/calendario')" in es
+
+    trazas = (
+        'data-tab="calendario"', 'tab-calendario', "'/calendario'",
+        'const CAL_DATA', 'renderCalendario', 'fbCanActivateCalendar',
+        '__fbAdminGateState', '__fbReconcileCalendarRoute',
+    )
+    assert all(traza not in en for traza in trazas)
+
+
 # ── load_lang ───────────────────────────────────────────────────────────────
 
 
