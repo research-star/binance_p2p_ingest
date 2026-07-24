@@ -448,6 +448,39 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
   .fb-kpi-card{flex:0 0 auto;min-width:160px;scroll-snap-align:start}
 }
 @media(max-width:600px){.fb-subheader-stats{display:none}.fb-navbar,.fb-subheader{padding:10px 12px}}
+/* ── Vista móvil admin-only (preview; con OK de Diego se abre a todos vía PR) ──
+   Gate doble: html[data-fb-admin="1"] + media queries de celular; público y
+   desktop quedan intactos. Portrait (≤600px): los 4 KPIs de Dólar se achican
+   y entran en UNA fila fija (reemplaza el carrusel scrolleable) — se ocultan
+   icono, sub y deltas; los values dobles (TCO, Profundidad) wrappean en dos
+   líneas tras el "/". Landscape bajo (alto ≤500px): navbar, subheader y KPIs
+   dejan de ser sticky para que la gráfica disponga del alto completo al
+   scrollear, y la fila única aplica también (a 601–900px el colapso a 3
+   columnas mandaba el 4º KPI a una segunda fila). */
+@media(max-width:600px){
+  html[data-fb-admin="1"] .fb-kpi-grid{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;grid-template-columns:none;overflow-x:visible;gap:6px;padding:0 10px 8px}
+  html[data-fb-admin="1"] .fb-kpi-card{min-width:0;padding:7px 8px}
+  html[data-fb-admin="1"] .fb-kpi-head{margin-bottom:4px}
+  html[data-fb-admin="1"] .fb-kpi-label{font-size:8px;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html[data-fb-admin="1"] .fb-kpi-icon,
+  html[data-fb-admin="1"] .fb-kpi-sub,
+  html[data-fb-admin="1"] .fb-kpi-dpush,
+  html[data-fb-admin="1"] .fb-kpi-w1-btn{display:none}
+  html[data-fb-admin="1"] .fb-kpi-value{font-size:14px;line-height:1.2;letter-spacing:-.03em}
+}
+@media(orientation:landscape) and (max-width:1000px) and (max-height:500px){
+  html[data-fb-admin="1"] .fb-navbar,html[data-fb-admin="1"] .fb-subheader{position:static}
+  html[data-fb-admin="1"] #kpis{position:static}
+  html[data-fb-admin="1"] .fb-kpi-wrap{padding:6px 12px 0}
+  html[data-fb-admin="1"] .fb-kpi-grid{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;grid-template-columns:none;overflow-x:visible;gap:8px;padding-bottom:8px}
+  html[data-fb-admin="1"] .fb-kpi-card{min-width:0;padding:7px 10px}
+  html[data-fb-admin="1"] .fb-kpi-head{margin-bottom:3px}
+  html[data-fb-admin="1"] .fb-kpi-icon,
+  html[data-fb-admin="1"] .fb-kpi-sub,
+  html[data-fb-admin="1"] .fb-kpi-dpush,
+  html[data-fb-admin="1"] .fb-kpi-w1-btn{display:none}
+  html[data-fb-admin="1"] .fb-kpi-value{font-size:16px;line-height:1.15}
+}
 .fb-mono{font-family:var(--font-mono)}
 .fb-chart-source{font-size:var(--text-xs);color:var(--text-soft,#9E927C);text-align:right;padding:6px 4px 0;font-style:italic}
 .fb-view-toggle{display:inline-flex;gap:4px;margin-top:6px}
@@ -2894,7 +2927,7 @@ function rVwap(c,v){
     const topMs=Date.parse(String(xaVwap.range[1]).replace(' ','T')+'Z');  // range[1] = string boStr
     if(tcoMaxMs>topMs){ xaVwap.range=[xaVwap.range[0], boStr(tcoMaxMs)]; xaVwap.autorange=false; }
   }
-  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_bob_usdt}}',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
+  Plotly.react('chartVwap',filtered,{...L,xaxis:xaVwap,yaxis:{...L.yaxis,title:{text:'{{t:dolar.axis_bob_usdt}}',font:{size:10,color:c.textMuted}},tickformat:'.2f',gridcolor:'rgba(33,30,27,.09)',showgrid:true,...(yRange?{range:yRange,autorange:false}:{})},margin:fbMobileAdmin()?{l:46,r:10,t:28,b:64}:{l:60,r:16,t:36,b:80},showlegend:false,shapes:gapShapes(c),height:chartHeight('chartVwap')+40},PC);
   applyVwapToggle();
 }
 function rOutliers(){
@@ -3029,7 +3062,7 @@ function rOffer(c){
     yaxis2:{overlaying:'y', side:'right', showgrid:false, fixedrange:true,
       tickfont:{family:'IBM Plex Mono,monospace',size:10,color:c.textMuted},
       title:{text:'{{t:dolar.axis_nro_oferentes}}',font:{size:10,color:c.textMuted}}, rangemode:'tozero'},
-    margin:{l:60,r:60,t:36,b:60},
+    margin:fbMobileAdmin()?{l:46,r:42,t:28,b:52}:{l:60,r:60,t:36,b:60},
     height:chartHeight('chartOffer')
   }, PC);
 }
@@ -3124,6 +3157,18 @@ function replotAllCharts(){
   rOutliers(); rFlow(c); rOffer(c); rHeatmap(c);
   rActivityHm(c);
   updateKpis();
+}
+// Vista móvil admin-only: al rotar el celu, replot para recalcular el height y
+// los márgenes móviles (el responsive de Plotly solo re-mide el width). Gate:
+// admin + pantalla táctil; en desktop-admin no re-renderiza al redimensionar.
+{
+  let fbRotT=null;
+  window.addEventListener('resize', function(){
+    if(document.documentElement.getAttribute('data-fb-admin')!=='1') return;
+    if(!window.matchMedia('(pointer:coarse)').matches) return;
+    clearTimeout(fbRotT);
+    fbRotT=setTimeout(replotAllCharts, 250);
+  });
 }
 // Render lazy de la tab Dólar (misma convención que renderNoticias).
 // Se invoca en cada activate de Dólar con #tab-dolar ya visible (loop de activateTab):
@@ -3459,7 +3504,22 @@ function applyLayout(layout){
     if(!layoutIds.has(id)) grid.appendChild(panels[id]);
   });
 }
-function chartHeight(divId){const el=document.getElementById(divId);if(!el)return 300;const panel=el.closest('.section');return(panel&&panel.classList.contains('full-width'))?400:300}
+// Vista móvil admin-only (mismo gate doble que el CSS: html[data-fb-admin] +
+// viewport de celular en portrait o landscape bajo). Público/desktop intactos.
+function fbMobileAdmin(){
+  return document.documentElement.getAttribute('data-fb-admin')==='1'
+    && window.matchMedia('(max-width:600px),(orientation:landscape) and (max-width:1000px) and (max-height:500px)').matches;
+}
+function chartHeight(divId){
+  const el=document.getElementById(divId);if(!el)return 300;
+  const panel=el.closest('.section');
+  const base=(panel&&panel.classList.contains('full-width'))?400:300;
+  // Admin+landscape: la gráfica se ajusta al alto del viewport (400px fijos no
+  // caben en ~330px de alto útil de un celu apaisado). Portrait no cambia.
+  if(fbMobileAdmin() && window.matchMedia('(orientation:landscape) and (max-height:500px)').matches)
+    return Math.max(260, Math.round(window.innerHeight*0.80));
+  return base;
+}
 function resizePanelCharts(panel){
   const isFull=panel.classList.contains('full-width');
   const h=isFull?400:300;
