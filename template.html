@@ -772,6 +772,9 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 .cal-day.has-events:hover{background:color-mix(in srgb,var(--cal-pale) 84%,var(--text-primary) 5%)}
 .cal-day.is-weekend:not(.has-events){background:color-mix(in srgb,var(--bg-tertiary) 55%,var(--bg-secondary))}
 .cal-day.is-weekend.has-events{background:color-mix(in srgb,var(--cal-pale) 88%,var(--bg-tertiary))}
+.cal-day.has-window{background:color-mix(in srgb,var(--cal-pale,var(--bg-secondary)) 45%,var(--bg-secondary))}
+.cal-day.has-window:hover{background:color-mix(in srgb,var(--cal-pale,var(--bg-secondary)) 62%,var(--bg-secondary))}
+.cal-day.is-weekend.has-window{background:color-mix(in srgb,var(--cal-pale,var(--bg-secondary)) 45%,var(--bg-tertiary))}
 .cal-day.is-outside{color:var(--text-soft);opacity:.6}
 .cal-day.is-selected::after{content:'';position:absolute;inset:3px;border:1px solid var(--line-strong);pointer-events:none}
 .cal-day-top{display:flex;justify-content:space-between;align-items:center;min-height:27px;margin-bottom:4px}
@@ -782,7 +785,9 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 .cal-chip-cert{display:block;margin-bottom:2px;font-family:var(--font-mono);font-size:7px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cal-c,var(--text-muted))}
 .cal-chip-title{display:block;font-size:9px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cal-chip .cal-example{margin-top:3px}
-.cal-chip.is-approx{border-top:1px dashed var(--cal-c,var(--text-muted));border-right:1px dashed var(--cal-c,var(--text-muted));border-bottom:1px dashed var(--cal-c,var(--text-muted))}
+.cal-chip.is-approx{background:color-mix(in srgb,var(--cal-pale,var(--bg-secondary)) 52%,transparent);border-left-width:2px;border-left-style:dashed}
+.cal-chip.is-approx .cal-chip-cert{opacity:.75}
+.cal-chip.is-approx .cal-chip-title{font-weight:500;color:var(--text-secondary)}
 .cal-chip-more{display:block;font-family:var(--font-mono);font-size:9px;color:var(--text-soft);margin-top:5px}
 .cal-year-view[hidden],.cal-month-view[hidden]{display:none}
 .cal-year-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -795,10 +800,22 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 .cal-mini-day{position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;border:1px solid transparent;border-radius:2px;background:transparent;color:var(--text-secondary);font-family:var(--font-mono);font-size:9px}
 .cal-mini-day.is-weekend:not(.has-event){background:color-mix(in srgb,var(--bg-tertiary) 60%,transparent);color:var(--text-soft)}
 .cal-mini-day.has-event{background:var(--cal-pale,var(--bg-tertiary));font-weight:700}
+.cal-mini-day.has-window{background:color-mix(in srgb,var(--cal-pale,var(--bg-tertiary)) 32%,transparent)}
+.cal-mini-day.has-window .cal-mini-dots i{opacity:.75}
 .cal-mini-day.is-today{border-color:var(--np-accent);color:var(--np-accent)}
+.cal-mini-day{cursor:pointer;transition:transform .1s,background .1s,border-color .1s,color .1s}
+.cal-mini-day:hover{border-color:var(--cal-c,var(--line-strong));background:color-mix(in srgb,var(--cal-pale,var(--bg-tertiary)) 85%,transparent);color:var(--text-primary);font-weight:700;transform:scale(1.18);z-index:1}
 .cal-mini-dots{position:absolute;left:2px;right:2px;bottom:1px;display:flex;justify-content:center;gap:1px;pointer-events:none}
 .cal-mini-dots i{width:3px;height:3px;border-radius:50%;background:var(--dot-c,var(--text-muted))}
 .cal-mini-blank{aspect-ratio:1}
+.cal-tip{position:fixed;z-index:90;min-width:200px;max-width:280px;background:var(--bg-secondary);border:1px solid var(--line-strong);border-top:2px solid var(--text-primary);border-radius:2px;box-shadow:0 8px 22px rgba(33,30,27,.16);opacity:0;visibility:hidden;transform:translateY(3px);transition:opacity .12s,transform .12s,visibility .12s;pointer-events:none}
+.cal-tip.is-on{opacity:1;visibility:visible;transform:none}
+.cal-tip-date{padding:7px 11px 6px;border-bottom:1px solid var(--border-color);background:var(--bg-primary);font-family:var(--font-mono);font-size:var(--text-2xs);font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-secondary)}
+.cal-tip-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:1px 8px;align-items:center;padding:7px 11px;border-bottom:1px solid var(--border-color)}
+.cal-tip-row:last-child{border-bottom:0}
+.cal-tip-dot{width:7px;height:7px;border-radius:50%;background:var(--cal-c,var(--text-muted))}
+.cal-tip-name{font-size:var(--text-xs);font-weight:600;line-height:1.3;color:var(--text-primary)}
+.cal-tip-meta{grid-column:2;font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cal-c,var(--text-muted))}
 .cal-footnote{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:14px;padding-top:10px;border-top:1px solid var(--border-color);font-size:var(--text-xs);line-height:1.45;color:var(--text-muted)}
 .cal-footnote strong{color:var(--text-secondary)}
 .cal-page button:focus-visible,.cal-page input:focus-visible,.cal-page a:focus-visible{outline:2px solid var(--np-accent);outline-offset:2px}
@@ -9071,14 +9088,21 @@ function installObserver(){
     for(var index=0; index<42; index++){
       var parts=calFromSerial(start+index);
       var events=calEventsOn(parts.iso);
-      var dominant=calDominant(events);
+      // Jerarquía visual: solo una fecha FIRME (event.d) pinta el día pleno
+      // (has-events). Un día cubierto únicamente por ventanas/rangos lleva
+      // has-window (tinte atenuado) — reconocible pero menos impactante.
+      var firmes=events.filter(function(ev){ return !!ev.d; });
+      var dominant=calDominant(firmes.length?firmes:events);
       var classes=['cal-day'];
       if(parts.month!==calState.month) classes.push('is-outside');
       if(parts.weekday===0 || parts.weekday===6) classes.push('is-weekend');
       if(parts.iso===calNow.iso) classes.push('is-today');
       if(parts.iso===calState.selected) classes.push('is-selected');
-      if(events.length) classes.push('has-events');
-      var shown=events.slice(0,3), more=events.length-shown.length;
+      if(firmes.length) classes.push('has-events');
+      else if(events.length) classes.push('has-window');
+      // Chips: firmes primero, ventanas después (misma jerarquía que el fondo).
+      var ordered=events.slice().sort(function(a,b){ return (a.d?0:1)-(b.d?0:1) || calSortEvents(a,b); });
+      var shown=ordered.slice(0,3), more=events.length-shown.length;
       var aria=calLongDate(parts)+(events.length?'. '+events.map(function(event){
         return event.label+', '+CAL_CERT[event.cert].label+(event.ejemplo?', datos de ejemplo':'');
       }).join('. '):'. Sin eventos');
@@ -9103,12 +9127,17 @@ function installObserver(){
     for(var blank=0; blank<offset; blank++) cells.push('<span class="cal-mini-blank"></span>');
     for(var day=1; day<=days; day++){
       var iso=calIso(year,month,day), parts=calParseIso(iso);
-      var events=calEventsOn(iso), dominant=calDominant(events);
+      var events=calEventsOn(iso);
+      // Misma jerarquía que la vista mensual: pleno solo con fecha firme;
+      // día solo-ventana → has-window (tinte tenue, dots atenuados).
+      var firmes=events.filter(function(ev){ return !!ev.d; });
+      var dominant=calDominant(firmes.length?firmes:events);
       var classes=['cal-mini-day'];
       if(parts.weekday===0 || parts.weekday===6) classes.push('is-weekend');
       if(iso===calNow.iso) classes.push('is-today');
-      if(events.length) classes.push('has-event');
-      cells.push('<span class="'+classes.join(' ')+'" aria-hidden="true"'
+      if(firmes.length) classes.push('has-event');
+      else if(events.length) classes.push('has-window');
+      cells.push('<span class="'+classes.join(' ')+'" data-cal-mini="'+iso+'" aria-hidden="true"'
         +(dominant?' style="'+calStyle(dominant)+'"':'')+'>'+day
         +(events.length?'<span class="cal-mini-dots" aria-hidden="true">'+calDots(events)+'</span>':'')
         +'</span>');
@@ -9179,6 +9208,7 @@ function installObserver(){
     var monthView=document.getElementById('calMonthView');
     var yearView=document.getElementById('calYearView');
     if(!monthView || !yearView) return;
+    calTipHide();  // el re-render invalida la celda anclada
     calNow=calToday();
     var annual=calState.view==='anio';
     monthView.hidden=annual;
@@ -9229,12 +9259,67 @@ function installObserver(){
       if(window.requestAnimationFrame) window.requestAnimationFrame(reveal); else reveal();
     }
   }
+  // ── Tooltip de día (hover mes/año) ─────────────────────────────────
+  // Un solo nodo compartido, montado DENTRO de .cal-page (las vars --cal-*
+  // están scopeadas ahí; en body no resolverían). position:fixed → no lo
+  // recorta el overflow-x del scroll mensual.
+  var calTip=null, calTipIso=null, calTipCell=null;
+  function calTipHide(){
+    if(!calTip) return;
+    calTip.classList.remove('is-on');
+    calTipIso=null; calTipCell=null;
+  }
+  function calTipPlace(cell){
+    var rect=cell.getBoundingClientRect();
+    var width=calTip.offsetWidth, height=calTip.offsetHeight;
+    var left=Math.min(Math.max(8,rect.left+rect.width/2-width/2),window.innerWidth-width-8);
+    var top=rect.top-height-8;
+    if(top<8) top=rect.bottom+8;
+    calTip.style.left=Math.round(left)+'px';
+    calTip.style.top=Math.round(top)+'px';
+  }
+  function calTipRow(event){
+    var meta=CAL_CERT[event.cert].label+(event.d?'':' · '+calEventDateLabel(event));
+    return '<div class="cal-tip-row" style="'+calStyle(event)+'">'
+      +'<span class="cal-tip-dot" aria-hidden="true"></span>'
+      +'<span class="cal-tip-name">'+calEsc(event.label)+'</span>'
+      +'<span class="cal-tip-meta">'+calEsc(meta)+'</span></div>';
+  }
+  function calTipShow(cell,iso){
+    var parts=calParseIso(iso);
+    var events=iso?calEventsOn(iso):[];
+    if(!parts || !events.length){ calTipHide(); return; }
+    if(!calTip){
+      var page=document.querySelector('#tab-calendario .cal-page');
+      if(!page) return;
+      calTip=document.createElement('div');
+      calTip.className='cal-tip';
+      calTip.setAttribute('aria-hidden','true');
+      page.appendChild(calTip);
+    }
+    // Firmes primero, ventanas después — misma jerarquía que chips y fondo.
+    events=events.slice().sort(function(a,b){ return (a.d?0:1)-(b.d?0:1) || calSortEvents(a,b); });
+    calTip.innerHTML='<div class="cal-tip-date">'+calEsc(calLongDate(parts))+'</div>'
+      +events.map(calTipRow).join('');
+    calTip.classList.add('is-on');
+    calTipPlace(cell);
+    calTipIso=iso; calTipCell=cell;
+  }
+
   function calWire(){
     if(calWired) return;
     var panel=document.getElementById('tab-calendario');
     if(!panel) return;
     calWired=true;
     panel.addEventListener('click',function(event){
+      // Día de la vista anual (span data-cal-mini, no button): salta al mes
+      // con ese día seleccionado — mismo destino que el click en vista mensual.
+      var mini=event.target && event.target.closest ? event.target.closest('[data-cal-mini]') : null;
+      if(mini && panel.contains(mini)){
+        var miniDay=calParseIso(mini.dataset.calMini);
+        if(miniDay) calOpenMonth(miniDay.year,miniDay.month,miniDay.iso);
+        return;
+      }
       var target=event.target && event.target.closest ? event.target.closest('button') : null;
       if(!target || !panel.contains(target)) return;
       if(target.hasAttribute('data-cal-nav')){
@@ -9290,6 +9375,25 @@ function installObserver(){
         calRenderAll();
       }
     });
+    // Tooltip solo con puntero real (hover:hover) — en táctil el tap ya
+    // navega al detalle del sidebar, un tooltip solo estorbaría.
+    if(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+      panel.addEventListener('mouseover',function(event){
+        var cell=event.target && event.target.closest ? event.target.closest('[data-cal-date],[data-cal-mini]') : null;
+        if(!cell || !panel.contains(cell)){ calTipHide(); return; }
+        var iso=cell.dataset.calDate || cell.dataset.calMini;
+        if(iso!==calTipIso) calTipShow(cell,iso);
+      });
+      panel.addEventListener('mouseleave',calTipHide);
+      // En scroll el ancla se mueve (tip es fixed): reposicionar, no esconder.
+      // Los scroll events llegan un frame DESPUÉS del mouseover que mostró el
+      // tip (scrollIntoView del propio hover) — esconder acá lo haría parpadear.
+      window.addEventListener('scroll',function(){
+        if(!calTipIso || !calTipCell) return;
+        if(!document.contains(calTipCell)){ calTipHide(); return; }
+        calTipPlace(calTipCell);
+      },true);
+    }
   }
 
   window.renderCalendario = function(){
