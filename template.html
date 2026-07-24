@@ -687,7 +687,6 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
 @media(max-width:900px){.fb-bbv-filters{gap:14px;padding:12px 14px}}
 /* /bake:optional:bbv *//* i18n:es-only *//* bake:optional:calendario */
 /* ── Calendario · feriados Bolivia + eventos económicos ── */
-#tab-calendario[hidden]{display:none!important}
 .cal-page{
   --cal-feriados:#a65347;--cal-feriados-pale:color-mix(in srgb,var(--cal-feriados) 13%,var(--bg-secondary));
   --cal-ine:#5d7389;--cal-ine-pale:color-mix(in srgb,var(--cal-ine) 13%,var(--bg-secondary));
@@ -1096,7 +1095,7 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
     <button class="fb-tab" data-tab="dollar">{{t:nav.tab_dolar}}</button>
     <button class="fb-tab" data-tab="macro">{{t:nav.tab_macro}}</button>
     <button class="fb-tab" data-tab="asfi">{{t:nav.tab_asfi}}</button><!-- i18n:es-only --><!-- bake:optional:calendario -->
-    <button class="fb-tab" data-tab="calendario" data-admin-only hidden>Calendario</button><!-- /bake:optional:calendario --><!-- /i18n:es-only -->
+    <button class="fb-tab" data-tab="calendario">Calendario</button><!-- /bake:optional:calendario --><!-- /i18n:es-only -->
     <!-- bake:optional:agro --><button class="fb-tab" data-tab="agro">{{t:nav.tab_agro}}</button><!-- /bake:optional:agro -->
     <!-- bake:optional:mercado247 --><button class="fb-tab" data-tab="mercado247" data-admin-only hidden>{{t:nav.tab_mercado247}}</button><!-- /bake:optional:mercado247 -->
     <!-- i18n:es-only -->
@@ -1291,7 +1290,7 @@ html[data-fb-admin="1"] .fb-kpi-w1-btn{display:inline-flex;align-items:center;ga
     <div class="asfi-fuente">{{t:asfi.fuente_pre}} <span style="color:var(--np-accent)">*</span> {{t:asfi.fuente_post}}</div>
   </div>
 </div><!-- /tab-asfi --><!-- i18n:es-only --><!-- bake:optional:calendario -->
-<div id="tab-calendario" data-admin-only hidden style="display:none;">
+<div id="tab-calendario" style="display:none;">
   <div class="fb-subheader">
     <div>
       <h1>Calendario</h1>
@@ -4381,34 +4380,9 @@ function activateMacroSubtab(subId){
   if(sub.title) document.title = sub.title;
   // Lazy render de la subtab (el propio render trae guard anti-rebuild).
   if(typeof sub.render === 'function') sub.render();
-}/* i18n:es-only *//* bake:optional:calendario */
-
-// Gate UX central del Calendario. La autoridad de sesión permanece privada en
-// el IIFE de Noticias y expone solo allowed|pending|denied. Pending conserva el
-// deep link sin montar el módulo; denied canonicaliza a Inicio con replaceState.
-function fbCalendarGateStatus(){
-  return typeof window.__fbAdminGateState === 'function'
-    ? window.__fbAdminGateState()
-    : 'denied';
 }
-function fbCanActivateCalendar(target){
-  if(target !== 'calendario') return true;
-  var status = fbCalendarGateStatus();
-  if(status === 'allowed') return true;
-  if(status === 'denied' && fbSlug(window.location.pathname) === '/calendario'){
-    history.replaceState(null, '', fbHref('/'));
-  }
-  return false;
-}
-window.__fbReconcileCalendarRoute = function(){
-  var route = ROUTE_MAP[fbSlug(window.location.pathname)];
-  if(route && route.tab === 'calendario') activateTab(route.tab, route.subtab);
-};
-/* /bake:optional:calendario *//* /i18n:es-only */
 
-function activateTab(target, subtab){/* i18n:es-only *//* bake:optional:calendario */
-  if(!fbCanActivateCalendar(target)){ target='noticias'; subtab=undefined; }
-/* /bake:optional:calendario *//* /i18n:es-only */
+function activateTab(target, subtab){
   // Toggle visual del tab header
   document.querySelectorAll('.fb-tab[data-tab]').forEach(function(t){
     t.classList.toggle('active', t.dataset.tab === target);
@@ -4438,15 +4412,14 @@ function activateTab(target, subtab){/* i18n:es-only *//* bake:optional:calendar
   } /* /bake:optional:agro */else if(TAB_TITLES[target]){
     document.title = TAB_TITLES[target];
   }
-  if(window.__fbMeasure) window.__fbMeasure();  // re-mide --nav-h/--sub-h: el subheader visible cambió con la tab/* i18n:es-only *//* bake:optional:calendario */
-  return target;/* /bake:optional:calendario *//* /i18n:es-only */
+  if(window.__fbMeasure) window.__fbMeasure();  // re-mide --nav-h/--sub-h: el subheader visible cambió con la tab
 }
 
 document.querySelectorAll('.fb-tab[data-tab]').forEach(function(tab){
   tab.addEventListener('click',function(){
     if(tab.classList.contains('active')) return;
     var target = tab.dataset.tab;
-    /* i18n:es-only *//* bake:optional:calendario */var activated = /* /bake:optional:calendario *//* /i18n:es-only */activateTab(target);/* i18n:es-only *//* bake:optional:calendario */if(activated!==target) return;/* /bake:optional:calendario *//* /i18n:es-only */
+    activateTab(target);
     // Actualizar URL sin recargar. Macro pushea el slug del subtab activo.
     var slug;
     if(target==='macro'){
@@ -6599,15 +6572,7 @@ window.addEventListener('popstate', function(){
   const NP_SESS_HINT = 'fb_admin_session';
   function npSetHint(){ try{ localStorage.setItem(NP_SESS_HINT,'1'); }catch(e){} }
   function npClearHint(){ try{ localStorage.removeItem(NP_SESS_HINT); }catch(e){} }
-  function npHasHint(){ try{ return localStorage.getItem(NP_SESS_HINT)==='1'; }catch(e){ return false; } }/* i18n:es-only *//* bake:optional:calendario */
-  window.__fbAdminGateState = function(){
-    var localDev = window.__fbDevAdmin === true
-      && (location.hostname==='localhost' || location.hostname==='127.0.0.1');
-    if(localDev || npAdmin.isAdmin) return 'allowed';
-    var directCalendar = fbSlug(location.pathname) === '/calendario';
-    return (!npAdmin.checked && (npHasHint() || directCalendar)) ? 'pending' : 'denied';
-  };
-  /* /bake:optional:calendario *//* /i18n:es-only */
+  function npHasHint(){ try{ return localStorage.getItem(NP_SESS_HINT)==='1'; }catch(e){ return false; } }
   // Login (PR-C4b): setea el hint y NAVEGA full-page a la ruta de bounce del
   // Worker. /v1/login dispara el handshake de Access (sin sesión) y, ya
   // autenticado, hace 302 de vuelta al `return` allowlisteado (finanzasbo.com).
@@ -6816,9 +6781,7 @@ window.addEventListener('popstate', function(){
     // markup (0 flash para el público) y reveladas acá cuando npCheckMe confirma
     // admin=true. fbRenderSession corre en toda transición (init/login/logout/expire),
     // así que el toggle sigue el estado de npAdmin.isAdmin sin tocar cada handler.
-    document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });/* i18n:es-only *//* bake:optional:calendario */
-    if(typeof window.__fbReconcileCalendarRoute === 'function') window.__fbReconcileCalendarRoute();
-    /* /bake:optional:calendario *//* /i18n:es-only */
+    document.querySelectorAll('[data-admin-only]').forEach(function(el){ el.hidden = !npAdmin.isAdmin; });
     fbApplyTcoStaleAlert();
     var slot=document.getElementById('fbFooterSession'); if(!slot) return;
     if(npAdmin.isAdmin){
@@ -8833,7 +8796,6 @@ function installObserver(){
   var CAL_CATS = Object.keys(CAL_CAT);
   var CAL_EVENTS = CAL_DATA.feriados.concat(CAL_DATA.eventos);
   var calWired = false;
-  var calDevObserver = null;
 
   function calEsc(value){
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
@@ -9400,26 +9362,6 @@ function installObserver(){
     calWire();
     calRenderAll();
   };
-
-  // El atajo localhost ?admin=1 solo fija el gate CSS global. fbRenderSession
-  // sigue administrando el atributo hidden, por eso este módulo conserva visible
-  // únicamente su propio botón durante la previsualización local autorizada.
-  function calRevealDevAdmin(){
-    if(!window.__fbDevAdmin) return;
-    var gated = Array.from(document.querySelectorAll('.fb-tab[data-tab="calendario"], #tab-calendario'));
-    if(!gated.length) return;
-    gated.forEach(function(el){ el.hidden=false; });
-    if(calDevObserver) return;
-    calDevObserver = new MutationObserver(function(){
-      if(window.__fbDevAdmin) gated.forEach(function(el){ if(el.hidden) el.hidden=false; });
-    });
-    gated.forEach(function(el){ calDevObserver.observe(el, {attributes:true, attributeFilter:['hidden']}); });
-  }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', calRevealDevAdmin);
-  }else{
-    calRevealDevAdmin();
-  }
 })();
 </script>
 <!-- /bake:optional:calendario --><!-- /i18n:es-only -->
